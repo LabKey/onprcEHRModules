@@ -172,9 +172,9 @@ Ext4.define('ONPRC_EHR.window.ApplyTemplateWindow', {
                     LABKEY.Filter.create('templateId', templateId, LABKEY.Filter.Types.EQUAL)
                 ],
                 sort: 'rowid',
-                success: function(data) {
-                    if (!data || !data.rows || !data.rows.length) {
-                        if (callback) {
+                success: function(data){
+                    if (!data || !data.rows || !data.rows.length){
+                        if (callback){
                             callback.call(scope, {});
                         }
 
@@ -184,18 +184,18 @@ Ext4.define('ONPRC_EHR.window.ApplyTemplateWindow', {
                     initialValues = initialValues || [];
 
                     var toAdd = {};
-                    if (!initialValues.length) {
+                    if (!initialValues.length){
                         initialValues.push({});
                     }
 
-                    Ext4.Array.forEach(initialValues, function (obj) {
-                        Ext4.Array.forEach(data.rows, function (row) {
+                    Ext4.Array.forEach(initialValues, function(obj){
+                        Ext4.Array.forEach(data.rows, function(row){
                             var data = Ext4.decode(row.json);
                             var store = storeCollection.getClientStoreByName(row.storeid);
 
 
                             //verify store exists
-                            if (!store) {
+                            if (!store){
                                 LDK.Utils.logToServer({
                                     level: 'ERROR',
                                     message: 'ApplyTemplateWindow.onLoadTemplate is unable to find store: ' + row.storeid
@@ -205,7 +205,7 @@ Ext4.define('ONPRC_EHR.window.ApplyTemplateWindow', {
                             }
 
                             //also verify it is loaded
-                            if (store.loading || !store.getFields() || !store.getFields().getCount()) {
+                            if (store.loading || !store.getFields() || !store.getFields().getCount()){
                                 LDK.Utils.logToServer({
                                     level: 'ERROR',
                                     message: 'ApplyTemplateWindow.onLoadTemplate called prior to store load'
@@ -219,7 +219,7 @@ Ext4.define('ONPRC_EHR.window.ApplyTemplateWindow', {
 
                             var date = Ext4.Date.clone(new Date());
 
-                            if (data.offset) {
+                            if (data.offset){
                                 var offsetDate = Ext4.Date.add(date, Ext4.Date.DAY, data.offset);
                                 offsetDate = Ext4.Date.clearTime(offsetDate);
                                 offsetDate.setHours(8);
@@ -228,8 +228,9 @@ Ext4.define('ONPRC_EHR.window.ApplyTemplateWindow', {
 
                             }
 
-                            var enddate = null;
-                            if (data.duration) {
+
+                            if (data.duration > 0) {
+                                var enddate = null;
                                 //this is specifically to handle hydro, when administered ~noon
                                 if (new String(data.duration).match(/H$/)) {
                                     var duration = new String(data.duration);
@@ -245,6 +246,11 @@ Ext4.define('ONPRC_EHR.window.ApplyTemplateWindow', {
                                 else {
                                     enddate = date;
                                     enddate = Ext4.Date.add(enddate, Ext4.Date.DAY, data.duration);
+                                    enddate.setHours(23);
+                                    enddate = enddate;
+                                    enddate.setMinutes(59);
+                                    enddate = enddate;
+
                                 }
                             }
                             var obj2 = {};
@@ -254,7 +260,7 @@ Ext4.define('ONPRC_EHR.window.ApplyTemplateWindow', {
                             };
 
                             var newData = Ext4.apply({}, data);
-                            newData = Ext4.apply(newData, obj);
+                            newData = Ext4.apply(newData, obj);   //Adds monkey id
                             newData = Ext4.apply(newData, obj2);
 
                             toAdd[store.storeId].push(newData);
@@ -542,12 +548,12 @@ EHR.DataEntryUtils.registerGridButton('TEMPLATEREV', function(config){
                     }).show();
                 }
             },{
-                text: 'Apply Template',
+                text: 'Apply TemplateX',
                 handler: function(btn){
                     var grid = btn.up('gridpanel');
                     var menu = this.up('menu').items.get('templatesMenu');
 
-                    Ext4.create('EHR.window.ApplyTemplateWindow', {
+                    Ext4.create('ONPRC_EHR.window.ApplyTemplateWindow', {
                         targetGrid: grid,
                         formType: grid.formConfig.name,
                         idSelectionMode: menu.idSelectionMode || 'multi'

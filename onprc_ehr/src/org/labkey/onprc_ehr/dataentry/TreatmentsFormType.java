@@ -44,6 +44,9 @@ public class TreatmentsFormType extends TaskForm
     {
         super(ctx, owner, NAME, LABEL, "Clinical", Arrays.asList(
             new TaskFormSection(),
+                 //Added 2-19-2016  Blasa
+           // new NonStoreFormSection("Treatment Template Helper", "Treatment Template Helper", "onprc_AddScheduledTreatmentPanel", Arrays.asList(ClientDependency.supplierFromPath("/onprc_ehr/panel/AddScheduledTreatmentPanel.js"))),
+
             new AnimalDetailsFormSection(),
             new DrugAdministrationFormSection(ClientDependency.supplierFromPath("onprc_ehr/window/ONPRC_AddScheduledTreatmentWindow.js")),
             new TreatmentOrdersFormSection()
