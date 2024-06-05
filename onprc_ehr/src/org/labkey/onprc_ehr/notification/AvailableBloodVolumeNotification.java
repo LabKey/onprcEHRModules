@@ -21,10 +21,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-/**
- * Created by jonesga on 05/8/2024
- * Update to change Source query to onprc-EHR
- */
 
 public class AvailableBloodVolumeNotification extends ColonyAlertsNotification
 {
@@ -44,23 +40,22 @@ public class AvailableBloodVolumeNotification extends ColonyAlertsNotification
     {
         return "Available Blood Volume Alert: " + getDateTimeFormat(c).format(new Date());
     }
-
     @Override
     public String getCronString()
     {
-        return "0 30/1 0/1 ? * * *";
+        return "0 30 7-18 * * ?";
     }
 
     @Override
     public String getScheduleDescription()
     {
-        return "every day at 30 Minutes after the hour from 7 AM to 6 PM";
+        return "every day at 30 minutes after the hour between 7:30AM and 6:30PM";
     }
 
     @Override
     public String getDescription()
     {
-        return "The report is designed to send am alert if the hourly available Blood Volume Transfer Fails!";
+        return "The report is designed to send an alert if the hourly Available Blood Volume transfer fails.";
     }
 
     @Override
