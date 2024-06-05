@@ -1,14 +1,12 @@
-/*Updatge to user onprc EHR*/
-SELECT a.datecreated,
-    hour (Now()) AS CurrentHour,
-    hour (a.dateCreated) as BVTime,
-    Case When hour (a.dateCreated) != hour (Now()) then 'out of synch'
-    When hour (a.dateCreated) = hour (Now()) then 'In Synch'
-End As AvailableBloodData,
-	DayofMonth(a.dateCreated) as MOnthDay,
-DayOfMonth(curDate()) as CurrentDay
-
-
-FROM AvailableBloodVolume a
-where  DayofMonth(a.dateCreated)= DayOfMonth(curDate())
-and hour (a.dateCreated) != hour (Now())
+/* Returns a single row of data where the date/hour of the Mathematica ABV calculations don't match the current date or hour.
+ * If there is Mathematica data from multiple hours, there will be a row of data for each hour of Mathematica data.
+ * This is not expected as Mathematica should drop the _public table each hour and the ETL'd data should match.
+* removed comma on line 9 per request
+ */
+SELECT DISTINCT CAST(a.dateCreated AS DATE) AS mmaDate,
+    hour(a.datecreated) AS mmaHour,
+    curdate() AS currentDate,
+    hour(now()) AS currentHour
+FROM ONPRC_EHR.AvailableBloodVolume AS a
+WHERE hour(a.dateCreated) != hour(now())
+   OR CAST(a.dateCreated AS DATE) != curdate()
