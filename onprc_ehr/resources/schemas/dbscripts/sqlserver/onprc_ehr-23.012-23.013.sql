@@ -47,7 +47,7 @@ CREATE Procedure onprc_ehr.p_Create_TB_Observationrecords
 
 
 DECLARE
-@SearchKey              Int,
+              @SearchKey              Int,
 			  @TempsearchKey	      Int,
 			  @TaskId		          varchar(4000),
 		      @ObjectId               varchar(4000),
@@ -92,7 +92,7 @@ from studydataset.c6d214_encounters  a
 Where a.participantid not in (select b.participantid  from studydataset.c6d171_clinical_observations b
                               where a.participantid = b.participantid And a.date = b.date  And b.category = 'TB TST Score (72 hr)'  )
   And a.type = 'Procedure' And a.qcstate = 18 And procedureid = 802         -----'TB Test Intradermal'
-  And a.created >=  dateadd(minute, 1, cast(getdate() as date))
+  And a.created >=   dateadd(day, -1, cast(getdate() as date))
 
 order by a.participantid, a.date desc
 
