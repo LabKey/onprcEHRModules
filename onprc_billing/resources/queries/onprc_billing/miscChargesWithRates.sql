@@ -1,4 +1,5 @@
---Udpate 20200107 using fiull path for source
+--Modified by Kollil  on 6/5/2024
+--Removed the substitute paths for the billing containers to reference the onprc_billingPublic datasets and this change avoids user access to the Finance admin section.
 SELECT
   p.Id,
   p.date,
@@ -131,42 +132,42 @@ SELECT
 
 FROM Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.onprc_billing.miscCharges p
 
-LEFT JOIN Site.{substitutePath moduleProperty('onprc_billing','BillingContainer')}.onprc_billing_public.chargeRates cr ON (
+LEFT JOIN onprc_billing_public.chargeRates cr ON (
     CAST(p.date AS DATE) >= CAST(cr.startDate AS DATE) AND
     (CAST(p.date AS DATE) <= cr.enddateCoalesced OR cr.enddate IS NULL) AND
     p.chargeId = cr.chargeId
 )
 
-LEFT JOIN Site.{substitutePath moduleProperty('onprc_billing','BillingContainer')}.onprc_billing_public.chargeRateExemptions e ON (
+LEFT JOIN onprc_billing_public.chargeRateExemptions e ON (
     CAST(p.date AS DATE) >= CAST(e.startDate AS DATE) AND
     (CAST(p.date AS DATE) <= e.enddateCoalesced OR e.enddate IS NULL) AND
     p.chargeId = e.chargeId AND
     p.project = e.project
 )
 
-LEFT JOIN Site.{substitutePath moduleProperty('onprc_billing','BillingContainer')}.onprc_billing_public.creditAccount ce ON (
+LEFT JOIN onprc_billing_public.creditAccount ce ON (
     CAST(p.date AS DATE) >= CAST(ce.startDate AS DATE) AND
     (CAST(p.date AS DATE) <= ce.enddateCoalesced OR ce.enddate IS NULL) AND
     p.chargeId = ce.chargeId
 )
 
-LEFT JOIN Site.{substitutePath moduleProperty('onprc_billing','BillingContainer')}.onprc_billing_public.projectAccountHistory aliasAtTime ON (
+LEFT JOIN onprc_billing_public.projectAccountHistory aliasAtTime ON (
   aliasAtTime.project = p.project AND
   aliasAtTime.startDate <= cast(p.date as date) AND
   aliasAtTime.endDate >= cast(p.date as date)
 )
 
-LEFT JOIN Site.{substitutePath moduleProperty('onprc_billing','BillingContainer')}.onprc_billing_public.aliases alias ON (
+LEFT JOIN onprc_billing_public.aliases alias ON (
   alias.alias = COALESCE(p.debitedaccount, aliasAtTime.account) and alias.dateDisabled is Null
 )
 
-LEFT JOIN Site.{substitutePath moduleProperty('onprc_billing','BillingContainer')}.onprc_billing_public.projectMultipliers pm ON (
+LEFT JOIN onprc_billing_public.projectMultipliers pm ON (
     CAST(p.date AS DATE) >= CASt(pm.startDate AS DATE) AND
     (CAST(p.date AS DATE) <= pm.enddateCoalesced OR pm.enddate IS NULL) AND
     alias.alias = pm.account
 )
 
-LEFT JOIN Site.{substitutePath moduleProperty('onprc_billing','BillingContainer')}.onprc_billing_public.chargeUnitAccounts cu ON (
+LEFT JOIN onprc_billing_public.chargeUnitAccounts cu ON (
   p.chargetype = cu.chargetype AND
   cast(cu.startDate AS date) <= cast(p.date as date) AND
   cast(cu.endDate AS date) >= cast(p.date as date)
