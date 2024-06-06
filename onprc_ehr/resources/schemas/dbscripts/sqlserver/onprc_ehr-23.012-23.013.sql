@@ -55,7 +55,8 @@ DECLARE
               @date                   datetime,
               @createdby              smallint,
               @created                smalldatetime,
-			  @performedby            varchar(200)
+			  @performedby            varchar(200),
+              @RunID                 varchar(4000)
 
 
 
@@ -119,6 +120,7 @@ END
           Set @performedby = NULL
           Set @TaskID = NULL
           Set @Animalid = Null
+          Set @RunID   = Null
 
 
 
@@ -142,6 +144,7 @@ BEGIN
 
 
                             Set @TaskID = NEWID()         ----- Task Record Object ID
+                            Set @RunID = NEWID()          ---- ObjectID
 
 
 
@@ -202,7 +205,8 @@ BEGIN
 								  taskid,
                                   qcstate,
 								  modified,
-								  modifiedby
+								  modifiedby,
+                                  lsid
 
                                    )
                               values (
@@ -214,11 +218,12 @@ BEGIN
                                   @created,
                                   @createdby,
                                   @performedby,
-								   NEWID() ,                                    ----- Objectid
+								   @RunID ,                                    ----- Objectid
                                    @TaskID,
                                     20 ,                                     ---- In Progress QCState
 									@created,
-									@createdBy
+									@createdBy,
+                                    'urn:lsid:ohsu.edu:Study.Data-6:5006.10003.19810204.0000.' + '' + @RunID + ''
 
 					)
 
@@ -245,7 +250,7 @@ END ----   While @TempSearchKey
             ----- Create a master copy of the completed transaction
 
 Select * into onprc_ehr.TB_TestTempMaster
-from onprc_ehr.TestTemp
+from onprc_ehr.TB_TestTemp
          If @@Error <> 0
 	  			GoTo Err_Proc
 
