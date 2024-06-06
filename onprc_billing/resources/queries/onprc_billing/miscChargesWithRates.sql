@@ -1,5 +1,6 @@
 --Modified by Kollil  on 6/5/2024
 --Removed the substitute paths for the billing containers to reference the onprc_billingPublic datasets and this change avoids user access to the Finance admin section.
+-- Refer labkey ticket #50568
 SELECT
   p.Id,
   p.date,
