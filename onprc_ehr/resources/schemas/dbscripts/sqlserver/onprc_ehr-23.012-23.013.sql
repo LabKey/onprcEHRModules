@@ -249,8 +249,9 @@ END ----   While @TempSearchKey
 
             ----- Create a master copy of the completed transaction
 
-Select * into onprc_ehr.TB_TestTempMaster
-from onprc_ehr.TB_TestTemp
+  Insert into onprc_ehr.TB_TestTempMaster
+     Select *  from onprc_ehr.TB_TestTemp
+
          If @@Error <> 0
 	  			GoTo Err_Proc
 
