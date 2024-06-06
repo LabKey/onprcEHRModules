@@ -1428,6 +1428,31 @@
         </columns>
     </table>
 
+   <table tableName="TB_TestTemp" tableDbType="TABLE">
+    <columns>
+        <column columnName="rowid" />
+        <column columnName="animalid" />
+        <column columnName="date" />
+        <column columnName="objectid" />
+        <column columnName="created" />
+        <column columnName="createdby" />
+        <column columnName="performedby" />
+
+    </columns>
+</table>
+
+    <table tableName="TB_TestTempMaster" tableDbType="TABLE">
+        <columns>
+            <column columnName="rowid" />
+            <column columnName="animalid" />
+            <column columnName="date" />
+            <column columnName="objectid" />
+            <column columnName="created" />
+            <column columnName="createdby" />
+            <column columnName="performedby" />
+
+        </columns>
+    </table>
 
 
 
