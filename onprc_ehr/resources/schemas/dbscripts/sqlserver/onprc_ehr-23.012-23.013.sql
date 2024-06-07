@@ -171,7 +171,7 @@ BEGIN
 	     Values  (
 
 		   @TaskID,
-		   @AnimalID + ' ' + cast(@Date as varchar(50)) ,   	        ------ Title  consist of animal id and Clinpath date
+		   @AnimalID + ' ' + cast(@Date as varchar(50)) ,   	        ------ Title  consist of animal id and Clinical procedure date
           'TB TST Scores',
 		   20,                     	              --- Qc State (In Progress)
 		   'TB TST Scores',              	      ------ FormType
