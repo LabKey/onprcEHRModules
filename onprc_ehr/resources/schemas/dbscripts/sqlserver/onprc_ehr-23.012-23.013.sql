@@ -91,7 +91,7 @@ select
 
 from studydataset.c6d214_encounters  a
 Where a.participantid not in (select b.participantid  from studydataset.c6d171_clinical_observations b
-                              where a.participantid = b.participantid And a.date = b.date  And b.category = 'TB TST Score (72 hr)'  )
+                              where a.participantid = b.participantid And cast(a.date as date)  = dateadd(day,3,cast(b.date as date))  And b.category = 'TB TST Score (72 hr)'  )
   And a.type = 'Procedure' And a.qcstate = 18 And procedureid = 802         -----'TB Test Intradermal'
   And a.created >=   dateadd(day, -1, cast(getdate() as date))
 
@@ -137,14 +137,15 @@ BEGIN
 
 Select @Animalid =animalid, @date = date, @created =created, @createdby =createdby,@performedby= performedby from onprc_ehr.TB_TestTemp Where rowid = @Searchkey
 
-    If not exists (select * from studydataset.c6d171_clinical_observations  Where participantid  = @AnimalID
-                                                                                                                                          And date = @date And category = 'TB TST Score (72 hr)'   )
+    If not exists (select * from studydataset.c6d171_clinical_observations j Where j.participantid  = @AnimalID
+                                             And cast(j.date as date) = dateadd(day,3,cast(@date as date)) And j.category = 'TB TST Score (72 hr)'   )
 BEGIN
 
 
 
                             Set @TaskID = NEWID()         ----- Task Record Object ID
                             Set @RunID = NEWID()          ---- ObjectID
+                            Set @date = dateadd(day, 3,@date)  ----- Add three days from TB Test date
 
 
 
@@ -177,9 +178,9 @@ BEGIN
 		   'task',                 		      -----  category,
 		  'CD17027B-C55F-102F-9907-5107380A54BE',    ---- EHR Container
 		   1822,                               -------- Assigned To Data Admins
-		   @created,                                ------- Create Date
+		   getdate(),                                ------- Create Date
 		   @createdby, 				     -------- Created By
-		   @created, 				     ------- Modified Date
+		   getdate(), 				     ------- Modified Date
 		   @createdby				     ----- Modified by
 
                     )
@@ -214,14 +215,14 @@ BEGIN
                                   @date,
                                   'TB TST Score (72 hr)',
                                  'Right Eyelid',
-                                 'Grade: 0',
-                                  @created,
+                                 'Grade: Negative',
+                                  getdate(),                         ----- created
                                   @createdby,
                                   @performedby,
 								   @RunID ,                                    ----- Objectid
                                    @TaskID,
                                     20 ,                                     ---- In Progress QCState
-									@created,
+									getdate(),                         -----modified
 									@createdBy,
                                     'urn:lsid:ohsu.edu:Study.Data-6:5006.10003.19810204.0000.' + '' + @RunID + ''
 
