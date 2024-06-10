@@ -1427,6 +1427,29 @@
 
         </columns>
     </table>
+    <table tableName="eIACUCPopulateeIACUCFields" tableDbType="TABLE" useColumnOrder="true">
+        <tableTitle>Protocol from eIACUC2</tableTitle>
+        <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+        <auditLogging>DETAILED</auditLogging>
+        <columns>
+            <column columnName="Rowid">
+                <columnTitle>Row ID</columnTitle>
+            </column>
+            <column columnName="Protocol_ID">
+            </column>
+            <column columnName="BaseProtocol">
+            </column>
+            <column columnName="RevisionNumber">
+            </column>
+            <column columnName="TemplateOID">
+            </column>
+            <column columnName="eIACUC2Details">
+            </column>
+            <column columnName="ProtocolState">
+            </column>
+
+        </columns>
+    </table>
 
 
 
