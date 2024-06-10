@@ -23,4 +23,5 @@ SELECT p.rowid,
        p.PROTOCOL_State,
        p.PPQ_Numbers,
        p.Description
+
 FROM eIACUCPopulateEIACUCData p

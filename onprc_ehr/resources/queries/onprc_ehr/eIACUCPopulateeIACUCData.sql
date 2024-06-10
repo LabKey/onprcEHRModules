@@ -29,4 +29,5 @@ SELECT p.rowid,
        p.PROTOCOL_State,
        p.PPQ_Numbers,
        p.Description
+
 FROM eIACUC_PRIME_VIEW_PROTOCOLS p
