@@ -73,6 +73,12 @@ Ext4.define('ONPRC_EHR.data.TreatmentOrdersClientStore', {
                     }
 
                     var def = values[fieldName];
+                    if (fieldName == "amount" && Ext4.isEmpty(def)) {
+                        continue;
+                    }
+                    if (fieldName == "volume" && Ext4.isEmpty(def)) {
+                        continue;
+                    }
                     if (Ext4.isDefined(def)){
                         params[this.fieldMap[fieldName]] = def;
                     }
