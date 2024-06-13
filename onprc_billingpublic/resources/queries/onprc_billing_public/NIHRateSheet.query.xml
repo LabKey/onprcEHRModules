@@ -11,11 +11,7 @@
                     <column columnName="category" />
                     <column columnName="name" />
                     <column columnName="CurrentYear">
-<<<<<<< 23.11_fb_PublicRates2024
-                        <columnTitle>YR65: Current Year</columnTitle>
-=======
-                        <columnTitle>Yr 65: Current Year</columnTitle>
->>>>>>> release23.11-SNAPSHOT
+
                         <formatString>$#,##0.00</formatString>
                     </column>
                     <column columnName="year1">
