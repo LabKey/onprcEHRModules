@@ -4,10 +4,10 @@ SELECT p.rowid,
        Case when Len(p.protocol_ID) > 10
                 then substring(p.protocol_id, 6,15)
             else p.protocol_ID
-           End As BAseProtocol,
+           End As BaseProtocol,
        Case When Len(p.protocol_ID) > 10
                 then substring(p.protocol_ID,1,4)
-            Else 'original'
+            Else 'Original'
            End as RevisionNumber,
        p.Template_OID,
        p.Protocol_OID,
@@ -26,7 +26,7 @@ SELECT p.rowid,
        p.created,
        p.modifiedby,
        p.modified,
-       p.PROTOCOL_State,
+       p.Protocol_State,
        p.PPQ_Numbers,
        p.Description
 FROM eIACUC_PRIME_VIEW_PROTOCOLS p
