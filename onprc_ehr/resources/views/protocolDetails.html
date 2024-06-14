@@ -16,6 +16,11 @@ Ext4.onReady(function (){
     },{
         tag: 'div',
         style: 'padding-bottom: 10px;',
+        id: 'eIACUC2Data_' + webpart.wrapperDivId
+    },
+        {
+        tag: 'div',
+        style: 'padding-bottom: 10px;',
         id: 'protocolProjects_' + webpart.wrapperDivId
     },{
         tag: 'div',
@@ -166,6 +171,17 @@ Ext4.onReady(function (){
         sort: '-startdate',
         failure: LDK.Utils.getErrorCallback()
     }).render('allowableSLAs_' + webpart.wrapperDivId);
+
+    //Added the link to eIACUC2 by jonesga, 06/14/2024
+    LDK.Utils.getReadOnlyQWP({
+        title: 'Link to eIACUC2 Data',
+        schemaName: 'onprc_ehr',
+        queryName: 'eIACUC2Data',
+       columns: 'PROTOCOL_ID,BaseProtocol,RevisionNumber,Protocol_Title',
+       filters: [LABKEY.Filter.create('BaseProtocol', protocol, LABKEY.Filter.Types.EQUAL)],
+        sort: 'created',
+        failure: LDK.Utils.getErrorCallback()
+    }).render('eIACUC2Data_' + webpart.wrapperDivId);
 
     LDK.Utils.getReadOnlyQWP({
         title: 'Exemptions',
