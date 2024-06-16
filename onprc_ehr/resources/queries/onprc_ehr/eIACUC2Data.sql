@@ -29,4 +29,4 @@ SELECT p.rowid,
        p.Protocol_State,
        p.PPQ_Numbers,
        p.Description
-FROM eIACUC_PRIME_VIEW_PROTOCOLS p
+FROM eIACUC_PRIME_VIEW_PROTOCOLS AS p

@@ -1,7 +1,7 @@
 <script type="text/javascript">
 
 Ext4.onReady(function (){
-    var protocol = LABKEY.ActionURL.getParameter('protocol') || LABKEY.ActionURL.getParameter('key');
+    var protocol = LABKEY.ActionURL.getParameter('protocol') || LABKEY.ActionURL.getParameter('key')  ;
     if (!protocol){
         alert('Must Provide Protocol Number');
         return false;
@@ -17,8 +17,7 @@ Ext4.onReady(function (){
         tag: 'div',
         style: 'padding-bottom: 10px;',
         id: 'eIACUC2Data_' + webpart.wrapperDivId
-    },
-        {
+    },{
         tag: 'div',
         style: 'padding-bottom: 10px;',
         id: 'protocolProjects_' + webpart.wrapperDivId
@@ -45,7 +44,7 @@ Ext4.onReady(function (){
     },{
         tag: 'div',
         style: 'padding-bottom: 10px;',
-        id: 'housingSummarySpecie_' + webpart.wrapperDivId
+        id: 'housingSummarySpecies_' + webpart.wrapperDivId
     }];
 
     var el = Ext4.get(webpart.wrapperDivId);
@@ -138,13 +137,13 @@ Ext4.onReady(function (){
     }).render('housingSummary_' + webpart.wrapperDivId);
 
     LDK.Utils.getReadOnlyQWP({
-        title: 'Housing Summary By Specie',
+        title: 'Housing Summary By Species',
         schemaName: 'study',
         queryName: 'protocolHousingSummary_Species',
-        columns: 'id/demographics/species,totalAnimals',
+        columns: 'species,totalAnimals',
         filters: [LABKEY.Filter.create('protocol', protocol, LABKEY.Filter.Types.EQUAL)],
         failure: LDK.Utils.getErrorCallback()
-    }).render('housingSummarySpecie_' + webpart.wrapperDivId);
+    }).render('housingSummarySpecies_' + webpart.wrapperDivId);
 
     LDK.Utils.getReadOnlyQWP({
         title: 'Projects Under This Protocol',
@@ -176,10 +175,10 @@ Ext4.onReady(function (){
     LDK.Utils.getReadOnlyQWP({
         title: 'Link to eIACUC2 Data',
         schemaName: 'onprc_ehr',
-        queryName: 'eIACUC2DataTest',
-       columns: 'PROTOCOL_ID,BaseProtocol,RevisionNumber,Protocol_Title',
-       filters: [LABKEY.Filter.create('BaseProtocol', protocol, LABKEY.Filter.Types.EQUAL)],
-        sort: 'created',
+        queryName: 'eIACUC2Data2',
+        columns: 'Protocol_ID, BaseProtocol, RevisionNumber, Protocol_Title',
+        filters: [LABKEY.Filter.create('protocol', protocol, LABKEY.Filter.Types.EQUAL)],
+        sort: '-approval_date',
         failure: LDK.Utils.getErrorCallback()
     }).render('eIACUC2Data_' + webpart.wrapperDivId);
 
