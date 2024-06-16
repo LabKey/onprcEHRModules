@@ -21,6 +21,7 @@ Notes:
     EXCEPT when enddate = date, in which case enddate is treated as though
     it was the following date for a single-day day lease
  */
+
 SELECT Id
      , project
      , project.protocol.external_id AS Protocol
@@ -29,12 +30,9 @@ SELECT Id
      , enddate
      , project.use_category AS projectType
 FROM study.assignment
-WHERE Curdate() >= date        /* The current date is on or after the assignment's start */
+WHERE Curdate() >= date  /* The assignment has started */
   AND (
-    enddate IS NULL
-        OR Curdate() < enddate /* The current date is before the day after the assignment ends */
-        OR (
-        Curdate() = enddate    /* Exceptional case: date can equal enddate for 1-day day lease */
-            AND enddate = date /* For consistency, it's preferred to have the enddate be the   */
-        )                      /* day following date for a 1-day day lease */
-    )
+    enddate IS NULL            /* Not a day lease or scheduled end of assignment */
+    OR Curdate() < enddate   /* The assignment hasn't yet ended */
+    OR (Curdate() = enddate AND enddate = date) /* 1-day day lease where date = enddate */
+  )
