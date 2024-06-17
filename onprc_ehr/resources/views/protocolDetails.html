@@ -20,11 +20,11 @@ Ext4.onReady(function (){
     },{
         tag: 'div',
         style: 'padding-bottom: 10px;',
-        id: 'protocolProjects_' + webpart.wrapperDivId
+        id: 'protocolLinks_' + webpart.wrapperDivId
     },{
         tag: 'div',
         style: 'padding-bottom: 10px;',
-        id: 'protocolLinks_' + webpart.wrapperDivId
+        id: 'protocolProjects_' + webpart.wrapperDivId
     },{
         tag: 'div',
         style: 'padding-bottom: 10px;',
@@ -84,7 +84,7 @@ Ext4.onReady(function (){
             }];
 
             Ext4.create('LDK.panel.WebpartPanel', {
-                title: 'Other Reports',
+                title: 'Protocol Reports',
                 bodyStyle: 'padding:5px;',
                 items: [{
                     xtype: 'ldk-navpanel',
@@ -116,7 +116,7 @@ Ext4.onReady(function (){
                 LABKEY.Filter.create('protocol', protocol, LABKEY.Filter.Types.EQUAL)
             ]
         },
-        title: 'Protocol Details:',
+        title: 'Protocol Details',
         renderTo: 'protocolDetails_' + webpart.wrapperDivId,
         detailsConfig: {
             buttons: buttons
@@ -146,6 +146,7 @@ Ext4.onReady(function (){
         schemaName: 'ehr',
         queryName: 'project',
         filters: [LABKEY.Filter.create('protocol', protocol, LABKEY.Filter.Types.EQUAL)],
+        sort: '-name',
         failure: LDK.Utils.getErrorCallback()
     }).render('protocolProjects_' + webpart.wrapperDivId);
 
@@ -167,9 +168,9 @@ Ext4.onReady(function (){
         failure: LDK.Utils.getErrorCallback()
     }).render('allowableSLAs_' + webpart.wrapperDivId);
 
-    //Added the link to eIACUC2 by jonesga, 06/14/2024
+    //Added the link to eIACUC2 by jonesga, 06/14/2024 -- EHR Issue 6121
     LDK.Utils.getReadOnlyQWP({
-        title: 'Link to eIACUC2 Data',
+        title: 'Direct Connect to eIACUC Site',
         schemaName: 'onprc_ehr',
         queryName: 'eIACUC2Data2',
         columns: 'Protocol_ID, BaseProtocol, RevisionNumber, Protocol_Title, PI_Last_Name, Protocol_State',
