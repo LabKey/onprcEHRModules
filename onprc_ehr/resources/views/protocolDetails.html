@@ -176,7 +176,7 @@ Ext4.onReady(function (){
         title: 'Link to eIACUC2 Data',
         schemaName: 'onprc_ehr',
         queryName: 'eIACUC2Data2',
-        columns: 'Protocol_ID, BaseProtocol, RevisionNumber, Protocol_Title',
+        columns: 'Protocol_ID, BaseProtocol, RevisionNumber, Protocol_Title, PI_Last_Name, Approval_Date, Annual_Update_Due, Three_Year_Expiration',
         filters: [LABKEY.Filter.create('protocol', protocol, LABKEY.Filter.Types.EQUAL)],
         sort: '-approval_date',
         failure: LDK.Utils.getErrorCallback()

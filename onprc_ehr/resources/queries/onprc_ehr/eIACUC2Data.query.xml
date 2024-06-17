@@ -4,6 +4,18 @@
             <column columnName="Protocol_ID">
                 <url replaceMissing="blankValue">https://iacucapp.ohsu.edu/IACUC/sd/Rooms/DisplayPages/LayoutInitial?Container=com.webridge.entity.Entity[OID[${Template_OID}]]</url>
             </column>
+            <column columnName="PI_Last_Name" >
+                <columnTitle>PI</columnTitle>
+            </column>
+            <column columnName="Approval_Date" >
+                <formatString>yyyy-MM-dd</formatString>
+            </column>
+            <column columnName="Annual_Update_Due" >
+                <formatString>yyyy-MM-dd</formatString>
+            </column>
+            <column columnName="Three_Year_Expiration" >
+                <formatString>yyyy-MM-dd</formatString>
+            </column>
         </columns>
     </table>
 </tables>
