@@ -4,6 +4,12 @@
             <column columnName="Protocol_ID">
                 <url replaceMissing="blankValue">https://iacucapp.ohsu.edu/IACUC/sd/Rooms/DisplayPages/LayoutInitial?Container=com.webridge.entity.Entity[OID[${Template_OID}]]</url>
             </column>
+            <column columnName="PI_Last_Name" >
+                <columnTitle>PI</columnTitle>
+            </column>
+            <column columnName="Protocol_State" >
+                <columnTitle>Protocol Status</columnTitle>
+            </column>
         </columns>
     </table>
 </tables>
