@@ -15,46 +15,34 @@
                         <columnTitle>ItemName</columnTitle>
                     </column>
                     <column columnName="CurrentYear">
-                        <!--   <columnTitle>Yr65: Current Year Rates</columnTitle><!---->
                         <formatString>$#,##0.00</formatString>
                     </column>
                     <column columnName="year1">
-            <!--            <columnTitle>YR66: 5/1/25 to 4/30/26</columnTitle>-->
                         <formatString>$#,##0.00</formatString>
                     </column>
                     <column columnName="year2">
-        <!--                <columnTitle>YR67: 5/1/26 to 4/30/27</columnTitle>-->
                         <formatString>$#,##0.00</formatString>
                     </column>
                     <column columnName="year3">
-          <!--              <columnTitle>YR68: 5/1/27 to 4/30/28</columnTitle>-->
                         <formatString>$#,##0.00</formatString>
                     </column>
 
                     <column columnName="year4">
-             <!--           <columnTitle>YR69: 5/1/28 to 4/30/29</columnTitle>-->
                         <formatString>$#,##0.00</formatString>
                     </column>
 
                     <column columnName="year5">
-           <!--             <columnTitle>YR70: 5/1/29 to 4/30/30</columnTitle>-->
                         <formatString>$#,##0.00</formatString>
                     </column>
                     <column columnName="year6">
-             <!--           <columnTitle>YR71: 5/1/30 to 4/30/31</columnTitle>-->
-
                         <formatString>$#,##0.00</formatString>
                     </column>
                     <column columnName="year7">
-      <!--                  <columnTitle>YR72: 5/1/31 to 4/30/32</columnTitle>-->
                         <formatString>$#,##0.00</formatString>
                     </column>
                     <column columnName="year8">
-         <!--               <columnTitle>YR73: 5/1/32 to 4/30/33</columnTitle>-->
                         <formatString>$#,##0.00</formatString>
                     </column>
-
-
                     <column columnName="PostedDate">
                         <columnTitle>Posted Date</columnTitle>
                         <formatString>MM/dd/yyyy</formatString>
