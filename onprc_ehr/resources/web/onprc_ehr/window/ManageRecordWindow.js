@@ -93,7 +93,7 @@ Ext4.define('ONPRC_EHR.window.ManageRecordWindow', {
         var rec = form.getRecord();
         if (!rec)
             return;
-        //Added by Kollil, 5/3/24
+        //Added by Kollil, 6/26/24
         //Refer to the ticket #9669
         //This code snippet is added to show a pop-up question box when the user selects MPA medication on animal history snapshot screen - > Manage Treatments link.
         if (rec.get('Id') && rec.get('code')=='E-85760')

@@ -170,6 +170,7 @@ Ext4.define('ONPRC_EHR.panel.AnimalDetailsPanel', {
                     hidden: EHR.Security.hasClinicalEntryPermission() && !EHR.Security.hasPermission(EHR.QCStates.COMPLETED, 'update', [{schemaName: 'study', queryName: 'Treatment Orders'}]),
                     handler: function(){
                         if (this.subjectId){
+                            //Changed the container to onprc_ehr by Kollil, 6/26/24
                             Ext4.create('onprc_ehr.window.ManageTreatmentsWindow', {animalId: this.subjectId}).show();
                         }
                         else {
