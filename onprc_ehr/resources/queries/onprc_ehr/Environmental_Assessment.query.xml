@@ -14,8 +14,13 @@
                         <displayWidth>100</displayWidth>
                     </column>
                     <column columnName="testing_location">
-                        <columnTitle>Test Location</columnTitle>
+                        <columnTitle>Area</columnTitle>
                         <displayWidth>150</displayWidth>
+                        <fk>
+                            <fkDbSchema>onprc_ehr</fkDbSchema>
+                            <fkTable>Env_testingLocation</fkTable>
+                            <fkColumnName>value</fkColumnName>
+                        </fk>
                     </column>
                     <column columnName="test_method">
                         <columnTitle>Method</columnTitle>
@@ -27,45 +32,63 @@
                     </column>
 
                     <column columnName="pass_fail">
-                        <columnTitle>Pass/Fail</columnTitle>
+                        <columnTitle>Initial</columnTitle>
                         <displayWidth>50</displayWidth>
                     </column>
                     <column columnName="test_results">
-                        <columnTitle>Test Results</columnTitle>
+                        <columnTitle>Lab/Group</columnTitle>
                         <displayWidth>100</displayWidth>
                     </column>
                     <column columnName="test_type">
                         <columnTitle>Test Type</columnTitle>
+                        <isHidden>true</isHidden>
                         <displayWidth>100</displayWidth>
                     </column>
                     <column columnName="qcstate">
                         <isHidden>true</isHidden>
                     </column>
-                    <column columnName="biological_BI#">
+                    <column columnName="biological_BI">
                         <isHidden>true</isHidden>
                     </column>
                     <column columnName="retest">
-                        <columnTitle>Results Read By</columnTitle>
+                        <columnTitle>Retest</columnTitle>
                         <displayWidth>60</displayWidth>
-                        <isHidden>false</isHidden>
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="action">
+                        <columnTitle>Location</columnTitle>
+                        <displayWidth>150</displayWidth>
+                    </column>
+                    <column columnName="biological_cycle">
+                        <columnTitle>Location</columnTitle>
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="water_source">
+                        <columnTitle>Location</columnTitle>
+                        <isHidden>true</isHidden>
                     </column>
                     <column columnName="colony_count">
                         <columnTitle>Colony Count</columnTitle>
                         <displayWidth>60</displayWidth>
-                        <isHidden>false</isHidden>
+                        <isHidden>true</isHidden>
                     </column>
 
                     <column columnName="surface_tested">
                         <columnTitle>Surface Tested</columnTitle>
                         <displayWidth>80</displayWidth>
                         <isHidden>false</isHidden>
+                        <fk>
+                            <fkDbSchema>onprc_ehr</fkDbSchema>
+                            <fkTable>Env_SurfaceTestingATP</fkTable>
+                            <fkColumnName>value</fkColumnName>
+                        </fk>
                     </column>
                     <column columnName="remarks">
                         <columnTitle>Comments</columnTitle>
                         <displayWidth>200</displayWidth>
                     </column>
                     <column columnName="performedby">
-                        <columnTitle>Collected by</columnTitle>
+                        <columnTitle>Tech</columnTitle>
                     </column>
                     <column columnName="taskid">
                         <columnTitle>Task ID</columnTitle>

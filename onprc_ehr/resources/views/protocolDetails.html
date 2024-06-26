@@ -16,11 +16,15 @@ Ext4.onReady(function (){
     },{
         tag: 'div',
         style: 'padding-bottom: 10px;',
-        id: 'protocolProjects_' + webpart.wrapperDivId
+        id: 'eIACUC2Data_' + webpart.wrapperDivId
     },{
         tag: 'div',
         style: 'padding-bottom: 10px;',
         id: 'protocolLinks_' + webpart.wrapperDivId
+    },{
+        tag: 'div',
+        style: 'padding-bottom: 10px;',
+        id: 'protocolProjects_' + webpart.wrapperDivId
     },{
         tag: 'div',
         style: 'padding-bottom: 10px;',
@@ -32,15 +36,11 @@ Ext4.onReady(function (){
     },{
         tag: 'div',
         style: 'padding-bottom: 10px;',
-        id: 'exemptions_' + webpart.wrapperDivId
-    },{
-        tag: 'div',
-        style: 'padding-bottom: 10px;',
         id: 'housingSummary_' + webpart.wrapperDivId
     },{
         tag: 'div',
         style: 'padding-bottom: 10px;',
-        id: 'housingSummarySpecie_' + webpart.wrapperDivId
+        id: 'housingSummarySpecies_' + webpart.wrapperDivId
     }];
 
     var el = Ext4.get(webpart.wrapperDivId);
@@ -84,7 +84,7 @@ Ext4.onReady(function (){
             }];
 
             Ext4.create('LDK.panel.WebpartPanel', {
-                title: 'Other Reports',
+                title: 'Protocol Reports',
                 bodyStyle: 'padding:5px;',
                 items: [{
                     xtype: 'ldk-navpanel',
@@ -116,7 +116,7 @@ Ext4.onReady(function (){
                 LABKEY.Filter.create('protocol', protocol, LABKEY.Filter.Types.EQUAL)
             ]
         },
-        title: 'Protocol Details:',
+        title: 'Protocol Details',
         renderTo: 'protocolDetails_' + webpart.wrapperDivId,
         detailsConfig: {
             buttons: buttons
@@ -133,19 +133,20 @@ Ext4.onReady(function (){
     }).render('housingSummary_' + webpart.wrapperDivId);
 
     LDK.Utils.getReadOnlyQWP({
-        title: 'Housing Summary By Specie',
+        title: 'Housing Summary By Species',
         schemaName: 'study',
         queryName: 'protocolHousingSummary_Species',
-        columns: 'id/demographics/species,totalAnimals',
+        columns: 'species,totalAnimals',
         filters: [LABKEY.Filter.create('protocol', protocol, LABKEY.Filter.Types.EQUAL)],
         failure: LDK.Utils.getErrorCallback()
-    }).render('housingSummarySpecie_' + webpart.wrapperDivId);
+    }).render('housingSummarySpecies_' + webpart.wrapperDivId);
 
     LDK.Utils.getReadOnlyQWP({
         title: 'Projects Under This Protocol',
         schemaName: 'ehr',
         queryName: 'project',
         filters: [LABKEY.Filter.create('protocol', protocol, LABKEY.Filter.Types.EQUAL)],
+        sort: '-name',
         failure: LDK.Utils.getErrorCallback()
     }).render('protocolProjects_' + webpart.wrapperDivId);
 
@@ -167,13 +168,16 @@ Ext4.onReady(function (){
         failure: LDK.Utils.getErrorCallback()
     }).render('allowableSLAs_' + webpart.wrapperDivId);
 
+    //Added the link to eIACUC2 by jonesga, 06/14/2024 -- EHR Issue 6121
     LDK.Utils.getReadOnlyQWP({
-        title: 'Exemptions',
-        schemaName: 'ehr',
-        queryName: 'protocolexemptions',
-        filters: [LABKEY.Filter.create('coalescedProtocol', protocol, LABKEY.Filter.Types.EQUAL)],
+        title: 'Direct Connect to eIACUC Site',
+        schemaName: 'onprc_ehr',
+        queryName: 'eIACUC2Data2',
+        columns: 'Protocol_ID, BaseProtocol, RevisionNumber, Protocol_Title, PI_Last_Name, Protocol_State',
+        filters: [LABKEY.Filter.create('protocol', protocol, LABKEY.Filter.Types.EQUAL)],
+        sort: '-approval_date',
         failure: LDK.Utils.getErrorCallback()
-    }).render('exemptions_' + webpart.wrapperDivId);
+    }).render('eIACUC2Data_' + webpart.wrapperDivId);
 
 });
 
