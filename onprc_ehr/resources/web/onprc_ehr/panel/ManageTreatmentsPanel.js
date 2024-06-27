@@ -77,6 +77,52 @@ Ext4.define('onprc_ehr.panel.ManageTreatmentsPanel', {
             }, (owner ? owner.animalId : null), category);
         },
 
+        onSubmit: function(btn) {
+            var form = this.down('#formPanel');
+            var rec = form.getRecord();
+            if (!rec)
+                return;
+            //Added by Kollil, 6/26/24
+            //Refer to the ticket #9669
+            //This code snippet is added to show a pop-up question box when the user selects MPA medication on animal details panel
+            if (rec.get('Id') && rec.get('code')=='E-85760')
+            {
+                Ext4.Msg.confirm('Medication Question', 'Have you confirmed MPA start date on CMU Calendar?', function(val){
+                    if (val == 'yes') {
+                        if (!rec.get('taskid')) {
+                            var tsk = LABKEY.Utils.generateUUID().toUpperCase();
+                            LABKEY.Query.insertRows({
+                                schemaName: 'ehr',
+                                queryName: 'tasks',
+                                rows: [{
+                                    taskid: tsk,
+                                    formtype: 'treatments',
+                                    title: 'Medication Order',
+                                    assignedto: LABKEY.Security.currentUser.userid,
+                                    qcstate: EHR.Security.getQCStateByLabel('Completed').RowId,
+                                    datecompleted: new Date(),
+                                    category: 'Task'
+                                }],
+                                scope: this,
+                                failure: EHR.Utils.onError,
+                                success: function () {
+                                    Ext4.Msg.hide();
+                                }
+                            });
+                            rec.set('taskid', tsk);
+                        }
+                        this.down('#dataEntryPanel').onSubmit(btn);
+                    }
+                    else {
+
+                    }
+                }, this)
+            }
+            else {
+                this.down('#dataEntryPanel').onSubmit(btn);
+            }
+        },
+
         createTreatmentWindow: function(btn, config, animalId, category){
             var cfg = Ext4.apply({
                 schemaName: 'study',

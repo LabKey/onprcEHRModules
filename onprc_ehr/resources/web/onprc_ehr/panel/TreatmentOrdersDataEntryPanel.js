@@ -1,6 +1,7 @@
 /* Created: 3-12-2024 by Kollil and Raymond
 This script is added to create a pop-up message box when MPA injection is selected in the medication order form.
 Refer to the ticket #9669
+Modified: Kollil, 6/26/24
 */
 Ext4.define('ONPRC_EHR.panel.TreatmentOrdersDataEntryPanel', {
     extend: 'EHR.panel.TaskDataEntryPanel',
@@ -14,7 +15,7 @@ Ext4.define('ONPRC_EHR.panel.TreatmentOrdersDataEntryPanel', {
 
         var ids = [];
         store.each(function(r){
-            if (r.get('Id')&& r.get('code')=='E-85760' && r.get('category') == 'Clinical' )
+            if (r.get('Id') && r.get('code')=='E-85760')  // && r.get('category') == 'Clinical' ) // Removed the category filter, as the medication requires the validation whenever its ordered
                 ids.push(r.get('Id'))
         }, this);
         ids = Ext4.unique(ids);
