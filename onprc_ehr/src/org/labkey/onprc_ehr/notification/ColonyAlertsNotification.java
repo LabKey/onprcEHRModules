@@ -1483,6 +1483,94 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
     //End of housing transfer alert
 
     /**
+     * Kollil, 06/27/2024 : Long-term clinical meds notifications Daily
+     * Refer Tkt# 10897 for more details
+     */
+    protected void LongTermMedsAlert(final Container c, User u, final StringBuilder msg)
+    {
+        if (QueryService.get().getUserSchema(u, c, "onprc_ehr") == null) {
+            msg.append("<b>Warning: The study schema has not been enabled in this folder, so the alert cannot run!<p><hr>");
+            return;
+        }
+
+        //Daily meds query
+        TableInfo ti = QueryService.get().getUserSchema(u, c, "onprc_ehr").getTable("SoonExpiringLongTermMeds", ContainerFilter.Type.AllFolders.create(c, u));
+        //((ContainerFilterable) ti).setContainerFilter(ContainerFilter.Type.AllFolders.create(c, u));
+        TableSelector ts = new TableSelector(ti, null, new Sort("date"));
+        long count = ts.getRowCount();
+
+        if (count > 0) {//transfers count
+            msg.append("<br><b>Soon Expiring Long-Term Clinical Meds:</b><br><br>");
+            msg.append("<b>" + count + " soon to be expiring long-term clinical meds were found in last 24 hours:</b>");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "onprc_ehr", "SoonExpiringLongTermMeds", null) + "'>Click here to view the soon to be expired long-term clinical meds in PRIME</a></p>\n");
+            msg.append("<hr>");
+        }
+        if (count == 0) {
+            msg.append("<b>There are no long-term clinical meds expiring today!</b><hr>");
+        }
+
+        //Display the daily report in the email
+        if (count > 0) {
+            Set<FieldKey> columns = new HashSet<>();
+            columns.add(FieldKey.fromString("performedBy"));
+            columns.add(FieldKey.fromString("Id"));
+            columns.add(FieldKey.fromString("date"));
+            columns.add(FieldKey.fromString("enddate"));
+            columns.add(FieldKey.fromString("frequency"));
+            columns.add(FieldKey.fromString("treatmentTimes"));
+            columns.add(FieldKey.fromString("code"));
+            columns.add(FieldKey.fromString("volume"));
+            columns.add(FieldKey.fromString("concentration"));
+            columns.add(FieldKey.fromString("amount"));
+            columns.add(FieldKey.fromString("route"));
+            columns.add(FieldKey.fromString("remark"));
+            columns.add(FieldKey.fromString("modifiedby"));
+            columns.add(FieldKey.fromString("modified"));
+            columns.add(FieldKey.fromString("taskId"));
+            columns.add(FieldKey.fromString("history"));
+
+            final Map<FieldKey, ColumnInfo> colMap = QueryService.get().getColumns(ti, columns);
+            TableSelector ts2 = new TableSelector(ti, colMap.values(), null, new Sort("date"));
+
+            // Table header
+            msg.append("<table border=1 style='border-collapse: collapse;'>");
+            msg.append("<tr>");
+            msg.append("<br><br><table border=1 style='border-collapse: collapse;'>");
+            msg.append("<tr bgcolor = " + '"' + "#00FF7F" + '"' + "style='font-weight: bold;'>");
+            msg.append("<td> Ordered By </td><td> Id </td><td> Begin Date </td><td> End Date </td><td> Frequency </td><td> Times </td><td> Treatment </td><td> Volume </td><td> Drug Conc </td><td> Amount </td><td> Route </td><td> Remark </td><td> Modified By </td><td> Modified Date </td><td> Task Id </td><td> History </td></tr>");
+
+            ts2.forEach(object -> {
+                Results rs = new ResultsImpl(object, colMap);
+                //String url = getParticipantURL(c, rs.getString("Id"));
+
+                if (count > 0)
+                { //high light the row in yellow if the room was empty before the move
+                    msg.append("<tr bgcolor = " + '"' + "#FFFF00" + '"' + ">");
+                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("performedBy")) + "</td>");
+                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("Id")) + "</td>");
+                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("date")) + "</td>");
+                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("enddate")) + "</td>");
+                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("frequency")) + "</td>");
+                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("treatmentTimes")) + "</td>");
+                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("code")) + "</td>");
+                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("volume")) + "</td>");
+                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("concentration")) + "</td>");
+                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("amount")) + "</td>");
+                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("route")) + "</td>");
+                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("remark")) + "</td>");
+                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("modifiedBy")) + "</td>");
+                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("modified")) + "</td>");
+                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("taskId")) + "</td>");
+                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("history")) + "</td>");
+                    msg.append("</tr>");
+                }
+            });
+            msg.append("</table>");
+        }
+    }
+    //End of Long term meds alert
+
+    /**
      * we find protocols over the animal limit
      * Kollil, 2/12/2023: This warning is removed as per Tkt #9095 request
      */

@@ -1,0 +1,6 @@
+<customView xmlns="http://labkey.org/data/xml/queryCustomView" label="Soon Expiring Long-Term Clinical Meds">
+    <sorts>
+        <sort column="performedBy" />
+        <sort column="enddate" />
+    </sorts>
+</customView>
