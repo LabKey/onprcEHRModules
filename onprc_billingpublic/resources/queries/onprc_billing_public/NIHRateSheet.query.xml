@@ -26,7 +26,6 @@
                     <column columnName="year5">
                         <formatString>$#,##0.00</formatString>
                     </column>
-
                     <column columnName="year6">
                         <formatString>$#,##0.00</formatString>
                     </column>
