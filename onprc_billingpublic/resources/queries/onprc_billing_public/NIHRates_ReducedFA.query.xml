@@ -10,7 +10,6 @@
                     <column columnName="category">
                         <columnTitle>Category</columnTitle>
                     </column>
-
                     <column columnName="name"></column>
                     <column columnName="CurrentYear">
                         <formatString>$#,##0.00</formatString>

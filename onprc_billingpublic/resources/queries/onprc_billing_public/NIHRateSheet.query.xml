@@ -6,8 +6,6 @@
                 <tableTitle>NIH Project Rate Sheet</tableTitle>
                 <columns>
                     <column columnName="RateSheetSelected"  />
-
-
                     <column columnName="category" />
                     <column columnName="name" />
                     <column columnName="CurrentYear">
@@ -25,7 +23,6 @@
                     <column columnName="year4">
                         <formatString>$#,##0.00</formatString>
                     </column>
-
                     <column columnName="year5">
                         <formatString>$#,##0.00</formatString>
                     </column>
