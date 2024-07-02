@@ -1,9 +1,11 @@
 -- Created by: Brent Logan, 6/25/2024
 -- Modified by: Kollil
-SELECT performedby,
+SELECT
     Id,
     date,
     enddate,
+    Id.assignedvet.assignedvet as AssignedVet,
+    Id.curlocation.room as Room,
     frequency,
     treatmentTimes,
     code,
@@ -14,6 +16,7 @@ SELECT performedby,
     remark,
     modifiedby,
     modified,
+    performedby,
     taskid,
     history
 FROM study.treatment_order

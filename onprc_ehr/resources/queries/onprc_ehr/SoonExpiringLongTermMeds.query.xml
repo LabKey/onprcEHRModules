@@ -3,11 +3,8 @@
         <tables xmlns="http://labkey.org/data/xml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                 xsi:schemaLocation="http://labkey.org/data/xml ">
             <table tableName="SoonExpiringLongTermMeds" tableDbType="NOT_IN_DB">
-                <tableTitle>Housing Transfer Alert</tableTitle>
+                <tableTitle>Soon Expiring Long-Term Clinical Meds</tableTitle>
                 <columns>
-                    <column columnName="performedBy">
-                        <columnTitle>Ordered By</columnTitle>
-                    </column>
                     <column columnName="Id">
                         <columnTitle>Id</columnTitle>
                     </column>
@@ -16,6 +13,12 @@
                     </column>
                     <column columnName="enddate">
                         <columnTitle>End Date</columnTitle>
+                    </column>
+                    <column columnName="AssignedVet">
+                        <columnTitle>Assigned Vet</columnTitle>
+                    </column>
+                    <column columnName="Room">
+                        <columnTitle>Room</columnTitle>
                     </column>
                     <column columnName="frequency">
                         <columnTitle>Frequency</columnTitle>
@@ -46,6 +49,9 @@
                     </column>
                     <column columnName="modified">
                         <columnTitle>Modified Date</columnTitle>
+                    </column>
+                    <column columnName="performedBy">
+                        <columnTitle>Ordered By</columnTitle>
                     </column>
                     <column columnName="taskId">
                         <columnTitle>Task Id</columnTitle>
