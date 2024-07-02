@@ -403,10 +403,10 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         }
 
 
-        //Modified: 9-7-2023  R.Blasa
+        //Modified: 7-2-2024  R.Blasa
         try
         {
-            EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "Clinical Pathology CPL Surface Sanitation Summary Report", this, new URLHelper("https://pcdbssrsprd1.ohsu.edu/ReportServer/Pages/ReportViewer.aspx?%2fPrime+Reports%2fClinPath%2fPrimeLaboratory_AssessmentReport&rs:Command=Render")
+            EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "Clinical Pathology Test Results for Environmental Assessment Summary Report", this, new URLHelper("https://pcdbssrsprd1.ohsu.edu/ReportServer/Pages/ReportViewer.aspx?%2fPrime+Reports%2fClinPath%2fPrimeLaboratory_AssessmentReport&rs:Command=Render")
             {
                 // SSRS is picky about the URI-encoding of the query parameters
                 @Override
