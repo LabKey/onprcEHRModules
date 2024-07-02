@@ -74,19 +74,19 @@ public class LongTermMedsNotification extends ColonyAlertsNotification
     @Override
     public String getCronString()
     {
-        return "0 0 16 * * ?";
+        return "0 40 5 ? * MON";
     }
 
     @Override
     public String getScheduleDescription()
     {
-        return "every day at 4:00PM";
+        return "every Monday at 5:40AM";
     }
 
     @Override
     public String getDescription()
     {
-        return "The report is designed to provide a daily list of Long-term clinical meds";
+        return "The report is designed to provide a list of long-term clinical meds that are soon to be expiring";
     }
 
     @Override

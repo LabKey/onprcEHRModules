@@ -1495,27 +1495,27 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
 
         //Daily meds query
         TableInfo ti = QueryService.get().getUserSchema(u, c, "onprc_ehr").getTable("SoonExpiringLongTermMeds", ContainerFilter.Type.AllFolders.create(c, u));
-        //((ContainerFilterable) ti).setContainerFilter(ContainerFilter.Type.AllFolders.create(c, u));
         TableSelector ts = new TableSelector(ti, null, new Sort("date"));
         long count = ts.getRowCount();
-
-        if (count > 0) {//transfers count
+        if (count == 0) {
+            msg.append("<b>There are no long-term clinical meds expiring soon!</b><hr>");
+        }
+        else if (count > 0)
+        {
+            //Display the report link on the notification page
             msg.append("<br><b>Soon Expiring Long-Term Clinical Meds:</b><br><br>");
             msg.append("<b>" + count + " soon to be expiring long-term clinical meds were found in last 24 hours:</b>");
-            msg.append("<p><a href='" + getExecuteQueryUrl(c, "onprc_ehr", "SoonExpiringLongTermMeds", null) + "'>Click here to view the soon to be expired long-term clinical meds in PRIME</a></p>\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "onprc_ehr", "SoonExpiringLongTermMeds", null) + "'>Click here to view the meds</a></p>\n");
             msg.append("<hr>");
-        }
-        if (count == 0) {
-            msg.append("<b>There are no long-term clinical meds expiring today!</b><hr>");
-        }
 
-        //Display the daily report in the email
-        if (count > 0) {
+            //Display the daily report in the email
             Set<FieldKey> columns = new HashSet<>();
             columns.add(FieldKey.fromString("performedBy"));
             columns.add(FieldKey.fromString("Id"));
             columns.add(FieldKey.fromString("date"));
             columns.add(FieldKey.fromString("enddate"));
+            columns.add(FieldKey.fromString("AssignedVet"));
+            columns.add(FieldKey.fromString("Room"));
             columns.add(FieldKey.fromString("frequency"));
             columns.add(FieldKey.fromString("treatmentTimes"));
             columns.add(FieldKey.fromString("code"));
@@ -1537,33 +1537,30 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
             msg.append("<tr>");
             msg.append("<br><br><table border=1 style='border-collapse: collapse;'>");
             msg.append("<tr bgcolor = " + '"' + "#00FF7F" + '"' + "style='font-weight: bold;'>");
-            msg.append("<td> Ordered By </td><td> Id </td><td> Begin Date </td><td> End Date </td><td> Frequency </td><td> Times </td><td> Treatment </td><td> Volume </td><td> Drug Conc </td><td> Amount </td><td> Route </td><td> Remark </td><td> Modified By </td><td> Modified Date </td><td> Task Id </td><td> History </td></tr>");
+            msg.append("<td> Ordered By </td><td> Id </td><td> Begin Date </td><td> End Date </td><td> Assigned Vet </td><td> Room </td><td> Frequency </td><td> Times </td><td> Treatment </td><td> Volume </td><td> Drug Conc </td><td> Amount </td><td> Route </td><td> Remark </td><td> Modified By </td><td> Modified Date </td><td> Task Id </td><td> History </td></tr>");
 
             ts2.forEach(object -> {
                 Results rs = new ResultsImpl(object, colMap);
-                //String url = getParticipantURL(c, rs.getString("Id"));
+                msg.append("<td>" + PageFlowUtil.filter(rs.getString("performedBy")) + "</td>");
+                msg.append("<td>" + PageFlowUtil.filter(rs.getString("Id")) + "</td>");
+                msg.append("<td>" + PageFlowUtil.filter(rs.getString("date")) + "</td>");
+                msg.append("<td>" + PageFlowUtil.filter(rs.getString("enddate")) + "</td>");
+                msg.append("<td>" + PageFlowUtil.filter(rs.getString("AssignedVet")) + "</td>");
+                msg.append("<td>" + PageFlowUtil.filter(rs.getString("Room")) + "</td>");
+                msg.append("<td>" + PageFlowUtil.filter(rs.getString("frequency")) + "</td>");
+                msg.append("<td>" + PageFlowUtil.filter(rs.getString("treatmentTimes")) + "</td>");
+                msg.append("<td>" + PageFlowUtil.filter(rs.getString("code")) + "</td>");
+                msg.append("<td>" + PageFlowUtil.filter(rs.getString("volume")) + "</td>");
+                msg.append("<td>" + PageFlowUtil.filter(rs.getString("concentration")) + "</td>");
+                msg.append("<td>" + PageFlowUtil.filter(rs.getString("amount")) + "</td>");
+                msg.append("<td>" + PageFlowUtil.filter(rs.getString("route")) + "</td>");
+                msg.append("<td>" + PageFlowUtil.filter(rs.getString("remark")) + "</td>");
+                msg.append("<td>" + PageFlowUtil.filter(rs.getString("modifiedBy")) + "</td>");
+                msg.append("<td>" + PageFlowUtil.filter(rs.getString("modified")) + "</td>");
+                msg.append("<td>" + PageFlowUtil.filter(rs.getString("taskId")) + "</td>");
+                msg.append("<td>" + PageFlowUtil.filter(rs.getString("history")) + "</td>");
+                msg.append("</tr>");
 
-                if (count > 0)
-                { //high light the row in yellow if the room was empty before the move
-                    msg.append("<tr bgcolor = " + '"' + "#FFFF00" + '"' + ">");
-                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("performedBy")) + "</td>");
-                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("Id")) + "</td>");
-                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("date")) + "</td>");
-                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("enddate")) + "</td>");
-                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("frequency")) + "</td>");
-                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("treatmentTimes")) + "</td>");
-                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("code")) + "</td>");
-                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("volume")) + "</td>");
-                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("concentration")) + "</td>");
-                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("amount")) + "</td>");
-                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("route")) + "</td>");
-                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("remark")) + "</td>");
-                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("modifiedBy")) + "</td>");
-                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("modified")) + "</td>");
-                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("taskId")) + "</td>");
-                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("history")) + "</td>");
-                    msg.append("</tr>");
-                }
             });
             msg.append("</table>");
         }
