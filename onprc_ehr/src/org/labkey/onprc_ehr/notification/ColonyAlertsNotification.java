@@ -1510,7 +1510,6 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
 
             //Display the daily report in the email
             Set<FieldKey> columns = new HashSet<>();
-            columns.add(FieldKey.fromString("performedBy"));
             columns.add(FieldKey.fromString("Id"));
             columns.add(FieldKey.fromString("date"));
             columns.add(FieldKey.fromString("enddate"));
@@ -1526,6 +1525,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
             columns.add(FieldKey.fromString("remark"));
             columns.add(FieldKey.fromString("modifiedby"));
             columns.add(FieldKey.fromString("modified"));
+            columns.add(FieldKey.fromString("performedBy"));
             columns.add(FieldKey.fromString("taskId"));
             columns.add(FieldKey.fromString("history"));
 
@@ -1537,11 +1537,10 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
             msg.append("<tr>");
             msg.append("<br><br><table border=1 style='border-collapse: collapse;'>");
             msg.append("<tr bgcolor = " + '"' + "#00FF7F" + '"' + "style='font-weight: bold;'>");
-            msg.append("<td> Ordered By </td><td> Id </td><td> Begin Date </td><td> End Date </td><td> Assigned Vet </td><td> Room </td><td> Frequency </td><td> Times </td><td> Treatment </td><td> Volume </td><td> Drug Conc </td><td> Amount </td><td> Route </td><td> Remark </td><td> Modified By </td><td> Modified Date </td><td> Task Id </td><td> History </td></tr>");
+            msg.append("<td> Id </td><td> Begin Date </td><td> End Date </td><td> Assigned Vet </td><td> Room </td><td> Frequency </td><td> Times </td><td> Treatment </td><td> Volume </td><td> Drug Conc </td><td> Amount </td><td> Route </td><td> Remark </td><td> Modified By </td><td> Modified Date </td><td> Ordered By </td><td> Task Id </td><td> History </td></tr>");
 
             ts2.forEach(object -> {
                 Results rs = new ResultsImpl(object, colMap);
-                msg.append("<td>" + PageFlowUtil.filter(rs.getString("performedBy")) + "</td>");
                 msg.append("<td>" + PageFlowUtil.filter(rs.getString("Id")) + "</td>");
                 msg.append("<td>" + PageFlowUtil.filter(rs.getString("date")) + "</td>");
                 msg.append("<td>" + PageFlowUtil.filter(rs.getString("enddate")) + "</td>");
@@ -1557,6 +1556,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
                 msg.append("<td>" + PageFlowUtil.filter(rs.getString("remark")) + "</td>");
                 msg.append("<td>" + PageFlowUtil.filter(rs.getString("modifiedBy")) + "</td>");
                 msg.append("<td>" + PageFlowUtil.filter(rs.getString("modified")) + "</td>");
+                msg.append("<td>" + PageFlowUtil.filter(rs.getString("performedBy")) + "</td>");
                 msg.append("<td>" + PageFlowUtil.filter(rs.getString("taskId")) + "</td>");
                 msg.append("<td>" + PageFlowUtil.filter(rs.getString("history")) + "</td>");
                 msg.append("</tr>");
