@@ -26,7 +26,7 @@
                     <column columnName="treatmentTimes">
                         <columnTitle>Times</columnTitle>
                     </column>
-                    <column columnName="code">
+                    <column columnName="Treatment">
                         <columnTitle>Treatment</columnTitle>
                     </column>
                     <column columnName="volume">
@@ -44,21 +44,21 @@
                     <column columnName="remark">
                         <columnTitle>Remark</columnTitle>
                     </column>
-                    <column columnName="modifiedBy">
-                        <columnTitle>Modified By</columnTitle>
-                    </column>
-                    <column columnName="modified">
-                        <columnTitle>Modified Date</columnTitle>
-                    </column>
-                    <column columnName="performedBy">
-                        <columnTitle>Ordered By</columnTitle>
-                    </column>
-                    <column columnName="taskId">
-                        <columnTitle>Task Id</columnTitle>
-                    </column>
-                    <column columnName="history">
-                        <columnTitle>History</columnTitle>
-                    </column>
+<!--                    <column columnName="modifiedBy">-->
+<!--                        <columnTitle>Modified By</columnTitle>-->
+<!--                    </column>-->
+<!--                    <column columnName="modified">-->
+<!--                        <columnTitle>Modified Date</columnTitle>-->
+<!--                    </column>-->
+<!--                    <column columnName="performedBy">-->
+<!--                        <columnTitle>Ordered By</columnTitle>-->
+<!--                    </column>-->
+<!--                    <column columnName="taskId">-->
+<!--                        <columnTitle>Task Id</columnTitle>-->
+<!--                    </column>-->
+<!--                    <column columnName="history">-->
+<!--                        <columnTitle>History</columnTitle>-->
+<!--                    </column>-->
                 </columns>
             </table>
         </tables>

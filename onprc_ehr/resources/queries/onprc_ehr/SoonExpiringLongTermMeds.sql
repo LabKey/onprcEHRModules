@@ -8,17 +8,12 @@ SELECT
     Id.curlocation.room as Room,
     frequency,
     treatmentTimes,
-    code,
+    code.meaning as Treatment,
     volume,
     concentration,
     amount,
     route,
-    remark,
-    modifiedby,
-    modified,
-    performedby,
-    taskid,
-    history
+    remark
 FROM study.treatment_order
 WHERE enddate BETWEEN curdate() AND timestampadd(SQL_TSI_DAY, 7, curdate())
   AND age(CAST(date AS DATE), CAST(enddate AS DATE), SQL_TSI_MONTH) >= 1

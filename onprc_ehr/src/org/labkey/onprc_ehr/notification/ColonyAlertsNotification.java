@@ -1495,7 +1495,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
 
         //Daily meds query
         TableInfo ti = QueryService.get().getUserSchema(u, c, "onprc_ehr").getTable("SoonExpiringLongTermMeds", ContainerFilter.Type.AllFolders.create(c, u));
-        TableSelector ts = new TableSelector(ti, null, new Sort("date"));
+        TableSelector ts = new TableSelector(ti, null, new Sort("AssignedVet, Room"));
         long count = ts.getRowCount();
         if (count == 0) {
             msg.append("<b>There are no long-term clinical meds expiring soon!</b><hr>");
@@ -1504,7 +1504,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         {
             //Display the report link on the notification page
             msg.append("<br><b>Soon Expiring Long-Term Clinical Meds:</b><br><br>");
-            msg.append("<b>" + count + " soon to be expiring long-term clinical meds were found in last 24 hours:</b>");
+            msg.append("<b>" + count + " soon to be expiring long-term clinical meds were found:</b>");
             msg.append("<p><a href='" + getExecuteQueryUrl(c, "onprc_ehr", "SoonExpiringLongTermMeds", null) + "'>Click here to view the meds</a></p>\n");
             msg.append("<hr>");
 
@@ -1517,27 +1517,22 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
             columns.add(FieldKey.fromString("Room"));
             columns.add(FieldKey.fromString("frequency"));
             columns.add(FieldKey.fromString("treatmentTimes"));
-            columns.add(FieldKey.fromString("code"));
+            columns.add(FieldKey.fromString("Treatment"));
             columns.add(FieldKey.fromString("volume"));
             columns.add(FieldKey.fromString("concentration"));
             columns.add(FieldKey.fromString("amount"));
             columns.add(FieldKey.fromString("route"));
             columns.add(FieldKey.fromString("remark"));
-            columns.add(FieldKey.fromString("modifiedby"));
-            columns.add(FieldKey.fromString("modified"));
-            columns.add(FieldKey.fromString("performedBy"));
-            columns.add(FieldKey.fromString("taskId"));
-            columns.add(FieldKey.fromString("history"));
 
             final Map<FieldKey, ColumnInfo> colMap = QueryService.get().getColumns(ti, columns);
-            TableSelector ts2 = new TableSelector(ti, colMap.values(), null, new Sort("date"));
+            TableSelector ts2 = new TableSelector(ti, colMap.values(), null, new Sort("AssignedVet, Room"));
 
             // Table header
             msg.append("<table border=1 style='border-collapse: collapse;'>");
             msg.append("<tr>");
-            msg.append("<br><br><table border=1 style='border-collapse: collapse;'>");
+            msg.append("<br><table border=1 style='border-collapse: collapse;'>");
             msg.append("<tr bgcolor = " + '"' + "#00FF7F" + '"' + "style='font-weight: bold;'>");
-            msg.append("<td> Id </td><td> Begin Date </td><td> End Date </td><td> Assigned Vet </td><td> Room </td><td> Frequency </td><td> Times </td><td> Treatment </td><td> Volume </td><td> Drug Conc </td><td> Amount </td><td> Route </td><td> Remark </td><td> Modified By </td><td> Modified Date </td><td> Ordered By </td><td> Task Id </td><td> History </td></tr>");
+            msg.append("<td> Id </td><td> Begin Date </td><td> End Date </td><td> Assigned Vet </td><td> Room </td><td> Frequency </td><td> Times </td><td> Treatment </td><td> Volume </td><td> Drug Conc </td><td> Amount </td><td> Route </td><td> Remark </td></tr>");
 
             ts2.forEach(object -> {
                 Results rs = new ResultsImpl(object, colMap);
@@ -1548,19 +1543,13 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
                 msg.append("<td>" + PageFlowUtil.filter(rs.getString("Room")) + "</td>");
                 msg.append("<td>" + PageFlowUtil.filter(rs.getString("frequency")) + "</td>");
                 msg.append("<td>" + PageFlowUtil.filter(rs.getString("treatmentTimes")) + "</td>");
-                msg.append("<td>" + PageFlowUtil.filter(rs.getString("code")) + "</td>");
+                msg.append("<td>" + PageFlowUtil.filter(rs.getString("Treatment")) + "</td>");
                 msg.append("<td>" + PageFlowUtil.filter(rs.getString("volume")) + "</td>");
                 msg.append("<td>" + PageFlowUtil.filter(rs.getString("concentration")) + "</td>");
                 msg.append("<td>" + PageFlowUtil.filter(rs.getString("amount")) + "</td>");
                 msg.append("<td>" + PageFlowUtil.filter(rs.getString("route")) + "</td>");
                 msg.append("<td>" + PageFlowUtil.filter(rs.getString("remark")) + "</td>");
-                msg.append("<td>" + PageFlowUtil.filter(rs.getString("modifiedBy")) + "</td>");
-                msg.append("<td>" + PageFlowUtil.filter(rs.getString("modified")) + "</td>");
-                msg.append("<td>" + PageFlowUtil.filter(rs.getString("performedBy")) + "</td>");
-                msg.append("<td>" + PageFlowUtil.filter(rs.getString("taskId")) + "</td>");
-                msg.append("<td>" + PageFlowUtil.filter(rs.getString("history")) + "</td>");
                 msg.append("</tr>");
-
             });
             msg.append("</table>");
         }

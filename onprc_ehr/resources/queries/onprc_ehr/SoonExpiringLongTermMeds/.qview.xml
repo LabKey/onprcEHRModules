@@ -1,6 +1,6 @@
 <customView xmlns="http://labkey.org/data/xml/queryCustomView" label="Soon Expiring Long-Term Clinical Meds">
     <sorts>
-        <sort column="assignedvet" />
-        <sort column="room" />
+        <sort column="AssignedVet" />
+        <sort column="Room" />
     </sorts>
 </customView>
