@@ -10,11 +10,9 @@
                     </column>
                     <column columnName="date">
                         <columnTitle>Begin Date</columnTitle>
-                        <formatString>YYYY-MM-DD</formatString>
                     </column>
                     <column columnName="enddate">
                         <columnTitle>End Date</columnTitle>
-                        <formatString>YYYY-MM-DD</formatString>
                     </column>
                     <column columnName="AssignedVet">
                         <columnTitle>Assigned Vet</columnTitle>
