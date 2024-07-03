@@ -1508,7 +1508,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
             msg.append("<p><a href='" + getExecuteQueryUrl(c, "onprc_ehr", "SoonExpiringLongTermMeds", null) + "'>Click here to view the meds</a></p>\n");
             msg.append("<hr>");
 
-            //Display the daily report in the email
+            //Display the report in the email
             Set<FieldKey> columns = new HashSet<>();
             columns.add(FieldKey.fromString("Id"));
             columns.add(FieldKey.fromString("date"));
@@ -1536,7 +1536,9 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
 
             ts2.forEach(object -> {
                 Results rs = new ResultsImpl(object, colMap);
-                msg.append("<td>" + PageFlowUtil.filter(rs.getString("Id")) + "</td>");
+                String url = getParticipantURL(c, rs.getString("Id"));
+
+                msg.append("<td> <a href='" + url + "'>" + PageFlowUtil.filter(rs.getString("Id")) + "</a></td>\n");
                 msg.append("<td>" + PageFlowUtil.filter(rs.getString("date")) + "</td>");
                 msg.append("<td>" + PageFlowUtil.filter(rs.getString("enddate")) + "</td>");
                 msg.append("<td>" + PageFlowUtil.filter(rs.getString("AssignedVet")) + "</td>");

@@ -2,8 +2,8 @@
 -- Modified by: Kollil
 SELECT
     Id,
-    date,
-    enddate,
+    CAST(date as DATE) as date,
+    CAST(enddate as DATE) as enddate,
     Id.assignedvet.assignedvet as AssignedVet,
     Id.curlocation.room as Room,
     frequency,
