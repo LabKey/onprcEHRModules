@@ -35,6 +35,8 @@ public class ChargesFormType extends TaskForm
 
         addClientDependency(ClientDependency.supplierFromPath("onprc_billing/panel/ChargesInstructionPanel.js"));
         addClientDependency(ClientDependency.supplierFromPath("onprc_billing/buttons/financeButtons.js"));
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/window/MiscCharges_ScanWindow.js"));
+
     }
 
     @Override
