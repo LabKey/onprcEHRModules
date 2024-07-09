@@ -32,8 +32,11 @@ EHR.model.DataModelManager.registerMetadata('onprc_Surgery', {
         },
         'study.treatment_order': {
             category: {
-                defaultValue: 'Surgical'
+                shownInGrid: true,
+                defaultValue: 'Surgical',
+                allowBlank: false
             }
+
         },
         'study.drug': {
             enddate: {
