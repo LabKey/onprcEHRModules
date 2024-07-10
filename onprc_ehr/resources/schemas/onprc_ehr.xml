@@ -735,6 +735,8 @@
             <column columnName="PROTOCOL_State"/>
             <column columnName="PPQ_Numbers"/>
             <column columnName="Description"/>
+            <column columnName="BaseProblem"/>
+            <column columnName="RevisionNumber"/>
         </columns>
     </table>
     <table tableName="PotentialDam_source" tableDbType="TABLE">
