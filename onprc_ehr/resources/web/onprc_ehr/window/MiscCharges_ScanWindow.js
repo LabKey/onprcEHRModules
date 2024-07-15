@@ -83,11 +83,9 @@ Ext4.define('ONPRC_EHR.window.MiscCharges_ScanWindow', {
 
         Ext4.Msg.wait('Please be patient while we Process your data...');
 
-        var servicetype = 'Sanitation: ATP';
-        var chargeunit = 'Kati' ;
+        var chargetype = 'Infectious Disease Resource';   //Same Charge unit
 
-
-        var offset = 1;
+        var offset = 3;
         var rowIdx = offset;
         for (var i = offset; i < parsed.length; i++)
         {
@@ -99,16 +97,11 @@ Ext4.define('ONPRC_EHR.window.MiscCharges_ScanWindow', {
                 continue;
             }
 
-            var tdate = parsed[i][1];
-            if (!tdate)
-            {
-                errors.push('Row ' + rowIdx + ': missing date');
-                return;
-            }
+
 
             var cnt = i;
 
-            this.processRow(row, recordMap, errors, rowIdx, id, parsed, cnt,servicetype,chargeunit);
+            this.processRow(row, recordMap, errors, rowIdx, id, parsed, cnt,chargetype);
         }
 
         Ext4.Msg.hide();
@@ -138,7 +131,7 @@ Ext4.define('ONPRC_EHR.window.MiscCharges_ScanWindow', {
         this.close();
     },
 
-    processRow: function(row, recordMap, errors, rowIdx,tdate, parsed, cnt,servicetype,chargeunit)
+    processRow: function(row, recordMap, errors, rowIdx,tdate, parsed, cnt,chargetype)
     {
 
         // Generate labwork Header information
@@ -148,15 +141,22 @@ Ext4.define('ONPRC_EHR.window.MiscCharges_ScanWindow', {
         {
             errors.push('Missing Date');
         }
+        // var tdate = parsed[i][1];
+        // if (!tdate)
+        // {
+        //     errors.push('Row ' + rowIdx + ': missing date');
+        //     return;
+        // }
 
+        var project = this.resolveProjectByName(Ext4.String.trim(row[14]), errors, rowIdx);
 
             var HeaderObjectID = LABKEY.Utils.generateUUID().toUpperCase();
-            var project = this.resolveProjectByName(Ext4.String.trim(parsed[4][1]), errors,rowIdx );
+            var project = this.resolveProjectByName(Ext4.String.trim(parsed[0][1]), errors,rowIdx );
+
             var obj = {
                 date: date,
                 project:project,
-                chargetype: chargeunit,
-                category: 'Misc. Fees',
+                chargetype: chargetype,
                 quantity: Ext4.String.trim(row[3]),
                 chargeid: Ext4.String.trim(row[4]),
                 comment: Ext4.String.trim(row[5]),
@@ -172,7 +172,6 @@ Ext4.define('ONPRC_EHR.window.MiscCharges_ScanWindow', {
 
 
     },
-
 
 
     checkRequired: function(fields, row, errors, rowIdx){
