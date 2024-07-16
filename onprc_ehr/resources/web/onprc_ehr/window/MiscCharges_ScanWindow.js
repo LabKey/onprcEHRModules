@@ -162,13 +162,13 @@ Ext4.define('ONPRC_EHR.window.MiscCharges_ScanWindow', {
                 project:project[0],
                 chargetype: chargetype,
                 quantity: Ext4.String.trim(row[4]),
-                chargeid: finalchargeid,
+                chargeId: finalchargeid,
                 objectid: HeaderObjectID
 
 
             };
 
-            if (!this.checkRequired(['date', 'project','chargetype','chargeid','objectid'], obj, errors, rowIdx))
+            if (!this.checkRequired(['date', 'project','chargetype','chargeId','objectid'], obj, errors, rowIdx))
             {
                 recordMap.primaryheader.push(obj);
             }

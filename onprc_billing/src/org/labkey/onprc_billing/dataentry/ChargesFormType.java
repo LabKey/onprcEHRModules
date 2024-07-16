@@ -12,6 +12,7 @@ import org.labkey.api.security.permissions.AdminPermission;
 import org.labkey.api.view.template.ClientDependency;
 import org.labkey.security.xml.GroupEnumType;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -39,11 +40,13 @@ public class ChargesFormType extends TaskForm
 
     }
 
+
     @Override
     protected List<String> getMoreActionButtonConfigs()
     {
         List<String> defaultButtons = super.getMoreActionButtonConfigs();
         defaultButtons.add("COPY_TASK");
+        defaultButtons.add("MISC_SCAN_IMPORT");
 
         return defaultButtons;
     }
