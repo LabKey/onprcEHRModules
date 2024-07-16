@@ -85,7 +85,7 @@ Ext4.define('ONPRC_EHR.window.MiscCharges_ScanWindow', {
 
         var chargetype = 'Infectious Disease Resource';   //Same Charge unit
 
-        var offset = 3;
+        var offset = 2;
         var rowIdx = offset;
         for (var i = offset; i < parsed.length; i++)
         {
@@ -96,7 +96,12 @@ Ext4.define('ONPRC_EHR.window.MiscCharges_ScanWindow', {
                 errors.push('Row ' + rowIdx + ': not enough items in row');
                 continue;
             }
-
+            var date = parsed[i][0];
+            if (!date)
+            {
+                errors.push('Row ' + rowIdx + ': missing date');
+                return;
+            }
 
 
             var cnt = i;
@@ -134,38 +139,36 @@ Ext4.define('ONPRC_EHR.window.MiscCharges_ScanWindow', {
     processRow: function(row, recordMap, errors, rowIdx,tdate, parsed, cnt,chargetype)
     {
 
-        // Generate labwork Header information
-
         var date = LDK.ConvertUtils.parseDate(this.safeGet(parsed, cnt, 0));
         if (!date)
         {
             errors.push('Missing Date');
         }
-        // var tdate = parsed[i][1];
-        // if (!tdate)
-        // {
-        //     errors.push('Row ' + rowIdx + ': missing date');
-        //     return;
-        // }
 
-        var project = this.resolveProjectByName(Ext4.String.trim(row[14]), errors, rowIdx);
+
+        // var project = this.resolveProjectByName(Ext4.String.trim(row[14]), errors, rowIdx);
 
             var HeaderObjectID = LABKEY.Utils.generateUUID().toUpperCase();
-            var project = this.resolveProjectByName(Ext4.String.trim(parsed[0][1]), errors,rowIdx );
+            // var project = this.resolveProjectByName(Ext4.String.trim(parsed[1][1]), errors,rowIdx );
+            var value = Ext4.String.trim(row[3]);    //Chargeid
+            var chargeid = value.split(',');
+
+            var tvalue = Ext4.String.trim(row[1]);    //project
+            var project = tvalue.split(',');
+            var finalchargeid = Math.floor(chargeid[0]);
 
             var obj = {
                 date: date,
-                project:project,
+                project:project[0],
                 chargetype: chargetype,
-                quantity: Ext4.String.trim(row[3]),
-                chargeid: Ext4.String.trim(row[4]),
-                comment: Ext4.String.trim(row[5]),
+                quantity: Ext4.String.trim(row[4]),
+                chargeid: finalchargeid,
                 objectid: HeaderObjectID
 
 
             };
 
-            if (!this.checkRequired(['date', 'project','chargetype','category','chargeid','comment','objectid'], obj, errors, rowIdx))
+            if (!this.checkRequired(['date', 'project','chargetype','chargeid','objectid'], obj, errors, rowIdx))
             {
                 recordMap.primaryheader.push(obj);
             }
