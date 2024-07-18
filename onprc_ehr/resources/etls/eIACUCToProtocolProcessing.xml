@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--update of procedure to production for daily run-->
+<etl xmlns="http://labkey.org/etl/xml">
+
+	<name>DetermineBaseProtocol</name>
+
+	<description>Updates the Rate Sheets for Investigators in the Billing Folder </description>
+
+
+	<transforms>
+		<transform id="Stored_ProcStep1" type="StoredProcedure">
+			<description>Runs a stored procedure to identify Base Protocols.</description>
+			<procedure schemaName="onprc_ehr" procedureName="eIACUCBaseProtocol">
+			</procedure>
+		</transform>
+
+
+	</transforms>
+
+
+		<schedule><cron expression="0 0 0 * * ?" /></schedule>
+
+
+
+</etl>
+
+
