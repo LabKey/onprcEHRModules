@@ -147,7 +147,7 @@ exports.init = function(EHR){
 
 
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study','birth', function(helper, scriptErrors, row, oldRow){
-        //Added: 8-1-2019  R.Blasa
+    //Added: 8-1-2019  R.Blasa
 
         if (row.Id && row.birth_condition == 'Fetus - Prenatal') {
             helper.setScriptOptions({
@@ -186,36 +186,6 @@ exports.init = function(EHR){
             //this was changed to allow merge records to insert, even if we lack a demographics record
             allowAnyId: true
         });
-    });
-
-    //Added: 2-14-2023  R.Blasa
-    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.INIT, 'study', 'urinalysisResults', function(event, helper){
-        helper.setScriptOptions({
-            removeTimeFromDate: false,
-            allowDatesInDistantPast: true
-        });
-    })
-
-    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.INIT, 'study', 'encounters', function(event, helper){
-        // Special handling for Pathology Request Form to use a placeholder ID
-        helper.decodeExtraContextProperty('AllowAnyId', false);
-        var allowAnyId = helper.getProperty('AllowAnyId');
-        if (allowAnyId) {
-            helper.setScriptOptions({
-                allowAnyId: true
-            });
-        }
-    });
-    //Added 8-15-2022  R.Blasa
-    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.INIT, 'study', 'tissueDistributions', function(event, helper){
-        // Special handling for Pathology Request Form to use a placeholder ID
-        helper.decodeExtraContextProperty('AllowAnyId', false);
-        var allowAnyId = helper.getProperty('AllowAnyId');
-        if (allowAnyId) {
-            helper.setScriptOptions({
-                allowAnyId: true
-            });
-        }
     });
 
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.INIT, 'study', 'assignment', function(event, helper){
@@ -387,30 +357,6 @@ exports.init = function(EHR){
         }
     });
 
-    // Added by Kollil, 12/22/2022: USDA Pain category validation:
-    /* This is user input validation for Procedures panel
-    1. Stop the user if the user attempts to fill in USDA pain level while creating / modifying a procedure other than the IS team personnel.
-    */
-    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'ehr_lookups', 'procedures', function(helper, scriptErrors, row, oldRow) {
-        //console.log(" 0. procedure: " + row.procedureid + ", ins: " + row.instructions);
-
-        // When users other than IS team entering the procedure data, stop them until they clear the USDA pain level field data
-        /*
-        Lakshmi Kolli - 1008
-        Gary Jones - 1011
-        Raymond Blasa - 1007
-        Lindsay Amor - 2217
-        Brent Logan - 2933
-         */
-        if (row.PainCategories != null) {
-            if ( LABKEY.Security.currentUser.id !== 1008 || LABKEY.Security.currentUser.id !== 1007 || LABKEY.Security.currentUser.id !== 1011 || LABKEY.Security.currentUser.id !== 2217 || LABKEY.Security.currentUser.id !== 2933 )
-            {
-                EHR.Server.Utils.addError(scriptErrors, 'PainCategories', 'The USDA pain category field must be left blank if the user is not from ISE team!', 'WARN');
-            }
-        }
-
-    });
-
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'encounters', function(helper, scriptErrors, row, oldRow)
     {
         if (row.chargetype == 'Research Staff' && !row.assistingstaff && row.procedureid && triggerHelper.requiresAssistingStaff(row.procedureid))
@@ -450,7 +396,7 @@ exports.init = function(EHR){
         }
     });
 
-    //Added 1-12-2016  Blasa  Menses TMB Records
+      //Added 1-12-2016  Blasa  Menses TMB Records
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.AFTER_UPSERT, 'study', 'clinical_observations', function(helper, scriptErrors, row, oldRow){
 
         if (row.Id && row.category == 'Menses' ){
@@ -460,16 +406,6 @@ exports.init = function(EHR){
             }
         }
 
-    });
-
-    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.INIT, 'study', 'flags', function(event, helper){
-        helper.setScriptOptions({
-            allowFutureDates: true,
-            removeTimeFromDate: true,
-            removeTimeFromEndDate: true
-        });
-
-        EHR.Server.TriggerManager.unregisterAllHandlersForQueryNameAndEvent('study', 'flags', EHR.Server.TriggerManager.Events.AFTER_INSERT);
     });
 
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_INSERT, 'study', 'flags', function(helper, scriptErrors, row, oldRow){
@@ -485,13 +421,13 @@ exports.init = function(EHR){
     //Added 9-2-2015  Blasa
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.AFTER_UPSERT, 'study',  'flags', function(helper, scriptErrors, row, oldRow){
 
-        if (row.Id ){
-            var msg = triggerHelper.sendCullListNotifications(row.Id,row.date, row.flag);
-            if (msg){
-                EHR.Server.Utils.addError(scriptErrors, 'category', msg, 'ERROR');
-            }
+    if (row.Id ){
+        var msg = triggerHelper.sendCullListNotifications(row.Id,row.date, row.flag);
+        if (msg){
+            EHR.Server.Utils.addError(scriptErrors, 'category', msg, 'ERROR');
         }
-    });
+    }
+});
 
 
     //Added 4-27-2016  R.Blasa
@@ -512,7 +448,7 @@ exports.init = function(EHR){
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_INSERT, 'study', 'assignment', function(helper, scriptErrors, row, oldRow){
         //check number of allowed animals at assign/approve time.  use different behavior than core EHR
         if (!helper.isETL() && !helper.isQuickValidation() &&
-                //this is designed to always perform the check on imports, but also updates where the Id was changed
+            //this is designed to always perform the check on imports, but also updates where the Id was changed
                 !(oldRow && oldRow.Id && oldRow.Id==row.Id) &&
                 row.Id && row.project && row.date
         ){
@@ -625,7 +561,7 @@ exports.init = function(EHR){
     });
 
 
-    //Modified: 10-13-2016 R.Blasa added arrival date parameter
+     //Modified: 10-13-2016 R.Blasa added arrival date parameter
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.AFTER_UPSERT, 'study', 'birth', function(helper, errors, row, oldRow) {
         //Modified: 3-20-2017 R.Blasa  Fetal Prenatal updates
         if (row.id && oldRow)
@@ -775,37 +711,13 @@ exports.init = function(EHR){
             EHR.Server.Utils.addError(scriptErrors, 'amount_units', 'When entering ketamine or telazol, amount must be in mg', 'WARN');
         }
 
-        if (row.code != 'E-YY164') { //Added by kollil, 9/14/2022. Added this line to apply this validation to all meds except Omnipaque
-            if (!row.amount && !row.volume) {
-                EHR.Server.Utils.addError(scriptErrors, 'amount', 'Must enter an amount or volume', 'WARN');
-                EHR.Server.Utils.addError(scriptErrors, 'volume', 'Must enter an amount or volume', 'WARN');
-            }
+        if (!row.amount && !row.volume){
+            EHR.Server.Utils.addError(scriptErrors, 'amount', 'Must enter an amount or volume', 'WARN');
+            EHR.Server.Utils.addError(scriptErrors, 'volume', 'Must enter an amount or volume', 'WARN');
         }
-
-        /* Added by Kollil, 11/17/2023. Tkt #10159
-        Added extra validation: 1. If volume is not null, must enter vol units
-                                2. If amount is not null, must enter amount units
-         */
-        if  (!row.vol_units) {
-            if (row.volume) {
-                EHR.Server.Utils.addError(scriptErrors, 'vol_units', 'Must enter Vol Units if Volume is entered', 'WARN');
-            }
-        }
-        if (!row.amount_units ) {
-            if (row.amount) {
-                EHR.Server.Utils.addError(scriptErrors, 'amount_units', 'Must enter Amount Units if Amount is entered', 'WARN');
-            }
-        }
-
         //Added: 10-14-2016 R.Blasa
         if ((row.code == 'E-00070' || row.code == 'E-YY490'|| row.code == 'E-YYY45') && !row.remark){
             EHR.Server.Utils.addError(scriptErrors, 'remark', 'A remark is required when entering this medication', 'WARN');
-        }
-
-        //Added by Kollil, 9/14/2022
-        //User must enter amount and amount units when Omnipaque medication is selected, E-YY164
-        if ((row.code == 'E-YY164' ) && (!row.amount || !row.amount_units || row.amount_units.toLowerCase() != 'mg')){
-            EHR.Server.Utils.addError(scriptErrors, 'amount', 'When entering Omnipaque, must enter amount and amount_units must be in mg', 'WARN');
         }
 
     });
@@ -918,7 +830,7 @@ exports.init = function(EHR){
     });
 
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.AFTER_UPSERT, 'study', 'arrival', function(helper, errors, row, oldRow) {
-        //Don't process normally if Pending -- Created: 4-25-2017 R.Blasa
+            //Don't process normally if Pending -- Created: 4-25-2017 R.Blasa
         if (row.id && oldRow)
         {
             var acquiValueOld = triggerHelper.retrieveAcquisitionType(oldRow.acquisitionType);
@@ -936,10 +848,6 @@ exports.init = function(EHR){
 
                 triggerHelper.ensureQuarantineFlag(row.Id, row.date);
 
-            }
-
-            if (row.birth != oldRow.birth){
-                triggerHelper.updateArrivalrecords(row.Id, row.birth)
             }
 
         }
@@ -1037,26 +945,9 @@ exports.init = function(EHR){
             EHR.Server.Utils.addError(scriptErrors, 'amount_units', 'When entering ketamine or telazol, amount must be in mg', 'WARN');
         }
 
-        if (row.code != 'E-YY164') { //Added by kollil, 9/14/2022. Added this line to apply this validation to all meds except Omnipaque
-            if (!row.amount && !row.volume) {
-                EHR.Server.Utils.addError(scriptErrors, 'amount', 'Must enter an amount or volume', 'WARN');
-                EHR.Server.Utils.addError(scriptErrors, 'volume', 'Must enter an amount or volume', 'WARN');
-            }
-        }
-
-        /* Added by Kollil, 11/17/2023. Tkt #10159
-        Added extra validation: 1. If volume is not null, must enter vol units
-                                2. If amount is not null, must enter amount units
-         */
-        if  (!row.vol_units) {
-            if (row.volume) {
-                EHR.Server.Utils.addError(scriptErrors, 'vol_units', 'Must enter Vol Units if Volume is entered', 'WARN');
-            }
-        }
-        if (!row.amount_units ) {
-            if (row.amount) {
-                EHR.Server.Utils.addError(scriptErrors, 'amount_units', 'Must enter Amount Units if Amount is entered', 'WARN');
-            }
+        if (!row.amount && !row.volume){
+            EHR.Server.Utils.addError(scriptErrors, 'amount', 'Must enter an amount or volume', 'WARN');
+            EHR.Server.Utils.addError(scriptErrors, 'volume', 'Must enter an amount or volume', 'WARN');
         }
 
         if (row.frequency){
@@ -1068,13 +959,6 @@ exports.init = function(EHR){
         if ((row.code == 'E-00070' || row.code == 'E-YY490'|| row.code == 'E-YYY45') && !row.remark){
             EHR.Server.Utils.addError(scriptErrors, 'remark', 'A remark is required when entering this medication', 'WARN');
         }
-
-        //Added by Kollil, 9/14/2022
-        //User must enter amount and amount units when Omnipaque medication is selected, E-YY164
-        if ((row.code == 'E-YY164' ) && (!row.amount || !row.amount_units || row.amount_units.toLowerCase() != 'mg')){
-            EHR.Server.Utils.addError(scriptErrors, 'amount', 'When entering Omnipaque, must enter amount and amount_units must be in mg', 'WARN');
-        }
-
     });
 
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.AFTER_UPSERT, 'study', 'treatment_order', function(helper, errors, row, oldRow){
@@ -1216,83 +1100,22 @@ exports.init = function(EHR){
                 }
             }
         });
-        //Added 8-2-2022  R.Blasa
-        EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'encounters', function (helper, scriptErrors, row, oldRow) {
 
-            helper.decodeExtraContextProperty('MiscChargesInTransaction');
-            var miscChargesInTransaction = helper.getProperty('MiscChargesInTransaction');
-
-            if (miscChargesInTransaction && miscChargesInTransaction['miscChargesEntered'] === 0) {
-                EHR.Server.Utils.addError(scriptErrors, 'Id', 'billing charges grid requires at least one row', 'WARN');
-            }
-        });
-
-        //Added 3-5-2019  R.Blasa
-        EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.AFTER_INSERT, 'ehr',  'project', function(helper, scriptErrors, row, oldRow){
+        //Added 5-6-2022  R.Blasa
+        EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.AFTER_UPSERT, 'ehr', 'project', function(helper, scriptErrors, row, oldRow){
 
             var triggerHelper = new org.labkey.onprc_ehr.query.ONPRC_EHRTriggerHelper(LABKEY.Security.currentUser.id, LABKEY.Security.currentContainer.id);
 
-            if (row.project){
+            if (row.project || (oldRow.enddate != row.enddate && oldRow.enddate)){
                 console.log("project data collected  " + row.project)
+                console.log("project end date " + row.enddate)
                 var msg = triggerHelper.sendProjectNotifications(row.project);
                 if (msg){
                     EHR.Server.Utils.addError(scriptErrors, 'project', msg, 'ERROR');
                 }
             }
         });
-
-        //Added 10-5-2022  R.Blasa
-        EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'matings', function (helper, scriptErrors, row, oldRow) {
-            //Ensure that the ID entered into Matings record is always female
-            if (row.Id )
-            {
-                EHR.Server.Utils.findDemographics({
-                    participant: row.Id ,
-                    helper: helper,
-                    scope: this,
-                    callback: function (data)
-                    {
-                        if (data)
-                        {
-                            if (data['gender/origGender'] && data['gender/origGender'] != 'f')
-                                EHR.Server.Utils.addError(scriptErrors, 'Id', 'The ID has to be female', 'ERROR');
-                        }
-                    }
-                });
-
-            }
-            // Ensure users are entering male ids
-            if (row.male )
-            {
-                EHR.Server.Utils.findDemographics({
-                    participant: row.male ,
-                    helper: helper,
-                    scope: this,
-                    callback: function (data)
-                    {
-                        if (data)
-                        {
-                            if (data['gender/origGender'] && data['gender/origGender'] != 'm')
-                                EHR.Server.Utils.addError(scriptErrors, 'male', 'The Male ID has to be male', 'ERROR');
-                        }
-                    }
-                });
-
-            }
-        });
     });
 
-    //Added: 10-4-2022  R.Blasa
-    EHR.Server.TriggerManager.registerHandler(EHR.Server.TriggerManager.Events.COMPLETE, function(event, errors, helper){
-        // Send notifications when requests approved
-        var requestsApproved = helper.getRequestApprovedArray();
-        if (requestsApproved && requestsApproved.length > 0) {
-            var msgs = helper.getJavaHelper().sendRequestStateEmail("Request: Approved", requestsApproved);
-            if (msgs && msgs.length) {
-                LABKEY.ExtAdapter.each(msgs, function (msg) {
-                    EHR.Server.Utils.addError(scriptErrors, 'qcstate', msg, 'INFO');
-                }, this);
-            }
-        }
-    });
+
 };
