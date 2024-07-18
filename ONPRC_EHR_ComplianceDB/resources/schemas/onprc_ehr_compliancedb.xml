@@ -170,7 +170,7 @@
             <column columnName="employeeid">
                 <columnTitle>Employee ID</columnTitle>
             </column>
-            <column columnName="latname">
+            <column columnName="lastname">
                 <columnTitle>Last Name</columnTitle>
             </column>
             <column columnName="firstname">
@@ -208,9 +208,10 @@
                 <columnTitle>Comments</columnTitle>
             </column>
             <column columnName="months_until_renewal">
-                <columnTitle>Mnths Until Renewal</columnTitle>
+                <columnTitle>Months Until Renewal</columnTitle>
             </column>
             <column columnName="snooze_date">
+                <columnTitle>Snooze Date</columnTitle>
             </column>
             <column columnName="Container">
                 <isUserEditable>false</isUserEditable>
