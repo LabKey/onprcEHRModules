@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<customView name="NHPs Without an Assigned Vet" xmlns="http://labkey.org/data/xml/queryCustomView">
+    <columns>
+        <column name="Id"/>
+        <column name="AssignedVet"/>
+        <column name="AssignmentType"/>
+        <column name="area"/>
+        <column name="room"/>
+        <column name="project"/>
+        <column name="protocol"/>
+        <column name="protocolPI"/>
+        <column name="Id/demographics/history"/>
+    </columns>
+    <filters>
+        <filter column="AssignedVet" operator="contains" value="Unassigned"/>
+    </filters>
+    <sorts>
+        <sort column="Id" descending="true"/>
+    </sorts>
+</customView>
