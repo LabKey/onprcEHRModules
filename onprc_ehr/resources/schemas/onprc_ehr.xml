@@ -734,7 +734,7 @@
             <column columnName="modified"/>
             <column columnName="PROTOCOL_State"/>
             <column columnName="PPQ_Numbers"/>
-            <column columnName="Description"/>
+            <column columnName="updateStatus"/>
             <column columnName="BaseProtocol"/>
             <column columnName="RevisionNumber"/>
         </columns>
