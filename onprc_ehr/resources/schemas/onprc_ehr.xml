@@ -710,7 +710,6 @@
             <column columnName="Surgery_Name"/>
         </columns>
     </table>
-
     <table tableName="eIACUC_PRIME_VIEW_PROTOCOLS" tableDbType="TABLE">
         <columns>
             <column columnName="rowid"/>
