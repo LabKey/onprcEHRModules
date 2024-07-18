@@ -180,10 +180,14 @@ BEGIN
             ---- Display all the entries that were added
 
                 Select    a.employeeid [employeeid],
+                          (select k.lastname from ehr_compliancedb.employees k where k.employeeid = a.employeeid) as lastname,
+                          (select k.firstname from ehr_compliancedb.employees k where k.employeeid = a.employeeid) as firstname,
+                          (select k.majorUDDS from ehr_compliancedb.employees k where k.employeeid = a.employeeid) as host,
+                          (select k.enddate from ehr_compliancedb.employees k where k.employeeid = a.employeeid) as enddate,
                           a.requirementname [requirementname],
+                          (select j.type from ehr_compliancedb.requirements j where j.requirementname = a.requirementname) as type,
                           a.date [date],
                           a.created [created],
-                         (select   (b.lastname + ', ' + b.firstname)  from  onprc_ehr.usersActiveNames b where a.createdby =b.userid) as createdBy,
                          a.trainer [trainer],
                          a.result,
                          a.comment,
@@ -196,16 +200,6 @@ BEGIN
 
                             If @@Error <> 0
                                 GoTo Err_Proc
-
-
-
-                ------ Rest Temp table
-                Delete [onprc_ehr_compliancedb].[ComplianceTemp]
-
-			            If @@Error <> 0
-	  		                    GoTo Err_Proc
-
-
 
 
 No_Records:
