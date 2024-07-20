@@ -225,7 +225,14 @@ Ext4.define('ONPRC_EHR.window.ApplyTemplateWindow', {
                                 offsetDate.setHours(8);
                                 date = offsetDate;
 
+                            }
 
+                            else
+                            {
+                                var offsetDate = date ;
+                                offsetDate = Ext4.Date.clearTime(offsetDate);
+                                offsetDate.setHours(8);
+                                date = offsetDate;
                             }
 
 
@@ -251,17 +258,36 @@ Ext4.define('ONPRC_EHR.window.ApplyTemplateWindow', {
                                     enddate.setMinutes(59);
                                     enddate = enddate;
 
+
+
                                 }
                             }
+                            else
+                            {
+
+                                enddate= date;
+                                enddate.setHours(23);
+                                enddate = enddate;
+                                enddate.setMinutes(59);
+                                enddate = enddate;
+
+                                var sdate = Ext4.Date.clone(new Date());
+                                var offsetDate = sdate ;
+                                offsetDate = Ext4.Date.clearTime(offsetDate);
+                                offsetDate.setHours(8);
+                                date = offsetDate;
+
+                                                    }
                             var obj2 = {};
                             obj2 = {
-                                date: date,
-                                enddate: enddate
+                                    date: date,
+                                    enddate: enddate
                             };
 
                             var newData = Ext4.apply({}, data);
                             newData = Ext4.apply(newData, obj);   //Adds monkey id
                             newData = Ext4.apply(newData, obj2);
+
 
                             toAdd[store.storeId].push(newData);
                         }, this);
