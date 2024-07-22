@@ -33,7 +33,8 @@
         <column name="lastdate"/>
         <column name="daysUntilNextExam"/>
         <column name="Id/labworkHistory/lastHematologyDate"/>
-        <column name="Id/labworkHistory/lastBiochemistryDate"/>
+        <column name="lastbiochem"/>
+        <column name="biochemtype"/>
         <column name="Id/currentCondition/condition"/>
         <column name="p2date"/>
         <column name="p2"/>

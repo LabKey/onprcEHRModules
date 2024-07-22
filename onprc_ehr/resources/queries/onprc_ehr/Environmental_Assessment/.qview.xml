@@ -16,6 +16,6 @@
 
     <sorts>
         <sort column="date" descending="true"/>
-        <sort column="formsort" descending="false"/>
+        <sort column="testing_location" descending="false"/>
     </sorts>
 </customView>
