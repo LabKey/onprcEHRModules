@@ -1802,7 +1802,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         params.put("RequirementSet", requirementSet);
         QueryService.get().bindNamedParameters(sql, params);
 
-        sql = new SQLFragment("SELECT * FROM ").append(sql).append(" WHERE t.status = ?").add(filterTerm);
+        sql = new SQLFragment("SELECT * FROM ").append(sql).append(" WHERE t.status = ? ORDER BY room, cage").add(filterTerm);
         SqlSelector ss = new SqlSelector(ti.getSchema(), sql);
         Map<String, Object>[] rows = ss.getMapArray();
 
