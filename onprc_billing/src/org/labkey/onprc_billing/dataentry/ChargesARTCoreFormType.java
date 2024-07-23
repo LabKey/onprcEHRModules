@@ -20,7 +20,7 @@ public class ChargesARTCoreFormType extends TaskForm
 
     public ChargesARTCoreFormType(DataEntryFormContext ctx, Module owner)
     {
-        super(ctx, owner, NAME, "ART Core Charges", "Billing - ART Core", Arrays.<FormSection>asList(
+        super(ctx, owner, NAME, "ART Core Charges", "Billing", Arrays.<FormSection>asList(
                 new TaskFormSection(),
                 new AnimalDetailsFormSection(),
                 new ChargesInstructionFormSection(),
