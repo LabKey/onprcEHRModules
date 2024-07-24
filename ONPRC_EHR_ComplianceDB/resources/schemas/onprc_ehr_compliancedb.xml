@@ -244,6 +244,45 @@
             </column>
         </columns>
     </table>
+    <table tableName="ComplianceTemp" tableDbType="TABLE" useColumnOrder="true">
+        <tableTitle>Compliance Editor Master</tableTitle>
+        <columns>
+            <column columnName="rowid">
+            </column>
+            <column columnName="employeeid">
+            </column>
+            <column columnName="trainingname">
+            </column>
+        </columns>
+    </table>
+
+
+    <table tableName="ComplianceEditorMaster" tableDbType="TABLE" useColumnOrder="true">
+        <tableTitle>Compliance Editor Master</tableTitle>
+        <columns>
+            <column columnName="employeeid">
+            </column>
+            <column columnName="date">
+            </column>
+            <column columnName="trainingname">
+            </column>
+            <column columnName="created">
+            </column>
+            <column columnName="createdby">
+            </column>
+            <column columnName="trainer">
+            </column>
+            <column columnName="result">
+            </column>
+            <column columnName="comment">
+            </column>
+            <column columnName="filename">
+            </column>
+            <column columnName="snooze_date">
+            </column>
+
+        </columns>
+    </table>
 
 
 
