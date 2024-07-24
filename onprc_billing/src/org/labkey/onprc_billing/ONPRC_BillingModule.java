@@ -58,6 +58,8 @@ import org.labkey.onprc_billing.security.ONPRCAliasEditorRole;
 import org.labkey.onprc_billing.security.ONPRCBillingAdminPermission;
 import org.labkey.onprc_billing.security.ONPRCBillingAdminRole;
 import org.labkey.onprc_billing.security.ONPRCVirologyAccessRole;
+import org.labkey.onprc_billing.security.ONPRCMiscChargesAccessRole;
+import org.labkey.onprc_billing.security.ONPRCArtCoreChargesAccessRole;
 import org.labkey.onprc_billing.table.ChargeableItemsCustomizer;
 import org.labkey.onprc_billing.table.ONPRC_BillingCustomizer;
 
@@ -104,6 +106,8 @@ public class ONPRC_BillingModule extends ExtendedSimpleModule
         RoleManager.registerRole(new ONPRCBillingAdminRole());
         RoleManager.registerRole(new ONPRCAliasEditorRole());
         RoleManager.registerRole(new ONPRCVirologyAccessRole());
+        RoleManager.registerRole(new ONPRCMiscChargesAccessRole());
+        RoleManager.registerRole(new ONPRCArtCoreChargesAccessRole());
     }
 
     @Override
