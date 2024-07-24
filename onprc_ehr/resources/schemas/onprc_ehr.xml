@@ -710,7 +710,6 @@
             <column columnName="Surgery_Name"/>
         </columns>
     </table>
-
     <table tableName="eIACUC_PRIME_VIEW_PROTOCOLS" tableDbType="TABLE">
         <columns>
             <column columnName="rowid"/>
@@ -735,6 +734,9 @@
             <column columnName="PROTOCOL_State"/>
             <column columnName="PPQ_Numbers"/>
             <column columnName="Description"/>
+            <column columnName="BaseProtocol"/>
+            <column columnName="RevisionNumber"/>
+            <column columnName="UpdateStatus"/>
         </columns>
     </table>
     <table tableName="PotentialDam_source" tableDbType="TABLE">

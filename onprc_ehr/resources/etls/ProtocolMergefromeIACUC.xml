@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--update of procedure to production for daily run-->
+<etl xmlns="http://labkey.org/etl/xml">
+
+    <name>InserteIACCUtoProtocol</name>
+    <description>Updates select columns into ehr Protocol extensible columns </description>
+<transforms>
+
+    <transform id="transform2">
+    <source schemaName="onprc_ehr" queryName="eIACUC_PRIME_VIEW_PROTOCOLS"/>
+    <destination schemaName="ehr" queryName="protocol" targetOption="merge">
+        <columnTransforms>
+            <column source="BaseProtocol" target="BaseProtocol"/>
+            <column source="RenewalNumber" target="RevisionNumber"/>
+            <column source="Protocol_State" target="Protocol_State"/>
+            <column source="last_modified" target="last_modified"/>
+        </columnTransforms>
+        <alternateKeys>
+            <!-- The pk of the target table is the "rowId" column. Use "OtherId" as an alternate match key -->
+            <column name="BaseProtocol"/>
+        </alternateKeys>
+
+    </destination>
+</transform>
+
+
+</transforms>
+</etl>

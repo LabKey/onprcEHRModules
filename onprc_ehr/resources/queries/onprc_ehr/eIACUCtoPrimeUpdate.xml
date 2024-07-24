@@ -1,0 +1,70 @@
+<etl xmlns="http://labkey.org/etl/xml">
+    <name>eiACUCtoPrimeUpdate</name>
+    <description>Transfers from the eIACUC Import tables to the Prime tables in ONPRC_EHR</description>
+    <transforms>
+        <transform id="step1a">
+            <description>Transfer to eIACUC Animal Groups</description>
+            <source queryName="PRIME_VIEW_ANIMAL_GROUPS" schemaName="eIACUC"/>
+            <destination queryName="eIACUC_PRIME_VIEW_ANIMAL_GROUPS" schemaName="ONPRC_EHR" targetOption="truncate"/>
+        </transform>
+        <transform id="step2a">
+            <description>Transfer to IBX Numbers</description>
+            <source queryName="PRIME_VIEW_IBC_NUMBERS" schemaName="eIACUC"/>
+            <destination queryName="eIACUC_PRIME_VIEW_IBC_NUMBERS" schemaName="ONPRC_EHR" targetOption="truncate"/>
+        </transform>
+        <transform id="step3a">
+            <description>Transfer to Non Surgical Procedures</description>
+            <source queryName="PRIME_VIEW_NON_SURGICAL_PROCS" schemaName="eIACUC"/>
+            <destination queryName="eIACUC_PRIME_VIEW_NON_SURGICAL_PROCS" schemaName="ONPRC_EHR" targetOption="truncate"/>
+        </transform>
+        <transform id="step4a">
+            <description>Transfer to Protocols</description>
+            <source queryName="eIACUCwithBaseProtocol" schemaName="eIACUC"/>
+            <destination queryName="eIACUC_PRIME_VIEW_PROTOCOLS" schemaName="ONPRC_EHR" targetOption="truncate"/>
+        </transform>
+        <transform id="step5a">
+            <description>Transfer to Surgical Procedures</description>
+            <source queryName="PRIME_VIEW_SURGERIES" schemaName="eIACUC"/>
+            <destination queryName="eIACUC_PRIME_VIEW_SURGICAL_PROCS" schemaName="ONPRC_EHR" targetOption="truncate"/>
+        </transform>
+        <!--
+
+                    <!–Need to update to change the processes and document each one–>
+                    <transform id="Stored_ProcStep10" type="StoredProcedure">
+                        <description>Runs a stored procedure tocapture information from the eIACUC Protocol Table.</description>
+                        <procedure schemaName="ONPRC_EHR" procedureName="etlStep1eIACUCtoPRIMEProcessing">
+                        </procedure>
+                    </transform>
+
+
+                    <transform id="Stored_ProcStep20" type="StoredProcedure">
+                        <description>Runs a stored procedure to process records from eIACUC to temp to ehr.protocol.</description>
+                        <procedure schemaName="ONPRC_EHR" procedureName="etlStep2eIACUCtoPublicAction">
+                        </procedure>
+                    </transform>
+
+                    <transform id="Stored_ProcStep30" type="StoredProcedure">
+                        <description>Runs a stored procedure identify record updated from eIACUC2 to ehrProtocol ending ehrProtocol Record.</description>
+                        <procedure schemaName="ONPRC_EHR" procedureName="etlStep3update_ehrProtocol">
+                        </procedure>
+                    </transform>
+
+                    <transform id="Stored_ProcStep40" type="StoredProcedure">
+                        <description>Runs a stored procedure to insert new and updated records from eIACUC to ehrProtocol and update log.</description>
+                        <procedure schemaName="ONPRC_EHR" procedureName="etlStep4insertToEhr_Protocol">
+                        </procedure>
+                    </transform>
+
+
+
+
+
+
+            -->
+    </transforms>
+    <!--	<schedule>
+
+              <poll interval="12h"/>
+
+          </schedule>-->
+</etl>
