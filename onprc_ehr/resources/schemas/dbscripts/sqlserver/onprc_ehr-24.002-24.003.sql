@@ -14,8 +14,9 @@ SET QUOTED_IDENTIFIER ON
 GO
 -- =============================================
 -- Author:		Jonesga
--- Create date: 2024/07/18
+-- Create date: 2024/07/25
 -- Description:	Iniitial Stage of update of eIACUC to protocol processing
+    -- Stored Procedure did not process, will retry
 -- =============================================
 
 CREATE PROCEDURE onprc_ehr.eIACUCBaseProtocol
