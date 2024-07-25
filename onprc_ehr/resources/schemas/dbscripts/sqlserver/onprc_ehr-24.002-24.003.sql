@@ -18,7 +18,7 @@ GO
 -- Description:	Iniitial Stage of update of eIACUC to protocol processing
 -- =============================================
 
-ALTER PROCEDURE onprc_ehr.eIACUCBaseProtocol
+CREATE PROCEDURE onprc_ehr.eIACUCBaseProtocol
 
     AS
 BEGIN
