@@ -227,15 +227,6 @@ Ext4.define('ONPRC_EHR.window.ApplyTemplateWindow', {
 
                             }
 
-                            else
-                            {
-                                var offsetDate = date ;
-                                offsetDate = Ext4.Date.clearTime(offsetDate);
-                                offsetDate.setHours(8);
-                                date = offsetDate;
-                            }
-
-
                             if (data.duration > 0) {
                                 var enddate = null;
                                 //this is specifically to handle hydro, when administered ~noon
@@ -251,7 +242,8 @@ Ext4.define('ONPRC_EHR.window.ApplyTemplateWindow', {
                                     enddate = Ext4.Date.add(enddate, Ext4.Date.DAY, duration);
                                 }
                                 else {
-                                    enddate = date;
+                                    // enddate = Ext4.Date.clone(new Date());
+                                    enddate = offsetDate
                                     enddate = Ext4.Date.add(enddate, Ext4.Date.DAY, data.duration);
                                     enddate.setHours(23);
                                     enddate = enddate;
@@ -259,31 +251,29 @@ Ext4.define('ONPRC_EHR.window.ApplyTemplateWindow', {
                                     enddate = enddate;
 
 
-
                                 }
                             }
                             else
                             {
 
-                                enddate= date;
+                                var sdate= Ext4.Date.clone(new Date());
+                                var soffsetDate = Ext4.Date.add(sdate, Ext4.Date.DAY, data.offset);
+                                var soffsetDate = Ext4.Date.clearTime(soffsetDate);
+                                enddate = soffsetDate;
                                 enddate.setHours(23);
                                 enddate = enddate;
                                 enddate.setMinutes(59);
                                 enddate = enddate;
 
-                                var sdate = Ext4.Date.clone(new Date());
-                                var offsetDate = sdate ;
-                                offsetDate = Ext4.Date.clearTime(offsetDate);
-                                offsetDate.setHours(8);
-                                date = offsetDate;
 
-                                                    }
-                            var obj2 = {};
-                            obj2 = {
-                                    date: date,
-                                    enddate: enddate
-                            };
+                            }
 
+
+                        var obj2 = {};
+                        obj2 = {
+                            date: date,
+                            enddate: enddate
+                        };
                             var newData = Ext4.apply({}, data);
                             newData = Ext4.apply(newData, obj);   //Adds monkey id
                             newData = Ext4.apply(newData, obj2);
