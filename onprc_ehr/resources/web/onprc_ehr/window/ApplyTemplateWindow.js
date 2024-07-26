@@ -242,7 +242,7 @@ Ext4.define('ONPRC_EHR.window.ApplyTemplateWindow', {
                                     enddate = Ext4.Date.add(enddate, Ext4.Date.DAY, duration);
                                 }
                                 else {
-                                    // enddate = Ext4.Date.clone(new Date());
+
                                     enddate = offsetDate
                                     enddate = Ext4.Date.add(enddate, Ext4.Date.DAY, data.duration);
                                     enddate.setHours(23);
