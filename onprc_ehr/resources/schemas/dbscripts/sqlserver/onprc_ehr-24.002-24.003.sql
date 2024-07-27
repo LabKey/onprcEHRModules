@@ -7,6 +7,7 @@
 --
 -- This block of comments will not be included in
 -- the definition of the procedure.
+--   Added updatge for Latest Renewal in the Stored Procedure
 -- ================================================
 SET ANSI_NULLS ON
 GO
