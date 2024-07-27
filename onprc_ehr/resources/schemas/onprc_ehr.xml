@@ -735,6 +735,9 @@
             <column columnName="PROTOCOL_State"/>
             <column columnName="PPQ_Numbers"/>
             <column columnName="Description"/>
+            <column columnName="baseProtocol"/>
+            <column columnName="RenewalNummber"/>
+            <column columnName="LatestRenewal"/>
         </columns>
     </table>
     <table tableName="PotentialDam_source" tableDbType="TABLE">

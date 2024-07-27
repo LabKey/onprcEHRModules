@@ -19,7 +19,7 @@ GO
     -- Stored Procedure did not process, will retry
 -- =============================================
 
-CREATE PROCEDURE onprc_ehr.eIACUCBaseProtocol
+ALTER PROCEDURE onprc_ehr.eIACUCBaseProtocol
 
     AS
 BEGIN
@@ -62,14 +62,11 @@ Set p1.ReNewalNumber = e.ReNewalNumber
 
     from onprc_ehr.eIACUC_PRIME_VIEW_PROTOCOLS p1 join #eIACUCBaseProtocol e on p1.protocol_id = e.Protocol_Id
 
-Update p1
-Set p1.LatestRenewal = e.LatestRenewal
+Update p
+Set p.LatestRenewal = 1
 
-    from onprc_ehr.eIACUC_PRIME_VIEW_PROTOCOLS p1 join #eIACUCBaseProtocol e on p1.protocol_id = e.Protocol_Id
-
-
---Now will limit the records to be inserted to most recent record
-
+    from onprc_ehr.eIACUC_PRIME_VIEW_PROTOCOLS p
+where (p.BaseProtocol is not null and p.last_Modified = (Select Max(p1.Last_Modified) from onprc_ehr.eIACUC_PRIME_VIEW_PROTOCOLS  p1 where p1.BaseProtocol = p.BaseProtocol))
 
 END
 GO
