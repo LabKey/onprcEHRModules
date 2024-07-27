@@ -83,11 +83,10 @@ order by a.participantid, a.date desc
 
         ---- When there are no records to process, exit immediately from the program.
 
-     If (Select count(*) from onprc_ehr.TB_TestTemp) = 0
-
-BEGIN
-GOTO No_Records
-END
+    If (Select count(*) from onprc_ehr.TB_TestTemp) = 0
+    BEGIN
+    GOTO No_Records
+    END
 
 
     ---- Reset temp variables
