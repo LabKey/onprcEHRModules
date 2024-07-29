@@ -1,0 +1,16 @@
+<etl xmlns="http://labkey.org/etl/xml">
+    <name>eiACUCtoProtocolPhase2</name>
+    <description>Enddate expired Protocol</description>
+    <transforms>
+
+        <transform id="UpdateeIACUCDataPhase2" type="StoredProcedure">
+            <description>Runs a stored proecdure that enddates Protocols that are expired</description>
+            <procedure schemaName="onprc_ehr" procedureName="eIACUCBaseProtocolPhase2">
+            </procedure>
+        </transform>
+        <!--//Need a query that has needed fields for BaseProtocol and revisionNumber and then inserts that into eIACUC_Prime_View_Protocols
+                Also only want latest data-->
+
+    </transforms>
+
+</etl>
