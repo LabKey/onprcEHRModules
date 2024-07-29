@@ -148,9 +148,6 @@
                             <fkTable>ClinPathRuns</fkTable>
                             <fkColumnName>objectId</fkColumnName>
                             <fkDisplayColumnName>SampleID</fkDisplayColumnName>
-
-
-
                         </fk>
                         <isHidden>true</isHidden>
                     </column>
