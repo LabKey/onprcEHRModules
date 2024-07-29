@@ -19,8 +19,12 @@ GO
 -- Description:	Iniitial Stage of update of eIACUC to protocol processing
     -- Stored Procedure did not process, will retry
 -- =============================================
+--DROP PROCEDURE onprc_ehr.eIACUCBaseProtocol;
+IF OBJECT_ID('eIACUCBaseProtocol', 'P') IS NOT NULL
+DROP PROC eIACUCBaseProtocol
 
-ALTER PROCEDURE onprc_ehr.eIACUCBaseProtocol
+Go
+CREATE PROCEDURE onprc_ehr.eIACUCBaseProtocol
 
     AS
 BEGIN
