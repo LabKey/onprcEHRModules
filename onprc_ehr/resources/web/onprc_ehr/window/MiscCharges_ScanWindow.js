@@ -146,8 +146,6 @@ Ext4.define('ONPRC_EHR.window.MiscCharges_ScanWindow', {
         }
 
 
-        // var project = this.resolveProjectByName(Ext4.String.trim(row[14]), errors, rowIdx);
-
             var HeaderObjectID = LABKEY.Utils.generateUUID().toUpperCase();
             // var project = this.resolveProjectByName(Ext4.String.trim(parsed[1][1]), errors,rowIdx );
             var value = Ext4.String.trim(row[3]);    //Chargeid
