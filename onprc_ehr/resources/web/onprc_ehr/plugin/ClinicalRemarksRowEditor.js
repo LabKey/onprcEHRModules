@@ -11,7 +11,7 @@ Ext4.define('ONPRC_EHR.plugin.ClinicalRemarksRowEditor', {
         LDK.Assert.assertNotEmpty('Observations store not found', store);
 
         return {
-            xtype: 'ehr-observationsroweditorgridpanel',
+            xtype: 'onprc_ehr-observationsroweditorgridpanel',
             itemId: 'observationsPanel',
             remarkStore: this.cmp.store,
             width: 600,

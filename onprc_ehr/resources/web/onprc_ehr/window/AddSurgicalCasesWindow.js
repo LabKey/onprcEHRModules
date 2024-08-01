@@ -7,7 +7,7 @@
  * This window will allow users to query open cases and add records to a task based on them
  */
 Ext4.define('ONPRC_EHR.window.AddSurgicalCasesWindow', {
-    extend: 'ONPRC_EHR.window.AddClinicalCasesWindow',
+    extend: 'EHR.window.AddClinicalCasesWindow',
     caseCategory: 'Surgery',
     templateName: 'Surgical Rounds',
 
@@ -176,7 +176,7 @@ Ext4.define('ONPRC_EHR.window.AddSurgicalCasesWindow', {
     }
 });
 
-EHR.DataEntryUtils.registerGridButton('ADDSURGICALCASES', function(config){
+EHR.DataEntryUtils.registerGridButton('ADDSURGICALCASEST', function(config){
     return Ext4.Object.merge({
         text: 'Add Open Cases',
         tooltip: 'Click to automatically add animals with open cases',
@@ -191,7 +191,7 @@ EHR.DataEntryUtils.registerGridButton('ADDSURGICALCASES', function(config){
             if(cellEditing)
                 cellEditing.completeEdit();
 
-            Ext4.create('EHR.window.AddSurgicalCasesWindow', {
+            Ext4.create('ONPRC_EHR.window.AddSurgicalCasesWindow', {
                 targetStore: grid.store
             }).show();
         }
