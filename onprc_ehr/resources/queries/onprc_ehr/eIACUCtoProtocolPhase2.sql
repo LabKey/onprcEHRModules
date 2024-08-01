@@ -1,10 +1,15 @@
+--I want to expand this to show dall dates in ehr.protocol
 SELECT
-    e.BaseProtocol,
-    e.RenewalNumber,
-    e.Protocol_state,
-    e.LatestRenewal,
-    p.protocol,
-    p.enddate
+    e.Protocol_State,
+    e.PPQ_Numbers,
+    e.Last_Modified,
+    e.Approval_Date as approve,
+    e.Annual_Update_Due as AnnualReviewDate,
+    e.Three_year_Expiration as renewalDate,
+    e.usda_Level,
+    e.template_OID,
+    e.renewalNumber as Renewal_Number,
+    p.protocol
 
 from onprc_ehr.eIACUC_PRIME_VIEW_PROTOCOLS e join  ehr.protocol p on e.BaseProtocol = p.external_id
-where (e.latestRenewal = true and p.enddate is Null and e.Protocol_State = 'expired')
+where e.LatestRenewal = 1

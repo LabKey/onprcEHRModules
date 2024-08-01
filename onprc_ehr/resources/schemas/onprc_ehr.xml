@@ -736,7 +736,7 @@
             <column columnName="PPQ_Numbers"/>
             <column columnName="Description"/>
             <column columnName="baseProtocol"/>
-            <column columnName="RenewalNummber"/>
+            <column columnName="RenewalNumber"/>
             <column columnName="LatestRenewal"/>
         </columns>
     </table>
