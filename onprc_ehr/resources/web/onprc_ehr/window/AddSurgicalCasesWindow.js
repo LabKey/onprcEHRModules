@@ -7,7 +7,7 @@
  * This window will allow users to query open cases and add records to a task based on them
  */
 Ext4.define('ONPRC_EHR.window.AddSurgicalCasesWindow', {
-    extend: 'EHR.window.AddClinicalCasesWindow',
+    extend: 'ONPRC_EHR.window.AddClinicalCasesWindow',
     caseCategory: 'Surgery',
     templateName: 'Surgical Rounds',
 
@@ -41,7 +41,7 @@ Ext4.define('ONPRC_EHR.window.AddSurgicalCasesWindow', {
             requiredVersion: 9.1,
             schemaName: 'study',
             queryName: 'latestObservationsForCase',
-            columns: 'Id,date,category,area,observation,remark,caseid',
+            columns: 'Id,date,category,area,observation,inflammation,bruising,other, remark,caseid',
             filterArray: obsFilterArray,
             scope: this,
             success: function(results){
@@ -139,6 +139,9 @@ Ext4.define('ONPRC_EHR.window.AddSurgicalCasesWindow', {
                     category: row.getValue('category'),
                     area: row.getValue('area'),
                     observation: row.getValue('observation'),
+                    inflammation: row.getValue('inflammation'),
+                    bruising: row.getValue('bruising'),
+                    other: row.getValue('other'),
                     remark: row.getValue('remark')
                 });
             }, this);

@@ -143,7 +143,28 @@ Ext4.define('ONPRC_EHR.grid.ObservationsRowEditorGridPanel', {
                 xtype: 'textfield'
             }
         },{
-            header: 'Findings',
+            header: 'Inflammation',
+            width: 200,
+            editable: true,
+            dataIndex: 'findings',
+            editor: {
+                xtype: 'labkey-combo',
+                displayField: 'state',
+                valueField: 'state',
+                forceSelection: true,
+                defaultValue:'Normal',
+                queryMode: 'local',
+                anyMaych: true,
+                value: 'N/A',
+                store: {
+                    type: 'labkey-store',
+                    schemaName: 'ehr_lookups',
+                    queryName: 'normal_abnormal',
+                    autoLoad: true
+                }
+            }
+        },{
+            header: 'Bruising',
             width: 200,
             editable: true,
             dataIndex: 'findings',

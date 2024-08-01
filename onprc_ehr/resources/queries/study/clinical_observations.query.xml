@@ -45,11 +45,15 @@
                         <columnTitle>Code</columnTitle>
                         <isHidden>true</isHidden>
                     </column>
-                    <column columnName="findings">
-                        <columnTitle>Findings</columnTitle>
+                    <column columnName="inflammation">
+                        <columnTitle>Inflammation</columnTitle>
                         <isHidden>true</isHidden>
                     </column>
-                    <column columnName="remark">
+                    <column columnName="bruising">
+                        <columnTitle>Brusing</columnTitle>
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="other">
                         <columnTitle>Remarks</columnTitle>
                         <isHidden>true</isHidden>
                     </column>
