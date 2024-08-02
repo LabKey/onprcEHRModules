@@ -43,7 +43,7 @@ alopecia_type	Alopecia Type	value
 alopecia_score	Alopecia Type	value
 alopecia_regrowth	Alopecia Regrowth	value
 mens_score	Mens Score	value
-vomit   Vomit   value
+vomit	Vomit	value
 tissue_sample_type	Tissue Distribution Sample Type	value
 tissue_distribution_category	Tissue Distribution Request Category	value
 cage_status	Cage Status	value
