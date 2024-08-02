@@ -8,7 +8,7 @@ SELECT
     e.Three_year_Expiration as renewalDate,
     e.usda_Level,
     e.template_OID,
-    e.renewalNumber as Renewal_Number,
+    e.renewalNumber as RenewalNumber,
     p.protocol
 
 from onprc_ehr.eIACUC_PRIME_VIEW_PROTOCOLS e join  ehr.protocol p on e.BaseProtocol = p.external_id
