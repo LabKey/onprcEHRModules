@@ -39,13 +39,13 @@ public class SurgicalRoundsRemarksFormSection extends SurgicalAmendedRemarksForm
         setConfigSources(Collections.singletonList("Task"));
 
         addClientDependency(ClientDependency.supplierFromPath("ehr/window/AddClinicalCasesWindow.js"));
-//        addClientDependency(ClientDependency.supplierFromPath("ehr/window/AddSurgicalCasesWindow.js"));
         addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/window/BulkChangeCasesWindow.js"));
 
 
 //        Modified: 7-26-2024 R. Blasa
         addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/window/AddSurgicalCasesWindow.js"));
-        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/plugin/ClinicalRemarksRowEditor.js"));
+//        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/plugin/ClinicalRemarksRowEditor.js"));
+//        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/grid/ObservationsRowEditorGridPanel.js"));
 
         _showLocation = true;
     }
