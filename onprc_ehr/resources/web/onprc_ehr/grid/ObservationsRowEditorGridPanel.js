@@ -22,7 +22,7 @@ Ext4.define('ONPRC_EHR.grid.ObservationsRowEditorGridPanel', {
                 mode: 'MULTI'
             },
             plugins: [{
-                ptype: 'clinicalobservationscellediting',
+                ptype: 'onprc_ehr-clinicalobservationscellediting',
                 pluginId: 'cellediting',
                 clicksToEdit: 1
             }],

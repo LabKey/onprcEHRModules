@@ -28,13 +28,13 @@ public class SurgicalAmendedRemarksFormSection extends SimpleFormSection
 {
     public SurgicalAmendedRemarksFormSection(String label, EHRService.FORM_SECTION_LOCATION location)
     {
-        super("study", "Clinical Remarks", label, "onprc_ehr-roundsremarksgridpanel", location);
+        super("study", "Clinical Remarks", label, "onprc_ehr-surgroundsremarksgridpanel", location);
 //        addClientDependency(ClientDependency.supplierFromPath("onpc_ehr/plugin/ClinicalObservationsCellEditing.js"));
         addClientDependency(ClientDependency.supplierFromPath("ehr/panel/ClinicalRemarkPanel.js"));
-        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/grid/RoundsRemarksGridPanel.js"));
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/grid/SurgicalRoundsRemarksGridPanel.js"));
         addClientDependency(ClientDependency.supplierFromPath("ehr/grid/ObservationsRowEditorGridPanel.js"));
 //        MOdified: 8-1-2024 so that contents reset as ehr control types
-        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/plugin/ClinicalRemarksRowEditor.js"));
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/plugin/SurgicalRemarksRowEditor.js"));
 
         addClientDependency(ClientDependency.supplierFromPath("ehr/data/ClinicalObservationsClientStore.js"));
         addClientDependency(ClientDependency.supplierFromPath("ehr/buttons/roundsButtons.js"));
