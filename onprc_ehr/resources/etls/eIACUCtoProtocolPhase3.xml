@@ -14,3 +14,16 @@
     </transforms>
 
 </etl>
+<transform id="transform1">
+<!--
+<source schemaName="study"queryName="Participants"/>
+<destination schemaName="study"queryName="Subjects"targetOption="merge">
+    <columnTransforms>
+        <column source="ParticipantId"target="SubjectId"/>
+        <column source="StartDate"target="Date"/>
+        <column source="Gender"target="Sex"/>
+        <column source="TreatmentGroup"target="Treatment"/>
+        <column source="Cohort"target="Group"/>
+    </columnTransforms>
+</destination>
+</transform> -->
