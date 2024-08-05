@@ -2145,7 +2145,7 @@ public class ONPRC_EHRTriggerHelper
 
         if(new TableSelector(getTableInfo("study", "flags"),filter, null).exists() )
         {
-            return  Id +"  Please contact the DVM staff because she shouldn't be mensing ";
+            return  Id +",  Please contact the DVM staff because she shouldn't be mensing ";
         }
         else
         {
