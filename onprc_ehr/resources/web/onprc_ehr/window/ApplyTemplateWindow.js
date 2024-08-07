@@ -346,6 +346,17 @@ Ext4.define('ONPRC_EHR.window.ApplyTemplateWindow', {
         return ret;
     },
 
+    getWeights: function(){
+        var ids = {};
+        Ext4.Array.forEach(this.parentRecords, function(r){
+            ids[r.get('Id')] = true;
+        }, this);
+
+        this.animalIds = Ext4.Object.getKeys(ids);
+
+        EHR.DataEntryUtils.getWeights(this.targetGrid.store.storeCollection, this.animalIds, this.onLoad, this, true);
+    },
+
     loadTemplate: function(templateId){
         if (!templateId)
             return;
@@ -564,7 +575,7 @@ EHR.DataEntryUtils.registerGridButton('TEMPLATEREV', function(config){
                     }).show();
                 }
             },{
-                text: 'Apply TemplateX',
+                text: 'Apply Template',
                 handler: function(btn){
                     var grid = btn.up('gridpanel');
                     var menu = this.up('menu').items.get('templatesMenu');
