@@ -25,7 +25,9 @@ import org.labkey.api.ehr.security.EHRPathologyEntryPermission;
 import org.labkey.api.module.Module;
 import org.labkey.api.security.*;
 import org.labkey.api.security.SecurityManager;
+import org.labkey.api.security.permissions.AdminPermission;
 import org.labkey.api.view.template.ClientDependency;
+import org.labkey.security.xml.GroupEnumType;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -99,6 +101,18 @@ public class NecropsyFormType extends EncounterForm
 
         return super.canInsert();
     }
+    //Added: 8-7-2024 R.Blasa
+    @Override
+    public boolean isVisible()
+    {
+        Group g = GroupManager.getGroup(getCtx().getContainer(), "Death Entry", GroupEnumType.SITE);
+        if (g != null && getCtx().getUser().isInGroup(g.getUserId()) && !getCtx().getContainer().hasPermission(getCtx().getUser(), AdminPermission.class))
+        {
+            return false;
+        }
+        return super.isVisible();
+    }
+
 
     /**
      * The intent is to prevent read access to the majority of users
