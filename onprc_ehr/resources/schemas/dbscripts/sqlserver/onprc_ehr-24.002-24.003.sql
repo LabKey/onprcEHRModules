@@ -20,8 +20,7 @@ GO
     -- Stored Procedure did not process, will retry
 -- =============================================
 --DROP PROCEDURE onprc_ehr.eIACUCBaseProtocol;
-IF OBJECT_ID('eIACUCBaseProtocol', 'P') IS NOT NULL
-DROP PROC eIACUCBaseProtocol
+EXEC core.fn_dropifexists 'eIACUCBaseProtocol', 'onprc_ehr', 'PROCEDURE';
 
 Go
 CREATE PROCEDURE onprc_ehr.eIACUCBaseProtocol
@@ -31,7 +30,7 @@ BEGIN
 	-- SET NOCOUNT ON added to prevent extra result sets from
 	-- interfering with SELECT statements.
 	SET NOCOUNT ON;
---Drop Temporary Table
+--Drop Temporary Table #eIACUCBaseProtocol
 --DROP TABLE #eIACUCBaseProtocol
 -- Insert statements for procedure here
 cREATE tABLE #eIACUCBaseProtocol
