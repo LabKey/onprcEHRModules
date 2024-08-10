@@ -158,12 +158,28 @@ Ext4.define('ONPRC_EHR.window.ApplyTemplateWindow', {
             Ext4.Msg.alert('Error', 'Must choose a template');
             return;
         }
-
+        var obj ={}
+        this.animalId = obj.Id;
         this.loadTemplate(templateId);
     },
 
     statics: {
         loadTemplateRecords: function(callback, scope, storeCollection, templateId, initialValues){
+            LABKEY.Query.selectRows({
+                schemaName: 'study',
+                queryName: 'demographics',
+                columns: 'Id,Id/MostRecentWeight/MostRecentWeight',
+                scope: this,
+                filterArray: [
+                    LABKEY.Filter.create('Id', this.animalId, LABKEY.Filter.Types.EQUAL)
+                ],
+                success: function (data) {
+                    if (data.rows && data.rows.length) {
+                        this.weight = data.row[0];
+                    }
+                }
+
+            });
             //subjectArray, date
             LABKEY.Query.selectRows({
                 schemaName: 'ehr',
@@ -267,6 +283,7 @@ Ext4.define('ONPRC_EHR.window.ApplyTemplateWindow', {
 
 
                             }
+                            // Extract monkey's weight
 
 
                         var obj2 = {};
@@ -344,17 +361,6 @@ Ext4.define('ONPRC_EHR.window.ApplyTemplateWindow', {
         }
 
         return ret;
-    },
-
-    getWeights: function(){
-        var ids = {};
-        Ext4.Array.forEach(this.parentRecords, function(r){
-            ids[r.get('Id')] = true;
-        }, this);
-
-        this.animalIds = Ext4.Object.getKeys(ids);
-
-        EHR.DataEntryUtils.getWeights(this.targetGrid.store.storeCollection, this.animalIds, this.onLoad, this, true);
     },
 
     loadTemplate: function(templateId){
