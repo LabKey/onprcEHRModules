@@ -1602,6 +1602,13 @@
                 <isHidden>true</isHidden>
             </column>
             <column columnName="contacts"/>
+            <column columnName="annual_update_due"/>
+            <column columnName="approval_date"/>
+            <column columnName="last_modified"/>
+            <column columnName="ppq_number"/>
+            <column columnName="protocol_state"/>
+            <column columnName="template_oid"/>
+            <column columnName="three_year_expiration"/>
 
         </columns>
     </table>
