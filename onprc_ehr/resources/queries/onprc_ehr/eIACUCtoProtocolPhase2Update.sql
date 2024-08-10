@@ -29,6 +29,6 @@ Select
     e.LatestRenewal
 
 
-from onprc_ehr.eIACUC_PRIME_VIEW_PROTOCOLS e  join onprc_ehr.ehr.protocol p on e.baseProtocol = p.external_Id
+from onprc_ehr.eIACUC_PRIME_VIEW_PROTOCOLS e  join onprc_ehr.ehr.protocolUpdate p on e.baseProtocol = p.external_Id
 where p.external_ID IN
 (Select e1.BaseProtocol from onprc_ehr.eIACUC_PRIME_VIEW_PROTOCOLS e1 where e1.LatestRenewal  = 1 )

@@ -20,7 +20,7 @@ GO
     -- Stored Procedure did not process, will retry
 -- =============================================
 --DROP PROCEDURE onprc_ehr.eIACUCBaseProtocol;
-EXEC core.fn_dropifexists 'eIACUCBaseProtocol', 'onprc_ehr', 'PROCEDURE';
+EXEC core.fn_dropifexists 'eIACUCBaseProtocolUpdate', 'onprc_ehr', 'PROCEDURE';
 
 Go
 CREATE PROCEDURE onprc_ehr.eIACUCBaseProtocol

@@ -1,12 +1,12 @@
 <etl xmlns="http://labkey.org/etl/xml">
-    <name>eiACUCtoProtocolPhase2</name>
+    <name>eiACUCtoProtocolPhase2Update</name>
     <description>Update extensible Fields in ehr Protocol</description>
     <transforms>
 
         <transform id="step1a">
             <description>Update field data from eIACUC Protocol</description>
-            <source queryName="eIACUCtoProtocolUpdate" schemaName="onprc_ehr"/>
-            <destination queryName="Protocol" schemaName="ehr" targetOption= "merge">
+            <source queryName="eIACUCtoProtocolPhase2Update" schemaName="onprc_ehr"/>
+            <destination queryName="ProtocolUpdate" schemaName="onprc_ehr" targetOption= "merge">
 
                 <alternateKeys>
                     <column name = "external_id"/>

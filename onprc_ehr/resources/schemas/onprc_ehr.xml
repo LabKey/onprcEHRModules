@@ -1456,7 +1456,155 @@
 
         </columns>
     </table>
+    <table tableName="protocolUpdate" tableDbType="TABLE" useColumnOrder="true">
+        <tableTitle>IACUC Protocols Updates</tableTitle>
+        <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+        <auditLogging>DETAILED</auditLogging>
+        <importUrl></importUrl>
+        <insertUrl></insertUrl>
+        <updateUrl></updateUrl>
+        <deleteUrl></deleteUrl>
+        <pkColumnName>protocol</pkColumnName>
+        <tableUrl>/ehr/protocolDetails.view?protocol=${protocol}</tableUrl>
+        <columns>
+            <column columnName="protocol">
+                <isKeyField>true</isKeyField>
+                <columnTitle>IACUC Protocol</columnTitle>
+            </column>
+            <column columnName="title">
+                <nullable>true</nullable>
+                <columnTitle>Title</columnTitle>
+            </column>
+            <column columnName="inves">
+                <nullable>true</nullable>
+                <columnTitle>Investigator</columnTitle>
+            </column>
+            <column columnName="investigatorId">
+                <columnTitle>Investigator</columnTitle>
+                <isHidden>true</isHidden>
+            </column>
+            <column columnName="approve">
+                <columnTitle>3-yr Approval Date</columnTitle>
+                <nullable>true</nullable>
+                <formatString>Date</formatString>
+            </column>
+            <column columnName="lastAnnualReview">
+                <columnTitle>Date of Last Annual Update</columnTitle>
+                <nullable>true</nullable>
+                <formatString>Date</formatString>
+            </column>
+            <column columnName="enddate">
+                <columnTitle>End Date</columnTitle>
+                <nullable>true</nullable>
+                <formatString>Date</formatString>
+            </column>
+            <column columnName="first_approval">
+                <columnTitle>First Approval Date</columnTitle>
+                <nullable>true</nullable>
+                <formatString>Date</formatString>
+            </column>
+            <column columnName="project_type">
+                <columnTitle>Type</columnTitle>
+                <nullable>true</nullable>
+            </column>
+            <column columnName="external_id">
+                <columnTitle>External Id</columnTitle>
+                <nullable>true</nullable>
+            </column>
+            <column columnName="ibc_approval_required">
+                <columnTitle>IBC Approval Required?</columnTitle>
+                <nullable>true</nullable>
+                <isHidden>true</isHidden>
+            </column>
+            <column columnName="ibc_approval_num">
+                <columnTitle>IBC Approval Number</columnTitle>
+                <nullable>true</nullable>
+                <isHidden>true</isHidden>
+            </column>
+            <column columnName="usda_level">
+                <columnTitle>USDA Level</columnTitle>
+                <nullable>true</nullable>
+            </column>
+            <column columnName="last_modification">
+                <columnTitle>Date of Last Modification</columnTitle>
+            </column>
+            <column columnName="description">
+                <nullable>true</nullable>
+            </column>
+            <column columnName="maxAnimals">
+            </column>
+            <column columnName="objectid">
+                <columnTitle>Key</columnTitle>
+                <isHidden>true</isHidden>
+            </column>
+            <column columnName="container">
 
+            </column>
+            <column columnName="lsid">
+                <datatype>lsidtype</datatype>
+                <isReadOnly>true</isReadOnly>
+                <isHidden>true</isHidden>
+                <isUserEditable>false</isUserEditable>
+                <fk>
+                    <fkColumnName>ObjectUri</fkColumnName>
+                    <fkTable>Object</fkTable>
+                    <fkDbSchema>exp</fkDbSchema>
+                </fk>
+            </column>
+            <column columnName="createdby">
+                <isUserEditable>false</isUserEditable>
+                <nullable>true</nullable>
+                <isHidden>true</isHidden>
+            </column>
+            <column columnName="created">
+                <isUserEditable>false</isUserEditable>
+                <nullable>true</nullable>
+                <isHidden>true</isHidden>
+            </column>
+            <column columnName="modifiedby">
+                <isUserEditable>false</isUserEditable>
+                <nullable>true</nullable>
+                <isHidden>true</isHidden>
+            </column>
+            <column columnName="modified">
+                <isUserEditable>false</isUserEditable>
+                <nullable>true</nullable>
+                <isHidden>true</isHidden>
+            </column>
+            <column columnName="diCreatedby">
+                <isUserEditable>false</isUserEditable>
+                <nullable>true</nullable>
+                <isHidden>true</isHidden>
+                <fk>
+                    <fkDbSchema>core</fkDbSchema>
+                    <fkTable>Users</fkTable>
+                    <fkColumnName>UserId</fkColumnName>
+                </fk>
+            </column>
+            <column columnName="diCreated">
+                <isUserEditable>false</isUserEditable>
+                <nullable>true</nullable>
+                <isHidden>true</isHidden>
+            </column>
+            <column columnName="diModifiedby">
+                <isUserEditable>false</isUserEditable>
+                <nullable>true</nullable>
+                <isHidden>true</isHidden>
+                <fk>
+                    <fkDbSchema>core</fkDbSchema>
+                    <fkTable>Users</fkTable>
+                    <fkColumnName>UserId</fkColumnName>
+                </fk>
+            </column>
+            <column columnName="diModified">
+                <isUserEditable>false</isUserEditable>
+                <nullable>true</nullable>
+                <isHidden>true</isHidden>
+            </column>
+            <column columnName="contacts"/>
+
+        </columns>
+    </table>
 
 
 </tables>
