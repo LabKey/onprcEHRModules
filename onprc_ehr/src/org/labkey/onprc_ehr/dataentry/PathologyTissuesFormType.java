@@ -20,18 +20,21 @@ import org.labkey.api.ehr.dataentry.AbstractFormSection;
 import org.labkey.api.ehr.dataentry.AnimalDetailsFormSection;
 import org.labkey.api.ehr.dataentry.DataEntryFormContext;
 import org.labkey.api.ehr.dataentry.FormSection;
+import org.labkey.api.ehr.dataentry.SimpleFormPanelSection;
+import org.labkey.onprc_ehr.dataentry.TissueInstructionFormSection;
 import org.labkey.api.ehr.dataentry.SimpleFormSection;
 import org.labkey.api.ehr.dataentry.TaskForm;
 import org.labkey.api.ehr.dataentry.TaskFormSection;
 import org.labkey.api.ehr.dataentry.DrugAdministrationFormSection;
+import org.labkey.api.ehr.security.EHRPathologyEntryPermission;
 import org.labkey.api.module.Module;
 import org.labkey.api.module.ModuleLoader;
 import org.labkey.api.security.PrincipalType;
 import org.labkey.api.security.UserPrincipal;
 import org.labkey.api.view.template.ClientDependency;
-import org.labkey.onprc_ehr.security.ONPRC_Pathology_TissueEntryPermission;
 
 import java.util.Arrays;
+import java.util.List;
 
 
 //Modified: 11-15-2023 R. Blasa
@@ -95,7 +98,7 @@ public class PathologyTissuesFormType extends TaskForm
     @Override
     protected boolean canInsert()
     {
-        if (!getCtx().getContainer().hasPermission(getCtx().getUser(), ONPRC_Pathology_TissueEntryPermission.class))
+        if (!getCtx().getContainer().hasPermission(getCtx().getUser(), EHRPathologyEntryPermission.class))
             return false;
 
         return super.canInsert();
