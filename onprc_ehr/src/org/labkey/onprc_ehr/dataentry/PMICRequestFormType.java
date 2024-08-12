@@ -23,6 +23,7 @@ import org.labkey.api.ehr.dataentry.RequestForm;
 import org.labkey.api.ehr.dataentry.RequestFormSection;
 import org.labkey.api.module.Module;
 import org.labkey.api.view.template.ClientDependency;
+import org.labkey.onprc_ehr.security.ONPRC_EHRServiceRequestsPermission;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -63,14 +64,13 @@ public class PMICRequestFormType extends RequestForm
     }
 
 
-//    //    Added: 12-5-2019  R.Blasa  Allow access only to PMIC Access group.
-//    @Override
-//    protected boolean canInsert()
-//    {
-//        if (!getCtx().getContainer().hasPermission(getCtx().getUser(), ONPRC_EHRPMICEditPermission.class))
-//            return false;
-//
-//        return super.canInsert();
-//    }
+    //    Added: 8-12-2024  R.Blasa
+    @Override
+    protected boolean canInsert()
+    {
+        if (!getCtx().getContainer().hasPermission(getCtx().getUser(), ONPRC_EHRServiceRequestsPermission.class))
+            return false;
 
+        return super.canInsert();
+    }
 }

@@ -98,7 +98,7 @@ import org.labkey.onprc_ehr.security.ONPRC_EHRCustomerEditPermission;
 import org.labkey.onprc_ehr.security.ONPRC_EHRCustomerEditRole;
 import org.labkey.onprc_ehr.security.ONPRC_EHREnvironmentalPermission;
 import org.labkey.onprc_ehr.security.ONPRC_EHREnvironmentalRole;
-//import org.labkey.onprc_ehr.security.ONPRC_EHRPMICEditRole;
+import org.labkey.onprc_ehr.security.ONPRC_EHRServiceRequestRole;
 import org.labkey.onprc_ehr.security.ONPRC_EHRTransferRequestRole;
 import org.labkey.onprc_ehr.table.ONPRC_EHRCustomizer;
 
@@ -149,6 +149,10 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
 
 //        Added: 10-30-2023 R. Blasa
         RoleManager.registerRole(new ONPRC_EHREnvironmentalRole());
+
+        //        Added: 8-11-2024 R. Blasa
+        RoleManager.registerRole(new ONPRC_EHRServiceRequestRole());
+
 
         // register the permissions provider for a restricted issue list
         IssuesListDefService.get().registerRestrictedIssueProvider(new RestrictedIssueProviderImpl());
