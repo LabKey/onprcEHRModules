@@ -119,7 +119,7 @@ public class AdminNotifications extends ColonyAlertsNotification
         TableSelector ts = new TableSelector(ti, null, new Sort("date"));
         long count = ts.getRowCount();
         if (count == 0) {
-            msg.append("<b>There are no meds with missing enddate!</b><hr>");
+            msg.append("<b>There are no other meds except E-85760 (Medroxyprogesterone injectable 150mg/ml) and E-Y7735 (Diet - Weekly Multivitamin) with missing end dates!</b><hr>");
         }
         else if (count > 0)
         {
