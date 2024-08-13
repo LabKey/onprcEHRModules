@@ -1,29 +1,21 @@
 <etl xmlns="http://labkey.org/etl/xml">
     <name>eiACUCtoProtocolPhase3</name>
-    <description>Stored Procedure to enddate Expired Protocols</description>
+    <description>Enddates expired Protocols in PRIME</description>
     <transforms>
 
-        <transform id="UpdateeIACUCDataPhase3" >
-            <description>Stored Procedure to enddate Expired Protocols</description>
-            <procedure schemaName="onprc_ehr" procedureName="eIACUCBaseProtocolPhase3">
-            </procedure>
+        <transform id="step1a">
+            <description>Update field data from eIACUC Protocol</description>
+            <source queryName="eIACUCtoProtocolPhase3_Enddate" schemaName="onprc_ehr"/>
+            <destination queryName="ProtocolUpdate" schemaName="onprc_ehr" targetOption= "merge">
+
+                <alternateKeys>
+                    <column name = "external_id"/>
+                </alternateKeys>
+            </destination>
+
         </transform>
-        <!--//Need a query that has needed fields for BaseProtocol and revisionNumber and then inserts that into eIACUC_Prime_View_Protocols
-                Also only want latest data-->
+
 
     </transforms>
 
 </etl>
-<transform id="transform1">
-<!--
-<source schemaName="study"queryName="Participants"/>
-<destination schemaName="study"queryName="Subjects"targetOption="merge">
-    <columnTransforms>
-        <column source="ParticipantId"target="SubjectId"/>
-        <column source="StartDate"target="Date"/>
-        <column source="Gender"target="Sex"/>
-        <column source="TreatmentGroup"target="Treatment"/>
-        <column source="Cohort"target="Group"/>
-    </columnTransforms>
-</destination>
-</transform> -->
