@@ -70,7 +70,9 @@ Update p
 Set p.LatestRenewal = 1
 
     from onprc_ehr.eIACUC_PRIME_VIEW_PROTOCOLS p
-where (p.BaseProtocol is not null and p.last_Modified = (Select Max(p1.Last_Modified) from onprc_ehr.eIACUC_PRIME_VIEW_PROTOCOLS  p1 where p1.BaseProtocol = p.BaseProtocol))
+--where (p.BaseProtocol is not null and p.last_Modified = (Select Max(p1.Last_Modified) from onprc_ehr.ProtocolUpdate  p1 where p1.BaseProtocol = p.BaseProtocol))
+-- recosider the control to look for latest approval date versus last_modified.
+where (p.BaseProtocol is not null and p.Approval_Date = (Select Max(p1.Approval_Date) from onprc_ehr.ProtocolUpdate  p1 where p1.BaseProtocol = p.BaseProtocol))
 
 END
 GO

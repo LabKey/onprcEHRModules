@@ -7,7 +7,7 @@ Select
     p.investigatorId,
     e.approval_Date as approve,
     p.lastAnnualReview,
-    e.Last_Modified as enddate,
+    e.THree_Year_Expiration as enddate,
     p.external_id,
     p.ibc_approval_num,
     p.usda_level,
