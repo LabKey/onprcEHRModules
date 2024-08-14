@@ -21,6 +21,7 @@ import org.labkey.api.ehr.dataentry.FormSection;
 import org.labkey.api.ehr.dataentry.SimpleGridPanel;
 import org.labkey.api.ehr.dataentry.TaskFormSection;
 import org.labkey.api.ehr.dataentry.UnsaveableTask;
+import org.labkey.api.ehr.security.EHRClinicalEntryPermission;
 import org.labkey.api.module.Module;
 import org.labkey.api.security.Group;
 import org.labkey.api.security.GroupManager;
@@ -65,17 +66,13 @@ public class FlagsFormType extends UnsaveableTask
         }
 
         return canInsert;
+        //Added: 8-7-2024 R.Blasa
+        if (!getCtx().getContainer().hasPermission(getCtx().getUser(), EHRClinicalEntryPermission.class))
+            return false;
+
+        return super.canInsert();
     }
 
-    //Added: 8-7-2024 R.Blasa
-    @Override
-    public boolean isVisible()
-    {
-        Group g = GroupManager.getGroup(getCtx().getContainer(), "Death Entry", GroupEnumType.SITE);
-        if (g != null && getCtx().getUser().isInGroup(g.getUserId()) && !getCtx().getContainer().hasPermission(getCtx().getUser(), AdminPermission.class))
-        {
-            return false;
-        }
-        return super.isVisible();
-    }
+
+
 }

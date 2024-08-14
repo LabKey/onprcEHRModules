@@ -10,7 +10,6 @@ import org.labkey.api.ehr.dataentry.RequestForm;
 import org.labkey.api.module.Module;
 import org.labkey.api.module.ModuleLoader;
 import org.labkey.api.view.template.ClientDependency;
-import org.labkey.onprc_ehr.security.ONPRC_EHRServiceRequestsPermission;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -81,14 +80,5 @@ public class NecropsyRequestForm extends RequestForm
         return defaultButtons;
     }
 
-    //    Added: 8-12-2024  R.Blasa
-    @Override
-    protected boolean canInsert()
-    {
-        if (!getCtx().getContainer().hasPermission(getCtx().getUser(), ONPRC_EHRServiceRequestsPermission.class))
 
-            return false;
-
-        return super.canInsert();
-    }
 }

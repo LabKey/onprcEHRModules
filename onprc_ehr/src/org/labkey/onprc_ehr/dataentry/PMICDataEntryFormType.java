@@ -45,14 +45,14 @@ public class PMICDataEntryFormType extends TaskForm
 
     }
 
-//    //    Added: 12-5-2019  R.Blasa  Allow access only to PMIC Access group.
-//    @Override
-//    protected boolean canInsert()
-//    {
-//        if (!getCtx().getContainer().hasPermission(getCtx().getUser(), ONPRC_EHRPMICEditPermission.class))
-//            return false;
-//
-//        return super.canInsert();
-//    }
+    //    Added: 8-14-2024  R.Blasa  Allow access only to PMIC Access group.
+    @Override
+    protected boolean canInsert()
+    {
+        if (!getCtx().getContainer().hasPermission(getCtx().getUser(), ONPRC_EHRPMICEditPermission.class))
+            return false;
+
+        return super.canInsert();
+    }
 
 }

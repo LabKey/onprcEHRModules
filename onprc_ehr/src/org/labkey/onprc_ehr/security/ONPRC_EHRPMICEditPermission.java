@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 LabKey Corporation
+ * Copyright (c) 2014-2017 LabKey Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,13 +15,15 @@
  */
 package org.labkey.onprc_ehr.security;
 
-import org.labkey.api.ehr.security.AbstractEHRPermission;
+import org.labkey.api.security.permissions.AbstractPermission;
 
-//Created: 8-12-2024 R. Blasa
-public class ONPRC_EHRServiceRequestsPermission extends AbstractEHRPermission
+/**
+
+ */
+public class ONPRC_EHRPMICEditPermission extends AbstractPermission
 {
-    public ONPRC_EHRServiceRequestsPermission()
+    public ONPRC_EHRPMICEditPermission()
     {
-        super("ONPRCEHRServiceRequestPermission", "This is the base permission used to grant permission to enter requests for all service request forms");
+        super("ONPRC_EHRPMICEditPermission", "This is the base permission used to control editing of the PMIC forms");
     }
 }

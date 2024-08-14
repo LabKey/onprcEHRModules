@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014-2016 LabKey Corporation
+ * Copyright (c) 2014-2017 LabKey Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,29 +15,24 @@
  */
 package org.labkey.onprc_ehr.security;
 
-import org.labkey.api.ehr.security.EHRDataEntryPermission;
-import org.labkey.api.security.permissions.DeletePermission;
 import org.labkey.api.security.permissions.InsertPermission;
 import org.labkey.api.security.permissions.ReadPermission;
 import org.labkey.api.security.permissions.UpdatePermission;
-import org.labkey.api.security.roles.AbstractModuleScopedRole;
-import org.labkey.onprc_ehr.ONPRC_EHRModule;
+import org.labkey.api.security.roles.AbstractRole;
 
 /**
 
  */
-public class ONPRC_EHRServiceRequestRole extends AbstractModuleScopedRole
+public class ONPRC_EHRPMICEditRole extends AbstractRole
 {
-    public ONPRC_EHRServiceRequestRole()
+    public ONPRC_EHRPMICEditRole()
     {
-        super("ONPRC EHR Service Requestor", "This role is to track which users can create requests for all Service Request forms.",
-                ONPRC_EHRModule.class,
+        super("ONPRC_EHR PMIC Editor", "This role is to track which users can edit the table PMIC forms.",
                 ReadPermission.class,
                 InsertPermission.class,
                 UpdatePermission.class,
-                DeletePermission.class,
-                EHRDataEntryPermission.class,
-                ONPRC_EHRServiceRequestsPermission.class
+                ONPRC_EHRPMICEditPermission.class
         );
     }
+
 }
