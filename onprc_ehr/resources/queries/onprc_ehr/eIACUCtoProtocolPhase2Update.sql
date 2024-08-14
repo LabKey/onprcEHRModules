@@ -1,3 +1,5 @@
+/*QUery updated to handle endate of expired Protocol*/
+
 Select
 --"Expired Protocol" as Result,
     p.protocol,
@@ -5,7 +7,7 @@ Select
     p.investigatorId,
     e.approval_Date as approve,
     p.lastAnnualReview,
-    p.enddate,
+    e.THree_Year_Expiration as enddate,
     p.external_id,
     p.ibc_approval_num,
     p.usda_level,
