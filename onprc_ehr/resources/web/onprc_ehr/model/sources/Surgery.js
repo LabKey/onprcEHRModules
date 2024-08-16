@@ -43,6 +43,8 @@ EHR.model.DataModelManager.registerMetadata('onprc_Surgery', {
                 hidden: false
             },
             category: {
+                shownInGrid: true,
+                hidden: false,
                 defaultValue: 'Surgical'
             },
             reason: {
