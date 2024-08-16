@@ -22,7 +22,7 @@ Ext4.define('ONPRC_EHR.grid.ObservationsRowEditorGridPanel', {
                 mode: 'MULTI'
             },
             plugins: [{
-                ptype: 'onprc_ehr-clinicalobservationscellediting',
+                ptype: 'clinicalobservationscellediting',
                 pluginId: 'cellediting',
                 clicksToEdit: 1
             }],
@@ -143,10 +143,32 @@ Ext4.define('ONPRC_EHR.grid.ObservationsRowEditorGridPanel', {
                 xtype: 'textfield'
             }
         },{
-            header: 'Inflammation',
+                header: 'inflammtion',
+                width: 200,
+                editable: true,
+                dataIndex: 'inflammation',
+                editor: {
+                    xtype: 'labkey-combo',
+                    displayField: 'state',
+                    valueField: 'state',
+                    forceSelection: true,
+                    defaultValue:'Normal',
+                    queryMode: 'local',
+                    anyMaych: true,
+                    value: 'N/A',
+                    store: {
+                        type: 'labkey-store',
+                        schemaName: 'ehr_lookups',
+                        queryName: 'normal_abnormal',
+                        autoLoad: true
+                    }
+               }
+         },{
+
+            header: 'bruising',
             width: 200,
             editable: true,
-            dataIndex: 'findings',
+            dataIndex: 'bruising',
             editor: {
                 xtype: 'labkey-combo',
                 displayField: 'state',
@@ -163,28 +185,29 @@ Ext4.define('ONPRC_EHR.grid.ObservationsRowEditorGridPanel', {
                     autoLoad: true
                 }
             }
-        },{
-            header: 'Bruising',
-            width: 200,
-            editable: true,
-            dataIndex: 'findings',
-            editor: {
-                xtype: 'labkey-combo',
-                displayField: 'state',
-                valueField: 'state',
-                forceSelection: true,
-                defaultValue:'Normal',
-                queryMode: 'local',
-                anyMaych: true,
-                value: 'N/A',
-                store: {
-                    type: 'labkey-store',
-                    schemaName: 'ehr_lookups',
-                    queryName: 'normal_abnormal',
-                    autoLoad: true
-                }
-            }
-        },{
+         },{
+
+               header: 'other',
+               width: 200,
+               editable: true,
+               dataIndex: 'other',
+               editor: {
+                   xtype: 'labkey-combo',
+                   displayField: 'state',
+                   valueField: 'state',
+                   forceSelection: true,
+                   defaultValue:'Normal',
+                   queryMode: 'local',
+                   anyMaych: true,
+                   value: 'N/A',
+                   store: {
+                       type: 'labkey-store',
+                       schemaName: 'ehr_lookups',
+                       queryName: 'normal_abnormal',
+                       autoLoad: true
+                   }
+               }
+           },{
             header: 'Remarks',
             width: 200,
             editable: true,

@@ -14,14 +14,14 @@ Ext4.define('ONPRC_EHR.plugin.ClinicalRemarksRowEditor', {
             xtype: 'ehr-observationsroweditorgridpanel',
             itemId: 'observationsPanel',
             remarkStore: this.cmp.store,
-            width: 600,
+            width: 500,
             store: store
         };
     },
 
     getDetailsPanelCfg: function(){
         return {
-            xtype: 'ehr-animaldetailsextendedpanel',
+            xtype: 'onprc_ehr-animaldetailsextendedpanel',
             itemId: 'detailsPanel'
         }
     },
