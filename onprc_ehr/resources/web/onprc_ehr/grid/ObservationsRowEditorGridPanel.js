@@ -143,7 +143,7 @@ Ext4.define('ONPRC_EHR.grid.ObservationsRowEditorGridPanel', {
                 xtype: 'textfield'
             }
         },{
-                header: 'inflammtion',
+                header: 'inflammation',
                 width: 200,
                 editable: true,
                 dataIndex: 'inflammation',
