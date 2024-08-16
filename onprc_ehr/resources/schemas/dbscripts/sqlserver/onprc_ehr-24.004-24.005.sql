@@ -54,3 +54,5 @@ ALTER TABLE [onprc_ehr].[protocolUpdate] ADD  DEFAULT (newid()) FOR [objectid]
     GO
 
 
+    GO
+-

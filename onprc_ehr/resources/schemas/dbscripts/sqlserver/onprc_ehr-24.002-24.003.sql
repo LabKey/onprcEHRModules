@@ -4,7 +4,7 @@
 -- Use the Specify Values for Template Parameters
 -- command (Ctrl-Shift-M) to fill in the parameter
 -- values below.
---
+--EXEC eIACUCBaseProtocolUpdate
 -- This block of comments will not be included in
 -- the definition of the procedure.
 --   Added updatge for Latest Renewal in the Stored Procedure

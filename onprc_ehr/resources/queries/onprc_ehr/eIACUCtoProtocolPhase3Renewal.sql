@@ -1,5 +1,11 @@
+/*
+* This query updates the existing Protocol data when a renew is approved.
+*Created 2024-08-14 jonesga
+*The query will update the following fields
+    Approval_date, Annual_Update_Due, Three Year Expiration, USDA Level
+*/
 Select
-    'Expired Protocol' as Result,
+--"Expired Protocol" as Result,
     p.protocol,
     p.title,
     p.investigatorId,
@@ -29,7 +35,6 @@ Select
     e.LatestRenewal
 
 
-from onprc_ehr.eIACUC_PRIME_VIEW_PROTOCOLS e  join onprc_ehr.protocol p on e.baseProtocol = p.external_Id
-where (p.external_ID IN
-(Select e1.BaseProtocol from onprc_ehr.eIACUC_PRIME_VIEW_PROTOCOLS e1 where e1.LatestRenewal  = 1 and e1.Protocol_State = 'Expired')
-and e.LatestRenewal = 1)
+from onprc_ehr.eIACUC_PRIME_VIEW_PROTOCOLS e  join onprc_ehr.ehr.protocolUpdate p on e.baseProtocol = p.external_Id
+where p.external_ID IN
+(Select e1.BaseProtocol from onprc_ehr.eIACUC_PRIME_VIEW_PROTOCOLS e1 where e1.LatestRenewal  = 1 )

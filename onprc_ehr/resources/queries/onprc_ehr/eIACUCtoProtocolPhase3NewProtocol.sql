@@ -1,11 +1,13 @@
+/*QUery updated to handle endate of expired Protocol*/
+
 Select
-    'Expired Protocol' as Result,
+--"Expired Protocol" as Result,
     p.protocol,
     p.title,
     p.investigatorId,
-    e.approval_Date as approve,
+    Cast(e.approval_Date as Date) as approve,
     p.lastAnnualReview,
-    p.enddate,
+    e.THree_Year_Expiration as enddate,
     p.external_id,
     p.ibc_approval_num,
     p.usda_level,
@@ -29,7 +31,8 @@ Select
     e.LatestRenewal
 
 
-from onprc_ehr.eIACUC_PRIME_VIEW_PROTOCOLS e  join onprc_ehr.protocol p on e.baseProtocol = p.external_Id
-where (p.external_ID IN
-(Select e1.BaseProtocol from onprc_ehr.eIACUC_PRIME_VIEW_PROTOCOLS e1 where e1.LatestRenewal  = 1 and e1.Protocol_State = 'Expired')
-and e.LatestRenewal = 1)
+from onprc_ehr.eIACUC_PRIME_VIEW_PROTOCOLS e  join onprc_ehr.ehr.protocolUpdate p on e.baseProtocol = p.external_Id
+where
+      (e.PROTOCOL_State = 'Approved' and e.RenewalNumber = 'Original' and e.Approval_date = Now()
+and
+    p.external_ID IN (Select e1.BaseProtocol from onprc_ehr.eIACUC_PRIME_VIEW_PROTOCOLS e1 where e1.LatestRenewal  = 1))

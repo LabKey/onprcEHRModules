@@ -5,7 +5,7 @@ Select
     p.protocol,
     p.title,
     p.investigatorId,
-    e.approval_Date as approve,
+    Cast(e.approval_Date as Date) as approve,
     p.lastAnnualReview,
     e.THree_Year_Expiration as enddate,
     p.external_id,
