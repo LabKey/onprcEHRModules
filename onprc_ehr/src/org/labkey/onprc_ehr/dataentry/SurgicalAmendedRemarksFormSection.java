@@ -38,7 +38,8 @@ public class SurgicalAmendedRemarksFormSection extends SimpleFormSection
 
         addClientDependency(ClientDependency.supplierFromPath("ehr/data/ClinicalObservationsClientStore.js"));
         addClientDependency(ClientDependency.supplierFromPath("ehr/buttons/roundsButtons.js"));
-//        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/panel/AnimalDetailsExtendedPanel.js"));
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/form/field/SurgeryEntryField.js"));
+
 
         setTemplateMode(TEMPLATE_MODE.NONE);
     }
