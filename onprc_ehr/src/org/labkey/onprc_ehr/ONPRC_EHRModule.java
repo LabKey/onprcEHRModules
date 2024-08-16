@@ -126,7 +126,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
     @Override
     public @Nullable Double getSchemaVersion()
     {
-        return 23.012;
+        return 23.015;
     }
 
     @Override
@@ -219,6 +219,12 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         //Added Oct 3rd, 2023 Kollil
         ns.registerNotification(new TreatmentAlertsMPANotification(this));
 
+        //Added June 28th, 2024 Kollil
+        ns.registerNotification(new LongTermMedsNotification(this));
+
+        //Added Aug 9th, 2024 Kollil
+        ns.registerNotification(new AdminNotifications(this));
+
         //Added 8-7-2018 R.Blasa
         ns.registerNotification(new BirthHousingMismatchNotification(this));
 
@@ -227,6 +233,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
 
         //Added 6-4-2019 Additional Scheduled for 5pm
         ns.registerNotification(new TreatmentAlertsPostOpsNotificationThird(this));
+
         //Added 5-9-2024 Additional to validate Available Draw Feed Values
         ns.registerNotification(new AvailableBloodVolumeNotification(this));
 
