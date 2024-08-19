@@ -1612,6 +1612,42 @@
 
         </columns>
     </table>
+    <table tableName="eIACUCToPrimeProtocolStatus" tableDbType="TABLE" useColumnOrder="true">
+    <tableTitle>IACUC Protocols Updates</tableTitle>
+    <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+    <auditLogging>DETAILED</auditLogging>
+    <importUrl></importUrl>
+    <insertUrl></insertUrl>
+    <updateUrl></updateUrl>
+    <deleteUrl></deleteUrl>
 
+    <columns>
+        <column columnName="rowid"/>
+        <column columnName="Protocol_ID"/>
+        <column columnName="Template_OID"/>
+        <column columnName="Protocol_OID"/>
+        <column columnName="Protocol_Title"/>
+        <column columnName="PI_ID"/>
+        <column columnName="PI_First_Name"/>
+        <column columnName="PI_Last_Name"/>
+        <column columnName="PI_Email"/>
+        <column columnName="PI_Phone"/>
+        <column columnName="USDA_Level"/>
+        <column columnName="Approval_Date"/>
+        <column columnName="Annual_Update_Due"/>
+        <column columnName="Three_year_Expiration"/>
+        <column columnName="Last_Modified"/>
+        <column columnName="createdby"/>
+        <column columnName="created"/>
+        <column columnName="modifiedby"/>
+        <column columnName="modified"/>
+        <column columnName="PROTOCOL_State"/>
+        <column columnName="PPQ_Numbers"/>
+        <column columnName="Description"/>
+        <column columnName="baseProtocol"/>
+        <column columnName="RenewalNumber"/>
+        <column columnName="LatestRenewal"/>
+    </columns>
+</table>
 
 </tables>

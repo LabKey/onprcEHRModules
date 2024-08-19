@@ -23,7 +23,7 @@ GO
 EXEC core.fn_dropifexists 'eIACUCBaseProtocolUpdate', 'onprc_ehr', 'PROCEDURE';
 
 Go
-CREATE PROCEDURE onprc_ehr.eIACUCBaseProtocol
+ALTER PROCEDURE [onprc_ehr].[eIACUCBaseProtocol]
 
     AS
 BEGIN
@@ -33,15 +33,16 @@ BEGIN
 --Drop Temporary Table #eIACUCBaseProtocol
 --DROP TABLE #eIACUCBaseProtocol
 -- Insert statements for procedure here
-cREATE tABLE #eIACUCBaseProtocol
-(BaseProtocol varchar(50) Not Null,
- RenewalNumber varchar(20) Not Null,
- Protocol_Id varchar(50) Not Null,
- Last_Modified varchar(30) not null ,
- LatestREnewal varchar (30) Not Null);
+CREATE tABLE #eIACUCBaseProtocol
+(BaseProtocol varchar(50) ,
+ RenewalNumber varchar(20),
+ Protocol_Id varchar(50) ,
+ Last_Modified varchar(30) ,
+ Approval_Date Date,
+ LatestREnewal varchar (30));
 
 --Populate the temporary table from query
-Insert INTO #eIACUCBaseProtocol(BaseProtocol,RenewalNumber,Protocol_id,Last_Modified,LatestRenewal)
+Insert INTO #eIACUCBaseProtocol(BaseProtocol,RenewalNumber,Protocol_id,Last_Modified,Approval_Date,LatestRenewal)
 Select
 
     Case when len(p.protocol_id) > 10 then substring(p.protocol_id, 6,15)
@@ -51,6 +52,7 @@ Select
          else 'Original'
         End as RenewalNumber,
     protocol_id,
+    Approval_Date,
     Last_Modified,
     ' ' as LatestRenewal
 
@@ -72,7 +74,6 @@ Set p.LatestRenewal = 1
     from onprc_ehr.eIACUC_PRIME_VIEW_PROTOCOLS p
 --where (p.BaseProtocol is not null and p.last_Modified = (Select Max(p1.Last_Modified) from onprc_ehr.ProtocolUpdate  p1 where p1.BaseProtocol = p.BaseProtocol))
 -- recosider the control to look for latest approval date versus last_modified.
-where (p.BaseProtocol is not null and p.Approval_Date = (Select Max(p1.Approval_Date) from onprc_ehr.ProtocolUpdate  p1 where p1.BaseProtocol = p.BaseProtocol))
+where (p.BaseProtocol is not null and p.Approval_Date = (Select Max(p1.Approval_Date) from #eIACUCBaseProtocol  p1 where p1.BaseProtocol = p.BaseProtocol))
 
 END
-GO
