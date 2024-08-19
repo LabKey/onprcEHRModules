@@ -13,6 +13,7 @@ import org.labkey.api.view.template.ClientDependency;
 import org.labkey.onprc_billing.security.ONPRCMiscChargesEntryPermission;
 import org.labkey.security.xml.GroupEnumType;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -36,13 +37,17 @@ public class ChargesFormType extends TaskForm
 
         addClientDependency(ClientDependency.supplierFromPath("onprc_billing/panel/ChargesInstructionPanel.js"));
         addClientDependency(ClientDependency.supplierFromPath("onprc_billing/buttons/financeButtons.js"));
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/window/MiscCharges_ScanWindow.js"));
+
     }
+
 
     @Override
     protected List<String> getMoreActionButtonConfigs()
     {
         List<String> defaultButtons = super.getMoreActionButtonConfigs();
         defaultButtons.add("COPY_TASK");
+        defaultButtons.add("MISC_SCAN_IMPORT");
 
         return defaultButtons;
     }
