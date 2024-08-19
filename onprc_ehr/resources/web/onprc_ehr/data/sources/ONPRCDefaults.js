@@ -20,6 +20,21 @@ EHR.model.DataModelManager.registerMetadata('Default', {
             }
         },
 
+        //Added by Kolli, 8/14/2024. Make the enddate not required globally,
+        // but added the validation code to force the enddate for all meds except Medroxyprojesterone and Dite - Multivitamins
+        // Refer tkt #
+        'study.treatment_order': {
+            enddate: {
+                xtype: 'xdatetime',
+                allowBlank: true
+                // extFormat: LABKEY.extDefaultDateTimeFormat,
+                // editorConfig: {
+                //     defaultHour: 23,
+                //     defaultMinutes: 59
+                // }
+            }
+        },
+
         'study.blood' : {
             tube_vol: {
                 hidden: true
@@ -42,7 +57,7 @@ EHR.model.DataModelManager.registerMetadata('Default', {
 
         },
 
-        // Added: 10-6-2022  R.Blasa
+        //Added: 10-6-2022  R.Blasa
         'ehr.tasks': {
             assignedto: {
                 useNull: true,
