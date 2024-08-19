@@ -93,30 +93,47 @@ Ext4.define('ONPRC_EHR.window.ManageRecordWindow', {
         var rec = form.getRecord();
         if (!rec)
             return;
-        if (!rec.get('taskid')) {
-            var tsk = LABKEY.Utils.generateUUID().toUpperCase();
-            LABKEY.Query.insertRows({
-                schemaName: 'ehr',
-                queryName: 'tasks',
-                rows: [{
-                    taskid: tsk,
-                    formtype: 'treatments',
-                    title: 'Medication/Diet',
-                    assignedto: LABKEY.Security.currentUser.userid,
-                    qcstate: EHR.Security.getQCStateByLabel('Completed').RowId,
-                    datecompleted: new Date(),
-                    category: 'Task'
-                }],
-                scope: this,
-                failure: EHR.Utils.onError,
-                success: function () {
-                    Ext4.Msg.hide();
+        //Added by Kollil, 6/26/24
+        //Refer to the ticket #9669
+        //This code snippet is added to show a pop-up question box when the user selects MPA medication on animal history snapshot screen - > Manage Treatments link.
+        if (rec.get('Id') && rec.get('code')=='E-85760')
+        {
+            Ext4.Msg.confirm('Medication Question', 'Have you confirmed MPA start date on CMU Calendar?', function(val){
+                if (val == 'yes') {
+                    if (!rec.get('taskid')) {
+                        var tsk = LABKEY.Utils.generateUUID().toUpperCase();
+                        LABKEY.Query.insertRows({
+                            schemaName: 'ehr',
+                            queryName: 'tasks',
+                            rows: [{
+                                taskid: tsk,
+                                formtype: 'treatments',
+                                title: 'Medication/Diet',
+                                assignedto: LABKEY.Security.currentUser.userid,
+                                qcstate: EHR.Security.getQCStateByLabel('Completed').RowId,
+                                datecompleted: new Date(),
+                                category: 'Task'
+                            }],
+                            scope: this,
+                            failure: EHR.Utils.onError,
+                            success: function () {
+                                Ext4.Msg.hide();
+                            }
+                        });
+                        rec.set('taskid', tsk);
+                    }
+                    this.down('#dataEntryPanel').onSubmit(btn);
                 }
-            });
-            rec.set('taskid', tsk);
+                else {
+
+                }
+            }, this)
         }
-        this.down('#dataEntryPanel').onSubmit(btn);
+        else {
+            this.down('#dataEntryPanel').onSubmit(btn);
+        }
     },
+
     onFormLoad: function(results){
         this.formResults = results;
         this.setTitle(this.formResults.formConfig.label);
