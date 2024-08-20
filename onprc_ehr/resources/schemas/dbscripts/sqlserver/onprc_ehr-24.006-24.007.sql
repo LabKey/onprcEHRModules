@@ -6,6 +6,7 @@ GO
 
 CREATE TABLE [onprc_ehr].eIACUCToPrimeProtocolStatus(
     [rowid] [int] IDENTITY(1,1) NOT NULL,
+    [primeaction] [varchar] (255),
     [Protocol_ID] [varchar](255) NOT NULL,
     [Template_OID] [varchar](32) NULL,
     [Protocol_OID] [varchar](255) NULL,

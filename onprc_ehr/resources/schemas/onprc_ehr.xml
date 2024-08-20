@@ -1623,6 +1623,7 @@
 
     <columns>
         <column columnName="rowid"/>
+        <column columnName="primeaction"/>
         <column columnName="Protocol_ID"/>
         <column columnName="Template_OID"/>
         <column columnName="Protocol_OID"/>
