@@ -42,6 +42,15 @@
                         </fk>
                         <defaultValue>No Charge</defaultValue>
                     </column>
+                    <column columnName="category">
+                        <columnTitle>Category</columnTitle>
+                        <fk>
+                            <fkDbSchema>ehr_lookups</fkDbSchema>
+                            <fkTable>drug_categories</fkTable>
+                            <fkColumnName>value</fkColumnName>
+                            <fkDisplayColumnName useRawValue="true"/>
+                        </fk>
+                    </column>
                     <column columnName="code">
                         <columnTitle>Code</columnTitle>
                         <fk>
@@ -162,16 +171,7 @@
                     <column columnName="remark">
                         <columnTitle>Remark</columnTitle>
                     </column>
-                    <column columnName="category">
-                        <columnTitle>Category</columnTitle>
-                        <fk>
-                            <fkDbSchema>ehr_lookups</fkDbSchema>
-                            <fkTable>drug_categories</fkTable>
-                            <fkColumnName>value</fkColumnName>
-                            <fkDisplayColumnName useRawValue="true"/>
-                        </fk>
-                    </column>
-                    <column columnName="begindate">
+                     <column columnName="begindate">
                         <columnTitle>Begin Date</columnTitle>
                     </column>
                     <column columnName="treatmentid">
