@@ -8,6 +8,3 @@ CREATE TABLE onprc_ehr.Environmental_Reference_Data (
 
         CONSTRAINT pk_referenceenv PRIMARY KEY (value)
 )
-
-
-    GO

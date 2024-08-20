@@ -735,6 +735,9 @@
             <column columnName="PROTOCOL_State"/>
             <column columnName="PPQ_Numbers"/>
             <column columnName="Description"/>
+            <column columnName="baseProtocol"/>
+            <column columnName="RenewalNumber"/>
+            <column columnName="LatestRenewal"/>
         </columns>
     </table>
     <table tableName="PotentialDam_source" tableDbType="TABLE">
@@ -1453,7 +1456,199 @@
 
         </columns>
     </table>
+    <table tableName="protocolUpdate" tableDbType="TABLE" useColumnOrder="true">
+        <tableTitle>IACUC Protocols Updates</tableTitle>
+        <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+        <auditLogging>DETAILED</auditLogging>
+        <importUrl></importUrl>
+        <insertUrl></insertUrl>
+        <updateUrl></updateUrl>
+        <deleteUrl></deleteUrl>
+        <pkColumnName>protocol</pkColumnName>
+        <tableUrl>/ehr/protocolDetails.view?protocol=${protocol}</tableUrl>
+        <columns>
+            <column columnName="protocol">
+                <isKeyField>true</isKeyField>
+                <columnTitle>IACUC Protocol</columnTitle>
+            </column>
+            <column columnName="title">
+                <nullable>true</nullable>
+                <columnTitle>Title</columnTitle>
+            </column>
+            <column columnName="inves">
+                <nullable>true</nullable>
+                <columnTitle>Investigator</columnTitle>
+            </column>
+            <column columnName="investigatorId">
+                <columnTitle>Investigator</columnTitle>
+                <isHidden>true</isHidden>
+            </column>
+            <column columnName="approve">
+                <columnTitle>3-yr Approval Date</columnTitle>
+                <nullable>true</nullable>
+                <formatString>Date</formatString>
+            </column>
+            <column columnName="lastAnnualReview">
+                <columnTitle>Date of Last Annual Update</columnTitle>
+                <nullable>true</nullable>
+                <formatString>Date</formatString>
+            </column>
+            <column columnName="enddate">
+                <columnTitle>End Date</columnTitle>
+                <nullable>true</nullable>
+                <formatString>Date</formatString>
+            </column>
+            <column columnName="first_approval">
+                <columnTitle>First Approval Date</columnTitle>
+                <nullable>true</nullable>
+                <formatString>Date</formatString>
+            </column>
+            <column columnName="project_type">
+                <columnTitle>Type</columnTitle>
+                <nullable>true</nullable>
+            </column>
+            <column columnName="external_id">
+                <columnTitle>External Id</columnTitle>
+                <nullable>true</nullable>
+            </column>
+            <column columnName="ibc_approval_required">
+                <columnTitle>IBC Approval Required?</columnTitle>
+                <nullable>true</nullable>
+                <isHidden>true</isHidden>
+            </column>
+            <column columnName="ibc_approval_num">
+                <columnTitle>IBC Approval Number</columnTitle>
+                <nullable>true</nullable>
+                <isHidden>true</isHidden>
+            </column>
+            <column columnName="usda_level">
+                <columnTitle>USDA Level</columnTitle>
+                <nullable>true</nullable>
+            </column>
+            <column columnName="last_modification">
+                <columnTitle>Date of Last Modification</columnTitle>
+            </column>
+            <column columnName="description">
+                <nullable>true</nullable>
+            </column>
+            <column columnName="maxAnimals">
+            </column>
+            <column columnName="objectid">
+                <columnTitle>Key</columnTitle>
+                <isHidden>true</isHidden>
+            </column>
+            <column columnName="container">
 
+            </column>
+            <column columnName="lsid">
+                <datatype>lsidtype</datatype>
+                <isReadOnly>true</isReadOnly>
+                <isHidden>true</isHidden>
+                <isUserEditable>false</isUserEditable>
+                <fk>
+                    <fkColumnName>ObjectUri</fkColumnName>
+                    <fkTable>Object</fkTable>
+                    <fkDbSchema>exp</fkDbSchema>
+                </fk>
+            </column>
+            <column columnName="createdby">
+                <isUserEditable>false</isUserEditable>
+                <nullable>true</nullable>
+                <isHidden>true</isHidden>
+            </column>
+            <column columnName="created">
+                <isUserEditable>false</isUserEditable>
+                <nullable>true</nullable>
+                <isHidden>true</isHidden>
+            </column>
+            <column columnName="modifiedby">
+                <isUserEditable>false</isUserEditable>
+                <nullable>true</nullable>
+                <isHidden>true</isHidden>
+            </column>
+            <column columnName="modified">
+                <isUserEditable>false</isUserEditable>
+                <nullable>true</nullable>
+                <isHidden>true</isHidden>
+            </column>
+            <column columnName="diCreatedby">
+                <isUserEditable>false</isUserEditable>
+                <nullable>true</nullable>
+                <isHidden>true</isHidden>
+                <fk>
+                    <fkDbSchema>core</fkDbSchema>
+                    <fkTable>Users</fkTable>
+                    <fkColumnName>UserId</fkColumnName>
+                </fk>
+            </column>
+            <column columnName="diCreated">
+                <isUserEditable>false</isUserEditable>
+                <nullable>true</nullable>
+                <isHidden>true</isHidden>
+            </column>
+            <column columnName="diModifiedby">
+                <isUserEditable>false</isUserEditable>
+                <nullable>true</nullable>
+                <isHidden>true</isHidden>
+                <fk>
+                    <fkDbSchema>core</fkDbSchema>
+                    <fkTable>Users</fkTable>
+                    <fkColumnName>UserId</fkColumnName>
+                </fk>
+            </column>
+            <column columnName="diModified">
+                <isUserEditable>false</isUserEditable>
+                <nullable>true</nullable>
+                <isHidden>true</isHidden>
+            </column>
+            <column columnName="contacts"/>
+            <column columnName="annual_update_due"/>
+            <column columnName="approval_date"/>
+            <column columnName="last_modified"/>
+            <column columnName="ppq_number"/>
+            <column columnName="protocol_state"/>
+            <column columnName="template_oid"/>
+            <column columnName="three_year_expiration"/>
 
+        </columns>
+    </table>
+    <table tableName="eIACUCToPrimeProtocolStatus" tableDbType="TABLE" useColumnOrder="true">
+    <tableTitle>IACUC Protocols Updates</tableTitle>
+    <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+    <auditLogging>DETAILED</auditLogging>
+    <importUrl></importUrl>
+    <insertUrl></insertUrl>
+    <updateUrl></updateUrl>
+    <deleteUrl></deleteUrl>
+
+    <columns>
+        <column columnName="rowid"/>
+        <column columnName="primeaction"/>
+        <column columnName="Protocol_ID"/>
+        <column columnName="Template_OID"/>
+        <column columnName="Protocol_OID"/>
+        <column columnName="Protocol_Title"/>
+        <column columnName="PI_ID"/>
+        <column columnName="PI_First_Name"/>
+        <column columnName="PI_Last_Name"/>
+        <column columnName="PI_Email"/>
+        <column columnName="PI_Phone"/>
+        <column columnName="USDA_Level"/>
+        <column columnName="Approval_Date"/>
+        <column columnName="Annual_Update_Due"/>
+        <column columnName="Three_year_Expiration"/>
+        <column columnName="Last_Modified"/>
+        <column columnName="createdby"/>
+        <column columnName="created"/>
+        <column columnName="modifiedby"/>
+        <column columnName="modified"/>
+        <column columnName="PROTOCOL_State"/>
+        <column columnName="PPQ_Numbers"/>
+        <column columnName="Description"/>
+        <column columnName="baseProtocol"/>
+        <column columnName="RenewalNumber"/>
+        <column columnName="LatestRenewal"/>
+    </columns>
+</table>
 
 </tables>

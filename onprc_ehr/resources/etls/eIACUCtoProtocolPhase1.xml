@@ -1,0 +1,16 @@
+<etl xmlns="http://labkey.org/etl/xml">
+    <name>eiACUCtoProtocolPhase1</name>
+    <description>Populates the extensible fields in Protocol</description>
+    <transforms>
+
+        <transform id="UpdateeIACUCData" type="StoredProcedure">
+            <description>Runs a stored procedure that generates lab values</description>
+            <procedure schemaName="onprc_ehr" procedureName="eIACUCBaseProtocol">
+            </procedure>
+        </transform>
+        <!--//Need a query that has needed fields for BaseProtocol and revisionNumber and then inserts that into eIACUC_Prime_View_Protocols
+                Also only want latest data-->
+
+    </transforms>
+
+</etl>

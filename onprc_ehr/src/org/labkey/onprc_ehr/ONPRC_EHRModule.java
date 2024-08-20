@@ -12,6 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * Upodate 2024/07/25
  */
 package org.labkey.onprc_ehr;
 
@@ -126,7 +127,10 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
     @Override
     public @Nullable Double getSchemaVersion()
     {
-        return 23.015;
+
+        return 24.007;
+
+
     }
 
     @Override
