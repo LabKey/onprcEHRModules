@@ -10,6 +10,7 @@ Turgor		{"xtype":"ehr-simplecombo","schemaName":"ehr_lookups","queryName":"turgo
 Pain Score		{"xtype":"ldk-numberfield","minValue":0,"maxValue":12}
 Other		{"xtype":"textfield"}
 Menses		{"xtype":"ehr-simplecombo","schemaName":"ehr_lookups","queryName":"mens_score","displayField":"value","sortFields":"sort_order","valueField":"value"}
+Vomit       {"xtype":"ehr-simplecombo","schemaName":"ehr_lookups","queryName":"vomit","displayField":"value","sortFields":"sort_order","valueField":"value"}
 App		{"xtype":"ehr-simplecombo","schemaName":"ehr_lookups","queryName":"app_score","displayField":"value","sortFields":"sort_order","valueField":"value"}
 Att		{"xtype":"ehr-simplecombo","schemaName":"ehr_lookups","queryName":"att_score","displayField":"value","valueField":"value"}
 Hyd		{"xtype":"ehr-simplecombo","schemaName":"ehr_lookups","queryName":"hyd_score","displayField":"value","sortFields":"sort_order","valueField":"value"}
