@@ -44,8 +44,7 @@ public class SurgicalRoundsRemarksFormSection extends SurgicalAmendedRemarksForm
 
 //        Modified: 7-26-2024 R. Blasa
         addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/window/AddSurgicalCasesWindow.js"));
-//        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/plugin/ClinicalRemarksRowEditor.js"));
-//        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/grid/ObservationsRowEditorGridPanel.js"));
+
 
         _showLocation = true;
     }

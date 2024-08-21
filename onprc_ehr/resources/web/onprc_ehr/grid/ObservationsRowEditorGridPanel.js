@@ -149,7 +149,6 @@ Ext4.define('ONPRC_EHR.grid.ObservationsRowEditorGridPanel', {
             editor: {
                 xtype: 'onprc_surgeryentryfield',
                 forceSelection: true
-//                defaultValue:'0 - None'
                }
          },{
 
@@ -159,8 +158,7 @@ Ext4.define('ONPRC_EHR.grid.ObservationsRowEditorGridPanel', {
             editor: {
                xtype: 'onprc_surgeryentryfield',
                forceSelection: true
-               defaultValue:'0 - None'
-                }
+                    }
 
           },{
            header: 'Other',
@@ -169,7 +167,7 @@ Ext4.define('ONPRC_EHR.grid.ObservationsRowEditorGridPanel', {
            editor: {
             xtype: 'onprc_surgeryentryfield',
            forceSelection: true
-//           defaultValue:'0 - None'
+
                 }
 
            },{

@@ -28,6 +28,7 @@ Ext4.define('onprc_ehr.form.field.SurgeryEntryField', {
             displayField:'value',
             valueField: 'value',
             queryMode: 'local',
+             defaultValue:'0 - None',
             store: Ext4.create('LABKEY.ext4.data.Store', {
                 schemaName: 'sla',
                 queryName: 'Reference_Data',
