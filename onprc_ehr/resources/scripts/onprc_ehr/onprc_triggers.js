@@ -1081,15 +1081,10 @@ exports.init = function(EHR){
             1. E-85760 - Medroxyprogesterone injectable (150mg/ml)
             2. E-Y7735 - Diet - Weekly Multivitamin
          */
-        if (row.code != 'E-85760' || row.code != 'E-Y7735') {
-        // if (row.code != 'E-85760') {
-            if (row.enddate == null) {
-                EHR.Server.Utils.addError(scriptErrors, 'enddate', 'Must enter enddate', 'WARN');
-            }
+        // console.log ("code:" + row.code);
+        if (row.code != 'E-85760' && !row.enddate) {
+            EHR.Server.Utils.addError(scriptErrors, 'enddate', 'Must enter enddate', 'WARN');
         }
-        // if (row.code != 'E-85760' && !row.enddate) {
-        //     EHR.Server.Utils.addError(scriptErrors, 'enddate', 'Must enter enddate', 'WARN');
-        // }
         // if (row.code != 'E-Y7735' && !row.enddate) {
         //     EHR.Server.Utils.addError(scriptErrors, 'enddate', 'Must enter enddate', 'WARN');
         // }
