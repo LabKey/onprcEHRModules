@@ -26,12 +26,12 @@ EHR.model.DataModelManager.registerMetadata('Default', {
         'study.treatment_order': {
             enddate: {
                 xtype: 'xdatetime',
-                allowBlank: true
-                // extFormat: LABKEY.extDefaultDateTimeFormat,
-                // editorConfig: {
-                //     defaultHour: 23,
-                //     defaultMinutes: 59
-                // }
+                allowBlank: true,
+                extFormat: LABKEY.extDefaultDateTimeFormat,
+                editorConfig: {
+                    defaultHour: 23,
+                    defaultMinutes: 59
+                }
             }
         },
 
