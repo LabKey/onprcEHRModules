@@ -30,6 +30,10 @@
             tag: 'div',
             style: 'padding-bottom: 10px;',
             id: 'procedureFlags_' + webpart.wrapperDivId
+          },{
+            tag: 'div',
+            style: 'padding-bottom: 10px;',
+            id: 'procedureObservations_' + webpart.wrapperDivId
         }];
 
         var el = Ext4.get(webpart.wrapperDivId);
@@ -101,6 +105,13 @@
             queryName: 'procedure_default_codes',
             filters: [LABKEY.Filter.create('procedureId', procedureId, LABKEY.Filter.Types.EQUAL)]
         }).render('procedureCodes_' + webpart.wrapperDivId);
+
+        LDK.Utils.getReadOnlyQWP({
+            title: 'Default Observations',
+            schemaName: 'ehr_lookups',
+            queryName: 'procedure_default_observations',
+            filters: [LABKEY.Filter.create('procedureId', procedureId, LABKEY.Filter.Types.EQUAL)]
+        }).render('procedureObservations_' + webpart.wrapperDivId);
     });
 
 </script>

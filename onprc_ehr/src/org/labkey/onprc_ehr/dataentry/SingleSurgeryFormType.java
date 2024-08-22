@@ -54,6 +54,7 @@ public class SingleSurgeryFormType extends EncounterForm
                 new EncounterChildFormSection("ehr", "encounter_summaries", "Narrative", true),
                 new EncounterMedicationsFormSection("study", "Drug Administration", "Medications/Treatments Given", true),
                 new EncounterMedicationsFormSection("study", "Treatment Orders", "Medication/Treatment Orders", false),
+                new ClinicalObservationsFormSection(EHRService.FORM_SECTION_LOCATION.Tabs),
                 new EncounterChildFormSection("study", "weight", "Weight", false, "EHR.data.WeightClientStore", Arrays.asList(ClientDependency.supplierFromPath("ehr/data/WeightClientStore.js")), null),
                 new BloodDrawFormSection(false, EHRService.FORM_SECTION_LOCATION.Tabs),
                 new EncounterChildFormSection("ehr", "snomed_tags", "Diagnostic Codes", true)
