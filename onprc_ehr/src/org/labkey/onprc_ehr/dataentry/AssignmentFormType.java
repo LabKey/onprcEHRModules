@@ -20,6 +20,7 @@ import org.labkey.api.ehr.dataentry.DataEntryFormContext;
 import org.labkey.api.ehr.dataentry.FormSection;
 import org.labkey.api.ehr.dataentry.TaskFormSection;
 import org.labkey.api.ehr.dataentry.UnsaveableTask;
+import org.labkey.api.ehr.security.EHRClinicalEntryPermission;
 import org.labkey.api.module.Module;
 import org.labkey.api.view.template.ClientDependency;
 
@@ -52,5 +53,17 @@ public class AssignmentFormType extends UnsaveableTask
         //Added 5-26-2016 R.Blasa
         addClientDependency(ClientDependency.supplierFromPath("/onprc_ehr/model/sources/ProjectAnimalConditions.js"));
 
+    }
+
+
+    //    //    Added: 8-12-2024  R.Blasa
+    @Override
+    protected boolean canInsert()
+    {
+        if (!getCtx().getContainer().hasPermission(getCtx().getUser(), EHRClinicalEntryPermission.class))
+
+            return false;
+
+        return super.canInsert();
     }
 }
