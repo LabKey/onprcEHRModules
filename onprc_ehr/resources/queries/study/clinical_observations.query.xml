@@ -50,11 +50,11 @@
                         <isHidden>true</isHidden>
                     </column>
                     <column columnName="bruising">
-                        <columnTitle>Brusing</columnTitle>
+                        <columnTitle>Bruising</columnTitle>
                         <isHidden>true</isHidden>
                     </column>
                     <column columnName="other">
-                        <columnTitle>Remarks</columnTitle>
+                        <columnTitle>Other</columnTitle>
                         <isHidden>true</isHidden>
                     </column>
                 </columns>
