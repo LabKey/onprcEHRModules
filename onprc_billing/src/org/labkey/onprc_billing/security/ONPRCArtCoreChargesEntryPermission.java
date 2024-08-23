@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2017 LabKey Corporation
+ * Copyright (c) 2013 LabKey Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,19 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.labkey.onprc_ehr.dataentry;
+package org.labkey.onprc_billing.security;
 
-import org.labkey.api.ehr.dataentry. NonStoreFormSection;
-import org.labkey.api.view.template.ClientDependency;
+import org.labkey.api.security.permissions.AbstractPermission;
 
-//Created:12-20-2018  R.Blasa
-
-public class AnimalDetailssFormSection extends NonStoreFormSection
+//Created: 5-14-2024  R.Blasa
+public class ONPRCArtCoreChargesEntryPermission extends AbstractPermission
 {
-    public AnimalDetailssFormSection()
+    public ONPRCArtCoreChargesEntryPermission()
     {
-        super("AnimalDetails", "Animal Details", "onprc_ehr-animaldetailspanels");
-        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/panel/AnimalDetailsPanel.js"));
-
+        super("ONPRCArtCoreChargesEntryPermission", "Can insert Art Core charges into the EHR");
     }
 }
+

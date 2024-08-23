@@ -34,6 +34,7 @@ Ext4.onReady(function(){
                 name: 'Requirements Overdue/Due Soon (Full SSRS Reports)', url: ctx['SSRSServerURL'] +'%2fPrime+Reports%2fCompliance%2fOverdue_Soon_Report&rs:Command=Render'
             },{
                 name: 'Requirements Overdue/Due Soon (SSRS Reports by Host)', url: ctx['SSRSServerURL'] +'%2fPrime+Reports%2fCompliance%2fOverdue_Soon_Host_Report&rs:Command=Render'
+
             }
             ]
         },{
@@ -43,8 +44,7 @@ Ext4.onReady(function(){
             },{
                 name: 'View/Edit Dates Employees Completed Requirements', url: '<%=contextPath%>/ldk' + container + '/updateQuery.view?schemaName=ehr_compliancedb&query.queryName=CompletionDates'
             // },{
-            //     name: 'Enter Employees Completed Requirements(Special Access)', url: ctx['SSRSServerURL'] +'%2fPrime+Reports%2fCompliance%2fEmployeeCompletionDatesInput&rs:Command=Render'
-
+            //     name:  'View Report Only  Employees Completed Requirements', url: '<%=contextPath%>/ldk' + container + '/updateQuery.view?schemaName=ehr_compliancedb&query.queryName=completionDates_Units_Category'
             }]
         },{
             header: 'Configuration of Requirements',
@@ -81,6 +81,8 @@ Ext4.onReady(function(){
                 name: 'Requirements Per Essential Form', url: LABKEY.ActionURL.buildURL('ehr','dataEntryForm', '/ONPRC/Admin/Compliance',{formType: 'employeecategoryrecords'})
             },{
                 name: 'Edit form with Task ID', url: LABKEY.ActionURL.buildURL('ONPRC_EHR_ComplianceDB', 'enterData.view',(ctx ? ctx['EmployeeContainer'] : null), null)
+            },{
+                name: 'SciShield input form',url: '<%=contextPath%>/query' + container + '/executeQuery.view?schemaName=onprc_ehr_compliancedb&query.queryName=SciShield_Data'
             }]
         },{
 
