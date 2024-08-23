@@ -126,7 +126,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
     @Override
     public @Nullable Double getSchemaVersion()
     {
-        return 23.011;
+        return 23.015;
     }
 
     @Override
@@ -219,6 +219,12 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         //Added Oct 3rd, 2023 Kollil
         ns.registerNotification(new TreatmentAlertsMPANotification(this));
 
+        //Added June 28th, 2024 Kollil
+        ns.registerNotification(new LongTermMedsNotification(this));
+
+        //Added Aug 9th, 2024 Kollil
+        ns.registerNotification(new AdminNotifications(this));
+
         //Added 8-7-2018 R.Blasa
         ns.registerNotification(new BirthHousingMismatchNotification(this));
 
@@ -227,6 +233,10 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
 
         //Added 6-4-2019 Additional Scheduled for 5pm
         ns.registerNotification(new TreatmentAlertsPostOpsNotificationThird(this));
+
+        //Added 5-9-2024 Additional to validate Available Draw Feed Values
+        ns.registerNotification(new AvailableBloodVolumeNotification(this));
+
 
         ns.registerNotification(new RequestAdminNotification(this));
         ns.registerNotification(new ColonyAlertsLiteNotification(this));
@@ -400,10 +410,10 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         }
 
 
-        //Modified: 9-7-2023  R.Blasa
+        //Modified: 7-2-2024  R.Blasa
         try
         {
-            EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "Clinical Pathology CPL Surface Sanitation Summary Report", this, new URLHelper("https://pcdbssrsprd1.ohsu.edu/ReportServer/Pages/ReportViewer.aspx?%2fPrime+Reports%2fClinPath%2fPrimeLaboratory_AssessmentReport&rs:Command=Render")
+            EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "Clinical Pathology Test Results for Environmental Assessment Summary Report", this, new URLHelper("https://pcdbssrsprd1.ohsu.edu/ReportServer/Pages/ReportViewer.aspx?%2fPrime+Reports%2fClinPath%2fPrimeLaboratory_AssessmentReport&rs:Command=Render")
             {
                 // SSRS is picky about the URI-encoding of the query parameters
                 @Override
@@ -590,7 +600,6 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
 
         //Added: 3-24-2023  R.Blasa
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(EnvironmentalATPFormType.class, this));
-
 
 
         //single section forms
