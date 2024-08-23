@@ -79,13 +79,13 @@ public class AdminNotifications extends ColonyAlertsNotification
     @Override
     public String getCronString()
     {
-        return "0 0 16 * * ?";
+        return "0 0 6 * * ?";
     }
 
     @Override
     public String getScheduleDescription()
     {
-        return "every day at 4:00PM";
+        return "every day at 6:00AM";
     }
 
     @Override
@@ -119,7 +119,7 @@ public class AdminNotifications extends ColonyAlertsNotification
         TableSelector ts = new TableSelector(ti, null, new Sort("date"));
         long count = ts.getRowCount();
         if (count == 0) {
-            msg.append("<b>There are no other meds except E-85760 (Medroxyprogesterone injectable 150mg/ml) and E-Y7735 (Diet - Weekly Multivitamin) with missing end dates!</b><hr>");
+            msg.append("<b>There are no meds ordered except E-85760 (Medroxyprogesterone injectable 150mg/ml) and E-Y7735 (Diet - Weekly Multivitamin) with missing end dates!</b><hr>");
         }
         else if (count > 0)
         {
