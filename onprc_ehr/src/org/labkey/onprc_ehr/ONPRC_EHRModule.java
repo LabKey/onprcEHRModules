@@ -222,6 +222,9 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         //Added June 28th, 2024 Kollil
         ns.registerNotification(new LongTermMedsNotification(this));
 
+        //Added Aug 9th, 2024 Kollil
+        ns.registerNotification(new AdminNotifications(this));
+
         //Added 8-7-2018 R.Blasa
         ns.registerNotification(new BirthHousingMismatchNotification(this));
 
