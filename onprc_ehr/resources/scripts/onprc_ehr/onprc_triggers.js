@@ -462,6 +462,24 @@ exports.init = function(EHR){
 
     });
 
+    //Added 8-5-2024 Blasa  Prevent inserting Mense record when Flag value exists
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_INSERT, 'study', 'clinical_observations', function(helper, scriptErrors, row, oldRow) {
+
+
+        if (row.Id && row.category == 'Menses')
+        {
+            var msg = triggerHelper.validateMenseFlagprocess(row.Id);
+            if (msg)
+            {
+                EHR.Server.Utils.addError(scriptErrors, 'category',  msg, 'ERROR');
+            }
+        }
+
+    });
+
+
+
+
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.INIT, 'study', 'flags', function(event, helper){
         helper.setScriptOptions({
             allowFutureDates: true,
