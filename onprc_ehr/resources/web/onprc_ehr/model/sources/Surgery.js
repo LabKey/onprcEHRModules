@@ -139,7 +139,7 @@ EHR.model.DataModelManager.registerMetadata('onprc_Surgery', {
                  showInGrid: true,
                  hidden: false,
                  columnConfig: {
-                        width: 150
+                        width: 250
                   }
                 },
                 observation_score: {

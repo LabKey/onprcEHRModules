@@ -34,7 +34,7 @@ Ext4.define('onprc_ehr.form.field.SurgeryExceptionField', {
                 queryName: 'Reference_Data',
                 columns: 'value',
                 defaultValue:'0 - None',
-                sort: 'value',
+                sort: 'sort_order',
                 filterArray: [
                     LABKEY.Filter.create('enddate', null, LABKEY.Filter.Types.ISBLANK),
                     LABKEY.Filter.create('ColumnName', 'Surgicalobservationexception', LABKEY.Filter.Types.EQUAL)],
@@ -70,7 +70,7 @@ Ext4.define('onprc_ehr.form.field.SurgeryScoreField', {
                 queryName: 'Reference_Data',
                 columns: 'value',
                 defaultValue:'Normal',
-                sort: 'value',
+                sort: 'sort_order',
                 filterArray: [
                     LABKEY.Filter.create('enddate', null, LABKEY.Filter.Types.ISBLANK),
                     LABKEY.Filter.create('ColumnName', 'Surgicalobservationscore', LABKEY.Filter.Types.EQUAL)],
@@ -105,7 +105,7 @@ Ext4.define('onprc_ehr.form.field.SurgeryOtherField', {
                 queryName: 'Reference_Data',
                 columns: 'value',
                 defaultValue:'0 - None',
-                sort: 'value',
+                sort: 'sort_order',
                 filterArray: [
                     LABKEY.Filter.create('enddate', null, LABKEY.Filter.Types.ISBLANK),
                     LABKEY.Filter.create('ColumnName', 'Surgicalobservationother', LABKEY.Filter.Types.EQUAL)],
