@@ -119,18 +119,27 @@ EHR.model.DataModelManager.registerMetadata('onprc_Surgery', {
                inflammation: {
                  xtype: 'onprc_surgeryentryfield',
                  showInGrid: true,
-                 hidden: false
+                 hidden: false,
+                 columnConfig: {
+                         width: 150
+                     }
                  },
                 bruising: {
                   xtype: 'onprc_surgeryentryfield',
                   showInGrid: true,
-                  hidden: false
+                  hidden: false,
+                  columnConfig: {
+                       width: 150
+                     }
                   },
                 other: {
                  xtype: 'onprc_surgeryentryfield',
                  showInGrid: true,
-                 hidden: false
+                 hidden: false,
+                 columnConfig: {
+                        width: 150
                   }
+                }
               },
         'ehr.encounter_participants': {
             comment: {
