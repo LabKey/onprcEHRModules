@@ -117,30 +117,39 @@ EHR.model.DataModelManager.registerMetadata('onprc_Surgery', {
         },
         'study.clinical_observations': {
                inflammation: {
-                 xtype: 'onprc_surgeryentryfield',
+                 xtype: 'onprc_surgeryexceptionfield',
                  showInGrid: true,
                  hidden: false,
+                 defaultValue: '0 - None',
                  columnConfig: {
                          width: 150
                      }
                  },
                 bruising: {
-                  xtype: 'onprc_surgeryentryfield',
+                  xtype: 'onprc_surgeryexceptionfield',
                   showInGrid: true,
                   hidden: false,
+                  defaultValue: '0 - None',
                   columnConfig: {
                        width: 150
                      }
                   },
                 other: {
-                 xtype: 'onprc_surgeryentryfield',
+                 xtype: 'onprc_surgeryotherfield',
                  showInGrid: true,
                  hidden: false,
                  columnConfig: {
                         width: 150
                   }
-                }
-              },
+                },
+                observation_score: {
+                     xtype: 'onprc_surgeryscorefield',
+                     defaultValue: 'Normal',
+                     columnConfig: {
+                            width: 150
+                      }
+                    }
+  },
         'ehr.encounter_participants': {
             comment: {
                 hidden: false,
