@@ -113,15 +113,18 @@ Ext4.define('ONPRC_EHR.window.AddProcedureDefaultsWindow', {
 
     tableNameMap: {
         'Drug Administration': {
+            schemaName: 'ehr_lookups',
             queryName: 'procedure_default_treatments',
             columns: 'procedureid,code,qualifier,route,frequency,volume,vol_units,dosage,dosage_units,concentration,conc_units,amount,amount_units'
         },
 
         'clinical_observations': {
+                    schemaName: 'onprc_ehr',
                     queryName: 'procedure_default_observations',
                     columns: 'procedureid,category,area,observation_score,inflammation,bruising,other,remark'
                 },
         encounter_summaries: {
+            schemaName: 'ehr_lookups',
             queryName: 'procedure_default_comments',
             columns: 'procedureid,comment',
             targetColumns: 'procedureid,remark'
@@ -142,7 +145,7 @@ Ext4.define('ONPRC_EHR.window.AddProcedureDefaultsWindow', {
             if (cfg){
                 totalRequests++;
                 multi.add(LABKEY.Query.selectRows, {
-                    schemaName: 'ehr_lookups',
+                    schemaName: cfg.schemaName,
                     queryName: cfg.queryName,
                     requiredVersion: 9.1,
                     columns: cfg.columns,
