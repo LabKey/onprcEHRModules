@@ -487,13 +487,13 @@ EHR.DataEntryUtils.registerGridButton('APPLYENCOUNTERDEFAULTSAMENDED', function(
             LDK.Assert.assertNotEmpty('Unable to find grid in APPLYENCOUNTERDEFAULTSAMENDED button', grid);
 
             var panel = grid.up('ehr-dataentrypanel');
-            LDK.Assert.assertNotEmpty('Unable to find dataEntryPanel in APPLYENCOUNTERDEFAULTSAMENDEDTS button', panel);
+            LDK.Assert.assertNotEmpty('Unable to find dataEntryPanel in APPLYENCOUNTERDEFAULTSAMENDED button', panel);
 
             var store = panel.storeCollection.getClientStoreByName('encounters');
             LDK.Assert.assertNotEmpty('Unable to find encounters store in APPLYENCOUNTERDEFAULTSAMENDED button', store);
 
             if (store){
-                Ext4.create('EHR.window.AddProcedureDefaultsWindow', {
+                Ext4.create('ONPRC_EHR.window.AddProcedureDefaultsWindow', {
                     dataEntryPanel: panel,
                     targetTabs: [grid],
                     encountersStore: store
@@ -503,19 +503,19 @@ EHR.DataEntryUtils.registerGridButton('APPLYENCOUNTERDEFAULTSAMENDED', function(
     });
 });
 
-EHR.DataEntryUtils.registerDataEntryFormButton('APPLYENCOUNTERDEFAULTS', {
+EHR.DataEntryUtils.registerDataEntryFormButton('APPLYENCOUNTERDEFAULTSAMENDED', {
     text: 'Add Procedure Defaults',
     xtype: 'button',
     tooltip: 'Click to copy records from the encounters section',
     handler: function(btn){
         var panel = btn.up('ehr-dataentrypanel');
-        LDK.Assert.assertNotEmpty('Unable to find dataEntryPanel in APPLYENCOUNTERDEFAULTS button', panel);
+        LDK.Assert.assertNotEmpty('Unable to find dataEntryPanel in APPLYENCOUNTERDEFAULTSAMENDED button', panel);
 
         var store = panel.storeCollection.getClientStoreByName('encounters');
-        LDK.Assert.assertNotEmpty('Unable to find encounters store in APPLYENCOUNTERDEFAULTS button', store);
+        LDK.Assert.assertNotEmpty('Unable to find encounters store in APPLYENCOUNTERDEFAULTSAMENDED button', store);
 
         if (store){
-            Ext4.create('EHR.window.AddProcedureDefaultsWindow', {
+            Ext4.create('ONPRC_EHR.window.AddProcedureDefaultsWindow', {
                 dataEntryPanel: panel,
                 encountersStore: store
             }).show();
