@@ -11,7 +11,7 @@
  * @cfg hrefTarget
  * @cfg redacted
  */
-//Created: 6-13-2016  R.Blasa
+//Created: 9-3-2024  R.Blasa
 Ext4.define('onprc_ehr.panel.SnapshotPanel', {
     extend: 'EHR.panel.SnapshotPanel',
     alias: 'widget.onprc_ehr-snapshotpanel',
