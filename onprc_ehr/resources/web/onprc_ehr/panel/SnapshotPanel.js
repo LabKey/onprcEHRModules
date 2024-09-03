@@ -11,7 +11,7 @@
  * @cfg hrefTarget
  * @cfg redacted
  */
-//Created: 9-3-2024  R.Blasa
+//Created: 6-13-2016  R.Blasa
 Ext4.define('onprc_ehr.panel.SnapshotPanel', {
     extend: 'EHR.panel.SnapshotPanel',
     alias: 'widget.onprc_ehr-snapshotpanel',
@@ -103,8 +103,8 @@ Ext4.define('onprc_ehr.panel.SnapshotPanel', {
                         name: 'calculated_status'
                     },{
                         xtype: 'displayfield',
-                        fieldLabel: 'Sex',
-                        name: 'sex'
+                        fieldLabel: 'Gender',
+                        name: 'gender'
                     },{
                         xtype: 'displayfield',
                         fieldLabel: 'Species',
@@ -633,7 +633,7 @@ Ext4.define('onprc_ehr.panel.SnapshotPanel', {
 
         toSet['species'] = row.getSpecies();
         toSet['geographic_origin'] = row.getGeographicOrigin();
-        toSet['sex'] = row.getGender();
+        toSet['gender'] = row.getGender();
         toSet['age'] = row.getAgeInYearsAndDays();
 
         var location;
