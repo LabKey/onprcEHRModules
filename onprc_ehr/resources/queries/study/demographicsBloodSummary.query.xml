@@ -11,10 +11,10 @@
                         <isHidden>false</isHidden>
                     </column>
                     <column columnName="gender">
-                        <columnTitle>Gender</columnTitle>
+                        <columnTitle>Sex</columnTitle>
                     </column>
                     <column columnName="species">
-                        <columnTitle>Speices</columnTitle>
+                        <columnTitle>Species</columnTitle>
                     </column>
                     <column columnName="yoa">
                         <columnTitle>Year of Birth</columnTitle>
