@@ -1190,7 +1190,7 @@
                 <columnTitle>Species</columnTitle>
             </column>
             <column columnName="gender">
-                <columnTitle>Gender</columnTitle>
+                <columnTitle>Sex</columnTitle>
             </column>
             <column columnName="ageclass">
                 <columnTitle>Age Class</columnTitle>
