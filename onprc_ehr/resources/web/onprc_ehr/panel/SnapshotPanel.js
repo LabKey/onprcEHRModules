@@ -103,8 +103,8 @@ Ext4.define('onprc_ehr.panel.SnapshotPanel', {
                         name: 'calculated_status'
                     },{
                         xtype: 'displayfield',
-                        fieldLabel: 'Gender',
-                        name: 'gender'
+                        fieldLabel: 'Sex',
+                        name: 'sex'
                     },{
                         xtype: 'displayfield',
                         fieldLabel: 'Species',
@@ -633,7 +633,7 @@ Ext4.define('onprc_ehr.panel.SnapshotPanel', {
 
         toSet['species'] = row.getSpecies();
         toSet['geographic_origin'] = row.getGeographicOrigin();
-        toSet['gender'] = row.getGender();
+        toSet['sex'] = row.getGender();
         toSet['age'] = row.getAgeInYearsAndDays();
 
         var location;
