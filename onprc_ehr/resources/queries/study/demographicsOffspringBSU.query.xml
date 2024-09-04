@@ -21,7 +21,7 @@
                         </fk>
                     </column>
                     <column columnName="offspringgender">
-                        <columnTitle>Gender</columnTitle>
+                        <columnTitle>Sex</columnTitle>
                     </column>
                     <column columnName="birth">
                         <columnTitle>Birth</columnTitle>
