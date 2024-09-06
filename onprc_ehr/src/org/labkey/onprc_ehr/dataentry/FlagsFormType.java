@@ -28,7 +28,9 @@ import org.labkey.api.security.permissions.AdminPermission;
 import org.labkey.api.security.permissions.Permission;
 import org.labkey.security.xml.GroupEnumType;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * User: bimber
@@ -46,6 +48,19 @@ public class FlagsFormType extends UnsaveableTask
                 new AnimalDetailsFormSection(),
                 new SimpleGridPanel("study", "flags", "Flags")
         ));
+
+
+    }
+
+
+    @Override
+    protected List<String> getButtonConfigs()
+    {
+        List<String> defaultButtons = new ArrayList<>();
+        defaultButtons.add("REVIEW");
+        defaultButtons.add("SUBMIT");
+
+        return defaultButtons;
     }
 
     @Override
