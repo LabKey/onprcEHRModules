@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>"IACUC Administration"</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .header {
+            background-color: royalblue;
+            color: white;
+            text-align: center;
+            padding: 1em;
+        }
+        .row {
+            display: flex;
+        }
+        .column {
+            flex: 33.33%;
+            padding: 15px;
+        }
+        .column1 { background-color: #f1f1f1; }
+        .column2 { background-color: #ddd; }
+        .column3 { background-color: #f1f1f1; }
+    </style>
+</head>
+<body>
+<div class="header">
+    <h1>eIACUC Administration</h1>
+</div>
+<div class="row">
+    <div class="column column1">
+        <h2>eIACUC Imports</h2>
+        <ul>
+            <li><a href="https://iacucapp.ohsu.edu/IACUC/sd/Rooms/DisplayPages/LayoutInitial?Container=com.webridge.entity.Entity[OID[24CEA4774E394E4389F64BD43D70C37F]]">Open eIACUC Application</a></li>
+            <li><a href="http://localhost:8080/labkey/query/ONPRC/EHR/executeQuery.view?schemaName=onprc_ehr&query.queryName=eIACUC_PRIME_VIEW_ANIMAL_GROUPS">eIACUC_PRIME_VIEW_ANIMAL_Groups</a></li>
+            <li><a href="http://localhost:8080/labkey/query/ONPRC/EHR/executeQuery.view?schemaName=onprc_ehr&query.queryName=eIACUC_PRIME_VIEW_IBC_NUMBERS">eIACUC_PRIME_VIEW_IBC_NUMBERS</a></li>
+            <li><a href="http://localhost:8080/labkey/query/ONPRC/EHR/executeQuery.view?schemaName=onprc_ehr&query.queryName=eIACUC_PRIME_VIEW_NON_SURGICAL_PROCS">eIACUC_PRIME_VIEW_NON_SURGICAL_PROCS</a></li>
+            <li><a href="http://localhost:8080/labkey/query/ONPRC/EHR/executeQuery.view?schemaName=onprc_ehr&query.queryName=eIACUC_PRIME_VIEW_PROTOCOLS">eIACUC_PRIME_VIEW_PROTOCOLS</a></li>
+            <li><a href="http://localhost:8080/labkey/query/ONPRC/EHR/executeQuery.view?schemaName=onprc_ehr&query.queryName=eIACUC_PRIME_VIEW_SURGICAL_PROCS">eIACUC_PRIME_VIEW_SURGICAL_PROCS</a></li>
+        </ul>
+    </div>
+    <div class="column column2">
+        <h2>Processing Tools</h2>
+        <ul>
+            <li><a href="http://localhost:8080/labkey/dataintegration/ONPRC/EHR/begin.view#">eTL Start Page</a></li>
+            <li><a href="https://www.example.com/item2">eTL Update PRIME eIACUC Data</a></li>
+            <li><a href="https://www.example.com/item3">Stored Procedures</a></li>
+        </ul>
+    </div>
+    <div class="column column3">
+        <h2>"Compare eIACUC to Prime Protocols"</h2>
+        <ul>
+            <li><a href="https://www.example.com/item1">Expired Protocols</a></li>
+            <li><a href="https://www.example.com/item2">Revised Protocols</a></li>
+            <li><a href="https://www.example.com/item3">New Protocols</a></li>
+        </ul>
+    </div>
+</div>
+</body>
+</html>
+```
+
