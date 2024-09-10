@@ -165,21 +165,7 @@ Ext4.define('ONPRC_EHR.window.ApplyTemplateWindow', {
 
     statics: {
         loadTemplateRecords: function(callback, scope, storeCollection, templateId, initialValues){
-            LABKEY.Query.selectRows({
-                schemaName: 'study',
-                queryName: 'demographics',
-                columns: 'Id,Id/MostRecentWeight/MostRecentWeight',
-                scope: this,
-                filterArray: [
-                    LABKEY.Filter.create('Id', this.animalId, LABKEY.Filter.Types.EQUAL)
-                ],
-                success: function (data) {
-                    if (data.rows && data.rows.length) {
-                        this.weight = data.row[0];
-                    }
-                }
 
-            });
             //subjectArray, date
             LABKEY.Query.selectRows({
                 schemaName: 'ehr',
@@ -323,6 +309,7 @@ Ext4.define('ONPRC_EHR.window.ApplyTemplateWindow', {
 
     getInitialRecordValues: function(){
         var ret = [];
+        var weight = [];
         var date = this.down('#dateField').getValue();
         var obj = {
             date: date
@@ -331,8 +318,25 @@ Ext4.define('ONPRC_EHR.window.ApplyTemplateWindow', {
         if   (this.down('#subjectIds')){
             var   subjectArray = LDK.Utils.splitIds(this.down('#subjectIds').getValue(),true);
             Ext4.Array.each(subjectArray, function(subj){
+                 this.animalId = subj;
+                 LABKEY.Query.selectRows({
+                            schemaName: 'study',
+                            queryName: 'demographics',
+                            columns: 'Id,Id/MostRecentWeight/MostRecentWeight',
+                            scope: this,
+                            filterArray: [
+                                LABKEY.Filter.create('Id', this.animalId, LABKEY.Filter.Types.EQUAL)
+                            ],
+                            success: function (data) {
+                                if (data.rows && data.rows.length) {
+                                    weight = data.rows[0].Id/MostRecentWeight/MostRecentWeight;
+                                }
+                            }
+
+                        });
                 ret.push(Ext4.apply({
-                    Id: subj
+                    Id: subj,
+                    Weight: weight
                 }, obj));
             }, this);
         }
