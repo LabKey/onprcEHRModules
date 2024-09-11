@@ -1445,12 +1445,12 @@
 </table>
     <table tableName="protocolUpdate" tableDbType="TABLE">
         <columns>
-            <column columnName="BasesProtocol" />
-            <column columnName="RenewalNummber" />
+            <column columnName="BaseProtocol" />
+            <column columnName="RenewalNumber" />
             <column columnName="Protocol_ID" />
             <column columnName="Last_Modified" />
             <column columnName="Protocol_State" />
-            <column columnName="LatestReneal" />
+            <column columnName="LatestRenewal" />
       >
 
         </columns>
