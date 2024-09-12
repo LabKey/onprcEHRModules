@@ -73,9 +73,9 @@ Where a.participantid not in (select b.participantid  from studydataset.c6d171_c
                                And cast(b.date as date)  = dateadd(day,3,cast(a.date as date))
                                And b.category = 'TB TST Score (72 hr)'
                                 And a.created >=  cast(getdate() as date)
-                                 And a.type = 'Procedure' And a.qcstate = 18 And procedureid = 802   )
+                                 And a.type = 'Procedure' And a.qcstate = 18 And a.procedureid = 802   )
 
-  And a.type = 'Procedure' And a.qcstate = 18 And procedureid = 802         -----'TB Test Intradermal'
+  And a.type = 'Procedure' And a.qcstate = 18 And a.procedureid = 802         -----'TB Test Intradermal'
   And a.created >=  cast(getdate() as date)
 And a.participantid in ( select k.participantid from studydataset.c6d203_demographics k
     where k.calculated_status = 'alive')
