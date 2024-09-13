@@ -2,9 +2,9 @@
 
 Select
     'New Protocol' as Result,
-    e.Protocol_ID,
+    e.baseProtocol,
     e.Protocol_Title,
-   /* p.investigatorId,
+    p.investigatorId,
     e.approval_Date as approve,
     p.lastAnnualReview,
     p.enddate,
@@ -18,7 +18,7 @@ Select
     e.PPQ_Numbers,
     e.PROTOCOL_State,
     e.RenewalNumber,
-    e.Template_OID,*/
+    e.Template_OID,
     e.Approval_Date,
     e.Annual_Update_Due as Annual_Update_Due,
     e.THree_Year_Expiration as Three_year_Expiration,
@@ -30,4 +30,7 @@ Select
     p.daysUntilRenewal
 
 
-from  onprc_ehr.ehr.protocol p join onprc_ehr.eIACUC_PRIME_VIEW_PROTOCOLS e on e.baseProtocol != p.external_Id
+from  onprc_ehr.ehr.protocol p, onprc_ehr.eIACUC_PRIME_VIEW_PROTOCOLS e
+where e.baseProtocol not in (Select external_id from ehr.protocol where enddate is Null)
+and (e.renewalNumber = 'Original' and e.Protocol_State = 'Approved')
+--where p.enddate is Null
