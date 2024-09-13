@@ -100,7 +100,7 @@ Ext4.define('ONPRC_EHR.panel.AnimalDetailsPanel', {
                     fieldLabel: 'Last Recorded Location',   //Added: 12-19-2018  R.Blasa
                     name: 'lastlocation'
                 },{
-                    fieldLabel: 'Gender',
+                    fieldLabel: 'Sex',
                     name: 'gender'
                 },{
                     fieldLabel: 'Species',
