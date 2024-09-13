@@ -88,7 +88,7 @@
         LDK.Utils.getReadOnlyQWP({
             title: 'Default Treatments',
             schemaName: 'ehr_lookups',
-            queryName: 'c',
+            queryName: 'procedure_default_treatments',
             filters: [LABKEY.Filter.create('procedureId', procedureId, LABKEY.Filter.Types.EQUAL)]
         }).render('procedureTreatments_' + webpart.wrapperDivId);
 
