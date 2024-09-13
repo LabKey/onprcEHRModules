@@ -142,6 +142,18 @@ EHR.model.DataModelManager.registerMetadata('onprc_Surgery', {
                         width: 250
                   }
                 },
+                 remark: {
+                 hidden: false,
+                 columnConfig: {
+                        width: 250
+                  }
+                },
+               performedby: {
+                 hidden: false,
+                 columnConfig: {
+                        width: 150
+                  }
+                },
                 observation_score: {
                      xtype: 'onprc_surgeryscorefield',
                      defaultValue: 'Normal',

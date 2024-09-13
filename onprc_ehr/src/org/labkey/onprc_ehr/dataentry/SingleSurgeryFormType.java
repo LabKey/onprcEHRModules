@@ -70,6 +70,9 @@ public class SingleSurgeryFormType extends EncounterForm
         addClientDependency(ClientDependency.supplierFromPath("ehr/panel/SurgeryDataEntryPanel.js"));
 //    Added: 8-27-2024  r. Blasa
         addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/form/field/SurgeryEntryField.js"));
+//        Added: 8-27-2024  R. Blasa
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/window/AddProcedureDefaultsWindow.js"));
+
         setDisplayReviewRequired(true);
         setJavascriptClass("EHR.panel.SurgeryDataEntryPanel");
 

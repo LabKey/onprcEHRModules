@@ -477,20 +477,20 @@ Ext4.define('ONPRC_EHR.window.AddProcedureDefaultsWindow', {
     }
 });
 
-EHR.DataEntryUtils.registerGridButton('APPLYENCOUNTERDEFAULTSAMENDED', function(config){
+EHR.DataEntryUtils.registerGridButton('ADDPROCEDUREDEFAULTS', function(config){
     return Ext4.Object.merge({
         text: 'Add Procedure Defaults',
         xtype: 'button',
         tooltip: 'Click to copy records from the encounters section',
         handler: function(btn){
             var grid = btn.up('grid');
-            LDK.Assert.assertNotEmpty('Unable to find grid in APPLYENCOUNTERDEFAULTSAMENDED button', grid);
+            LDK.Assert.assertNotEmpty('Unable to find grid in ADDPROCEDUREDEFAULTS button', grid);
 
             var panel = grid.up('ehr-dataentrypanel');
-            LDK.Assert.assertNotEmpty('Unable to find dataEntryPanel in APPLYENCOUNTERDEFAULTSAMENDED button', panel);
+            LDK.Assert.assertNotEmpty('Unable to find dataEntryPanel in ADDPROCEDUREDEFAULTS button', panel);
 
             var store = panel.storeCollection.getClientStoreByName('encounters');
-            LDK.Assert.assertNotEmpty('Unable to find encounters store in APPLYENCOUNTERDEFAULTSAMENDED button', store);
+            LDK.Assert.assertNotEmpty('Unable to find encounters store in ADDPROCEDUREDEFAULTS button', store);
 
             if (store){
                 Ext4.create('ONPRC_EHR.window.AddProcedureDefaultsWindow', {
