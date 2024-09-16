@@ -130,6 +130,7 @@ Ext4.define('ONPRC_EHR.window.AddProcedureDefaultsWindow', {
             targetColumns: 'procedureid,remark'
         },
         snomed_tags: {
+            schemaName: 'ehr_lookups',
             queryName: 'procedure_default_codes',
             columns: 'procedureid,code,qualifier',
             sort: 'sort_order'
