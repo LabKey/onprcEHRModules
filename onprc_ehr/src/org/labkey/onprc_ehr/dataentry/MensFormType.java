@@ -45,6 +45,8 @@ public class MensFormType extends TaskForm
 
         addClientDependency(ClientDependency.supplierFromPath("ehr/model/sources/Menses.js"));
 
+        setDisplayReviewRequired(true);
+
         for (FormSection s : getFormSections())
         {
             s.addConfigSource("Task");
