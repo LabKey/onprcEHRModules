@@ -127,7 +127,7 @@ Ext4.define('onprc_ehr.panel.SnapshotPanel', {
                         name: 'calculated_status'
                     },{
                         xtype: 'displayfield',
-                        fieldLabel: 'Gender',
+                        fieldLabel: 'Sex',
                         name: 'gender'
                     },{
                         xtype: 'displayfield',
