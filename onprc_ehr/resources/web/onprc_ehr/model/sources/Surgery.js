@@ -240,6 +240,17 @@
                           }
                  }
             },
+
+         'study.weight': {
+                 parentid: {
+                         shownInGrid: true,
+                         hidden: false,
+                         header: 'Procedure Link',
+                         columnConfig: {
+                                width: 250
+                          }
+                     }
+                },
             'ehr.encounter_summaries': {
                 category: {
                     defaultValue: 'Narrative'
