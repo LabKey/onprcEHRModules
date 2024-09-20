@@ -1483,6 +1483,82 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
     //End of housing transfer alert
 
     /**
+     * Kollil, 06/27/2024 : Long-term clinical meds notifications Daily
+     * Refer Tkt# 10897 for more details
+     */
+    protected void LongTermMedsAlert(final Container c, User u, final StringBuilder msg)
+    {
+        if (QueryService.get().getUserSchema(u, c, "onprc_ehr") == null) {
+            msg.append("<b>Warning: The study schema has not been enabled in this folder, so the alert cannot run!<p><hr>");
+            return;
+        }
+
+        //Daily meds query
+        TableInfo ti = QueryService.get().getUserSchema(u, c, "onprc_ehr").getTable("SoonExpiringLongTermMeds", ContainerFilter.Type.AllFolders.create(c, u));
+        TableSelector ts = new TableSelector(ti, null, new Sort("AssignedVet, Room"));
+        long count = ts.getRowCount();
+        if (count == 0) {
+            msg.append("<b>There are no long-term clinical meds expiring soon!</b><hr>");
+        }
+        else if (count > 0)
+        {
+            //Display the report link on the notification page
+            msg.append("<br><b>Soon Expiring Long-Term Clinical Meds:</b><br><br>");
+            msg.append("<b>" + count + " soon to be expiring long-term clinical meds were found:</b>");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "onprc_ehr", "SoonExpiringLongTermMeds", null) + "'>Click here to view the meds</a></p>\n");
+            msg.append("<hr>");
+
+            //Display the report in the email
+            Set<FieldKey> columns = new HashSet<>();
+            columns.add(FieldKey.fromString("Id"));
+            columns.add(FieldKey.fromString("date"));
+            columns.add(FieldKey.fromString("enddate"));
+            columns.add(FieldKey.fromString("AssignedVet"));
+            columns.add(FieldKey.fromString("Room"));
+            columns.add(FieldKey.fromString("frequency"));
+            columns.add(FieldKey.fromString("treatmentTimes"));
+            columns.add(FieldKey.fromString("Treatment"));
+            columns.add(FieldKey.fromString("volume"));
+            columns.add(FieldKey.fromString("concentration"));
+            columns.add(FieldKey.fromString("amount"));
+            columns.add(FieldKey.fromString("route"));
+            columns.add(FieldKey.fromString("remark"));
+
+            final Map<FieldKey, ColumnInfo> colMap = QueryService.get().getColumns(ti, columns);
+            TableSelector ts2 = new TableSelector(ti, colMap.values(), null, new Sort("AssignedVet, Room"));
+
+            // Table header
+            msg.append("<table border=1 style='border-collapse: collapse;'>");
+            msg.append("<tr>");
+            msg.append("<br><table border=1 style='border-collapse: collapse;'>");
+            msg.append("<tr bgcolor = " + '"' + "#00FF7F" + '"' + "style='font-weight: bold;'>");
+            msg.append("<td> Id </td><td> Begin Date </td><td> End Date </td><td> Assigned Vet </td><td> Room </td><td> Frequency </td><td> Times </td><td> Treatment </td><td> Volume </td><td> Drug Conc </td><td> Amount </td><td> Route </td><td> Remark </td></tr>");
+
+            ts2.forEach(object -> {
+                Results rs = new ResultsImpl(object, colMap);
+                String url = getParticipantURL(c, rs.getString("Id"));
+
+                msg.append("<td> <a href='" + url + "'>" + PageFlowUtil.filter(rs.getString("Id")) + "</a></td>\n");
+                msg.append("<td>" + PageFlowUtil.filter(rs.getString("date")) + "</td>");
+                msg.append("<td>" + PageFlowUtil.filter(rs.getString("enddate")) + "</td>");
+                msg.append("<td>" + PageFlowUtil.filter(rs.getString("AssignedVet")) + "</td>");
+                msg.append("<td>" + PageFlowUtil.filter(rs.getString("Room")) + "</td>");
+                msg.append("<td>" + PageFlowUtil.filter(rs.getString("frequency")) + "</td>");
+                msg.append("<td>" + PageFlowUtil.filter(rs.getString("treatmentTimes")) + "</td>");
+                msg.append("<td>" + PageFlowUtil.filter(rs.getString("Treatment")) + "</td>");
+                msg.append("<td>" + PageFlowUtil.filter(rs.getString("volume")) + "</td>");
+                msg.append("<td>" + PageFlowUtil.filter(rs.getString("concentration")) + "</td>");
+                msg.append("<td>" + PageFlowUtil.filter(rs.getString("amount")) + "</td>");
+                msg.append("<td>" + PageFlowUtil.filter(rs.getString("route")) + "</td>");
+                msg.append("<td>" + PageFlowUtil.filter(rs.getString("remark")) + "</td>");
+                msg.append("</tr>");
+            });
+            msg.append("</table>");
+        }
+    }
+    //End of Long term meds alert
+
+    /**
      * we find protocols over the animal limit
      * Kollil, 2/12/2023: This warning is removed as per Tkt #9095 request
      */
@@ -1700,7 +1776,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
 
     protected void cageReviewErrors(final Container c, User u, final StringBuilder msg, boolean notifyOnNone, String requirementSet)
     {
-        cageReview(c, u, msg, notifyOnNone, "ERROR", "WARNING: The following cages are too small for the animals currently in them (using " + requirementSet + "), except for animals with heigh/weight exemption flags:", requirementSet);
+        cageReview(c, u, msg, notifyOnNone, "ERROR", "WARNING: The following cages are too small for the animals currently in them (using " + requirementSet + "), except for animals with height/weight exemption flags:", requirementSet);
     }
 
     protected void cageReviewWarnings(final Container c, User u, final StringBuilder msg, boolean notifyOnNone, String requirementSet)
@@ -1726,7 +1802,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         params.put("RequirementSet", requirementSet);
         QueryService.get().bindNamedParameters(sql, params);
 
-        sql = new SQLFragment("SELECT * FROM ").append(sql).append(" WHERE t.status = ?").add(filterTerm);
+        sql = new SQLFragment("SELECT * FROM ").append(sql).append(" WHERE t.status = ? ORDER BY room, cage").add(filterTerm);
         SqlSelector ss = new SqlSelector(ti.getSchema(), sql);
         Map<String, Object>[] rows = ss.getMapArray();
 

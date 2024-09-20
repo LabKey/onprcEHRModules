@@ -24,6 +24,6 @@
         <sort column="date" descending="true"/>
     </sorts>
     <filters>
-        <filter column="eventtype" operator="notin" value="General comment;Pair monitor"/>
+        <filter column="eventType" operator="notin" value="Bio dam reunite;C-sx reunite;Nonlactating foster;Lactating foster"/>
     </filters>
 </customView>

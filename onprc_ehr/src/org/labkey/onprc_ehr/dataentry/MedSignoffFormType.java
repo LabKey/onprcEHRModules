@@ -60,6 +60,8 @@ public class MedSignoffFormType extends TaskForm
             addSection(new MiscChargesFormSection(EHRService.FORM_SECTION_LOCATION.Body));
         }
 
+        setDisplayReviewRequired(true);
+
     }
 
     @Override
