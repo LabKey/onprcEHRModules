@@ -97,7 +97,7 @@ BEGIN
                a.employeeid,
                string_agg(b.unit,char(10)) as unit,
                string_agg(a.category,char(10)) as category,
-               string_agg(b.trackingflag,char(10)) as trackingflag,
+         	  (select top 1 h.trackingflag from ehr_compliancedb.requirementspercategory h where h.requirementname = b.requirementname) as trackingflag,
               (select h.email from ehr_compliancedb.employees h where h.employeeid = a.employeeid) as  email,
               (select h.lastname from ehr_compliancedb.employees h where h.employeeid = a.employeeid) as lastname,
               (select h.firstname from ehr_compliancedb.employees h where h.employeeid = a.employeeid) as firstname,
