@@ -79,7 +79,7 @@ BEGIN
                          host,
                          supervisor,
                          trainee_type,
-                         requirement_name_type
+                         requirement_name_type,
                          times_completed,
                           expired_period,
                           new_expired_Perioed,
