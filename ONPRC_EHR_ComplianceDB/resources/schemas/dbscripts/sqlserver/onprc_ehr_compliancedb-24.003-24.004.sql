@@ -82,7 +82,7 @@ BEGIN
                          requirement_name_type,
                          times_completed,
                           expired_period,
-                          new_expired_Perioed,
+                          new_expired_Period,
                           mostrecentcompleted_date,
                           comment,
                           snooze_date,
