@@ -6,6 +6,6 @@
     </sorts>
     <filters>
         <filter column="months_until_renewal" operator="lte" value="2"/>
-        <filter column="requirementName/datedisabled" operator="isblank"/>
+<!--        <filter column="requirementName/datedisabled" operator="isblank"/>-->
     </filters>
 </customView>

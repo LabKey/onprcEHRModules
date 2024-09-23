@@ -86,8 +86,12 @@
                         <displayWidth>70</displayWidth>
                     </column>
 
-                    <column columnName="type">
-                        <columnTitle>Type</columnTitle>
+                    <column columnName="trainee_type">
+                        <columnTitle>Trainee Type</columnTitle>
+                        <displayWidth>70</displayWidth>
+                    </column>
+                    <column columnName="requirement_name_type">
+                        <columnTitle>Requirement Name Type</columnTitle>
                         <displayWidth>70</displayWidth>
                     </column>
                     <column columnName="months_until_renewal">
