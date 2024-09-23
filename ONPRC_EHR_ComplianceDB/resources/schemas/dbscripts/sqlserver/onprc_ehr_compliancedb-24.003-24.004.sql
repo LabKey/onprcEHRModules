@@ -19,14 +19,15 @@
     [firstname] [varchar](500) NULL,
     [host] [varchar](500) NULL,
     [supervisor] [varchar](500) NULL,
-    [type] [varchar](500) NULL,
+    [trainee_type] [varchar](500) NULL,
 	[times_completed] [smallint] NULL,
 	[expired_period] [smallint] NULL,
 	[new_expired_period] [smallint] NULL,
 	[mostrecentcompleted_date] [smalldatetime] NULL,
 	[comment] [varchar](4000) NULL,
 	[snooze_date] [smalldatetime] NULL,
-	[months_until_renewal] [decimal](4, 1) NULL
+	[months_until_renewal] [decimal](4, 1) NULL,
+	[requirement_name_type] [varchar](1000) NULL
 
  CONSTRAINT [PK_ComplianceOverdueSoonReport] PRIMARY KEY CLUSTERED
 (
@@ -79,14 +80,15 @@ BEGIN
                          firstname,
                          host,
                          supervisor,
-                         type,
+                         trainee_type,
                          times_completed,
                           expired_period,
                           new_expired_Perioed,
                           mostrecentcompleted_date,
                           comment,
                           snooze_date,
-                          months_until_renewal
+                          months_until_renewal,
+                          requirement_name_type
                          )
 
 
@@ -103,8 +105,8 @@ BEGIN
               (select h.firstname from ehr_compliancedb.employees h where h.employeeid = a.employeeid) as firstname,
               (select h.majorudds from ehr_compliancedb.employees h where h.employeeid = a.employeeid) as host,
               (select h.supervisor from ehr_compliancedb.employees h where h.employeeid = a.employeeid) as supervisor,
-              (select h.type from ehr_compliancedb.employees h where h.employeeid = a.employeeid) as type,      ----- type trainee, or trainer
-
+              (select h.type from ehr_compliancedb.employees h where h.employeeid = a.employeeid) as trainee_type,      ----- type trainee, or trainer
+              (select h.type from ehr_compliancedb.Requirements h where h.requirementname = b.requirementname) as requirement_type,
 
                (select count(zz.date) from ehr_compliancedb.completiondates zz where zz.requirementname= b.requirementname and zz.employeeid= a.employeeid  ) as times_Completed,
 
@@ -166,7 +168,8 @@ BEGIN
               (select h.firstname from ehr_compliancedb.employees h where h.employeeid = a.employeeid) as firstname,
               (select h.majorudds from ehr_compliancedb.employees h where h.employeeid = a.employeeid) as host,
               (select h.supervisor from ehr_compliancedb.employees h where h.employeeid = a.employeeid) as supervisor,
-              (select h.type from ehr_compliancedb.employees h where h.employeeid = a.employeeid) as type,      ----- type trainee, or trainer
+              (select h.type from ehr_compliancedb.employees h where h.employeeid = a.employeeid) as trainee_type,      ----- type trainee, or trainer
+              (select h.type from ehr_compliancedb.Requirements h where h.requirementname = a.requirementname) as requirement_type,  ----- type trainee, or trainer
 
 
                (select count(zz.date) from ehr_compliancedb.completiondates zz where zz.requirementname= a.requirementname and zz.employeeid= a.employeeid  ) as timesCompleted,
@@ -224,7 +227,8 @@ BEGIN
               (select h.firstname from ehr_compliancedb.employees h where h.employeeid = j.employeeid) as firstname,
               (select h.majorudds from ehr_compliancedb.employees h where h.employeeid = j.employeeid) as host,
               (select h.supervisor from ehr_compliancedb.employees h where h.employeeid = j.employeeid) as supervisor,
-              (select h.type from ehr_compliancedb.employees h where h.employeeid = j.employeeid) as type,      ----- type trainee, or trainer
+              (select h.type from ehr_compliancedb.employees h where h.employeeid = a.employeeid) as trainee_type,      ----- type trainee, or trainer
+              (select h.type from ehr_compliancedb.Requirements h where h.requirementname = j.requirementname) as requirement_type,    ----- type trainee, or trainer
                null as timesCompleted,
                null as ExpiredPeriod,
                null as NewExpirePeriod,
