@@ -229,7 +229,8 @@ BEGIN
                   (select h.firstname from ehr_compliancedb.employees h where h.employeeid = a.employeeid) as firstname,
                   (select h.majorudds from ehr_compliancedb.employees h where h.employeeid = a.employeeid) as host,
                   (select h.supervisor from ehr_compliancedb.employees h where h.employeeid = a.employeeid) as supervisor,
-                  (select h.type from ehr_compliancedb.employees h where h.employeeid = a.employeeid) as type,      ----- type trainee, or trainer
+                   (select h.type from ehr_compliancedb.employees h where h.employeeid = a.employeeid) as trainee_type,      ----- type trainee, or trainer
+                  (select h.type from ehr_compliancedb.Requirements h where h.requirementname = a.requirementname) as requirement_type,      ----- type trainee, or trainer
 
 
                    (select count(zz.date) from ehr_compliancedb.completiondates zz where zz.requirementname= a.requirementname and zz.employeeid= a.employeeid  ) as timesCompleted,
