@@ -50,6 +50,8 @@ public class PregnancyConfirmationFormType extends TaskForm
         addClientDependency(ClientDependency.supplierFromPath("ehr/model/sources/ClinicalDefaults.js"));
         addClientDependency(ClientDependency.supplierFromPath("ehr/model/sources/PregnancyConfirmation.js"));
 
+        setDisplayReviewRequired(true);
+
         for (FormSection s : getFormSections())
         {
             s.addConfigSource("Task");
