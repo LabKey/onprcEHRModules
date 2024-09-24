@@ -11,8 +11,8 @@
         <column name="employeeId/isActive"/>
         <column name="requirementname"/>
         <column name="requirement_name_type"/>
-        <column name="moostrecentcompleted_date"/>
-        <column name="mmonths_until_renewal"/>
+        <column name="mostrecentcompleted_date"/>
+        <column name="months_until_renewal"/>
     </columns>
     <sorts>
         <sort column="lastname" descending="false"/>
