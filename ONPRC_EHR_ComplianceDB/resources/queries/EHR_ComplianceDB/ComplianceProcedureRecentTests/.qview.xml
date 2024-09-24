@@ -1,6 +1,6 @@
 <customView xmlns="http://labkey.org/data/xml/queryCustomView" label="All">
     <columns>
-        <column name="email"/>
+`        <column name="email"/>
         <column name="employeeid"/>
         <column name="lastname"/>
         <column name="firstame"/>
