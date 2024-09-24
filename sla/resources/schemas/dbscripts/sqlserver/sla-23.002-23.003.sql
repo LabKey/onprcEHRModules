@@ -50,6 +50,8 @@ CREATE TABLE sla.TempWeaning (
  created DATETIME
 );
 
+GO
+
 -- Alter the stored proc
 /****** Object:  StoredProcedure  onprc_ehr . SLAWeaningDataTransfer   Script Date: 8/24/2024 *****/
 -- =================================================================================
