@@ -10,7 +10,7 @@
         <column name="requirementname"/>
         <column name="trackingflag"/>
         <column name="times_completed"/>
-        <column name="expired_periodd"/>
+        <column name="expired_period"/>
         <column name="new_expired_period"/>
         <column name="mostrecentcompleted_date"/>
         <column name="comment"/>

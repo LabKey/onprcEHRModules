@@ -75,6 +75,7 @@
                     </column>
                     <column columnName="mostrecentcompleted_date">
                         <columnTitle>Most Recent Date</columnTitle>
+                        <formatString>yyyy-MM-dd</formatString>
                         <displayWidth>70</displayWidth>
                     </column>
                     <column columnName="comment">
