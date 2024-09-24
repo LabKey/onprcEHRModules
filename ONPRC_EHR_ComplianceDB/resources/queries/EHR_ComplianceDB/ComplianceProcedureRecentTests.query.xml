@@ -19,7 +19,7 @@
                     </column>
                     <column columnName="requirementname">
                         <columnTitle>Requirement Name</columnTitle>
-                        <displayWidth>90</displayWidth>
+                        <displayWidth>250</displayWidth>
                         <fk>
                             <fkDbSchema>ehr_compliancedb</fkDbSchema>
                             <fkTable>requirements</fkTable>
@@ -62,7 +62,7 @@
 
                     <column columnName="host">
                         <columnTitle>Host</columnTitle>
-                        <displayWidth>150</displayWidth>
+                        <displayWidth>110</displayWidth>
                     </column>
                     <column columnName="supervisor">
                         <columnTitle>Supervisor</columnTitle>
@@ -71,7 +71,7 @@
 
                     <column columnName="unit">
                         <columnTitle>Unit</columnTitle>
-                        <displayWidth>70</displayWidth>
+                        <displayWidth>210</displayWidth>
                     </column>
                     <column columnName="mostrecentcompleted_date">
                         <columnTitle>Most Recent Date</columnTitle>
@@ -93,7 +93,7 @@
                     </column>
                     <column columnName="requirement_name_type">
                         <columnTitle>Requirement Name Type</columnTitle>
-                        <displayWidth>70</displayWidth>
+                        <displayWidth>180</displayWidth>
                     </column>
                     <column columnName="months_until_renewal">
                         <columnTitle>Months Until Renewal</columnTitle>
