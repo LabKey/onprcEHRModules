@@ -35,7 +35,7 @@ CREATE TABLE [onprc_ehr].[TB_TestHistoricalTempMaster](
 
   ALTER Procedure onprc_ehr.p_Create_TB_ObservationHistoricalrecords
                          @starting_date  smalldatetime,
-                         #ending_date     smalldatetime
+                         @ending_date     smalldatetime
 
 
 
@@ -101,8 +101,6 @@ select
         where k.calculated_status = 'alive')
 
     order by a.participantid, a.date desc
-
-order by a.participantid, a.date desc
 
 
     If @@Error <> 0
