@@ -21,7 +21,8 @@ CREATE TABLE [onprc_ehr].[TB_TestHistoricalTempMaster](
     createdby    integer NULL,
     performedby  varchar(200) NULL
 
-
+  )
+    GO
 
 
 /*
