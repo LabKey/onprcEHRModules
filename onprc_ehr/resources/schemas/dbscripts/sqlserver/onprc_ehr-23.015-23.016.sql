@@ -33,7 +33,7 @@ CREATE TABLE [onprc_ehr].[TB_TestHistoricalTempMaster](
 
 */
 
-  ALTER Procedure onprc_ehr.p_Create_TB_ObservationHistoricalrecords
+  CREATE Procedure onprc_ehr.p_Create_TB_ObservationHistoricalrecords
                          @starting_date  smalldatetime,
                          @ending_date     smalldatetime
 
@@ -92,15 +92,16 @@ select
                                   where a.participantid = b.participantid
                                    And cast(b.date as date)  = dateadd(day,3,cast(a.date as date))
                                    And b.category = 'TB TST Score (72 hr)'
-                                     And (a.date >= @starting_date and a.date < dateadd(day,1,cast(@ending_date as date)  )
+                                     And (a.date >= @starting_date and a.date < dateadd(day,1,cast(@ending_date as date) ) )
                                      And a.type = 'Procedure' And a.qcstate = 18 And a.procedureid = 802   )
 
       And a.type = 'Procedure' And a.qcstate = 18 And a.procedureid = 802         -----'TB Test Intradermal'
-      And (a.date >= @starting_date and a.date < dateadd(day,1,cast(@ending_date as date)  )
+      And (a.date >= @starting_date and a.date < dateadd(day,1,cast(@ending_date as date) )  )
     And a.participantid in ( select k.participantid from studydataset.c6d203_demographics k
         where k.calculated_status = 'alive')
 
     order by a.participantid, a.date desc
+
 
 
     If @@Error <> 0
@@ -278,6 +279,8 @@ Err_Proc:
 END
 
 GO
+
+
 
 
 
