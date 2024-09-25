@@ -131,7 +131,7 @@ select
 
       ----- extract initial row id
 
-        Select Top 1 @Searchkey = rowid  from onprc_ehr.TB_TestHitoricalTemp
+        Select Top 1 @Searchkey = rowid  from onprc_ehr.TB_TestHistoricalTemp
         Order by rowid
 
 
