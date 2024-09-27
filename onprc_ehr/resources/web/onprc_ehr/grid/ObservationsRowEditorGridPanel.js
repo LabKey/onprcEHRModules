@@ -130,18 +130,25 @@ Ext4.define('ONPRC_EHR.grid.ObservationsRowEditorGridPanel', {
         },{
             header: 'Observation/Score',
             width: 200,
-            editable: true,
-            dataIndex: 'observation',
-            renderer: function(value, cellMetaData, record){
-                if (Ext4.isEmpty(value) && ['Vet Attention'].indexOf(record.get('category')) == -1){
-                    cellMetaData.tdCls = 'labkey-grid-cell-invalid';
-                }
 
-                return value;
-            },
+            dataIndex: 'observation',
+//            renderer: function(value, cellMetaData, record){
+//                if (Ext4.isEmpty(value) && ['Vet Attention'].indexOf(record.get('category')) == -1){
+//                    cellMetaData.tdCls = 'labkey-grid-cell-invalid';
+//                }
+//
+//                return value;
+//            },
+//            editor: {
+//                xtype: 'textfield'
+//            }
+
+            width: 130,
+            dataIndex: 'inflammation',
             editor: {
-                xtype: 'textfield'
-            }
+                xtype: 'onprc_surgeryscorefield',
+                forceSelection: true
+               }
         },{
             header: 'Inflammation',
             width: 130,
