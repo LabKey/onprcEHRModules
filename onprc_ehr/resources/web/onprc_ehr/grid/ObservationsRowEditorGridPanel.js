@@ -147,7 +147,7 @@ Ext4.define('ONPRC_EHR.grid.ObservationsRowEditorGridPanel', {
             width: 130,
             dataIndex: 'inflammation',
             editor: {
-                xtype: 'onprc_surgeryentryfield',
+                xtype: 'onprc_surgeryexceptionfield',
                 forceSelection: true
                }
          },{
@@ -156,7 +156,7 @@ Ext4.define('ONPRC_EHR.grid.ObservationsRowEditorGridPanel', {
             width: 130,
             dataIndex: 'bruising',
             editor: {
-               xtype: 'onprc_surgeryentryfield',
+               xtype: 'onprc_surgeryexceptionfield',
                forceSelection: true
                     }
 
@@ -165,7 +165,7 @@ Ext4.define('ONPRC_EHR.grid.ObservationsRowEditorGridPanel', {
            width: 130,
            dataIndex: 'other',
            editor: {
-            xtype: 'onprc_surgeryentryfield',
+            xtype: 'onprc_surgeryotherfield',
            forceSelection: true
 
                 }
