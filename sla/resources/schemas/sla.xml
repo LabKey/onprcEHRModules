@@ -527,6 +527,7 @@
 
         <columns>
             <column columnName="rowid" />
+            <column columnName="weaning_rowid" />
             <column columnName="investigator">
                 <columnTitle>PI</columnTitle>
             </column>
