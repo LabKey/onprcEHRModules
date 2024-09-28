@@ -140,7 +140,22 @@
             'study.clinical_observations': {
                    inflammation: {
                      hidden: true
-                 },
+                    },
+                    area: {
+                      lookup: {
+                                xtype: 'combobox',
+                                schemaName:'sla',
+                                queryName: 'Reference_Data',
+                                columns: 'value',
+                                sort: 'sort_order',
+                                 editable: true,
+                                 header: 'Area',
+                                 filterArray: [
+                                   LABKEY.Filter.create('enddate', null, LABKEY.Filter.Types.ISBLANK),
+                                   LABKEY.Filter.create('ColumnName', 'Surgicalobservationarea', LABKEY.Filter.Types.EQUAL)],
+                                autoLoad: true
+                           }
+                      },
                     bruising: {
                       hidden: true
                       },
@@ -148,14 +163,16 @@
                       hidden: true
                     },
                      remark: {
-                       hidden: true
+                       hidden: true,
+                       defaultValue: ''
                     },
                    performedby: {
                     hidden: true
                     },
 
-                    observation_score: {
-                       hidden: true
+                    observation: {
+                       hidden: true,
+                       defaultValue: ''
                     }
            },
 
