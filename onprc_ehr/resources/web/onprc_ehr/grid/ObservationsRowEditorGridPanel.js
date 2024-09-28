@@ -162,14 +162,31 @@ Ext4.define('ONPRC_EHR.grid.ObservationsRowEditorGridPanel', {
                     }
 
           },{
-           header: 'Other',
-           width: 130,
-           dataIndex: 'other',
-           editor: {
-            xtype: 'onprc_surgeryotherfield',
-           forceSelection: true
-
-                }
+              header: 'Other',
+                   width: 200,
+                   editable: true,
+                   dataIndex: 'other',
+                   editor: {
+                       xtype: 'checkcombo',
+                       displayField: 'value',
+                       valueField: 'value',
+                       forceSelection: true,
+                       queryMode: 'local',
+                       anyMaych: true,
+                       value: 'N/A',
+                       store: {
+                           type: 'labkey-store',
+                            schemaName:'sla',
+                            queryName: 'Reference_Data',
+                            columns: 'value',
+                            defaultValue:'0 - None',
+                            sort: 'sort_order',
+                            filterArray: [
+                                LABKEY.Filter.create('enddate', null, LABKEY.Filter.Types.ISBLANK),
+                                LABKEY.Filter.create('ColumnName', 'Surgicalobservationother', LABKEY.Filter.Types.EQUAL)],
+                           autoLoad: true
+                       }
+                   }
 
            },{
             header: 'Remarks',

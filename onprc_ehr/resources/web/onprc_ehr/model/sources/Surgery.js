@@ -55,16 +55,7 @@
                   }
             },
 
-           'study.blood': {
-               parentid: {
-                  shownInGrid: true,
-                  hidden: false,
-                  header: 'Procedure Link',
-                  columnConfig: {
-                           width: 250
-                     }
-               }
-           },
+
             'study.drug': {
                 enddate: {
                     hidden: false
@@ -77,14 +68,7 @@
                 reason: {
                     defaultValue: 'Procedure'
                 },
-                parentid: {
-                     shownInGrid: true,
-                     hidden: false,
-                     header: 'Procedure Link',
-                     columnConfig: {
-                              width: 250
-                       }
-                  },
+
                 chargetype: {
                     //NOTE: this will be inherited from the encounters record, so we dont want a default
                     //defaultValue: 'DCM: Surgery Services',
@@ -119,14 +103,7 @@
                 chargetype: {
                     allowBlank: false
                 },
-                objectid: {
-                     shownInGrid: true,
-                     hidden: false,
-                     header: 'Procedure Link',
-                     columnConfig: {
-                          width: 250
-                     }
-                 },
+
                 assistingstaff: {
                     hidden: false,
                     allowBlank: true //will be handled in trigger script
@@ -155,71 +132,30 @@
                 set_number: {
                     hidden: true
                 },
-                parentid: {
-                 shownInGrid: true,
-                 hidden: false,
-                 header: 'Procedure Link',
-                 columnConfig: {
-                           width: 250
-                     }
-                },
+
                 sort: {
                     hidden: true
                 }
             },
             'study.clinical_observations': {
                    inflammation: {
-                     xtype: 'onprc_surgeryexceptionfield',
-                     showInGrid: true,
-                     hidden: false,
-                     defaultValue: '0 - None',
-                     columnConfig: {
-                             width: 150
-                         }
+                     hidden: true
                  },
                     bruising: {
-                      xtype: 'onprc_surgeryexceptionfield',
-                      showInGrid: true,
-                      hidden: false,
-                      defaultValue: '0 - None',
-                      columnConfig: {
-                           width: 150
-                         }
+                      hidden: true
                       },
                     other: {
-                     xtype: 'onprc_surgeryotherfield',
-                     showInGrid: true,
-                     hidden: false,
-                     columnConfig: {
-                            width: 250
-                      }
+                      hidden: true
                     },
                      remark: {
-                     hidden: false,
-                     columnConfig: {
-                            width: 250
-                      }
+                       hidden: true
                     },
                    performedby: {
-                     hidden: false,
-                     columnConfig: {
-                            width: 150
-                      }
+                    hidden: true
                     },
-                    parentid: {
-                         shownInGrid: true,
-                         hidden: false,
-                         header: 'Procedure Link',
-                         columnConfig: {
-                                 width: 250
-                               }
-                    },
+
                     observation_score: {
-                         xtype: 'onprc_surgeryscorefield',
-                         defaultValue: 'Normal',
-                         columnConfig: {
-                                width: 150
-                          }
+                       hidden: true
                     }
            },
 
@@ -230,39 +166,16 @@
                     columnConfig: {
                         width: 300
                       }
-                },
-                parentid: {
-                         shownInGrid: true,
-                         hidden: false,
-                         header: 'Procedure Link',
-                         columnConfig: {
-                                width: 250
-                          }
-                 }
+                }
+
             },
 
-         'study.weight': {
-                 parentid: {
-                         shownInGrid: true,
-                         hidden: false,
-                         header: 'Procedure Link',
-                         columnConfig: {
-                                width: 250
-                          }
-                     }
-                },
+
             'ehr.encounter_summaries': {
                 category: {
                     defaultValue: 'Narrative'
-                },
-                parentid: {
-                         shownInGrid: true,
-                         hidden: false,
-                         header: 'Procedure Link',
-                         columnConfig: {
-                                  width: 250
-                            }
-                   }
+                }
+
             }
         }
     });
