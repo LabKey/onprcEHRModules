@@ -108,25 +108,31 @@ Ext4.define('ONPRC_EHR.grid.ObservationsRowEditorGridPanel', {
                 }
             }
         },{
-            header: 'Area',
-            width: 200,
-            editable: true,
-            dataIndex: 'area',
-            editor: {
-                xtype: 'labkey-combo',
-                displayField: 'value',
-                valueField: 'value',
-                forceSelection: true,
-                queryMode: 'local',
-                anyMaych: true,
-                value: 'N/A',
-                store: {
-                    type: 'labkey-store',
-                    schemaName: 'ehr_lookups',
-                    queryName: 'observation_areas',
-                    autoLoad: true
-                }
-            }
+              header: 'Area',
+                     width: 200,
+                     editable: true,
+                     dataIndex: 'area',
+                     editor: {
+                         xtype: 'combobox',
+                         displayField: 'value',
+                         valueField: 'value',
+                         forceSelection: true,
+                         queryMode: 'local',
+                         anyMaych: true,
+                         value: 'N/A',
+                         store: {
+                             type: 'labkey-store',
+                              schemaName:'sla',
+                              queryName: 'Reference_Data',
+                              columns: 'value',
+                              defaultValue:'0 - None',
+                              sort: 'sort_order',
+                              filterArray: [
+                                  LABKEY.Filter.create('enddate', null, LABKEY.Filter.Types.ISBLANK),
+                                  LABKEY.Filter.create('ColumnName', 'Surgicalobservationarea', LABKEY.Filter.Types.EQUAL)],
+                             autoLoad: true
+                         }
+                     }
         },{
              header: 'Observation/Score',
                     width: 200,
