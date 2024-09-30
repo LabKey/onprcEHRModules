@@ -18,9 +18,6 @@ CREATE Procedure onprc_ehr_compliancedb.[p_ComplianceAccesscontainerUpdate]
 AS
 
 
-DECLARE
-
-
 
 BEGIN
 
