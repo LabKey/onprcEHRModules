@@ -1093,6 +1093,17 @@ exports.init = function(EHR){
             EHR.Server.Utils.addError(scriptErrors, 'amount', 'When entering Omnipaque, must enter amount and amount_units must be in mg', 'WARN');
         }
 
+        //Added by Kollil, 8/1/24
+        /*User can bypass the enddate for these two medications, as per ticket #11016
+         Validation code on the Prime side to bypass the following two medications without entering the end dates.
+            1. E-85760 - Medroxyprogesterone injectable (150mg/ml)
+            2. E-Y7735 - Diet - Weekly Multivitamin
+         */
+        if (row.code != 'E-85760' && row.code != 'E-Y7735'){
+            if (!row.enddate) {
+                EHR.Server.Utils.addError(scriptErrors, 'enddate', 'Must enter enddate', 'WARN');
+            }
+        }
     });
 
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.AFTER_UPSERT, 'study', 'treatment_order', function(helper, errors, row, oldRow){
