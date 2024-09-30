@@ -1,5 +1,8 @@
 
 
+CREATE INDEX IX_completiondates_trainer ON ehr_compliancedb.completiondates(trainer);
+GO
+
 -- Author:	R. Blasa
 -- Created: 9-16-2024
 
