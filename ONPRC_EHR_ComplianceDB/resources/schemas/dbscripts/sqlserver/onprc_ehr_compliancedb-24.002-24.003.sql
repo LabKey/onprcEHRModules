@@ -27,10 +27,10 @@ If exists(Select * from  ehr_Compliancedb.CompletionDates ss where ss.container 
 BEGIN
 
   Update ss
-    set ss.container =   'CD170458-C55F-102F-9907-5107380A54BE'    ----Compliance folder
+    set ss.container =   'CD170458-C55F-102F-9907-5107380A54BE'    ----Compliance folder on Prime Production
 
    from  ehr_Compliancedb.CompletionDates ss
-    Where ss.container = '47F00C3F-5691-103D-8866-41AD310B2640'    ---Compliance Access folder
+    Where ss.container = 'F1C05E2D-618D-103D-ABC9-9814909BFFCD'    ---Compliance Access folder on Prime Production
 
                 If @@Error <> 0
                      GoTo Err_Proc
