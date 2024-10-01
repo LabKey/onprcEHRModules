@@ -50,7 +50,7 @@ public class TBTestObservationFormType extends TaskForm
 
         addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/form/field/TB_TST_Scores_Type.js"));
 
-
+        setDisplayReviewRequired(true);
 
     }
 
