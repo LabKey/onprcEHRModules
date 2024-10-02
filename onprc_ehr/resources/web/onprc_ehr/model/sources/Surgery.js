@@ -164,15 +164,16 @@
                     },
                      remark: {
                        hidden: true,
-                       defaultValue: ''
+                       defaultValue: 'Deferred entries until Surgical Rounds process'
                     },
                    performedby: {
-                    hidden: true
+                    hidden: true,
+                    allowBlank: true
                     },
 
                     observation: {
                        hidden: true,
-                       defaultValue: ''
+                       allowBlank: true
                     }
            },
 
