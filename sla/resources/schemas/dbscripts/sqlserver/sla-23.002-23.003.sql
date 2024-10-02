@@ -61,7 +61,7 @@ GO
 -- =================================================================================
 
 CREATE PROCEDURE  [sla].[SLAWeaningDataTransfer]
-    AS
+AS
 
 DECLARE
     @WCount			Int,
@@ -93,7 +93,7 @@ BEGIN
       --Found entries, so, insert those records into SLA.purchase and SLA.purchasedetails tables
     If @WCount > 0
     Begin
-            --Delete the rows from temp table before loading new data
+        --Delete the rows from temp table before loading new data
         TRUNCATE TABLE sla.TempWeaning
 
         --Move the weaning entries into a temp table
@@ -127,17 +127,17 @@ BEGIN
                    @species = species, @sex = sex, @strain = strain, @vendorlocation = vendorlocation
             From sla.TempWeaning Where rowid = @counter
 
-                                       --Insert weaning data into sla.purchase table as a pending order
-                INSERT INTO sla.purchase
+            --Insert weaning data into sla.purchase table as a pending order
+            INSERT INTO sla.purchase
             (project, account, requestorid, vendorid, hazardslist, dobrequired, comments, confirmationnum, housingconfirmed,
              iacucconfirmed, requestdate, orderdate, orderedby, objectid, container, createdby, created, modifiedby, modified, DARComments, VendorContact)
-            Select @center_project, @alias ,'7B3F1ED1-4CD9-4D9A-AFF4-FE0618D49C4B','E1EE1B64-B7BE-1035-BFC4-5107380AE41E','',0,'','',null,null,null,null,'',NEWID(),
+            Select @center_project, @alias ,'7B3F1ED1-4CD9-4D9A-AFF4-FE0618D49C4B','E1EE1B64-B7BE-1035-BFC4-5107380AE41E','',0,'',null,null,null,null,null,'',NEWID(),
                    '4831D09C-4169-1034-BAD2-5107380A9819',1294,GETDATE(),null,null,'',''
 
             --Get the newly created purchaseid from sla.purchase
             Select top 1 @purchaseid = objectid From sla.purchase order by created desc
 
-                                                               --Insert data into purchasedetails with the newly created purchaseid above
+            --Insert data into purchasedetails with the newly created purchaseid above
             INSERT INTO sla.purchaseDetails
             (purchaseid, species, age, weight, weight_units, gestation, gender, strain, room, animalsordered, animalsreceived, boxesquantity, costperanimal, shippingcost,
             totalcost, housingInstructions, requestedarrivaldate, expectedarrivaldate, receiveddate, receivedby, cancelledby, datecancelled,
@@ -157,4 +157,5 @@ BEGIN
         End --End while
     End
 End
+
 Go
