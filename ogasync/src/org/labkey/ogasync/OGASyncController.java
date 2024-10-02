@@ -23,6 +23,7 @@ import org.labkey.api.action.ReadOnlyApiAction;
 import org.labkey.api.action.SpringActionController;
 import org.labkey.api.data.ContainerManager;
 import org.labkey.api.data.PropertyManager;
+import org.labkey.api.data.PropertyManager.WritablePropertyMap;
 import org.labkey.api.security.RequiresPermission;
 import org.labkey.api.security.ValidEmail;
 import org.labkey.api.security.permissions.AdminPermission;
@@ -83,7 +84,7 @@ public class OGASyncController extends SpringActionController
         {
             Map<String, Object> resultProperties = new HashMap<>();
 
-            PropertyManager.PropertyMap configMap = PropertyManager.getWritableProperties(OGASyncManager.CONFIG_PROPERTY_DOMAIN, true);
+            WritablePropertyMap configMap = PropertyManager.getWritableProperties(OGASyncManager.CONFIG_PROPERTY_DOMAIN, true);
 
             if (form.getLabkeyUser() != null)
             {

@@ -15,9 +15,10 @@
  */
 package org.labkey.sla.etl;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.labkey.api.data.PropertyManager;
+import org.labkey.api.data.PropertyManager.WritablePropertyMap;
 
 import java.io.IOException;
 import java.util.concurrent.Executors;
@@ -164,7 +165,7 @@ public class ETL
 
     private static void setEnabled(Boolean enabled)
     {
-        PropertyManager.PropertyMap pm = PropertyManager.getWritableProperties(ETLRunnable.CONFIG_PROPERTY_DOMAIN, true);
+        WritablePropertyMap pm = PropertyManager.getWritableProperties(ETLRunnable.CONFIG_PROPERTY_DOMAIN, true);
         pm.put(ENABLED_PROP_NAME, enabled.toString());
         pm.save();
     }

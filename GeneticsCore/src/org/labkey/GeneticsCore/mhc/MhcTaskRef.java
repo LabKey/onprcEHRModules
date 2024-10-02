@@ -11,6 +11,7 @@ import org.labkey.api.data.ColumnInfo;
 import org.labkey.api.data.CompareType;
 import org.labkey.api.data.Container;
 import org.labkey.api.data.PropertyManager;
+import org.labkey.api.data.PropertyManager.WritablePropertyMap;
 import org.labkey.api.data.SimpleFilter;
 import org.labkey.api.data.TableInfo;
 import org.labkey.api.data.TableSelector;
@@ -97,7 +98,7 @@ public class MhcTaskRef implements TaskRefTask
 
     public static void saveLastRun(Container container, Date jobStart)
     {
-        PropertyManager.PropertyMap map = PropertyManager.getWritableProperties(container, PROP_CATEGORY, true);
+        WritablePropertyMap map = PropertyManager.getWritableProperties(container, PROP_CATEGORY, true);
         if (jobStart != null)
         {
             map.put(lastRunTime, String.valueOf(jobStart.getTime()));
@@ -112,7 +113,7 @@ public class MhcTaskRef implements TaskRefTask
 
     private Date getLastRun(Container c)
     {
-        PropertyManager.PropertyMap map = PropertyManager.getWritableProperties(c, PROP_CATEGORY, true);
+        WritablePropertyMap map = PropertyManager.getWritableProperties(c, PROP_CATEGORY, true);
         return map.containsKey(lastRunTime) ? new Date(Long.parseLong(map.get(lastRunTime))) : null;
     }
 
