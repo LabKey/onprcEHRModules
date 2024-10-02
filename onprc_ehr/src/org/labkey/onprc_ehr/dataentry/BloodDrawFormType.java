@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2018 LabKey Corporation
+ * Copyright (c) 2018-2019 LabKey Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,61 +15,59 @@
  */
 package org.labkey.onprc_ehr.dataentry;
 
-
+import org.labkey.api.ehr.EHRService;
 import org.labkey.api.ehr.dataentry.AnimalDetailsFormSection;
+import org.labkey.api.ehr.dataentry.BloodDrawFormSection;
 import org.labkey.api.ehr.dataentry.DataEntryFormContext;
+import org.labkey.api.ehr.dataentry.DrugAdministrationFormSection;
 import org.labkey.api.ehr.dataentry.FormSection;
 import org.labkey.api.ehr.dataentry.TaskForm;
 import org.labkey.api.ehr.dataentry.TaskFormSection;
 import org.labkey.api.ehr.dataentry.WeightFormSection;
-import org.labkey.api.ehr.dataentry.DrugAdministrationFormSection;
-import org.labkey.api.ehr.security.EHRClinicalEntryPermission;
 import org.labkey.api.module.Module;
-import org.labkey.api.security.permissions.AdminPermission;
 import org.labkey.api.view.template.ClientDependency;
-import org.labkey.api.security.GroupManager;
-import org.labkey.api.security.Group;
-import org.labkey.security.xml.GroupEnumType;
 
 import java.util.Arrays;
-
+import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * User: bimber
  * Date: 7/29/13
- * Time: 5:03 PM
  */
-public class WeightFormType extends TaskForm
+public class BloodDrawFormType extends TaskForm
 {
-    public static final String NAME = "weight";
+    public static final String NAME = "Blood Draws";
 
-    public WeightFormType(DataEntryFormContext ctx, Module owner)
+    public BloodDrawFormType(DataEntryFormContext ctx, Module owner)
     {
-        super(ctx, owner, NAME, "Weights", "Clinical", Arrays.asList(
+        this(ctx, owner, Arrays.asList(
             new TaskFormSection(),
             new AnimalDetailsFormSection(),
+            new BloodDrawFormSection(false),
             new WeightFormSection(),
-            new DrugAdministrationFormSection(ClientDependency.supplierFromPath("onprc_ehr/window/ONPRC_AddScheduledTreatmentWindow.js")),
-            new TBProcedureFormSection()
+            new DrugAdministrationFormSection(EHRService.FORM_SECTION_LOCATION.Body, DrugAdministrationFormSection.LABEL, null)
         ));
+    }
 
-        addClientDependency(ClientDependency.supplierFromPath("ehr/model/sources/Weight.js"));
+    public BloodDrawFormType(DataEntryFormContext ctx, Module owner, List<FormSection> sections)
+    {
+        super(ctx, owner, NAME, NAME, "Clinical", sections);
+
+        addClientDependency(getAddScheduledTreatmentWindowDependency());
+        addClientDependency(ClientDependency.supplierFromPath("ehr/form/field/SnomedTreatmentCombo.js"));
+
+        addClientDependency(ClientDependency.supplierFromPath("ehr/model/sources/BloodDraw.js"));
 
         for (FormSection s : getFormSections())
         {
-            s.addConfigSource("Task");
-            s.addConfigSource("Weight");
+            s.addConfigSource("BloodDraw");
         }
         setDisplayReviewRequired(true);
     }
 
-    @Override
-    protected boolean canInsert()
+    public Supplier<ClientDependency> getAddScheduledTreatmentWindowDependency()
     {
-        if (!getCtx().getContainer().hasPermission(getCtx().getUser(), EHRClinicalEntryPermission.class))
-            return false;
-
-        return super.canInsert();
+        return ClientDependency.supplierFromPath("ehr/window/AddScheduledTreatmentWindow.js");
     }
-
 }
