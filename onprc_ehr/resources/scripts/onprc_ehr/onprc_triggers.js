@@ -477,15 +477,15 @@ exports.init = function(EHR){
 
         if (row.Id && row.category != 'Incision' && (row.inflammation || row.bruising || row.other))
             {
-               var msg = ''
-              if (row.inflammtion) {
-                   msg = 'This is not a valid entry onto the Inflammation input field'
+               var msg = '';
+              if (row.Id && row.category != 'Incision' && row.inflammtion) {
+                   msg = ' This is not a valid entry onto the Inflammation input field';
                    }
-              else if (row.bruising) {
-                    msg = 'This is not a valid entry onto the Bruising input field'
+              if (row.Id && row.category != 'Incision' && row.bruising) {
+                    msg += ' This is not a valid entry onto the Bruising input field';
                     }
-               else if (row.other) {
-                    msg = 'This is not a valid entry onto the Other input field'
+               if (row.Id && row.category != 'Incision' && row.other) {
+                    msg += ' This is not a valid entry onto the Other input field';
                     }
 
                 EHR.Server.Utils.addError(scriptErrors, 'category',  msg, 'ERROR');

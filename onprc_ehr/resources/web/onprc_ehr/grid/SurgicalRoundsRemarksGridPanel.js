@@ -44,7 +44,7 @@ Ext4.define('ONPRC_EHR.grid.SurgicalRoundsRemarksGridPanel', {
         this.columns.push({
             name: 'observations',
             header: 'Observations',
-            width: 400,
+            width: 600,
             renderer: function(value, cellMetaData, record, rowIndex, colIndex, store){
                 if (!this.obsStore){
                     this.obsStore = store.storeCollection.getClientStoreByName('Clinical Observations');
@@ -93,7 +93,7 @@ Ext4.define('ONPRC_EHR.grid.SurgicalRoundsRemarksGridPanel', {
                                     line += '; [Bruising]-->  ' +r.get('bruising');
                         }
                         if (!Ext4.isEmpty(r.get('other'))){
-                                    line += '; [Other]-->  ' +r.get('other');
+                                    line += '; [Other`]-->  ' +r.get('other');
                         }
 
                         if (r.get('remark')){
