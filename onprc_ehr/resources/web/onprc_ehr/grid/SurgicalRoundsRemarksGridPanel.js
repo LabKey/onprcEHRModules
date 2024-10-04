@@ -44,7 +44,7 @@ Ext4.define('ONPRC_EHR.grid.SurgicalRoundsRemarksGridPanel', {
         this.columns.push({
             name: 'observations',
             header: 'Observations',
-            width: 600,
+            width: 700,
             renderer: function(value, cellMetaData, record, rowIndex, colIndex, store){
                 if (!this.obsStore){
                     this.obsStore = store.storeCollection.getClientStoreByName('Clinical Observations');
