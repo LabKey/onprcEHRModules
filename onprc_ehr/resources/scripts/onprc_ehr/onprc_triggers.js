@@ -479,13 +479,13 @@ exports.init = function(EHR){
             {
                var msg = '';
               if (row.Id && row.category != 'Incision' && row.inflammtion) {
-                   msg = ' This is not a valid entry onto the Inflammation input field';
+                   msg = 'Observation Category: ' + row.category + ' - This is an vinalid entry onto the Inflammation input field';
                    }
               if (row.Id && row.category != 'Incision' && row.bruising) {
-                    msg += ' This is not a valid entry onto the Bruising input field';
+                    msg += 'Observation Category: ' + row.category + ' - This is an invalid entry onto the Bruising input field';
                     }
                if (row.Id && row.category != 'Incision' && row.other) {
-                    msg += ' This is not a valid entry onto the Other input field';
+                    msg += 'Observation Category: ' + row.category + ' - This is an invalid entry onto the Other input field';
                     }
 
                 EHR.Server.Utils.addError(scriptErrors, 'category',  msg, 'ERROR');
