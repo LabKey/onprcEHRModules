@@ -93,7 +93,7 @@ Ext4.define('ONPRC_EHR.grid.SurgicalRoundsRemarksGridPanel', {
                                     line += '; [Bruising]-->  ' +r.get('bruising');
                         }
                         if (!Ext4.isEmpty(r.get('other'))){
-                                    line += '; [Other`]-->  ' +r.get('other');
+                                    line += '; [Other]-->  ' +r.get('other');
                         }
 
                         if (r.get('remark')){
