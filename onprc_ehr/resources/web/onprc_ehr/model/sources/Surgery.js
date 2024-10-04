@@ -139,8 +139,11 @@
             },
             'study.clinical_observations': {
                    inflammation: {
-                     hidden: true
-                    },
+                     hidden: true,
+                       editorConfig: {
+                                        helpPopup: 'You are not allowed to enter values here if not an Incicision category''
+                                    }
+                },
                     area: {
                       lookup: {
                                 xtype: 'combobox',
