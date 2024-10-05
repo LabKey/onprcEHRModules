@@ -91,6 +91,14 @@ EHR.model.DataModelManager.registerMetadata('Necropsy_Notes', {
             project: {
                 xtype: 'onprc_ehr-projectentryfield'
                  }
+            filename: {
+                 hidden: false,
+                 shownInGrid: true,
+                 header: 'Pdf File'
+                 columnConfig: {
+                         width: 200
+                     }
+            }
         },
         'onprc_ehr.encounter_summaries_remarks': {
             Id: {
