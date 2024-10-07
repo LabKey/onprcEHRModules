@@ -14,7 +14,6 @@
         <column name="taskid" />
         <column name="requestid" />
         <column name="chargetype" />
-        <column name="filename" />
     </columns>
     <sorts>
         <sort column="date" descending="true"/>
