@@ -97,7 +97,7 @@ Ext4.define('ONPRC_EHR.grid.ObservationsRowEditorGridPanel', {
                 valueField: 'value',
                 forceSelection: true,
                 queryMode: 'local',
-                anyMaych: true,
+                anyMatch: true,
                 store: {
                     type: 'labkey-store',
                     schemaName: 'ehr',
@@ -118,8 +118,8 @@ Ext4.define('ONPRC_EHR.grid.ObservationsRowEditorGridPanel', {
                          valueField: 'value',
                          forceSelection: true,
                          queryMode: 'local',
-                         anyMaych: true,
-                         value: 'N/A',
+                         anyMatch: true,
+                         value: 'All',
                          store: {
                              type: 'labkey-store',
                               schemaName:'sla',
@@ -133,32 +133,22 @@ Ext4.define('ONPRC_EHR.grid.ObservationsRowEditorGridPanel', {
                              autoLoad: true
                          }
                      }
-        },{
-             header: 'Observation/Score',
-                      width: 200,
-                          editable: true,
-                          dataIndex: 'area',
-                          editor: {
-                              xtype: 'combobox',
-                              displayField: 'value',
-                              valueField: 'value',
-                              forceSelection: true,
-                              queryMode: 'local',
-                              anyMaych: true,
-                              value: 'N/A',
-                              store: {
-                                  type: 'labkey-store',
-                                   schemaName:'sla',
-                                   queryName: 'Reference_Data',
-                                   columns: 'value',
-                                   defaultValue:'0 - None',
-                                   sort: 'sort_order',
-                                   filterArray: [
-                                       LABKEY.Filter.create('enddate', null, LABKEY.Filter.Types.ISBLANK),
-                                       LABKEY.Filter.create('ColumnName', 'surgicalobservationscore', LABKEY.Filter.Types.EQUAL)],
-                                  autoLoad: true
-                                      }
-                                  }
+              },{
+                     header: 'Observation/Score',
+                     width: 200,
+                     editable: true,
+                     dataIndex: 'observation',
+                     sort: 'sort_order',
+                     renderer: function(value, cellMetaData, record){
+                         if (Ext4.isEmpty(value) && ['Vet Attention'].indexOf(record.get('category')) == -1){
+                             cellMetaData.tdCls = 'labkey-grid-cell-invalid';
+                         }
+
+                         return value;
+                     },
+                     editor: {
+                         xtype: 'textfield'
+                     }
 
         },{
             header: 'Inflammation',
@@ -187,10 +177,7 @@ Ext4.define('ONPRC_EHR.grid.ObservationsRowEditorGridPanel', {
                        xtype: 'checkcombo',
                        displayField: 'value',
                        valueField: 'value',
-                       forceSelection: true,
                        queryMode: 'local',
-                       anyMaych: true,
-                       value: 'N/A',
                        store: {
                            type: 'labkey-store',
                             schemaName:'sla',

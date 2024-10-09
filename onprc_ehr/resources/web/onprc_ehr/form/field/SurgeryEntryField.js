@@ -27,13 +27,12 @@ Ext4.define('onprc_ehr.form.field.SurgeryExceptionField', {
         Ext4.apply(this, {
             displayField:'value',
             valueField: 'value',
+             defaultValue: '0 - None',
             queryMode: 'local',
-             defaultValue:'0 - None',
             store: Ext4.create('LABKEY.ext4.data.Store', {
                 schemaName: 'sla',
                 queryName: 'Reference_Data',
                 columns: 'value',
-                defaultValue:'0 - None',
                 sort: 'sort_order',
                 filterArray: [
                     LABKEY.Filter.create('enddate', null, LABKEY.Filter.Types.ISBLANK),
@@ -64,12 +63,11 @@ Ext4.define('onprc_ehr.form.field.SurgeryScoreField', {
             displayField:'value',
             valueField: 'value',
             queryMode: 'local',
-             defaultValue:'0 - None',
+            defaultValue:'Normal',
             store: Ext4.create('LABKEY.ext4.data.Store', {
                 schemaName: 'sla',
                 queryName: 'Reference_Data',
                 columns: 'value',
-                defaultValue:'Normal',
                 sort: 'sort_order',
                 filterArray: [
                     LABKEY.Filter.create('enddate', null, LABKEY.Filter.Types.ISBLANK),

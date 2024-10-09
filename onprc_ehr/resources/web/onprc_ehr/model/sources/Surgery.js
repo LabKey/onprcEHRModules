@@ -139,7 +139,8 @@
             },
             'study.clinical_observations': {
                    inflammation: {
-                     hidden: true
+                     hidden: true,
+                     defaultValue: '0 - None'
                     },
                     area: {
                       lookup: {
@@ -148,6 +149,7 @@
                                 queryName: 'Reference_Data',
                                 columns: 'value',
                                 sort: 'sort_order',
+                                 defaultValue:'All',
                                  editable: true,
                                  header: 'Area',
                                  filterArray: [
@@ -157,10 +159,12 @@
                            }
                       },
                     bruising: {
-                      hidden: true
+                      hidden: true,
+                      defaultValue:'0 - None'
                       },
                     other: {
-                      hidden: true
+                      hidden: true,
+                      defaultValue:'0 - None'
                     },
                      remark: {
                        hidden: true,
