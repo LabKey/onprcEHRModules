@@ -135,19 +135,30 @@ Ext4.define('ONPRC_EHR.grid.ObservationsRowEditorGridPanel', {
                      }
         },{
              header: 'Observation/Score',
-                    width: 200,
-                    editable: true,
-                    dataIndex: 'observation',
-                    renderer: function(value, cellMetaData, record){
-                        if (Ext4.isEmpty(value) && ['Vet Attention'].indexOf(record.get('category')) == -1){
-                            cellMetaData.tdCls = 'labkey-grid-cell-invalid';
-                        }
-
-                        return value;
-                    },
-                    editor: {
-                        xtype: 'textfield'
-                    }
+                      width: 200,
+                          editable: true,
+                          dataIndex: 'area',
+                          editor: {
+                              xtype: 'combobox',
+                              displayField: 'value',
+                              valueField: 'value',
+                              forceSelection: true,
+                              queryMode: 'local',
+                              anyMaych: true,
+                              value: 'N/A',
+                              store: {
+                                  type: 'labkey-store',
+                                   schemaName:'sla',
+                                   queryName: 'Reference_Data',
+                                   columns: 'value',
+                                   defaultValue:'0 - None',
+                                   sort: 'sort_order',
+                                   filterArray: [
+                                       LABKEY.Filter.create('enddate', null, LABKEY.Filter.Types.ISBLANK),
+                                       LABKEY.Filter.create('ColumnName', 'surgicalobservationscore', LABKEY.Filter.Types.EQUAL)],
+                                  autoLoad: true
+                                      }
+                                  }
 
         },{
             header: 'Inflammation',
