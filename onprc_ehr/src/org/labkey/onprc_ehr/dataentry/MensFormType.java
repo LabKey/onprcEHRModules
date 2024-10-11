@@ -47,7 +47,6 @@ public class MensFormType extends TaskForm
 
         addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/model/sources/Menses.js"));
 
-        setDisplayReviewRequired(true);
 
         for (FormSection s : getFormSections())
         {
@@ -63,7 +62,7 @@ public class MensFormType extends TaskForm
 
             defaultButtons.remove("SUBMIT");
             defaultButtons.add("SAVEDRAFT");
-            defaultButtons.add("SAVECLOSE");
+            defaultButtons.add("CLOSE");
             defaultButtons.add("REVIEW");
             defaultButtons.add("MENSEFINAL");
 
