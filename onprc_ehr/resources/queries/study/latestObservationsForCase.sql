@@ -26,8 +26,8 @@ SELECT
   c.isOpen as caseIsOpen,
   o.taskid,
   o.inflammation,
-  o.bruising,
-  o.other
+  o.bruising
+
 
 FROM study.clinical_observations o
 JOIN study.cases c ON (c.objectid = o.caseid)
