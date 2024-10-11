@@ -474,6 +474,28 @@ exports.init = function(EHR){
                 EHR.Server.Utils.addError(scriptErrors, 'category',  msg, 'ERROR');
             }
         }
+      });
+
+    //Added 10-7-2024 Blasa
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'clinical_observations', function(helper, scriptErrors, row, oldRow) {
+
+        if (row.Id && row.category != 'Incision' && (row.inflammation || row.bruising || row.other))
+            {
+               var msg = '';
+              if (row.Id && row.category != 'Incision' && row.inflammation) {
+                   msg = row.category + ': was an invalid entry onto the Inflammation input field, only Incision entries are allowed';
+                   }
+              if (row.Id && row.category != 'Incision' && row.bruising) {
+                    msg = row.category + ': was an invalid entry onto the Bruising input field, only Incision entries are allowed';
+                    }
+               if (row.Id && row.category != 'Incision' && row.other) {
+                    msg = row.category + ': was an invalid entry onto the Other input field, only Incision entries are allowed';
+                    }
+
+                EHR.Server.Utils.addError(scriptErrors, 'category',  msg, 'ERROR');
+
+            }
+
 
     });
 
