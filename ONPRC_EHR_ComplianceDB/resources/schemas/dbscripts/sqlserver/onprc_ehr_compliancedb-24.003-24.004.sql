@@ -4,10 +4,10 @@
 
 -- Author:	R. Blasa
 -- Created: 9-20-2024-2024
--- Description:	Stored procedure program to create a static data set for Compliance Procedure REcent Test .sq;
+-- Description:	Stored procedure program to create a static data set for Compliance REcent Test .sq;
 
 
-   CREATE TABLE onprc_ehr_compliancedb.ComplianceProcedureReport(
+   CREATE TABLE onprc_ehr_compliancedb.ComplianceRecentReport(
 	[rowid] [int] IDENTITY(1,1) NOT NULL,
     [employeeid]  varchar(300) NULL,
 	[requirementname] [varchar](4000) NULL,
@@ -29,7 +29,7 @@
 	[months_until_renewal] [decimal](4, 1) NULL,
 	[requirement_name_type] [varchar](1000) NULL
 
- CONSTRAINT [PK_ComplianceProcedureReport] PRIMARY KEY CLUSTERED
+ CONSTRAINT [PK_ComplianceRecentReport] PRIMARY KEY CLUSTERED
 (
 	[rowid] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
@@ -50,14 +50,15 @@ GO
 **
 */
 
-CREATE Procedure onprc_ehr_compliancedb.p_ComplianceProcedureOverDueSoon_Process
+CREATE Procedure onprc_ehr_compliancedb.p_ComplianceRecentOverDueSoon_Process
 
 
 AS
 
 
+
               ----- Reset Reporting table
-              Delete onprc_ehr_compliancedb.ComplianceProcedureReport
+              Delete onprc_ehr_compliancedb.ComplianceRecentReport
 
 	                      If @@Error <> 0
 	                                GoTo Err_Proc
@@ -66,7 +67,7 @@ AS
 
 BEGIN
 
-          Insert into onprc_ehr_compliancedb.ComplianceProcedureReport
+          Insert into onprc_ehr_compliancedb.ComplianceRecentReport
                         (
                          requirementname,
                          employeeid,
@@ -105,7 +106,8 @@ BEGIN
               (select h.majorudds from ehr_compliancedb.employees h where h.employeeid = a.employeeid) as host,
               (select h.supervisor from ehr_compliancedb.employees h where h.employeeid = a.employeeid) as supervisor,
               (select h.type from ehr_compliancedb.employees h where h.employeeid = a.employeeid) as trainee_type,      ----- type trainee, or trainer
-              (select h.type from ehr_compliancedb.Requirements h where h.requirementname = b.requirementname) as requirement_type,
+              (select h.type from ehr_compliancedb.Requirements h where h.requirementname = b.requirementname) as requirement_type,  ----- type trainee, or trainer
+
 
                (select count(zz.date) from ehr_compliancedb.completiondates zz where zz.requirementname= b.requirementname and zz.employeeid= a.employeeid  ) as times_Completed,
 
@@ -149,7 +151,7 @@ BEGIN
           And b.requirementname not in (select distinct t.requirementname from ehr_compliancedb.employeerequirementexemptions t Where a.employeeid = t.employeeid
                                                                                                                                   And b.requirementname = t.requirementname)
           And a.employeeid in (select p.employeeid from ehr_compliancedb.employees p where a.employeeid = p.employeeid And p.enddate is null)
-          And b.requirementname in  (select q.requirementname from ehr_compliancedb.Requirements q where q.requirementname = b.requirementname And q.dateDisabled is null )
+           And b.requirementname in  (select q.requirementname from ehr_compliancedb.Requirements q where q.requirementname = b.requirementname And q.dateDisabled is null )
 
 
                                         group by b.requirementname,a.employeeid
@@ -168,7 +170,7 @@ BEGIN
               (select h.majorudds from ehr_compliancedb.employees h where h.employeeid = a.employeeid) as host,
               (select h.supervisor from ehr_compliancedb.employees h where h.employeeid = a.employeeid) as supervisor,
               (select h.type from ehr_compliancedb.employees h where h.employeeid = a.employeeid) as trainee_type,      ----- type trainee, or trainer
-              (select h.type from ehr_compliancedb.Requirements h where h.requirementname = a.requirementname) as requirement_type,  ----- type trainee, or trainer
+              (select h.type from ehr_compliancedb.Requirements h where h.requirementname = a.requirementname) as requirement_type,      ----- type trainee, or trainer
 
 
                (select count(zz.date) from ehr_compliancedb.completiondates zz where zz.requirementname= a.requirementname and zz.employeeid= a.employeeid  ) as timesCompleted,
@@ -216,6 +218,64 @@ BEGIN
 
         UNION
 
+        -- Training that was completed by as an employee training exemptions, and at least completed one, or more times
+        select a.requirementname,
+               a.employeeid,
+               null as unit,
+               null as category,
+               'No' as trackingflag,
+                (select h.email from ehr_compliancedb.employees h where h.employeeid = a.employeeid) as  email,
+                  (select h.lastname from ehr_compliancedb.employees h where h.employeeid = a.employeeid) as lastname,
+                  (select h.firstname from ehr_compliancedb.employees h where h.employeeid = a.employeeid) as firstname,
+                  (select h.majorudds from ehr_compliancedb.employees h where h.employeeid = a.employeeid) as host,
+                  (select h.supervisor from ehr_compliancedb.employees h where h.employeeid = a.employeeid) as supervisor,
+                   (select h.type from ehr_compliancedb.employees h where h.employeeid = a.employeeid) as trainee_type,      ----- type trainee, or trainer
+                  (select h.type from ehr_compliancedb.Requirements h where h.requirementname = a.requirementname) as requirement_type,      ----- type trainee, or trainer
+
+
+                   (select count(zz.date) from ehr_compliancedb.completiondates zz where zz.requirementname= a.requirementname and zz.employeeid= a.employeeid  ) as timesCompleted,
+
+                   (select k.expireperiod from ehr_compliancedb.Requirements k where k.requirementname = a.requirementname) as ExpiredPeriod,
+
+                   ( select  (datediff(month,max(pq.date), tt.reviewdate) )from  ehr_compliancedb.requirements tt, ehr_compliancedb.completiondates pq where tt.requirementname =   a.requirementname and pq.requirementname = tt.requirementname and pq.employeeid = a.employeeid group by tt.expireperiod, tt.reviewdate
+                     having (tt.expireperiod) > (datediff(month,max(pq.date), tt.reviewdate))  and (tt.reviewdate is not null)  ) as NewExpirePeriod,
+
+                   (select max(zz.date) from ehr_compliancedb.completiondates zz where zz.requirementname= a.requirementname and zz.employeeid= a.employeeid  ) as MostRecentDate,
+
+                   (Select distinct string_agg(yy.comment, char(10))  from ehr_compliancedb.completiondates yy where yy.date in (select max(zz.date) from ehr_compliancedb.completiondates zz where zz.requirementname= a.requirementname and zz.employeeid= a.employeeid )
+                                                                                                 And  yy.requirementname= a.requirementname and yy.employeeid= a.employeeid   ) as comment,
+
+                   (Select distinct string_agg(yy.snooze_date, char(10))  from ehr_compliancedb.completiondates yy where yy.date in (select max(zz.date) from ehr_compliancedb.completiondates zz where zz.requirementname= a.requirementname and zz.employeeid= a.employeeid )
+                                                                                                 And  yy.requirementname= a.requirementname and yy.employeeid= a.employeeid   ) as snooze_date,
+
+                   CAST(
+                           CASE
+                               WHEN (select max(st.date) from ehr_compliancedb.completiondates st where st.requirementname = a.requirementname and st.employeeid = a.employeeid ) IS NULL   then 0
+                               WHEN ( select  (tt.expireperiod)  from  ehr_compliancedb.requirements tt, ehr_compliancedb.completiondates pq where tt.requirementname = a.requirementname and pq.requirementname = tt.requirementname and pq.employeeid = a.employeeid group by tt.expireperiod  ) = 0 then Null
+
+
+                               WHEN ( select  count(*) from  ehr_compliancedb.requirements tt, ehr_compliancedb.completiondates pq where tt.requirementname = a.requirementname and pq.requirementname = tt.requirementname and pq.employeeid = a.employeeid group by tt.expireperiod, tt.reviewdate
+                                      having (tt.expireperiod) >  (datediff(month,max(pq.date), tt.reviewdate)  )) > 0 THEN
+
+                                   ( select  ( datediff(month,max(pq.date), tt.reviewdate) - ( datediff(month,max(pq.date), getdate())) )from  ehr_compliancedb.requirements tt, ehr_compliancedb.completiondates pq where tt.requirementname =   a.requirementname and pq.requirementname = tt.requirementname and pq.employeeid = a.employeeid group by tt.expireperiod, tt.reviewdate
+                                     having (tt.expireperiod) > (datediff(month,max(pq.date), tt.reviewdate)) and (tt.reviewdate is not null)  )
+
+
+                               ELSE ( select  (tt.expireperiod) - ( datediff(month,max(pq.date), getdate())) from  ehr_compliancedb.requirements tt, ehr_compliancedb.completiondates pq where   tt.requirementname =   a.requirementname and pq.requirementname = tt.requirementname and pq.employeeid = a.employeeid group by tt.expireperiod )
+
+                               END  AS DECIMAL)  AS MonthsUntilRenewal
+
+
+        from  ehr_compliancedb.employeerequirementexemptions a
+            Where a.requirementname in (select z.requirementname from ehr_compliancedb.completiondates z where z.requirementname = a.requirementname
+                                                    and z.employeeid = a.employeeid and z.date is not null)
+              And a.employeeid in (select p.employeeid from ehr_compliancedb.employees p where a.employeeid = p.employeeid And p.enddate is null)
+              And a.requirementname in  (select q.requirementname from ehr_compliancedb.Requirements q where q.requirementname = a.requirementname And q.dateDisabled is null )
+
+        group by a.requirementname,a.employeeid
+
+        UNION
+
         -- Additional requirements for employees that have not completed training, but is required
         select j.requirementname,
                j.employeeid,
@@ -228,7 +288,7 @@ BEGIN
               (select h.majorudds from ehr_compliancedb.employees h where h.employeeid = j.employeeid) as host,
               (select h.supervisor from ehr_compliancedb.employees h where h.employeeid = j.employeeid) as supervisor,
               (select h.type from ehr_compliancedb.employees h where h.employeeid = j.employeeid) as trainee_type,      ----- type trainee, or trainer
-              (select h.type from ehr_compliancedb.Requirements h where h.requirementname = j.requirementname) as requirement_type,    ----- type trainee, or trainer
+              (select h.type from ehr_compliancedb.Requirements h where h.requirementname = j.requirementname) as requirement_type,      ----- type trainee, or trainer
                null as timesCompleted,
                null as ExpiredPeriod,
                null as NewExpirePeriod,
@@ -243,7 +303,7 @@ BEGIN
         Where j.requirementname not in (select z.requirementname from ehr_compliancedb.completiondates z where z.requirementname = j.requirementname
           and z.employeeid = j.employeeid and z.date is not null)
           And j.employeeid in (select p.employeeid from ehr_compliancedb.employees p where j.employeeid = p.employeeid And p.enddate is null)
-         And j.requirementname in  (select q.requirementname from ehr_compliancedb.Requirements q where q.requirementname = j.requirementname And q.dateDisabled is null )
+          And j.requirementname in  (select q.requirementname from ehr_compliancedb.Requirements q where q.requirementname = j.requirementname And q.dateDisabled is null )
 
         group by j.requirementname,j.employeeid
 
