@@ -199,7 +199,7 @@
             </column>
             <column columnName="snooze_date">
             </column>
-            <column columnName="month_until_renewal">
+            <column columnName="months_until_renewal">
             </column>
             <column columnName="requirement_name_type">
             </column>
@@ -247,7 +247,7 @@
             </column>
             <column columnName="snooze_date">
             </column>
-            <column columnName="month_until_renewal">
+            <column columnName="months_until_renewal">
             </column>
             <column columnName="requirement_name_type">
             </column>
