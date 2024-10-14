@@ -116,10 +116,10 @@ BEGIN
 
                (select max(zz.date) from ehr_compliancedb.completiondates zz where zz.requirementname= b.requirementname and zz.employeeid= a.employeeid  ) as mostrecentcompleted_date,
 
-               (Select string_agg(yy.comment, char(10))  from ehr_compliancedb.completiondates yy where yy.date in (select max(zz.date) from ehr_compliancedb.completiondates zz where zz.requirementname= b.requirementname and zz.employeeid= a.employeeid )
+               (Select distinct string_agg(yy.comment, char(10))  from ehr_compliancedb.completiondates yy where yy.date in (select max(zz.date) from ehr_compliancedb.completiondates zz where zz.requirementname= b.requirementname and zz.employeeid= a.employeeid )
                                                                                              And  yy.requirementname= b.requirementname and yy.employeeid= a.employeeid   ) as comment,
 
-               (Select string_agg(yy.snooze_date, char(10)) from ehr_compliancedb.completiondates yy where yy.date in (select max(zz.date) from ehr_compliancedb.completiondates zz where zz.requirementname= b.requirementname and zz.employeeid= a.employeeid )
+               (Select distinct string_agg(yy.snooze_date, char(10)) from ehr_compliancedb.completiondates yy where yy.date in (select max(zz.date) from ehr_compliancedb.completiondates zz where zz.requirementname= b.requirementname and zz.employeeid= a.employeeid )
                                                                                              And  yy.requirementname= b.requirementname and yy.employeeid= a.employeeid   ) as snooze_date,
 
                CAST(
@@ -180,10 +180,10 @@ BEGIN
 
                (select max(zz.date) from ehr_compliancedb.completiondates zz where zz.requirementname= a.requirementname and zz.employeeid= a.employeeid  ) as MostRecentDate,
 
-               (Select string_agg(yy.comment, char(10))  from ehr_compliancedb.completiondates yy where yy.date in (select max(zz.date) from ehr_compliancedb.completiondates zz where zz.requirementname= a.requirementname and zz.employeeid= a.employeeid )
+               (Select distinct string_agg(yy.comment, char(10))  from ehr_compliancedb.completiondates yy where yy.date in (select max(zz.date) from ehr_compliancedb.completiondates zz where zz.requirementname= a.requirementname and zz.employeeid= a.employeeid )
                                                                                              And  yy.requirementname= a.requirementname and yy.employeeid= a.employeeid   ) as comment,
 
-               (Select string_agg(yy.snooze_date, char(10))  from ehr_compliancedb.completiondates yy where yy.date in (select max(zz.date) from ehr_compliancedb.completiondates zz where zz.requirementname= a.requirementname and zz.employeeid= a.employeeid )
+               (Select distinct string_agg(yy.snooze_date, char(10))  from ehr_compliancedb.completiondates yy where yy.date in (select max(zz.date) from ehr_compliancedb.completiondates zz where zz.requirementname= a.requirementname and zz.employeeid= a.employeeid )
                                                                                              And  yy.requirementname= a.requirementname and yy.employeeid= a.employeeid   ) as snooze_date,
 
                CAST(
