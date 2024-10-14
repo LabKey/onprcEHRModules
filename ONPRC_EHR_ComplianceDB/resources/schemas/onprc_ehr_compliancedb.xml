@@ -158,7 +158,7 @@
     </table>
 
     <table tableName="ComplianceProcedureReport" tableDbType="TABLE" useColumnOrder="true">
-        <tableTitle>Scishield Master Temp</tableTitle>
+        <tableTitle>Compliance Procedure Report</tableTitle>
         <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
         <auditLogging>DETAILED</auditLogging>
         <columns>
@@ -206,7 +206,7 @@
         </columns>
     </table>
     <table tableName="ComplianceRecentReport" tableDbType="TABLE" useColumnOrder="true">
-        <tableTitle>Scishield Master Temp</tableTitle>
+        <tableTitle>Compliance Recent Report</tableTitle>
         <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
         <auditLogging>DETAILED</auditLogging>
         <columns>
