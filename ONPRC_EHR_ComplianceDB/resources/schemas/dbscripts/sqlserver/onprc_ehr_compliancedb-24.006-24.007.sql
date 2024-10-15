@@ -274,7 +274,7 @@ BEGIN
 
                           Select  @HepBdate = trim([Hep B Date]), @Herp= trim([Herp]) from onprc_ehr_compliancedb.OccHealthTemp where searchID = @Searchkey And [Hep B Date] is not null
 
-                             Set @completiondate = null
+                             Set  @comment = ''
                              Set @Temp = ''
 
   			                 If ( @Herp = 'Complete)
