@@ -18,23 +18,23 @@
 **
 **
 Prime - Compliance Name								Sharepoint Extract
-Occupational Health - Hep B Compliant - Level 1					Hep B
+Occupational Health - Hep B Compliant - Level 1				Hep B
 Occupational Health - Hep B Compliant - Level 2
 Occupational Health - Measles Compliant						Measles
 Occupational Health - Measles Compliant - Initial
 Occupational Health - Mumps Compliant						Mumps
 Occupational Health - Rubella Compliant						Rubella
 Occupational Health - Varicella Compliant					Varicella
-Tdap Compliant									Tdap
+Tdap Compliant									            Tdap
 Occupational Health - Respiratory Protection - CAPR Training			Full Face Respirator
 Occupational Health - Respiratory Protection - N95 Respirator Fit Testing	Standard Respirator
-Occupational Health - Flu Compliant						Flu
-TB Surveillance Compliant							TB Health Surveillance
+Occupational Health - Flu Compliant						    Flu
+TB Surveillance Compliant							        TB Health Surveillance
 Occupational Health - TB Compliant - Annual					TB Annual
-Occupational Health - TB Compliant - Initial					TB West Campus
+Occupational Health - TB Compliant - Initial				TB West Campus
 Occupational Health - TB Compliant - Due in 6 Months
-AIRC MRI Compliant								AIRC MRI
-Clinical MRI Compliant								Clinical MRI
+AIRC MRI Compliant								            AIRC MRI
+Clinical MRI Compliant								        Clinical MRI
 
 The following dates are not required entries:
 
@@ -58,13 +58,13 @@ AS
 
 DECLARE
 			              @SearchKey              Int,
-			              @TempsearchKey	  Int,
+			              @TempsearchKey	      Int,
 			              @requirementnameFinal   varchar(2000),
                           @requirementnanme       varchar(2000),
                           @employeeid             varchar(500),
                           @Completiondate         smalldatetime,
                           @OccHealthID            int,
-                          @trainer                varchar(1000),
+                          @trainer                varchar(500),
                           @Comment                varchar(2000),
   			              @HepBdate               smalldatetime,
   			              @HepB                   varchar(100),
@@ -114,11 +114,11 @@ BEGIN
  	[Employee Status] ,
  	[Total Compliance],
  	[Hep B] ,
-    [Hep B Date]
+    [Hep B Date],
  	[Measles] ,
     [Measles Date] ,
  	[Mumps] ,
-    [Mumps Date]
+    [Mumps Date],
  	[Rubella],
     [Rubella Date],
  	[Varicella] ,
@@ -140,11 +140,11 @@ BEGIN
  	[Employee Status] ,
  	[Total Compliance],
  	[Hep B] ,
-    [Hep B Date]
+    [Hep B Date],
  	[Measles] ,
     [Measles Date] ,
  	[Mumps] ,
-    [Mumps Date]
+    [Mumps Date],
  	[Rubella],
     [Rubella Date],
  	[Varicella] ,

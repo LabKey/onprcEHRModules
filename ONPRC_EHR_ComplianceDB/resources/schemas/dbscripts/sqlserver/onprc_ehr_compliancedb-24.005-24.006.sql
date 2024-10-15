@@ -27,8 +27,8 @@ CREATE TABLE onprc_ehr_compliancedb.OccHealth_Data
     [Standard Respirator Date] datetime null,
     [TB West Campus]         nvarchar(100) null,
     [TB West Campus Date]    datetime null,
-    [Supervisor Email]       nvarchar(100) null,
-    [Processed]              nvarchar(1000) null,
+    [Supervisor Email]       nvarchar(200) null,
+    [Processed]              nvarchar(2000) null,
     Container                ENTITYID NOT NULL,
     CreatedBy               USERID,
     Created                 datetime,
@@ -65,8 +65,8 @@ CREATE TABLE [onprc_ehr_compliancedb].[OccHealthTemp] (
     [TB West Campus]         nvarchar(100) null,
     [TB West Campus Date]    datetime null,
     [Supervisor Email]       nvarchar(100) null,
-    [trainer] [varchar](1000) NULL,
-    [processed]  [varchar](1000) NULL,
+    [trainer]               [varchar](500) NULL,
+    [processed]             [varchar](2000) NULL,
     [rowid] [int] NULL
 
     ) ON [PRIMARY]
@@ -95,8 +95,8 @@ CREATE TABLE [onprc_ehr_compliancedb].[OccHealthMasterTemp](
       [TB West Campus]         nvarchar(100) null,
       [TB West Campus Date]    datetime null,
       [Supervisor Email]       nvarchar(100) null,
-      [trainer] [varchar](1000) NULL,
-      [processed]  [varchar](1000) NULL,
+      [trainer]                [varchar](500) NULL,
+      [processed]              [varchar](2000) NULL,
       [rowid] [int] NULL
 
     ) ON [PRIMARY]
