@@ -4,7 +4,7 @@
 **
 ** 	Created by
 **      Blasa  		3-19-2024               Import process from OccHealth Data To Prime Compliance Module
-**							Introduced to this project 3-22-2024   Data file smaple provided 3-22-2024
+**							Introduced to this project 3-22-2024   Data file smaple provided 9-19-2024
 **
 **                                                 Processed codes:    Null    ---     Not Processed
                                                                           1 ------     Successfully posted
@@ -44,109 +44,11 @@ Incomplete (Due 04-20-2023)
 
 Complete by Declination (2024-03-13)
 
-
-
-
-
-
-
-
-
-CREATE TABLE [onprc_ehr_complinacedb].[OccHealthTemp](
-	[searchID] [int] IDENTITY(100,1) NOT NULL,
-	[Email] [nvarchar](255) NULL,
-	[Person Type] [nvarchar](255) NULL,
-	[Employee Status] [nvarchar](255) NULL,
-	[Total Compliance] [nvarchar](255) NULL,
-	[West Campus] [nvarchar](255) NULL,
-	[Hep B] [nvarchar](255) NULL,
-	[Measles] [nvarchar](255) NULL,
-	[Mumps] [nvarchar](255) NULL,
-	[Rubella] [nvarchar](255) NULL,
-	[Varicella] [nvarchar](255) NULL,
-	[Tdap] [nvarchar](255) NULL,
-	[Full Face Respirator] [nvarchar](255) NULL,
-	[Standard Respirator] [nvarchar](255) NULL,
-	[Flu] [nvarchar](255) NULL,
-	[TB Health Surveillance] [nvarchar](255) NULL,
-	[TB Annual] [nvarchar](255) NULL,
-	[TB West Campus] [nvarchar](255) NULL,
-	[AIRC MRI] [nvarchar](255) NULL,
-	[Clinical MRI] [nvarchar](255) NULL,
-	[Supervisor Email] [nvarchar](255) NULL,
-        [trainer] [varchar](1000) NULL,
-        [processed]  [varchar](1000) NULL,
-	[rowid] [int] NULL
-
-) ON [PRIMARY]
-GO
-
-CREATE TABLE [onprc_ehr_complinacedb].[OccHealthMasterTemp](
-	[searchID] [int] IDENTITY(100,1) NOT NULL,
-	[Email] [nvarchar](255) NULL,
-	[Person Type] [nvarchar](255) NULL,
-	[Employee Status] [nvarchar](255) NULL,
-	[Total Compliance] [nvarchar](255) NULL,
-	[West Campus] [nvarchar](255) NULL,
-	[Hep B] [nvarchar](255) NULL,
-	[Measles] [nvarchar](255) NULL,
-	[Mumps] [nvarchar](255) NULL,
-	[Rubella] [nvarchar](255) NULL,
-	[Varicella] [nvarchar](255) NULL,
-	[Tdap] [nvarchar](255) NULL,
-	[Full Face Respirator] [nvarchar](255) NULL,
-	[Standard Respirator] [nvarchar](255) NULL,
-	[Flu] [nvarchar](255) NULL,
-	[TB Health Surveillance] [nvarchar](255) NULL,
-	[TB Annual] [nvarchar](255) NULL,
-	[TB West Campus] [nvarchar](255) NULL,
-	[AIRC MRI] [nvarchar](255) NULL,
-	[Clinical MRI] [nvarchar](255) NULL,
-	[Supervisor Email] [nvarchar](255) NULL,
-        [trainer] [varchar](1000) NULL,
-        [processed]   [varchar](1000) NULL,
-	[rowid] [int] NULL
-
-) ON [PRIMARY]
-GO
-
-
 **
 **
-
-
-
-CREATE TABLE [onprc_ehr_compliancedb].[OccHealth_Data](
-        [RowId] [int] IDENTITY(100,1) NOT NULL,
-	[Email] [nvarchar](255) NULL,
-	[Person Type] [nvarchar](255) NULL,
-	[Employee Status] [nvarchar](255) NULL,
-	[Total Compliance] [nvarchar](255) NULL,
-	[West Campus] [nvarchar](255) NULL,
-	[Hep B] [nvarchar](255) NULL,
-	[Measles] [nvarchar](255) NULL,
-	[Mumps] [nvarchar](255) NULL,
-	[Rubella] [nvarchar](255) NULL,
-	[Varicella] [nvarchar](255) NULL,
-	[Tdap] [nvarchar](255) NULL,
-	[Full Face Respirator] [nvarchar](255) NULL,
-	[Standard Respirator] [nvarchar](255) NULL,
-	[Flu] [nvarchar](255) NULL,
-	[TB Health Surveillance] [nvarchar](255) NULL,
-	[TB Annual] [nvarchar](255) NULL,
-	[TB West Campus] [nvarchar](255) NULL,
-	[AIRC MRI] [nvarchar](255) NULL,
-	[Clinical MRI] [nvarchar](255) NULL,
-	[Supervisor Email] [nvarchar](255) NULL,
-        [trainer] [varchar](1000) NULL,
-        [processed]   [varchar](1000) NULL,
-
-) ON [PRIMARY]
-GO
-
 */
 
-                                 CREATE Procedure [onprc_ehr_compliancedb].[p_OccHealthToPrimeProcess]
+                CREATE Procedure [onprc_ehr_compliancedb].[p_OccHealthToPrimeProcess]
 
 
 
@@ -155,29 +57,22 @@ AS
 
 
 DECLARE
-			  @SearchKey              Int,
-			  @TempsearchKey	  Int,
-			  @requirementnameFinal   varchar(2000),
+			              @SearchKey              Int,
+			              @TempsearchKey	  Int,
+			              @requirementnameFinal   varchar(2000),
                           @requirementnanme       varchar(2000),
                           @employeeid             varchar(500),
                           @Completiondate         smalldatetime,
                           @OccHealthID            int,
                           @trainer                varchar(1000),
                           @Comment                varchar(2000),
-  			  @HerpesBdate            varchar(500),
-                          @measlesDate            varchar(500),
-                          @MumpsDate              varchar(500),
-                          @RubellaDate            varchar(500),
-                          @Varicelladate          varchar(500),
-     			  @Tdapdate               varchar(500),
-                          @Fullfacerespiratordate varchar(500),
-			  @StandardRespiratorydate varchar(500),
-                          @Fludate                varchar(500),
-                          @TBSurveillancedate     varchar(500),
-                          @TBAnnualdate           varchar(500),
-                          @TBWestCampusdate       varchar(500),
-			  @ClinicalMRI_date       varchar(500),
-                          @AIRCMRI_date           varchar(500),
+  			              @HepBdate               smalldatetime,
+                          @measlesDate            smalldatetime,
+                          @MumpsDate              smalldatetime,
+                          @RubellaDate            smalldatetime,
+                          @Varicelladate          smalldatetime,
+			              @StandardRespiratorydate smalldatetime,
+                          @TBWestCampusdate       smalldatetime,
                           @skipFlag               smallint,
                           @importTech             smallint,
                           @Status                 varchar(1000),
@@ -205,57 +100,55 @@ BEGIN
 
      BEGIN
 
-        Insert into onprc_ehr_compliancedb.OccHealthTemp
-            (
-         Email,
-	[Person Type] ,
-	[Employee Status] ,
-	[Total Compliance],
-	[West Campus] ,
-	[Hep B] ,
-	[Measles] ,
-	[Mumps] ,
-	[Rubella],
-	[Varicella] ,
-	[Tdap] ,
-	[Full Face Respirator] ,
-	[Standard Respirator] ,
-	[Flu] ,
-	[TB Health Surveillance] ,
-	[TB Annual] ,
-	[TB West Campus] ,
-	[AIRC MRI] ,
-	[Clinical MRI],
-	[Supervisor Email],
-        [processed] ,
-	[rowid]
+     Insert into onprc_ehr_compliancedb.OccHealthTemp
+             (
+          Email,
+ 	[Person Type] ,
+ 	[Employee Status] ,
+ 	[Total Compliance],
+ 	[Hep B] ,
+    [Hep B Date]
+ 	[Measles] ,
+    [Measles Date] ,
+ 	[Mumps] ,
+    [Mumps Date]
+ 	[Rubella],
+    [Rubella Date],
+ 	[Varicella] ,
+    [Varicella Date] ,
+    [Standard Respirator] ,
+    [Standard Respirator Date] ,
+ 	[TB West Campus] ,
+    [TB West Campus Date] ,
+ 	[Supervisor Email],
+    [processed] ,
+ 	[rowid]
 
-               )
+                )
 
 
-           select
-                 Email,
-	[Person Type] ,
-	[Employee Status] ,
-	[Total Compliance],
-	[West Campus] ,
-	[Hep B] ,
-	[Measles] ,
-	[Mumps] ,
-	[Rubella],
-	[Varicella] ,
-	[Tdap] ,
-	[Full Face Respirator] ,
-	[Standard Respirator] ,
-	[Flu] ,
-	[TB Health Surveillance] ,
-	[TB Annual] ,
-	[TB West Campus] ,
-	[AIRC MRI] ,
-	[Clinical MRI],
-	[Supervisor Email],
-        [processed] ,
-	[rowid]
+  select
+     Email,
+ 	[Person Type] ,
+ 	[Employee Status] ,
+ 	[Total Compliance],
+ 	[Hep B] ,
+    [Hep B Date]
+ 	[Measles] ,
+    [Measles Date] ,
+ 	[Mumps] ,
+    [Mumps Date]
+ 	[Rubella],
+    [Rubella Date],
+ 	[Varicella] ,
+    [Varicella Date] ,
+    [Standard Respirator] ,
+    [Standard Respirator Date] ,
+ 	[TB West Campus] ,
+    [TB West Campus Date] ,
+ 	[Supervisor Email],
+    [processed] ,
+ 	[rowid]
 
 
               from  onprc_ehr_compliancedb.OccHealth_Data
@@ -288,29 +181,22 @@ BEGIN
 
    While @TempSearchKey < @SearchKey
    BEGIN
-			      Set  @requirementnameFinal = ''
+			                  Set  @requirementnameFinal = ''
                               Set @requirementnanme = ''
                               Set @employeeid = ''
                               Set @Completiondate = Null
                               Set @Comment = ''
                               Set @trainer = ''
                               Set @Temp = ''
-                              Set @HerpesBdate = Null
+                              Set @HepBdate = Null
                               Set @measlesDate = Null
                               Set @MumpsDate = Null
                               Set @RubellaDate  = Null
                               Set @Varicelladate = NUll
-     			      Set @Tdapdate = Null
-                              Set @Fullfacerespiratordate = Null
                               Set @StandardRespiratorydate = Null
-                              Set @Fludate = Null
-                              Set @TBSurveillancedate = Null
-                              Set @TBAnnualdate = Null
                               Set @TBWestCampusdate = Null
                               Set @OccHealthID  = Null
-                              Set @ClinicalMRI_date = Null
-                              Set @AIRCMRI_date = Null
-			      Set @skipFlag = 0
+			                  Set @skipFlag = 0
                               Set @ImportTech = 3054    ---Pete Johnson
                               Set @Status = ''
 							  Set @iPos = 0
@@ -320,10 +206,9 @@ BEGIN
 
 
 
-                   Select @employeeid = trim(email),  @HerpesBdate = trim([hep B]), @measlesDate = trim(measles), @MumpsDate = trim(Mumps), @RubellaDate = trim(Rubella),
-                             @Varicelladate= trim(Varicella),  @Tdapdate = trim(Tdap), @Fullfacerespiratordate = trim([Full Face Respirator]), @StandardRespiratorydate = trim([Standard Respirator]),
-                             @Fludate = trim(Flu), @TBSurveillancedate = trim([TB Health Surveillance]), @TBAnnualdate = trim([TB Annual]), @TBWestCampusdate = trim([TB West Campus]),
-                             @AIRCMRI_date= trim([AIRC MRI]), @ClinicalMRI_date = trim([Clinical MRI]),
+                   Select @employeeid = trim(email),  @HerpesBdate = trim([hep B Date]), @measlesDate = trim([Measles Date]), @MumpsDate = trim([Mumps Date]), @RubellaDate = trim([Rubella Date]),
+                             @Varicelladate= trim([Varicella Date), , @StandardRespiratorydate = trim([Standard Respirator Date]),
+                               @TBWestCampusdate = trim([TB West Campus Date]),
                             @trainer = trim([supervisor email]),@OccHealthID = rowid
 
                                from onprc_ehr_compliancedb.OccHealthTemp Where  searchID = @Searchkey
@@ -332,26 +217,26 @@ BEGIN
                             -----Parse and extract date from file`
 
 		      Set @iPos = charindex('@', @employeeid)
-                      if @iPos > 0
-			Begin
+              if @iPos > 0
+			   Begin
                           Set @employeeid = left(@employeeid,@iPos - 1)
 		        End
 
 
-			Set @iPos = charindex('@', @trainer)
+			         Set @iPos = charindex('@', @trainer)
 
-                        if @iPos > 0
-			Begin
-			  Set @trainer = left(@trainer,@iPos - 1)
-                        End
+              if @iPos > 0
+			  Begin
+			       Set @trainer = left(@trainer,@iPos - 1)
+               End
 
                                     ----validate if the employeeid is defined
 
-                   IF not exists( Select * from ehr_compliancedb.employees Where employeeid = @employeeid And enddate is null)
+               IF not exists( Select * from ehr_compliancedb.employees Where employeeid = @employeeid And enddate is null)
 
                    BEGIN
-
-				Set @Status = @Status + ' E2 '
+                            Set @Status = ''
+				            Set @Status = @Status + 'Employee ID Undefined '
 
                             Update ss
                                Set ss.processed = @Status
@@ -365,131 +250,51 @@ BEGIN
                                     GOTO Next_Record
 
 
-                    END  ----
+                 END  ----
 
 
 						----Evaluate Hep B data
 
-                     If exists (Select * from onprc_ehr_compliancedb.OccHealthTemp where searchID = @Searchkey And [Hep B] is not null)
+                  If exists (Select * from onprc_ehr_compliancedb.OccHealthTemp where searchID = @Searchkey And [Hep B Date] is not null)
                      BEGIN
 
-                          Select  @HerpesBdate = trim([Hep B]) from onprc_ehr_compliancedb.OccHealthTemp where searchID = @Searchkey And [Hep B] is not null
+                          Select  @HepBdate = trim([Hep B Date]), @Herp= trim([Herp]) from onprc_ehr_compliancedb.OccHealthTemp where searchID = @Searchkey And [Hep B Date] is not null
 
-                        Set @completiondate = null
-                        Set @Temp = ''
+                             Set @completiondate = null
+                             Set @Temp = ''
 
-  			 If ( @HerpesBdate like 'Complete%')
-                         BEGIN
-
-			  set @Temp = right(@HerpesBdate ,len(@HerpesBdate) - (charindex('(', @HerpesBdate) + 1))
-                          set @Temp = left(@Temp,charindex(')', @Temp)- 1)
-
-                          if isdate(@Temp) = 1
-                            Set @completiondate = @Temp
-
-                          Set @Temp = ''
-                         END
-
-  			ELSE If ( @HerpesBdate like 'Complete by Declination%')
-                         BEGIN
-
-			  set @Temp = right(@HerpesBdate ,len(@HerpesBdate) - (charindex('(', @HerpesBdate ) + 1))
-                          set @Temp = left(@Temp,charindex(')', @Temp)- 1)
-                          if isdate(@Temp) = 1
-                            Set @completiondate = @Temp
-
-                          Set @Temp = ''
-                         END
-                        ELSE  if ( @HerpesBdate like 'Incomplete%' )  or ( @HerpesBdate like 'Complete Pending%' )
-                           BEGIN
-                                  Set @Status = @Status + ' He3  '
-
-                            Update ss
-                                 Set ss.processed = @Status
-
-                              From onprc_ehr_compliancedb.OccHealth_Data ss  Where ss.rowid = @OccHealthID
+  			                 If ( @Herp = 'Complete)
+                                 Set @comment = @comment + ' Complete'
 
 
-      	                        If @@Error <> 0
-	                                GoTo Err_Proc
+                      If not exists( Select * from ehr_compliancedb.completiondates Where employeeid = @employeeid And requirementname = 'Occupational Health - Hep B Compliant - Level 1'
+                                    And date = @HepBdate And @HepBdate is not null)
 
-					 Set @completiondate = null
-
-
-
-			   END
-                         ELSE
-                          BEGIN
-				Set @Status = @Status + ' He3  '
-
-                            Update ss
-                               Set ss.processed = @Status
-
-                              From onprc_ehr_compliancedb.OccHealth_Data ss  Where ss.rowid = @OccHealthID
-
-
-      	                        If @@Error <> 0
-	                                GoTo Err_Proc
-
-				 Set @completiondate = null
-
-
-                         END
-
-                                         ---- IF all previous version were validated proceed with the record insert
-
-                                                   Set @requirementnameFinal = 'Occupational Health - Hep B Compliant - Level 1'
-                                                   Set @comment = @comment + ' OccHealth Import'
-
-
-					            ----validate if the record already exists
-
-              		 IF exists( Select * from ehr_compliancedb.completiondates Where employeeid = @employeeid And requirementname = @requirementnameFinal
-                                    		And date = @completiondate)  And @completiondate is not null
-               		 BEGIN
-							Set @Status = @Status + ' He4 '
-
-                            				Update ss
-                               				Set ss.processed = @Status
-
-                              				From onprc_ehr_compliancedb.OccHealth_Data ss  Where ss.rowid = @OccHealthID
-
-
-      	                        			If @@Error <> 0
-	                               				 GoTo Err_Proc
-
-
-                          END
-
-
-                          If not exists( Select * from ehr_compliancedb.completiondates Where employeeid = @employeeid And requirementname = @requirementnameFinal
-                                    And date = @completiondate)   And @completiondate is not null
-
-                           BEGIN
-					Insert into ehr_compliancedb.completiondates
-                                  	 	(employeeid,
-        			  		requirementname,
-           			  		date,
-           			  		trainer,
-           			  		container,
-           			  		created,
-           			  		createdby,
-                                  		modified,
-           			  		modifiedby,
-                                                comment
+                        BEGIN
+					          Insert into ehr_compliancedb.completiondates
+                               (employeeid,
+        			  		   requirementname,
+           			  		   date,
+           			  		   trainer,
+           			  		   container,
+           			  		   created,
+           			  		   createdby,
+                               modified,
+           			  		   modifiedby,
+                               comment
 
          					)
         				values(
          				        @employeeid,
-          			                @requirementnameFinal,
-          			                @completiondate,
-          			               'OccHealth Import',
-          			               'CD170458-C55F-102F-9907-5107380A54BE',
-          			                getdate(),
-         			                @ImportTech,
-          			                getdate(),
-          			                @ImportTech,
-					        @comment
+          			            'Occupational Health - Hep B Compliant - Level 1',
+          			            @HepBdate,
+          			            @trainer,
+          			            'CD170458-C55F-102F-9907-5107380A54BE',
+          			             getdate(),
+         			             @ImportTech,
+          			             getdate(),
+          			             @ImportTech,
+					             @comment
 									)
 
 
@@ -500,7 +305,7 @@ BEGIN
 
 					---------- Set successful entry flag
 
-						Set @Status = @Status + ' He1 '
+						Set @Status = @Status + 'Processed'
 
 			   			 Update ss
                                				Set ss.processed =  @Status
@@ -512,7 +317,7 @@ BEGIN
 	                                			GoTo Err_Proc
 
 
-			     END   -----if not exists
+			             END   -----if not exists
 
 
                    END  ---If exists
@@ -521,149 +326,74 @@ BEGIN
 
 
 
-                   If exists (Select * from onprc_ehr_compliancedb.OccHealthTemp where searchID = @Searchkey And measles is not null)
-                   BEGIN
+                                ----Evaluate Measles data
 
-                       Select   @measlesDate = trim(measles) from onprc_ehr_compliancedb.OccHealthTemp where searchID = @Searchkey And measles is not null
+            If exists (Select * from onprc_ehr_compliancedb.OccHealthTemp where searchID = @Searchkey And [Measles Date] is not null)
+               BEGIN
 
-			 Set @completiondate = null
-                         Set @Temp = ''
+                    Select  @Measlesdate = trim([Measles Date]), @Measles= trim([Measles]) from onprc_ehr_compliancedb.OccHealthTemp where searchID = @Searchkey And [Measles Date] is not null
 
-  			 If ( @measlesDate like 'Complete%')
-                         BEGIN
-			  set @Temp = right(@measlesDate ,len(@measlesDate) - (charindex('(', @measlesDate) + 1))
-                          set @Temp = left(@Temp,charindex(')', @Temp)- 1)
-                          if isdate(@Temp) = 1
-                            Set @completiondate = @Temp
+                       Set @completiondate = null
 
-                          Set @Temp = ''
-                         END
+                    If ( @Measles = 'Complete)
+                               Set @comment = @comment + ' Complete'
+                     else
+                                Set @comment = @comment + ' Complete by Declination'
 
-  			ELSE If (@measlesDate like 'Complete by Declination%')
-                         BEGIN
+                    If not exists( Select * from ehr_compliancedb.completiondates Where employeeid = @employeeid And requirementname = 'Occupational Health - Measles Compliant'
+                                              And date = @Measlesdate   And @Measlesdate is not null
 
-			  set @Temp = right(@measlesDate ,len(@measlesDate) - (charindex('(', @measlesDate) + 1))
-                         set @Temp = left(@Temp,charindex(')', @Temp)- 1)
-                          if isdate(@Temp) = 1
-                            Set @completiondate = @Temp
+                                  BEGIN
+          					          Insert into ehr_compliancedb.completiondates
+                                         (employeeid,
+                  			  		   requirementname,
+                     			  		   date,
+                     			  		   trainer,
+                     			  		   container,
+                     			  		   created,
+                     			  		   createdby,
+                                         modified,
+                     			  		   modifiedby,
+                                         comment
 
-                          Set @Temp = ''
-                         END
-                        ELSE if ( @measlesDate like 'Incomplete%' )  or ( @measlesDate like 'Complete Pending%' )
-                         BEGIN
-                               Set @Status = @Status + ' Me3  '
-
-                            Update ss
-                               Set ss.processed = @Status
-
-                              From onprc_ehr_compliancedb.OccHealth_Data ss  Where ss.rowid = @OccHealthID
-
-
-      	                        If @@Error <> 0
-	                                GoTo Err_Proc
-
- 						Set @completiondate = null
-
-
-			   END
-                         ELSE
-                          BEGIN
-				 Set @Status = @Status + ' Me3  '
-
-                            Update ss
-                               Set ss.processed = @Status
-
-                              From onprc_ehr_compliancedb.OccHealth_Data ss  Where ss.rowid = @OccHealthID
-
-
-      	                        If @@Error <> 0
-	                                GoTo Err_Proc
-
-					 Set @completiondate = null
-
-
-                         END
-
-                                         ---- IF all previous version were validated proceed with the record insert
-
-                                                   Set @requirementnameFinal = 'Occupational Health - Measles Compliant'
-                                                   Set @comment = @comment + ' OccHealth Import'
-
-
-					            ----validate if the record already exists
-
-              		 IF exists( Select * from ehr_compliancedb.completiondates Where employeeid = @employeeid And requirementname = @requirementnameFinal
-                                    		And date = @completiondate)  And @completiondate is not null
-               		 BEGIN
-						 Set @Status = @Status + ' Me4 '
-                            				Update ss
-                               				Set ss.processed = @Status
-
-                              				From onprc_ehr_compliancedb.OccHealth_Data ss  Where ss.rowid = @OccHealthID
-
-
-      	                        			If @@Error <> 0
-	                               				 GoTo Err_Proc
-
-
-                          END
-
-
-                          If not exists( Select * from ehr_compliancedb.completiondates Where employeeid = @employeeid And requirementname = @requirementnameFinal
-                                    And date = @completiondate)   And @completiondate is not null
-
-                           BEGIN
-					Insert into ehr_compliancedb.completiondates
-                                  	 	(employeeid,
-        			  		requirementname,
-           			  		date,
-           			  		trainer,
-           			  		container,
-           			  		created,
-           			  		createdby,
-                                  		modified,
-           			  		modifiedby,
-                                                comment
-
-         					)
-        				values(
-         				        @employeeid,
-          			                @requirementnameFinal,
-          			                @completiondate,
-          			               'OccHealth Import',
-          			               'CD170458-C55F-102F-9907-5107380A54BE',
-          			                getdate(),
-         			                @ImportTech,
-          			                getdate(),
-          			                @ImportTech,
-					        @comment
-							)
+                   					)
+                  				values(
+                   				        @employeeid,
+                    			        'Occupational Health - Measles Compliant',
+                    			         @Measlesdate,
+                    			         @trainer,
+                    			         'CD170458-C55F-102F-9907-5107380A54BE',
+                    			          getdate(),
+                   			             @ImportTech,
+                    			         getdate(),
+                    			         @ImportTech,
+          					             @comment
+          									)
 
 
 
-                                         If @@Error <> 0
-	                                   GoTo Err_Proc
+                                                              If @@Error <> 0
+          	                               				 GoTo Err_Proc
 
 
-					---------- Set successful entry flag
+          					---------- Set successful entry flag
 
-						 Set @Status = @Status + ' Me1  '
+          						Set @Status = @Status + 'Processed'
 
-			   			 Update ss
-                               				Set ss.processed = @Status
+          			   			 Update ss
+                                        Set ss.processed =  @Status
 
-                              			From onprc_ehr_compliancedb.OccHealth_Data ss  Where ss.rowid = @OccHealthID
-
-
-      	                        			If @@Error <> 0
-	                                			GoTo Err_Proc
+                                   From onprc_ehr_compliancedb.OccHealth_Data ss  Where ss.rowid = @OccHealthID
 
 
-			     END   -----if not exists
+                	                       If @@Error <> 0
+          	                                GoTo Err_Proc
 
 
-                   END  ---If exists
+          			             END   -----if not exists
 
+
+                             END  ---If exists
 
 
 
