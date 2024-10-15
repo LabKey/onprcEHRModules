@@ -4,7 +4,6 @@
         <column name="email"/>
         <column name="lastname"/>
         <column name="firstname"/>
-<!--        <column name="employeeId/isActive"/>-->
         <column name="requirementname"/>
         <column name="unit"/>
         <column name="category"/>
