@@ -54,11 +54,12 @@ CREATE TABLE sla.TempWeaning (
 GO
 
 /****** Object:  StoredProcedure  sla.SLAWeaningDataTransfer   Script Date: 8/24/2024 *****/
--- =================================================================================
+-- ==========================================================================================
 -- Author: Lakshmi Kolli
 -- Create date: 8/24/2024
--- Description: Create a stored proc to check for any rodents with age of 21 days after the DOB.
--- =================================================================================
+-- Description: Create a stored proc to check for any rodents with age >= 21 days and enter
+-- the data into SLA tables
+-- ==========================================================================================
 
 CREATE PROCEDURE  [sla].[SLAWeaningDataTransfer]
 AS
