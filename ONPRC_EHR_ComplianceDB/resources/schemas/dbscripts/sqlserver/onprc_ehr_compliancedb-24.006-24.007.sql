@@ -29,7 +29,7 @@ Tdap Compliant									            Tdap
 Occupational Health - Respiratory Protection - CAPR Training			Full Face Respirator
 Occupational Health - Respiratory Protection - N95 Respirator Fit Testing	Standard Respirator
 Occupational Health - Flu Compliant						    Flu
-TB Surveillance Compliant							        TB Health Surveillance
+TB Surveillance Compliant							         TB Health Surveillance
 Occupational Health - TB Compliant - Annual					TB Annual
 Occupational Health - TB Compliant - Initial				TB West Campus
 Occupational Health - TB Compliant - Due in 6 Months
