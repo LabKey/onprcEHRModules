@@ -15,14 +15,14 @@
     <transforms>
         <transform id="Stored_Proc" type="StoredProcedure">
             <description>Runs the stored procedure to process and update the weaning data from sla.TempWeaning table to sla.purchase and sla.purchasedetails tables in prime</description>
-            <procedure schemaName="onprc_ehr" procedureName="SLAWeaning"> </procedure>
+            <procedure schemaName="onprc_ehr" procedureName="SLAWeaningDataTransfer"> </procedure>
         </transform>
     </transforms>
 
     <schedule>
         <!-- Runs daily at 11pm -->
 <!--        <cron expression="0 0 23 * * ?"/>-->
-        <cron expression="*/30 * * * * ?"/>   <!-- For testing it runs every half hour -->
+        <cron expression="0 * * * * ?"/>   <!-- For testing it runs every hour -->
     </schedule>
 
 </etl>
