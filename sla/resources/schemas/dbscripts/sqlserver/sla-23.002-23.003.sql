@@ -61,7 +61,7 @@ GO
 -- the data into SLA tables
 -- ==========================================================================================
 
-CREATE PROCEDURE  [sla].[SLAWeaningDataTransfer]
+CREATE PROCEDURE  [onprc_ehr].[SLAWeaningDataTransfer]
 AS
 
 DECLARE
