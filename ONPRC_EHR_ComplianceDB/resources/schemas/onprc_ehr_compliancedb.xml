@@ -212,13 +212,24 @@
             <column columnName="Varicella Date">
                 <columnTitle>Varicella Date</columnTitle>
             </column>
+            <column columnName="Full Face Repirator">
+                <columnTitle>Full Face Repirator</columnTitle>
+            </column>
+            <column columnName="Full Face Repirator Date">
+                <columnTitle>Full Face Repirator Date</columnTitle>
+            </column>
             <column columnName="Standard Respirator">
                 <columnTitle>Standard Respirator</columnTitle>
             </column>
             <column columnName="Standard Respirator Date">
                 <columnTitle>Standard Respirator Date</columnTitle>
             </column>
-
+            <column columnName="Tdap">
+                <columnTitle>Tdap</columnTitle>
+            </column>
+            <column columnName="Tdap Date">
+                <columnTitle>Tdap Date</columnTitle>
+            </column>
        <column columnName="TB West Campus">
         <columnTitle>TB West Campus</columnTitle>
         </column>
@@ -318,11 +329,23 @@
             <column columnName="Varicella Date">
             <columnTitle>Varicella Date</columnTitle>
             </column>
+            <column columnName="Full Face Repirator">
+                <columnTitle>Full Face Repirator</columnTitle>
+            </column>
+            <column columnName="Full Face Repirator Date">
+                <columnTitle>Full Face Repirator Date</columnTitle>
+            </column>
             <column columnName="Standard Respirator">
                 <columnTitle>Standard Respirator</columnTitle>
             </column>
             <column columnName="Standard Respirator Date">
                 <columnTitle>Standard Respirator Date</columnTitle>
+            </column>
+            <column columnName="Tdap">
+                <columnTitle>Tdap</columnTitle>
+            </column>
+            <column columnName="Tdap Date">
+                <columnTitle>Tdap Date</columnTitle>
             </column>
 
             <column columnName="TB West Campus">
@@ -394,13 +417,24 @@
             <column columnName="Varicella Date">
                 <columnTitle>Varicella Date</columnTitle>
             </column>
+            <column columnName="Full Face Repirator">
+                <columnTitle>Full Face Repirator</columnTitle>
+            </column>
+            <column columnName="Full Face Repirator Date">
+                <columnTitle>Full Face Repirator Date</columnTitle>
+            </column>
             <column columnName="Standard Respirator">
                 <columnTitle>Standard Respirator</columnTitle>
             </column>
             <column columnName="Standard Respirator Date">
                 <columnTitle>Standard Respirator Date</columnTitle>
             </column>
-
+            <column columnName="Tdap">
+                <columnTitle>Tdap</columnTitle>
+            </column>
+            <column columnName="Tdap Date">
+                <columnTitle>Tdap Date</columnTitle>
+            </column>
             <column columnName="TB West Campus">
                 <columnTitle>TB West Campus</columnTitle>
             </column>

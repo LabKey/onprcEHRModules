@@ -23,8 +23,12 @@ CREATE TABLE onprc_ehr_compliancedb.OccHealth_Data
     [Rubella Date]           datetime null,
     [Varicella]              nvarchar(100) null,
     [Varicella Date]         datetime null,
+    [Full Face Respirator]   nvarchar(100) null,
+    [Full Face Respirator Date] datetime null,
     [Standard Respirator]    nvarchar(100) null,
     [Standard Respirator Date] datetime null,
+    [Tdap]                 nvarchar(100) null,
+    [Tdap Date]              datetime null,
     [TB West Campus]         nvarchar(100) null,
     [TB West Campus Date]    datetime null,
     [Supervisor Email]       nvarchar(200) null,
@@ -69,9 +73,9 @@ CREATE TABLE [onprc_ehr_compliancedb].[OccHealthTemp] (
     [TB West Campus]         nvarchar(100) null,
     [TB West Campus Date]    datetime null,
     [Supervisor Email]       nvarchar(100) null,
-    [trainer]               [varchar](500) NULL,
-    [processed]             [varchar](2000) NULL,
-    [rowid] [int] NULL
+    [trainer]                varchar (500) NULL,
+    [processed]              varchar (2000) NULL,
+    [rowid]                     int NULL
 
     ) ON [PRIMARY]
     GO
@@ -103,9 +107,9 @@ CREATE TABLE [onprc_ehr_compliancedb].[OccHealthMasterTemp](
       [TB West Campus]         nvarchar(100) null,
       [TB West Campus Date]    datetime null,
       [Supervisor Email]       nvarchar(100) null,
-      [trainer]                [varchar](500) NULL,
-      [processed]              [varchar](2000) NULL,
-      [rowid] [int] NULL
+      [trainer]                varchar(500) NULL,
+      [processed]              varchar(2000) NULL,
+      [rowid]                   int NULL
 
     ) ON [PRIMARY]
     GO
