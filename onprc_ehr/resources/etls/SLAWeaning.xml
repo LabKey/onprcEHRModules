@@ -22,7 +22,7 @@
     <schedule>
         <!-- Runs daily at 11pm -->
 <!--        <cron expression="0 0 23 * * ?"/>-->
-        <cron expression="0 * * * * ?"/>   <!-- For testing it runs every hour -->
+        <cron expression="*/15 * * * * ?"/>   <!-- For testing it runs every 15 mins -->
     </schedule>
 
 </etl>
