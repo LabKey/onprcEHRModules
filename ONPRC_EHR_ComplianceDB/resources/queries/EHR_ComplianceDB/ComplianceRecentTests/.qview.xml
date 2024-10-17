@@ -1,23 +1,22 @@
 <customView xmlns="http://labkey.org/data/xml/queryCustomView" label="All">
     <columns>
-        <column name="employeeId"/>
-        <column name="employeeId/email"/>
-        <column name="employeeId/lastName"/>
-        <column name="employeeId/firstName"/>
-        <column name="employeeId/isActive"/>
-        <column name="requirementName"/>
+        <column name="employeeid"/>
+        <column name="email"/>
+        <column name="lastname"/>
+        <column name="firstname"/>
+        <column name="requirementname"/>
         <column name="unit"/>
         <column name="category"/>
         <column name="trackingflag"/>
-        <column name="timesCompleted"/>
-        <column name="ExpiredPeriod"/>
-        <column name="NewExpirePeriod"/>
-        <column name="MostRecentDate"/>
-        <column name="MonthsUntilRenewal"/>
+        <column name="times_completedd"/>
+        <column name="expired_period"/>
+        <column name="new_expired_period"/>
+        <column name="mostrecentcompleted_date"/>
+        <column name="months_until_renewal"/>
     </columns>
     <sorts>
-        <sort column="employeeId/lastName" descending="false"/>
-        <sort column="employeeId/firstName" descending="false"/>
-        <sort column="requirementName" descending="false"/>
+        <sort column="lastname" descending="false"/>
+        <sort column="firstname" descending="false"/>
+        <sort column="requirementname" descending="false"/>
     </sorts>
 </customView>

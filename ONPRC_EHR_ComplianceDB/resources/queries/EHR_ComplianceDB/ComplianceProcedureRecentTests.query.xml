@@ -4,7 +4,7 @@
             <table tableName="complianceProcedureRecentTests" tableDbType="NOT_IN_DB">
                 <tableTitle>Employee Procedure Requirement Summary</tableTitle>
                 <columns>
-                    <column columnName="employeeId">
+                    <column columnName="employeeid">
                         <columnTitle>Employee ID</columnTitle>
                         <isKeyField>true</isKeyField>
                         <fk>
@@ -14,9 +14,12 @@
 
                         </fk>
                     </column>
-                    <column columnName="requirementName">
+                    <column columnName="rowid">
+                        <columnTitle>Row ID</columnTitle>
+                    </column>
+                    <column columnName="requirementname">
                         <columnTitle>Requirement Name</columnTitle>
-                        <displayWidth>90</displayWidth>
+                        <displayWidth>250</displayWidth>
                         <fk>
                             <fkDbSchema>ehr_compliancedb</fkDbSchema>
                             <fkTable>requirements</fkTable>
@@ -24,7 +27,7 @@
                         </fk>
                         <facetingBehavior>ALWAYS_OFF</facetingBehavior>
                     </column>
-                    <column columnName="timesCompleted">
+                    <column columnName="times_completed">
                         <columnTitle>Times Completed</columnTitle>
                         <displayWidth>50</displayWidth>
                         <url>/query/executeQuery.view?schemaName=ehr_compliancedb&amp;
@@ -33,21 +36,46 @@
                             query.requirementName~eq=${requirementName}&amp;
                         </url>
                     </column>
-                    <column columnName="ExpiredPeriod">
+                    <column columnName="expired_period">
                         <columnTitle>Expire Period (Months)</columnTitle>
                         <displayWidth>70</displayWidth>
                     </column>
-
-                    <column columnName="NewExpirePeriod">
+                    <column columnName="new_expired_period">
                         <columnTitle>New Expire Period (Months)</columnTitle>
                         <displayWidth>70</displayWidth>
                     </column>
-                    <column columnName="unit">
-                        <columnTitle>Unit</columnTitle>
+
+                    <column columnName="email">
+                        <columnTitle>Email</columnTitle>
                         <displayWidth>70</displayWidth>
                     </column>
-                    <column columnName="mostrecentdate">
+
+                    <column columnName="lastname">
+                        <columnTitle>Last Name</columnTitle>
+                        <displayWidth>110</displayWidth>
+                    </column>
+
+                    <column columnName="firstname">
+                        <columnTitle>First Name</columnTitle>
+                        <displayWidth>110</displayWidth>
+                    </column>
+
+                    <column columnName="host">
+                        <columnTitle>Host</columnTitle>
+                        <displayWidth>110</displayWidth>
+                    </column>
+                    <column columnName="supervisor">
+                        <columnTitle>Supervisor</columnTitle>
+                        <displayWidth>150</displayWidth>
+                    </column>
+
+                    <column columnName="unit">
+                        <columnTitle>Unit</columnTitle>
+                        <displayWidth>210</displayWidth>
+                    </column>
+                    <column columnName="mostrecentcompleted_date">
                         <columnTitle>Most Recent Date</columnTitle>
+                        <formatString>yyyy-MM-dd</formatString>
                         <displayWidth>70</displayWidth>
                     </column>
                     <column columnName="comment">
@@ -58,7 +86,16 @@
                         <columnTitle>Category</columnTitle>
                         <displayWidth>70</displayWidth>
                     </column>
-                    <column columnName="MonthsUntilRenewal">
+
+                    <column columnName="trainee_type">
+                        <columnTitle>Trainee Type</columnTitle>
+                        <displayWidth>70</displayWidth>
+                    </column>
+                    <column columnName="requirement_name_type">
+                        <columnTitle>Requirement Name Type</columnTitle>
+                        <displayWidth>180</displayWidth>
+                    </column>
+                    <column columnName="months_until_renewal">
                         <columnTitle>Months Until Renewal</columnTitle>
                         <displayWidth>60</displayWidth>
                         <conditionalFormats>
