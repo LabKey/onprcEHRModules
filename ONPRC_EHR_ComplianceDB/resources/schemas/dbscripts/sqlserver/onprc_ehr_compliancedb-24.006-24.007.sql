@@ -75,9 +75,13 @@ DECLARE
                           @RubellaDate            smalldatetime,
                           @Rubella                varchar(100),
                           @Varicelladate          smalldatetime,
+                          @FullFaceRespiratordate smalldatetime,
+                          @FullFaceRespirators    varchar(100),
                           @Varicella              varchar(100),
 			              @StandardRespiratorydate smalldatetime,
 			              @StandardRespirator     varchar(100),
+			              @Tdapdate               smalldatetime,
+                          @Tdap                   varchar(100),
                           @TBWestCampusdate       smalldatetime,
                           @TBWestCampus           varchar(100),
                           @skipFlag               smallint,
@@ -123,8 +127,12 @@ BEGIN
     [Rubella Date],
  	[Varicella] ,
     [Varicella Date] ,
+    [Full Face Respirator] ,
+    [Full Face Respirator Date] ,
     [Standard Respirator] ,
     [Standard Respirator Date] ,
+    [Tdap],
+    [Tdap Date),]
  	[TB West Campus] ,
     [TB West Campus Date] ,
  	[Supervisor Email],
@@ -149,8 +157,12 @@ BEGIN
     [Rubella Date],
  	[Varicella] ,
     [Varicella Date] ,
+    [Full Face Respirator] ,
+    [Full Face Respirator Date] ,
     [Standard Respirator] ,
     [Standard Respirator Date] ,
+    [Tdap],
+    [Tdap Date),]
  	[TB West Campus] ,
     [TB West Campus Date] ,
  	[Supervisor Email],
@@ -205,8 +217,12 @@ BEGIN
                               Set @Rubella  = ''
                               Set @Varicelladate = NUll
                               Set @Varicella= ''
+                              Set @FullFaceRespiratordate = NULL
+                              Set @FullFaceRespirator = ''
                               Set @StandardRespiratorydate = Null
                               Set @StandardRespiratory = ''
+                              Set @Tdap = ''
+                              Set @Tdapdate = NUll
                               Set @TBWestCampus = ''
                               Set @TBWestCampusdate = Null
                               Set @OccHealthID  = Null
@@ -446,7 +462,7 @@ BEGIN
                   				values(
                    				        @employeeid,
                     			        'Occupational Health - Mumps Compliant',
-                    			         @Measlesdate,
+                    			         @Mumpsdate,
                     			         @trainer,
                     			         'CD170458-C55F-102F-9907-5107380A54BE',
                     			          getdate(),
@@ -517,7 +533,7 @@ BEGIN
                   				values(
                    				        @employeeid,
                     			        'Occupational Health - Rubella Compliant',
-                    			         @Measlesdate,
+                    			         @Rubelladate,
                     			         @trainer,
                     			         'CD170458-C55F-102F-9907-5107380A54BE',
                     			          getdate(),
@@ -589,7 +605,7 @@ BEGIN
                   				values(
                    				        @employeeid,
                     			        'Occupational Health - Varicella Compliant',
-                    			         @Measlesdate,
+                    			         @Varicelladate,
                     			         @trainer,
                     			         'CD170458-C55F-102F-9907-5107380A54BE',
                     			          getdate(),
@@ -623,6 +639,77 @@ BEGIN
 
 
                              END  ---If exists
+
+
+                  ----Evaluate Full Face Respirator data
+
+            If exists (Select * from onprc_ehr_compliancedb.OccHealthTemp where searchID = @Searchkey And [Full Face Respirator Date] is not null)
+               BEGIN
+
+                    Select  @FullfaceRespiratordate = trim([Full Face Respirator Date]), @FullFaceRespirator = trim([Full Face Respirator]) from onprc_ehr_compliancedb.OccHealthTemp where searchID = @Searchkey And [Full Face Respirator Date] is not null
+
+                         Set @comment = ''
+
+                    If ( @FullFaceRespirator = 'Complete)
+                               Set @comment = @comment + ' Complete'
+                     else
+                                Set @comment = @comment + ' Complete by Declination'
+
+                    If not exists( Select * from ehr_compliancedb.completiondates Where employeeid = @employeeid And requirementname = 'Occupational Health - Respiratory Protection - CAPR Training'
+                                              And date = @FullFaceRespiratordate   And @FullFaceRespiratordate is not null
+
+                                  BEGIN
+          					          Insert into ehr_compliancedb.completiondates
+                                         (employeeid,
+                  			  		      requirementname,
+                     			  		   date,
+                     			  		   trainer,
+                     			  		   container,
+                     			  		   created,
+                     			  		   createdby,
+                                           modified,
+                     			  		   modifiedby,
+                                           comment
+
+                   					)
+                  				values(
+                   				        @employeeid,
+                    			        'Occupational Health - Respiratory Protection - CAPR Training',
+                    			         @FullFaceRespiratordate,
+                    			         @trainer,
+                    			         'CD170458-C55F-102F-9907-5107380A54BE',
+                    			          getdate(),
+                   			             @ImportTech,
+                    			         getdate(),
+                    			         @ImportTech,
+          					             @comment
+          									)
+
+
+
+                                                              If @@Error <> 0
+          	                               				 GoTo Err_Proc
+
+
+          					---------- Set successful entry flag
+
+          						Set @Status = @Status + 'Processed'
+
+          			   			 Update ss
+                                        Set ss.processed =  @Status
+
+                                   From onprc_ehr_compliancedb.OccHealth_Data ss  Where ss.rowid = @OccHealthID
+
+
+                	                       If @@Error <> 0
+          	                                GoTo Err_Proc
+
+
+          			             END   -----if not exists
+
+
+                             END  ---If exists
+
 
 
                 ----Evaluate Standard Respiratordata
@@ -694,7 +781,74 @@ BEGIN
 
                              END  ---If exists
 
+                        ----Evaluate Tdap Values
 
+            If exists (Select * from onprc_ehr_compliancedb.OccHealthTemp where searchID = @Searchkey And [Tdap Date] is not null)
+               BEGIN
+
+                    Select  @Tdapdate = trim([Tdap Date]), @Tdap= trim([Tdap]) from onprc_ehr_compliancedb.OccHealthTemp where searchID = @Searchkey And [Tdap Date] is not null
+
+                       Set @comment = ''
+
+                    If ( @Tdab = 'Complete)
+                               Set @comment = @comment + ' Complete'
+                     else
+                                Set @comment = @comment + ' Complete by Declination'
+
+                    If not exists( Select * from ehr_compliancedb.completiondates Where employeeid = @employeeid And requirementname = 'Tdap Compliant'
+                                              And date = @Tdapdate   And @Tdapdate is not null
+
+                                  BEGIN
+          					          Insert into ehr_compliancedb.completiondates
+                                         (employeeid,
+                  			  		      requirementname,
+                     			  		   date,
+                     			  		   trainer,
+                     			  		   container,
+                     			  		   created,
+                     			  		   createdby,
+                                           modified,
+                     			  		   modifiedby,
+                                           comment
+
+                   					)
+                  				values(
+                   				        @employeeid,
+                    			        'Tdap Compliant',
+                    			         @Tdaoate,
+                    			         @trainer,
+                    			         'CD170458-C55F-102F-9907-5107380A54BE',
+                    			          getdate(),
+                   			             @ImportTech,
+                    			         getdate(),
+                    			         @ImportTech,
+          					             @comment
+          									)
+
+
+
+                                                              If @@Error <> 0
+          	                               				 GoTo Err_Proc
+
+
+          					---------- Set successful entry flag
+
+          						Set @Status = @Status + 'Processed'
+
+          			   			 Update ss
+                                        Set ss.processed =  @Status
+
+                                   From onprc_ehr_compliancedb.OccHealth_Data ss  Where ss.rowid = @OccHealthID
+
+
+                	                       If @@Error <> 0
+          	                                GoTo Err_Proc
+
+
+          			             END   -----if not exists
+
+
+                             END  ---If exist
 
 
                 ----Evaluate TB West Campus
@@ -706,7 +860,7 @@ BEGIN
 
                        Set @comment = ''
 
-                    If ( @1tbWestCampus = 'Complete)
+                    If ( @TbWestCampus = 'Complete)
                                Set @comment = @comment + ' Complete'
                      else
                                 Set @comment = @comment + ' Complete by Declination'
