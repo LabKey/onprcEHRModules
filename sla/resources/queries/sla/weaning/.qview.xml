@@ -1,0 +1,18 @@
+<customView xmlns="http://labkey.org/data/xml/queryCustomView">
+    <columns>
+        <column name="rowid"/>
+        <column name="investigator"/>
+        <column name="date"/>
+        <column name="project"/>
+        <column name="vendorlocation"/>
+        <column name="DOB"/>
+        <column name="DOM"/>
+        <column name="species"/>
+        <column name="sex"/>
+        <column name="strain"/>
+        <column name="numAlive"/>
+        <column name="numDead"/>
+        <column name="totalPups"/>
+        <column name="dateofTransfer"/>
+    </columns>
+</customView>
