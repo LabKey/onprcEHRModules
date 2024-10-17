@@ -45,8 +45,8 @@ Ext4.onReady(function(){
                 name: 'Employee List', url: '<%=contextPath%>/ldk' + container + '/updateQuery.view?schemaName=ehr_compliancedb&query.queryName=Employees&query.viewName=' + employeeDefaultView
             },{
                 name: 'View/Edit Dates Employees Completed Requirements', url: '<%=contextPath%>/ldk' + container + '/updateQuery.view?schemaName=ehr_compliancedb&query.queryName=CompletionDates'
-            // },{
-            //     name:  'View Report Only  Employees Completed Requirements', url: '<%=contextPath%>/ldk' + container + '/updateQuery.view?schemaName=ehr_compliancedb&query.queryName=completionDates_Units_Category'
+             },{
+                name:  'Enter Dates Employees Completed Requirements (SA)', url: '<%=contextPath%>/ldk' + '/ONPRC/Admin/Compliance/Compliance Access' + '/updateQuery.view?schemaName=ehr_compliancedb&query.queryName=completionDates'
             }]
         },{
             header: 'Configuration of Requirements',
