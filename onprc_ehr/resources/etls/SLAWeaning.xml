@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Created By: Kollil, 9/25/2024.
+ Create an ETL process for SLA weaning data: Based on the alive pups DOB, create an ETL process that runs daily and checks if there are any pups
+ that’s 21 days old, load them into SLA purchase & purchase details datasets as pending orders (Confirmation num is null & dateCanceled is null).
+ Once the data is moved, the “dateofTransfer” field will be set marking the pups are moved into SLA purchase datasets and will be excluded
+ from the future daily checks.
+ Refer to ticket # 11233 for more details.
+-->
+<etl xmlns="http://labkey.org/etl/xml">
+
+    <name>SLAWeaning</name>
+
+    <description>Executes stored procedure to populate the SLA purchase datasets</description>
+
+    <transforms>
+        <transform id="Stored_Proc" type="StoredProcedure">
+            <description>Runs the stored procedure to process and update the weaning data from sla.TempWeaning table to sla.purchase and sla.purchasedetails tables in prime</description>
+            <procedure schemaName="onprc_ehr" procedureName="SLAWeaningDataTransfer"> </procedure>
+        </transform>
+    </transforms>
+
+    <schedule>
+        <!-- Runs daily at 11pm -->
+<!--        <cron expression="0 0 23 * * ?"/>-->
+        <cron expression="*/15 * * * * ?"/>   <!-- For testing only - runs every 15 mins -->
+    </schedule>
+
+</etl>

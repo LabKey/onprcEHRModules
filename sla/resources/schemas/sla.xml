@@ -461,4 +461,105 @@
         </columns>
     </table>
 
+    <table tableName="Weaning" tableDbType="TABLE" useColumnOrder="true">
+        <tableTitle>Weaning</tableTitle>
+        <auditLogging>DETAILED</auditLogging>
+        <importUrl></importUrl>
+        <insertUrl></insertUrl>
+        <updateUrl></updateUrl>
+        <deleteUrl></deleteUrl>
+
+        <columns>
+            <column columnName="rowid" />
+            <column columnName="investigator">
+                <columnTitle>PI</columnTitle>
+            </column>
+            <column columnName="date">
+                <columnTitle>Date</columnTitle>
+            </column>
+            <column columnName="project">
+                <columnTitle>Center Project</columnTitle>
+            </column>
+            <column columnName="vendorLocation">
+                <columnTitle>Vendor Location</columnTitle>
+            </column>
+            <column columnName="DOB">
+                <columnTitle>DOB</columnTitle>
+            </column>
+            <column columnName="DOM">
+                <columnTitle>DOM</columnTitle>
+            </column>
+            <column columnName="species">
+                <columnTitle>Species</columnTitle>
+            </column>
+            <column columnName="sex">
+                <columnTitle>Sex</columnTitle>
+            </column>
+            <column columnName="strain">
+                <columnTitle>Strain</columnTitle>
+            </column>
+            <column columnName="numAlive">
+                <columnTitle>Alive Pups</columnTitle>
+            </column>
+            <column columnName="numDead">
+                <columnTitle>Dead Pups</columnTitle>
+            </column>
+            <column columnName="totalPups">
+                <columnTitle>Total Pups</columnTitle>
+            </column>
+            <column columnName="dateofTransfer">
+                <columnTitle>Date moved to SLA pending orders</columnTitle>
+            </column>
+            <column columnName="createdby" />
+            <column columnName="created" />
+            <column columnName="modifiedby" />
+            <column columnName="modified" />
+        </columns>
+    </table>
+
+    <table tableName="TempWeaning" tableDbType="TABLE" useColumnOrder="true">
+        <tableTitle>TempWeaning</tableTitle>
+        <auditLogging>DETAILED</auditLogging>
+        <importUrl></importUrl>
+        <insertUrl></insertUrl>
+        <updateUrl></updateUrl>
+        <deleteUrl></deleteUrl>
+
+        <columns>
+            <column columnName="rowid" />
+            <column columnName="weaning_rowid" />
+            <column columnName="investigator">
+                <columnTitle>PI</columnTitle>
+            </column>
+            <column columnName="date">
+                <columnTitle>Date</columnTitle>
+            </column>
+            <column columnName="project">
+                <columnTitle>Center Project</columnTitle>
+            </column>
+            <column columnName="vendorLocation">
+                <columnTitle>Vendor Location</columnTitle>
+            </column>
+            <column columnName="DOB">
+                <columnTitle>DOB</columnTitle>
+            </column>
+            <column columnName="DOM">
+                <columnTitle>DOM</columnTitle>
+            </column>
+            <column columnName="species">
+                <columnTitle>Species</columnTitle>
+            </column>
+            <column columnName="sex">
+                <columnTitle>Sex</columnTitle>
+            </column>
+            <column columnName="strain">
+                <columnTitle>Strain</columnTitle>
+            </column>
+            <column columnName="numAlive">
+                <columnTitle>Alive Pups</columnTitle>
+            </column>
+            <column columnName="created" />
+        </columns>
+    </table>
+
 </tables>
