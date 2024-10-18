@@ -212,10 +212,10 @@
             <column columnName="Varicella Date">
                 <columnTitle>Varicella Date</columnTitle>
             </column>
-            <column columnName="Full Face Repirator">
-                <columnTitle>Full Face Repirator</columnTitle>
+            <column columnName="Full Face Respirator">
+                <columnTitle>Full Face Respirator</columnTitle>
             </column>
-            <column columnName="Full Face Repirator Date">
+            <column columnName="Full Face Respirator Date">
                 <columnTitle>Full Face Repirator Date</columnTitle>
             </column>
             <column columnName="Standard Respirator">
@@ -329,10 +329,10 @@
             <column columnName="Varicella Date">
             <columnTitle>Varicella Date</columnTitle>
             </column>
-            <column columnName="Full Face Repirator">
+            <column columnName="Full Face Respirator">
                 <columnTitle>Full Face Repirator</columnTitle>
             </column>
-            <column columnName="Full Face Repirator Date">
+            <column columnName="Full Face Respirator Date">
                 <columnTitle>Full Face Repirator Date</columnTitle>
             </column>
             <column columnName="Standard Respirator">
@@ -358,8 +358,14 @@
             <column columnName="Supervisor Email">
                 <columnTitle>Supervisor Email</columnTitle>
             </column>
+            <column columnName="trainer">
+                <columnTitle>Trainer</columnTitle>
+            </column>
             <column columnName="processed">
                 <columnTitle>Processed</columnTitle>
+            </column>
+            <column columnName="rowid">
+                <columnTitle>Row ID</columnTitle>
             </column>
         </columns>
     </table>
@@ -444,8 +450,14 @@
             <column columnName="Supervisor Email">
                 <columnTitle>Supervisor Email</columnTitle>
             </column>
+            <column columnName="trainer">
+                <columnTitle>Trainer</columnTitle>
+            </column>
             <column columnName="processed">
                 <columnTitle>Processed</columnTitle>
+            </column>
+            <column columnName="rowid">
+                <columnTitle>Row ID</columnTitle>
             </column>
        </columns>
     </table>
