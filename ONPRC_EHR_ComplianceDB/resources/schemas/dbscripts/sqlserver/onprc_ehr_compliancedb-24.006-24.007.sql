@@ -196,8 +196,6 @@ BEGIN
                                   order by searchID
 
 
-
-
    While @TempSearchKey < @SearchKey
    BEGIN
 
@@ -233,9 +231,9 @@ BEGIN
 
                            -----Extract data from imported values
 
-                   Select @employeeid = trim(email),  @HepBdate = trim([hep B Date]), @HepBdate = trim([hep B]), @measlesDate = trim([Measles Date]), @Measles = trim([Measles]), @Mumps = trim([Mumps]),@MumpsDate = trim([Mumps Date]), @RubellaDate = trim([Rubella Date]),
-                           @Rubella = trim([Rubella]), @Varicella= trim([Varicella]), @Varicelladate= trim([Varicella Date]), @FullFaceRespiratordate = trim([Full Face Respirator Date]), @FullFaceRespirator= trim([Full Face Respirator]), @StandardRespiratordate = trim([Standard Respirator Date]),
-                            @StandardRespirator = trim([Standard Respirator]), @Tdap = trim([Tdap]), @Tdapdate = trim(Tdap Date]),@TBWestCampus = trim([TB West Campus]), @TBWestCampusdate = trim([TB West Campus Date]),
+                   Select @employeeid = trim(email),  @HepBdate = ([hep B Date]), @HepB = trim([hep B]), @measlesDate = ([Measles Date]), @Measles = trim([Measles]), @Mumps = trim([Mumps]),@MumpsDate = ([Mumps Date]), @RubellaDate = ([Rubella Date]),
+                           @Rubella = trim([Rubella]), @Varicella= trim([Varicella]), @Varicelladate= ([Varicella Date]), @FullFaceRespiratordate = ([Full Face Respirator Date]), @FullFaceRespirator= trim([Full Face Respirator]), @StandardRespiratordate = ([Standard Respirator Date]),
+                            @StandardRespirator = trim([Standard Respirator]), @Tdap = trim([Tdap]), @Tdapdate = ([Tdap Date]),@TBWestCampus = trim([TB West Campus]), @TBWestCampusdate = ([TB West Campus Date]),
                             @trainer = trim([supervisor email]),@OccHealthID = rowid
 
                                from onprc_ehr_compliancedb.OccHealthTemp Where  searchID = @Searchkey
@@ -285,7 +283,7 @@ BEGIN
                   If exists (Select * from onprc_ehr_compliancedb.OccHealthTemp where searchID = @Searchkey And [Hep B Date] is not null)
                      BEGIN
 
-                          Select  @HepBdate = trim([Hep B Date]), @HepB= trim([Hep B]) from onprc_ehr_compliancedb.OccHealthTemp where searchID = @Searchkey And [Hep B Date] is not null
+                          Select  @HepBdate = ([Hep B Date]), @HepB= trim([Hep B]) from onprc_ehr_compliancedb.OccHealthTemp where searchID = @Searchkey And [Hep B Date] is not null
 
                              Set  @comment = ''
                              Set @Temp = ''
@@ -360,7 +358,7 @@ BEGIN
             If exists (Select * from onprc_ehr_compliancedb.OccHealthTemp where searchID = @Searchkey And [Measles Date] is not null)
                BEGIN
 
-                    Select  @Measlesdate = trim([Measles Date]), @Measles= trim([Measles]) from onprc_ehr_compliancedb.OccHealthTemp where searchID = @Searchkey And [Measles Date] is not null
+                    Select  @Measlesdate = ([Measles Date]), @Measles= trim([Measles]) from onprc_ehr_compliancedb.OccHealthTemp where searchID = @Searchkey And [Measles Date] is not null
 
                        Set @comment = ''
 
@@ -370,12 +368,12 @@ BEGIN
                                 Set @comment = @comment + ' Complete by Declination'
 
                     If not exists( Select * from ehr_compliancedb.completiondates Where employeeid = @employeeid And requirementname = 'Occupational Health - Measles Compliant'
-                                              And date = @Measlesdate   And @Measlesdate is not null
+                                              And date = @Measlesdate   And @Measlesdate is not null)
 
                                   BEGIN
           					          Insert into ehr_compliancedb.completiondates
                                          (employeeid,
-                  			  		   requirementname,
+                  			  		       requirementname,
                      			  		   date,
                      			  		   trainer,
                      			  		   container,
@@ -432,7 +430,7 @@ BEGIN
             If exists (Select * from onprc_ehr_compliancedb.OccHealthTemp where searchID = @Searchkey And [Mumps Date] is not null)
                BEGIN
 
-                    Select  @Mumpsdate = trim([Mumps Date]), @Mumps= trim([Mumps]) from onprc_ehr_compliancedb.OccHealthTemp where searchID = @Searchkey And [Mumps Date] is not null
+                    Select  @Mumpsdate = ([Mumps Date]), @Mumps= trim([Mumps]) from onprc_ehr_compliancedb.OccHealthTemp where searchID = @Searchkey And [Mumps Date] is not null
 
                          Set @comment = ''
 
@@ -442,7 +440,7 @@ BEGIN
                                 Set @comment = @comment + ' Complete by Declination'
 
                     If not exists( Select * from ehr_compliancedb.completiondates Where employeeid = @employeeid And requirementname = 'Occupational Health - Mumps Compliant'
-                                              And date = @Mumpsdate   And @Mumpsdate is not null
+                                              And date = @Mumpsdate   And @Mumpsdate is not null )
 
                                   BEGIN
           					          Insert into ehr_compliancedb.completiondates
@@ -505,7 +503,7 @@ BEGIN
             If exists (Select * from onprc_ehr_compliancedb.OccHealthTemp where searchID = @Searchkey And [Rubella Date] is not null)
                BEGIN
 
-                    Select  @Rubelladate = trim([Rubella Date]), @Rubella= trim([Rubella]) from onprc_ehr_compliancedb.OccHealthTemp where searchID = @Searchkey And [Rubella Date] is not null
+                    Select  @Rubelladate = ([Rubella Date]), @Rubella= trim([Rubella]) from onprc_ehr_compliancedb.OccHealthTemp where searchID = @Searchkey And [Rubella Date] is not null
 
                          Set @comment = ''
 
@@ -515,7 +513,7 @@ BEGIN
                                 Set @comment = @comment + ' Complete by Declination'
 
                     If not exists( Select * from ehr_compliancedb.completiondates Where employeeid = @employeeid And requirementname = 'Occupational Health - Rubella Compliant'
-                                              And date = @Rubelladate   And @Rubelladate is not null
+                                              And date = @Rubelladate   And @Rubelladate is not null  )
 
                                   BEGIN
           					          Insert into ehr_compliancedb.completiondates
@@ -578,7 +576,7 @@ BEGIN
             If exists (Select * from onprc_ehr_compliancedb.OccHealthTemp where searchID = @Searchkey And [Rubella Date] is not null)
                BEGIN
 
-                    Select  @Varicelladate = trim([Varicella Date]), @Varicella= trim([Varicella]) from onprc_ehr_compliancedb.OccHealthTemp where searchID = @Searchkey And [Varicella Date] is not null
+                    Select  @Varicelladate = ([Varicella Date]), @Varicella= trim([Varicella]) from onprc_ehr_compliancedb.OccHealthTemp where searchID = @Searchkey And [Varicella Date] is not null
 
                          Set @comment = ''
 
@@ -588,7 +586,7 @@ BEGIN
                                 Set @comment = @comment + ' Complete by Declination'
 
                     If not exists( Select * from ehr_compliancedb.completiondates Where employeeid = @employeeid And requirementname = 'Occupational Health - Varicella Compliant'
-                                              And date = @Varicelladate   And @Varicelladate is not null
+                                              And date = @Varicelladate   And @Varicelladate is not null )
 
                                   BEGIN
           					          Insert into ehr_compliancedb.completiondates
@@ -649,7 +647,7 @@ BEGIN
             If exists (Select * from onprc_ehr_compliancedb.OccHealthTemp where searchID = @Searchkey And [Full Face Respirator Date] is not null)
                BEGIN
 
-                    Select  @FullfaceRespiratordate = trim([Full Face Respirator Date]), @FullFaceRespirator = trim([Full Face Respirator]) from onprc_ehr_compliancedb.OccHealthTemp where searchID = @Searchkey And [Full Face Respirator Date] is not null
+                    Select  @FullfaceRespiratordate = ([Full Face Respirator Date]), @FullFaceRespirator = trim([Full Face Respirator]) from onprc_ehr_compliancedb.OccHealthTemp where searchID = @Searchkey And [Full Face Respirator Date] is not null
 
                          Set @comment = ''
 
@@ -659,7 +657,7 @@ BEGIN
                                 Set @comment = @comment + ' Complete by Declination'
 
                     If not exists( Select * from ehr_compliancedb.completiondates Where employeeid = @employeeid And requirementname = 'Occupational Health - Respiratory Protection - CAPR Training'
-                                              And date = @FullFaceRespiratordate   And @FullFaceRespiratordate is not null
+                                              And date = @FullFaceRespiratordate   And @FullFaceRespiratordate is not null  )
 
                                   BEGIN
           					          Insert into ehr_compliancedb.completiondates
@@ -722,7 +720,7 @@ BEGIN
             If exists (Select * from onprc_ehr_compliancedb.OccHealthTemp where searchID = @Searchkey And [Standard Respirator Date] is not null)
                BEGIN
 
-                    Select  @StandardRespiratordate = trim([Stamdard Respirator Date]), @StandardRespirator= trim([Standard Respirator]) from onprc_ehr_compliancedb.OccHealthTemp where searchID = @Searchkey And [Standard Respirator Date] is not null
+                    Select  @StandardRespiratordate = ([Standard Respirator Date]), @StandardRespirator= trim([Standard Respirator]) from onprc_ehr_compliancedb.OccHealthTemp where searchID = @Searchkey And [Standard Respirator Date] is not null
 
                         Set @comment = ''
 
@@ -732,7 +730,7 @@ BEGIN
                                 Set @comment = @comment + ' Complete by Declination'
 
                     If not exists( Select * from ehr_compliancedb.completiondates Where employeeid = @employeeid And requirementname = 'Occupational Health - Respiratory Protection - N95 Respirator Fit Testing'
-                                              And date = @StandardRespiratordate   And @StarndardRespiratordate is not null
+                                              And date = @StandardRespiratordate   And @StandardRespiratordate is not null  )
 
                                   BEGIN
           					          Insert into ehr_compliancedb.completiondates
@@ -793,17 +791,17 @@ BEGIN
             If exists (Select * from onprc_ehr_compliancedb.OccHealthTemp where searchID = @Searchkey And [Tdap Date] is not null)
                BEGIN
 
-                    Select  @Tdapdate = trim([Tdap Date]), @Tdap= trim([Tdap]) from onprc_ehr_compliancedb.OccHealthTemp where searchID = @Searchkey And [Tdap Date] is not null
+                    Select  @Tdapdate = ([Tdap Date]), @Tdap= trim([Tdap]) from onprc_ehr_compliancedb.OccHealthTemp where searchID = @Searchkey And [Tdap Date] is not null
 
                        Set @comment = ''
 
-                    If ( @Tdab = 'Complete')
+                    If ( @Tdap = 'Complete')
                                Set @comment = @comment + ' Complete'
                      else
                                 Set @comment = @comment + ' Complete by Declination'
 
                     If not exists( Select * from ehr_compliancedb.completiondates Where employeeid = @employeeid And requirementname = 'Tdap Compliant'
-                                              And date = @Tdapdate   And @Tdapdate is not null
+                                              And date = @Tdapdate   And @Tdapdate is not null  )
 
                                   BEGIN
           					          Insert into ehr_compliancedb.completiondates
@@ -822,7 +820,7 @@ BEGIN
                   				values(
                    				        @employeeid,
                     			        'Tdap Compliant',
-                    			         @Tdaoate,
+                    			         @Tdapdate,
                     			         @trainer,
                     			         'CD170458-C55F-102F-9907-5107380A54BE',
                     			         getdate(),
@@ -865,7 +863,7 @@ BEGIN
             If exists (Select * from onprc_ehr_compliancedb.OccHealthTemp where searchID = @Searchkey And [TB West Campus Date] is not null)
                BEGIN
 
-                    Select  @TBWestCampusdate = trim([TB West Campus Date]), @TBWestCampus= trim([TB West Campus]) from onprc_ehr_compliancedb.OccHealthTemp where searchID = @Searchkey And [TB West Campus Date] is not null
+                    Select  @TBWestCampusdate = ([TB West Campus Date]), @TBWestCampus= trim([TB West Campus]) from onprc_ehr_compliancedb.OccHealthTemp where searchID = @Searchkey And [TB West Campus Date] is not null
 
                        Set @comment = ''
 
@@ -875,7 +873,7 @@ BEGIN
                                 Set @comment = @comment + ' Complete by Declination'
 
                     If not exists( Select * from ehr_compliancedb.completiondates Where employeeid = @employeeid And requirementname = 'Occupational Health - TB Compliant - Initial'
-                                              And date = @TBWestCampusdate   And @TBWestCampusdate is not null
+                                              And date = @TBWestCampusdate   And @TBWestCampusdate is not null )
 
                       BEGIN
           					          Insert into ehr_compliancedb.completiondates
@@ -979,10 +977,11 @@ Next_Record:
              [Standard Respirator] ,
              [Standard Respirator Date] ,
              [Tdap],
-             [Tdap Date),]
+             [Tdap Date],
           	 [TB West Campus] ,
              [TB West Campus Date] ,
           	 [Supervisor Email],
+			 [trainer],
              [processed] ,
           	 [rowid]
 
