@@ -29,7 +29,7 @@ import java.util.Arrays;
 //Modified: 12-21-2016 R.blasa
 public class ASBRequestFormType extends RequestForm
 {
-    public static final String NAME = "ASB SERVICES REQUEST";
+    public static final String NAME = "ASB Services Request";
     public static final String DEFAULT_GROUP = "ASB Services";
 
     public ASBRequestFormType(DataEntryFormContext ctx, Module owner)
