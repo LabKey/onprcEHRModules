@@ -263,7 +263,7 @@ BEGIN
 
                    BEGIN
                             Set @Status = ''
-				            Set @Status = @Status + 'Employee ID Undefined '
+				            Set @Status =  'Employee ID Undefined '
 
                             Update ss
                                Set ss.processed = @Status
@@ -285,12 +285,12 @@ BEGIN
                   If exists (Select * from onprc_ehr_compliancedb.OccHealthTemp where searchID = @Searchkey And [Hep B Date] is not null)
                      BEGIN
 
-                          Select  @HepBdate = trim([Hep B Date]), @Herp= trim([Herp]) from onprc_ehr_compliancedb.OccHealthTemp where searchID = @Searchkey And [Hep B Date] is not null
+                          Select  @HepBdate = trim([Hep B Date]), @HepB= trim([Hep B]) from onprc_ehr_compliancedb.OccHealthTemp where searchID = @Searchkey And [Hep B Date] is not null
 
                              Set  @comment = ''
                              Set @Temp = ''
 
-  			                 If ( @Herp = 'Complete)
+  			                 If  (@HepB = 'Complete')
                                  Set @comment = @comment + ' Complete'
 
 
@@ -326,28 +326,30 @@ BEGIN
 
 
 
-                                                    If @@Error <> 0
-	                               				 GoTo Err_Proc
+                                  If @@Error <> 0
+	                               		GoTo Err_Proc
 
 
 					---------- Set successful entry flag
+                       If @Status <> 'Processed'
+					   BEGIN
+					      	Set @Status = 'Processed'
 
-						Set @Status = @Status + 'Processed'
-
-			   			 Update ss
+			   			             Update ss
                                				Set ss.processed =  @Status
 
-                              			From onprc_ehr_compliancedb.OccHealth_Data ss  Where ss.rowid = @OccHealthID
+                             From onprc_ehr_compliancedb.OccHealth_Data ss  Where ss.rowid = @OccHealthID
 
 
       	                        			If @@Error <> 0
 	                                			GoTo Err_Proc
 
+                         END  ------ IF @Status
 
-			             END   -----if not exists
+			     END   -----if not exists
 
 
-                   END  ---If exists
+             END  ---If exists
 
 
 
@@ -362,7 +364,7 @@ BEGIN
 
                        Set @comment = ''
 
-                    If ( @Measles = 'Complete)
+                    If ( @Measles = 'Complete')
                                Set @comment = @comment + ' Complete'
                      else
                                 Set @comment = @comment + ' Complete by Declination'
@@ -379,9 +381,9 @@ BEGIN
                      			  		   container,
                      			  		   created,
                      			  		   createdby,
-                                         modified,
+                                           modified,
                      			  		   modifiedby,
-                                         comment
+                                           comment
 
                    					)
                   				values(
@@ -399,13 +401,14 @@ BEGIN
 
 
 
-                                                              If @@Error <> 0
-          	                               				 GoTo Err_Proc
+                                         If @@Error <> 0
+          	                               	GoTo Err_Proc
 
 
           					---------- Set successful entry flag
-
-          						Set @Status = @Status + 'Processed'
+                            If @Status <> 'Processed'
+          					BEGIN
+          						Set @Status =  'Processed'
 
           			   			 Update ss
                                         Set ss.processed =  @Status
@@ -416,13 +419,12 @@ BEGIN
                 	                       If @@Error <> 0
           	                                GoTo Err_Proc
 
+                            END  ---if @Status
 
-          			             END   -----if not exists
-
-
-                             END  ---If exists
+          			 END   -----if not exists
 
 
+                 END  ---If exists
 
 
                   ----Evaluate Mumps data
@@ -434,7 +436,7 @@ BEGIN
 
                          Set @comment = ''
 
-                    If ( @Mumps = 'Complete)
+                    If ( @Mumps = 'Complete')
                                Set @comment = @comment + ' Complete'
                      else
                                 Set @comment = @comment + ' Complete by Declination'
@@ -445,15 +447,15 @@ BEGIN
                                   BEGIN
           					          Insert into ehr_compliancedb.completiondates
                                          (employeeid,
-                  			  		   requirementname,
+                  			  		      requirementname,
                      			  		   date,
                      			  		   trainer,
                      			  		   container,
                      			  		   created,
                      			  		   createdby,
-                                         modified,
+                                           modified,
                      			  		   modifiedby,
-                                         comment
+                                           comment
 
                    					)
                   				values(
@@ -476,8 +478,9 @@ BEGIN
 
 
           					---------- Set successful entry flag
-
-          						Set @Status = @Status + 'Processed'
+                           If @Status <> 'Processed'
+          				   BEGIN
+          						Set @Status =  'Processed'
 
           			   			 Update ss
                                         Set ss.processed =  @Status
@@ -488,11 +491,12 @@ BEGIN
                 	                       If @@Error <> 0
           	                                GoTo Err_Proc
 
+                           END   ----- if @Status
 
-          			             END   -----if not exists
+          		      END   -----if not exists
 
 
-                             END  ---If exists
+                END  ---If exists
 
 
 
@@ -501,11 +505,11 @@ BEGIN
             If exists (Select * from onprc_ehr_compliancedb.OccHealthTemp where searchID = @Searchkey And [Rubella Date] is not null)
                BEGIN
 
-                    Select  @Rubelladate = trim([Measles Date]), @Rubella= trim([Rubella]) from onprc_ehr_compliancedb.OccHealthTemp where searchID = @Searchkey And [Mumps Date] is not null
+                    Select  @Rubelladate = trim([Rubella Date]), @Rubella= trim([Rubella]) from onprc_ehr_compliancedb.OccHealthTemp where searchID = @Searchkey And [Rubella Date] is not null
 
                          Set @comment = ''
 
-                    If ( @Rubella = 'Complete)
+                    If ( @Rubella = 'Complete')
                                Set @comment = @comment + ' Complete'
                      else
                                 Set @comment = @comment + ' Complete by Declination'
@@ -516,15 +520,15 @@ BEGIN
                                   BEGIN
           					          Insert into ehr_compliancedb.completiondates
                                          (employeeid,
-                  			  		      requirementname,
+                  			  		       requirementname,
                      			  		   date,
                      			  		   trainer,
                      			  		   container,
                      			  		   created,
                      			  		   createdby,
-                                         modified,
+                                           modified,
                      			  		   modifiedby,
-                                         comment
+                                           comment
 
                    					)
                   				values(
@@ -533,7 +537,7 @@ BEGIN
                     			         @Rubelladate,
                     			         @trainer,
                     			         'CD170458-C55F-102F-9907-5107380A54BE',
-                    			          getdate(),
+                    			         getdate(),
                    			             @ImportTech,
                     			         getdate(),
                     			         @ImportTech,
@@ -542,13 +546,14 @@ BEGIN
 
 
 
-                                                              If @@Error <> 0
-          	                               				 GoTo Err_Proc
+                                         If @@Error <> 0
+          	                               	GoTo Err_Proc
 
 
           					---------- Set successful entry flag
-
-          						Set @Status = @Status + 'Processed'
+                             If @Status <> 'Processed'
+          					 BEGIN
+          						Set @Status =  'Processed'
 
           			   			 Update ss
                                         Set ss.processed =  @Status
@@ -560,24 +565,24 @@ BEGIN
           	                                GoTo Err_Proc
 
 
-          			             END   -----if not exists
+          			         END   -----if not exists
 
 
-                             END  ---If exists
+                     END  ---If exists
 
 
-
+               END  --- if not exists
 
                   ----Evaluate Varicella data
 
             If exists (Select * from onprc_ehr_compliancedb.OccHealthTemp where searchID = @Searchkey And [Rubella Date] is not null)
                BEGIN
 
-                    Select  @Varicelladate = trim([Varicella Date]), @Rubella= trim([Varicella]) from onprc_ehr_compliancedb.OccHealthTemp where searchID = @Searchkey And [Varicella Date] is not null
+                    Select  @Varicelladate = trim([Varicella Date]), @Varicella= trim([Varicella]) from onprc_ehr_compliancedb.OccHealthTemp where searchID = @Searchkey And [Varicella Date] is not null
 
                          Set @comment = ''
 
-                    If ( @Varicella = 'Complete)
+                    If ( @Varicella = 'Complete')
                                Set @comment = @comment + ' Complete'
                      else
                                 Set @comment = @comment + ' Complete by Declination'
@@ -619,8 +624,9 @@ BEGIN
 
 
           					---------- Set successful entry flag
-
-          						Set @Status = @Status + 'Processed'
+                            If @Status <> 'Processed'
+          					BEGIN
+          						Set @Status =  'Processed'
 
           			   			 Update ss
                                         Set ss.processed =  @Status
@@ -630,12 +636,12 @@ BEGIN
 
                 	                       If @@Error <> 0
           	                                GoTo Err_Proc
+                            END ----If @Status
+
+          			   END   -----if not exists
 
 
-          			             END   -----if not exists
-
-
-                             END  ---If exists
+               END  ---If exists
 
 
                   ----Evaluate Full Face Respirator data
@@ -647,7 +653,7 @@ BEGIN
 
                          Set @comment = ''
 
-                    If ( @FullFaceRespirator = 'Complete)
+                    If ( @FullFaceRespirator = 'Complete')
                                Set @comment = @comment + ' Complete'
                      else
                                 Set @comment = @comment + ' Complete by Declination'
@@ -675,7 +681,7 @@ BEGIN
                     			         @FullFaceRespiratordate,
                     			         @trainer,
                     			         'CD170458-C55F-102F-9907-5107380A54BE',
-                    			          getdate(),
+                    			         getdate(),
                    			             @ImportTech,
                     			         getdate(),
                     			         @ImportTech,
@@ -684,13 +690,14 @@ BEGIN
 
 
 
-                                                              If @@Error <> 0
-          	                               				 GoTo Err_Proc
+                                         If @@Error <> 0
+          	                               	 GoTo Err_Proc
 
 
           					---------- Set successful entry flag
-
-          						Set @Status = @Status + 'Processed'
+                            If @Status <> 'Processed'
+          					BEGIN
+          						Set @Status = 'Processed'
 
           			   			 Update ss
                                         Set ss.processed =  @Status
@@ -701,11 +708,12 @@ BEGIN
                 	                       If @@Error <> 0
           	                                GoTo Err_Proc
 
+                             END  ----if @Status
 
-          			             END   -----if not exists
+          		  END   -----if not exists
 
 
-                             END  ---If exists
+               END  ---If exists
 
 
 
@@ -718,7 +726,7 @@ BEGIN
 
                         Set @comment = ''
 
-                    If ( @StandardRespirator = 'Complete)
+                    If ( @StandardRespirator = 'Complete')
                                Set @comment = @comment + ' Complete'
                      else
                                 Set @comment = @comment + ' Complete by Declination'
@@ -746,7 +754,7 @@ BEGIN
                     			         @Measlesdate,
                     			         @trainer,
                     			         'CD170458-C55F-102F-9907-5107380A54BE',
-                    			          getdate(),
+                    			         getdate(),
                    			             @ImportTech,
                     			         getdate(),
                     			         @ImportTech,
@@ -755,13 +763,14 @@ BEGIN
 
 
 
-                                                              If @@Error <> 0
+                                           If @@Error <> 0
           	                               				 GoTo Err_Proc
 
 
           					---------- Set successful entry flag
-
-          						Set @Status = @Status + 'Processed'
+                           If @Status <> 'Processed'
+          				    BEGIN
+          						Set @Status = 'Processed'
 
           			   			 Update ss
                                         Set ss.processed =  @Status
@@ -772,11 +781,12 @@ BEGIN
                 	                       If @@Error <> 0
           	                                GoTo Err_Proc
 
+                             END  ----if @Status
 
-          			             END   -----if not exists
+          			      END   -----if not exists
 
 
-                             END  ---If exists
+                     END  ---If exists
 
                         ----Evaluate Tdap Values
 
@@ -787,7 +797,7 @@ BEGIN
 
                        Set @comment = ''
 
-                    If ( @Tdab = 'Complete)
+                    If ( @Tdab = 'Complete')
                                Set @comment = @comment + ' Complete'
                      else
                                 Set @comment = @comment + ' Complete by Declination'
@@ -815,7 +825,7 @@ BEGIN
                     			         @Tdaoate,
                     			         @trainer,
                     			         'CD170458-C55F-102F-9907-5107380A54BE',
-                    			          getdate(),
+                    			         getdate(),
                    			             @ImportTech,
                     			         getdate(),
                     			         @ImportTech,
@@ -824,13 +834,14 @@ BEGIN
 
 
 
-                                                              If @@Error <> 0
-          	                               				 GoTo Err_Proc
+                                            If @@Error <> 0
+          	                               	GoTo Err_Proc
 
 
           					---------- Set successful entry flag
-
-          						Set @Status = @Status + 'Processed'
+                            If @Status <> 'Processed'
+          					BEGIN
+          						Set @Status = 'Processed'
 
           			   			 Update ss
                                         Set ss.processed =  @Status
@@ -841,11 +852,12 @@ BEGIN
                 	                       If @@Error <> 0
           	                                GoTo Err_Proc
 
+                              END  ---if @Status
 
-          			             END   -----if not exists
+          			       END   -----if not exists
 
 
-                             END  ---If exist
+                      END  ---If exist
 
 
                 ----Evaluate TB West Campus
@@ -857,7 +869,7 @@ BEGIN
 
                        Set @comment = ''
 
-                    If ( @TbWestCampus = 'Complete'
+                    If ( @TbWestCampus = 'Complete')
                                Set @comment = @comment + ' Complete'
                      else
                                 Set @comment = @comment + ' Complete by Declination'
@@ -865,7 +877,7 @@ BEGIN
                     If not exists( Select * from ehr_compliancedb.completiondates Where employeeid = @employeeid And requirementname = 'Occupational Health - TB Compliant - Initial'
                                               And date = @TBWestCampusdate   And @TBWestCampusdate is not null
 
-                                  BEGIN
+                      BEGIN
           					          Insert into ehr_compliancedb.completiondates
                                          (employeeid,
                   			  		      requirementname,
@@ -899,10 +911,11 @@ BEGIN
 
 
           					---------- Set successful entry flag
+                               If @Status <> 'Processed'
+                               BEGIN
+          						     Set @Status =  'Processed'
 
-          						Set @Status = @Status + 'Processed'
-
-          			   			 Update ss
+          			   			      Update ss
                                         Set ss.processed =  @Status
 
                                    From onprc_ehr_compliancedb.OccHealth_Data ss  Where ss.rowid = @OccHealthID
@@ -910,12 +923,12 @@ BEGIN
 
                 	                       If @@Error <> 0
           	                                GoTo Err_Proc
+                                END
+
+          			     END   -----if not exists
 
 
-          			             END   -----if not exists
-
-
-                             END  ---If exist
+                     END  ---If exist
 
 
 
@@ -972,7 +985,6 @@ Next_Record:
           	 [Supervisor Email],
              [processed] ,
           	 [rowid]
-
 
 
                    from onprc_ehr_compliancedb.OccHealthTemp
