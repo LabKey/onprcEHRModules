@@ -77,9 +77,9 @@ DECLARE
                           @Varicelladate          smalldatetime,
                           @Varicella              varchar(100),
                           @FullFaceRespiratordate smalldatetime,
-                          @FullFaceRespirators    varchar(100),
+                          @FullFaceRespirator    varchar(100),
                           @StandardRespirator     varchar(100),
-			              @StandardRespiratorydate smalldatetime,
+			              @StandardRespiratordate smalldatetime,
 			              @Tdapdate               smalldatetime,
                           @Tdap                   varchar(100),
                           @TBWestCampusdate       smalldatetime,
@@ -219,8 +219,8 @@ BEGIN
                               Set @Varicella= ''
                               Set @FullFaceRespiratordate = NULL
                               Set @FullFaceRespirator = ''
-                              Set @StandardRespiratorydate = Null
-                              Set @StandardRespiratory = ''
+                              Set @StandardRespiratordate = Null
+                              Set @StandardRespirator = ''
                               Set @Tdap = ''
                               Set @Tdapdate = NUll
                               Set @TBWestCampus = ''
@@ -234,7 +234,7 @@ BEGIN
                            -----Extract data from imported values
 
                    Select @employeeid = trim(email),  @HepBdate = trim([hep B Date]), @HepBdate = trim([hep B]), @measlesDate = trim([Measles Date]), @Measles = trim([Measles]), @Mumps = trim([Mumps]),@MumpsDate = trim([Mumps Date]), @RubellaDate = trim([Rubella Date]),
-                           @Rubella = trim([Rubella]), @Varicella= trim([Varicella]), @Varicelladate= trim([Varicella Date]), @FullFaceRespiratordate = trim([Full Face Respirator Date]), @FullFaceRespirator= trim([Full Face Respirator]), @StandardRespiratorydate = trim([Standard Respirator Date]),
+                           @Rubella = trim([Rubella]), @Varicella= trim([Varicella]), @Varicelladate= trim([Varicella Date]), @FullFaceRespiratordate = trim([Full Face Respirator Date]), @FullFaceRespirator= trim([Full Face Respirator]), @StandardRespiratordate = trim([Standard Respirator Date]),
                             @StandardRespirator = trim([Standard Respirator]), @Tdap = trim([Tdap]), @Tdapdate = trim(Tdap Date]),@TBWestCampus = trim([TB West Campus]), @TBWestCampusdate = trim([TB West Campus Date]),
                             @trainer = trim([supervisor email]),@OccHealthID = rowid
 
