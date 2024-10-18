@@ -236,9 +236,9 @@ BEGIN
 
 
 
-                   Select @employeeid = trim(email),  @HepBdate = trim([hep B Date]), @HepBdate = trim([hep B]), @measlesDate = trim([Measles Date]), @MumpsDate = trim([Mumps Date]), @RubellaDate = trim([Rubella Date]),
-                             @Varicelladate= trim([Varicella Date]), @FullFaceRespiratordate = trim([Full Face Respirator Date]), @FullFaceRespirator= trim([Full Face Respirator]), @StandardRespiratorydate = trim([Standard Respirator Date]),
-                               @Tdap = tgrim([Tdap]), @Tdapdate = trim(Tdap Date])@TBWestCampusdate = trim([TB West Campus Date]),
+                   Select @employeeid = trim(email),  @HepBdate = trim([hep B Date]), @HepBdate = trim([hep B]), @measlesDate = trim([Measles Date]), @Measles = trim([Measles]), @Mumps = trim([Mumps]),@MumpsDate = trim([Mumps Date]), @RubellaDate = trim([Rubella Date]),
+                           @Rubella = trim([Rubella]), @Varicella= trim([Varicella]), @Varicelladate= trim([Varicella Date]), @FullFaceRespiratordate = trim([Full Face Respirator Date]), @FullFaceRespirator= trim([Full Face Respirator]), @StandardRespiratorydate = trim([Standard Respirator Date]),
+                            @StandardRespirator = trim([Standard Respirator]), @Tdap = trim([Tdap]), @Tdapdate = trim(Tdap Date]),@TBWestCampus = trim([TB West Campus]), @TBWestCampusdate = trim([TB West Campus Date]),
                             @trainer = trim([supervisor email]),@OccHealthID = rowid
 
                                from onprc_ehr_compliancedb.OccHealthTemp Where  searchID = @Searchkey
@@ -253,7 +253,7 @@ BEGIN
 		        End
 
 
-			         Set @iPos = charindex('@', @trainer)
+			  Set @iPos = charindex('@', @trainer)
 
               if @iPos > 0
 			  Begin
