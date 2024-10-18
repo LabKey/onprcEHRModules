@@ -25,6 +25,8 @@ import org.labkey.api.module.Module;
 import org.labkey.api.view.template.ClientDependency;
 
 import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * User: bimber
@@ -43,16 +45,30 @@ public class MensFormType extends TaskForm
             new MensFormSection()
         ));
 
-        addClientDependency(ClientDependency.supplierFromPath("ehr/model/sources/Menses.js"));
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/model/sources/Menses.js"));
 
-        setDisplayReviewRequired(true);
 
         for (FormSection s : getFormSections())
         {
             s.addConfigSource("Task");
-            s.addConfigSource("Menses");
+            s.addConfigSource("MensesAddendum");
         }
     }
+        //    Added 10-9-2024  r. Blasa
+        @Override
+        protected List<String> getButtonConfigs()
+        {
+            List<String> defaultButtons = new ArrayList<>();
+
+            defaultButtons.remove("SUBMIT");
+            defaultButtons.add("SAVEDRAFT");
+            defaultButtons.add("CLOSE");
+            defaultButtons.add("REVIEW");
+            defaultButtons.add("MENSEFINAL");
+
+
+            return defaultButtons;
+        }
 
     @Override
     protected boolean canInsert()
