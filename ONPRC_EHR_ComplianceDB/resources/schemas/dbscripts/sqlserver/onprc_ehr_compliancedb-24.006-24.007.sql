@@ -132,7 +132,7 @@ BEGIN
     [Standard Respirator] ,
     [Standard Respirator Date] ,
     [Tdap],
-    [Tdap Date),]
+    [Tdap Date],
  	[TB West Campus] ,
     [TB West Campus Date] ,
  	[Supervisor Email],
@@ -162,7 +162,7 @@ BEGIN
     [Standard Respirator] ,
     [Standard Respirator Date] ,
     [Tdap],
-    [Tdap Date),]
+    [Tdap Date],
  	[TB West Campus] ,
     [TB West Campus Date] ,
  	[Supervisor Email],
@@ -231,10 +231,7 @@ BEGIN
                               Set @Status = ''
 							  Set @iPos = 0
 
-
-
-
-
+                           -----Extract data from imported values
 
                    Select @employeeid = trim(email),  @HepBdate = trim([hep B Date]), @HepBdate = trim([hep B]), @measlesDate = trim([Measles Date]), @Measles = trim([Measles]), @Mumps = trim([Mumps]),@MumpsDate = trim([Mumps Date]), @RubellaDate = trim([Rubella Date]),
                            @Rubella = trim([Rubella]), @Varicella= trim([Varicella]), @Varicelladate= trim([Varicella Date]), @FullFaceRespiratordate = trim([Full Face Respirator Date]), @FullFaceRespirator= trim([Full Face Respirator]), @StandardRespiratorydate = trim([Standard Respirator Date]),
