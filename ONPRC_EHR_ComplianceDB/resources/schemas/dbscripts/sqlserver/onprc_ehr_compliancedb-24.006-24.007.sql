@@ -236,9 +236,9 @@ BEGIN
 
 
 
-                   Select @employeeid = trim(email),  @HerpesBdate = trim([hep B Date]), @measlesDate = trim([Measles Date]), @MumpsDate = trim([Mumps Date]), @RubellaDate = trim([Rubella Date]),
-                             @Varicelladate= trim([Varicella Date), , @StandardRespiratorydate = trim([Standard Respirator Date]),
-                               @TBWestCampusdate = trim([TB West Campus Date]),
+                   Select @employeeid = trim(email),  @HepBdate = trim([hep B Date]), @HepBdate = trim([hep B]), @measlesDate = trim([Measles Date]), @MumpsDate = trim([Mumps Date]), @RubellaDate = trim([Rubella Date]),
+                             @Varicelladate= trim([Varicella Date]), @FullFaceRespiratordate = trim([Full Face Respirator Date]), @FullFaceRespirator= trim([Full Face Respirator]), @StandardRespiratorydate = trim([Standard Respirator Date]),
+                               @Tdap = tgrim([Tdap]), @Tdapdate = trim(Tdap Date])@TBWestCampusdate = trim([TB West Campus Date]),
                             @trainer = trim([supervisor email]),@OccHealthID = rowid
 
                                from onprc_ehr_compliancedb.OccHealthTemp Where  searchID = @Searchkey
@@ -860,7 +860,7 @@ BEGIN
 
                        Set @comment = ''
 
-                    If ( @TbWestCampus = 'Complete)
+                    If ( @TbWestCampus = 'Complete'
                                Set @comment = @comment + ' Complete'
                      else
                                 Set @comment = @comment + ' Complete by Declination'
