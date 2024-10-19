@@ -272,15 +272,169 @@ BEGIN
       	                        If @@Error <> 0
 	                                GoTo Err_Proc
 
-                                    GOTO Next_Record
-
 
                  END  ----
 
 
+                 --------------------------   validate date input values
+
+                  If   isdate(@HepBdate) = 0
+                   BEGIN
+                        Set @Status = ''
+                            Set @Status =    'Hep B has invalid date'
+
+                              Update ss
+                                 Set ss.processed = @Status
+
+                                From onprc_ehr_compliancedb.OccHealth_Data ss  Where ss.rowid = @OccHealthID
+
+
+                                    If @@Error <> 0
+                                    GoTo Err_Proc
+
+
+                  END
+
+                  If  isdate(@measlesDate) =  0
+                    BEGIN
+                              Set @Status = ''
+                              Set @Status =    'Measles has an invalid date'
+
+                                Update ss
+                                   Set ss.processed = @Status
+
+                                  From onprc_ehr_compliancedb.OccHealth_Data ss  Where ss.rowid = @OccHealthID
+
+
+                                      If @@Error <> 0
+                                      GoTo Err_Proc
+
+
+                    END
+
+                    If  isdate(@MumpsDate)  = 0
+                    BEGIN
+                              Set @Status = ''
+                              Set @Status =    'Mumps has an invalid date'
+
+                                Update ss
+                                   Set ss.processed = @Status
+
+                                  From onprc_ehr_compliancedb.OccHealth_Data ss  Where ss.rowid = @OccHealthID
+
+
+                                      If @@Error <> 0
+                                      GoTo Err_Proc
+
+
+                    END
+
+                   If  isdate(@Rubelladate) = 0
+                    BEGIN
+                      Set @Status = ''
+                      Set @Status =    'Rubella has an invalid date'
+
+                        Update ss
+                           Set ss.processed = @Status
+
+                          From onprc_ehr_compliancedb.OccHealth_Data ss  Where ss.rowid = @OccHealthID
+
+
+                              If @@Error <> 0
+                              GoTo Err_Proc
+
+
+                    END
+
+                    If  isdate(@Varicelladate) = 0
+                    BEGIN
+                      Set @Status = ''
+                      Set @Status =    'Varicella has an invalid date'
+
+                        Update ss
+                           Set ss.processed = @Status
+
+                          From onprc_ehr_compliancedb.OccHealth_Data ss  Where ss.rowid = @OccHealthID
+
+
+                              If @@Error <> 0
+                              GoTo Err_Proc
+
+
+                    END
+
+                  If  isdate(@FullFaceRespiratordate) = 0
+                  BEGIN
+                      Set @Status = ''
+                      Set @Status =    'Full Face Respirator has an invalid date'
+
+                        Update ss
+                           Set ss.processed = @Status
+
+                          From onprc_ehr_compliancedb.OccHealth_Data ss  Where ss.rowid = @OccHealthID
+
+
+                              If @@Error <> 0
+                              GoTo Err_Proc
+
+
+                   END
+
+                   If  isdate(@StandardRespiratordate) = 0
+                     BEGIN
+                         Set @Status = ''
+                         Set @Status =    'Standard Respirator has an invalid date'
+
+                           Update ss
+                              Set ss.processed = @Status
+
+                             From onprc_ehr_compliancedb.OccHealth_Data ss  Where ss.rowid = @OccHealthID
+
+
+                                 If @@Error <> 0
+                                 GoTo Err_Proc
+
+
+                      END
+
+                      If  isdate(@Tdapdate) = 0
+                       BEGIN
+                           Set @Status = ''
+                           Set @Status =    'Tdap has an invalid date'
+
+                             Update ss
+                                Set ss.processed = @Status
+
+                               From onprc_ehr_compliancedb.OccHealth_Data ss  Where ss.rowid = @OccHealthID
+
+
+                                   If @@Error <> 0
+                                   GoTo Err_Proc
+
+
+                        END
+
+                        If  isdate(@TBWestCampusdate) = 0
+                         BEGIN
+                           Set @Status = ''
+                           Set @Status =  'TB West Campus has an invalid date'
+
+
+                             Update ss
+                                Set ss.processed = @Status
+
+                               From onprc_ehr_compliancedb.OccHealth_Data ss  Where ss.rowid = @OccHealthID
+
+
+                                   If @@Error <> 0
+                                   GoTo Err_Proc
+
+
+                          END
+
 						----Evaluate Hep B data
 
-                  If exists (Select * from onprc_ehr_compliancedb.OccHealthTemp where searchID = @Searchkey And [Hep B Date] is not null)
+                  If exists (Select * from onprc_ehr_compliancedb.OccHealthTemp where searchID = @Searchkey And [Hep B Date] is not null And isdate([Hep B Date]) = 1)
                      BEGIN
 
                           Select  @HepBdate = ([Hep B Date]), @HepB= trim([Hep B]) from onprc_ehr_compliancedb.OccHealthTemp where searchID = @Searchkey And [Hep B Date] is not null
@@ -355,7 +509,7 @@ BEGIN
 
                                 ----Evaluate Measles data
 
-            If exists (Select * from onprc_ehr_compliancedb.OccHealthTemp where searchID = @Searchkey And [Measles Date] is not null)
+            If exists (Select * from onprc_ehr_compliancedb.OccHealthTemp where searchID = @Searchkey And [Measles Date] is not null And isDate([Measles Date]) = 1)
                BEGIN
 
                     Select  @Measlesdate = ([Measles Date]), @Measles= trim([Measles]) from onprc_ehr_compliancedb.OccHealthTemp where searchID = @Searchkey And [Measles Date] is not null
@@ -427,7 +581,7 @@ BEGIN
 
                   ----Evaluate Mumps data
 
-            If exists (Select * from onprc_ehr_compliancedb.OccHealthTemp where searchID = @Searchkey And [Mumps Date] is not null)
+            If exists (Select * from onprc_ehr_compliancedb.OccHealthTemp where searchID = @Searchkey And [Mumps Date] is not null And isDate([Mumps Date]) = 1)
                BEGIN
 
                     Select  @Mumpsdate = ([Mumps Date]), @Mumps= trim([Mumps]) from onprc_ehr_compliancedb.OccHealthTemp where searchID = @Searchkey And [Mumps Date] is not null
@@ -500,7 +654,7 @@ BEGIN
 
                   ----Evaluate Rubella data
 
-            If exists (Select * from onprc_ehr_compliancedb.OccHealthTemp where searchID = @Searchkey And [Rubella Date] is not null)
+            If exists (Select * from onprc_ehr_compliancedb.OccHealthTemp where searchID = @Searchkey And [Rubella Date] is not null And isDate([Rubella Date]) = 1)
                BEGIN
 
                     Select  @Rubelladate = ([Rubella Date]), @Rubella= trim([Rubella]) from onprc_ehr_compliancedb.OccHealthTemp where searchID = @Searchkey And [Rubella Date] is not null
@@ -573,7 +727,7 @@ BEGIN
 
                   ----Evaluate Varicella data
 
-            If exists (Select * from onprc_ehr_compliancedb.OccHealthTemp where searchID = @Searchkey And [Rubella Date] is not null)
+            If exists (Select * from onprc_ehr_compliancedb.OccHealthTemp where searchID = @Searchkey And [Rubella Date] is not null And isDate([Rubella Date]) = 1)
                BEGIN
 
                     Select  @Varicelladate = ([Varicella Date]), @Varicella= trim([Varicella]) from onprc_ehr_compliancedb.OccHealthTemp where searchID = @Searchkey And [Varicella Date] is not null
@@ -644,7 +798,7 @@ BEGIN
 
                   ----Evaluate Full Face Respirator data
 
-            If exists (Select * from onprc_ehr_compliancedb.OccHealthTemp where searchID = @Searchkey And [Full Face Respirator Date] is not null)
+            If exists (Select * from onprc_ehr_compliancedb.OccHealthTemp where searchID = @Searchkey And [Full Face Respirator Date] is not null And isDate([Full Face Respirator Date]) = 1)
                BEGIN
 
                     Select  @FullfaceRespiratordate = ([Full Face Respirator Date]), @FullFaceRespirator = trim([Full Face Respirator]) from onprc_ehr_compliancedb.OccHealthTemp where searchID = @Searchkey And [Full Face Respirator Date] is not null
@@ -717,7 +871,7 @@ BEGIN
 
                 ----Evaluate Standard Respiratordata
 
-            If exists (Select * from onprc_ehr_compliancedb.OccHealthTemp where searchID = @Searchkey And [Standard Respirator Date] is not null)
+            If exists (Select * from onprc_ehr_compliancedb.OccHealthTemp where searchID = @Searchkey And [Standard Respirator Date] is not null And isDate([Standard Respirator Date]) = 1)
                BEGIN
 
                     Select  @StandardRespiratordate = ([Standard Respirator Date]), @StandardRespirator= trim([Standard Respirator]) from onprc_ehr_compliancedb.OccHealthTemp where searchID = @Searchkey And [Standard Respirator Date] is not null
@@ -788,7 +942,7 @@ BEGIN
 
                         ----Evaluate Tdap Values
 
-            If exists (Select * from onprc_ehr_compliancedb.OccHealthTemp where searchID = @Searchkey And [Tdap Date] is not null)
+            If exists (Select * from onprc_ehr_compliancedb.OccHealthTemp where searchID = @Searchkey And [Tdap Date] is not null And isDate([Tdap Date]) = 1)
                BEGIN
 
                     Select  @Tdapdate = ([Tdap Date]), @Tdap= trim([Tdap]) from onprc_ehr_compliancedb.OccHealthTemp where searchID = @Searchkey And [Tdap Date] is not null
@@ -860,7 +1014,7 @@ BEGIN
 
                 ----Evaluate TB West Campus
 
-            If exists (Select * from onprc_ehr_compliancedb.OccHealthTemp where searchID = @Searchkey And [TB West Campus Date] is not null)
+            If exists (Select * from onprc_ehr_compliancedb.OccHealthTemp where searchID = @Searchkey And [TB West Campus Date] is not null And isDate([TB West Campus Date]) = 1)
                BEGIN
 
                     Select  @TBWestCampusdate = ([TB West Campus Date]), @TBWestCampus= trim([TB West Campus]) from onprc_ehr_compliancedb.OccHealthTemp where searchID = @Searchkey And [TB West Campus Date] is not null
