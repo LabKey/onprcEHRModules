@@ -48,7 +48,7 @@ Complete by Declination (2024-03-13)
 **
 */
 
-                CREATE Procedure [onprc_ehr_compliancedb].[p_OccHealthToPrimeProcess]
+                CREATE Procedure onprc_ehr_compliancedb.p_OccHealthToPrimeProcess
 
 
 
@@ -892,7 +892,7 @@ BEGIN
                   				values(
                    				        @employeeid,
                     			        'Occupational Health - TB Compliant - Initial',
-                    			         @Measlesdate,
+                    			         @TBWestCampusdate,
                     			         @trainer,
                     			         'CD170458-C55F-102F-9907-5107380A54BE',
                     			          getdate(),
