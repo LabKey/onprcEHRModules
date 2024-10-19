@@ -6,18 +6,22 @@
         <column name="Total Compliance"/>
         <column name="West Campus"/>
         <column name="Hep B"/>
+        <column name="Hep B Date"/>
         <column name="Measles"/>
+        <column name="Measles Date"/>
         <column name="Mumps"/>
+        <column name="Mumps Date"/>
         <column name="Rubella"/>
+        <column name="Rubella Date"/>
         <column name="Varicella"/>
+        <column name="Varicella Date"/>
         <column name="Tdap"/>
+        <column name="Tdap Date"/>
         <column name="Full Face Respirator"/>
+        <column name="Full Face Respirator Date"/>
         <column name="Standard Respirator"/>
-        <column name="Flu"/>
-        <column name="TB Health Surveillance"/>
-        <column name="TB Annual"/>
         <column name="TB West Campus"/>
-        <column name="Clinical MRI"/>
+        <column name="TB West Campus Date"/>
         <column name="Supervisor Email"/>
         <column name="Processed"/>
 

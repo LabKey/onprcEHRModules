@@ -1,9 +1,112 @@
 <query xmlns="http://labkey.org/data/xml/query">
     <metadata>
         <tables xmlns="http://labkey.org/data/xml">
-            <table tableName="OccHealth_Data" tableDbType="TABLE">
-                <tableTitle>Enterprise Health Data</tableTitle>
+            <table tableName="OccHealth_Data" tableDbType="NOT_IN_DB">
+                <tableTitle>OccHealth Data</tableTitle>
                 <columns>
+                    <column columnName="email">
+                        <columnTitle>Email</columnTitle>
+                    </column>
+
+                    <column columnName="Person Type">
+                        <columnTitle>Person Type</columnTitle>
+                        <displayWidth>100</displayWidth>
+                    </column>
+                    <column columnName="Total Compliance">
+                        <columnTitle>Total Compliance</columnTitle>
+                        <displayWidth>100</displayWidth>
+                    </column>
+                    <column columnName="Hep B">
+                        <columnTitle>Hep</columnTitle>
+                        <displayWidth>100</displayWidth>
+                    </column>
+                    <column columnName="Hep B Date">
+                        <columnTitle>Hep B Date</columnTitle>
+                        <formatString>yyyy-MM-dd</formatString>
+                        <displayWidth>100</displayWidth>
+                    </column>
+                    <column columnName="Measles">
+                        <columnTitle>Mealses</columnTitle>
+                        <displayWidth>100</displayWidth>
+                    </column>
+                    <column columnName="Measles Date">
+                        <columnTitle>Heales Date</columnTitle>
+                        <formatString>yyyy-MM-dd</formatString>
+                        <displayWidth>100</displayWidth>
+                    </column>
+                    <column columnName="Mumps">
+                        <columnTitle>Mumps</columnTitle>
+                        <displayWidth>100</displayWidth>
+                    </column>
+                    <column columnName="Mumps Date">
+                        <columnTitle>Humps Date</columnTitle>
+                        <formatString>yyyy-MM-dd</formatString>
+                        <displayWidth>100</displayWidth>
+                    </column>
+                    <column columnName="Rubella">
+                        <columnTitle>Rubella</columnTitle>
+                        <displayWidth>100</displayWidth>
+                    </column>
+                    <column columnName="Rubella Date">
+                        <columnTitle>Rubella Date</columnTitle>
+                        <formatString>yyyy-MM-dd</formatString>
+                        <displayWidth>100</displayWidth>
+                    </column>
+                    <column columnName="Varicella">
+                        <columnTitle>Varicella</columnTitle>
+                        <displayWidth>100</displayWidth>
+                    </column>
+                    <column columnName="Varicella Date">
+                        <columnTitle>Varicella Date</columnTitle>
+                        <formatString>yyyy-MM-dd</formatString>
+                        <displayWidth>100</displayWidth>
+                    </column>
+
+                    <column columnName="Full Face Respirator">
+                        <columnTitle>Full Face Respirator</columnTitle>
+                        <displayWidth>100</displayWidth>
+                    </column>
+                    <column columnName="Full Face Respirator Date">
+                        <columnTitle>Full Face Respirator Date</columnTitle>
+                        <formatString>yyyy-MM-dd</formatString>
+                        <displayWidth>100</displayWidth>
+                    </column>
+                    <column columnName="Standard Respirator">
+                        <columnTitle>Standard Respirator</columnTitle>
+                        <displayWidth>100</displayWidth>
+                    </column>
+                    <column columnName="Standard Respirator Date">
+                        <columnTitle>Standard Respirator Date</columnTitle>
+                        <formatString>yyyy-MM-dd</formatString>
+                        <displayWidth>100</displayWidth>
+                    </column>
+                    <column columnName="Tdap">
+                        <columnTitle>Tdap</columnTitle>
+                        <displayWidth>100</displayWidth>
+                    </column>
+                    <column columnName="Tdap Date">
+                        <columnTitle>Tdap Date</columnTitle>
+                        <formatString>yyyy-MM-dd</formatString>
+                        <displayWidth>100</displayWidth>
+                    </column>
+                    <column columnName="TB West Campus">
+                        <columnTitle>TB West Campus</columnTitle>
+                        <displayWidth>100</displayWidth>
+                    </column>
+                    <column columnName="TB West Campusd Date">
+                        <columnTitle>TB West Campus Date</columnTitle>
+                        <formatString>yyyy-MM-dd</formatString>
+                        <displayWidth>100</displayWidth>
+                    </column>
+                    <column columnName="Supervisor Email">
+                        <columnTitle>Supervisor Email</columnTitle>
+                        <displayWidth>100</displayWidth>
+                    </column>
+                    <column columnName="Processed">
+                        <columnTitle>Processed</columnTitle>
+                        <displayWidth>100</displayWidth>
+                    </column>
+
                 </columns>
             </table>
         </tables>
