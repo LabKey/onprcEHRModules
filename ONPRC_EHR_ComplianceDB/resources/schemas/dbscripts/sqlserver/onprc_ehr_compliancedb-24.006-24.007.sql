@@ -278,159 +278,10 @@ BEGIN
 
                  --------------------------   validate date input values
 
-                  If   isdate(@HepBdate) = 0
-                   BEGIN
-                        Set @Status = ''
-                            Set @Status =    'Hep B has invalid date'
-
-                              Update ss
-                                 Set ss.processed = @Status
-
-                                From onprc_ehr_compliancedb.OccHealth_Data ss  Where ss.rowid = @OccHealthID
 
 
-                                    If @@Error <> 0
-                                    GoTo Err_Proc
 
 
-                  END
-
-                  If  isdate(@measlesDate) =  0
-                    BEGIN
-                              Set @Status = ''
-                              Set @Status =    'Measles has an invalid date'
-
-                                Update ss
-                                   Set ss.processed = @Status
-
-                                  From onprc_ehr_compliancedb.OccHealth_Data ss  Where ss.rowid = @OccHealthID
-
-
-                                      If @@Error <> 0
-                                      GoTo Err_Proc
-
-
-                    END
-
-                    If  isdate(@MumpsDate)  = 0
-                    BEGIN
-                              Set @Status = ''
-                              Set @Status =    'Mumps has an invalid date'
-
-                                Update ss
-                                   Set ss.processed = @Status
-
-                                  From onprc_ehr_compliancedb.OccHealth_Data ss  Where ss.rowid = @OccHealthID
-
-
-                                      If @@Error <> 0
-                                      GoTo Err_Proc
-
-
-                    END
-
-                   If  isdate(@Rubelladate) = 0
-                    BEGIN
-                      Set @Status = ''
-                      Set @Status =    'Rubella has an invalid date'
-
-                        Update ss
-                           Set ss.processed = @Status
-
-                          From onprc_ehr_compliancedb.OccHealth_Data ss  Where ss.rowid = @OccHealthID
-
-
-                              If @@Error <> 0
-                              GoTo Err_Proc
-
-
-                    END
-
-                    If  isdate(@Varicelladate) = 0
-                    BEGIN
-                      Set @Status = ''
-                      Set @Status =    'Varicella has an invalid date'
-
-                        Update ss
-                           Set ss.processed = @Status
-
-                          From onprc_ehr_compliancedb.OccHealth_Data ss  Where ss.rowid = @OccHealthID
-
-
-                              If @@Error <> 0
-                              GoTo Err_Proc
-
-
-                    END
-
-                  If  isdate(@FullFaceRespiratordate) = 0
-                  BEGIN
-                      Set @Status = ''
-                      Set @Status =    'Full Face Respirator has an invalid date'
-
-                        Update ss
-                           Set ss.processed = @Status
-
-                          From onprc_ehr_compliancedb.OccHealth_Data ss  Where ss.rowid = @OccHealthID
-
-
-                              If @@Error <> 0
-                              GoTo Err_Proc
-
-
-                   END
-
-                   If  isdate(@StandardRespiratordate) = 0
-                     BEGIN
-                         Set @Status = ''
-                         Set @Status =    'Standard Respirator has an invalid date'
-
-                           Update ss
-                              Set ss.processed = @Status
-
-                             From onprc_ehr_compliancedb.OccHealth_Data ss  Where ss.rowid = @OccHealthID
-
-
-                                 If @@Error <> 0
-                                 GoTo Err_Proc
-
-
-                      END
-
-                      If  isdate(@Tdapdate) = 0
-                       BEGIN
-                           Set @Status = ''
-                           Set @Status =    'Tdap has an invalid date'
-
-                             Update ss
-                                Set ss.processed = @Status
-
-                               From onprc_ehr_compliancedb.OccHealth_Data ss  Where ss.rowid = @OccHealthID
-
-
-                                   If @@Error <> 0
-                                   GoTo Err_Proc
-
-
-                        END
-
-                        If  isdate(@TBWestCampusdate) = 0
-                         BEGIN
-                           Set @Status = ''
-                           Set @Status =  'TB West Campus has an invalid date'
-
-
-                             Update ss
-                                Set ss.processed = @Status
-
-                               From onprc_ehr_compliancedb.OccHealth_Data ss  Where ss.rowid = @OccHealthID
-
-
-                                   If @@Error <> 0
-                                   GoTo Err_Proc
-
-
-                          END
 
 						----Evaluate Hep B data
 
@@ -483,22 +334,40 @@ BEGIN
 
 
 					---------- Set successful entry flag
-                       If @Status <> 'Processed'
-					   BEGIN
-					      	Set @Status = 'Processed'
+                            If @Status <> 'Recorded'
+					        BEGIN
+
+					      		Set @Status = 'Recorded'
 
 			   			             Update ss
                                				Set ss.processed =  @Status
 
-                             From onprc_ehr_compliancedb.OccHealth_Data ss  Where ss.rowid = @OccHealthID
+                                          From onprc_ehr_compliancedb.OccHealth_Data ss  Where ss.rowid = @OccHealthID
 
 
       	                        			If @@Error <> 0
 	                                			GoTo Err_Proc
 
-                         END  ------ IF @Status
+                              END  ------ IF @Status
 
-			     END   -----if not exists
+			            END   -----if not exists
+			           else
+			            BEGIN
+
+
+			             		Set @Status = 'Hep B record already exists'
+
+                                     Update ss
+                                            Set ss.processed =  @Status
+
+                                          From onprc_ehr_compliancedb.OccHealth_Data ss  Where ss.rowid = @OccHealthID
+
+
+                                            If @@Error <> 0
+                                                GoTo Err_Proc
+
+			            END
+
 
 
              END  ---If exists
@@ -558,9 +427,9 @@ BEGIN
 
 
           					---------- Set successful entry flag
-                            If @Status <> 'Processed'
+                            If @Status <> 'Recorded'
           					BEGIN
-          						Set @Status =  'Processed'
+          						Set @Status =  'Recorded'
 
           			   			 Update ss
                                         Set ss.processed =  @Status
@@ -574,6 +443,22 @@ BEGIN
                             END  ---if @Status
 
           			 END   -----if not exists
+          			  else
+                        BEGIN
+
+
+                                Set @Status = 'Measles record already exists'
+
+                                      Update ss
+                                             Set ss.processed =  @Status
+
+                                           From onprc_ehr_compliancedb.OccHealth_Data ss  Where ss.rowid = @OccHealthID
+
+
+                                             If @@Error <> 0
+                                                 GoTo Err_Proc
+
+                        END
 
 
                  END  ---If exists
@@ -630,9 +515,9 @@ BEGIN
 
 
           					---------- Set successful entry flag
-                           If @Status <> 'Processed'
+                           If @Status <> 'Recorded'
           				   BEGIN
-          						Set @Status =  'Processed'
+          						Set @Status =  'Recorded'
 
           			   			 Update ss
                                         Set ss.processed =  @Status
@@ -646,6 +531,22 @@ BEGIN
                            END   ----- if @Status
 
           		      END   -----if not exists
+          		       else
+                            BEGIN
+
+
+                            Set @Status = 'Mumps record already exists'
+
+                                   Update ss
+                                          Set ss.processed =  @Status
+
+                                        From onprc_ehr_compliancedb.OccHealth_Data ss  Where ss.rowid = @OccHealthID
+
+
+                                          If @@Error <> 0
+                                              GoTo Err_Proc
+
+                            END
 
 
                 END  ---If exists
@@ -703,9 +604,9 @@ BEGIN
 
 
           					---------- Set successful entry flag
-                             If @Status <> 'Processed'
+                             If @Status <> 'Recorded'
           					 BEGIN
-          						Set @Status =  'Processed'
+          						Set @Status =  'Recorded'
 
           			   			 Update ss
                                         Set ss.processed =  @Status
@@ -721,6 +622,21 @@ BEGIN
 
 
                      END  ---If exists
+                      else
+                        BEGIN
+
+                            Set @Status = 'Rubella record already exists'
+
+                                  Update ss
+                                         Set ss.processed =  @Status
+
+                                       From onprc_ehr_compliancedb.OccHealth_Data ss  Where ss.rowid = @OccHealthID
+
+
+                                         If @@Error <> 0
+                                             GoTo Err_Proc
+
+                        END
 
 
                END  --- if not exists
@@ -776,9 +692,9 @@ BEGIN
 
 
           					---------- Set successful entry flag
-                            If @Status <> 'Processed'
+                            If @Status <> 'Recorded'
           					BEGIN
-          						Set @Status =  'Processed'
+          						Set @Status =  'Recorded'
 
           			   			 Update ss
                                         Set ss.processed =  @Status
@@ -791,6 +707,21 @@ BEGIN
                             END ----If @Status
 
           			   END   -----if not exists
+          			    else
+                            BEGIN
+
+                            Set @Status = 'Varicella record already exists'
+
+                                    Update ss
+                                           Set ss.processed =  @Status
+
+                                         From onprc_ehr_compliancedb.OccHealth_Data ss  Where ss.rowid = @OccHealthID
+
+
+                                           If @@Error <> 0
+                                               GoTo Err_Proc
+
+                            END
 
 
                END  ---If exists
@@ -847,9 +778,9 @@ BEGIN
 
 
           					---------- Set successful entry flag
-                            If @Status <> 'Processed'
+                            If @Status <> 'Recorded'
           					BEGIN
-          						Set @Status = 'Processed'
+          						Set @Status = 'Recorded'
 
           			   			 Update ss
                                         Set ss.processed =  @Status
@@ -863,7 +794,21 @@ BEGIN
                              END  ----if @Status
 
           		  END   -----if not exists
+                 else
+                    BEGIN
 
+                    Set @Status = 'Full Face Respirator record already exists'
+
+                         Update ss
+                                Set ss.processed =  @Status
+
+                              From onprc_ehr_compliancedb.OccHealth_Data ss  Where ss.rowid = @OccHealthID
+
+
+                                If @@Error <> 0
+                                    GoTo Err_Proc
+
+                    END
 
                END  ---If exists
 
@@ -920,9 +865,9 @@ BEGIN
 
 
           					---------- Set successful entry flag
-                           If @Status <> 'Processed'
+                           If @Status <> 'Recorded'
           				    BEGIN
-          						Set @Status = 'Processed'
+          						Set @Status = 'Recorded'
 
           			   			 Update ss
                                         Set ss.processed =  @Status
@@ -936,7 +881,21 @@ BEGIN
                              END  ----if @Status
 
           			      END   -----if not exists
+                         else
+                            BEGIN
 
+                                Set @Status = 'Standard Respirator already exists'
+
+                                     Update ss
+                                            Set ss.processed =  @Status
+
+                                          From onprc_ehr_compliancedb.OccHealth_Data ss  Where ss.rowid = @OccHealthID
+
+
+                                            If @@Error <> 0
+                                                GoTo Err_Proc
+
+                            END
 
                      END  ---If exists
 
@@ -991,9 +950,9 @@ BEGIN
 
 
           					---------- Set successful entry flag
-                            If @Status <> 'Processed'
+                            If @Status <> 'Recorded'
           					BEGIN
-          						Set @Status = 'Processed'
+          						Set @Status = 'Recorded'
 
           			   			 Update ss
                                         Set ss.processed =  @Status
@@ -1007,6 +966,22 @@ BEGIN
                               END  ---if @Status
 
           			       END   -----if not exists
+          			        else
+                                BEGIN
+
+
+                                        Set @Status = 'Tdap record already exists'
+
+                                                Update ss
+                                                       Set ss.processed =  @Status
+
+                                                     From onprc_ehr_compliancedb.OccHealth_Data ss  Where ss.rowid = @OccHealthID
+
+
+                                                       If @@Error <> 0
+                                                           GoTo Err_Proc
+
+                                END
 
 
                       END  ---If exist
@@ -1063,9 +1038,9 @@ BEGIN
 
 
           					---------- Set successful entry flag
-                               If @Status <> 'Processed'
+                               If @Status <> 'Recorded'
                                BEGIN
-          						     Set @Status =  'Processed'
+          						     Set @Status =  'Recorded'
 
           			   			      Update ss
                                         Set ss.processed =  @Status
@@ -1078,6 +1053,22 @@ BEGIN
                                 END
 
           			     END   -----if not exists
+          			      else
+                            BEGIN
+
+
+                                    Set @Status = 'TB West Campus record already exists'
+
+                                          Update ss
+                                                 Set ss.processed =  @Status
+
+                                               From onprc_ehr_compliancedb.OccHealth_Data ss  Where ss.rowid = @OccHealthID
+
+
+                                                 If @@Error <> 0
+                                                     GoTo Err_Proc
+
+                            END
 
 
                      END  ---If exist
