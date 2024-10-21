@@ -35,7 +35,7 @@ import java.util.Map;
 //Created: 5/23/2019 Kollil
 public class PMICRequestFormType extends RequestForm
 {
-    public static final String NAME = "PMIC SERVICES REQUEST";
+    public static final String NAME = "PMIC Services Request";
     public static final String DEFAULT_GROUP = "PMIC Services";
 
     public PMICRequestFormType(DataEntryFormContext ctx, Module owner)

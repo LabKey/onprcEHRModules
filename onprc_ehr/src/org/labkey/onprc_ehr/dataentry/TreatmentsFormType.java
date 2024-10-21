@@ -58,6 +58,9 @@ public class TreatmentsFormType extends TaskForm
             s.addConfigSource("TreatmentDrugsClinical");
 
         }
+
+        setDisplayReviewRequired(true);
+
         addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/model/sources/TreatmentDrugsClinical.js"));
        //Added 4-24-2024  R. Blasa
         addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/window/FormTemplateWindow.js"));
