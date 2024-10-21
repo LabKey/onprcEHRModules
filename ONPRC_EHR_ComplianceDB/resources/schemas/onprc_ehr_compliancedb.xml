@@ -241,7 +241,7 @@
             <columnTitle>Supervisor Email</columnTitle>
            </column>
             <column columnName="processed">
-                <columnTitle>Processed</columnTitle>
+                <columnTitle>Record Status</columnTitle>
             </column>
             <column columnName="container">
                 <isUserEditable>false</isUserEditable>

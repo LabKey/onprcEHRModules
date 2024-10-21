@@ -111,76 +111,82 @@ BEGIN
 
      BEGIN
 
-     Insert into onprc_ehr_compliancedb.OccHealthTemp
-             (
-          Email,
- 	[Person Type] ,
- 	[Employee Status] ,
- 	[Total Compliance],
- 	[Hep B] ,
-    [Hep B Date],
- 	[Measles] ,
-    [Measles Date] ,
- 	[Mumps] ,
-    [Mumps Date],
- 	[Rubella],
-    [Rubella Date],
- 	[Varicella] ,
-    [Varicella Date] ,
-    [Full Face Respirator] ,
-    [Full Face Respirator Date] ,
-    [Standard Respirator] ,
-    [Standard Respirator Date] ,
-    [Tdap],
-    [Tdap Date],
- 	[TB West Campus] ,
-    [TB West Campus Date] ,
- 	[Supervisor Email],
-    [processed] ,
- 	[rowid]
+                 Insert into onprc_ehr_compliancedb.OccHealthTemp
+                         (
+                      Email,
+                [Person Type] ,
+                [Employee Status] ,
+                [Total Compliance],
+                [Hep B] ,
+                [Hep B Date],
+                [Measles] ,
+                [Measles Date] ,
+                [Mumps] ,
+                [Mumps Date],
+                [Rubella],
+                [Rubella Date],
+                [Varicella] ,
+                [Varicella Date] ,
+                [Full Face Respirator] ,
+                [Full Face Respirator Date] ,
+                [Standard Respirator] ,
+                [Standard Respirator Date] ,
+                [Tdap],
+                [Tdap Date],
+                [TB West Campus] ,
+                [TB West Campus Date] ,
+                [Supervisor Email],
+                [processed] ,
+                [rowid]
 
-                )
-
-
-  select
-     Email,
- 	[Person Type] ,
- 	[Employee Status] ,
- 	[Total Compliance],
- 	[Hep B] ,
-    [Hep B Date],
- 	[Measles] ,
-    [Measles Date] ,
- 	[Mumps] ,
-    [Mumps Date],
- 	[Rubella],
-    [Rubella Date],
- 	[Varicella] ,
-    [Varicella Date] ,
-    [Full Face Respirator] ,
-    [Full Face Respirator Date] ,
-    [Standard Respirator] ,
-    [Standard Respirator Date] ,
-    [Tdap],
-    [Tdap Date],
- 	[TB West Campus] ,
-    [TB West Campus Date] ,
- 	[Supervisor Email],
-    [processed] ,
- 	[rowid]
+                            )
 
 
-              from  onprc_ehr_compliancedb.OccHealth_Data
-	     where processed is null
+              select
+                 Email,
+                [Person Type] ,
+                [Employee Status] ,
+                [Total Compliance],
+                [Hep B] ,
+                [Hep B Date],
+                [Measles] ,
+                [Measles Date] ,
+                [Mumps] ,
+                [Mumps Date],
+                [Rubella],
+                [Rubella Date],
+                [Varicella] ,
+                [Varicella Date] ,
+                [Full Face Respirator] ,
+                [Full Face Respirator Date] ,
+                [Standard Respirator] ,
+                [Standard Respirator Date] ,
+                [Tdap],
+                [Tdap Date],
+                [TB West Campus] ,
+                [TB West Campus Date] ,
+                [Supervisor Email],
+                [processed] ,
+                [rowid]
 
-	 order by email
 
-      	 If @@Error <> 0
-	 GoTo Err_Proc
+                          from  onprc_ehr_compliancedb.OccHealth_Data
+                     where processed is null
+
+                 order by email
+
+                     If @@Error <> 0
+                 GoTo Err_Proc
 
 
 
      END
+     ELSE             ------ No new entries exit
+       BEGIN
+
+         GOTO No_Records
+
+       END
 
                         --- Initialize Varaibles
 
@@ -269,8 +275,7 @@ BEGIN
                               From onprc_ehr_compliancedb.OccHealth_Data ss  Where ss.rowid = @OccHealthID
 
 
-      	                        If @@Error <> 0
-	                                GoTo Err_Proc
+      	                       GOTO Next_Record
 
 
                  END  ----
