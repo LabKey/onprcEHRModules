@@ -103,7 +103,7 @@
                         <displayWidth>100</displayWidth>
                     </column>
                     <column columnName="Processed">
-                        <columnTitle>Processed</columnTitle>
+                        <columnTitle>Record Status</columnTitle>
                         <displayWidth>100</displayWidth>
                     </column>
 
