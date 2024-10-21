@@ -26,11 +26,11 @@
                         <displayWidth>100</displayWidth>
                     </column>
                     <column columnName="Measles">
-                        <columnTitle>Mealses</columnTitle>
+                        <columnTitle>Measles</columnTitle>
                         <displayWidth>100</displayWidth>
                     </column>
                     <column columnName="Measles Date">
-                        <columnTitle>Heales Date</columnTitle>
+                        <columnTitle>Measles Date</columnTitle>
                         <formatString>yyyy-MM-dd</formatString>
                         <displayWidth>100</displayWidth>
                     </column>
@@ -39,7 +39,7 @@
                         <displayWidth>100</displayWidth>
                     </column>
                     <column columnName="Mumps Date">
-                        <columnTitle>Humps Date</columnTitle>
+                        <columnTitle>Mumps Date</columnTitle>
                         <formatString>yyyy-MM-dd</formatString>
                         <displayWidth>100</displayWidth>
                     </column>
