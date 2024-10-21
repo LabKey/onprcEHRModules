@@ -17,24 +17,24 @@
 **
 **
 **
-Prime - Compliance Name								Sharepoint Extract
-Occupational Health - Hep B Compliant - Level 1				Hep B
+Prime - Compliance Name								                        Sharepoint Extract
+Occupational Health - Hep B Compliant - Level 1				                Hep B
 Occupational Health - Hep B Compliant - Level 2
-Occupational Health - Measles Compliant						Measles
+Occupational Health - Measles Compliant						                Measles
 Occupational Health - Measles Compliant - Initial
-Occupational Health - Mumps Compliant						Mumps
-Occupational Health - Rubella Compliant						Rubella
-Occupational Health - Varicella Compliant					Varicella
-Tdap Compliant									            Tdap
-Occupational Health - Respiratory Protection - CAPR Training			Full Face Respirator
+Occupational Health - Mumps Compliant						                Mumps
+Occupational Health - Rubella Compliant						                Rubella
+Occupational Health - Varicella Compliant					                Varicella
+Tdap Compliant									                            Tdap
+Occupational Health - Respiratory Protection - CAPR Training			    Full Face Respirator
 Occupational Health - Respiratory Protection - N95 Respirator Fit Testing	Standard Respirator
-Occupational Health - Flu Compliant						    Flu
-TB Surveillance Compliant							         TB Health Surveillance
-Occupational Health - TB Compliant - Annual					TB Annual
-Occupational Health - TB Compliant - Initial				TB West Campus
+Occupational Health - Flu Compliant						                    Flu
+TB Surveillance Compliant							                        TB Health Surveillance
+Occupational Health - TB Compliant - Annual					                TB Annual
+Occupational Health - TB Compliant - Initial				                TB West Campus
 Occupational Health - TB Compliant - Due in 6 Months
-AIRC MRI Compliant								            AIRC MRI
-Clinical MRI Compliant								        Clinical MRI
+AIRC MRI Compliant								                            AIRC MRI
+Clinical MRI Compliant								                        Clinical MRI
 
 The following dates are not required entries:
 
@@ -853,7 +853,7 @@ BEGIN
                   				values(
                    				        @employeeid,
                     			        'Occupational Health - Respiratory Protection - N95 Respirator Fit Testing',
-                    			         @Measlesdate,
+                    			         @StandardRespiratordate,
                     			         @trainer,
                     			         'CD170458-C55F-102F-9907-5107380A54BE',
                     			         getdate(),
