@@ -20,6 +20,7 @@
         <column name="Full Face Respirator"/>
         <column name="Full Face Respirator Date"/>
         <column name="Standard Respirator"/>
+        <column name="Standard Respirator Date"/>
         <column name="TB West Campus"/>
         <column name="TB West Campus Date"/>
         <column name="Supervisor Email"/>
