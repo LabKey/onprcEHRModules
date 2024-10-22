@@ -302,7 +302,7 @@ BEGIN
                                  Set @comment = @comment + ' Complete'
 
 
-                      If not exists( Select * from ehr_compliancedb.completiondates Where employeeid = @employeeid And requirementname = 'Occupational Health - Hep B Compliant - Level 1'
+                      If not exists( Select * from ehr_compliancedb.completiondates Where employeeid = @employeeid And requirementname = 'Occupational Health - Hep B Compliant - Level 2'
                                     And date = @HepBdate And @HepBdate is not null)
 
                         BEGIN
@@ -321,7 +321,7 @@ BEGIN
          					)
         				values(
          				        @employeeid,
-          			            'Occupational Health - Hep B Compliant - Level 1',
+          			            'Occupational Health - Hep B Compliant - Level 2',
           			            @HepBdate,
           			            @trainer,
           			            'CD170458-C55F-102F-9907-5107380A54BE',
