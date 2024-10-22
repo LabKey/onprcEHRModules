@@ -1,0 +1,40 @@
+<customView xmlns="http://labkey.org/data/xml/queryCustomView">
+    <columns>
+        <column name="Email"/>
+        <column name="Person Type"/>
+        <column name="Employee Status"/>
+        <column name="Total Compliance"/>
+        <column name="West Campus"/>
+        <column name="Hep B"/>
+        <column name="Hep B Date"/>
+        <column name="Measles"/>
+        <column name="Measles Date"/>
+        <column name="Mumps"/>
+        <column name="Mumps Date"/>
+        <column name="Rubella"/>
+        <column name="Rubella Date"/>
+        <column name="Varicella"/>
+        <column name="Varicella Date"/>
+        <column name="Tdap"/>
+        <column name="Tdap Date"/>
+        <column name="Full Face Respirator"/>
+        <column name="Full Face Respirator Date"/>
+        <column name="Standard Respirator"/>
+        <column name="Standard Respirator Date"/>
+        <column name="TB West Campus"/>
+        <column name="TB West Campus Date"/>
+        <column name="Supervisor Email"/>
+        <column name="Processed"/>
+
+
+
+
+    </columns>
+    <sorts>
+        <sort column="Email" descending="false"/>
+
+    </sorts>
+<!--    <filters>-->
+<!--        <filter column="processed" operator="isblank"/>-->
+<!--    </filters>-->
+</customView>

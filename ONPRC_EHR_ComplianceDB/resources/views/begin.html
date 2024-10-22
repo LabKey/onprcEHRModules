@@ -82,7 +82,9 @@ Ext4.onReady(function(){
             },{
                 name: 'Edit form with Task ID', url: LABKEY.ActionURL.buildURL('ONPRC_EHR_ComplianceDB', 'enterData.view',(ctx ? ctx['EmployeeContainer'] : null), null)
             },{
-                name: 'SciShield input form',url: '<%=contextPath%>/query' + container + '/executeQuery.view?schemaName=onprc_ehr_compliancedb&query.queryName=SciShield_Data'
+                name: 'SciShield Upload data site',url: '<%=contextPath%>/query' + container + '/executeQuery.view?schemaName=onprc_ehr_compliancedb&query.queryName=SciShield_Data'
+            },{
+                name: 'Occupational Health Upload data site',url: '<%=contextPath%>/query' + container + '/executeQuery.view?schemaName=onprc_ehr_compliancedb&query.queryName=OccHealth_Data'
             }]
         },{
 

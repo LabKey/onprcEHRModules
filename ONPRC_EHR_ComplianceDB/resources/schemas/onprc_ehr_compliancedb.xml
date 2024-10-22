@@ -157,5 +157,310 @@
         </columns>
     </table>
 
+    <table tableName="OccHealth_Data" tableDbType="TABLE">
+        <auditLogging>DETAILED</auditLogging>
+        <javaCustomizer class="org.labkey.ldk.query.DefaultTableCustomizer" />
+        <tableTitle>OccHealth Data</tableTitle>
+        <pkColumnName>rowid</pkColumnName>
+        <columns>
+            <column columnName="rowid">
+                <isAutoInc>true</isAutoInc>
+                <isKeyField>true</isKeyField>
+                <columnTitle>Key</columnTitle>
+            </column>
+            <column columnName="Email">
+                <columnTitle>Email</columnTitle>
+            </column>
+            <column columnName="Person Type">
+                <columnTitle>Person Type</columnTitle>
+             </column>
+
+            <column columnName="Employee Status">
+                <columnTitle>Employee Status</columnTitle>
+            </column>
+
+            <column columnName="Total Compliance">
+                <columnTitle>Total Compliance</columnTitle>
+            </column>
+            <column columnName="Hep B">
+                <columnTitle>Hep B</columnTitle>
+            </column>
+            <column columnName="Hep B Date">
+                <columnTitle>Hep B</columnTitle>
+            </column>
+            <column columnName="Measles">
+            <columnTitle>Measles</columnTitle>
+             </column>
+            <column columnName="Measles Date">
+                <columnTitle>Measles Date</columnTitle>
+            </column>
+            <column columnName="Mumps">
+                <columnTitle>Mumps</columnTitle>
+            </column>
+            <column columnName="Mumps Date">
+                <columnTitle>Mumps DAte</columnTitle>
+            </column>
+            <column columnName="Rubella">
+            <columnTitle>Rubella</columnTitle>
+        </column>
+            <column columnName="Rubella Date">
+                <columnTitle>Rubella Date</columnTitle>
+            </column>
+            <column columnName="Varicella">
+            <columnTitle>Varicella</columnTitle>
+            </column>
+            <column columnName="Varicella Date">
+                <columnTitle>Varicella Date</columnTitle>
+            </column>
+            <column columnName="Full Face Respirator">
+                <columnTitle>Full Face Respirator</columnTitle>
+            </column>
+            <column columnName="Full Face Respirator Date">
+                <columnTitle>Full Face Repirator Date</columnTitle>
+            </column>
+            <column columnName="Standard Respirator">
+                <columnTitle>Standard Respirator</columnTitle>
+            </column>
+            <column columnName="Standard Respirator Date">
+                <columnTitle>Standard Respirator Date</columnTitle>
+            </column>
+            <column columnName="Tdap">
+                <columnTitle>Tdap</columnTitle>
+            </column>
+            <column columnName="Tdap Date">
+                <columnTitle>Tdap Date</columnTitle>
+            </column>
+       <column columnName="TB West Campus">
+        <columnTitle>TB West Campus</columnTitle>
+        </column>
+            <column columnName="TB West Campus Date">
+                <columnTitle>TB West Campus Date</columnTitle>
+            </column>
+
+          <column columnName="Supervisor Email">
+            <columnTitle>Supervisor Email</columnTitle>
+           </column>
+            <column columnName="processed">
+                <columnTitle>Record Status</columnTitle>
+            </column>
+            <column columnName="container">
+                <isUserEditable>false</isUserEditable>
+                <isHidden>true</isHidden>
+                <fk>
+                    <fkDbSchema>core</fkDbSchema>
+                    <fkTable>containers</fkTable>
+                    <fkColumnName>entityid</fkColumnName>
+                </fk>
+            </column>
+             <column columnName="createdby">
+                <isUserEditable>false</isUserEditable>
+                <nullable>true</nullable>
+                <isHidden>true</isHidden>
+            </column>
+            <column columnName="created">
+                <isUserEditable>false</isUserEditable>
+                <nullable>true</nullable>
+                <isHidden>true</isHidden>
+            </column>
+            <column columnName="modifiedby">
+                <isUserEditable>false</isUserEditable>
+                <nullable>true</nullable>
+                <isHidden>true</isHidden>
+            </column>
+            <column columnName="modified">
+                <isUserEditable>false</isUserEditable>
+                <nullable>true</nullable>
+                <isHidden>true</isHidden>
+            </column>
+
+    </columns>
+    </table>
+
+
+    <table tableName="OccHealthTemp" tableDbType="TABLE" useColumnOrder="true">
+        <tableTitle>OccHealth Temp</tableTitle>
+        <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+        <auditLogging>DETAILED</auditLogging>
+        <columns>
+            <column columnName="searchID">
+                <isAutoInc>true</isAutoInc>
+                <isKeyField>true</isKeyField>
+                <columnTitle>SearchID</columnTitle>
+            </column>
+            <column columnName="Email">
+                <columnTitle>Email</columnTitle>
+            </column>
+            <column columnName="Person Type">
+                <columnTitle>Person Type</columnTitle>
+            </column>
+            <column columnName="Employee Status">
+                <columnTitle>Employee Status</columnTitle>
+            </column>
+            <column columnName="Total Compliance">
+                <columnTitle>Total Compliance</columnTitle>
+            </column>
+            <column columnName="Hep B">
+                <columnTitle>Hep B</columnTitle>
+            </column>
+            <column columnName="Hep B Date">
+                <columnTitle>Hep B</columnTitle>
+            </column>
+            <column columnName="Measles">
+                <columnTitle>Measles</columnTitle>
+            </column>
+            <column columnName="Measles Date">
+                <columnTitle>Measles Date</columnTitle>
+            </column>
+            <column columnName="Mumps">
+                <columnTitle>Mumps</columnTitle>
+            </column>
+            <column columnName="Mumps Date">
+                <columnTitle>Mumps DAte</columnTitle>
+            </column>
+            <column columnName="Rubella">
+                <columnTitle>Rubella</columnTitle>
+            </column>
+            <column columnName="Rubella Date">
+                <columnTitle>Rubella Date</columnTitle>
+            </column>
+            <column columnName="Varicella">
+                <columnTitle>Varicella</columnTitle>
+            </column>
+            <column columnName="Varicella Date">
+            <columnTitle>Varicella Date</columnTitle>
+            </column>
+            <column columnName="Full Face Respirator">
+                <columnTitle>Full Face Repirator</columnTitle>
+            </column>
+            <column columnName="Full Face Respirator Date">
+                <columnTitle>Full Face Repirator Date</columnTitle>
+            </column>
+            <column columnName="Standard Respirator">
+                <columnTitle>Standard Respirator</columnTitle>
+            </column>
+            <column columnName="Standard Respirator Date">
+                <columnTitle>Standard Respirator Date</columnTitle>
+            </column>
+            <column columnName="Tdap">
+                <columnTitle>Tdap</columnTitle>
+            </column>
+            <column columnName="Tdap Date">
+                <columnTitle>Tdap Date</columnTitle>
+            </column>
+
+            <column columnName="TB West Campus">
+                <columnTitle>TB West Campus</columnTitle>
+            </column>
+            <column columnName="TB West Campus Date">
+                <columnTitle>TB West Campus Date</columnTitle>
+            </column>
+
+            <column columnName="Supervisor Email">
+                <columnTitle>Supervisor Email</columnTitle>
+            </column>
+            <column columnName="trainer">
+                <columnTitle>Trainer</columnTitle>
+            </column>
+            <column columnName="processed">
+                <columnTitle>Processed</columnTitle>
+            </column>
+            <column columnName="rowid">
+                <columnTitle>Row ID</columnTitle>
+            </column>
+        </columns>
+    </table>
+
+    <table tableName="OccHealthMasterTemp" tableDbType="TABLE" useColumnOrder="true">
+        <tableTitle>OccHealth Master Temp</tableTitle>
+        <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+        <auditLogging>DETAILED</auditLogging>
+        <columns>
+            <column columnName="searchID">
+                <columnTitle>Search ID</columnTitle>
+                <isAutoInc>true</isAutoInc>
+                <isKeyField>true</isKeyField>
+            </column>
+
+            <column columnName="Email">
+                <columnTitle>Email</columnTitle>
+            </column>
+            <column columnName="Person Type">
+                <columnTitle>Person Type</columnTitle>
+            </column>
+            <column columnName="Employee Status">
+                <columnTitle>Employee Status</columnTitle>
+            </column>
+            <column columnName="Total Compliance">
+                <columnTitle>Total Compliance</columnTitle>
+            </column>
+            <column columnName="Hep B">
+                <columnTitle>Hep B</columnTitle>
+            </column>
+            <column columnName="Hep B Date">
+                <columnTitle>Hep B Date</columnTitle>
+            </column>
+            <column columnName="Measles">
+                <columnTitle>Measles</columnTitle>
+            </column>
+            <column columnName="Measles Date">
+                <columnTitle>Measles Date</columnTitle>
+            </column>
+            <column columnName="Mumps">
+                <columnTitle>Mumps</columnTitle>
+            </column>
+            <column columnName="Mumps Date">
+                <columnTitle>Mumps DAte</columnTitle>
+            </column>
+            <column columnName="Rubella">
+                <columnTitle>Rubella</columnTitle>
+            </column>
+            <column columnName="Rubella Date">
+                <columnTitle>Rubella Date</columnTitle>
+            </column>
+            <column columnName="Varicella">
+                <columnTitle>Varicella</columnTitle>
+            </column>
+            <column columnName="Varicella Date">
+                <columnTitle>Varicella Date</columnTitle>
+            </column>
+            <column columnName="Full Face Repirator">
+                <columnTitle>Full Face Repirator</columnTitle>
+            </column>
+            <column columnName="Full Face Repirator Date">
+                <columnTitle>Full Face Repirator Date</columnTitle>
+            </column>
+            <column columnName="Standard Respirator">
+                <columnTitle>Standard Respirator</columnTitle>
+            </column>
+            <column columnName="Standard Respirator Date">
+                <columnTitle>Standard Respirator Date</columnTitle>
+            </column>
+            <column columnName="Tdap">
+                <columnTitle>Tdap</columnTitle>
+            </column>
+            <column columnName="Tdap Date">
+                <columnTitle>Tdap Date</columnTitle>
+            </column>
+            <column columnName="TB West Campus">
+                <columnTitle>TB West Campus</columnTitle>
+            </column>
+            <column columnName="TB West Campus Date">
+                <columnTitle>TB West Campus Date</columnTitle>
+            </column>
+            <column columnName="Supervisor Email">
+                <columnTitle>Supervisor Email</columnTitle>
+            </column>
+            <column columnName="trainer">
+                <columnTitle>Trainer</columnTitle>
+            </column>
+            <column columnName="processed">
+                <columnTitle>Processed</columnTitle>
+            </column>
+            <column columnName="rowid">
+                <columnTitle>Row ID</columnTitle>
+            </column>
+       </columns>
+    </table>
+
 
 </tables>
