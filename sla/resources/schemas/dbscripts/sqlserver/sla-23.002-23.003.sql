@@ -15,18 +15,18 @@ GO
 CREATE TABLE sla.weaning (
     rowid int IDENTITY(1,1) NOT NULL,
     investigator varchar(250),
-    date DATETIME,
+    date DATETIME,  -- Pup's DOB
     project varchar(200),
     vendorLocation varchar(200),
-    DOB DATETIME,
-    DOM DATETIME,
+    DOB DATETIME,   --Dam's DOB
+    DOM DATETIME,   --Date of Mating
     species varchar(100),
     sex varchar(100),
     strain varchar (200),
     numAlive INTEGER,
     numDead INTEGER,
     totalPups INTEGER,
-    dateofTransfer DATETIME,
+    dateofTransfer DATETIME,    --The date of transfer into SLA tables
     createdBy USERID,
     created DATETIME,
     modifiedBy USERID,
@@ -93,7 +93,7 @@ DECLARE
 BEGIN
     --Check if any rodents age is 21 days and above and not transferred into SLA tables
     Select @WCount = COUNT(*) From sla.weaning
-    Where numAlive > 0 And dateofTransfer is null And DateDiff(dd, DOB, GETDATE()) >= 21
+    Where numAlive > 0 And dateofTransfer is null And DateDiff(dd, date, GETDATE()) >= 21
 
       --Found entries, so, insert those records into SLA.purchase and SLA.purchasedetails tables
     If @WCount > 0
@@ -103,14 +103,14 @@ BEGIN
 
         --Move the weaning entries into a temp table
         INSERT INTO sla.TempWeaning (weaning_rowid, investigator, date, project, vendorlocation, DOB, DOM, species, sex, strain, numAlive, created)
-        Select rowid, investigator, date, project, vendorlocation, DOB, DOM, species,
+        Select rowid, investigator, date, project, vendorlocation, date, DOM, species,
         CASE
             WHEN sex = 'F' THEN 'Female'
             WHEN sex = 'M' THEN 'Male'
             ELSE 'Male or Female'
         END AS sex,
         strain, numAlive, GETDATE() From sla.weaning
-        Where numAlive > 0 And dateofTransfer is null And DateDiff(dd, DOB, GETDATE()) >= 21
+        Where numAlive > 0 And dateofTransfer is null And DateDiff(dd, date, GETDATE()) >= 21
 
             --Set the counter
         Select top 1 @counter = rowid from sla.Tempweaning order by rowid asc
@@ -128,10 +128,10 @@ BEGIN
             Select @center_project = project, @alias = account From ehr.project Where name = (Select project From sla.TempWeaning Where rowid = @counter)
 
             --Get the age of the rodent and weaning_rowid, species, sex, strain and vendorlocation
-            Select @ageindays = DateDiff(dd, DOB, GETDATE()),@weaning_rowid = weaning_rowid,
+            Select @ageindays = DateDiff(dd, date, GETDATE()),@weaning_rowid = weaning_rowid,
                    @species = species, @sex = sex, @strain = strain, @vendorlocation = vendorlocation,
-                   @RequestedArrivalDate = DateAdd(dd, 21, DOB), @ExpectedArrivalDate = DateAdd(dd, 21, DOB),
-                   @slaDOB = DOB, @numAnimalsOrdered = numAlive
+                   @RequestedArrivalDate = DateAdd(dd, 21, date), @ExpectedArrivalDate = DateAdd(dd, 21, date),
+                   @slaDOB = date, @numAnimalsOrdered = numAlive
             From sla.TempWeaning Where rowid = @counter
 
             --Insert weaning data into sla.purchase table as a pending order
