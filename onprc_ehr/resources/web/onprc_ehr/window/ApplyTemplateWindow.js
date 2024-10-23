@@ -315,7 +315,8 @@ Ext4.define('ONPRC_EHR.window.ApplyTemplateWindow', {
             date: date
         };
 
-        if   (this.down('#subjectIds')){
+        if   (this.down('#subjectIds'))
+        {
             var   subjectArray = LDK.Utils.splitIds(this.down('#subjectIds').getValue(),true);
             Ext4.Array.each(subjectArray, function(subj){
                  this.animalId = subj;
@@ -329,7 +330,8 @@ Ext4.define('ONPRC_EHR.window.ApplyTemplateWindow', {
                             ],
                             success: function (data) {
                                 if (data.rows && data.rows.length) {
-                                    weight = data.rows[0].Id/MostRecentWeight/MostRecentWeight;
+                                    weight = data.rows[0]["Id/MostRecentWeight/MostRecentWeight"];
+
                                 }
                             }
 
