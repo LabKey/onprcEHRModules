@@ -30,9 +30,15 @@
                     },{
                         name: 'Surgeries Entered',
                         url: LABKEY.ActionURL.buildURL('ehr', 'enterData', ctx['EHRStudyContainer'])
-                    },{
+                    }]
+                },{
+                    header: 'Notifications',
+                    items: [{
                         name: 'Surgery Notification',
                         url: LABKEY.ActionURL.buildURL('ldk', 'runNotification', null, {key: 'org.labkey.onprc_ssu.notification.SSU_Notification'})
+                    },{
+                        name: 'Surgery Rounds Notification',
+                        url: LABKEY.ActionURL.buildURL('ldk', 'runNotification', null, {key: 'org.labkey.onprc_ssu.notification.SSU_RoundsNotification'})
                     }]
                 },{
                     header: 'Reports',
