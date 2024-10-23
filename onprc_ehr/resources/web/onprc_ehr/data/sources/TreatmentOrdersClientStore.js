@@ -43,11 +43,7 @@ Ext4.define('ONPRC_EHR.data.TreatmentOrdersClientStore', {
                 record.set('remark', '');
                 record.endEdit(true);
             }
-            // if (record.get('code') == 'E-85760' && record.get('remark') == null){
-            //     record.beginEdit();
-            //     record.set('remark', 'Please make a clinical prime entry at each administration once the administration is complete.');
-            //     record.endEdit(true);
-            // }
+
 
             if (!this.formularyStore){
                 LDK.Utils.logToServer({
@@ -73,6 +69,12 @@ Ext4.define('ONPRC_EHR.data.TreatmentOrdersClientStore', {
                     }
 
                     var def = values[fieldName];
+                    if (fieldName == "amount" && Ext4.isEmpty(def)) {
+                        continue;
+                    }
+                    if (fieldName == "volume" && Ext4.isEmpty(def)) {
+                        continue;
+                    }
                     if (Ext4.isDefined(def)){
                         params[this.fieldMap[fieldName]] = def;
                     }
