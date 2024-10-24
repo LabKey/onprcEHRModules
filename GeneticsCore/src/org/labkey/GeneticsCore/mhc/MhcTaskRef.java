@@ -63,12 +63,12 @@ public class MhcTaskRef implements TaskRefTask
 
         for (String subject : subjects)
         {
-            processSubject(job, subject);
-
             if (job.isCancelled())
             {
                 throw new CancelledException();
             }
+
+            processSubject(job, subject);
         }
 
         job.getLogger().info("Done!");
