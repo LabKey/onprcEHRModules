@@ -299,7 +299,35 @@ Ext4.define('ONPRC_Billing.window.ReverseChargeWindow', {
                     }
                 }]
             });
-
+            // added per request in Finance Tracker Issue 11380
+            //debit alias
+            items.push({
+                xtype: 'checkbox',
+                boxLabel: 'Change Debit Alias',
+                itemId: 'doChangedebitAlias',
+                listeners: {
+                    change: function(field, val){
+                        field.up('panel').down('#debitPanel').setVisible(val);
+                    }
+                }
+            },{
+                xtype: 'panel',
+                itemId: 'debitPanel',
+                hidden: true,
+                defaults: {
+                    border: false,
+                    style: 'margin-left: 20px;'
+                },
+                items: [{
+                    xtype: 'textfield',
+                    itemId: 'debitAliasField',
+                    width: 400,
+                    labelWidth: 150,
+                    fieldLabel: 'Debit Alias',
+                    displayField: 'debitAlias',
+                    valueField: 'debitAlias'
+                }]
+            });
             //credit alias
             items.push({
                 xtype: 'checkbox',
@@ -396,7 +424,10 @@ Ext4.define('ONPRC_Billing.window.ReverseChargeWindow', {
                 return;
 
             }
-
+            if (this.down('#doChangeDebitAlias').getValue() && !this.down('#debitAliasField').getValue()){
+                Ext4.Msg.alert('Error', 'You have checked that you want to alter the debit alias, but did not supply the new alias.  Either enter an alias or uncheck the field');
+                return;
+            }
             if (this.down('#doChangeCreditAlias').getValue() && !this.down('#creditAliasField').getValue()){
                 Ext4.Msg.alert('Error', 'You have checked that you want to alter the credit alias, but did not supply the new alias.  Either enter an alias or uncheck the field');
                 return;
