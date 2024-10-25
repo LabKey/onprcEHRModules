@@ -3,7 +3,7 @@
         <column name="email"/>
         <column name="employeeid"/>
         <column name="lastname"/>
-        <column name="firstame"/>
+        <column name="firstname"/>
         <column name="host"/>
         <column name="unit"/>
         <column name="category"/>
