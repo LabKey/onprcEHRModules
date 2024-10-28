@@ -1321,7 +1321,7 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
         log("Creating the blood draw request");
         goToProjectHome();
         clickAndWait(Locator.linkWithText("Manage Requests"));
-        waitAndClickAndWait(Locator.linkWithText("ASB SERVICES REQUEST"));
+        waitAndClickAndWait(Locator.linkWithText("ASB Services Request"));
         addBloodDrawRequest(animalId, now, "795644", "Heparin", 12);
 
         checker().withScreenshot("Blood request").verifyTrue("Expected error is not present", isAnyTextPresent(

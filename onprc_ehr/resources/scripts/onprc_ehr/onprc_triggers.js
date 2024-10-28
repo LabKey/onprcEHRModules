@@ -471,7 +471,7 @@ exports.init = function(EHR){
             var msg = triggerHelper.validateMenseFlagprocess(row.Id);
             if (msg)
             {
-                EHR.Server.Utils.addError(scriptErrors, 'category',  msg, 'ERROR');
+                EHR.Server.Utils.addError(scriptErrors, 'category',  msg, 'WARN');
             }
         }
 
