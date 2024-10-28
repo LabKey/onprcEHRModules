@@ -1,4 +1,4 @@
-- Author:	R. Blasa
+-- Author:	R. Blasa
 -- Created: 9-20-2024-2024
 -- Description:	Stored procedure program to create a static data set for Compliance Procedure REcent Test .sq;
 
