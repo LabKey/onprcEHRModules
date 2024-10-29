@@ -427,10 +427,10 @@ Ext4.define('ONPRC_Billing.window.ReverseChargeWindow', {
             }
             //added as part of Finance 11380 update by Gary
             //this issues is causing error
-           /* if (this.down('#doChangedebitAlias').getValue() && !this.down('#newDebitAlias').getValue()){
+           if (this.down('#doChangedebitAlias').getValue() && !this.down('#newDebitAliasField').getValue()){
                 Ext4.Msg.alert('Error', 'You have checked that you want to alter the debit alias, but did not supply the new alias.  Either enter an alias or uncheck the field');
                 return;
-            }*/
+            }
 
             if (this.down('#doChangeCreditAlias').getValue() && !this.down('#creditAliasField').getValue()){
                 Ext4.Msg.alert('Error', 'You have checked that you want to alter the credit alias, but did not supply the new alias.  Either enter an alias or uncheck the field');
@@ -489,13 +489,13 @@ Ext4.define('ONPRC_Billing.window.ReverseChargeWindow', {
                     toApply.debitedaccount = Ext4.String.trim(toApply.debitedaccount);
                 }
             }
-           /*//Added by Gary as part of 11380 update
-            if (this.down('#doChangeDebitlias').getValue()){
-                toApply.debitedaccount = this.down('##newDebitAlias'').getValue();
-                if (toApply.creditedaccount){
-                    toApply.creditedaccount = Ext4.String.trim(toApply.creditedaccount);
+           //Added by Gary as part of 11380 update
+            if (this.down('#doChangedebitAlias').getValue()){
+                toApply.debitedaccount = this.down('#newDebitAliasField').getValue();
+                if (toApply.debitedaccount){
+                    toApply.debitedaccount = Ext4.String.trim(toApply.debitedaccount);
                 }
-            }*/
+            }
             if (this.down('#doChangeCreditAlias').getValue()){
                 toApply.creditedaccount = this.down('#creditAliasField').getValue();
                 if (toApply.creditedaccount){
