@@ -1,0 +1,114 @@
+<script type="text/javascript" nonce="<%=scriptNonce%>">
+
+    Ext4.onReady(function (){
+        var webpart = <%=webpartContext%>;
+
+        Ext4.create('Ext.panel.Panel', {
+            renderTo: webpart.wrapperDivId,
+            border: false,
+            items: [{
+                xtype: 'panel',
+                border: false,
+                defaults: {
+                    border: false
+                },
+                items: [{
+                    html: 'This page contains links and reports designed to help manage MHC data.'
+                }]
+            },{
+                xtype: 'ldk-navpanel',
+                style: 'padding-top: 20px;',
+                border: false,
+                sections: [{
+                    header: 'Sample/Data QC',
+                    items: [{
+                        name: 'Subjects Discordant Between Genotyping Results and Readsets',
+                        url: LABKEY.ActionURL.buildURL('query', 'executeQuery.view', null, {
+                            schemaName: 'geneticscore',
+                            queryName: 'discordantSubjectIdsGrouped'
+                        })
+                    },{
+                        name: 'Genotyping Results Not Connected to an Analysis',
+                        url: LABKEY.ActionURL.buildURL('query', 'executeQuery.view', null, {
+                            schemaName: 'assay',
+                            queryName: 'GenotypeAssay.Genotype.Data',
+                            'query.analysisId/rowId~isblank': ''
+                        })
+                    },{
+                        name: 'Discordant Cached Results',
+                        url: LABKEY.ActionURL.buildURL('query', 'executeQuery.view', null, {
+                            schemaName: 'geneticscore',
+                            queryName: 'discordantCachedResults'
+                        })
+                    },{
+                        name: 'Analyses Using Non-Passing Readsets',
+                        url: LABKEY.ActionURL.buildURL('query', 'executeQuery.view', null, {
+                            schemaName: 'sequenceanalysis',
+                            queryName: 'sequence_analyses',
+                            'query.readset/status~isnonblank': null
+                        })
+                    }]
+                },{
+                    header: 'Data and Processing',
+                    items: [{
+                        name: 'All Analyses',
+                        url: LABKEY.ActionURL.buildURL('query', 'executeQuery.view', null, {
+                            schemaName: 'sequenceanalysis',
+                            queryName: 'sequence_analyses',
+                            'query.viewName': 'SBT Information',
+                            'query.readset~nonblank': null,
+                        })
+                    },{
+                        name: 'Analyses without Cached Results',
+                        url: LABKEY.ActionURL.buildURL('query', 'executeQuery.view', null, {
+                            schemaName: 'sequenceanalysis',
+                            queryName: 'sequence_analyses',
+                            'query.viewName': 'SBT Information',
+                            'query.readset~nonblank': null,
+                            'query.readset/status~isblank': null,
+                            'query.numCachedResults~gt': 0,
+                        })
+                    },{
+                        name: 'Readsets Without Alignments',
+                        url: LABKEY.ActionURL.buildURL('query', 'executeQuery.view', null, {
+                            schemaName: 'sequenceanalysis',
+                            queryName: 'sequence_readsets',
+                            'query.totalAlignments~eq': 0,
+                            'query.totalForwardReads~isnonblank': null,
+                            'query.status~isblank': null,
+                            'query.isArchived~eq': 0,
+                            'query.sort': 'name',
+                            'query.maxRows': 250
+                        })
+                    },{
+                        name: 'Cached MHC Typing Results (source data for PRIMe)',
+                        url: LABKEY.ActionURL.buildURL('query', 'executeQuery.view', null, {
+                            schemaName: 'geneticscore',
+                            queryName: 'mhc_data'
+                        })
+                    }]
+                },{
+                    header: 'Data Archival',
+                    items: [{
+                        name: 'Readsets Not Archived to SRA',
+                        url: LABKEY.ActionURL.buildURL('query', 'executeQuery.view', null, {
+                                    schemaName: 'sequenceanalysis',
+                                    queryName: 'sequence_readsets',
+                                    'query.totalForwardReads~isnonblank': null,
+                                    'query.isArchived~eq': 0
+                                }
+                        )
+                    },{
+                        name: 'BAM (not CRAM) Files',
+                        url: LABKEY.ActionURL.buildURL('query', 'executeQuery.view', null, {
+                                    schemaName: 'sequenceanalysis',
+                                    queryName: 'outputfiles',
+                                    'query.dataid/DataFileUrl~contains': '.bam'
+                                }
+                        )
+                    }]
+                }]
+            }]
+        });
+    });
+</script>

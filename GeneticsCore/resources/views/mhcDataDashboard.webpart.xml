@@ -1,0 +1,6 @@
+<webpart xmlns="http://labkey.org/data/xml/webpart" title="MHC Typing Dashboard">
+    <view name="mhcDataDashboard"/>
+    <locations>
+        <location name="body"/>
+    </locations>
+</webpart>
