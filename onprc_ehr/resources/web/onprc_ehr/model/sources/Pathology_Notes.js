@@ -90,7 +90,15 @@ EHR.model.DataModelManager.registerMetadata('Necropsy_Notes', {
         'study.encounters': {
             project: {
                 xtype: 'onprc_ehr-projectentryfield'
-                 }
+                 },
+            filename: {
+                 hidden: false,
+                 shownInGrid: true,
+                 label: 'Pdf File',
+                 columnConfig: {
+                         width: 200
+                     }
+                }
         },
         'onprc_ehr.encounter_summaries_remarks': {
             Id: {
