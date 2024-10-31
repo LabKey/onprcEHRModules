@@ -18,6 +18,14 @@ EHR.model.DataModelManager.registerMetadata('Biopsy_Notes', {
             project: {
                 xtype: 'onprc_ehr-projectentryfield'
             },
+             filename: {
+                 hidden: false,
+                 shownInGrid: true,
+                 label: 'Pdf File',
+                 columnConfig: {
+                         width: 200
+                     }
+                },
             remark: {
                 defaultValue: 'CLINICAL HISTORY: \n\n\nGROSS DESCRIPTION: \n\n\nHISTOLOGIC DIAGNOSIS: \n\n\nCOMMENTS: \n\n\n',
                 hidden: false
