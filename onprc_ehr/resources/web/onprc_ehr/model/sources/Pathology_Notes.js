@@ -94,7 +94,7 @@ EHR.model.DataModelManager.registerMetadata('Necropsy_Notes', {
             filename: {
                  hidden: false,
                  shownInGrid: true,
-                 label: 'Pdf File',
+                 label: 'PDF File',
                  columnConfig: {
                          width: 200
                      }
