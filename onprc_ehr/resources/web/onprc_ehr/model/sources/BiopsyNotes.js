@@ -21,7 +21,7 @@ EHR.model.DataModelManager.registerMetadata('Biopsy_Notes', {
              filename: {
                  hidden: false,
                  shownInGrid: true,
-                 label: 'Pdf File',
+                 label: 'PDF File',
                  columnConfig: {
                          width: 200
                      }
