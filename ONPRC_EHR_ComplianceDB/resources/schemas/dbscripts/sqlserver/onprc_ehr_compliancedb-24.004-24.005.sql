@@ -22,7 +22,7 @@
 	[mostrecentcompleted_date] [smalldatetime] NULL,
 	[comment] [varchar](4000) NULL,
 	[snooze_date] [smalldatetime] NULL,
-	[months_until_renewal] [decimal](4, 1) NULL,
+	[months_until_renewal] [Float] NULL,
 	[requirement_name_type] [varchar](1000) NULL
 
  ) ON [PRIMARY]
@@ -87,7 +87,7 @@ BEGIN
 
         select b.requirementname,
                a.employeeid,
-               string_agg(b.unit,char(10)) as unit,
+               string_agg(a.unit,char(10)) as unit,
                string_agg(a.category,char(10)) as category,
          	  (select top 1 h.trackingflag from ehr_compliancedb.requirementspercategory h where h.requirementname = b.requirementname) as trackingflag,
               (select h.email from ehr_compliancedb.employees h where h.employeeid = a.employeeid) as  email,
@@ -131,7 +131,7 @@ BEGIN
 
                            ELSE ( select  (tt.expireperiod) - ( datediff(month,max(pq.date), getdate())) from  ehr_compliancedb.requirements tt, ehr_compliancedb.completiondates pq where   tt.requirementname =   b.requirementname and pq.requirementname = tt.requirementname and pq.employeeid = a.employeeid group by tt.expireperiod )
 
-                           END  AS DECIMAL)  AS MonthsUntilRenewal
+                           END  AS Float)  AS MonthsUntilRenewal
 
 
 
@@ -192,7 +192,7 @@ BEGIN
 
                            ELSE ( select  (tt.expireperiod) - ( datediff(month,max(pq.date), getdate())) from  ehr_compliancedb.requirements tt, ehr_compliancedb.completiondates pq where   tt.requirementname =   a.requirementname and pq.requirementname = tt.requirementname and pq.employeeid = a.employeeid group by tt.expireperiod )
 
-                           END  AS DECIMAL)  AS MonthsUntilRenewal
+                           END  AS Float)  AS MonthsUntilRenewal
 
 
         from  ehr_compliancedb.completiondates a
