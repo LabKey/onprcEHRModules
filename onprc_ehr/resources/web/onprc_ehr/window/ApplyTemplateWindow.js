@@ -270,12 +270,15 @@ Ext4.define('ONPRC_EHR.window.ApplyTemplateWindow', {
 
                             }
                             // Extract monkey's weight
+                            if data.dosage > 0 {
+                              var volume = this.Weights * data.dosage /date.concentration}
 
 
                         var obj2 = {};
                         obj2 = {
                             date: date,
-                            enddate: enddate
+                            enddate: enddate,
+                            Volume: volume
                         };
                             var newData = Ext4.apply({}, data);
                             newData = Ext4.apply(newData, obj);   //Adds monkey id
@@ -320,6 +323,7 @@ Ext4.define('ONPRC_EHR.window.ApplyTemplateWindow', {
             var   subjectArray = LDK.Utils.splitIds(this.down('#subjectIds').getValue(),true);
             Ext4.Array.each(subjectArray, function(subj){
                  this.animalId = subj;
+                 this.Weights = {};
                  LABKEY.Query.selectRows({
                             schemaName: 'study',
                             queryName: 'demographics',
@@ -331,6 +335,7 @@ Ext4.define('ONPRC_EHR.window.ApplyTemplateWindow', {
                             success: function (data) {
                                 if (data.rows && data.rows.length) {
                                     weight = data.rows[0]["Id/MostRecentWeight/MostRecentWeight"];
+                                    this.Weights = weight;
 
                                 }
                             }
