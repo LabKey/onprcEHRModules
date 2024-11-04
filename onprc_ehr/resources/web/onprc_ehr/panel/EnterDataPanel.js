@@ -341,13 +341,20 @@ Ext4.define('onprc_ehr.panel.EnterDataPanel', {
                                             xtype: 'ldk-linkbutton',
                                             text: 'Unapproved Requests',
                                             linkCls: 'labkey-text-link',
-                                             href: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'study', 'query.queryName': 'encounters', 'query.viewName': 'Requests', 'query.QCState/Label~eq': 'Request: Pending', 'query.chargetype~eq': item.chargeType})
-                                        },{
-                                            xtype: 'ldk-linkbutton',
-                                            text: 'Approved Requests',
-                                            linkCls: 'labkey-text-link',
                                             style: 'padding-left: 5px;',
+                                            href : LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'study', 'query.queryName': 'encounters', 'query.viewName': 'Requests', 'query.QCState/Label~eq': 'Request: Pending', 'query.chargetype~eq': item.chargeType})
+                                      },{
+                                             xtype: 'ldk-linkbutton',
+                                             text: 'Approved Requests',
+                                             linkCls: 'labkey-text-link',
+                                             style: 'padding-left: 5px;',
                                              href: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'study', 'query.queryName': 'encounters', 'query.viewName': 'Requests', 'query.QCState/Label~eq': 'Request: Approved', 'query.chargetype~eq': item.chargeType})
+                                      },{
+                                             xtype: 'ldk-linkbutton',
+                                             text: 'Scheduled Today',
+                                             linkCls: 'labkey-text-link',
+                                             style: 'padding-left: 5px;',
+                                             href: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'study', 'query.queryName': 'encounters', 'query.viewName': 'Requests', 'query.QCState/Label~eq': 'Request: Approved', 'query.chargetype~eq': item.chargeType, 'query.date~dateeq': Ext4.Date.format(new Date(), 'Y-m-d')})
 
                                         }]
                                     }
@@ -373,22 +380,101 @@ Ext4.define('onprc_ehr.panel.EnterDataPanel', {
                                         xtype: 'ldk-linkbutton',
                                         text: 'Unapproved Requests',
                                         linkCls: 'labkey-text-link',
-                                        href: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'study', 'query.queryName': 'Drug Administration', 'query.viewName': 'Requests', 'query.QCState/Label~eq': 'Request: Pending', 'query.chargetype~eq': item.chargeType})
+                                        href: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'study', 'query.queryName': 'Treatment Orders', 'query.viewName': 'Requests', 'query.QCState/Label~eq': 'Request: Pending', 'query.chargetype~eq': item.chargeType})
                                     },{
                                         xtype: 'ldk-linkbutton',
                                         text: 'Approved Requests',
                                         linkCls: 'labkey-text-link',
                                         style: 'padding-left: 5px;',
-                                        href: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'study', 'query.queryName': 'Drug Administration', 'query.viewName': 'Requests', 'query.QCState/Label~eq': 'Request: Approved', 'query.chargetype~eq': item.chargeType})
+                                        href: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'study', 'query.queryName': 'Treatment Orders', 'query.viewName': 'Requests', 'query.QCState/Label~eq': 'Request: Approved', 'query.chargetype~eq': item.chargeType})
+                                  },{
+                                         xtype: 'ldk-linkbutton',
+                                         text: 'Scheduled Today',
+                                         linkCls: 'labkey-text-link',
+                                         style: 'padding-left: 5px;',
+                                         href: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'study', 'query.queryName': 'Treatment Orders', 'query.viewName': 'Requests', 'query.QCState/Label~eq': 'Request: Approved', 'query.chargetype~eq': item.chargeType, 'query.date~dateeq': Ext4.Date.format(new Date(), 'Y-m-d')})
 
                                     }]
                                 }
                             },
                             items: [{
-                                name: 'Treatment Given Request',
+                                name: 'Treatment Orders Request',
                                 chargeType: 'Research Staff'
 
                             }]
+                       },{
+                          renderer: function(item){
+                              return {
+                                  layout: 'hbox',
+                                  bodyStyle: 'padding: 2px;background-color: transparent;',
+                                  defaults: {
+                                      border: false
+                                  },
+                                  items: [{
+                                      html: item.name + ':',
+                                      width: 200
+                                  },{
+                                      xtype: 'ldk-linkbutton',
+                                      text: 'Unapproved Requests',
+                                      linkCls: 'labkey-text-link',
+                                      href: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'study', 'query.queryName': 'Drug Administration', 'query.viewName': 'Requests', 'query.QCState/Label~eq': 'Request: Pending', 'query.chargetype~eq': item.chargeType})
+                                  },{
+                                      xtype: 'ldk-linkbutton',
+                                      text: 'Approved Requests',
+                                      linkCls: 'labkey-text-link',
+                                      style: 'padding-left: 5px;',
+                                      href: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'study', 'query.queryName': 'Drug Administration', 'query.viewName': 'Requests', 'query.QCState/Label~eq': 'Request: Approved', 'query.chargetype~eq': item.chargeType})
+                                },{
+                                       xtype: 'ldk-linkbutton',
+                                       text: 'Scheduled Today',
+                                       linkCls: 'labkey-text-link',
+                                       style: 'padding-left: 5px;',
+                                       href: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'study', 'query.queryName': 'Drug Administration', 'query.viewName': 'Requests', 'query.QCState/Label~eq': 'Request: Approved', 'query.chargetype~eq': item.chargeType, 'query.date~dateeq': Ext4.Date.format(new Date(), 'Y-m-d')})
+
+                                  }]
+                              }
+                          },
+                          items: [{
+                              name: 'Treatment Given Request',
+                              chargeType: 'Research Staff'
+
+                          }]
+                    },{
+                        renderer: function(item){
+                              return {
+                                  layout: 'hbox',
+                                  bodyStyle: 'padding: 2px;background-color: transparent;',
+                                  defaults: {
+                                      border: false
+                                  },
+                                  items: [{
+                                      html: item.name + ':',
+                                      width: 200
+                                                          },{
+                                          xtype: 'ldk-linkbutton',
+                                          text: 'Unapproved Requests',
+                                          linkCls: 'labkey-text-link',
+                                          href: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'study', 'query.queryName': 'Blood Draws', 'query.viewName': 'Requests', 'query.QCState/Label~eq': 'Request: Pending', 'query.chargetype~eq': item.chargeType})
+                                      },{
+                                          xtype: 'ldk-linkbutton',
+                                          text: 'Approved Requests',
+                                          linkCls: 'labkey-text-link',
+                                          style: 'padding-left: 5px;',
+                                          href: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'study', 'query.queryName': 'Blood Draws', 'query.viewName': 'Requests', 'query.QCState/Label~eq': 'Request: Approved', 'query.chargetype~eq': item.chargeType})
+                                      },{
+                                          xtype: 'ldk-linkbutton',
+                                          text: 'Scheduled Today',
+                                          linkCls: 'labkey-text-link',
+                                          style: 'padding-left: 5px;',
+                                          href: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'study', 'query.queryName': 'Blood Draws', 'query.viewName': 'Requests', 'query.QCState/Label~eq': 'Request: Approved', 'query.chargetype~eq': item.chargeType, 'query.date~dateeq': Ext4.Date.format(new Date(), 'Y-m-d')})
+                                      }]
+                                  }
+                              },
+                              items: [{
+                                  name: 'Blood Draw Request',      //Modified: 1-7-2017 R.Blasa restored back as ASB Services
+                                  chargeType: 'Research Staff'
+
+                              }]
                      },{
                         header: 'Colony Service Requests',
                         renderer: function(item){
