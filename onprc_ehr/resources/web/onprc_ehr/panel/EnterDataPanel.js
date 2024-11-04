@@ -324,8 +324,72 @@ Ext4.define('onprc_ehr.panel.EnterDataPanel', {
                             chargeType: 'DCM: ASB Services'
 
                         }]
-                    },{
-                        //header: 'Blood Draw Requests',
+                      },{
+//                         Added: 11-54-2024
+                                header: 'CMU Service Requests',
+                                renderer: function(item){
+                                    return {
+                                        layout: 'hbox',
+                                        bodyStyle: 'padding: 2px;background-color: transparent;',
+                                        defaults: {
+                                            border: false
+                                        },
+                                        items: [{
+                                            html: item.name + ':',
+                                            width: 200
+                                        },{
+                                            xtype: 'ldk-linkbutton',
+                                            text: 'Unapproved Requests',
+                                            linkCls: 'labkey-text-link',
+                                             href: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'study', 'query.queryName': 'encounters', 'query.viewName': 'Requests', 'query.QCState/Label~eq': 'Request: Pending', 'query.chargetype~eq': item.chargeType})
+                                        },{
+                                            xtype: 'ldk-linkbutton',
+                                            text: 'Approved Requests',
+                                            linkCls: 'labkey-text-link',
+                                            style: 'padding-left: 5px;',
+                                             href: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'study', 'query.queryName': 'encounters', 'query.viewName': 'Requests', 'query.QCState/Label~eq': 'Request: Approved', 'query.chargetype~eq': item.chargeType})
+
+                                        }]
+                                    }
+                                },
+                                items: [{
+                                    name: 'Procedure Request',
+                                    chargeType: 'Research Staff'
+
+                                }]
+
+                          },{
+                            renderer: function(item){
+                                return {
+                                    layout: 'hbox',
+                                    bodyStyle: 'padding: 2px;background-color: transparent;',
+                                    defaults: {
+                                        border: false
+                                    },
+                                    items: [{
+                                        html: item.name + ':',
+                                        width: 200
+                                    },{
+                                        xtype: 'ldk-linkbutton',
+                                        text: 'Unapproved Requests',
+                                        linkCls: 'labkey-text-link',
+                                        href: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'study', 'query.queryName': 'Drug Administration', 'query.viewName': 'Requests', 'query.QCState/Label~eq': 'Request: Pending', 'query.chargetype~eq': item.chargeType})
+                                    },{
+                                        xtype: 'ldk-linkbutton',
+                                        text: 'Approved Requests',
+                                        linkCls: 'labkey-text-link',
+                                        style: 'padding-left: 5px;',
+                                        href: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'study', 'query.queryName': 'Drug Administration', 'query.viewName': 'Requests', 'query.QCState/Label~eq': 'Request: Approved', 'query.chargetype~eq': item.chargeType})
+
+                                    }]
+                                }
+                            },
+                            items: [{
+                                name: 'Treatment Given Request',
+                                chargeType: 'Research Staff'
+
+                            }]
+                     },{
                         header: 'Colony Service Requests',
                         renderer: function(item){
                             return {
@@ -394,15 +458,13 @@ Ext4.define('onprc_ehr.panel.EnterDataPanel', {
                             }
                         },
                         items: [{
-                            //name: 'ASB Services',
                             name: 'Treatment Given Request',
                             chargeType: 'DCM: Colony Services'
 
                         }]
 
                     },{
-                        //header: 'Procedure Requests',
-                        renderer: function(item){
+                          renderer: function(item){
                             return {
                                 layout: 'hbox',
                                 bodyStyle: 'padding: 2px;background-color: transparent;',
@@ -433,7 +495,6 @@ Ext4.define('onprc_ehr.panel.EnterDataPanel', {
                             }
                         },
                         items: [{
-                            //name: 'ASB Services',
                             name: 'Procedure Request',
                             chargeType: 'DCM: Colony Services'
 

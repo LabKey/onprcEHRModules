@@ -604,6 +604,9 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         //Added: 9-5-2024  R.Blasa
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(BloodDrawFormType.class, this));
 
+        //Modified: 11-4-2024 R.Blasa
+        EHRService.get().registerFormType(new DefaultDataEntryFormFactory(CMURequestFormType.class, this));
+
         //single section forms
         EHRService.get().registerSingleFormOverride(new SingleQueryFormProvider(this, "study", "treatment_order", new MedicationsQueryFormSection("study", "Treatment Orders", "Medication/Treatment Orders")));
         EHRService.get().registerSingleFormOverride(new SingleQueryFormProvider(this, "study", "drug", new MedicationsQueryFormSection("study", "Drug Administration", "Medication/Treatments Given")));
@@ -739,7 +742,8 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         EHRService.get().registerOptionalClinicalHistoryResources(this);
 
         EHRService.get().registerLabworkType(new ONPRCUrinalysisLabworkType(this));
-        EHRService.get().registerLabworkType(new ONPRCiStatLabworkType(this));
+//        Removed: 11-4-2024
+//        EHRService.get().registerLabworkType(new ONPRCiStatLabworkType(this));
            //     7-26-2022  R. Blasa
         EHRService.get().registerLabworkType(new ONPRCEpocLabworkType(this));
         //R.Blasa   11-28-2016
