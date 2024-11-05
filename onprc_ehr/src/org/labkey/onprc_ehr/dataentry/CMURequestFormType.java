@@ -17,12 +17,15 @@ package org.labkey.onprc_ehr.dataentry;
 
 import org.labkey.api.ehr.dataentry.AnimalDetailsFormSection;
 import org.labkey.api.ehr.dataentry.BloodDrawFormSection;
+import org.labkey.onprc_ehr.dataentry.TreatmentOrdersRequestFormSection;
 import org.labkey.api.ehr.dataentry.DataEntryFormContext;
 import org.labkey.api.ehr.dataentry.FormSection;
 import org.labkey.api.ehr.dataentry.RequestForm;
 import org.labkey.api.ehr.dataentry.RequestFormSection;
 import org.labkey.api.module.Module;
 import org.labkey.api.view.template.ClientDependency;
+
+
 
 import java.util.Arrays;
 
@@ -39,7 +42,9 @@ public class CMURequestFormType extends RequestForm
                 //new RequestInstructionsFormSection(),
                 new AnimalDetailsFormSection(),
                 new ClinicalEncountersFormSection(),
-                new DrugAdministrationRequestFormSection()
+                new BloodDrawFormSection(true),
+                new DrugAdministrationRequestFormSection(),
+                new TreatmentOrdersRequestFormSection()
         ));
 
         addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/model/sources/CMU_Services.js"));
