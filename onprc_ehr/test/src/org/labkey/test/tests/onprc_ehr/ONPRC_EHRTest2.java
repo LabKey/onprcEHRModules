@@ -1275,7 +1275,7 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
         shortWait().until(ExpectedConditions.elementToBeClickable(Locator.tagWithText("span", "Submit Final")));
         clickButton("Submit Final", 0);
         _billingHelper.checkMessageWindow("Finalize Form", "You are about to finalize this form. Do you want to do this?", "Yes");
-        waitForElement(Locator.linkWithText("Medications/Diet"));
+        waitForElement(Locator.linkWithText("Medications/Diet"), WAIT_FOR_PAGE);
 
         log("Verifying request was created");
         goToSchemaBrowser();
