@@ -138,7 +138,7 @@ from  ehr_compliancedb.RequirementsPerEmployee j
 Where j.requirementname not in (select z.requirementname from ehr_compliancedb.completiondates z where z.requirementname = j.requirementname
   and z.employeeid = j.employeeid and z.date is not null)
   And j.employeeid in (select p.employeeid from ehr_compliancedb.employees p where p.enddate is null)
-  And j.requirementname in ( select k.requirementname from ehr_compliancedb.requirements k where k.datedisabled is null)
+  And j.requirementname in ( select k.requirements from ehr_compliancedb.requirements k where k.datedisabled is null)
 
 
 group by j.requirementname,j.employeeid

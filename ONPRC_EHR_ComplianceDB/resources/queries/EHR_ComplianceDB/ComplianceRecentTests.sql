@@ -103,7 +103,7 @@ where a.requirementname not in (select distinct h.requirementname from ehr_compl
   And a.requirementname not in (select distinct t.requirementname from ehr_compliancedb.employeerequirementexemptions t Where a.employeeid = t.employeeid
                                                                                                                           And a.requirementname = t.requirementname)
   And a.employeeid in (select p.employeeid from ehr_compliancedb.employees p where p.enddate is null)
-  And a.requirementname in ( select k.requirementname from ehr_compliancedb.requirementname k where k.datedisabled is null)
+  And a.requirementname in ( select k.requirementname from ehr_compliancedb.requirements k where k.datedisabled is null)
 
 group by a.requirementname,a.employeeid
 
