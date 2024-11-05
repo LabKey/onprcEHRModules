@@ -8,7 +8,7 @@
 -- Training that was completed by an employee and being recorded as  completed as a Unit or Category
 select b.requirementname,
        a.employeeid,
-       group_concat(distinct b.unit,chr(10)) as unit,
+       group_concat(distinct a.unit,chr(10)) as unit,
        group_concat(distinct a.category,chr(10)) as category,
        group_concat(distinct b.trackingflag) as trackingflag,
 
