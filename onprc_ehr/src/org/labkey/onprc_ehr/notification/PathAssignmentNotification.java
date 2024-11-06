@@ -67,7 +67,7 @@ public class PathAssignmentNotification extends ColonyAlertsNotification
     @Override
     public String getDescription()
     {
-        return "The report is designed to send animal assignments data to pathology every other Monday!";
+        return "The report is designed to send animal assignments data to pathology every Monday!";
     }
 
     @Override
@@ -125,7 +125,7 @@ public class PathAssignmentNotification extends ColonyAlertsNotification
             columns.add(FieldKey.fromString("releaseCondition"));
             columns.add(FieldKey.fromString("releaseType"));
             columns.add(FieldKey.fromString("remark"));
-            columns.add(FieldKey.fromString("description"));
+//            columns.add(FieldKey.fromString("description"));
 
             final Map<FieldKey, ColumnInfo> colMap = QueryService.get().getColumns(ti, columns);
             TableSelector ts2 = new TableSelector(ti, colMap.values(), null, null);
@@ -133,7 +133,7 @@ public class PathAssignmentNotification extends ColonyAlertsNotification
             msg.append("<hr><b>Assignments:</b><br><br>\n");
             msg.append("<table border=1 style='border-collapse: collapse;'>");
             msg.append("<tr bgcolor = " + '"' + "#FFD700" + '"' + "style='font-weight: bold;'>");
-            msg.append("<td>Id </td><td>Center Project </td><td>Assign Date </td><td>Projected Release Date </td><td>Release Date </td><td>Assignment Type </td><td>Condition At Assignment </td><td>Projected Release Condition </td><td>Condition At Release </td><td>Release Type </td><td>Remark </td><td>Description </td></tr>");
+            msg.append("<td>Id </td><td>Center Project </td><td>Assign Date </td><td>Projected Release Date </td><td>Release Date </td><td>Assignment Type </td><td>Condition At Assignment </td><td>Projected Release Condition </td><td>Condition At Release </td><td>Release Type </td><td>Remark </td></tr>");
 
             ts2.forEach(object -> {
                 Results rs = new ResultsImpl(object, colMap);
@@ -151,7 +151,7 @@ public class PathAssignmentNotification extends ColonyAlertsNotification
                 msg.append("<td>" + PageFlowUtil.filter(rs.getString("releaseCondition")) + "</td>");
                 msg.append("<td>" + PageFlowUtil.filter(rs.getString("releaseType")) + "</td>");
                 msg.append("<td>" + PageFlowUtil.filter(rs.getString("remark")) + "</td>");
-                msg.append("<td>" + PageFlowUtil.filter(rs.getString("description")) + "</td>");
+//                msg.append("<td>" + PageFlowUtil.filter(rs.getString("description")) + "</td>");
                 msg.append("</tr>");
             });
             msg.append("</table>");

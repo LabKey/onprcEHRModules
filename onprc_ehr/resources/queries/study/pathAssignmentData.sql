@@ -1,5 +1,5 @@
 SELECT  Id,
-        project,
+        project.name as project,
         date,
         projectedRelease,
         enddate,
