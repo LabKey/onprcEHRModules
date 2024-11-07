@@ -270,9 +270,9 @@ Ext4.define('ONPRC_EHR.window.ApplyTemplateWindow', {
 
                             }
                             // Extract monkey's weight
-                            if data.dosage > 0 {
-                              var volume = this.Weights * data.dosage /date.concentration}
-
+                            if (data.dosage > 0) {
+                              var volume = this.Weights * data.dosage /data.concentration;
+                              }
 
                         var obj2 = {};
                         obj2 = {
