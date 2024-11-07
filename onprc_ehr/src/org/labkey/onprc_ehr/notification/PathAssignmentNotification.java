@@ -54,14 +54,14 @@ public class PathAssignmentNotification extends ColonyAlertsNotification
     @Override
     public String getCronString()
     {
-        return "0 30 7 ? * MON";
+        return "0 0 9 ? * MON";
 
     }
 
     @Override
     public String getScheduleDescription()
     {
-        return "every Monday at 7:30Am";
+        return "every Monday at 9Am";
     }
 
     @Override
@@ -92,7 +92,7 @@ public class PathAssignmentNotification extends ColonyAlertsNotification
             msg.append("<b>Warning: The study schema has not been enabled in this folder, so the alert cannot run!<p><hr>");
             return;
         }
-        //Fasts query
+        //assignments query
         TableInfo ti = QueryService.get().getUserSchema(u, c, "study").getTable("pathAssignmentData", ContainerFilter.Type.AllFolders.create(c, u));
         TableSelector ts = new TableSelector(ti, null, null);
         long count = ts.getRowCount();
@@ -115,17 +115,17 @@ public class PathAssignmentNotification extends ColonyAlertsNotification
         {
             Set<FieldKey> columns = new HashSet<>();
             columns.add(FieldKey.fromString("Id"));
+            columns.add(FieldKey.fromString("Sex"));
+            columns.add(FieldKey.fromString("AgeInYearsRounded"));
             columns.add(FieldKey.fromString("project"));
+            columns.add(FieldKey.fromString("Investigator"));
+            columns.add(FieldKey.fromString("Title"));
             columns.add(FieldKey.fromString("date"));
-            columns.add(FieldKey.fromString("projectedRelease"));
             columns.add(FieldKey.fromString("enddate"));
-            columns.add(FieldKey.fromString("assignmentType"));
-            columns.add(FieldKey.fromString("assignCondition"));
+            columns.add(FieldKey.fromString("projectedRelease"));
             columns.add(FieldKey.fromString("projectedReleaseCondition"));
+            columns.add(FieldKey.fromString("assignCondition"));
             columns.add(FieldKey.fromString("releaseCondition"));
-            columns.add(FieldKey.fromString("releaseType"));
-            columns.add(FieldKey.fromString("remark"));
-//            columns.add(FieldKey.fromString("description"));
 
             final Map<FieldKey, ColumnInfo> colMap = QueryService.get().getColumns(ti, columns);
             TableSelector ts2 = new TableSelector(ti, colMap.values(), null, null);
@@ -133,7 +133,7 @@ public class PathAssignmentNotification extends ColonyAlertsNotification
             msg.append("<hr><b>Assignments:</b><br><br>\n");
             msg.append("<table border=1 style='border-collapse: collapse;'>");
             msg.append("<tr bgcolor = " + '"' + "#FFD700" + '"' + "style='font-weight: bold;'>");
-            msg.append("<td>Id </td><td>Center Project </td><td>Assign Date </td><td>Projected Release Date </td><td>Release Date </td><td>Assignment Type </td><td>Condition At Assignment </td><td>Projected Release Condition </td><td>Condition At Release </td><td>Release Type </td><td>Remark </td></tr>");
+            msg.append("<td>Id </td><td>Sex </td><td>Age (Years, Rounded) </td><td>Center Project </td><td>Investigator </td><td>Title </td><td>Assign Date </td><td>Release Date </td><td>Projected Release Date </td><td>Projected Release Condition </td><td>Condition At Assignment </td><td>Condition At Release </td></tr>");
 
             ts2.forEach(object -> {
                 Results rs = new ResultsImpl(object, colMap);
@@ -141,17 +141,17 @@ public class PathAssignmentNotification extends ColonyAlertsNotification
 
                 msg.append("<tr bgcolor = " + '"' + "#FFFACD" + '"' + ">");
                 msg.append("<td><b> <a href='" + url + "'>" + PageFlowUtil.filter(rs.getString("Id")) + "</a> </b></td>\n");
+                msg.append("<td>" + PageFlowUtil.filter(rs.getString("Sex")) + "</td>");
+                msg.append("<td>" + PageFlowUtil.filter(rs.getString("AgeInYearsRounded")) + "</td>");
                 msg.append("<td>" + PageFlowUtil.filter(rs.getString("project")) + "</td>");
+                msg.append("<td>" + PageFlowUtil.filter(rs.getString("Investigator")) + "</td>");
+                msg.append("<td>" + PageFlowUtil.filter(rs.getString("Title")) + "</td>");
                 msg.append("<td>" + PageFlowUtil.filter(rs.getString("date")) + "</td>");
-                msg.append("<td>" + PageFlowUtil.filter(rs.getString("projectedRelease")) + "</td>");
                 msg.append("<td>" + PageFlowUtil.filter(rs.getString("enddate")) + "</td>");
-                msg.append("<td>" + PageFlowUtil.filter(rs.getString("assignmentType")) + "</td>");
-                msg.append("<td>" + PageFlowUtil.filter(rs.getString("assignCondition")) + "</td>");
+                msg.append("<td>" + PageFlowUtil.filter(rs.getString("projectedRelease")) + "</td>");
                 msg.append("<td>" + PageFlowUtil.filter(rs.getString("projectedReleaseCondition")) + "</td>");
-                msg.append("<td>" + PageFlowUtil.filter(rs.getString("releaseCondition")) + "</td>");
-                msg.append("<td>" + PageFlowUtil.filter(rs.getString("releaseType")) + "</td>");
-                msg.append("<td>" + PageFlowUtil.filter(rs.getString("remark")) + "</td>");
-//                msg.append("<td>" + PageFlowUtil.filter(rs.getString("description")) + "</td>");
+                msg.append("<td>" + PageFlowUtil.filter(rs.getString("assigncondition")) + "</td>");
+                msg.append("<td>" + PageFlowUtil.filter(rs.getString("releasecondition")) + "</td>");
                 msg.append("</tr>");
             });
             msg.append("</table>");
