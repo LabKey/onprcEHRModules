@@ -55,7 +55,7 @@ where ( a.unit = b.unit or a.category = b.category )
                                                                                                                           And b.requirementname = t.requirementname)
   And b.requirementname in ( select k.requirementname from ehr_compliancedb.requirements k where k.datedisabled is null)
 
-  And a.employeeid in (select p.employeeid from ehr_compliancedb.employees p where k.requirementname = b.requirementname And p.enddate is null)
+  And a.employeeid in (select p.employeeid from ehr_compliancedb.employees p where  p.enddate is null)
 
 
 
