@@ -4,7 +4,7 @@
 SELECT a.protocol,
        c.protocol_id as eIACUC_protocol_name,
        a.species,
-       a.gender,
+       a.gender as Sex,
        a.strain,
        a.age,
        a.allowed,
