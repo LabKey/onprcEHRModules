@@ -30,8 +30,8 @@
                     },{
                         name: 'Genotyping Results Not Connected to an Analysis',
                         url: LABKEY.ActionURL.buildURL('query', 'executeQuery.view', null, {
-                            schemaName: 'assay',
-                            queryName: 'GenotypeAssay.Genotype.Data',
+                            schemaName: 'assay.GenotypeAssay.Genotype',
+                            queryName: 'Data',
                             'query.analysisId/rowId~isblank': ''
                         })
                     },{
