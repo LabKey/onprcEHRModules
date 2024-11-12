@@ -15,7 +15,12 @@ CREATE PROCEDURE onprc_ehr.eIACUCtoPrimeProcessing
 AS
 BEGIN
     --Processes to administer PRIMe protocols from eiCAUC2
-    DROP TABLE IF EXISTS  ##eIACUCBaseProtocolData,##eIACUCExpiredProtocols,##ExpiredPRIMEprotocols, ##DistincteIACUCProtocol,  ##TestingProtocol;
+    -- Reported to be No Longer used in SQL 2012   DROP TABLE IF EXISTS  ##eIACUCBase ProtocolData,##eIACUCExpiredProtocols,##ExpiredPRIMEprotocols, ##DistincteIACUCProtocol,  ##TestingProtocol;
+    EXEC DROP_EXISTING ##eIACUCBaseProtocolData
+    EXEC DROP_EXISTING ##eIACUCExpiredProtocols
+    EXEC DROP_EXISTING ##ExpiredPRIMEprotocols
+    EXEC DROP_EXISTING ##DistincteIACUCProtocol
+    EXEC DROP_EXISTING ##TestingProtocol
 
     --Test Result Set Select * from #TestingProtocol
 /*Define temp Tables for process
@@ -100,9 +105,9 @@ so we need to get the lateesst record
               WHERE rn = 1)
 /* Determine what records in ehr.prtotocol (##TestingProtocol) here need to be enddated
 we will use the three year renewal date as the end date of the protocol
-select * from ##TestingProtocol
-Select * from ##DistincteIACUCProtocol
-DROP TABLE IF EXISTS  ##DistincteIACUCProtocol
+--select * from ##TestingProtocol
+--Select * from ##DistincteIACUCProtocol
+--DROP TABLE IF EXISTS  ##DistincteIACUCProtocol
 */
     Select
         p.protocol,
