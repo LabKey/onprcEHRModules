@@ -10,7 +10,7 @@ GO
 ----THis determines Protocols that are New, Updated or EndDated
 ----This Procedure hadndles enddates only
 -- =============================================
-CREATE PROCEDURE onprc_ehr.eIACUCtoPrimeProcessing
+ALTER PROCEDURE onprc_ehr.eIACUCtoPrimeProcessing
 
 AS
 BEGIN
