@@ -126,7 +126,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
     @Override
     public @Nullable Double getSchemaVersion()
     {
-        return 23.016;
+        return 24.002;
     }
 
     @Override
@@ -221,9 +221,6 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
 
         //Added June 28th, 2024 Kollil
         ns.registerNotification(new LongTermMedsNotification(this));
-
-        //Added Aug 9th, 2024 Kollil
-        ns.registerNotification(new AdminNotifications(this));
 
         //Added 8-7-2018 R.Blasa
         ns.registerNotification(new BirthHousingMismatchNotification(this));
@@ -601,8 +598,6 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         //Added: 3-24-2023  R.Blasa
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(EnvironmentalATPFormType.class, this));
 
-        //Added: 9-5-2024  R.Blasa
-        EHRService.get().registerFormType(new DefaultDataEntryFormFactory(BloodDrawFormType.class, this));
 
         //single section forms
         EHRService.get().registerSingleFormOverride(new SingleQueryFormProvider(this, "study", "treatment_order", new MedicationsQueryFormSection("study", "Treatment Orders", "Medication/Treatment Orders")));
