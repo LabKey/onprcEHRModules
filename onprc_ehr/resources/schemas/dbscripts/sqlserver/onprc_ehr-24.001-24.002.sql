@@ -15,11 +15,15 @@ CREATE PROCEDURE onprc_ehr.eIACUCtoPrimeProcessing
 AS
 BEGIN
     --Processes to administer PRIMe protocols from eiCAUC2
-    DROP TABLE IF EXISTS ##eIACUCBaseProtocolData;
-    DROP TABLE IF EXISTS ##eIACUCExpiredProtocols;
-    DROP TABLE IF EXISTS ##ExpiredPRIMEprotocols;
-    DROP TABLE IF EXISTS ##DistincteIACUCProtocol;
-    DROP TABLE IF EXISTS ##TestingProtocol;
+    -- Reported to be No Longer used in SQL 2012   DROP TABLE IF EXISTS  ##eIACUCBase ProtocolData,##eIACUCExpiredProtocols,##ExpiredPRIMEprotocols, ##DistincteIACUCProtocol,  ##TestingProtocol;
+    -- Processes to administer PRIMe protocols from eiCAUC2
+    EXEC core.fn_dropifexists '##eIACUCBaseProtocolData', 'onprc_ehr', 'TABLE';
+    EXEC core.fn_dropifexists '##eIACUCExpiredProtocols', 'onprc_ehr', 'TABLE';
+    EXEC core.fn_dropifexists '##eIACUCExpiredProtocols', 'onprc_ehr', 'TABLE';
+    EXEC core.fn_dropifexists '##ExpiredPRIMEprotocols', 'onprc_ehr', 'TABLE';
+    EXEC core.fn_dropifexists '##DistincteIACUCProtocol', 'onprc_ehr', 'TABLE';
+    EXEC core.fn_dropifexists '##TestingProtocol', 'onprc_ehr', 'TABLE';
+
 
     --Test Result Set Select * from #TestingProtocol
 /*Define temp Tables for process
