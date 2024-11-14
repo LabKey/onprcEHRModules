@@ -45,7 +45,7 @@ select b.requirementname,
 
                    ELSE ( select  (tt.expireperiod) - ( age_in_months(max(pq.date), curdate())) from  ehr_compliancedb.requirements tt, ehr_compliancedb.completiondates pq where   tt.requirementname =   b.requirementname and pq.requirementname = tt.requirementname and pq.employeeid = a.employeeid group by tt.expireperiod )
 
-                   END  AS double)  AS MonthsUntilRenewal
+                   END  AS DECIMAL )  AS MonthsUntilRenewal
 
 
 
@@ -104,7 +104,7 @@ select a.requirementname,
 
                    ELSE ( select  (tt.expireperiod) - ( age_in_months(max(pq.date), curdate())) from  ehr_compliancedb.requirements tt, ehr_compliancedb.completiondates pq where   tt.requirementname =   a.requirementname and pq.requirementname = tt.requirementname and pq.employeeid = a.employeeid group by tt.expireperiod )
 
-                   END  AS double)  AS MonthsUntilRenewal
+                   END  AS DECIMAL)  AS MonthsUntilRenewal
 
 
          from  ehr_compliancedb.completiondates a
