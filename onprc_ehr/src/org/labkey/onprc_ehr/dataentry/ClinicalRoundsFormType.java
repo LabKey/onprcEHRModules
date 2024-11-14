@@ -19,6 +19,7 @@ import org.labkey.api.ehr.EHRService;
 import org.labkey.api.ehr.dataentry.AbstractFormSection;
 import org.labkey.api.ehr.dataentry.BloodDrawFormSection;
 import org.labkey.api.ehr.dataentry.DataEntryFormContext;
+import org.labkey.api.ehr.dataentry.DefaultDataEntryFormFactory;
 import org.labkey.api.ehr.dataentry.FormSection;
 import org.labkey.api.ehr.dataentry.TaskForm;
 import org.labkey.api.ehr.dataentry.TaskFormSection;
@@ -72,10 +73,16 @@ public class ClinicalRoundsFormType extends TaskForm
         addClientDependency(ClientDependency.supplierFromPath("ehr/model/sources/ClinicalDefaults.js"));
         addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/model/sources/ClinicalRounds.js"));
 
+
         //Added by Kollil, 6/26/24
         //This script was added to show a pop-up question box when the user selects MPA medication on the Medication order form.
         addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/panel/TreatmentOrdersDataEntryPanel.js"));
         setJavascriptClass("ONPRC_EHR.panel.TreatmentOrdersDataEntryPanel");
+
+        setDisplayReviewRequired(true);
+
+
+
     }
 
     @Override

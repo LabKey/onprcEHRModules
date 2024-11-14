@@ -8,14 +8,15 @@
         <column name="category"/>
         <column name="Name"/>
         <column name = "CurrentYear">
-            <properties>
+         <!--   <properties>
                 <property name="columnTitle" value="YR65: Current Year"/>
 
-            </properties>
+            </properties>-->
         </column>
         <column name = "year1">
         <properties>
             <property name="columnTitle" value="YR66: 5/1/25-4/30/26"/>
+
         </properties>
     </column>
     <column name = "year2">

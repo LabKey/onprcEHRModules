@@ -159,10 +159,11 @@ Ext4.onReady(function (){
     }).render('allowableAnimals_' + webpart.wrapperDivId);
 
     //Added the SLAs count by Kollil, 10/18/2021
+    //Updated changed the query jonesga 07/11/2024
     LDK.Utils.getReadOnlyQWP({
         title: 'Allowable SLAs',
         schemaName: 'sla',
-        queryName: 'allowableSLA',
+        queryName: 'allowableAnimals',
         filters: [LABKEY.Filter.create('protocol', protocol, LABKEY.Filter.Types.EQUAL)],
         sort: '-startdate',
         failure: LDK.Utils.getErrorCallback()

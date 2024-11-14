@@ -40,6 +40,8 @@ public class TBFormType extends TaskForm
                 new AnimalDetailsFormSection(),
                 new TBProcedureFormSection()
         ));
+
+        setDisplayReviewRequired(true);
     }
 
     @Override

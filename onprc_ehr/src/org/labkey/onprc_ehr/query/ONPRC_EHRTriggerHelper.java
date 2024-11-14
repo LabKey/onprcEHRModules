@@ -2137,6 +2137,21 @@ public class ONPRC_EHRTriggerHelper
 
         return null;
     }
+//     Added: 8-2-2024  R. Blasa Determine if Id's Flag value set as "Bilateral ovariectomy'.
+      public String validateMenseFlagprocess(String Id)
+    {
+        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("Id"),  Id);
+        filter.addCondition(FieldKey.fromString("flag/value"), "Bilateral ovariectomy",CompareType.EQUAL);
+
+        if(new TableSelector(getTableInfo("study", "flags"),filter, null).exists() )
+        {
+            return  Id +",  Please contact the DVM staff because she shouldn't be mensing ";
+        }
+        else
+        {
+            return null;
+        }
+    }
 
     //Added 1-12-2016 Blasa
     public void sendMenseNotifications(String id)
