@@ -18,7 +18,6 @@ package org.labkey.onprc_ehr.dataentry;
 import org.labkey.api.ehr.EHRService;
 import org.labkey.api.ehr.dataentry.AbstractFormSection;
 import org.labkey.api.ehr.dataentry.DataEntryFormContext;
-import org.labkey.onprc_ehr.dataentry.ExtendedAnimalDetailsFormSection;
 import org.labkey.api.ehr.dataentry.FormSection;
 import org.labkey.api.ehr.dataentry.NonStoreFormSection;
 import org.labkey.api.ehr.dataentry.SimpleFormPanelSection;
@@ -27,12 +26,10 @@ import org.labkey.api.ehr.dataentry.SimpleGridPanel;
 import org.labkey.api.ehr.dataentry.TaskForm;
 import org.labkey.api.ehr.dataentry.TaskFormSection;
 import org.labkey.api.ehr.dataentry.WeightFormSection;
-import org.labkey.api.ehr.dataentry.DrugAdministrationFormSection;
 import org.labkey.api.ehr.security.EHRClinicalEntryPermission;
 import org.labkey.api.module.Module;
 import org.labkey.api.query.Queryable;
 import org.labkey.api.view.template.ClientDependency;
-
 
 import java.util.Arrays;
 import java.util.List;
@@ -64,7 +61,6 @@ public class ClinicalReportFormType extends TaskForm
                 new SimpleGridPanel("ehr", "snomed_tags", "Diagnostic Codes", EHRService.FORM_SECTION_LOCATION.Tabs),
                 //Added 5-23-2015   Blasa
                 new SimpleGridPanel("study", "housing", "Housing Transfers",EHRService.FORM_SECTION_LOCATION.Tabs)
-
 
         ));
 

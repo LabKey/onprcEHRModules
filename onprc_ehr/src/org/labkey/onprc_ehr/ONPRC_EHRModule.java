@@ -274,14 +274,13 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         EHRService.get().registerClientDependency(ClientDependency.supplierFromPath("onprc_ehr/window/ManageTreatmentsWindow.js"), this);
         EHRService.get().registerClientDependency(ClientDependency.supplierFromPath("onprc_ehr/panel/ManageTreatmentsPanel.js"), this);
         EHRService.get().registerClientDependency(ClientDependency.supplierFromPath("onprc_ehr/panel/SmallFormSnapShotPanel.js"), this);
+//        EHRService.get().registerClientDependency(ClientDependency.supplierFromPath("onprc_ehr/plugin/onprc_RowEditor.js"), this);
 
         //Added: 8-24-2016 R.Blasa
         EHRService.get().registerClientDependency(ClientDependency.supplierFromPath("onprc_ehr/DemographicsRecord.js"), this);
 
         //Added: 2-22-2017  R.Blasa
         EHRService.get().registerClientDependency(ClientDependency.supplierFromPath("onprc_ehr/panel/NarrowSnapshotPanel.js"), this);
-
-
 
         //Added: 10-25-2017  R.Blasa  References new Xtype
         EHRService.get().registerClientDependency(ClientDependency.supplierFromPath("onprc_ehr/form/field/CEG_PlantextArea.js"), this);

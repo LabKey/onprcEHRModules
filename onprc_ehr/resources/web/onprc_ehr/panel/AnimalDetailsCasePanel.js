@@ -146,7 +146,7 @@ Ext4.define('ONPRC_EHR.panel.AnimalDetailsCasePanel', {
                     xtype: 'ldk-linkbutton',
                     style: 'margin-top: 10px;',
                     scope: this,
-                    text: '[Show Full Hx]',
+                    text: '[Show Full Hx show]',
                     handler: function(){
                         if (this.subjectId){
                             EHR.window.ClinicalHistoryWindow.showClinicalHistory(null, this.subjectId, null);

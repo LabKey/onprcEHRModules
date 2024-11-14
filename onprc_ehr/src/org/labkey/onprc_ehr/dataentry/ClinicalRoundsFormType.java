@@ -23,7 +23,6 @@ import org.labkey.api.ehr.dataentry.FormSection;
 import org.labkey.api.ehr.dataentry.TaskForm;
 import org.labkey.api.ehr.dataentry.TaskFormSection;
 import org.labkey.api.ehr.dataentry.WeightFormSection;
-import org.labkey.api.ehr.dataentry.DrugAdministrationFormSection;
 import org.labkey.api.ehr.security.EHRClinicalEntryPermission;
 import org.labkey.api.module.Module;
 import org.labkey.api.query.Queryable;
@@ -47,14 +46,15 @@ public class ClinicalRoundsFormType extends TaskForm
             new TaskFormSection(),
              //Added 5-9-2016 R.Blasa
             new AnimalDetailsRoundsFormSection(),
-
             new ClinicalRoundsRemarksFormSection(),
             //NOTE: originally removed in order to enforce non-editable IDs
             //however, have been re-added apparently people do use them
             new BloodDrawFormSection(false, EHRService.FORM_SECTION_LOCATION.Tabs),
             new WeightFormSection(EHRService.FORM_SECTION_LOCATION.Tabs),
-            new DrugAdministrationFormSection(EHRService.FORM_SECTION_LOCATION.Tabs, DrugAdministrationFormSection.LABEL, ClientDependency.supplierFromPath("onprc_ehr/window/ONPRC_AddScheduledTreatmentWindow.js")),
-            new TreatmentOrdersFormSection(EHRService.FORM_SECTION_LOCATION.Tabs),
+//            new DrugAdministrationFormSection(EHRService.FORM_SECTION_LOCATION.Tabs, DrugAdministrationFormSection.LABEL, ClientDependency.supplierFromPath("onprc_ehr/window/ONPRC_AddScheduledTreatmentWindow.js")),
+            new DrugAdministrationFormSection(ClientDependency.supplierFromPath("onprc_ehr/window/ONPRC_AddScheduledTreatmentWindow.js")),
+//            new TreatmentOrdersFormSection(EHRService.FORM_SECTION_LOCATION.Tabs),
+            new TreatmentOrdersFormSection(),
             new ClinicalObservationsFormSection(EHRService.FORM_SECTION_LOCATION.Tabs, false)
         ));
 
