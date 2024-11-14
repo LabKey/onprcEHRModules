@@ -122,14 +122,13 @@ Ext4.define('ONPRC_EHR.grid.ObservationsRowEditorGridPanel', {
                          value: 'All',
                          store: {
                              type: 'labkey-store',
-                              schemaName:'sla',
-                              queryName: 'Reference_Data',
+                              schemaName:'ehr_lookups',
+                              queryName: 'observation_areas',
                               columns: 'value',
                               defaultValue:'0 - None',
-                              sort: 'sort_order',
+                              sort: 'value',
                               filterArray: [
-                                  LABKEY.Filter.create('enddate', null, LABKEY.Filter.Types.ISBLANK),
-                                  LABKEY.Filter.create('ColumnName', 'Surgicalobservationarea', LABKEY.Filter.Types.EQUAL)],
+                                  LABKEY.Filter.create('date_disabled', null, LABKEY.Filter.Types.ISBLANK)],
                              autoLoad: true
                          }
                      }
