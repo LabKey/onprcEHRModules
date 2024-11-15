@@ -46,9 +46,10 @@ Populate the ProtocolTest dataset with data from ehr.Protocol
 --
 Select
     p.Protocol_ID,
-    WHEN len(p.Protocol_ID) > 10 then substring(Protocol_ID,6,15)
-    ELSE Protocol_ID
-END as BaseProtocol,
+    Case
+        WHEN len(p.Protocol_ID) > 10 then substring(Protocol_ID,6,15)
+        ELSE Protocol_ID
+    END as BaseProtocol,
         CASE
             WHEN len(p.Protocol_ID) > 10 then substring(Protocol_ID,1,4)
 
