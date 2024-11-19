@@ -9,6 +9,7 @@ GO
 ----Compare current Prime Protocols to eiACUC Protocols
 ----and end Date the Protocols in Prime that have a
 ----Protocol State of expired, terminated or withdrawn
+--Update -for Github to Buidl 23.11
 -- =============================================
 CREATE PROCEDURE onprc_ehr.eIACUCtoPRIMEProtocolProcessing
     -- No Parameters are used
