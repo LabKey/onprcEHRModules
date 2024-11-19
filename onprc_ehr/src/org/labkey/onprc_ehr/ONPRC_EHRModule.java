@@ -111,13 +111,12 @@ import java.util.Collections;
  * User: jonesga
  * Date: 6/26/2018
  * Change of ONPRC Module Number
- * Jonesga update to 24-002 again
+ * Update 2024/11/19 jonesga
  */
 public class ONPRC_EHRModule extends ExtendedSimpleModule
 {
     public static final String NAME = "ONPRC_EHR";
     public static final String CONTROLLER_NAME = "onprc_ehr";
-
     @Override
     public String getName()
     {
