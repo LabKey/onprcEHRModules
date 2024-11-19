@@ -42,6 +42,7 @@ Select rowid,
        Protocol_State
 INTO  #PRIMEProtocolstoEndDate
 from onprc_ehr.eIACUC_PRIME_VIEW_PROTOCOLS
+where Protocol_State in ('expired','terminated','withdrawn')
 -- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 --Step Two
 --Using Values in Step 1 limits tghe records returned to newest record for a base protocol
