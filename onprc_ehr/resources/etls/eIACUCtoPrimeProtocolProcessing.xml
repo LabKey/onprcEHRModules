@@ -20,7 +20,6 @@
             <source schemaName="labkeyPublic" queryName="Temp_Drug"/>
             <destination schemaName="study" queryName="drug"  />
         </transform>-->
-
     </transforms>
 <!--
     <schedule>

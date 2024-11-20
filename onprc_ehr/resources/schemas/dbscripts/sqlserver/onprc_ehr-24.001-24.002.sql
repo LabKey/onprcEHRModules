@@ -23,6 +23,7 @@ BEGIN
 --Step One
 --Determine the Base Protocol and Revision Number in eIACUC Protocols
 --Creates temp Table #PRIMEProtocolstoEndDate
+--Revision 2024-11-20 Missing Where clause in step 1
 
 Select rowid,
        Protocol_ID,
