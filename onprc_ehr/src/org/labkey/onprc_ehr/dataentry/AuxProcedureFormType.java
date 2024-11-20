@@ -15,7 +15,6 @@
  */
 package org.labkey.onprc_ehr.dataentry;
 
-import org.labkey.onprc_ehr.dataentry.AnimalDetailsFormSection;
 import org.labkey.api.ehr.dataentry.BloodDrawFormSection;
 import org.labkey.api.ehr.dataentry.DataEntryFormContext;
 import org.labkey.api.ehr.dataentry.FormSection;
@@ -23,7 +22,6 @@ import org.labkey.api.ehr.dataentry.NonStoreFormSection;
 import org.labkey.api.ehr.dataentry.TaskForm;
 import org.labkey.api.ehr.dataentry.TaskFormSection;
 import org.labkey.api.ehr.dataentry.WeightFormSection;
-import org.labkey.onprc_ehr.dataentry.DrugAdministrationFormSection;
 import org.labkey.api.module.Module;
 import org.labkey.api.view.template.ClientDependency;
 
@@ -47,7 +45,7 @@ public class AuxProcedureFormType extends TaskForm
 
 
             new TaskFormSection(),
-            new AnimalDetailsFormSection(),
+            new ONPRCAnimalDetailsFormSection(),
           //  new SimpleGridPanel("study", "encounters", "Procedures" ),
             new ClinicalEncountersFormSection(),   //Added 5-4-2015  Blasa
             new BloodDrawFormSection(false),

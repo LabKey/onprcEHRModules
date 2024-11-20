@@ -16,14 +16,12 @@
 package org.labkey.onprc_ehr.dataentry;
 
 import org.labkey.api.ehr.EHRService;
-import org.labkey.onprc_ehr.dataentry.AnimalDetailsFormSection;
 import org.labkey.api.ehr.dataentry.DataEntryFormContext;
 import org.labkey.api.ehr.dataentry.FormSection;
 import org.labkey.api.ehr.dataentry.SimpleGridPanel;
 import org.labkey.api.ehr.dataentry.TaskForm;
 import org.labkey.api.ehr.dataentry.TaskFormSection;
 import org.labkey.api.ehr.dataentry.WeightFormSection;
-import org.labkey.onprc_ehr.dataentry.DrugAdministrationFormSection;
 import org.labkey.api.ehr.security.EHRClinicalEntryPermission;
 import org.labkey.api.module.Module;
 import org.labkey.api.view.template.ClientDependency;
@@ -45,7 +43,7 @@ public class BulkClinicalEntryFormType extends TaskForm
     {
         super(ctx, owner, NAME, "Bulk Clinical Entry", "Clinical", Arrays.asList(
                 new TaskFormSection(),
-                new AnimalDetailsFormSection(),
+                new ONPRCAnimalDetailsFormSection(),
 
                 //Added 6-5-2015  Blasa
                 new ClinicalEncountersFormSection(),

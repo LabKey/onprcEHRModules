@@ -20,9 +20,9 @@ import org.labkey.api.view.template.ClientDependency;
 
 //Created:12-20-2018  R.Blasa
 
-public class AnimalDetailsFormSection extends NonStoreFormSection
+public class ONPRCAnimalDetailsFormSection extends NonStoreFormSection
 {
-    public AnimalDetailsFormSection()
+    public ONPRCAnimalDetailsFormSection()
     {
         super("AnimalDetails", "Animal Details", "onprc_ehr-animaldetailspanels");
         addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/panel/AnimalDetailsPanel.js"));
