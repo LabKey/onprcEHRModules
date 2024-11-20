@@ -96,9 +96,7 @@ import org.labkey.onprc_ehr.security.ONPRC_EHRCMUAdministrationPermission;
 import org.labkey.onprc_ehr.security.ONPRC_EHRCMUAdministrationRole;
 import org.labkey.onprc_ehr.security.ONPRC_EHRCustomerEditPermission;
 import org.labkey.onprc_ehr.security.ONPRC_EHRCustomerEditRole;
-import org.labkey.onprc_ehr.security.ONPRC_EHREnvironmentalPermission;
 import org.labkey.onprc_ehr.security.ONPRC_EHREnvironmentalRole;
-//import org.labkey.onprc_ehr.security.ONPRC_EHRPMICEditRole;
 import org.labkey.onprc_ehr.security.ONPRC_EHRTransferRequestRole;
 import org.labkey.onprc_ehr.table.ONPRC_EHRCustomizer;
 
@@ -284,7 +282,11 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         EHRService.get().registerClientDependency(ClientDependency.supplierFromPath("onprc_ehr/window/ManageTreatmentsWindow.js"), this);
         EHRService.get().registerClientDependency(ClientDependency.supplierFromPath("onprc_ehr/panel/ManageTreatmentsPanel.js"), this);
         EHRService.get().registerClientDependency(ClientDependency.supplierFromPath("onprc_ehr/panel/SmallFormSnapShotPanel.js"), this);
-//        EHRService.get().registerClientDependency(ClientDependency.supplierFromPath("onprc_ehr/plugin/onprc_RowEditor.js"), this);
+
+        // Consider creating a base FormType to include these dependencies instead of blasting them on every page
+        EHRService.get().registerClientDependency(ClientDependency.supplierFromPath("ehr/plugin/RowEditor.js"), this);
+        EHRService.get().registerClientDependency(ClientDependency.supplierFromPath("onprc_ehr/plugin/onprc_RowEditor.js"), this);
+        EHRService.get().registerClientDependency(ClientDependency.supplierFromPath("onprc_ehr/panel/AnimalDetailsPanel.js"), this);
 
         //Added: 8-24-2016 R.Blasa
         EHRService.get().registerClientDependency(ClientDependency.supplierFromPath("onprc_ehr/DemographicsRecord.js"), this);
