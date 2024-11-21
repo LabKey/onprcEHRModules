@@ -1,4 +1,3 @@
-USE [Labkey_GJ]
 GO
 /****** Object:  StoredProcedure [onprc_ehr].[eIACUCtoPrimeEndDateProcessing]    Script Date: 11/21/2024 10:25:00 AM ******/
 SET ANSI_NULLS ON
