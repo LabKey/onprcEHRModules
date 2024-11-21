@@ -1,95 +1,78 @@
+USE [Labkey_GJ]
+GO
+/****** Object:  StoredProcedure [onprc_ehr].[eIACUCtoPrimeEndDateProcessing]    Script Date: 11/21/2024 10:25:00 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
--- =============================================
--- Author:		jonesga
--- Create date: 2024-11-18
--- Description:	This Stored Preocduer is deigned to
-----Compare current Prime Protocols to eiACUC Protocols
-----and end Date the Protocols in Prime that have a
-----Protocol State of expired, terminated or withdrawn
---Update -for Github to Buidl 23.11 New Build
--- =============================================
-CREATE PROCEDURE onprc_ehr.eIACUCtoPRIMEProtocolProcessing
-    -- No Parameters are used
-    AS
+CREATE PROCEDURE [onprc_ehr].[eIACUCtoPrimeProcessing]
+
+
+AS
 BEGIN
-	-- SET NOCOUNT ON added to prevent extra result sets from
-	-- interfering with SELECT statements.
-	SET NOCOUNT ON;
 
-    -- Insert statements for procedure here
---Step One
---Determine the Base Protocol and Revision Number in eIACUC Protocols
---Creates temp Table #PRIMEProtocolstoEndDate
---Revision 2024-11-20 Missing Where clause in step 1
 
-Select rowid,
-       Protocol_ID,
-       CASE
-           WHEN len(Protocol_ID) > 10 then substring(Protocol_ID,6,15)
-           ELSE Protocol_ID
-           END as BaseProtocol,
-       CASE
-           WHEN len(Protocol_ID) > 10 then substring(Protocol_ID,1,4)
-           ELSE 'Original'
-           END as RevisionNumber,
-       Protocol_Title,
-       Template_OID,
-       Approval_Date,
-       last_modified,
-       Three_year_Expiration,
-       Protocol_State
-INTO  #PRIMEProtocolstoEndDate
-from onprc_ehr.eIACUC_PRIME_VIEW_PROTOCOLS
-where Protocol_State in ('expired','terminated','withdrawn')
--- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
---Step Two
---Using Values in Step 1 limits tghe records returned to newest record for a base protocol
---Vtrsrd tempt Table  #DistincteIACUCProtocolv
-SELECT
-    rowid,
-    BaseProtocol,
-    RevisionNumber,
-    Protocol_Title,
-    Template_OID,
-    Approval_Date,
-    last_modified,
-    Three_year_Expiration,
-    Protocol_State
-INTO #DistincteIACUCProtocol
-from  #PRIMEProtocolstoEndDate
-where rowID  =
-      (Select Max(rowID) from #PRIMEProtocolstoEndDate p1 where p1.BaseProtocol = #PRIMEProtocolstoEndDate.BaseProtocol)
--- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
---Step Three
--- Determine what records in ehr.prtotocol (##TestingProtocol) here need to be enddated
---we will use the three year renewal date as the end date of the protocol
---Creates Temp Table  #PRIMEProtocolstoEndDate
---DROP TABLE #PRIMEProtocolstoEndDate
+--Step 1 Identify eIACUC Records and extract Base Prtocol and Revision Number
+-- Filter for Protocol State in Approved, Expired, Terminated or Withdrawn
+--Note a review was completed and it was found that there were records in
+-- Prime Protocol related to terminated or winthdrawn
+--Based on Ai assistance this was determined to return the needed records
+WITH RankedBaseProtocols AS (
+    SELECT rowid,
+           Protocol_ID,
+           CASE
+               WHEN LEN(Protocol_ID) > 10 THEN SUBSTRING(Protocol_ID, 6, 15)
+               ELSE Protocol_ID
+               END AS BaseProtocol,
+           CASE
+               WHEN LEN(Protocol_ID) > 10 THEN SUBSTRING(Protocol_ID, 1, 4)
+               ELSE 'Original'
+               END AS RevisionNumber,
+           Protocol_Title,
+           Template_OID,
+           Approval_Date,
+           last_modified,
+           Three_year_Expiration,
+           Protocol_State,
+           ROW_NUMBER() OVER (PARTITION BY
+                   CASE
+                       WHEN LEN(Protocol_ID) > 10 THEN SUBSTRING(Protocol_ID, 6, 15)
+                       ELSE Protocol_ID
+                   END
+                   ORDER BY last_modified DESC) AS rn
+    FROM onprc_ehr.eIACUC_PRIME_VIEW_PROTOCOLS
+    WHERE Protocol_State IN ('approved', 'expired', 'terminated', 'withdrawn')
+)
+SELECT *
+Into #Step1EndDateCandidates
+FROM RankedBaseProtocols
+where PROTOCOL_State != 'approved' and rn = 1
+
+Select * from #Step1EndDateCandidates
+--########################################################################
+--Step 2
+--Using #Step1EndDateCandidates we match to PrimeProtocols to determine records that
+--should be end dated
+--IfExists Drop Tanle Drop Table #Step2PrimeProtocoltoEnddate
 Select
-    p.protocol,
     p.external_id,
-    p.approve,
+    p.protocol,
+    p.title,
     p.enddate,
-    d.BaseProtocol,
-    d.RevisionNumber,
-    d.PROTOCOL_State,
-    d.Three_year_Expiration
-into #endDatePrimeProtocols
-From ehr.protocol p join #DistincteIACUCProtocol d on p.external_Id = d.baseProtocol
---Select * from  #PRIMEProtocolstoEndDate
--- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
---Step Four
--- Update of Records Identified in Step 3
---we will use the three year renewal date as the end date of the protocol
---
-Update p
-Set p.enddate = e.Three_year_Expiration,p.contacts = 'Protocol enddate based on eIACUC Record PROTOCOL STATE = ' + e.Protocol_State
---Select p.*
-    from ehr.protocol p join #endDatePrimeProtocols e on p.protocol = e.protocol
+    s.BaseProtocol,
+    s.PROTOCOL_State,
+    s.Three_year_Expiration
+INTO #Step2PrimeProtocoltoEnddate
+from ehr.protocol p join #Step1EndDateCandidates s on p.external_id = s.BaseProtocol
+where p.enddate is Null
 
+--########################################################################
+--Step 3
+--Using #Step2PrimeProtocoltoEnddate we match to PrimeProtocols
+--enddate the Protocol and place text in contacts field
+Update p
+set p.enddate = s.Three_year_Expiration, p.contacts = 'EndDate baseed on eIACUC Protocol State ' + s.PROTOCOL_State
+
+    from ehr.protocol p join #Step2PrimeProtocoltoEnddate s  on p.external_ID = s.BaseProtocol
 
 END
-GO
