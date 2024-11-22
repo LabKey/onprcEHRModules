@@ -1,3 +1,4 @@
+USE [Labkey_GJ]
 GO
 /****** Object:  StoredProcedure [onprc_ehr].[eIACUCtoPrimeEndDateProcessing]    Script Date: 11/21/2024 10:25:00 AM ******/
 SET ANSI_NULLS ON
@@ -38,7 +39,7 @@ WITH RankedBaseProtocols AS (
                        WHEN LEN(Protocol_ID) > 10 THEN SUBSTRING(Protocol_ID, 6, 15)
                        ELSE Protocol_ID
                    END
-                   ORDER BY Approval_Date DESC) AS rn
+                   ORDER BY last_modified DESC) AS rn
     FROM onprc_ehr.eIACUC_PRIME_VIEW_PROTOCOLS
     WHERE Protocol_State IN ('approved', 'expired', 'terminated', 'withdrawn')
 )
@@ -51,7 +52,7 @@ Select * from #Step1EndDateCandidates
 --########################################################################
 --Step 2
 --Using #Step1EndDateCandidates we match to PrimeProtocols to determine records that
---should be end dated
+--should be endddated
 --IfExists Drop Tanle Drop Table #Step2PrimeProtocoltoEnddate
 Select
     p.external_id,
