@@ -15,7 +15,7 @@ BEGIN
 -- Filter for Protocol State in Approved, Expired, Terminated or Withdrawn
 --Note a review was completed and it was found that there were records in
 -- Prime Protocol related to terminated or winthdrawn
---2024-11-22 Updated to get the last Approval Record
+--2024-11-22 Update to get the last Approval Record
 
 WITH RankedBaseProtocols AS (
     SELECT rowid,
