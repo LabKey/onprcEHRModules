@@ -5,7 +5,7 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE PROCEDURE [onprc_ehr].[eIACUCtoPrimeProcessing]
+ALTER PROCEDURE [onprc_ehr].[eIACUCtoPrimeProcessing]
 
 
 AS
