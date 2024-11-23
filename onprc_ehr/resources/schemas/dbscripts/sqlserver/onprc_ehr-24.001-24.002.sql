@@ -17,6 +17,7 @@ BEGIN
 -- Prime Protocol related to terminated or winthdrawn
 --2024-11-22 Update to get the last Approval Record date
 --2024-11-23 Reset the first query to remove the with Clause and Labkey complained
+--Merged remote to local and then Commit
 
 
     SELECT rowid,
