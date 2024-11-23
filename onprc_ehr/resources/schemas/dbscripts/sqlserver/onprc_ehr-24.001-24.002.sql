@@ -17,7 +17,7 @@ BEGIN
 -- Prime Protocol related to terminated or winthdrawn
 --2024-11-22 Update to get the last Approval Record date
 
-WITH RankedBaseProtocols AS (
+
     SELECT rowid,
            Protocol_ID,
            CASE
@@ -40,12 +40,13 @@ WITH RankedBaseProtocols AS (
                        ELSE Protocol_ID
                    END
                    ORDER BY Approval_Date DESC) AS rn
+    INTO #BaseProtocolDetails
     FROM onprc_ehr.eIACUC_PRIME_VIEW_PROTOCOLS
     WHERE Protocol_State IN ('approved', 'expired', 'terminated', 'withdrawn')
 )
 SELECT *
 Into #Step1EndDateCandidates
-FROM RankedBaseProtocols
+FROM #BaseProtocolDetails
 where PROTOCOL_State != 'approved' and rn = 1
 
 Select * from #Step1EndDateCandidates
