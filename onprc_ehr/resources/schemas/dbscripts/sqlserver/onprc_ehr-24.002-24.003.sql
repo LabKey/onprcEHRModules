@@ -1,0 +1,3 @@
+ALTER TABLE onprc_ehr.eIACUC_PRIME_VIEW_PROTOCOLS ADD  BaseProtocol varchar(25);
+ALTER TABLE onprc_ehr.eIACUC_PRIME_VIEW_PROTOCOLS ADD  RevisionNumber varchar(25);
+ALTER TABLE onprc_ehr.eIACUC_PRIME_VIEW_PROTOCOLS ADD  RN int;

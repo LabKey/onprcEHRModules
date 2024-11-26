@@ -79,3 +79,6 @@ set p.enddate = s.Three_year_Expiration, p.contacts = 'EndDate baseed on eIACUC 
     from ehr.protocol p join #Step2PrimeProtocoltoEnddate s  on p.external_ID = s.BaseProtocol
 
 END
+
+--########################################################################
+--Step 4 update eIACUC2Data from this query
