@@ -165,7 +165,6 @@ Ext4.define('ONPRC_EHR.window.ApplyTemplateWindow', {
 
     statics: {
         loadTemplateRecords: function(callback, scope, storeCollection, templateId, initialValues){
-
             //subjectArray, date
             LABKEY.Query.selectRows({
                 schemaName: 'ehr',
@@ -271,7 +270,7 @@ Ext4.define('ONPRC_EHR.window.ApplyTemplateWindow', {
                             }
                             // Extract monkey's weight
                             if (data.dosage > 0) {
-                              var volume = this.Weights * data.dosage /data.concentration;
+                              var volume = this.weight * data.dosage /data.concentration;
                               }
 
                         var obj2 = {};
@@ -283,7 +282,6 @@ Ext4.define('ONPRC_EHR.window.ApplyTemplateWindow', {
                             var newData = Ext4.apply({}, data);
                             newData = Ext4.apply(newData, obj);   //Adds monkey id
                             newData = Ext4.apply(newData, obj2);
-
 
                             toAdd[store.storeId].push(newData);
                         }, this);
@@ -312,18 +310,15 @@ Ext4.define('ONPRC_EHR.window.ApplyTemplateWindow', {
 
     getInitialRecordValues: function(){
         var ret = [];
-        var weight = [];
         var date = this.down('#dateField').getValue();
         var obj = {
             date: date
         };
 
-        if   (this.down('#subjectIds'))
-        {
+        if   (this.down('#subjectIds')){
             var   subjectArray = LDK.Utils.splitIds(this.down('#subjectIds').getValue(),true);
             Ext4.Array.each(subjectArray, function(subj){
                  this.animalId = subj;
-                 this.Weights = {};
                  LABKEY.Query.selectRows({
                             schemaName: 'study',
                             queryName: 'demographics',
@@ -332,10 +327,10 @@ Ext4.define('ONPRC_EHR.window.ApplyTemplateWindow', {
                             filterArray: [
                                 LABKEY.Filter.create('Id', this.animalId, LABKEY.Filter.Types.EQUAL)
                             ],
+                            scope: this,
                             success: function (data) {
                                 if (data.rows && data.rows.length) {
-                                    weight = data.rows[0]["Id/MostRecentWeight/MostRecentWeight"];
-                                    this.Weights = weight;
+                                   this.weight = data.rows[0]["Id/MostRecentWeight/MostRecentWeight"];
 
                                 }
                             }
@@ -343,7 +338,7 @@ Ext4.define('ONPRC_EHR.window.ApplyTemplateWindow', {
                         });
                 ret.push(Ext4.apply({
                     Id: subj,
-                    Weight: weight
+                    Weight: this.weight
                 }, obj));
             }, this);
         }
