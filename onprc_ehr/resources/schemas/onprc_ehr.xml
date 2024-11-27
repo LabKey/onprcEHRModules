@@ -735,6 +735,10 @@
             <column columnName="PROTOCOL_State"/>
             <column columnName="PPQ_Numbers"/>
             <column columnName="Description"/>
+            <column columnName="BaseProtocol"/>
+            <column columnName="RevisionNumber"/>
+            <column columnName="rn"/>
+
         </columns>
     </table>
     <table tableName="PotentialDam_source" tableDbType="TABLE">

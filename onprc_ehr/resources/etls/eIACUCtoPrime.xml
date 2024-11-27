@@ -17,9 +17,10 @@
       <source queryName="PRIME_VIEW_NON_SURGICAL_PROCS" schemaName="eIACUC"/>
       <destination queryName="eIACUC_PRIME_VIEW_NON_SURGICAL_PROCS" schemaName="ONPRC_EHR" targetOption="truncate"/>
     </transform>
+    --Changed 2024-11-27 to change the source to add calcualted fields
     <transform id="step4a">
       <description>Transfer to Protocols</description>
-      <source queryName="PRIME_VIEW_PROTOCOLS" schemaName="eIACUC"/>
+      <source queryName="eIACUCBaseProtocol" schemaName="eIACUC"/>
       <destination queryName="eIACUC_PRIME_VIEW_PROTOCOLS" schemaName="ONPRC_EHR" targetOption="truncate"/>
     </transform>
     <transform id="step5a">
