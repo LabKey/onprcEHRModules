@@ -115,4 +115,8 @@ WHERE --d.calculated_status = 'Alive'
 
 --account for date/time in schedule
 --and
-s.date >= s.startDate and s.date <= s.enddate
+s.date >= s.startDate
+    AND (
+        s.date <= s.enddate
+        OR s.enddate IS NULL   -- some treatment_orders can have NULL enddates
+    )
