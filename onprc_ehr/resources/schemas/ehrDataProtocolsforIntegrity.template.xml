@@ -1,0 +1,31 @@
+<templateSchema sourceSchemaName="ehr" xmlns="http://labkey.org/data/xml/externalSchema" xmlns:cv="http://labkey.org/data/xml/queryCustomView">
+    <tables>
+        <tableName>protocol</tableName>
+        <tableName>protocolAnimals</tableName>
+        <tableName>protocolProcedures</tableName>
+        <tableName>ProtocoltotalProjects</tableName>
+
+    </tables>
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="protocol" tableDbType="NOT_IN_DB">
+                <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+                <tableTitle>protocol</tableTitle>
+            </table>
+            <table tableName="protocolAnimals" tableDbType="NOT_IN_DB">
+                <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+                <tableTitle>protocolAnimals</tableTitle>
+            </table>
+            <table tableName="protocolProcedures" tableDbType="NOT_IN_DB">
+                <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+                <tableTitle>protocolProcedures</tableTitle>
+            </table>
+            <table tableName="ProtocoltotalProjects" tableDbType="NOT_IN_DB">
+                <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+                <tableTitle>ProtocoltotalProjects</tableTitle>
+            </table>
+
+
+        </tables>
+    </metadata>
+</templateSchema>
