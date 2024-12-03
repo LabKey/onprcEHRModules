@@ -28,8 +28,6 @@
                 <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
                 <tableTitle>eIACUC_PRIME_VIEW_Surgical_Procs</tableTitle>
             </table>
-
-
         </tables>
     </metadata>
 </templateSchema>

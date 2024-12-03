@@ -24,8 +24,6 @@
                 <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
                 <tableTitle>ProtocoltotalProjects</tableTitle>
             </table>
-
-
         </tables>
     </metadata>
 </templateSchema>
