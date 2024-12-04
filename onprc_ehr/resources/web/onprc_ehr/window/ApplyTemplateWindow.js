@@ -267,47 +267,28 @@ Ext4.define('ONPRC_EHR.window.ApplyTemplateWindow', {
                                 enddate.setMinutes(59);
                                 enddate = enddate;
 
-
                             }
 
 
-                       LABKEY.Query.selectRows({
-                            schemaName: 'study',
-                            queryName: 'demographics',
-                            columns: 'Id,Id/MostRecentWeight/MostRecentWeight',
-                            scope: this,
-                            filterArray: [
-                                LABKEY.Filter.create('Id', obj.Id, LABKEY.Filter.Types.EQUAL)
-                            ],
-                            scope: this,
-                            success: function (results) {
 
-                                if (results.rows && results.rows.length) {
-                                   var row = results.rows[0];
-//                                   weight = results.rows[0].Id/MostRecentWeight/MostRecentWeight;
-                                    weight = row['Id/MostRecentWeight/MostRecentWeight'];
-;
-                                             // Extract monkey's weight
-
-                                     tvolume = weight * data.dosage /data.concentration;
-
-
-                                }
-                            }
-
-                        });
-
+                           tvolume = tweight * data.dosage /data.concentration; //<---------- I need weight available here
 
                         var obj2 = {};
                         obj2 = {
                             date: date,
                             enddate: enddate,
                             volume: tvolume
-                        };
+                            };
+//                            var obj3 = {};
+//                            obj3 = {
+//                                volume: tvolume
+//                        };
                             var newData = Ext4.apply({}, data);
                             newData = Ext4.apply(newData, obj);   //Adds monkey id
 
-                            newData = Ext4.apply(newData, obj2);
+                            newData = Ext4.apply(newData, obj2); // add new computed dates
+
+//                             newData = Ext4.apply(newData, obj3);
 
                             toAdd[store.storeId].push(newData);
                         }, this);
@@ -334,6 +315,7 @@ Ext4.define('ONPRC_EHR.window.ApplyTemplateWindow', {
         }
     },
 
+
     getInitialRecordValues: function(){
         var ret = [];
         var date = this.down('#dateField').getValue();
@@ -345,26 +327,26 @@ Ext4.define('ONPRC_EHR.window.ApplyTemplateWindow', {
             var   subjectArray = LDK.Utils.splitIds(this.down('#subjectIds').getValue(),true);
             Ext4.Array.each(subjectArray, function(subj){
                  this.animalId = subj;
-//                 LABKEY.Query.selectRows({
-//                            schemaName: 'study',
-//                            queryName: 'demographics',
-//                            columns: 'Id,Id/MostRecentWeight/MostRecentWeight',
-//                            scope: this,
-//                            filterArray: [
-//                                LABKEY.Filter.create('Id', this.animalId, LABKEY.Filter.Types.EQUAL)
-//                            ],
-//                            scope: this,
-//                            success: function (data) {
-//                                if (data.rows && data.rows.length) {
-//                                   this.weight = data.rows[0]["Id/MostRecentWeight/MostRecentWeight"];
-//
-//                                }
-//                            }
-//
-//                        });
+                 var tweight = 0;
+                    LABKEY.Query.selectRows({
+                         schemaName: 'study',
+                         queryName: 'demographics',
+                         columns: 'Id,Id/MostRecentWeight/MostRecentWeight',
+                         scope: this,
+                         filterArray: [
+                             LABKEY.Filter.create('Id', this.animalId, LABKEY.Filter.Types.EQUAL)
+                         ],
+                         scope: this,
+                         success: function (results) {
+                           if (results.rows && results.rows.length) {
+                              var row = results.rows[0];
+                               tweight = row['Id/MostRecentWeight/MostRecentWeight']; //<---------- weight computed here
+                         }
+                       }
+                     });
                 ret.push(Ext4.apply({
-                    Id: subj
-//                    Weight: this.weight
+                    Id: subj,
+                    weight: tweight
                 }, obj));
             }, this);
         }
@@ -403,6 +385,8 @@ Ext4.define('ONPRC_EHR.window.ApplyTemplateWindow', {
         if (!records){
             return;
         }
+
+
 
         this.hide();
         Ext4.Msg.wait("Loading Template...");
