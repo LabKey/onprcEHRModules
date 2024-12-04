@@ -188,8 +188,9 @@ Ext4.define('ONPRC_EHR.window.ApplyTemplateWindow', {
                     if (!initialValues.length){
                         initialValues.push({});
                     }
-                      var tvolume = 0;
-                      var weight = 0;
+//                      var tvolume = 0;
+//                      var weight = 0;
+//                       var tweight = 0;
                     Ext4.Array.forEach(initialValues, function(obj){
                         Ext4.Array.forEach(data.rows, function(row){
                             var data = Ext4.decode(row.json);
@@ -268,27 +269,38 @@ Ext4.define('ONPRC_EHR.window.ApplyTemplateWindow', {
                                 enddate = enddate;
 
                             }
+//                    var tweight = 0;
+//                    LABKEY.Query.selectRows({
+//                         schemaName: 'study',
+//                         queryName: 'demographics',
+//                         columns: 'Id,Id/MostRecentWeight/MostRecentWeight',
+//                         scope: this,
+//                         filterArray: [
+//                             LABKEY.Filter.create('Id', '28106', LABKEY.Filter.Types.EQUAL)
+//                         ],
+//                         failure: LDK.Utils.getErrorCallback(),
+//                         success: function (resultst) {
+//                           if (resultst.rows && resultst.rows.length) {
+//                              var rowt = resultst.rows[0];
+//                               tweight = rowt['Id/MostRecentWeight/MostRecentWeight']; //<---------- weight computed here
+//                         }
+//                       }
+//                     });
 
 
-
-                           tvolume = tweight * data.dosage /data.concentration; //<---------- I need weight available here
+//                           tvolume = tweight * data.dosage /data.concentration; //<---------- I need weight available here
 
                         var obj2 = {};
                         obj2 = {
                             date: date,
-                            enddate: enddate,
-                            volume: tvolume
+                            enddate: enddate
+//                            volume: tvolume
                             };
-//                            var obj3 = {};
-//                            obj3 = {
-//                                volume: tvolume
-//                        };
+
                             var newData = Ext4.apply({}, data);
                             newData = Ext4.apply(newData, obj);   //Adds monkey id
 
                             newData = Ext4.apply(newData, obj2); // add new computed dates
-
-//                             newData = Ext4.apply(newData, obj3);
 
                             toAdd[store.storeId].push(newData);
                         }, this);
@@ -327,26 +339,8 @@ Ext4.define('ONPRC_EHR.window.ApplyTemplateWindow', {
             var   subjectArray = LDK.Utils.splitIds(this.down('#subjectIds').getValue(),true);
             Ext4.Array.each(subjectArray, function(subj){
                  this.animalId = subj;
-                 var tweight = 0;
-                    LABKEY.Query.selectRows({
-                         schemaName: 'study',
-                         queryName: 'demographics',
-                         columns: 'Id,Id/MostRecentWeight/MostRecentWeight',
-                         scope: this,
-                         filterArray: [
-                             LABKEY.Filter.create('Id', this.animalId, LABKEY.Filter.Types.EQUAL)
-                         ],
-                         scope: this,
-                         success: function (results) {
-                           if (results.rows && results.rows.length) {
-                              var row = results.rows[0];
-                               tweight = row['Id/MostRecentWeight/MostRecentWeight']; //<---------- weight computed here
-                         }
-                       }
-                     });
                 ret.push(Ext4.apply({
-                    Id: subj,
-                    weight: tweight
+                    Id: subj
                 }, obj));
             }, this);
         }
