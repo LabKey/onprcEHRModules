@@ -85,7 +85,8 @@ FROM ehr_lookups.dateRange dr
 
 JOIN study."Treatment Orders" t1
   --NOTE: should the enddate consider date/time?
-  ON (dr.dateOnly >= t1.dateOnly and dr.dateOnly <= t1.enddateCoalesced AND
+  --The COALESCE enables this query to be return results with s.date in the future and t1.enddate being NULL
+  ON (dr.dateOnly >= t1.dateOnly and dr.dateOnly <= COALESCE(t1.enddateCoalesced, dr.dateOnly) AND
       --technically the first day of the treatment is day 1, not day 0
   (  (mod(CAST(timestampdiff('SQL_TSI_DAY', CAST(t1.dateOnly as timestamp), dr.dateOnly) as integer), t1.frequency.intervalindays) = 0 And t1.frequency.intervalindays is not null And t1.frequency.dayofweek is null )
 
