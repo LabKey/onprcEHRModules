@@ -1,5 +1,6 @@
 GO
-/****** Object:  StoredProcedure [onprc_ehr].[eIACUCtoPrimeEndDateProcessing]    Script Date: 11/21/2024 10:25:00 AM ******/
+/****** Object:  StoredProcedure [onprc_ehr].[eIACUCtoPrimeEndDateProcessing]    Script Date: 11/21/2024 10:25:00 AM ******
+  2024-12-06 New Stored Proceddure designed to handle Max Row on a Base Protocol/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
