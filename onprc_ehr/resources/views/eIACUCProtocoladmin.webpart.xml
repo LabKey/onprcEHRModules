@@ -1,0 +1,6 @@
+<webpart xmlns="http://labkey.org/data/xml/webpart" title="Manage eIACUC Protocol Processing">
+   <view name="eIACUCProtocolAdmin"/>
+   <locations>
+		<location name="body"/>
+   </locations>
+</webpart>

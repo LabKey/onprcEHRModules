@@ -1,0 +1,49 @@
+<script type="text/javascript">
+
+Ext4.onReady(function(){
+    var webpart = <%=webpartContext%>;
+
+    Ext4.create('Ext.panel.Panel', {
+        border: false,
+        defaults: {
+            border: false
+        },
+        items: [{
+            html: 'This page is designed to give a summary of the Protocols and eiACUC References',
+            style: 'padding-bottom: 10px;'
+        },{
+            xtype: 'ldk-navpanel',
+            sections: [{
+                header: 'eIACUC Resources',
+                items: [{
+                    name: 'eIACUC Protocols',
+                    url: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'ehrData', 'query.queryName': 'eIACUC_PRIME_VIEW_PROTOCOLS'})
+                }]
+            },{
+                header: 'Reference Tables',
+                items: [{
+                    name: 'Animal Groups',
+                    url: LABKEY.ActionURL.buildURL('ehr', 'executeQuery', null, {schemaName: 'ehrData', 'query.queryName': 'eIACUC_PRIME_VIEW_ANIMAL_GROUPS'})
+                },{
+                    name: 'IBC Numbers',
+                    url: LABKEY.ActionURL.buildURL('ehr', 'executeQuery', null, {schemaName: 'ehrData', 'query.queryName': 'eIACUC_PRIME_VIEW_IBC_NUMBERS'})
+                },{
+                    name: 'Non Surgical Procesures',
+                    url: LABKEY.ActionURL.buildURL('ehr', 'executeQuery', null, {schemaName: 'ehrData', 'query.queryName': 'eIACUC_PRIME_VIEW_NON_SURGICAL_PROCS'})
+                },{
+                    name: 'Protocols',
+                    url: LABKEY.ActionURL.buildURL('ehr', 'executeQuery', null, {schemaName: 'ehrData', 'query.queryName': 'eIACUC_PRIME_VIEW_PROTOCOLS\t'})
+                },{
+                    name: 'Surgical Procesures',
+                    url: LABKEY.ActionURL.buildURL('ehr', 'executeQuery', null, {schemaName: 'ehrData', 'query.queryName': 'eIACUC_PRIME_VIEW_SURGICAL_PROCS'})
+                }
+
+
+                ]
+            }]
+        }]
+
+    }).render(webpart.wrapperDivId);
+});
+
+</script>
