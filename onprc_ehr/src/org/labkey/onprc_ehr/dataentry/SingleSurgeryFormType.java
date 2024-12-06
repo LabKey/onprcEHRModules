@@ -66,7 +66,7 @@ public class SingleSurgeryFormType extends EncounterForm
         }
 
         addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/model/sources/Surgery.js"));
-        addClientDependency(ClientDependency.supplierFromPath("ehr/window/OpenSurgeryCasesWindow.js"));
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/window/OpenSurgeryCasesWindow.js"));
         addClientDependency(ClientDependency.supplierFromPath("ehr/panel/SurgeryDataEntryPanel.js"));
 //    Added: 8-27-2024  r. Blasa
         addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/form/field/SurgeryEntryField.js"));
@@ -95,7 +95,7 @@ public class SingleSurgeryFormType extends EncounterForm
     protected List<String> getButtonConfigs()
     {
         List<String> ret = super.getButtonConfigs();
-        ret.add("OPENSURGERYCASES");
+        ret.add("OPENSURGERYCASEST");
 
         return ret;
     }
