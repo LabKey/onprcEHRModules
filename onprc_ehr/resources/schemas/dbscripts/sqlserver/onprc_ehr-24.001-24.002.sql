@@ -1,5 +1,7 @@
 GO
-/****** Object:  StoredProcedure [onprc_ehr].[eIACUCtoPrimeEndDateProcessing]    Script Date: 11/21/2024 10:25:00 AM ******/
+/****** Object:  StoredProcedure [onprc_ehr].[eIACUCtoPrimeEndDateProcessing]    Script Date: 11/21/2024 10:25:00 AM
+2024-12-09 dropped drop if extists statement
+******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
