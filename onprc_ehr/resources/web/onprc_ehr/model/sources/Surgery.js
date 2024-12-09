@@ -139,8 +139,7 @@
             },
             'study.clinical_observations': {
                    inflammation: {
-                     hidden: true,
-                     defaultValue: '0 - None'
+                     hidden: true
                     },
                     area: {
                       lookup: {
@@ -159,13 +158,11 @@
                            }
                       },
                     bruising: {
-                      hidden: true,
-                      defaultValue:'0 - None'
+                      hidden: true
                       },
                     other: {
-                      hidden: true,
-                      defaultValue:'0 - None'
-                    },
+                      hidden: true
+                     },
                      remark: {
                        hidden: true,
                        defaultValue: 'Deferred entries until Surgical Rounds process'
