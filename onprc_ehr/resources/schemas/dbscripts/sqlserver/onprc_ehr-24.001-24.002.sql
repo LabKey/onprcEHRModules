@@ -17,7 +17,6 @@ ALTER PROCEDURE [onprc_ehr].[eIACUCtoPrimeProcessing]
 AS
 BEGIN
 
-    DROP TABLE IF EXISTS #expiredProtocolMaxRow --do this duirng development only as the Temp table drops once the session is closed
 
 CREATE TABLE #expiredProtocolMaxRow (
     BaseProtocol varchar(50) ,
