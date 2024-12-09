@@ -482,17 +482,20 @@ exports.init = function(EHR){
         if (row.Id && row.category != 'Incision' && (row.inflammation || row.bruising || row.other))
             {
                var msg = '';
-              if (row.Id && row.category != 'Incision' && row.inflammation) {
+              if (row.Id && row.category != 'Incision' && row.inflammation && row.inflammation == null) {
                    msg = row.category + ': was an invalid entry onto the Inflammation input field, only Incision entries are allowed';
+                   EHR.Server.Utils.addError(scriptErrors, 'category',  msg, 'ERROR');
                    }
-              if (row.Id && row.category != 'Incision' && row.bruising) {
+              if (row.Id && row.category != 'Incision' && row.bruising && row.bruinsing == null) {
                     msg = row.category + ': was an invalid entry onto the Bruising input field, only Incision entries are allowed';
+                    EHR.Server.Utils.addError(scriptErrors, 'category',  msg, 'ERROR');
                     }
-               if (row.Id && row.category != 'Incision' && row.other) {
+               if (row.Id && row.category != 'Incision' && row.other && row.other == null) {
                     msg = row.category + ': was an invalid entry onto the Other input field, only Incision entries are allowed';
+                    EHR.Server.Utils.addError(scriptErrors, 'category',  msg, 'ERROR');
                     }
 
-                EHR.Server.Utils.addError(scriptErrors, 'category',  msg, 'ERROR');
+
 
             }
 

@@ -56,8 +56,6 @@ Ext4.define('ONPRC_EHR.window.OpenSurgeryCasesWindow', {
         var animalMap = {};
         var columns = 6;
 
-         var animalMapObs = {};
-
         this.sourceStore.each(function(rec, recIdx){
             if (!rec.get('Id') || !rec.get('procedureid')){
                 return;
@@ -88,27 +86,10 @@ Ext4.define('ONPRC_EHR.window.OpenSurgeryCasesWindow', {
             animalMap[rec.get('Id')].encounterRecords.push(rec);
         }, this);
 
-//        -----------------------------------------
-
-       this.sourceStoreobs.each(function(rec, recIdx){
-            if (!rec.get('Id')) {
-                return;
-            }
-
-            animalMapObs[rec.get('Id')] = animalMapObs[rec.get('Id')] || {
-                observationRecords: [],
-
-            };
-            animalMapObs[rec.get('Id')].observationRecords.push(rec);
-        }, this);
-
-//-----------------------------------------------------
-
         var toAdd = [];
         var rowIdx = 0;
         for (var id in animalMap){
             var obj = animalMap[id];
-            var obj2 = animalMapObs[id];
             obj.procedureNames = Ext4.unique(obj.procedureNames);
             var ar = demographicsMap[id];
             rowIdx++;
@@ -175,7 +156,6 @@ Ext4.define('ONPRC_EHR.window.OpenSurgeryCasesWindow', {
                 xtype: 'checkbox',
                 fieldName: 'exclude',
                 encounterRecords: obj.encounterRecords,
-                observationRecords: obj2.observationRecords,
                 checked: (obj.maxFollowup === 0),
                 rowIdx: rowIdx
             });
@@ -226,9 +206,6 @@ Ext4.define('ONPRC_EHR.window.OpenSurgeryCasesWindow', {
         var caseRecordsToInsert = [];
         var caseRecordsToUpdate = [];
 
-        var recordMapObs = {};
-
-
         var success = true;
         var cbs = this.query('checkbox');
         Ext4.Array.forEach(cbs, function(cb){
@@ -238,9 +215,6 @@ Ext4.define('ONPRC_EHR.window.OpenSurgeryCasesWindow', {
                 var existingCase = this.query('component[rowIdx=' + cb.rowIdx + '][fieldName=caseId]')[0].caseId;
                 recordMap[id] = recordMap[id] || [];
                 recordMap[id] = recordMap[id].concat(cb.encounterRecords);
-
-                 recordMapObs[id] = recordMapObs[id] || [];
-                 recordMapObs[id] = recordMapObs[id].concat(cb.observationRecords);
 
                 if (!remark){
                     Ext4.Msg.alert('Error', 'Must Enter A Remark For All Cases');
@@ -286,27 +260,26 @@ Ext4.define('ONPRC_EHR.window.OpenSurgeryCasesWindow', {
                         if (!results || !results.rows){
                             return;
                         }
-//                        Add Observation record to the same case     Ext4.Array.each(subjectArray, function(subj)
+
                         Ext4.Array.forEach(results.rows, function(row){
                             if (row.Id && row.objectid){
-                                var records = recordMapObs[row.Id];
-                                Ext4.Array.each(records, function(rec){
-                                    console.log('updating observation with caseid');
+                                var records = recordMap[row.Id];
+                                Ext4.Array.forEach(records, function(rec){
+                                    console.log('updating procedure with caseid');
                                     rec.set('caseid', row.objectid);
+                                }, this);
+
+                                this.caseUpdateStores.forEach(function(store){
+                                    if (store.getFields().get('caseid') && store.getFields().get('Id')){
+                                        store.each((rec) => {
+                                            if (rec.get('Id') == row.Id){
+                                                rec.set('caseid', row.objectid);
+                                            }
+                                        }, this);
+                                    }
                                 }, this);
                             }
                         }, this);
-
-
-                          Ext4.Array.forEach(results.rows, function(row){
-                          if (row.Id && row.objectid){
-                              var records = recordMap[row.Id];
-                              Ext4.Array.forEach(records, function(rec){
-                                  console.log('updating procedure with caseid');
-                                  rec.set('caseid', row.objectid);
-                              }, this);
-                          }
-                      }, this);
                     }
                 });
             }
@@ -329,6 +302,16 @@ Ext4.define('ONPRC_EHR.window.OpenSurgeryCasesWindow', {
                                 Ext4.Array.forEach(records, function(rec){
                                     console.log('updating procedure with caseid')
                                     rec.set('caseid', row.objectid);
+                                }, this);
+
+                                this.caseUpdateStores.forEach(function(store){
+                                    if (store.getFields().get('caseid') && store.getFields().get('Id')){
+                                        store.each((rec) => {
+                                            if (rec.get('Id') == row.Id){
+                                                rec.set('caseid', row.objectid);
+                                            }
+                                        }, this);
+                                    }
                                 }, this);
                             }
                         }, this);
@@ -372,18 +355,9 @@ EHR.DataEntryUtils.registerDataEntryFormButton('OPENSURGERYCASEST', {
             return;
         }
 
-        //extract observation record
-            var obsStore = panel.storeCollection.getClientStoreByName('clinical_observations') || panel.storeCollection.getClientStoreByName('Clinical Observations');
-            LDK.Assert.assertNotEmpty('Unable to find obsStore from OPENSURGERYCASES button', obsStore);
-
-           if (!obsStore.getCount()){
-                Ext4.Msg.alert('Error', 'No Observation Entered');
-                return;
-            }
-
         Ext4.create('ONPRC_EHR.window.OpenSurgeryCasesWindow', {
             sourceStore: clientStore,
-            sourceStoreobs: obsStore
+            caseUpdateStores: panel.storeCollection.clientStores.items,
         }).show();
     }
 });
