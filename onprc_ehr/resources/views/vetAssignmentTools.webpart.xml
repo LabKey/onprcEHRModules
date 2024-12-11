@@ -1,6 +1,0 @@
-<webpart xmlns="http://labkey.org/data/xml/webpart" title="Vet Assignment Tools">
-    <view name="vetAssignmentTools"/>
-    <locations>
-        <location name="body"/>
-    </locations>
-</webpart>
