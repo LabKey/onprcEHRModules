@@ -10,9 +10,6 @@ Notes:
   * Left joins are needed for CMUcases and assignedProject as those tables
     might not have records for an animal ID. Left joins are used for all
 	other joins to be resilient against missing data.
-
-Future potential modifications:
-  * Limit open cases to those that are not inactive	after confirming w/ Heather
  */
 
 SELECT demographics.id
@@ -28,15 +25,11 @@ SELECT demographics.id
      , demographics.gender
      , demographics.species
      , demographics.history
-FROM Site.{ substitutePath moduleProperty('EHR', 'EHRStudyContainer') }.study.animal AS nhp
-LEFT JOIN Site.{ substitutePath moduleProperty('EHR', 'EHRStudyContainer') }.study.ClinicalCases_Open AS CMUcases
-ON CMUcases.id = nhp.id
-    LEFT JOIN Site.{ substitutePath moduleProperty('EHR', 'EHRStudyContainer') }.study.housing AS housing
-    ON housing.id = nhp.id
-    LEFT JOIN Site.{ substitutePath moduleProperty('EHR', 'EHRStudyContainer') }.study.demographics AS demographics
-    ON demographics.id = nhp.id
-    LEFT JOIN Site.{ substitutePath moduleProperty('EHR', 'EHRStudyContainer') }.study.vetAssignment_projects AS assignedProject
-    ON assignedProject.id = nhp.id
+FROM study.animal AS nhp
+LEFT JOIN study.ClinicalCases_Open AS CMUcases ON CMUcases.id = nhp.id
+LEFT JOIN study.housing AS housing ON housing.id = nhp.id
+LEFT JOIN study.demographics AS demographics ON demographics.id = nhp.id
+LEFT JOIN study.vetAssignment_projects AS assignedProject ON assignedProject.id = nhp.id
 WHERE demographics.Calculated_Status = 'Alive'
   AND nhp.id NOT LIKE '[A-Z]%'
   AND housing.enddate IS NULL

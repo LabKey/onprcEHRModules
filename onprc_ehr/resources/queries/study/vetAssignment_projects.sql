@@ -30,9 +30,9 @@ SELECT Id
      , enddate
      , project.use_category AS projectType
 FROM study.assignment
-WHERE Curdate() >= date  /* The assignment has started */
+WHERE Curdate() >= date                         -- The assignment has started
   AND (
-    enddate IS NULL            /* Not a day lease or scheduled end of assignment */
-    OR Curdate() < enddate   /* The assignment hasn't yet ended */
-    OR (Curdate() = enddate AND enddate = date) /* 1-day day lease where date = enddate */
+    enddate IS NULL                             -- Not a day lease or scheduled end of assignment
+    OR Curdate() < enddate                      -- The assignment hasn't yet ended
+    OR (Curdate() = enddate AND enddate = date) -- 1-day day lease where date = enddate
   )
