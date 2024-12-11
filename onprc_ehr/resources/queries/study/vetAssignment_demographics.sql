@@ -11,25 +11,24 @@ Notes:
     might not have records for an animal ID. Left joins are used for all
 	other joins to be resilient against missing data.
  */
-
-SELECT demographics.id
-     , CMUcases.assignedVet.displayName AS caseVet
-     , CMUcases.date AS caseDate
-     , housing.room
-     , housing.room.area
-     , assignedProject.project AS project
-     , assignedProject.Protocol AS protocol
-     , assignedProject.PI AS protocolPI
-     , assignedProject.projectType AS assignmentType
-     , demographics.calculated_status
-     , demographics.gender
-     , demographics.species
-     , demographics.history
+SELECT demographics.id,
+       CMUcases.assignedVet.displayName AS caseVet,
+       CMUcases.date AS caseDate,
+       housing.room,
+       housing.room.area,
+       assignedProject.project AS project,
+       assignedProject.Protocol AS protocol,
+       assignedProject.PI AS protocolPI,
+       assignedProject.projectType AS assignmentType,
+       demographics.calculated_status,
+       demographics.gender,
+       demographics.species,
+       demographics.history
 FROM study.animal AS nhp
-LEFT JOIN study.ClinicalCases_Open AS CMUcases ON CMUcases.id = nhp.id
-LEFT JOIN study.housing AS housing ON housing.id = nhp.id
-LEFT JOIN study.demographics AS demographics ON demographics.id = nhp.id
-LEFT JOIN study.vetAssignment_projects AS assignedProject ON assignedProject.id = nhp.id
+         LEFT JOIN study.ClinicalCases_Open AS CMUcases ON CMUcases.id = nhp.id
+         LEFT JOIN study.housing AS housing ON housing.id = nhp.id
+         LEFT JOIN study.demographics AS demographics ON demographics.id = nhp.id
+         LEFT JOIN study.vetAssignment_projects AS assignedProject ON assignedProject.id = nhp.id
 WHERE demographics.Calculated_Status = 'Alive'
   AND nhp.id NOT LIKE '[A-Z]%'
   AND housing.enddate IS NULL
