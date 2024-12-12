@@ -31,3 +31,41 @@ set e.enddate = p.Approval_Date, e.contacts = 'Protocol enddated based on eiACUC
     From ehr.protocol e, ExpiredProtocol p
 where e.external_id = p.BaseProtocol
 
+/*WITH ApprovedProtocols AS (
+    SELECT
+    BaseProtocol,
+    MAX(Approval_Date) AS maxApprovalDate
+    FROM
+    onprc_ehr.eIACUC_PRIME_VIEW_PROTOCOLS
+    WHERE
+    Protocol_State IN ('expired', 'terminated', 'withdrawn')
+    GROUP BY
+    BaseProtocol
+    ),
+
+    DistinctProtocols as (
+    SELECT DISTINCT
+    p.rowID,
+    p.BaseProtocol,
+    p.RevisionNumber,
+    p.Protocol_State,
+    p.Approval_Date,
+    p.Last_Modified,
+    p.Three_Year_Expiration
+    FROM
+    onprc_ehr.eIACUC_PRIME_VIEW_PROTOCOLS p
+    INNER JOIN ApprovedProtocols
+    ON p.BaseProtocol = ApprovedProtocols.BaseProtocol
+    AND p.Approval_Date = ApprovedProtocols.maxApprovalDate)
+
+Select
+    p.Protocol,
+    p.external_Id,
+    d.BaseProtocol,
+    d.RevisionNumber,
+    d.Protocol_State,
+    p.enddate
+
+
+from ehr.protocol p, distinctProtocols d
+Where p.external_id = d.BaseProtocol and p.enddate is null*/
