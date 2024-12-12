@@ -27,4 +27,5 @@ Update e
 Set e.BaseProtocol = p.BaseProtocol, e.RevisionNumber = p.revisionNumber
 --
     from onprc_ehr.eIACUC_PRIME_VIEW_PROTOCOLS e, BaseProtocol p
+    where e.rowID = p.rowID
 
