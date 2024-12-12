@@ -8,11 +8,11 @@ WITH BaseProtocol AS (
         RowID,
         Protocol_id,
         CASE
-            WHEN LEN(protocol_id) > 10 THEN SUBSTRING(protocol_id, 6, LEN(protocol_id) - 5)
+            WHEN LEN(protocol_id) > 10 THEN SUBSTRING(protocol_id, 6, 15)
             ELSE protocol_id
             END AS BaseProtocol,
         CASE
-            WHEN LEN(protocol_id) > 10 THEN SUBSTRING(protocol_ID, 5, LEN(protocol_id) - 4)
+            WHEN LEN(protocol_id) > 10 THEN SUBSTRING(protocol_ID,1, 5)
             ELSE 'Original'
             END AS RevisionNumber,
         approval_date,

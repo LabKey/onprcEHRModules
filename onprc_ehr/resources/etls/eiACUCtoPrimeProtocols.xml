@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<etl xmlns="http://labkey.org/etl/xml">
+
+    <name>eIACUC to Prime Protocols</name>
+
+    <description>Runs stored Procedure to update eiACUC Protocols in ehr</description>
+
+
+    <transforms>
+
+        <transform id="UpdateBaseProtocol" type="StoredProcedure">
+            <description>Runs a stored procedure that generates lab values</description>
+            <procedure schemaName="onprc_ehr" procedureName="onprc_ehr.BaseProtocol">
+            </procedure>
+        </transform>
+
+
+
+    </transforms>
+
+    <schedule>
+--Runs at 8:30 AM each day
+        <cron expression="0 50 04 * * "/>
+
+    </schedule>
+
+
+</etl>
+
+
+
+
