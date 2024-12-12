@@ -188,9 +188,7 @@ Ext4.define('ONPRC_EHR.window.ApplyTemplateWindow', {
                     if (!initialValues.length){
                         initialValues.push({});
                     }
-//                      var tvolume = 0;
-//                      var weight = 0;
-//                       var tweight = 0;
+
                     Ext4.Array.forEach(initialValues, function(obj){
                         Ext4.Array.forEach(data.rows, function(row){
                             var data = Ext4.decode(row.json);
@@ -269,32 +267,12 @@ Ext4.define('ONPRC_EHR.window.ApplyTemplateWindow', {
                                 enddate = enddate;
 
                             }
-//                    var tweight = 0;
-//                    LABKEY.Query.selectRows({
-//                         schemaName: 'study',
-//                         queryName: 'demographics',
-//                         columns: 'Id,Id/MostRecentWeight/MostRecentWeight',
-//                         scope: this,
-//                         filterArray: [
-//                             LABKEY.Filter.create('Id', '28106', LABKEY.Filter.Types.EQUAL)
-//                         ],
-//                         failure: LDK.Utils.getErrorCallback(),
-//                         success: function (resultst) {
-//                           if (resultst.rows && resultst.rows.length) {
-//                              var rowt = resultst.rows[0];
-//                               tweight = rowt['Id/MostRecentWeight/MostRecentWeight']; //<---------- weight computed here
-//                         }
-//                       }
-//                     });
-
-
-//                           tvolume = tweight * data.dosage /data.concentration; //<---------- I need weight available here
 
                         var obj2 = {};
                         obj2 = {
                             date: date,
                             enddate: enddate
-//                            volume: tvolume
+
                             };
 
                             var newData = Ext4.apply({}, data);
