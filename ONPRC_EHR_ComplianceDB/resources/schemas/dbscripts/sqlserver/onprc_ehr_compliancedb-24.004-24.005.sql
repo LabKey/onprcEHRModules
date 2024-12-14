@@ -129,7 +129,7 @@ BEGIN
 
 
 
-                           ELSE ( select  (tt.expireperiod) - ( datediff(month,max(pq.date), getdate())) from  ehr_compliancedb.requirements tt, ehr_compliancedb.completiondates pq where   tt.requirementname =   b.requirementname and pq.requirementname = tt.requirementname and pq.employeeid = a.employeeid group by tt.expireperiod )
+                           ELSE ( select  (tt.expireperiod) - ( datediff(month,max(pq.date), getdate())) + 1 from  ehr_compliancedb.requirements tt, ehr_compliancedb.completiondates pq where   tt.requirementname =   b.requirementname and pq.requirementname = tt.requirementname and pq.employeeid = a.employeeid group by tt.expireperiod )
 
                            END  AS Float)  AS MonthsUntilRenewal
 
