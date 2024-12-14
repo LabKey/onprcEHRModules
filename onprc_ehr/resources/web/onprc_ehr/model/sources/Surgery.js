@@ -160,6 +160,10 @@
                     bruising: {
                       hidden: true
                       },
+                    type: {
+                           hidden: true,
+                           defaultValue: 'surgery'
+                           },
                     other: {
                       hidden: true
                      },
