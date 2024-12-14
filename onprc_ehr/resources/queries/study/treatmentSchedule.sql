@@ -116,8 +116,5 @@ WHERE (d.lastDayatCenter Is Null or d.lastDayAtCenter > s.enddate)
 
 
 --account for date/time in schedule
-    AND s.date >= s.startDate
-        AND (
-            s.date <= s.enddate
-            OR s.enddate IS NULL   -- some treatment_orders can have NULL enddates
-        )
+    AND s.date >= s.startDate AND (s.date <= s.enddate OR s.enddate IS NULL)   -- some treatment_orders can have NULL enddates
+
