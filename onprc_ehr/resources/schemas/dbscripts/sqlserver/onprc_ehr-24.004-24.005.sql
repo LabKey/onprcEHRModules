@@ -53,10 +53,11 @@ WITH ApprovedProtocols AS (
                  INNER JOIN ApprovedProtocols ap
                             ON p.BaseProtocol = ap.BaseProtocol
                                 AND p.Approval_Date = ap.maxApprovalDate
-     )
+     ),
 
 -- Select protocols that need to be updated
-SELECT
+     ExpiredProtocol as
+(SELECT
     p.Protocol,
     p.external_Id,
     d.BaseProtocol,
@@ -68,7 +69,7 @@ FROM
         INNER JOIN DistinctProtocols d
                    ON p.external_id = d.BaseProtocol
 WHERE
-    p.enddate IS NULL;
+    p.enddate IS NULL),
 
 -- Update the end date and contacts for expired protocols
 UPDATE e

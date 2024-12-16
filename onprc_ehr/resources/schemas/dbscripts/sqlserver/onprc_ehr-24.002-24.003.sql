@@ -1,5 +1,5 @@
 --This build is a stored preoccured that uses a temp table and then updates onprc_ehronprc_ehr.eIACUC_PRIME_VIEW_PROTOCOLS
-CREATE Procedure onprc_ehr.BaseProtocol
+ALTER Procedure onprc_ehr.BaseProtocol
 
     AS
 --Create a Temp Table that creates Base Protocol and Revision Number

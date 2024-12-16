@@ -15,6 +15,13 @@
             </procedure>
         </transform>
 
+        <transform id="enddateExpiredProtocolsProtocol" type="StoredProcedure">
+            <description>Runs a stored procedure that generates lab values</description>
+            <procedure schemaName="onprc_ehr" procedureName="ExpiredProtocolUpdate">
+            </procedure>
+        </transform>
+
+
 
 
     </transforms>
