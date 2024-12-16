@@ -42,7 +42,7 @@ BEGIN
 
  END
 
- GO
+
  If exists(select * from ehr_compliancedb.EmployeePerUnit         ------> count= 496
            where  category like '%arrs%'
   )
@@ -58,7 +58,7 @@ BEGIN
 
   END
 
-GO
+
 
  If exists(select * from ehr_compliancedb.Employees
                where majorudds  like '%arrs%'
@@ -75,7 +75,7 @@ GO
 
   END
 
-GO
+
 
  If exists(select * from ehr_compliancedb.Employees
                where unit  like '%arrs%'
@@ -90,7 +90,7 @@ GO
 
   END
 
-GO
+
 
  If exists(select * from ehr_compliancedb.Employees
                where  category  like '%arrs%'
@@ -105,7 +105,7 @@ GO
 
   END
 
-GO
+
 
  If exists(select * from ehr_compliancedb.requirements
                where requirementname  like '%arrs%'
@@ -120,7 +120,7 @@ GO
                       GoTo Err_Proc
 
   END
-  GO
+
 
 
  If exists(select * from ehr_compliancedb.EmployeeRequirementExemptions
@@ -136,7 +136,7 @@ GO
                       GoTo Err_Proc
 
   END
-  GO
+
 
 
 
@@ -154,7 +154,7 @@ GO
                         GoTo Err_Proc
 
     END
-    GO
+
 
    If exists(select * from ehr_compliancedb.RequirementsPerCategory
                  where RequirementName  like '%arrs%'
@@ -170,7 +170,7 @@ GO
                         GoTo Err_Proc
 
     END
-    GO
+
 
  If exists(select * from ehr_compliancedb.RequirementsPerCategory
            where category  like '%arrs%'
@@ -184,7 +184,7 @@ GO
                         GoTo Err_Proc
 
     END
-    GO
+
 
    If exists(select * from ehr_compliancedb.RequirementsPerCategory
              where unit  like '%arrs%'
@@ -199,7 +199,7 @@ GO
                           GoTo Err_Proc
 
       END
-      GO
+
 
 
   If exists(select * from ehr_compliancedb.EmployeeCategory
@@ -215,7 +215,7 @@ GO
                          GoTo Err_Proc
 
      END
-     GO
+
 
 
 
