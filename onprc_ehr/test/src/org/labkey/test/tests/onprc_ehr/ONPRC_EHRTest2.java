@@ -18,6 +18,7 @@ package org.labkey.test.tests.onprc_ehr;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.hc.client5.http.classic.methods.HttpGet;
+import org.awaitility.Awaitility;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -56,6 +57,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 
 import java.io.IOException;
 import java.net.URI;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
@@ -1324,8 +1326,10 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
         waitAndClickAndWait(Locator.linkWithText("ASB Services Request"));
         addBloodDrawRequest(animalId, now, "795644", "Heparin", 12);
 
-        checker().withScreenshot("Blood request").verifyTrue("Expected error is not present", isAnyTextPresent(
-                "Row 1, # of Tubes: ERROR: The quantity requested, 12.0ml exceeds the available blood volume, 10.0ml for AnimalId: 12345"));
+        Awaitility.await().atMost(Duration.ofSeconds(30)).untilAsserted(() -> {
+            Assert.assertTrue("Expected error is not present", isAnyTextPresent(
+                    "Row 1, # of Tubes: ERROR: The quantity requested, 12.0ml exceeds the available blood volume, 10.0ml for AnimalId: 12345"));
+        });
 
         //Updating the total volume below the available blood volume.
         updateTotalVolume(8);
