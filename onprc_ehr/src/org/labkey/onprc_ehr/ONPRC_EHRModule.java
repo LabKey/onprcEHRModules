@@ -225,6 +225,9 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         //Added Aug 9th, 2024 Kollil
         ns.registerNotification(new AdminNotifications(this));
 
+        //Added Nov 5th, 2024 Kollil
+        ns.registerNotification(new PathAssignmentNotification(this));
+
         //Added 8-7-2018 R.Blasa
         ns.registerNotification(new BirthHousingMismatchNotification(this));
 

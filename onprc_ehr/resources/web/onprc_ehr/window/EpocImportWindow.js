@@ -19,7 +19,15 @@ Ext4.define('ONPRC_EHR.window.EpocImportWindow', {
             items: [{
                 html: 'This helper allows you to bulk import EPOC data, exported as an excel file from the Epoc software.',
                 style: 'padding-bottom: 10px;'
-            },{
+                 },{
+                    xtype: 'ldk-linkbutton',
+                    text: '[Download Epoc Template]',
+                    scope: this,
+                    style: 'margin-bottom: 10px;',
+                    handler: function(){
+                        window.location = LABKEY.contextPath + '/onprc_ehr/templates/Epoc_Template.xlsx'
+                    }
+                },{
                 xtype: 'textarea',
                 itemId: 'textField',
                 height: 300,
