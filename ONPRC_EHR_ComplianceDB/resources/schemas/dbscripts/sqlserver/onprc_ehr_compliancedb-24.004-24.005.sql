@@ -219,7 +219,7 @@ BEGIN
      )
     BEGIN
 
-          Update  ehr_compliancedb.completiondates
+          Update   ehr_compliancedb.EmployeeCategory
                  set categoryname  = replace(categoryname ,'arrs', 'DCM')
 
 
