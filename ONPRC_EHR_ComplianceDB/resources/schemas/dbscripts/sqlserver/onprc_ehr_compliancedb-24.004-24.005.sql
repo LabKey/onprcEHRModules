@@ -200,21 +200,34 @@ BEGIN
 
       END
 
-
-
-  If exists(select * from ehr_compliancedb.EmployeeCategory
-            where categoryname  like '%arrs%'
+  If exists(select * from ehr_compliancedb.completiondates
+                           where  requirementname  like '%arrs%'
      )
     BEGIN
 
-         delete ehr_compliancedb.EmployeeCategory
-         where categoryname  like '%arrs%'
+                 Update  ehr_compliancedb.completiondates
+                     set requirementname = replace(requirementname,'arrs', 'DCM')
 
 
                     If @@Error <> 0
                          GoTo Err_Proc
 
      END
+
+  If exists(select * from ehr_compliancedb.EmployeeCategory
+            where categoryname  like '%arrs%'
+     )
+    BEGIN
+
+          Update  ehr_compliancedb.completiondates
+                 set categoryname  = replace(categoryname ,'arrs', 'DCM')
+
+
+                    If @@Error <> 0
+                         GoTo Err_Proc
+
+     END
+
 
 
 
