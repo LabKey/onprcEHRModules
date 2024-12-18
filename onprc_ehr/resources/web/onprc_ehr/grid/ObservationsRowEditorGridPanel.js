@@ -167,41 +167,41 @@ Ext4.define('ONPRC_EHR.grid.ObservationsRowEditorGridPanel', {
                forceSelection: true
                     }
 
-             },{
-                      header: 'Other',
-                           width: 200,
-                           editable: true,
-                           dataIndex: 'other',
-                           editor: {
-                               xtype: 'checkcombo',
-                               displayField: 'value',
-                               valueField: 'value',
-                               queryMode: 'local',
-                               store: {
-                                   type: 'labkey-store',
-                                    schemaName:'sla',
-                                    queryName: 'Reference_Data',
-                                    columns: 'value',
-                                    defaultValue:'0 - None',
-                                    sort: 'sort_order',
-                                    filterArray: [
-                                        LABKEY.Filter.create('enddate', null, LABKEY.Filter.Types.ISBLANK),
-                                        LABKEY.Filter.create('ColumnName', 'Surgicalobservationother', LABKEY.Filter.Types.EQUAL)],
-                                   autoLoad: true
-                               },
-                               listeners: {
-                                   expand: function (combo) {
-                                       // Convert comma-separated string to an array and set value
-                                       const currentValue = combo.getValue();
-                                       if (Array.isArray(currentValue) && currentValue.length > 0 && typeof currentValue[0] === 'string') {
-                                           const valueArray = currentValue[0].split(',');
-                                           combo.setValue(valueArray);
-                                       }
-                                   }
+          },{
+              header: 'Other',
+                   width: 200,
+                   editable: true,
+                   dataIndex: 'other',
+                   editor: {
+                       xtype: 'checkcombo',
+                       displayField: 'value',
+                       valueField: 'value',
+                       queryMode: 'local',
+                       store: {
+                           type: 'labkey-store',
+                            schemaName:'sla',
+                            queryName: 'Reference_Data',
+                            columns: 'value',
+                            defaultValue:'0 - None',
+                            sort: 'sort_order',
+                            filterArray: [
+                                LABKEY.Filter.create('enddate', null, LABKEY.Filter.Types.ISBLANK),
+                                LABKEY.Filter.create('ColumnName', 'Surgicalobservationother', LABKEY.Filter.Types.EQUAL)],
+                           autoLoad: true
+                       },
+                       listeners: {
+                           expand: function (combo) {
+                               // Convert comma-separated string to an array and set value
+                               const currentValue = combo.getValue();
+                               if (Array.isArray(currentValue) && currentValue.length > 0 && typeof currentValue[0] === 'string') {
+                                   const valueArray = currentValue[0].split(',');
+                                   combo.setValue(valueArray);
                                }
                            }
+                       }
+                   }
 
-                   },{
+           },{
             header: 'Remarks',
             width: 200,
             editable: true,
