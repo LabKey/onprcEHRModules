@@ -158,7 +158,8 @@ Ext4.define('ONPRC_EHR.window.ApplyTemplateWindow', {
             Ext4.Msg.alert('Error', 'Must choose a template');
             return;
         }
-
+        var obj ={}
+        this.animalId = obj.Id;
         this.loadTemplate(templateId);
     },
 
@@ -225,16 +226,59 @@ Ext4.define('ONPRC_EHR.window.ApplyTemplateWindow', {
                                 offsetDate.setHours(8);
                                 date = offsetDate;
 
+                            }
+
+                            if (data.duration > 0) {
+                                var enddate = null;
+                                //this is specifically to handle hydro, when administered ~noon
+                                if (new String(data.duration).match(/H$/)) {
+                                    var duration = new String(data.duration);
+                                    duration = duration.replace('H', '');
+                                    duration = Number(duration);
+                                    duration += encountersRec.get('date').getHours();
+                                    duration = Math.floor(duration / 24);
+
+                                    enddate = date;
+                                    endate = Ext4.Date.clearTime(enddate);
+                                    enddate = Ext4.Date.add(enddate, Ext4.Date.DAY, duration);
+                                }
+                                else {
+
+                                    enddate = offsetDate
+                                    enddate = Ext4.Date.add(enddate, Ext4.Date.DAY, data.duration);
+                                    enddate.setHours(23);
+                                    enddate = enddate;
+                                    enddate.setMinutes(59);
+                                    enddate = enddate;
+
+
+                                }
+                            }
+                            else
+                            {
+
+                                var sdate= Ext4.Date.clone(new Date());
+                                var soffsetDate = Ext4.Date.add(sdate, Ext4.Date.DAY, data.offset);
+                                var soffsetDate = Ext4.Date.clearTime(soffsetDate);
+                                enddate = soffsetDate;
+                                enddate.setHours(23);
+                                enddate = enddate;
+                                enddate.setMinutes(59);
+                                enddate = enddate;
 
                             }
-                            var obj2 = {};
-                             obj2 = {
-                                date: date
+
+                        var obj2 = {};
+                        obj2 = {
+                            date: date,
+                            enddate: enddate
+
                             };
 
                             var newData = Ext4.apply({}, data);
-                            newData = Ext4.apply(newData, obj);
-                            newData = Ext4.apply(newData, obj2);
+                            newData = Ext4.apply(newData, obj);   //Adds monkey id
+
+                            newData = Ext4.apply(newData, obj2); // add new computed dates
 
                             toAdd[store.storeId].push(newData);
                         }, this);
@@ -261,6 +305,7 @@ Ext4.define('ONPRC_EHR.window.ApplyTemplateWindow', {
         }
     },
 
+
     getInitialRecordValues: function(){
         var ret = [];
         var date = this.down('#dateField').getValue();
@@ -271,6 +316,7 @@ Ext4.define('ONPRC_EHR.window.ApplyTemplateWindow', {
         if   (this.down('#subjectIds')){
             var   subjectArray = LDK.Utils.splitIds(this.down('#subjectIds').getValue(),true);
             Ext4.Array.each(subjectArray, function(subj){
+                 this.animalId = subj;
                 ret.push(Ext4.apply({
                     Id: subj
                 }, obj));
@@ -311,6 +357,8 @@ Ext4.define('ONPRC_EHR.window.ApplyTemplateWindow', {
         if (!records){
             return;
         }
+
+
 
         this.hide();
         Ext4.Msg.wait("Loading Template...");
@@ -526,7 +574,7 @@ EHR.DataEntryUtils.registerGridButton('TEMPLATEREV', function(config){
                     var grid = btn.up('gridpanel');
                     var menu = this.up('menu').items.get('templatesMenu');
 
-                    Ext4.create('EHR.window.ApplyTemplateWindow', {
+                    Ext4.create('ONPRC_EHR.window.ApplyTemplateWindow', {
                         targetGrid: grid,
                         formType: grid.formConfig.name,
                         idSelectionMode: menu.idSelectionMode || 'multi'
