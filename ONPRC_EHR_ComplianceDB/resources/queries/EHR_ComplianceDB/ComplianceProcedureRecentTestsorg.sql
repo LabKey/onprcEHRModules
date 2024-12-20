@@ -53,8 +53,6 @@ from employeeperunit a ,requirementspercategory b
 where ( a.unit = b.unit or a.category = b.category )
   And b.requirementname not in (select distinct t.requirementname from ehr_compliancedb.employeerequirementexemptions t Where a.employeeid = t.employeeid
                                                                                                                           And b.requirementname = t.requirementname)
-  And b.requirementname not in (select distinct t.requirementname from ehr_compliancedb.completiondates t Where a.employeeid = t.employeeid
-                                                                                                                            And b.requirementname = t.requirementname)
   And a.employeeid in (select p.employeeid from ehr_compliancedb.employees p where p.enddate is null)
   And b.requirementname in  (select q.requirementname from ehr_compliancedb.Requirements q where q.requirementname = b.requirementname And q.dateDisabled is null )
 
