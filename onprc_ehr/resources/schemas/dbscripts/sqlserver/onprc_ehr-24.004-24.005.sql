@@ -16,11 +16,10 @@ WITH ApprovedProtocols AS (
     FROM
         onprc_ehr.eIACUC_PRIME_VIEW_PROTOCOLS
     WHERE
-        Protocol_State IN ('approved','expired', 'terminated', 'withdrawn')
+        Protocol_State IN ('approved','expired', 'terminated') --All protocols that have been approved
     GROUP BY
         BaseProtocol
 ),
-
 
      DistinctProtocols AS (
          SELECT DISTINCT
@@ -46,22 +45,19 @@ WITH ApprovedProtocols AS (
              d.RevisionNumber,
              d.Protocol_State,
              p.enddate,
-             Case
-                 when d.approval_date >= d.three_year_Expiration then d.approval_Date
-                 When d.three_Year_Expiration <= d.Last_Modified then d.last_modified
-                 End as LatestDate
+             CURRENT_DATE() as LatestDate
          FROM
              ehr.protocol p
                  INNER JOIN DistinctProtocols d
                             ON p.external_id = d.BaseProtocol
          WHERE
-             p.enddate IS NULL)
-
+             p.enddate IS NULL
+             AND d.Protocol_State NOT LIKE 'approved')
 
 UPDATE e
 SET
-    e.enddate =p.LatestDate,
-    e.contacts = 'Protocol enddated based on eiACUC Status ' + p.Protocol_State
+    e.enddate = p.LatestDate,
+    e.contacts = 'Protocol enddated based on eiACUC Status ' + p.Protocol_State --debug message to be removed before push to prod
     FROM
         ehr.protocol e
     INNER JOIN ExpiredProtocol p
