@@ -33,11 +33,11 @@ select b.requirementname,
                    WHEN ( select  count(*) from  ehr_compliancedb.requirements tt, ehr_compliancedb.completiondates pq where tt.requirementname = b.requirementname and pq.requirementname = tt.requirementname and pq.employeeid = a.employeeid group by tt.expireperiod, tt.reviewdate
                           having (tt.expireperiod) >  (age_in_months(max(pq.date), tt.reviewdate)  )) > 0 THEN
 
-                       ( select  ( age_in_months(max(pq.date), tt.reviewdate) - ( age_in_months(max(pq.date), curdate())) )from  ehr_compliancedb.requirements tt, ehr_compliancedb.completiondates pq where tt.requirementname =   b.requirementname and pq.requirementname = tt.requirementname and pq.employeeid = a.employeeid group by tt.expireperiod, tt.reviewdate
+                       ( select  ( age_in_months(max(pq.date), tt.reviewdate) - (TIMESTAMPDIFF('SQL_TSI_MONTH', max(pq.date), Now()) ) ) from  ehr_compliancedb.requirements tt, ehr_compliancedb.completiondates pq where tt.requirementname =   b.requirementname and pq.requirementname = tt.requirementname and pq.employeeid = a.employeeid group by tt.expireperiod, tt.reviewdate
                          having (tt.expireperiod) > (age_in_months(max(pq.date), tt.reviewdate))  and (tt.reviewdate is not null)  )
 
 
-                   ELSE ( select  (tt.expireperiod) - ( age_in_months(max(pq.date), curdate())) from  ehr_compliancedb.requirements tt, ehr_compliancedb.completiondates pq where   tt.requirementname =   b.requirementname and pq.requirementname = tt.requirementname and pq.employeeid = a.employeeid group by tt.expireperiod )
+                   ELSE ( select  (tt.expireperiod) - ( TIMESTAMPDIFF('SQL_TSI_MONTH', max(pq.date), Now())) from  ehr_compliancedb.requirements tt, ehr_compliancedb.completiondates pq where   tt.requirementname =   b.requirementname and pq.requirementname = tt.requirementname and pq.employeeid = a.employeeid group by tt.expireperiod )
 
                    END  AS double)  AS MonthsUntilRenewal
 
@@ -88,13 +88,13 @@ select a.requirementname,
                    WHEN ( select  count(*) from  ehr_compliancedb.requirements tt, ehr_compliancedb.completiondates pq where tt.requirementname = a.requirementname and pq.requirementname = tt.requirementname and pq.employeeid = a.employeeid group by tt.expireperiod, tt.reviewdate
                           having (tt.expireperiod) >  (age_in_months(max(pq.date), tt.reviewdate)  )) > 0 THEN
 
-                       ( select  ( age_in_months(max(pq.date), tt.reviewdate) - ( age_in_months(max(pq.date), curdate())) )from  ehr_compliancedb.requirements tt, ehr_compliancedb.completiondates pq where tt.requirementname =  a.requirementname and pq.requirementname = tt.requirementname and pq.employeeid = a.employeeid group by tt.expireperiod, tt.reviewdate
+                       ( select  ( age_in_months(max(pq.date), tt.reviewdate) - ( TIMESTAMPDIFF('SQL_TSI_MONTH', max(pq.date), Now()) ) )from  ehr_compliancedb.requirements tt, ehr_compliancedb.completiondates pq where tt.requirementname =  a.requirementname and pq.requirementname = tt.requirementname and pq.employeeid = a.employeeid group by tt.expireperiod, tt.reviewdate
                          having (tt.expireperiod) > (age_in_months(max(pq.date), tt.reviewdate))   and (tt.reviewdate is not null)  )
 
 
 
 
-                   ELSE ( select  (tt.expireperiod) - ( age_in_months(max(pq.date), curdate())) from  ehr_compliancedb.requirements tt, ehr_compliancedb.completiondates pq where   tt.requirementname =   a.requirementname and pq.requirementname = tt.requirementname and pq.employeeid = a.employeeid group by tt.expireperiod )
+                   ELSE ( select  (tt.expireperiod) - ( TIMESTAMPDIFF('SQL_TSI_MONTH', max(pq.date), Now())) from  ehr_compliancedb.requirements tt, ehr_compliancedb.completiondates pq where   tt.requirementname =   a.requirementname and pq.requirementname = tt.requirementname and pq.employeeid = a.employeeid group by tt.expireperiod )
 
                    END  AS double)  AS MonthsUntilRenewal
 
