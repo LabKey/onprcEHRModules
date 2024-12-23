@@ -41,9 +41,10 @@ WITH ApprovedProtocols AS (
         ,
      ExpiredProtocol as (
          Select d.*,p.protocol,p.enddate from DistinctProtocols d inner join ehr.protocol p on d.BaseProtocol = p.external_ID
-         where (d.Protocol_StaTe != 'Approved' and p.enddate is Null))
+         where (d.Protocol_Stae != 'Approved' and p.enddate is Null))
 
 Update p
 Set p.enddate = getDate() , p.contacts = 'EndDated based on Protocol_State ' + e.PROTOCOL_State
 
     from ehr.protocol p inner join expiredProtocol e on p.external_id = e.BaseProtocol
+End
