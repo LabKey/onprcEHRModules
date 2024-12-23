@@ -1,3 +1,14 @@
+USE [Labkey_GJ]
+GO
+/****** Object:  StoredProcedure [onprc_ehr].[ExpiredProtocolUpdate]    Script Date: 12/20/2024 9:09:09 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER PROCEDURE [onprc_ehr].[ExpiredProtocolUpdate]
+    AS
+BEGIN
+
 WITH ApprovedProtocols AS (
     SELECT
         BaseProtocol,
@@ -5,10 +16,11 @@ WITH ApprovedProtocols AS (
     FROM
         onprc_ehr.eIACUC_PRIME_VIEW_PROTOCOLS
     WHERE
-        Protocol_State IN ('approved','expired', 'terminated') --All protocols that have been approved
+        Protocol_State IN ('approved','expired', 'terminated', 'withdrawn')
     GROUP BY
         BaseProtocol
 ),
+
 
      DistinctProtocols AS (
          SELECT DISTINCT
