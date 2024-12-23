@@ -1,14 +1,3 @@
-USE [Labkey_GJ]
-GO
-/****** Object:  StoredProcedure [onprc_ehr].[ExpiredProtocolUpdate]    Script Date: 12/20/2024 9:09:09 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-ALTER PROCEDURE [onprc_ehr].[ExpiredProtocolUpdate]
-    AS
-BEGIN
-
 WITH ApprovedProtocols AS (
     SELECT
         BaseProtocol,
@@ -16,11 +5,10 @@ WITH ApprovedProtocols AS (
     FROM
         onprc_ehr.eIACUC_PRIME_VIEW_PROTOCOLS
     WHERE
-        Protocol_State IN ('approved','expired', 'terminated', 'withdrawn')
+        Protocol_State IN ('approved','expired', 'terminated') --All protocols that have been approved
     GROUP BY
         BaseProtocol
 ),
-
 
      DistinctProtocols AS (
          SELECT DISTINCT
@@ -35,35 +23,13 @@ WITH ApprovedProtocols AS (
              onprc_ehr.eIACUC_PRIME_VIEW_PROTOCOLS p
                  INNER JOIN ApprovedProtocols ap
                             ON p.BaseProtocol = ap.BaseProtocol
-                                AND p.Approval_Date = ap.maxApprovalDate
-     ),
-
+                                AND p.Approval_Date = ap.maxApprovalDate)
+        ,
      ExpiredProtocol as (
-         SELECT
-             p.Protocol,
-             p.external_Id,
-             d.BaseProtocol,
-             d.RevisionNumber,
-             d.Protocol_State,
-             p.enddate,
-             Case
-                 when d.approval_date >= d.three_year_Expiration then d.approval_Date
-                 When d.three_Year_Expiration <= d.Last_Modified then d.last_modified
-                 End as LatestDate
-         FROM
-             ehr.protocol p
-                 INNER JOIN DistinctProtocols d
-                            ON p.external_id = d.BaseProtocol
-         WHERE
-             p.enddate IS NULL)
+         Select d.*,p.protocol,p.enddate from DistinctProtocols d inner join ehr.protocol p on d.BaseProtocol = p.external_ID
+         where d.Protocol_StaTe != 'Approved' and p.enddate is Null)
 
+Update p
+Set p.enddate = getDate() , p.contacts = 'EndDated based on Protocol_State ' + e.PROTOCOL_State
 
-UPDATE e
-SET
-    e.enddate =p.LatestDate,
-    e.contacts = 'Protocol enddated based on eiACUC Status ' + p.Protocol_State
-    FROM
-        ehr.protocol e
-    INNER JOIN ExpiredProtocol p
-ON e.external_id = p.BaseProtocol;
-END;
+    from ehr.protocol p inner join expiredProtocol e on p.external_id = e.BaseProtocol
