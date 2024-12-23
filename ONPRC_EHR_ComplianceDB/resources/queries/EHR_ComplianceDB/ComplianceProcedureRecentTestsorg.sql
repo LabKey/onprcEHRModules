@@ -17,8 +17,8 @@ select b.requirementname,
 
        (select k.expireperiod from Requirements k where k.requirementname = b.requirementname) as ExpiredPeriod,
 
-       ( select  (age_in_months(max(pq.date), tt.reviewdate) ) from  ehr_compliancedb.requirements tt, ehr_compliancedb.completiondates pq where tt.requirementname =   b.requirementname and pq.requirementname = tt.requirementname and pq.employeeid = a.employeeid group by tt.expireperiod, tt.reviewdate
-         having (tt.expireperiod) > (age_in_months(max(pq.date), tt.reviewdate))   and (tt.reviewdate is not null)  ) as NewExpirePeriod,
+       ( select ( TIMESTAMPDIFF('SQL_TSI_MONTH', max(pq.date), tt.reviewdate)) from  ehr_compliancedb.requirements tt, ehr_compliancedb.completiondates pq where tt.requirementname =   b.requirementname and pq.requirementname = tt.requirementname and pq.employeeid = a.employeeid group by tt.expireperiod, tt.reviewdate
+         having (tt.expireperiod) > ( TIMESTAMPDIFF('SQL_TSI_MONTH', max(pq.date), tt.reviewdate))  and (tt.reviewdate is not null)  ) as NewExpirePeriod,
 
        (select max(zz.date) from completiondates zz where zz.requirementname= b.requirementname and zz.employeeid= a.employeeid  ) as MostRecentDate,
 
@@ -35,12 +35,10 @@ select b.requirementname,
 
 
                    WHEN ( select  count(*) from  ehr_compliancedb.requirements tt, ehr_compliancedb.completiondates pq where tt.requirementname = b.requirementname and pq.requirementname = tt.requirementname and pq.employeeid = a.employeeid group by tt.expireperiod, tt.reviewdate
-                          having (tt.expireperiod) >  (age_in_months(max(pq.date), tt.reviewdate)  )) > 0 THEN
+                          having (tt.expireperiod) >  ( TIMESTAMPDIFF('SQL_TSI_MONTH', max(pq.date), tt.reviewdate))   ) > 0 THEN
 
-                       ( select  ( age_in_months(max(pq.date), tt.reviewdate) - (TIMESTAMPDIFF('SQL_TSI_MONTH', max(pq.date), Now()) ) ) from  ehr_compliancedb.requirements tt, ehr_compliancedb.completiondates pq where tt.requirementname =   b.requirementname and pq.requirementname = tt.requirementname and pq.employeeid = a.employeeid group by tt.expireperiod, tt.reviewdate
-                         having (tt.expireperiod) > (age_in_months(max(pq.date), tt.reviewdate))  and (tt.reviewdate is not null)  )
-
-
+                       ( select  ( TIMESTAMPDIFF('SQL_TSI_MONTH', max(pq.date), tt.reviewdate) - (TIMESTAMPDIFF('SQL_TSI_MONTH', max(pq.date), Now()) ) ) from  ehr_compliancedb.requirements tt, ehr_compliancedb.completiondates pq where tt.requirementname =   b.requirementname and pq.requirementname = tt.requirementname and pq.employeeid = a.employeeid group by tt.expireperiod, tt.reviewdate
+                         having (tt.expireperiod) > ( TIMESTAMPDIFF('SQL_TSI_MONTH', max(pq.date), tt.reviewdate))  and (tt.reviewdate is not null)  )
 
 
                    ELSE ( select  (tt.expireperiod) - ( TIMESTAMPDIFF('SQL_TSI_MONTH', max(pq.date), Now())) from  ehr_compliancedb.requirements tt, ehr_compliancedb.completiondates pq where   tt.requirementname =   b.requirementname and pq.requirementname = tt.requirementname and pq.employeeid = a.employeeid group by tt.expireperiod )
@@ -76,8 +74,8 @@ select a.requirementname,
 
        (select k.expireperiod from ehr_compliancedb.Requirements k where k.requirementname = a.requirementname) as ExpiredPeriod,
 
-       ( select  (age_in_months(max(pq.date), tt.reviewdate) )from  ehr_compliancedb.requirements tt, ehr_compliancedb.completiondates pq where tt.requirementname =   a.requirementname and pq.requirementname = tt.requirementname and pq.employeeid = a.employeeid group by tt.expireperiod, tt.reviewdate
-         having (tt.expireperiod) > (age_in_months(max(pq.date), tt.reviewdate))  and (tt.reviewdate is not null)  ) as NewExpirePeriod,
+       ( select  ( TIMESTAMPDIFF('SQL_TSI_MONTH', max(pq.date), tt.reviewdate)) from  ehr_compliancedb.requirements tt, ehr_compliancedb.completiondates pq where tt.requirementname =   a.requirementname and pq.requirementname = tt.requirementname and pq.employeeid = a.employeeid group by tt.expireperiod, tt.reviewdate
+         having (tt.expireperiod) > ( TIMESTAMPDIFF('SQL_TSI_MONTH', max(pq.date), tt.reviewdate)) and (tt.reviewdate is not null)  ) as NewExpirePeriod,
 
        (select max(zz.date) from ehr_compliancedb.completiondates zz where zz.requirementname= a.requirementname and zz.employeeid= a.employeeid  ) as MostRecentDate,
 
@@ -94,10 +92,10 @@ select a.requirementname,
 
 
                    WHEN ( select  count(*) from  ehr_compliancedb.requirements tt, ehr_compliancedb.completiondates pq where tt.requirementname = a.requirementname and pq.requirementname = tt.requirementname and pq.employeeid = a.employeeid group by tt.expireperiod, tt.reviewdate
-                          having (tt.expireperiod) >  (age_in_months(max(pq.date), tt.reviewdate)  )) > 0 THEN
+                          having (tt.expireperiod) >  ( TIMESTAMPDIFF('SQL_TSI_MONTH', max(pq.date), tt.reviewdate))  ) > 0 THEN
 
-                       ( select  ( age_in_months(max(pq.date), tt.reviewdate) - ( TIMESTAMPDIFF('SQL_TSI_MONTH', max(pq.date), Now()) ) ) from  ehr_compliancedb.requirements tt, ehr_compliancedb.completiondates pq where tt.requirementname =   a.requirementname and pq.requirementname = tt.requirementname and pq.employeeid = a.employeeid group by tt.expireperiod, tt.reviewdate
-                         having (tt.expireperiod) > (age_in_months(max(pq.date), tt.reviewdate)) and (tt.reviewdate is not null)  )
+                       ( select  ( TIMESTAMPDIFF('SQL_TSI_MONTH', max(pq.date), tt.reviewdate) - ( TIMESTAMPDIFF('SQL_TSI_MONTH', max(pq.date), Now()) ) ) from  ehr_compliancedb.requirements tt, ehr_compliancedb.completiondates pq where tt.requirementname =   a.requirementname and pq.requirementname = tt.requirementname and pq.employeeid = a.employeeid group by tt.expireperiod, tt.reviewdate
+                         having (tt.expireperiod) > ( TIMESTAMPDIFF('SQL_TSI_MONTH', max(pq.date), tt.reviewdate)) and (tt.reviewdate is not null)  )
 
 
 
