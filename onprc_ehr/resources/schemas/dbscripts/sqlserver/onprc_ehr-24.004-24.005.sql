@@ -1,11 +1,10 @@
-USE [Labkey_GJ]
 GO
 /****** Object:  StoredProcedure [onprc_ehr].[ExpiredProtocolUpdate]    Script Date: 12/20/2024 9:09:09 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-ALTER PROCEDURE [onprc_ehr].[ExpiredProtocolUpdate]
+CREATE PROCEDURE [onprc_ehr].[ExpiredProtocolUpdate]
     AS
 BEGIN
 
@@ -45,3 +44,4 @@ Update p
 Set p.enddate = getDate() , p.contacts = 'EndDated based on Protocol_State ' + e.PROTOCOL_State
 
     from ehr.protocol p inner join expiredProtocol e on p.external_id = e.BaseProtocol
+END
