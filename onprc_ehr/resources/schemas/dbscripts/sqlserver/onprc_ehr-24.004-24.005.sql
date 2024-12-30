@@ -15,7 +15,7 @@ WITH ApprovedProtocols AS (
     FROM
         onprc_ehr.eIACUC_PRIME_VIEW_PROTOCOLS
     WHERE
-        Protocol_State IN ('approved','expired', 'terminated', 'withdrawn')
+        Protocol_State IN ('approved','expired', 'terminated')
     GROUP BY
         BaseProtocol
 ),
