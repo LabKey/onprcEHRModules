@@ -693,7 +693,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         //EHRService.get().registerMoreActionsButton(new CreateTaskFromRecordButtons(this, "Create Task From Selected", "PMIC Procedures", PMICDataEntryFormType.NAME), "study", "PMIC_encounters");
 
         //Added: 12-30-2024  R.Blasa
-        EHRService.get().registerMoreActionsButton(new CreateTaskFromRecordButtons(this, "Create Task From Selected", "Treatments/Medications Order", TreatmentsFormType.NAME), "study", "Treatment Orders");
+        EHRService.get().registerMoreActionsButton(new CreateTaskFromRecordButtons(this, "Create Task From Selected", "Treatments/Medications Order", TreatmentsFormType.NAME), "study", "treatment_order");
 
         EHRService.get().registerMoreActionsButton(new ChangeQCStateButton(this), "study", "blood");
         EHRService.get().registerMoreActionsButton(new ChangeQCStateButton(this, "ONPRC_EHR.window.ChangeLabworkStatusWindow", Collections.singletonList(ClientDependency.supplierFromPath("onprc_ehr/window/ChangeLabworkStatusWindow.js"))), "study", "clinpathRuns");
@@ -701,6 +701,9 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         EHRService.get().registerMoreActionsButton(new ChangeQCStateButton(this), "study", "encounters");
         EHRService.get().registerMoreActionsButton(new ChangeQCStateButton(this), "study", "drug");
         EHRService.get().registerTbarButton(new ChangeQCStateButton(this, "Mark Delivered", "ONPRC_EHR.window.MarkLabworkDeliveredWindow", Collections.singletonList(ClientDependency.supplierFromPath("onprc_ehr/window/MarkLabworkDeliveredWindow.js"))), "study", "clinpathRuns");
+
+        //Added: 12-30-2024  R.Blasa
+        EHRService.get().registerMoreActionsButton(new ChangeQCStateButton(this), "study", "treatment_order");
 
         EHRService.get().registerMoreActionsButton(new ReassignRequestButton(this, "bloodChargeType"), "study", "blood");
         EHRService.get().registerMoreActionsButton(new ReassignRequestButton(this, "medicationChargeType"), "study", "drug");
