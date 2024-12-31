@@ -17,7 +17,7 @@ EHR.model.DataModelManager.registerMetadata('CMU_Services', {
                   hidden: false
               },
               date: {
-                  defaultValue: new Date()
+                  defaultValue: Ext4.Date.add(new Date(), Ext4.Date.DAY, 1)
               },
               Billable: {
                   defaultValue: 'No',

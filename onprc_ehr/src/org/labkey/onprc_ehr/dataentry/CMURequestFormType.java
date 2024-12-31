@@ -39,7 +39,6 @@ public class CMURequestFormType extends RequestForm
     {
         super(ctx, owner, NAME, NAME, "Requests", Arrays.asList(
                 new RequestFormSection(),
-                //new RequestInstructionsFormSection(),
                 new AnimalDetailsFormSection(),
                 new TreatmentOrdersRequestFormSection()
         ));
