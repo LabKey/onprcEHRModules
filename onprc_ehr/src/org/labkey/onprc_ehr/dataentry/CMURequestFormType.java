@@ -41,9 +41,6 @@ public class CMURequestFormType extends RequestForm
                 new RequestFormSection(),
                 //new RequestInstructionsFormSection(),
                 new AnimalDetailsFormSection(),
-                new ClinicalEncountersFormSection(),
-                new BloodDrawFormSection(true),
-                new DrugAdministrationRequestFormSection(),
                 new TreatmentOrdersRequestFormSection()
         ));
 
