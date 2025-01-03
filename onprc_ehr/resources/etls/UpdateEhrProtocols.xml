@@ -2,36 +2,31 @@
 
 <etl xmlns="http://labkey.org/etl/xml">
 
-    <name>eIACUC to Prime Protocols</name>
+    <name>Update Protocols in EHR</name>
 
-    <description>Runs stored Procedure to update eiACUC Protocols in ehr</description>
-
+    <description>Runs stored procedures to update the protocol table in schema ehr.</description>
 
     <transforms>
 
         <transform id="UpdateBaseProtocol" type="StoredProcedure">
-            <description>Runs a stored procedure that generates lab values</description>
+            <description>Determines and populates BaseProtocol and RevisionNumber data for the protocol table in schema onprc_ehr.</description>
             <procedure schemaName="onprc_ehr" procedureName="BaseProtocol">
             </procedure>
         </transform>
 
         <transform id="enddateExpiredProtocolsProtocol" type="StoredProcedure">
-            <description>Runs a stored procedure that generates lab values</description>
+            <description>Adds enddate data to the protocol table in ehr.</description>
             <procedure schemaName="onprc_ehr" procedureName="ExpiredProtocolUpdate">
             </procedure>
         </transform>
 
-
-
-
     </transforms>
 
-    <!-- <schedule>
- &#45;&#45;Runs at 8:30 AM each day
-         <cron expression="0 50 04 * * "/>
-
+    <!--
+    <schedule>
+        <cron expression="0 50 04 * * "/>
      </schedule>
- -->
+     -->
 
 </etl>
 
