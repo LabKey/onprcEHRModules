@@ -41,7 +41,7 @@ Ext4.define('ONPRC_EHR.window.AddSurgicalCasesWindow', {
             requiredVersion: 9.1,
             schemaName: 'study',
             queryName: 'latestObservationsForCase',
-            columns: 'Id,date,category,area,observation,inflammation,bruising,other, remark,caseid',
+            columns: 'Id,date,category,area,observation,inflammation,bruising,other, remark,caseid,type',
             filterArray: obsFilterArray,
             scope: this,
             success: function(results){
