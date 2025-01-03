@@ -1,4 +1,4 @@
-ALTER PROCEDURE onprc_ehr.BaseProtocol
+CREATE PROCEDURE onprc_ehr.BaseProtocol
 AS
 BEGIN
     -- Create a Common Table Expression (CTE) named BaseProtocol
