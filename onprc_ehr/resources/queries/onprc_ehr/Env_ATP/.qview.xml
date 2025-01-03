@@ -1,7 +1,6 @@
 <customView xmlns="http://labkey.org/data/xml/queryCustomView" >
     <columns>
         <column name="date"/>
-        <column name="charge_unit"/>
         <column name="testing_location" />
         <column name="test_method"/>
         <column name="surface_tested" />

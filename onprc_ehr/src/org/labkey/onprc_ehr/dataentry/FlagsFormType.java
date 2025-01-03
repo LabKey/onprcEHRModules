@@ -22,9 +22,15 @@ import org.labkey.api.ehr.dataentry.SimpleGridPanel;
 import org.labkey.api.ehr.dataentry.TaskFormSection;
 import org.labkey.api.ehr.dataentry.UnsaveableTask;
 import org.labkey.api.module.Module;
+import org.labkey.api.security.Group;
+import org.labkey.api.security.GroupManager;
+import org.labkey.api.security.permissions.AdminPermission;
 import org.labkey.api.security.permissions.Permission;
+import org.labkey.security.xml.GroupEnumType;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * User: bimber
@@ -42,6 +48,19 @@ public class FlagsFormType extends UnsaveableTask
                 new AnimalDetailsFormSection(),
                 new SimpleGridPanel("study", "flags", "Flags")
         ));
+
+
+    }
+
+
+    @Override
+    protected List<String> getButtonConfigs()
+    {
+        List<String> defaultButtons = new ArrayList<>();
+        defaultButtons.add("REVIEW");
+        defaultButtons.add("SUBMIT");
+
+        return defaultButtons;
     }
 
     @Override
@@ -61,5 +80,17 @@ public class FlagsFormType extends UnsaveableTask
         }
 
         return canInsert;
+    }
+
+    //Added: 8-7-2024 R.Blasa
+    @Override
+    public boolean isVisible()
+    {
+        Group g = GroupManager.getGroup(getCtx().getContainer(), "Death Entry", GroupEnumType.SITE);
+        if (g != null && getCtx().getUser().isInGroup(g.getUserId()) && !getCtx().getContainer().hasPermission(getCtx().getUser(), AdminPermission.class))
+        {
+            return false;
+        }
+        return super.isVisible();
     }
 }

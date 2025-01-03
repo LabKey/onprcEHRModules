@@ -24,10 +24,8 @@ EHR.model.DataModelManager.registerMetadata('Environmental_ATP', {
             },
 
             charge_unit: {
-                xtype: 'onprc-env_chargeunit',
-                columnConfig: {
-                    width: 100
-                }
+                defaultValue: 'Kati',
+                hidden: true
             },
             testing_location: {
                 xtype: 'onprc-env_testLocation',
@@ -62,6 +60,7 @@ EHR.model.DataModelManager.registerMetadata('Environmental_ATP', {
             },
             surface_tested: {
                 xtype: 'onprc-env_surfacetest',
+                header: 'Surface Tested',
                 hidden: false,
                 columnConfig: {
                     width: 180

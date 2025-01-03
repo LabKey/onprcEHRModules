@@ -8,7 +8,7 @@
 -- Training that was completed by an employee and being recorded as  completed as a Unit or Category
 select b.requirementname,
        a.employeeid,
-       group_concat(distinct b.unit,chr(10)) as unit,
+       group_concat(distinct a.unit,chr(10)) as unit,
        group_concat(distinct a.category,chr(10)) as category,
        group_concat(distinct b.trackingflag) as trackingflag,
 
@@ -27,7 +27,7 @@ select b.requirementname,
        CAST(
                CASE
                    WHEN (select max(st.date) from completiondates st where st.requirementname = b.requirementname and st.employeeid = a.employeeid ) IS NULL   then 0
-                   WHEN ( select  (tt.expireperiod)  from  ehr_compliancedb.requirements tt, ehr_compliancedb.completiondates pq where tt.requirementname = b.requirementname and pq.requirementname = tt.requirementname and pq.employeeid = a.employeeid group by tt.expireperiod  ) = 0 then Null
+                   WHEN ( select  (tt.expireperiod)  from  ehr_compliancedb.requirements tt where tt.requirementname = b.requirementname  group by tt.expireperiod  ) = 0 then Null
 
 
                    WHEN ( select  count(*) from  ehr_compliancedb.requirements tt, ehr_compliancedb.completiondates pq where tt.requirementname = b.requirementname and pq.requirementname = tt.requirementname and pq.employeeid = a.employeeid group by tt.expireperiod, tt.reviewdate
@@ -48,6 +48,7 @@ where ( a.unit = b.unit or a.category = b.category )
   And b.requirementname not in (select distinct t.requirementname from ehr_compliancedb.employeerequirementexemptions t Where a.employeeid = t.employeeid
                                                                                                                           And b.requirementname = t.requirementname)
   And a.employeeid in (select p.employeeid from ehr_compliancedb.employees p where p.enddate is null)
+  And b.requirementname in ( select k.requirementname from ehr_compliancedb.requirements k where k.requirementname = b.requirementname And k.datedisabled is null)
 
 
 group by b.requirementname,a.employeeid
@@ -80,7 +81,7 @@ select a.requirementname,
     CAST(
                CASE
                    WHEN (select max(st.date) from completiondates st where st.requirementname = a.requirementname and st.employeeid = a.employeeid ) IS NULL   then 0
-                   WHEN ( select  (tt.expireperiod)  from  ehr_compliancedb.requirements tt, ehr_compliancedb.completiondates pq where tt.requirementname = a.requirementname and pq.requirementname = tt.requirementname and pq.employeeid = a.employeeid group by tt.expireperiod  ) = 0 then Null
+                   WHEN ( select  (tt.expireperiod)  from  ehr_compliancedb.requirements tt where tt.requirementname = a.requirementname group by tt.expireperiod  ) = 0 then Null
 
 
                    WHEN ( select  count(*) from  ehr_compliancedb.requirements tt, ehr_compliancedb.completiondates pq where tt.requirementname = a.requirementname and pq.requirementname = tt.requirementname and pq.employeeid = a.employeeid group by tt.expireperiod, tt.reviewdate
@@ -102,6 +103,7 @@ where a.requirementname not in (select distinct h.requirementname from ehr_compl
   And a.requirementname not in (select distinct t.requirementname from ehr_compliancedb.employeerequirementexemptions t Where a.employeeid = t.employeeid
                                                                                                                           And a.requirementname = t.requirementname)
   And a.employeeid in (select p.employeeid from ehr_compliancedb.employees p where p.enddate is null)
+  And a.requirementname in ( select k.requirementname from ehr_compliancedb.requirements k where k.requirementname = a.requirementname And k.datedisabled is null)
 
 group by a.requirementname,a.employeeid
 
@@ -130,6 +132,7 @@ from  ehr_compliancedb.employeerequirementexemptions j
     Where j.requirementname in (select z.requirementname from ehr_compliancedb.completiondates z where z.requirementname = j.requirementname
                                             and z.employeeid = j.employeeid and z.date is not null)
       And j.employeeid in (select p.employeeid from ehr_compliancedb.employees p where p.enddate is null)
+      And j.requirementname in ( select k.requirementname from ehr_compliancedb.requirements k where k.requirementname = j.requirementname And k.datedisabled is null)
 
 
 group by j.requirementname,j.employeeid
@@ -154,6 +157,7 @@ from  ehr_compliancedb.RequirementsPerEmployee j
 Where j.requirementname NOT in (select z.requirementname from ehr_compliancedb.completiondates z where z.requirementname = j.requirementname
                                                                                                and z.employeeid = j.employeeid and z.date is not null)
   And j.employeeid in (select p.employeeid from ehr_compliancedb.employees p where p.enddate is null)
+  And j.requirementname in ( select k.requirementname from ehr_compliancedb.requirements k where k.requirementname = j.requirementname And k.datedisabled is null)
 
 
 group by j.requirementname,j.employeeid

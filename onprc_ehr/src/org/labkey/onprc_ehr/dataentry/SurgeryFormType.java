@@ -64,7 +64,7 @@ public class SurgeryFormType extends EncounterForm
         {
             addSection(new EncounterChildFormSection("onprc_billing", "miscCharges", "Misc. Charges", false, "EHR.data.MiscChargesClientStore", Arrays.asList(ClientDependency.supplierFromPath("ehr/data/MiscChargesClientStore.js")), null));
         }
-//        Modified: 4-20-2021  R.Blasa
+//        Modified: 7-4-2024  R.Blasa
         addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/model/sources/Surgery.js"));
 
         addClientDependency(ClientDependency.supplierFromPath("ehr/window/OpenSurgeryCasesWindow.js"));
