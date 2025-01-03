@@ -38,7 +38,7 @@ EHR.model.DataModelManager.registerMetadata('SurgicalRoundsExt', {
             }
         },
 
-        'study.clinical_observation': {
+        'study.clinical_observations': {
             type: {
                 defaultValue: 'surgery',
                 hidden: true
