@@ -124,6 +124,50 @@ EHR.model.DataModelManager.registerMetadata('onprc_Surgery', {
                 }
             }
         },
+      'study.clinical_observations': {
+                   inflammation: {
+                     hidden: true
+                    },
+                    area: {
+                      lookup: {
+                                xtype: 'combobox',
+                                schemaName:'sla',
+                                queryName: 'Reference_Data',
+                                columns: 'value',
+                                sort: 'sort_order',
+                                 defaultValue:'All',
+                                 editable: true,
+                                 header: 'Area',
+                                 filterArray: [
+                                   LABKEY.Filter.create('enddate', null, LABKEY.Filter.Types.ISBLANK),
+                                   LABKEY.Filter.create('ColumnName', 'Surgicalobservationarea', LABKEY.Filter.Types.EQUAL)],
+                                autoLoad: true
+                           }
+                      },
+                    bruising: {
+                      hidden: true
+                      },
+                    type: {
+                           hidden: true,
+                           defaultValue: 'surgery'
+                           },
+                    other: {
+                      hidden: true
+                     },
+                     remark: {
+                       hidden: true,
+                       defaultValue: 'Deferred entries until Surgical Rounds process'
+                    },
+                   performedby: {
+                    hidden: true,
+                    allowBlank: true
+                    },
+
+                    observation: {
+                       hidden: true,
+                       allowBlank: true
+                    }
+               },
         'ehr.encounter_summaries': {
             category: {
                 defaultValue: 'Narrative'
