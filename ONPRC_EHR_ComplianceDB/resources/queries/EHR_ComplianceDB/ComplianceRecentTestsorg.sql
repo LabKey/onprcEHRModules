@@ -115,20 +115,44 @@ union
 -- Training that was completed by as an employee training exemptions, and at least completed one, or more times
 select j.requirementname,
        j.employeeid,
-       null as unit,
-       null as category,
+       null  as unit,
+       null  as category,
        'No' as trackingflag,
+
+
        (select count(zz.date) from ehr_compliancedb.completiondates zz where zz.requirementname= j.requirementname and zz.employeeid= j.employeeid  ) as timesCompleted,
+
        (select k.expireperiod from ehr_compliancedb.Requirements k where k.requirementname = j.requirementname) as ExpiredPeriod,
 
-       ( select  (age_in_months(max(pq.date),tt.reviewdate) ) from  ehr_compliancedb.requirements tt, ehr_compliancedb.completiondates pq where tt.requirementname =   j.requirementname and pq.requirementname = tt.requirementname and pq.employeeid = j.employeeid group by tt.expireperiod, tt.reviewdate
+
+    ( select  ( TIMESTAMPDIFF('SQL_TSI_MONTH', max(pq.date), tt.reviewdate)) from  ehr_compliancedb.requirements tt, ehr_compliancedb.completiondates pq where tt.requirementname =   j.requirementname and pq.requirementname = tt.requirementname and pq.employeeid = j.employeeid group by tt.expireperiod, tt.reviewdate
          having (tt.expireperiod) > ( TIMESTAMPDIFF('SQL_TSI_MONTH', max(pq.date), tt.reviewdate))  and (tt.reviewdate is not null)  ) as NewExpirePeriod,
 
        (select max(zz.date) from ehr_compliancedb.completiondates zz where zz.requirementname= j.requirementname and zz.employeeid= j.employeeid  ) as MostRecentDate,
+
        (Select group_concat(distinct yy.comment, chr(10))  from ehr_compliancedb.completiondates yy where yy.date in (select max(zz.date) from ehr_compliancedb.completiondates zz where zz.requirementname= j.requirementname and zz.employeeid= j.employeeid )
                                                                                      And  yy.requirementname= j.requirementname and yy.employeeid= j.employeeid   ) as comment,
-       null AS MonthsUntilRenewal
 
+
+
+    CAST(
+               CASE
+                   WHEN (select max(st.date) from ehr_compliancedb.completiondates st where st.requirementname = j.requirementname and st.employeeid = j.employeeid ) IS NULL   then 0
+                   WHEN ( select  (tt.expireperiod)  from  ehr_compliancedb.requirements tt where tt.requirementname = j.requirementname  group by tt.expireperiod  ) = 0 then Null
+
+
+                   WHEN ( select  count(*) from  ehr_compliancedb.requirements tt, ehr_compliancedb.completiondates pq where tt.requirementname = j.requirementname and pq.requirementname = tt.requirementname and pq.employeeid = j.employeeid group by tt.expireperiod, tt.reviewdate
+                          having (tt.expireperiod) >  ( TIMESTAMPDIFF('SQL_TSI_MONTH', max(pq.date), tt.reviewdate))   ) > 0 THEN
+
+                       ( select  ( TIMESTAMPDIFF('SQL_TSI_MONTH', max(pq.date), tt.reviewdate) - ( TIMESTAMPDIFF('SQL_TSI_MONTH', max(pq.date), Now()) ) ) from  ehr_compliancedb.requirements tt, ehr_compliancedb.completiondates pq where tt.requirementname =  j.requirementname and pq.requirementname = tt.requirementname and pq.employeeid = j.employeeid group by tt.expireperiod, tt.reviewdate
+                         having (tt.expireperiod) > ( TIMESTAMPDIFF('SQL_TSI_MONTH', max(pq.date), tt.reviewdate))  and (tt.reviewdate is not null)  )
+
+
+
+
+                   ELSE ( select  (tt.expireperiod) - ( TIMESTAMPDIFF('SQL_TSI_MONTH', max(pq.date), Now())) from  ehr_compliancedb.requirements tt, ehr_compliancedb.completiondates pq where   tt.requirementname =   j.requirementname and pq.requirementname = tt.requirementname and pq.employeeid = j.employeeid group by tt.expireperiod )
+
+                   END  AS double)  AS MonthsUntilRenewal
 
 from  ehr_compliancedb.employeerequirementexemptions j
     Where j.requirementname in (select z.requirementname from ehr_compliancedb.completiondates z where z.requirementname = j.requirementname
