@@ -486,7 +486,7 @@ exports.init = function(EHR){
                    msg = row.category + ': was an invalid entry onto the Inflammation input field, only Incision entries are allowed';
                    EHR.Server.Utils.addError(scriptErrors, 'category',  msg, 'ERROR');
                    }
-              if (row.Id && row.category != 'Incision' && row.type == 'surgery' && row.bruising && row.bruinsing != null) {
+              if (row.Id && row.category != 'Incision' && row.type == 'surgery' && row.bruising && row.bruising != null) {
                     msg = row.category + ': was an invalid entry onto the Bruising input field, only Incision entries are allowed';
                     EHR.Server.Utils.addError(scriptErrors, 'category',  msg, 'ERROR');
                     }
