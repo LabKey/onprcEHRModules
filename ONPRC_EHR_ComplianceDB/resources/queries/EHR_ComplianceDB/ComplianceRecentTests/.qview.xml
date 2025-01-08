@@ -11,8 +11,10 @@
         <column name="times_completed"/>
         <column name="expired_period"/>
         <column name="new_expired_period"/>
+        <column name="comment"/>
         <column name="mostrecentcompleted_date"/>
         <column name="months_until_renewal"/>
+
     </columns>
     <sorts>
         <sort column="lastname" descending="false"/>
