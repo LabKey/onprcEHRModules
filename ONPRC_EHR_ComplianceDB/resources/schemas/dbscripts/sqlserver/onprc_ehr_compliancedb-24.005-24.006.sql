@@ -1,6 +1,6 @@
 -- Author:	R. Blasa
 -- Created: 9-20-2024-2024
--- Description:	Stored procedure program to create a static data set for Compliance Procedure REcent Test .sq;
+-- Description:	Stored procedure program to create a static data set for Compliance Procedure Recent Test .sql
 
 
    CREATE TABLE onprc_ehr_compliancedb.ComplianceProcedureReport(
@@ -144,7 +144,7 @@ BEGIN
           And b.requirementname in  (select q.requirementname from ehr_compliancedb.Requirements q where q.requirementname = b.requirementname And q.dateDisabled is null )
 
 
-                                        group by b.requirementname,a.employeeid
+          group by b.requirementname,a.employeeid
 
 
         union

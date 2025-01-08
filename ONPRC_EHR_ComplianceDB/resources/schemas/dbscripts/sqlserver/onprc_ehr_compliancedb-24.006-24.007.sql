@@ -1,6 +1,6 @@
 -- Author:	R. Blasa
 -- Created: 9-20-2024-2024
--- Description:	Stored procedure program to create a static data set for Compliance REcent Test .sq;
+-- Description:	Stored procedure program to create a static data set for Compliance Recent Test .sql
 
 
    CREATE TABLE onprc_ehr_compliancedb.ComplianceRecentReport(
@@ -36,7 +36,7 @@
 **
 ** 	Created by
 **      Blasa  		9-20-2024     Created a storedprocedure to create a static set of data from
-**                                 the ComplianceProcedureRecentTest.sql query
+**                                 the ComplianceRecentTest.sql query
 **
 **
 **
@@ -84,7 +84,6 @@ BEGIN
                          )
 
 
-        --------string_agg(CAST(BOOK.ID AS varchar(max)), ',')
 
 
         select b.requirementname,
@@ -146,7 +145,7 @@ BEGIN
            And b.requirementname in  (select q.requirementname from ehr_compliancedb.Requirements q where q.requirementname = b.requirementname And q.dateDisabled is null )
 
 
-                                        group by b.requirementname,a.employeeid
+             group by b.requirementname,a.employeeid
 
 
         union
@@ -210,7 +209,8 @@ BEGIN
 
         UNION
 
-        -- Training that was completed by as an employee training exemptions, and at least completed one, or more times
+        --- Training that was completed by as an employee training exemptions, and at least completed one, or more times
+
         select a.requirementname,
                a.employeeid,
                null as unit,
@@ -268,7 +268,8 @@ BEGIN
 
         UNION
 
-        -- Additional requirements for employees that have not completed training, but is required
+        --- Additional requirements for employees that have not completed training, but is required
+
         select j.requirementname,
                j.employeeid,
                null as unit,
@@ -339,7 +340,7 @@ BEGIN
 
 
 Err_Proc:
-                    -------Error Generated, Transfer process stopped
+
 	RETURN 1
 
 
