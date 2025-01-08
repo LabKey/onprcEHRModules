@@ -48,6 +48,7 @@ CREATE TABLE sla.TempWeaning (
      sex varchar(100),
      strain varchar (200),
      numAlive INTEGER,
+     dateofTransfer DATETIME,
      created DATETIME
 );
 
@@ -65,9 +66,10 @@ CREATE PROCEDURE  [onprc_ehr].[SLAWeaningDataTransfer]
 AS
 
 DECLARE
-    @WCount			        Int,
+@WCount			        Int,
     @project		        varchar(100),
     @center_project         int,
+	@center_project2        int,
     @PI				        varchar(250),
     @investigaorid	        int,
     @vendorlocation         varchar(250),
@@ -84,39 +86,41 @@ DECLARE
     @purchaseId		        entityid,
     @ageindays		        int,
     @counter		        int,
+	@counter2				int,
 	@weaning_rowid	        int,
     @RequestedArrivalDate   smalldatetime,
     @ExpectedArrivalDate    smalldatetime,
     @slaDOB                 smalldatetime,
-    @numAnimalsOrdered      int
+    @numAnimalsOrdered      int,
+	@DOT					smalldatetime
 
 BEGIN
     --Check if any rodents age is 21 days and above and not transferred into SLA tables
-    Select @WCount = COUNT(*) From sla.weaning
-    Where numAlive > 0 And dateofTransfer is null And DateDiff(dd, date, GETDATE()) >= 21
+Select @WCount = COUNT(*) From sla.weaning
+Where numAlive > 0 And dateofTransfer is null And DateDiff(dd, date, GETDATE()) >= 21
 
-      --Found entries, so, insert those records into SLA.purchase and SLA.purchasedetails tables
-    If @WCount > 0
+  --Found entries, so, insert those records into SLA.purchase and SLA.purchasedetails tables
+    If @WCount > 0 -- start BIG If
     Begin
-        --Delete the rows from temp table before loading new data
+            --Delete the rows from temp table before loading new data
         TRUNCATE TABLE sla.TempWeaning
 
-        --Move the weaning entries into a temp table
-        INSERT INTO sla.TempWeaning (weaning_rowid, investigator, date, project, vendorlocation, DOB, DOM, species, sex, strain, numAlive, created)
+            --Move the weaning entries into a temp table
+            INSERT INTO sla.TempWeaning (weaning_rowid, investigator, date, project, vendorlocation, DOB, DOM, species, sex, strain, numAlive, created)
         Select rowid, investigator, date, project, vendorlocation, date, DOM, species,
-        CASE
+            CASE
             WHEN sex = 'F' THEN 'Female'
             WHEN sex = 'M' THEN 'Male'
             ELSE 'Male or Female'
         END AS sex,
-        strain, numAlive, GETDATE() From sla.weaning
-        Where numAlive > 0 And dateofTransfer is null And DateDiff(dd, date, GETDATE()) >= 21
+                    strain, numAlive, GETDATE() From sla.weaning
+                    Where numAlive > 0 And dateofTransfer is null And DateDiff(dd, date, GETDATE()) >= 21
 
-            --Set the counter
+                --Set the counter seed value
         Select top 1 @counter = rowid from sla.Tempweaning order by rowid asc
 
-        While @counter <= @WCount
-        Begin
+        WHILE @counter <= @WCount -- start 1st while
+        BEGIN
             /* Requestorid - (Kati Marshall ) - 7B3F1ED1-4CD9-4D9A-AFF4-FE0618D49C4B
             Userid - (Kati Marshall) - 1294
             vendor - (ONPRC Weaning - SLA) - E1EE1B64-B7BE-1035-BFC4-5107380AE41E
@@ -124,45 +128,92 @@ BEGIN
             created - (onprc-is) - 1003
             */
 
-            -- Get projectid , PI and account
+            -- Get projectid, PI and account
             Select @center_project = project, @alias = account From ehr.project Where name = (Select project From sla.TempWeaning Where rowid = @counter)
 
             --Get the age of the rodent and weaning_rowid, species, sex, strain and vendorlocation
             Select @ageindays = DateDiff(dd, date, GETDATE()),@weaning_rowid = weaning_rowid,
                    @species = species, @sex = sex, @strain = strain, @vendorlocation = vendorlocation,
                    @RequestedArrivalDate = DateAdd(dd, 21, date), @ExpectedArrivalDate = DateAdd(dd, 21, date),
-                   @slaDOB = date, @numAnimalsOrdered = numAlive
+                   @slaDOB = date, @numAnimalsOrdered = numAlive, @DOT = dateofTransfer
             From sla.TempWeaning Where rowid = @counter
 
-            --Insert weaning data into sla.purchase table as a pending order
-            INSERT INTO sla.purchase
-            (project, account, requestorid, vendorid, hazardslist, dobrequired, comments, confirmationnum, housingconfirmed,
-             iacucconfirmed, requestdate, orderdate, orderedby, objectid, container, createdby, created, modifiedby, modified, DARComments, VendorContact)
-            Select @center_project, @alias ,'7B3F1ED1-4CD9-4D9A-AFF4-FE0618D49C4B','E1EE1B64-B7BE-1035-BFC4-5107380AE41E','',0,'',null,null,null,null,null,'',NEWID(),
-            '4831D09C-4169-1034-BAD2-5107380A9819',1294,GETDATE(),null,null,'',''
+                -- Check if the row is already transfered into the main SLA tables. If DOT is null means the row hasn't been transferred yet.
+            If @DOT IS NULL -- start if, 1
+            Begin
+                            --Insert weaning data into sla.purchase table as a pending order
+                INSERT INTO sla.purchase
+                (project, account, requestorid, vendorid, hazardslist, dobrequired, comments, confirmationnum, housingconfirmed,
+                 iacucconfirmed, requestdate, orderdate, orderedby, objectid, container, createdby, created, modifiedby, modified, DARComments, VendorContact)
+                Select @center_project, @alias ,'7B3F1ED1-4CD9-4D9A-AFF4-FE0618D49C4B','E1EE1B64-B7BE-1035-BFC4-5107380AE41E','',0,'',null,null,null,null,null,'',NEWID(),
+                       '4831D09C-4169-1034-BAD2-5107380A9819',1294,GETDATE(),null,null,'',''
 
-            --Get the newly created purchaseid from sla.purchase
-            Select top 1 @purchaseid = objectid From sla.purchase order by created desc
+                --Get the newly created purchaseid from sla.purchase
+                Select top 1 @purchaseid = objectid From sla.purchase order by created desc
 
-            --Insert data into purchasedetails with the newly created purchaseid above
-            INSERT INTO sla.purchaseDetails
-            (purchaseid, species, age, weight, weight_units, gestation, gender, strain, room, animalsordered, animalsreceived, boxesquantity, costperanimal, shippingcost,
-            totalcost, housingInstructions, requestedarrivaldate, expectedarrivaldate, receiveddate, receivedby, cancelledby, datecancelled,
-            objectid, container, createdby, created, modifiedby, modified, sla_DOB, vendorLocation)
-            VALUES
-            (@purchaseId, @species, CONVERT(VARCHAR, @ageindays) + ' days','','','', @sex, @strain, '',@numAnimalsOrdered,null,null,'','',
-            '','',@RequestedArrivalDate,@ExpectedArrivalDate,null,'','',null,
-            NewId(),'4831D09C-4169-1034-BAD2-5107380A9819',1003,GETDATE(),null,null,@slaDOB,@vendorLocation)
+                --Insert data into purchasedetails with the newly created purchaseid above
+                    INSERT INTO sla.purchaseDetails
+                (purchaseid, species, age, weight, weight_units, gestation, gender, strain, room, animalsordered, animalsreceived, boxesquantity, costperanimal, shippingcost,
+                 totalcost, housingInstructions, requestedarrivaldate, expectedarrivaldate, receiveddate, receivedby, cancelledby, datecancelled,
+                 objectid, container, createdby, created, modifiedby, modified, sla_DOB, vendorLocation)
+                VALUES
+                    (@purchaseId, @species, CONVERT(VARCHAR, @ageindays) + ' days','','','', @sex, @strain, '',@numAnimalsOrdered, null, null,'','',
+                    '','',@RequestedArrivalDate,@ExpectedArrivalDate,null,'','',null,
+                    NewId(),'4831D09C-4169-1034-BAD2-5107380A9819',1003,GETDATE(),null,null,@slaDOB,@vendorLocation)
 
-            --Update the sla.weaning row with the date of transfer date set for the transferred weaning row
-            Update sla.weaning
-            Set dateofTransfer = GETDATE()
-            Where rowid = @weaning_rowid
+                --Update the sla.weaning row with the date of transfer date set for the transferred weaning row
+                Update sla.weaning
+                Set dateofTransfer = GETDATE()
+                Where rowid = @weaning_rowid
 
+                Update sla.TempWeaning
+                Set dateofTransfer = GETDATE()
+                Where rowid = @weaning_rowid
+
+                  --Find if there are any rows with the same center project. Then create them under one purchaseId
+                  --set the new counter
+                SET @counter2 = @counter + 1;
+
+                WHILE @counter2 <= @Wcount -- start 2nd while
+                BEGIN
+                                    --Get projectid of the next row
+                    Select @center_project2 = project From ehr.project Where name = (Select project From sla.TempWeaning Where rowid = @counter2)
+
+                    If (@center_project = @center_project2) -- start if, 2
+                    Begin
+                        Select @ageindays = DateDiff(dd, date, GETDATE()),@weaning_rowid = weaning_rowid,
+                               @species = species, @sex = sex, @strain = strain, @vendorlocation = vendorlocation,
+                               @RequestedArrivalDate = DateAdd(dd, 21, date), @ExpectedArrivalDate = DateAdd(dd, 21, date),
+                               @slaDOB = date, @numAnimalsOrdered = numAlive, @DOT = dateofTransfer
+                        From sla.TempWeaning Where rowid = @counter2
+
+                        If @DOT IS NULL -- start if, 3
+                        Begin
+                            INSERT INTO sla.purchaseDetails
+                            (purchaseid, species, age, weight, weight_units, gestation, gender, strain, room, animalsordered, animalsreceived, boxesquantity, costperanimal, shippingcost,
+                             totalcost, housingInstructions, requestedarrivaldate, expectedarrivaldate, receiveddate, receivedby, cancelledby, datecancelled,
+                             objectid, container, createdby, created, modifiedby, modified, sla_DOB, vendorLocation)
+                            VALUES
+                                (@purchaseId, @species, CONVERT(VARCHAR, @ageindays) + ' days','','','',@sex,@strain, '',@numAnimalsOrdered,null,null,'','',
+                                 '','',@RequestedArrivalDate,@ExpectedArrivalDate,null,'','',null,
+                                 NewId(),'4831D09C-4169-1034-BAD2-5107380A9819',1003,GETDATE(),null,null,@slaDOB,@vendorLocation)
+
+                            Update sla.weaning
+                            Set dateofTransfer = GETDATE()
+                            Where rowid = @weaning_rowid
+
+                            Update sla.TempWeaning
+                            Set dateofTransfer = GETDATE()
+                            Where rowid = @weaning_rowid
+
+                        End -- end if, 3
+                    End -- end if, 2
+                    SET @counter2 = @counter2 + 1;
+                END -- end, 2nd while
+            End  -- end if, 1
             SET @counter = @counter + 1;
-
-        End --End while
-    End
-End
+        END -- end, 1st while
+    End -- end, BIG if
+END
 
 Go

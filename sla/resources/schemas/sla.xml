@@ -558,6 +558,9 @@
             <column columnName="numAlive">
                 <columnTitle>Alive Pups</columnTitle>
             </column>
+            <column columnName="dateofTransfer">
+                <columnTitle>Date of Transfer</columnTitle>
+            </column>
             <column columnName="created" />
         </columns>
     </table>
