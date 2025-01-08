@@ -85,7 +85,7 @@ FROM ehr_lookups.dateRange dr
 
 JOIN study."Treatment Orders" t1
   --NOTE: should the enddate consider date/time?
-  ON (dr.dateOnly >= t1.dateOnly and dr.dateOnly <= t1.enddateCoalesced AND
+  ON (dr.dateOnly >= t1.dateOnly AND (dr.dateOnly <= t1.enddate OR t1.enddate IS NULL) AND
       --technically the first day of the treatment is day 1, not day 0
   (  (mod(CAST(timestampdiff('SQL_TSI_DAY', CAST(t1.dateOnly as timestamp), dr.dateOnly) as integer), t1.frequency.intervalindays) = 0 And t1.frequency.intervalindays is not null And t1.frequency.dayofweek is null )
 
@@ -116,4 +116,4 @@ WHERE (d.lastDayatCenter Is Null or d.lastDayAtCenter > s.enddate)
 
 
 --account for date/time in schedule
-and s.date >= s.startDate and s.date <= s.enddate
+    AND s.date >= s.startDate AND (s.date <= s.enddate OR s.enddate IS NULL)   -- some treatment_orders can have NULL enddates

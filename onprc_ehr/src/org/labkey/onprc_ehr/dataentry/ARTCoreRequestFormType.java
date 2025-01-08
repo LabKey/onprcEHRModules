@@ -27,7 +27,7 @@ import java.util.Arrays;
 //Created: 1/13/2021 Kollil
 public class ARTCoreRequestFormType extends RequestForm
 {
-    public static final String NAME = "ART CORE SERVICES REQUEST";
+    public static final String NAME = "ART Core Services Request";
     public static final String DEFAULT_GROUP = "ART Core Services";
 
     public ARTCoreRequestFormType(DataEntryFormContext ctx, Module owner)
