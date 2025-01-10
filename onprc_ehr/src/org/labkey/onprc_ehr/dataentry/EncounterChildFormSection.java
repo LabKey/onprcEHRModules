@@ -40,7 +40,10 @@ public class EncounterChildFormSection extends SimpleGridPanel
         addClientDependency(ClientDependency.supplierFromPath("ehr/buttons/encounterButtons.js"));
         addClientDependency(ClientDependency.supplierFromPath("ehr/model/sources/EncounterChild.js"));
         addClientDependency(ClientDependency.supplierFromPath("ehr/window/EncounterAddRecordWindow.js"));
-        addClientDependency(ClientDependency.supplierFromPath("ehr/window/AddProcedureDefaultsWindow.js"));
+
+
+        //        Added: 1-10-2025  R. Blasa
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/window/AddProcedureDefaultsWindow.js"));
 
         addConfigSource("Encounter");
         addConfigSource("EncounterChild");
@@ -66,8 +69,9 @@ public class EncounterChildFormSection extends SimpleGridPanel
     {
         List<String> defaultButtons = new ArrayList<>();
 
+//        Modified: 1-20-20025 R. Blasa
         if (_allowAddDefaults)
-            defaultButtons.add("ADDPROCEDUREDEFAULTS");
+            defaultButtons.add("APPLYENCOUNTERDEFAULTSAMENDED");
 
         defaultButtons.addAll(super.getTbarButtons());
         defaultButtons.remove("ADDANIMALS");
