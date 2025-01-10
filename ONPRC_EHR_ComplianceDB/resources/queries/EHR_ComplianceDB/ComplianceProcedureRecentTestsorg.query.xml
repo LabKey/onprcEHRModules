@@ -2,7 +2,7 @@
     <metadata>
         <tables xmlns="http://labkey.org/data/xml">
             <table tableName="complianceProcedureRecentTests" tableDbType="NOT_IN_DB">
-                <tableTitle>Employee Requirement Summary</tableTitle>
+                <tableTitle>Employee Requirement Summary -- Original version</tableTitle>
                 <columns>
                     <column columnName="employeeid">
                         <columnTitle>Employee ID</columnTitle>
@@ -17,7 +17,7 @@
                     <column columnName="rowid">
                         <columnTitle>Row ID</columnTitle>
                     </column>
-                    <column columnName="requirementname">
+                    <column columnName="requirementName">
                         <columnTitle>Requirement Name</columnTitle>
                         <displayWidth>250</displayWidth>
                         <fk>
@@ -27,7 +27,7 @@
                         </fk>
                         <facetingBehavior>ALWAYS_OFF</facetingBehavior>
                     </column>
-                    <column columnName="times_completed">
+                    <column columnName="timesCompleted">
                         <columnTitle>Times Completed</columnTitle>
                         <displayWidth>50</displayWidth>
                         <url>/query/executeQuery.view?schemaName=ehr_compliancedb&amp;
@@ -73,7 +73,7 @@
                         <columnTitle>Unit</columnTitle>
                         <displayWidth>210</displayWidth>
                     </column>
-                    <column columnName="mostrecentcompleted_date">
+                    <column columnName="MostRecentDate">
                         <columnTitle>Most Recent Date</columnTitle>
                         <formatString>yyyy-MM-dd</formatString>
                         <displayWidth>70</displayWidth>
@@ -95,7 +95,7 @@
                         <columnTitle>Requirement Name Type</columnTitle>
                         <displayWidth>180</displayWidth>
                     </column>
-                    <column columnName="months_until_renewal">
+                    <column columnName="MonthsUntilRenewal">
                         <columnTitle>Months Until Renewal</columnTitle>
                         <displayWidth>60</displayWidth>
                         <conditionalFormats>
