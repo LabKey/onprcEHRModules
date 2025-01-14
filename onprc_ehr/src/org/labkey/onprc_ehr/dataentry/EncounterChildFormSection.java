@@ -69,9 +69,8 @@ public class EncounterChildFormSection extends SimpleGridPanel
     {
         List<String> defaultButtons = new ArrayList<>();
 
-//        Modified: 1-20-20025 R. Blasa
         if (_allowAddDefaults)
-            defaultButtons.add("APPLYENCOUNTERDEFAULTSAMENDED");
+            defaultButtons.add("ADDPROCEDUREDEFAULTS");
 
         defaultButtons.addAll(super.getTbarButtons());
         defaultButtons.remove("ADDANIMALS");
