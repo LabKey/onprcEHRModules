@@ -157,5 +157,101 @@
         </columns>
     </table>
 
+    <table tableName="ComplianceProcedureReport" tableDbType="TABLE" useColumnOrder="true">
+        <tableTitle>Compliance Procedure Report</tableTitle>
+        <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+        <auditLogging>DETAILED</auditLogging>
+        <columns>
+            <column columnName="rowid">
+                <columnTitle>Search ID</columnTitle>
+            </column>
+            <column columnName="employeeid">
+            </column>
+            <column columnName="requirementname">
+            </column>
+            <column columnName="unit">
+            </column>
+            <column columnName="category">
+            </column>
+            <column columnName="trackingflag">
+            </column>
+            <column columnName="email">
+            </column>
+            <column columnName="lastname">
+            </column>
+            <column columnName="firstname">
+            </column>
+            <column columnName="host">
+            </column>
+            <column columnName="supervisor">
+            </column>
+            <column columnName="trainee_type">
+            </column>
+            <column columnName="times_completed">
+            </column>
+            <column columnName="expired_period">
+            </column>
+            <column columnName="new_expired_period">
+            </column>
+            <column columnName="mostrecentcompleted_date">
+            </column>
+            <column columnName="comment">
+            </column>
+            <column columnName="snooze_date">
+            </column>
+            <column columnName="months_until_renewal">
+            </column>
+            <column columnName="requirement_name_type">
+            </column>
+        </columns>
+    </table>
+    <table tableName="ComplianceRecentReport" tableDbType="TABLE" useColumnOrder="true">
+        <tableTitle>Compliance Recent Report</tableTitle>
+        <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+        <auditLogging>DETAILED</auditLogging>
+        <columns>
+            <column columnName="rowid">
+                <columnTitle>Search ID</columnTitle>
+            </column>
+            <column columnName="employeeid">
+            </column>
+            <column columnName="requirementname">
+            </column>
+            <column columnName="unit">
+            </column>
+            <column columnName="category">
+            </column>
+            <column columnName="trackingflag">
+            </column>
+            <column columnName="email">
+            </column>
+            <column columnName="lastname">
+            </column>
+            <column columnName="firstname">
+            </column>
+            <column columnName="host">
+            </column>
+            <column columnName="supervisor">
+            </column>
+            <column columnName="trainee_type">
+            </column>
+            <column columnName="times_completed">
+            </column>
+            <column columnName="expired_period">
+            </column>
+            <column columnName="new_expired_period">
+            </column>
+            <column columnName="mostrecentcompleted_date">
+            </column>
+            <column columnName="comment">
+            </column>
+            <column columnName="snooze_date">
+            </column>
+            <column columnName="months_until_renewal">
+            </column>
+            <column columnName="requirement_name_type">
+            </column>
+        </columns>
+    </table>
 
 </tables>
