@@ -32,16 +32,17 @@ WITH ApprovedProtocols AS (
              p.Three_Year_Expiration
          FROM
              onprc_ehr.eIACUC_PRIME_VIEW_PROTOCOLS p
-                 INNER JOIN ApprovedProtocols ap
-                            ON p.BaseProtocol = ap.BaseProtocol
-                                AND p.Approval_Date = ap.maxApprovalDate)
-        ,
-     ExpiredProtocol as (
-         Select d.*,p.protocol,p.enddate from DistinctProtocols d inner join ehr.protocol p on d.BaseProtocol = p.external_ID
-         where d.Protocol_StaTe != 'Approved' and p.enddate is Null)
+                 INNER JOIN ApprovedProtocols ap ON p.BaseProtocol = ap.BaseProtocol
+                                AND p.Approval_Date = ap.maxApprovalDate),
+     ExpiredProtocol AS (
+         Select
+             d.*,
+             p.protocol,
+             p.enddate
+         from DistinctProtocols d inner join ehr.protocol p on d.BaseProtocol = p.external_ID
+            where d.Protocol_State != 'Approved' and p.enddate is Null)
 
 Update p
-Set p.enddate = getDate() , p.contacts = 'EndDated based on Protocol_State ' + e.PROTOCOL_State
-
+    Set p.enddate = getDate()
     from ehr.protocol p inner join expiredProtocol e on p.external_id = e.BaseProtocol
 END
