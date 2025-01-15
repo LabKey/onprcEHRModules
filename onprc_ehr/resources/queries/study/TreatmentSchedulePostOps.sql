@@ -64,7 +64,7 @@ FROM (
     FROM ehr_lookups.dateRange dr
 
 Join study."Treatment Orders" t1
-    ON (dr.dateOnly >= t1.dateOnly and dr.dateOnly <= t1.enddateCoalesced AND
+    ON (dr.dateOnly >= t1.dateOnly AND (dr.dateOnly <= t1.enddate OR t1.enddate IS NULL) AND
         mod(CAST(timestampdiff('SQL_TSI_DAY', CAST(t1.dateOnly as timestamp), dr.dateOnly) as integer), t1.frequency.intervalindays) = 0
     )
 
@@ -93,7 +93,7 @@ WHERE t1.date is not null
 ) s ON (s.animalid = h.id)
    WHERE h.calculated_status = 'Alive'
    --account for date/time in schedule
-   and s.date >= s.startDate and s.date <= s.enddate
+   AND s.date >= s.startDate AND (s.date <= s.enddate OR s.enddate IS NULL)
 
 
 -- /*
