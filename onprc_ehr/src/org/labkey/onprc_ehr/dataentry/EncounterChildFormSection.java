@@ -40,7 +40,10 @@ public class EncounterChildFormSection extends SimpleGridPanel
         addClientDependency(ClientDependency.supplierFromPath("ehr/buttons/encounterButtons.js"));
         addClientDependency(ClientDependency.supplierFromPath("ehr/model/sources/EncounterChild.js"));
         addClientDependency(ClientDependency.supplierFromPath("ehr/window/EncounterAddRecordWindow.js"));
-        addClientDependency(ClientDependency.supplierFromPath("ehr/window/AddProcedureDefaultsWindow.js"));
+
+
+        //        Added: 1-10-2025  R. Blasa
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/window/AddProcedureDefaultsWindow.js"));
 
         addConfigSource("Encounter");
         addConfigSource("EncounterChild");

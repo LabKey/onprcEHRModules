@@ -26,7 +26,7 @@ import java.util.List;
  * Date: 7/7/13
  * Time: 10:36 AM
  */
-public class SurgicalRoundsRemarksFormSection extends RoundsRemarksFormSection
+public class SurgicalRoundsRemarksFormSection extends SurgicalAmendedRemarksFormSection
 {
     public SurgicalRoundsRemarksFormSection()
     {
@@ -39,8 +39,12 @@ public class SurgicalRoundsRemarksFormSection extends RoundsRemarksFormSection
         setConfigSources(Collections.singletonList("Task"));
 
         addClientDependency(ClientDependency.supplierFromPath("ehr/window/AddClinicalCasesWindow.js"));
-        addClientDependency(ClientDependency.supplierFromPath("ehr/window/AddSurgicalCasesWindow.js"));
         addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/window/BulkChangeCasesWindow.js"));
+
+
+//        Modified: 7-26-2024 R. Blasa
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/window/AddSurgicalCasesWindow.js"));
+
 
         _showLocation = true;
     }
@@ -49,8 +53,11 @@ public class SurgicalRoundsRemarksFormSection extends RoundsRemarksFormSection
     public List<String> getTbarButtons()
     {
         List<String> defaultButtons = super.getTbarButtons();
-        defaultButtons.add(0, "ADDSURGICALCASES");
         defaultButtons.add("BULK_CHANGE_CASES");
+
+//        Added: 7-26-2024  R. Blasa
+        defaultButtons.add(0, "ADDSURGICALCASEST");
+
 
         return defaultButtons;
     }

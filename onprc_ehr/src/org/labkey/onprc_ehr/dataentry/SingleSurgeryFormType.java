@@ -46,7 +46,7 @@ public class SingleSurgeryFormType extends EncounterForm
     public SingleSurgeryFormType(DataEntryFormContext ctx, Module owner)
     {
         super(ctx, owner, NAME, "Surgery", "Surgery", Arrays.asList(
-                new NonStoreFormSection("Instructions", "Instructions", "ehr-surgeryinstructionspanel", Arrays.asList(ClientDependency.supplierFromPath("ehr/panel/SurgeryInstructionsPanel.js"))),
+                new NonStoreFormSection("Instructions", "Instructions", "onprc_ehr-surgeryinstructionspanel", Arrays.asList(ClientDependency.supplierFromPath("onprc_ehr/panel/SurgeryInstructionsPanel.js"))),
                 new TaskFormSection(),
                 new ClinicalEncountersFormPanelSection("Surgery"),
                 new ExtendedAnimalDetailsFormSection(),
@@ -54,6 +54,7 @@ public class SingleSurgeryFormType extends EncounterForm
                 new EncounterChildFormSection("ehr", "encounter_summaries", "Narrative", true),
                 new EncounterMedicationsFormSection("study", "Drug Administration", "Medications/Treatments Given", true),
                 new EncounterMedicationsFormSection("study", "Treatment Orders", "Medication/Treatment Orders", false),
+                new ClinicalObservationsFormSection(EHRService.FORM_SECTION_LOCATION.Tabs),
                 new EncounterChildFormSection("study", "weight", "Weight", false, "EHR.data.WeightClientStore", Arrays.asList(ClientDependency.supplierFromPath("ehr/data/WeightClientStore.js")), null),
                 new BloodDrawFormSection(false, EHRService.FORM_SECTION_LOCATION.Tabs),
                 new EncounterChildFormSection("ehr", "snomed_tags", "Diagnostic Codes", true)
@@ -65,8 +66,13 @@ public class SingleSurgeryFormType extends EncounterForm
         }
 
         addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/model/sources/Surgery.js"));
-        addClientDependency(ClientDependency.supplierFromPath("ehr/window/OpenSurgeryCasesWindow.js"));
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/window/OpenSurgeryCasesWindow.js"));
         addClientDependency(ClientDependency.supplierFromPath("ehr/panel/SurgeryDataEntryPanel.js"));
+
+//    Added: 8-27-2024  r. Blasa
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/form/field/SurgeryEntryField.js"));
+
+
         setDisplayReviewRequired(true);
         setJavascriptClass("EHR.panel.SurgeryDataEntryPanel");
 
@@ -89,7 +95,7 @@ public class SingleSurgeryFormType extends EncounterForm
     protected List<String> getButtonConfigs()
     {
         List<String> ret = super.getButtonConfigs();
-        ret.add("OPENSURGERYCASES");
+        ret.add("OPENSURGERYCASEST");
 
         return ret;
     }

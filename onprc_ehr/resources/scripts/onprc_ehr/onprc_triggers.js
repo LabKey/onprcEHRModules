@@ -474,6 +474,31 @@ exports.init = function(EHR){
                 EHR.Server.Utils.addError(scriptErrors, 'category',  msg, 'WARN');
             }
         }
+      });
+
+    //Added 10-7-2024 Blasa
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'clinical_observations', function(helper, scriptErrors, row, oldRow) {
+
+        if (row.Id && row.category != 'Incision' && (row.inflammation || row.bruising || row.other))
+            {
+               var msg = '';
+              if (row.Id && row.category != 'Incision' && row.type == 'surgery' && row.inflammation && row.inflammation != null) {
+                   msg = row.category + ': was an invalid entry onto the Inflammation input field, only Incision entries are allowed';
+                   EHR.Server.Utils.addError(scriptErrors, 'category',  msg, 'ERROR');
+                   }
+              if (row.Id && row.category != 'Incision' && row.type == 'surgery' && row.bruising && row.bruising != null) {
+                    msg = row.category + ': was an invalid entry onto the Bruising input field, only Incision entries are allowed';
+                    EHR.Server.Utils.addError(scriptErrors, 'category',  msg, 'ERROR');
+                    }
+               if (row.Id && row.category != 'Incision' && row.type == 'surgery' && row.other && row.other != null) {
+                    msg = row.category + ': was an invalid entry onto the Other input field, only Incision entries are allowed';
+                    EHR.Server.Utils.addError(scriptErrors, 'category',  msg, 'ERROR');
+                    }
+
+
+
+            }
+
 
     });
 
