@@ -1,0 +1,44 @@
+<script type="text/javascript">
+
+    Ext4.onReady(function (){
+        var webpart = <%=webpartContext%>;
+        var ctx = EHR.Utils.getEHRContext(webpart.wrapperDivId);
+        if(!ctx)
+            return;
+
+        Ext4.create('Ext.panel.Panel', {
+            border: false,
+            defaults: {
+                border: false
+            },
+            items: [{
+                html: 'This is the Necropsy Scheduler Module.  Below are links to the Necropsy Scheduler Program, and related reports.',
+                style: 'padding-bottom: 10px;'
+            },{
+                xtype: 'ldk-navpanel',
+                sections: [{
+                    header: 'Scheduler Menus',
+                    items: [{
+
+                        name: 'View Necropsy Scheduler Calendar',
+
+                        url: LABKEY.ActionURL.buildURL('extscheduler', 'weeklyNecropsyTest', null, {
+                            //     var schedulerAppLink = LABKEY.ActionURL.buildURL('extscheduler', 'NecropsyWeeklySC', null, {
+                            returnUrl: window.location.pathname + window.location.search
+                        })
+                    },{
+                        name: 'View Scheduler Resource and Events Reports',
+                        url: LABKEY.ActionURL.buildURL('extscheduler', 'NecropsyWeeklyScheduler', null, {
+                            //     var schedulerAppLink = LABKEY.ActionURL.buildURL('extscheduler', 'NecropsyWeeklySC', null, {
+                            // returnUrl: window.location.pathname + window.location.search
+                        })
+
+                    }]
+
+
+                 }]
+            }]
+        }).render(webpart.wrapperDivId);
+    });
+
+</script>
