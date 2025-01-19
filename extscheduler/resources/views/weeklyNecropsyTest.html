@@ -26,143 +26,144 @@
     <title>Scheduler Week View</title>
 </head>
 <body>
-<script type="text/javascript">
-    Ext.onReady(function ()
-    {
-        var initScheduler = function()
+<script type="text/javascript" nonce="<%=scriptNonce%>">
+        Ext.onReady(function ()
+        {
+            var initScheduler = function()
         {
             Ext.application({
-                name     : 'App',
-                mainView : 'App.view.ViewportAmended',
-                paths    : {
-                    'App': LABKEY.contextPath + '/extscheduler/App'
-                },
-                views    : [
-                    'EventFormAmended',
-                    'HeaderAmended',
-                    'InfoPanelAmended',
-                    'NavigationBarAmended',
-                    'ProjectCombo',
-                    'ResourceCombo',
-                    'Resources',
-                    'SchedulerAmended',
-                    'ViewportAmended'
-                ]
-            });
+            name     : 'App',
+            mainView : 'App.view.ViewportAmended',
+            paths    : {
+            'App': LABKEY.contextPath + '/extscheduler/App'
+        },
+            views    : [
+            'EventFormAmended',
+            'HeaderAmended',
+            'InfoPanelAmended',
+            'NavigationBarAmended',
+            'ProjectCombo',
+            'ResourceCombo',
+            'Resources',
+            'SchedulerAmended',
+            'ViewportAmended'
+            ]
+        });
         };
 
 
-        var queryStoreData = function()
+            var queryStoreData = function()
         {
             var resourceStore = null, eventStore = null, userStore = null;
 
             // query to get the resource store data
             LABKEY.Query.selectRows({
-                schemaName: 'extscheduler',
-                queryName: 'Resources',
-                columns: 'Id,Name,Color,Room,Bldg',
-                success: function(data) {
-                    resourceStore = Ext.create('Sch.data.ResourceStore', {
-                        model   : 'Sch.model.Resource',
-                        storeId : 'resource', // referenced by this store id in Scheduler.js, ResourceCombo.js, etc.
-                        sorters : {
-                            property  : 'Name',
-                            direction : "ASC"
-                        },
-                        data: data.rows
-                    });
+            schemaName: 'extscheduler',
+            queryName: 'Resources',
+            columns: 'Id,Name,Color,Room,Bldg',
+            success: function(data) {
+            resourceStore = Ext.create('Sch.data.ResourceStore', {
+            model   : 'Sch.model.Resource',
+            storeId : 'resource', // referenced by this store id in Scheduler.js, ResourceCombo.js, etc.
+            sorters : {
+            property  : 'Name',
+            direction : "ASC"
+        },
+            data: data.rows
+        });
 
-                    // only initialize the scheduler when all stores have loaded
-                    if (eventStore != null && userStore != null) {
-                        initScheduler();
-                    }
-                }
-            });
+            // only initialize the scheduler when all stores have loaded
+            if (eventStore != null && userStore != null) {
+            initScheduler();
+        }
+        }
+        });
 
             // query to get the event store data
             LABKEY.Query.selectRows({
-                schemaName: 'extscheduler',
-                queryName: 'Events',
-                columns: 'Id,ResourceId,Name,StartDate,EndDate,UserId,Alias,Owner,Comments,project,fasting,delivery,animalid,remainingtissues',
-                success: function(data){
+            schemaName: 'extscheduler',
+            queryName: 'Events',
+            columns: 'Id,ResourceId,Name,StartDate,EndDate,UserId,Alias,Owner,Comments,project,fasting,delivery,animalid,remainingtissues',
+            success: function(data){
 
-                    // need to convert the date fields from a string to JS Date object
-                    Ext.each(data.rows, function(row){
-                        row.StartDate = new Date(row.StartDate);
-                        row.EndDate = new Date(row.EndDate);
-                    });
+            // need to convert the date fields from a string to JS Date object
+            Ext.each(data.rows, function(row){
+            row.StartDate = new Date(row.StartDate);
+            row.EndDate = new Date(row.EndDate);
+        });
 
-                    eventStore = Ext.create('Sch.data.EventStore', {
-                        model : 'Sch.model.Event',
-                        storeId : 'event', // referenced by this store id in Scheduler.js, etc.
-                        data : data.rows
-                    });
+            eventStore = Ext.create('Sch.data.EventStore', {
+            model : 'Sch.model.Event',
+            storeId : 'event', // referenced by this store id in Scheduler.js, etc.
+            data : data.rows
+        });
 
-                    // only initialize the scheduler when all stores have loaded
-                    if (resourceStore != null && userStore != null) {
-                        initScheduler();
-                    }
-                }
-            });
+            // only initialize the scheduler when all stores have loaded
+            if (resourceStore != null && userStore != null) {
+            initScheduler();
+        }
+        }
+        });
 
             // query to get the Ext Scheduler users store data
             LABKEY.Ajax.request({
-                url: LABKEY.ActionURL.buildURL('extscheduler', 'getSchedulerGroupMembers.api'),
-                method: 'POST',
-                success: function (response) {
-                    var data = Ext.JSON.decode(response.responseText);
+            url: LABKEY.ActionURL.buildURL('extscheduler', 'getSchedulerGroupMembers.api'),
+            method: 'POST',
+            success: function (response) {
+            var data = Ext.JSON.decode(response.responseText);
 
-                    if (!data.success && data.msg)
-                    {
-                        data.rows = [];
-                        Ext.Msg.alert('Error', data.msg);
-                    }
-                    else if (data.success && data.rows.length == 0)
-                    {
-                        Ext.Msg.alert('Error', 'No users found in the configured Scheduler user group. Please contact '
-                                + 'an administrator to verify that the Scheduler user group is configured correctly.');
-                    }
+            if (!data.success && data.msg)
+        {
+            data.rows = [];
+            Ext.Msg.alert('Error', data.msg);
+        }
+            else if (data.success && data.rows.length == 0)
+        {
+            Ext.Msg.alert('Error', 'No users found in the configured Scheduler user group. Please contact '
+            + 'an administrator to verify that the Scheduler user group is configured correctly.');
+        }
 
-                    Ext.define('User', {
-                        extend: 'Ext.data.Model',
+            Ext.define('User', {
+            extend: 'Ext.data.Model',
 
-                        fields: [
-                            {name: 'UserId', type: 'int'},
-                            {name: 'LastName', type: 'string'},
-                            {name: 'FirstName', type: 'string'},
-                            {name: 'DisplayName', type: 'string'},
-                            {
-                                name: 'FullName',
-                                convert: function(v, record) {
-                                    if (record.get('LastName') == null || record.get('LastName') == '')
-                                        return record.get('DisplayName');
-                                    else
-                                        return record.get('LastName') + ', ' + record.get('FirstName');
-                                }
-                            }
-                        ]
-                    });
+            fields: [
+        {name: 'UserId', type: 'int'},
+        {name: 'LastName', type: 'string'},
+        {name: 'FirstName', type: 'string'},
+        {name: 'DisplayName', type: 'string'},
+        {
+            name: 'FullName',
+            convert: function(v, record) {
+            if (record.get('LastName') == null || record.get('LastName') == '')
+            return record.get('DisplayName');
+            else
+            return record.get('LastName') + ', ' + record.get('FirstName');
+        }
+        }
+            ]
+        });
 
-                    userStore = Ext.create('Ext.data.Store', {
-                        storeId : 'users', // referenced by this store id in InfoPanel.js
-                        model: 'User',
-                        sorters : {
-                            property  : 'FullName',
-                            direction : "ASC"
-                        },
-                        data : data.rows
-                    });
+            userStore = Ext.create('Ext.data.Store', {
+            storeId : 'users', // referenced by this store id in InfoPanel.js
+            model: 'User',
+            sorters : {
+            property  : 'FullName',
+            direction : "ASC"
+        },
+            data : data.rows
+        });
 
-                    // only initialize the scheduler when all stores have loaded
-                    if (resourceStore != null && eventStore != null) {
-                        initScheduler();
-                    }
-                }
-            });
+            // only initialize the scheduler when all stores have loaded
+            if (resourceStore != null && eventStore != null) {
+            initScheduler();
+        }
+        }
+        });
         };
 
-        queryStoreData();
-    });
+            queryStoreData();
+        })
+    ;
 </script>
 </body>
 </html>
