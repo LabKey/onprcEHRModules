@@ -48,10 +48,10 @@ AS
 
 DECLARE
     @WCount			        int,
-    @center_project         int,
-	@center_project2        int,
     @alias			        varchar(100),
     @purchaseId		        entityid,
+    @center_project         int,
+	@center_project2        int,
     @counter		        int,
 	@counter2				int,
 	@DOT					DATETIME,
@@ -64,7 +64,7 @@ BEGIN
     --Found entries, so, insert those records into SLA.purchase and SLA.purchasedetails tables
     If @WCount > 0 -- start if, 1
     Begin
-        --Create a local temp table to process the weaning data
+        --Create a local temp table to process the weaning data. The table drops automatically at the end of the session
         CREATE TABLE #TempWeaning (
           rowid int IDENTITY(1,1) NOT NULL,
           orig_weaning_rowid INTEGER,
@@ -176,7 +176,7 @@ BEGIN
         END -- end, 1st while
     End -- end if, 1
 
-    --Drop the temp table
+    --Drop the temp table incase it exists...
     IF EXISTS (SELECT * FROM tempdb.sys.tables WHERE name = '#TempWeaning')
     BEGIN
         DROP TABLE #TempWeaning;
