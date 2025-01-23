@@ -150,6 +150,15 @@ Ext4.define('ONPRC_EHR.grid.ObservationsRowEditorGridPanel', {
                      }
 
         },{
+            header: 'Obs Remarks',
+            width: 130,
+            dataIndex: 'obs_remark',
+            editor: {
+                xtype: 'textarea',
+                width:280,
+                height:50
+            }
+        },{
             header: 'Inflammation',
             width: 130,
             dataIndex: 'inflammation',

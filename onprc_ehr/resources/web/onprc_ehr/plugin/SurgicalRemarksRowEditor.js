@@ -14,7 +14,7 @@ Ext4.define('ONPRC_EHR.plugin.SurgicalRemarksRowEditor', {
             xtype: 'onprc_ehr-observationsroweditorgridpanel',
             itemId: 'observationsPanel',
             remarkStore: this.cmp.store,
-            width: 1400,
+            width: 1600,
             store: store
         };
     },
