@@ -67,6 +67,10 @@
                         <isHidden>false</isHidden>
                         <columnTitle>Remark</columnTitle>
                     </column>
+                    <column columnName="obs_remark">
+                        <isHidden>false</isHidden>
+                        <columnTitle>Observation Score Remark</columnTitle>
+                    </column>
                     <column columnName="performedby">
                         <isHidden>true</isHidden>
                         <columnTitle>Performed By</columnTitle>

@@ -846,6 +846,12 @@
             <column columnName="other">
                 <datatype>varchar</datatype>
             </column>
+            <column columnName="type">
+                <datatype>varchar</datatype>
+            </column>
+            <column columnName="obs_remark">
+                <datatype>varchar</datatype>
+            </column>
         </columns>
         <tableTitle>Clinical Observations</tableTitle>
     </table>

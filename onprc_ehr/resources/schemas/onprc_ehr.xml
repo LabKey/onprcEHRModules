@@ -1485,6 +1485,8 @@
 
             <column columnName="remark"/>
 
+            <column columnName="obs_remark"/>
+
         </columns>
     </table>
 

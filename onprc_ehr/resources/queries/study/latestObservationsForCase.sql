@@ -26,7 +26,8 @@ SELECT
   c.isOpen as caseIsOpen,
   o.taskid,
   o.inflammation,
-  o.bruising
+  o.bruising,
+  o.obs_remark
 
 
 FROM study.clinical_observations o

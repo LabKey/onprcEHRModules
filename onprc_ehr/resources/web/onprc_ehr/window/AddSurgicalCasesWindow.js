@@ -41,7 +41,7 @@ Ext4.define('ONPRC_EHR.window.AddSurgicalCasesWindow', {
             requiredVersion: 9.1,
             schemaName: 'study',
             queryName: 'latestObservationsForCase',
-            columns: 'Id,date,category,area,observation,inflammation,bruising,other, remark,caseid,type',
+            columns: 'Id,date,category,area,observation,inflammation,bruising,other,remark,caseid,obs_remark,type',
             filterArray: obsFilterArray,
             scope: this,
             success: function(results){
@@ -142,7 +142,8 @@ Ext4.define('ONPRC_EHR.window.AddSurgicalCasesWindow', {
                     inflammation: row.getValue('inflammation'),
                     bruising: row.getValue('bruising'),
                     other: row.getValue('other'),
-                    remark: row.getValue('remark')
+                    remark: row.getValue('remark'),
+                    obs_remark: row.getValue('obs_remark')
                 });
             }, this);
         }
