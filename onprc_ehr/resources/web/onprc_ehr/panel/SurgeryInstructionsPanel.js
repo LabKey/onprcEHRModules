@@ -5,7 +5,7 @@
  */
 Ext4.define('ONPRC_EHR.panel.SurgeryInstructionsPanel', {
     extend: 'Ext.panel.Panel',
-    alias: 'widget.ehr-surgeryinstructionspanel',
+    alias: 'widget.onprc_ehr-surgeryinstructionspanel',
 
     initComponent: function(){
         var buttons = [];
