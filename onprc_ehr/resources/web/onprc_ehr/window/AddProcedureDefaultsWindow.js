@@ -493,7 +493,7 @@ EHR.DataEntryUtils.registerGridButton('ADDPROCEDUREDEFAULTS', function(config){
             LDK.Assert.assertNotEmpty('Unable to find encounters store in ADDPROCEDUREDEFAULTS button', store);
 
             if (store){
-                Ext4.create('EHR.window.AddProcedureDefaultsWindow', {
+                Ext4.create('ONPRC_EHR.window.AddProcedureDefaultsWindow', {
                     dataEntryPanel: panel,
                     targetTabs: [grid],
                     encountersStore: store
