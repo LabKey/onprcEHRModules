@@ -155,12 +155,14 @@ EHR.model.DataModelManager.registerMetadata('onprc_Surgery', {
                       hidden: true
                      },
                      remark: {
-                       hidden: true,
-                       defaultValue: 'Deferred entries until Surgical Rounds process'
+                       hidden: true
                     },
+                   obs_remark: {
+                      hidden: true
+                  },
                    performedby: {
-                    hidden: true,
-                    allowBlank: true
+                        hidden: true,
+                        allowBlank: true
                     },
 
                     observation: {
