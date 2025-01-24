@@ -503,16 +503,16 @@ EHR.DataEntryUtils.registerGridButton('ADDPROCEDUREDEFAULTS', function(config){
     });
 });
 
-EHR.DataEntryUtils.registerDataEntryFormButton('PPLYENCOUNTERDEFAULTSAMENDED', {
+EHR.DataEntryUtils.registerDataEntryFormButton('APPLYENCOUNTERDEFAULTSAMENDED', {
     text: 'Add Procedure Defaults',
     xtype: 'button',
     tooltip: 'Click to copy records from the encounters section',
     handler: function(btn){
         var panel = btn.up('ehr-dataentrypanel');
-        LDK.Assert.assertNotEmpty('Unable to find dataEntryPanel in PPLYENCOUNTERDEFAULTSAMENDED button', panel);
+        LDK.Assert.assertNotEmpty('Unable to find dataEntryPanel in APPLYENCOUNTERDEFAULTSAMENDED button', panel);
 
         var store = panel.storeCollection.getClientStoreByName('encounters');
-        LDK.Assert.assertNotEmpty('Unable to find encounters store in PPLYENCOUNTERDEFAULTSAMENDEDS button', store);
+        LDK.Assert.assertNotEmpty('Unable to find encounters store in APPLYENCOUNTERDEFAULTSAMENDEDS button', store);
 
         if (store){
             Ext4.create('ONPRC_EHR.window.AddProcedureDefaultsWindow', {
