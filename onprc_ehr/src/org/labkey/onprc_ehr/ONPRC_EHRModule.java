@@ -97,6 +97,7 @@ import org.labkey.onprc_ehr.security.ONPRC_EHRCMUAdministrationRole;
 import org.labkey.onprc_ehr.security.ONPRC_EHRCustomerEditPermission;
 import org.labkey.onprc_ehr.security.ONPRC_EHRCustomerEditRole;
 import org.labkey.onprc_ehr.security.ONPRC_EHREnvironmentalPermission;
+import org.labkey.onprc_ehr.security.ONPRC_EHRCMUMedicationEntryRole;
 import org.labkey.onprc_ehr.security.ONPRC_EHREnvironmentalRole;
 //import org.labkey.onprc_ehr.security.ONPRC_EHRPMICEditRole;
 import org.labkey.onprc_ehr.security.ONPRC_EHRTransferRequestRole;
@@ -144,11 +145,15 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         RoleManager.registerRole(new ONPRC_EHRCMUAdministrationRole());
         RoleManager.registerRole(new ONPRC_EHRTransferRequestRole());
 
+
 //        Added: 12-5-2019
 //        RoleManager.registerRole(new ONPRC_EHRPMICEditRole());
 
 //        Added: 10-30-2023 R. Blasa
         RoleManager.registerRole(new ONPRC_EHREnvironmentalRole());
+
+//        Added: 1-29-2025 R. Blasa
+        RoleManager.registerRole(new ONPRC_EHRCMUMedicationEntryRole());
 
         // register the permissions provider for a restricted issue list
         IssuesListDefService.get().registerRestrictedIssueProvider(new RestrictedIssueProviderImpl());
@@ -609,6 +614,9 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
 
         //Modified: 11-4-2024 R.Blasa
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(CMURequestFormType.class, this));
+
+        //Modified: 1-29-2025 R.Blasa
+        EHRService.get().registerFormType(new DefaultDataEntryFormFactory(CMUTreatmentsFormType.class, this));
 
         //single section forms
         EHRService.get().registerSingleFormOverride(new SingleQueryFormProvider(this, "study", "treatment_order", new MedicationsQueryFormSection("study", "Treatment Orders", "Medication/Treatment Orders")));

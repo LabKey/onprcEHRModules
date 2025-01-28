@@ -37,9 +37,9 @@ public class CMURequestFormType extends RequestForm
 
     public CMURequestFormType(DataEntryFormContext ctx, Module owner)
     {
-        super(ctx, owner, NAME, NAME, "Requests", Arrays.asList(
+        super(ctx, owner, NAME, NAME, "CMU", Arrays.asList(
                 new RequestFormSection(),
-                new AnimalDetailsFormSection(),
+                new AnimalDetailsFormSection(),+
                 new TreatmentOrdersRequestFormSection()
         ));
 
