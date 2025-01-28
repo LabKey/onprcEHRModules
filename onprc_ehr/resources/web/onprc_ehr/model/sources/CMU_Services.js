@@ -13,14 +13,14 @@ EHR.model.DataModelManager.registerMetadata('CMU_Services', {
     byQuery: {
    'study.treatment_order': {
               chargetype: {
-                  defaultValue: 'Research Staff',
+                  defaultValue: 'DCM: Clinical Services',
                   hidden: false
               },
               date: {
                   defaultValue: Ext4.Date.add(new Date(), Ext4.Date.DAY, 1)
               },
               Billable: {
-                  defaultValue: 'No',
+                  defaultValue: 'Yes',
                   hidden: true
               },
               code: {
@@ -30,11 +30,11 @@ EHR.model.DataModelManager.registerMetadata('CMU_Services', {
                   }
               },
               category: {
-                  defaultValue: 'Research',
+                  defaultValue: 'Clinical on behalf of Research',
                   hidden: true
               },
               remark: {
-                  header: 'Special Instructions',
+                  header: 'Remark',
                   hidden: false
               }
           },
