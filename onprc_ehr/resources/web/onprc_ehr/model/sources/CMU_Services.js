@@ -11,41 +11,41 @@ EHR.model.DataModelManager.registerMetadata('CMU_Services', {
 
     },
     byQuery: {
-   'study.treatment_order': {
-              chargetype: {
-                  defaultValue: 'Research Staff',
-                  hidden: false
-              },
-              date: {
-                  defaultValue: Ext4.Date.add(new Date(), Ext4.Date.DAY, 1)
-              },
-              Billable: {
-                  defaultValue: 'No',
-                  hidden: true
-              },
-              code: {
-                  header: 'Treatment',
-                  editorConfig: {
-                      defaultSubset: 'Research'
-                  }
-              },
-              category: {
-                  defaultValue: 'Research',
-                  hidden: true
-              },
-              remark: {
-                  header: 'Special Instructions',
-                  hidden: false
-              }
-          },
+        'study.treatment_order': {
+            chargetype: {
+                defaultValue: 'DCM: Clinical Services',
+                hidden: false
+            },
+            date: {
+                defaultValue: Ext4.Date.add(new Date(), Ext4.Date.DAY, 1)
+            },
+            Billable: {
+                defaultValue: 'Yes',
+                hidden: true
+            },
+            code: {
+                header: 'Treatment',
+                editorConfig: {
+                    defaultSubset: 'Research'
+                }
+            },
+            category: {
+                defaultValue: 'Clinical on behalf of Research',
+                hidden: true
+            },
+            remark: {
+                header: 'Remark',
+                hidden: false
+            }
+        },
 
         'ehr.requests': {
-                    remark: {
-                        label: 'Lab Phone # ',
-                        width: 300,
-                        height: 20,
-                        hidden: false
-                    }
+            remark: {
+                label: 'Lab Phone # ',
+                width: 300,
+                height: 20,
+                hidden: false
+            }
 
         }
     }
