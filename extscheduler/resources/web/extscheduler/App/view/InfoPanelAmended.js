@@ -1,4 +1,4 @@
-`Ext.define('App.view.InfoPanelAmended', {
+Ext.define('App.view.InfoPanelAmended', {
     extend    : 'Ext.Container',
     alias     : 'widget.infopanelAmended',
     requires  : [
