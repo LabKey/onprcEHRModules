@@ -34,7 +34,7 @@ Ext4.define('ONPRC_EHR.plugin.SurgicalRemarksRowEditor', {
 
     getFormPanelCfg: function(){
         var ret = this.callParent(arguments);
-        ret.maxFieldWidth = 500;
+        ret.maxFieldWidth = 1500;
 
         return ret;
     },
@@ -57,7 +57,7 @@ Ext4.define('ONPRC_EHR.plugin.SurgicalRemarksRowEditor', {
 
         ret.width = 1150;
         return ret;
-    },
+     },
 
     getWindowButtons: function(){
         var buttons = this.callParent(arguments);
