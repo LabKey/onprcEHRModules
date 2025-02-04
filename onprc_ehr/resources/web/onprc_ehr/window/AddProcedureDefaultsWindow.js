@@ -129,6 +129,13 @@ Ext4.define('ONPRC_EHR.window.AddProcedureDefaultsWindow', {
             columns: 'procedureid,comment',
             targetColumns: 'procedureid,remark'
         },
+
+        'Blood Draws': {
+            schemaName: 'onprc_ehr',
+            queryName: 'procedure_default_blood',
+            columns: 'procedureid,sampletype,chargetype,reason,additionalServices',
+
+        },
         snomed_tags: {
             schemaName: 'ehr_lookups',
             queryName: 'procedure_default_codes',
