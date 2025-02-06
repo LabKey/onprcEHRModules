@@ -22,7 +22,6 @@ import org.labkey.api.ehr.dataentry.TaskForm;
 import org.labkey.api.ehr.dataentry.TaskFormSection;
 import org.labkey.onprc_ehr.security.ONPRC_EHRCMUMedicationEntryPermission;
 import org.labkey.api.module.Module;
-import org.labkey.api.module.ModuleLoader;
 import org.labkey.api.view.template.ClientDependency;
 
 
@@ -36,8 +35,8 @@ import java.util.List;
  */
 public class CMUTreatmentsFormType extends TaskForm
 {
-    public static final String NAME = "treatments";
-    public static final String LABEL = "Medications/Diet";
+    public static final String NAME = "CMU treatments";
+    public static final String LABEL = "CMU Medications/Diet";
 
     public CMUTreatmentsFormType(DataEntryFormContext ctx, Module owner)
     {
@@ -56,21 +55,8 @@ public class CMUTreatmentsFormType extends TaskForm
         }
         setDisplayReviewRequired(true);
 
-       //Added 4-24-2024  R. Blasa
-        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/window/FormTemplateWindow.js"));
-
-
-        if (ctx.getContainer().getActiveModules().contains(ModuleLoader.getInstance().getModule("onprc_billing")))
-        {
-            addSection(new MiscChargesFormSection(EHRService.FORM_SECTION_LOCATION.Body));
-        }
 
     }
-
-
-
-
-
 
     @Override
     protected boolean canInsert()

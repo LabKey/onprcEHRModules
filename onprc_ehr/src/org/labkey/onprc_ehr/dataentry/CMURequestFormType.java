@@ -24,7 +24,8 @@ import org.labkey.api.ehr.dataentry.RequestForm;
 import org.labkey.api.ehr.dataentry.RequestFormSection;
 import org.labkey.api.module.Module;
 import org.labkey.api.view.template.ClientDependency;
-
+import org.labkey.onprc_ehr.security.ONPRC_EHRCMUMedicationEntryPermission;
+import org.labkey.onprc_ehr.security.ONPRC_EHREnvironmentalPermission;
 
 
 import java.util.Arrays;
@@ -39,7 +40,7 @@ public class CMURequestFormType extends RequestForm
     {
         super(ctx, owner, NAME, NAME, "CMU", Arrays.asList(
                 new RequestFormSection(),
-                new AnimalDetailsFormSection(),+
+                new AnimalDetailsFormSection(),
                 new TreatmentOrdersRequestFormSection()
         ));
 
@@ -49,5 +50,14 @@ public class CMURequestFormType extends RequestForm
         {
             s.addConfigSource("CMU_Services");
         }
+    }
+
+    @Override
+    protected boolean canInsert()
+    {
+        if (!getCtx().getContainer().hasPermission(getCtx().getUser(), ONPRC_EHRCMUMedicationEntryPermission.class))
+            return false;
+
+        return super.canInsert();
     }
 }
