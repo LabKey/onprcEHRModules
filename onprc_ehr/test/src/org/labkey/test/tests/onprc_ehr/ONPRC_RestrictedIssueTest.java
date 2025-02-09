@@ -153,7 +153,7 @@ public class ONPRC_RestrictedIssueTest extends BaseWebDriverTest implements Sqls
     private void verifyIssueAccess(String issueID, boolean shouldHaveAccess)
     {
         pushLocation();
-        clickAndWait(Locator.linkContainingText(issueID));
+        waitAndClickAndWait(Locator.linkContainingText(issueID));
         if (shouldHaveAccess)
             assertTextNotPresent(ACCESS_ERROR_MSG);
         else
@@ -246,7 +246,7 @@ public class ONPRC_RestrictedIssueTest extends BaseWebDriverTest implements Sqls
         {
             assertElementPresent(relatedIssueLink);
             // related link should also navigate properly
-            clickAndWait(relatedIssueLink);
+            waitAndClickAndWait(relatedIssueLink);
             assertTextNotPresent(ACCESS_ERROR_MSG);
         }
         else
