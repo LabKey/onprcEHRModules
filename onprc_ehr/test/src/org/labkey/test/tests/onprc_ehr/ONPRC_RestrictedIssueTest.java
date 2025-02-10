@@ -152,8 +152,10 @@ public class ONPRC_RestrictedIssueTest extends BaseWebDriverTest implements Sqls
 
     private void verifyIssueAccess(String issueID, boolean shouldHaveAccess)
     {
+        Locator issueLink = Locator.linkContainingText(issueID);
+        waitForElement(issueLink, defaultWaitForPage);
         pushLocation();
-        waitAndClickAndWait(Locator.linkContainingText(issueID));
+        clickAndWait(issueLink);
         if (shouldHaveAccess)
             assertTextNotPresent(ACCESS_ERROR_MSG);
         else
@@ -239,14 +241,15 @@ public class ONPRC_RestrictedIssueTest extends BaseWebDriverTest implements Sqls
 
     private void verifyRelatedIssueAccess(String issueID, String relatedIssueID, boolean shouldHaveRelatedAccess)
     {
+        Locator issueLink = Locator.linkContainingText(issueID);
+        waitForElement(issueLink, defaultWaitForPage);
         pushLocation();
-        clickAndWait(Locator.linkContainingText(issueID));
-        Locator relatedIssueLink = Locator.linkContainingText(relatedIssueID);
+        Locator relatedIssueLink = Locator.tagWithAttributeContaining("a", "href", String.format("issues-details.view?issueId=%s", relatedIssueID));
         if (shouldHaveRelatedAccess)
         {
             assertElementPresent(relatedIssueLink);
             // related link should also navigate properly
-            waitAndClickAndWait(relatedIssueLink);
+            clickAndWait(relatedIssueLink);
             assertTextNotPresent(ACCESS_ERROR_MSG);
         }
         else
