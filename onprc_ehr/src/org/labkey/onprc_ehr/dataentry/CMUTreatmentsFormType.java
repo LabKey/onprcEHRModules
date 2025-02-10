@@ -20,7 +20,7 @@ import org.labkey.api.ehr.dataentry.DataEntryFormContext;
 import org.labkey.api.ehr.dataentry.FormSection;
 import org.labkey.api.ehr.dataentry.TaskForm;
 import org.labkey.api.ehr.dataentry.TaskFormSection;
-import org.labkey.onprc_ehr.security.ONPRC_EHRCMUMedicationEntryPermission;
+import org.labkey.onprc_ehr.security.ONPRC_EHRCMUMedicationAdministrationPermission;
 import org.labkey.api.module.Module;
 import org.labkey.api.view.template.ClientDependency;
 
@@ -61,7 +61,7 @@ public class CMUTreatmentsFormType extends TaskForm
     @Override
     protected boolean canInsert()
     {
-        if (!getCtx().getContainer().hasPermission(getCtx().getUser(), ONPRC_EHRCMUMedicationEntryPermission.class))
+        if (!getCtx().getContainer().hasPermission(getCtx().getUser(), ONPRC_EHRCMUMedicationAdministrationPermission.class))
             return false;
 
         return super.canInsert();
