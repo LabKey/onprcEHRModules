@@ -15,24 +15,35 @@
  */
 package org.labkey.onprc_ehr.security;
 
+import org.labkey.api.data.Container;
+import org.labkey.api.module.ModuleLoader;
+import org.labkey.api.security.SecurableResource;
+import org.labkey.api.security.SecurityPolicy;
+import org.labkey.api.security.permissions.DeletePermission;
 import org.labkey.api.security.permissions.InsertPermission;
 import org.labkey.api.security.permissions.ReadPermission;
 import org.labkey.api.security.permissions.UpdatePermission;
 import org.labkey.api.security.roles.AbstractRole;
+import org.labkey.onprc_ehr.ONPRC_EHRModule;
 
 /**
 
  */
-public class ONPRC_EHRCMUMedicationEntryRole extends AbstractRole
+public class ONPRC_EHRCMUMedicationAdministrationRole extends AbstractRole
 {
-    public ONPRC_EHRCMUMedicationEntryRole()
+    public ONPRC_EHRCMUMedicationAdministrationRole()
     {
-        super("ONPRC_EHR CMU Medication Service Request Entry", "This role is to track which users can edit the table onprc_ehr CMU Medication Service Request Entries.",
+        super("ONPRC EHR CMU Medication Administration", "This role is to track which users can edit the table CMU medication Entries.",
                 ReadPermission.class,
                 InsertPermission.class,
                 UpdatePermission.class,
-                ONPRC_EHRCMUMedicationEntryPermission.class
+                DeletePermission.class,
+                ONPRC_EHRCMUMedicationAdministrationPermission.class
         );
     }
-
+    @Override
+    public boolean isApplicable(SecurityPolicy policy, SecurableResource resource)
+    {
+        return resource instanceof Container ? ((Container)resource).getActiveModules().contains(ModuleLoader.getInstance().getModule(ONPRC_EHRModule.class)) : false;
+    }
 }

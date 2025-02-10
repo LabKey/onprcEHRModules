@@ -20,11 +20,10 @@ import org.labkey.api.security.permissions.AbstractPermission;
 /**
 
  */
-public class ONPRC_EHRCMUMedicationEntryPermission extends AbstractPermission
+public class ONPRC_EHRCMUMedicationAdministrationPermission extends AbstractPermission
 {
-    public ONPRC_EHRCMUMedicationEntryPermission()
+    public ONPRC_EHRCMUMedicationAdministrationPermission()
     {
-        super("ONPRC_EHRCMUMedicationEntryPermission", "This is the base permission used to control editing of the CMU Treatment Order Service Request Eentries");
-
+        super("ONPRC_EHRCMUMedicationAdministrationPermission", "This is the base permission used to control editing of the CMU Medication entries");
     }
 }
