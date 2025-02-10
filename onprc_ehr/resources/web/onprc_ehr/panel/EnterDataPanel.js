@@ -343,7 +343,7 @@ Ext4.define('onprc_ehr.panel.EnterDataPanel', {
                                         xtype: 'ldk-linkbutton',
                                         text: 'Unapproved Requests',
                                         linkCls: 'labkey-text-link',
-                                        href: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'study', 'query.queryName': 'Treatment Orders', 'query.viewName': 'Requests', 'query.QCState/Label~eq': 'Request: Pending', 'query.chargetype~eq': item.chargeType})
+                                        href: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'study', 'query.queryName': 'Treatment Orders', 'query.viewName': 'Requests', 'query.QCState/Label~eq': 'Request: Pending', 'query.chargetype~eq': 'DCM: Clinical Services'})
                                     },{
                                         xtype: 'ldk-linkbutton',
                                         text: 'Approved Requests',
