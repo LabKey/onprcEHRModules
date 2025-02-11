@@ -120,6 +120,64 @@ BEGIN
 
           group by b.requirementname,a.employeeid
 
+          union
+
+          select a.requirementname,
+                 a.employeeid,
+                 null as unit,
+                 null as category,
+                 'None' as trackingflag,
+                 (select h.email from ehr_compliancedb.employees h where h.employeeid = a.employeeid) as  email,
+                 (select h.lastname from ehr_compliancedb.employees h where h.employeeid = a.employeeid) as lastname,
+                 (select h.firstname from ehr_compliancedb.employees h where h.employeeid = a.employeeid) as firstname,
+                 (select h.majorudds from ehr_compliancedb.employees h where h.employeeid = a.employeeid) as host,
+                 (select h.supervisor from ehr_compliancedb.employees h where h.employeeid = a.employeeid) as supervisor,
+                 (select h.type from ehr_compliancedb.employees h where h.employeeid = a.employeeid) as trainee_type,      ----- type trainee, or trainer
+                 (select h.type from ehr_compliancedb.Requirements h where h.requirementname = a.requirementname) as requirement_type,      ----- type trainee, or trainer
+
+
+                 (select count(zz.date) from ehr_compliancedb.completiondates zz where zz.requirementname= a.requirementname and zz.employeeid= a.employeeid  ) as timesCompleted,
+
+                 (select k.expireperiod from ehr_compliancedb.Requirements k where k.requirementname = a.requirementname) as ExpiredPeriod,
+
+                 ( select  (datediff(month,max(pq.date), tt.reviewdate) )from  ehr_compliancedb.requirements tt, ehr_compliancedb.completiondates pq where tt.requirementname =   a.requirementname and pq.requirementname = tt.requirementname and pq.employeeid = a.employeeid group by tt.expireperiod, tt.reviewdate
+                   having (tt.expireperiod) > (datediff(month,max(pq.date), tt.reviewdate))  and (tt.reviewdate is not null)  ) as NewExpirePeriod,
+
+                 (select max(zz.date) from ehr_compliancedb.completiondates zz where zz.requirementname= a.requirementname and zz.employeeid= a.employeeid  ) as MostRecentDate,
+
+                 (Select distinct string_agg(yy.comment, char(10))  from ehr_compliancedb.completiondates yy where yy.date in (select max(zz.date) from ehr_compliancedb.completiondates zz where zz.requirementname= a.requirementname and zz.employeeid= a.employeeid )
+                                                                                                               And  yy.requirementname= a.requirementname and yy.employeeid= a.employeeid   ) as comment,
+
+                 (Select distinct string_agg(yy.snooze_date, char(10))  from ehr_compliancedb.completiondates yy where yy.date in (select max(zz.date) from ehr_compliancedb.completiondates zz where zz.requirementname= a.requirementname and zz.employeeid= a.employeeid )
+                                                                                                                   And  yy.requirementname= a.requirementname and yy.employeeid= a.employeeid   ) as snooze_date,
+
+                 CAST(
+                         CASE
+                             WHEN (select max(st.date) from ehr_compliancedb.completiondates st where st.requirementname = a.requirementname and st.employeeid = a.employeeid ) IS NULL   then 0
+                             WHEN ( select  (tt.expireperiod)  from  ehr_compliancedb.requirements tt where tt.requirementname = a.requirementname   group by tt.expireperiod  ) = 0 then Null
+
+
+                             WHEN ( select  count(*) from  ehr_compliancedb.requirements tt, ehr_compliancedb.completiondates pq where tt.requirementname = a.requirementname and pq.requirementname = tt.requirementname and pq.employeeid = a.employeeid group by tt.expireperiod, tt.reviewdate
+                                    having (tt.expireperiod) >  (datediff(month,max(pq.date), tt.reviewdate)  )) > 0 THEN
+
+                                 ( select  (datediff(month,max(pq.date), tt.reviewdate) - ( datediff(month,max(pq.date), getdate())) ) from  ehr_compliancedb.requirements tt, ehr_compliancedb.completiondates pq where tt.requirementname =   a.requirementname and pq.requirementname = tt.requirementname and pq.employeeid = a.employeeid group by tt.expireperiod, tt.reviewdate
+                                   having (tt.expireperiod) > (datediff(month,max(pq.date), tt.reviewdate) )   )
+
+
+                             ELSE ( select  (tt.expireperiod) - ( datediff(month,max(pq.date), getdate())) from  ehr_compliancedb.requirements tt, ehr_compliancedb.completiondates pq where   tt.requirementname =   a.requirementname and pq.requirementname = tt.requirementname and pq.employeeid = a.employeeid group by tt.expireperiod )
+
+                             END  AS FLOAT)  AS MonthsUntilRenewal
+
+
+          from  ehr_compliancedb.completiondates a
+          where a.requirementname not in (select distinct h.requirementname from ehr_compliancedb.employeeperunit k, ehr_compliancedb.requirementspercategory h Where (k.unit = h.unit
+              or k.category = h.category) And a.employeeid = k.employeeid )
+            And a.requirementname not in (select distinct t.requirementname from ehr_compliancedb.employeerequirementexemptions t Where a.employeeid = t.employeeid
+                                                                                                                                    And a.requirementname = t.requirementname)
+            And a.employeeid in (select p.employeeid from ehr_compliancedb.employees p where a.employeeid = p.employeeid And p.enddate is null)
+            And a.requirementname in  (select q.requirementname from ehr_compliancedb.Requirements q where q.requirementname = a.requirementname And q.dateDisabled is null )
+
+          group by a.requirementname,a.employeeid
 
         union
 
