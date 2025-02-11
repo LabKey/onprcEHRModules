@@ -241,10 +241,10 @@ public class ONPRC_RestrictedIssueTest extends BaseWebDriverTest implements Sqls
 
     private void verifyRelatedIssueAccess(String issueID, String relatedIssueID, boolean shouldHaveRelatedAccess)
     {
-        Locator issueLink = Locator.linkContainingText(issueID);
+        Locator issueLink = getIssueLinkLocator(issueID);
         waitForElement(issueLink, defaultWaitForPage);
         pushLocation();
-        clickAndWait(Locator.linkContainingText(issueID));
+        clickAndWait(issueLink);
         Locator relatedIssueLink = getIssueLinkLocator(relatedIssueID);
         if (shouldHaveRelatedAccess)
         {
