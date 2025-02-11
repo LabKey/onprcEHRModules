@@ -6,7 +6,6 @@ import org.junit.experimental.categories.Category;
 import org.labkey.test.BaseWebDriverTest;
 import org.labkey.test.Locator;
 import org.labkey.test.TestTimeoutException;
-import org.labkey.test.categories.CustomModules;
 import org.labkey.test.categories.EHR;
 import org.labkey.test.categories.ONPRC;
 import org.labkey.test.pages.issues.DetailsPage;
@@ -20,7 +19,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-@Category({CustomModules.class, EHR.class, ONPRC.class})
+@Category({EHR.class, ONPRC.class})
 public class ONPRC_RestrictedIssueTest extends BaseWebDriverTest implements SqlserverOnlyTest
 {
     private final IssuesHelper _issuesHelper;
