@@ -65,7 +65,7 @@ public class ONPRC_RestrictedIssueTest extends BaseWebDriverTest implements Sqls
         _issuesHelper.setIssueAssignmentList("Site: Users");
         clickButton("Save");
 
-        clickProject(getProjectName());
+        goToProjectHome();
         _issuesHelper.createNewIssuesList(UNRESTRICTED_ISSUES_LIST, _containerHelper, false, false, false);
         waitAndClickAndWait(Locator.linkContainingText(UNRESTRICTED_ISSUES_LIST));
         _issuesHelper.goToAdmin();
@@ -95,7 +95,7 @@ public class ONPRC_RestrictedIssueTest extends BaseWebDriverTest implements Sqls
     @Test
     public void restrictedIssueTest()
     {
-        clickProject(getProjectName());
+        goToProjectHome();
 
         // create a few issues in the restricted list
         impersonate(ISSUE_CREATOR.getEmail());
@@ -110,13 +110,13 @@ public class ONPRC_RestrictedIssueTest extends BaseWebDriverTest implements Sqls
         stopImpersonating();
 
         // verify site admins can see both issues (but not folder admins)
-        clickProject(getProjectName());
+        goToProjectHome();
         clickAndWait(Locator.linkContainingText(RESTRICTED_ISSUES_LIST));
         verifyIssueAccess(ISSUE_1, true);
         verifyIssueAccess(ISSUE_2, true);
 
         impersonate(FOLDER_ADMIN.getEmail());
-        clickProject(getProjectName());
+        goToProjectHome();
         clickAndWait(Locator.linkContainingText(RESTRICTED_ISSUES_LIST));
         verifyIssueAccess(ISSUE_1, false);
         verifyIssueAccess(ISSUE_2, false);
@@ -124,7 +124,7 @@ public class ONPRC_RestrictedIssueTest extends BaseWebDriverTest implements Sqls
 
         // creators can see all of the issues they opened
         impersonate(ISSUE_CREATOR.getEmail());
-        clickProject(getProjectName());
+        goToProjectHome();
         clickAndWait(Locator.linkContainingText(RESTRICTED_ISSUES_LIST));
         verifyIssueAccess(ISSUE_1, true);
         verifyIssueAccess(ISSUE_2, true);
@@ -132,7 +132,7 @@ public class ONPRC_RestrictedIssueTest extends BaseWebDriverTest implements Sqls
 
         // users can view issues assigned to them
         impersonate(USER1.getEmail());
-        clickProject(getProjectName());
+        goToProjectHome();
         clickAndWait(Locator.linkContainingText(RESTRICTED_ISSUES_LIST));
         verifyIssueAccess(ISSUE_1, true);
         verifyIssueAccess(ISSUE_2, false);
@@ -143,7 +143,7 @@ public class ONPRC_RestrictedIssueTest extends BaseWebDriverTest implements Sqls
         page.notifyList().set(USER1.getEmail());
         page.save();
         impersonate(USER1.getEmail());
-        clickProject(getProjectName());
+        goToProjectHome();
         clickAndWait(Locator.linkContainingText(RESTRICTED_ISSUES_LIST));
         verifyIssueAccess(ISSUE_1, true);
         verifyIssueAccess(ISSUE_2, true);
@@ -166,7 +166,7 @@ public class ONPRC_RestrictedIssueTest extends BaseWebDriverTest implements Sqls
     @Test
     public void relatedIssueTest()
     {
-        clickProject(getProjectName());
+        goToProjectHome();
 
         // create 2 issues related to each other
         impersonate(ISSUE_CREATOR.getEmail());
@@ -183,7 +183,7 @@ public class ONPRC_RestrictedIssueTest extends BaseWebDriverTest implements Sqls
 
         // verify creator sees both all issues and their relationships
         impersonate(ISSUE_CREATOR.getEmail());
-        clickProject(getProjectName());
+        goToProjectHome();
         clickAndWait(Locator.linkContainingText(RESTRICTED_ISSUES_LIST));
         verifyRelatedIssueAccess(ISSUE_1, ISSUE_2, true);
         verifyRelatedIssueAccess(ISSUE_2, ISSUE_1, true);
@@ -191,7 +191,7 @@ public class ONPRC_RestrictedIssueTest extends BaseWebDriverTest implements Sqls
 
         // verify users can open issue assigned to them but not see the related issue
         impersonate(USER1.getEmail());
-        clickProject(getProjectName());
+        goToProjectHome();
         clickAndWait(Locator.linkContainingText(RESTRICTED_ISSUES_LIST));
         verifyRelatedIssueAccess(ISSUE_1, ISSUE_2, false);
         // shouldn't be able to access the other issue at all
@@ -199,7 +199,7 @@ public class ONPRC_RestrictedIssueTest extends BaseWebDriverTest implements Sqls
         stopImpersonating();
 
         impersonate(USER2.getEmail());
-        clickProject(getProjectName());
+        goToProjectHome();
         clickAndWait(Locator.linkContainingText(RESTRICTED_ISSUES_LIST));
         verifyRelatedIssueAccess(ISSUE_2, ISSUE_1, false);
         verifyIssueAccess(ISSUE_1, false);
@@ -207,7 +207,7 @@ public class ONPRC_RestrictedIssueTest extends BaseWebDriverTest implements Sqls
 
         // create issues in the unrestricted issue list and relate them to issues in the other list
         impersonate(ISSUE_CREATOR.getEmail());
-        clickProject(getProjectName());
+        goToProjectHome();
         clickAndWait(Locator.linkContainingText(UNRESTRICTED_ISSUES_LIST));
         // issue related to both restricted issues
         detailsPage = _issuesHelper.addIssue(String.format("UnRestricted issue assigned to (%s)", USER1.getUserDisplayName()),
@@ -217,7 +217,7 @@ public class ONPRC_RestrictedIssueTest extends BaseWebDriverTest implements Sqls
 
         // any user with read access to the unrestricted list can see details but no links to the linked restricted issues
         impersonate(FOLDER_ADMIN.getEmail());
-        clickProject(getProjectName());
+        goToProjectHome();
         clickAndWait(Locator.linkContainingText(UNRESTRICTED_ISSUES_LIST));
         verifyRelatedIssueAccess(ISSUE_3, ISSUE_1, false);
         verifyRelatedIssueAccess(ISSUE_3, ISSUE_2, false);
@@ -225,14 +225,14 @@ public class ONPRC_RestrictedIssueTest extends BaseWebDriverTest implements Sqls
 
         // users can link to the restricted issues they have access to
         impersonate(USER1.getEmail());
-        clickProject(getProjectName());
+        goToProjectHome();
         clickAndWait(Locator.linkContainingText(UNRESTRICTED_ISSUES_LIST));
         verifyRelatedIssueAccess(ISSUE_3, ISSUE_1, true);
         verifyRelatedIssueAccess(ISSUE_3, ISSUE_2, false);
         stopImpersonating();
 
         impersonate(USER2.getEmail());
-        clickProject(getProjectName());
+        goToProjectHome();
         clickAndWait(Locator.linkContainingText(UNRESTRICTED_ISSUES_LIST));
         verifyRelatedIssueAccess(ISSUE_3, ISSUE_1, false);
         verifyRelatedIssueAccess(ISSUE_3, ISSUE_2, true);
