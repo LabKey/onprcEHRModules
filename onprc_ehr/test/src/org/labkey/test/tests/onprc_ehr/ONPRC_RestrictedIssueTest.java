@@ -152,7 +152,7 @@ public class ONPRC_RestrictedIssueTest extends BaseWebDriverTest implements Sqls
 
     private void verifyIssueAccess(String issueID, boolean shouldHaveAccess)
     {
-        Locator issueLink = Locator.linkContainingText(issueID);
+        Locator issueLink = getIssueLinkLocator(issueID);
         waitForElement(issueLink, defaultWaitForPage);
         pushLocation();
         clickAndWait(issueLink);
@@ -244,7 +244,8 @@ public class ONPRC_RestrictedIssueTest extends BaseWebDriverTest implements Sqls
         Locator issueLink = Locator.linkContainingText(issueID);
         waitForElement(issueLink, defaultWaitForPage);
         pushLocation();
-        Locator relatedIssueLink = Locator.tagWithAttributeContaining("a", "href", String.format("issues-details.view?issueId=%s", relatedIssueID));
+        clickAndWait(Locator.linkContainingText(issueID));
+        Locator relatedIssueLink = getIssueLinkLocator(relatedIssueID);
         if (shouldHaveRelatedAccess)
         {
             assertElementPresent(relatedIssueLink);
@@ -259,5 +260,10 @@ public class ONPRC_RestrictedIssueTest extends BaseWebDriverTest implements Sqls
             assertTextPresent(relatedIssueID);
         }
         popLocation();
+    }
+
+    private Locator getIssueLinkLocator(String issueID)
+    {
+        return Locator.tagWithAttributeContaining("a", "href", String.format("issues-details.view?issueId=%s", issueID));
     }
 }
