@@ -155,7 +155,7 @@ public class ONPRC_RestrictedIssueTest extends BaseWebDriverTest implements Sqls
         Locator issueLink = getIssueLinkLocator(issueID);
         waitForElement(issueLink, defaultWaitForPage);
         pushLocation();
-        clickAndWait(issueLink);
+        waitAndClickAndWait(issueLink);
         if (shouldHaveAccess)
             assertTextNotPresent(ACCESS_ERROR_MSG);
         else
