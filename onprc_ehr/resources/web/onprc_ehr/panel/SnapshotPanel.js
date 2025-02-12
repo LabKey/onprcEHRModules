@@ -735,8 +735,6 @@ Ext4.define('onprc_ehr.panel.SnapshotPanel', {
 
         toSet['flags'] = values.length ? '<a id="onprcFlagsLink">' + values.join('<br>') + '</div>' : null;
 
-        behavevalues = ['test'];
-
         if (behavevalues.length) {
             toSet['behaviorflag'] = '<a id="onprcBehaviorFlagsLink">' + behavevalues.join('<br>') + '</div>';
         }
