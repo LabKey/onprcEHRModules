@@ -6,8 +6,8 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 
-CREATE PROCEDURE [dbo].[ArchiveAuditTables_Update]
-ASON
+CREATE PROCEDURE [dbo].[ArchiveAuditTables]
+
 BEGIN
     SET NOCOUNT ON;
 
