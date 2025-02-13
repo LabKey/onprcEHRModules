@@ -118,6 +118,7 @@ Ext4.define('ONPRC_EHR.window.AddProcedureDefaultsWindow', {
             columns: 'procedureid,code,qualifier,route,frequency,volume,vol_units,dosage,dosage_units,concentration,conc_units,amount,amount_units'
         },
         encounter_summaries: {
+            schemaName: 'ehr_lookups',
             queryName: 'procedure_default_comments',
             columns: 'procedureid,comment',
             targetColumns: 'procedureid,remark'
