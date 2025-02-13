@@ -1,0 +1,12 @@
+<customView xmlns="http://labkey.org/data/xml/queryCustomView">
+    <sorts>
+        <sort column="lastname" descending="false"/>
+        <sort column="firstName" descending="false"/>
+        <sort column="requirementname" descending="false"/>
+    </sorts>
+    <filters>
+        <filter column="months_until_renewal" operator="lte" value="2"/>
+        <filter column="employeeid/isActive" operator="eq" value="true"/>
+        <filter column="requirementname" operator="contains" value="sop review"/>
+    </filters>
+</customView>
