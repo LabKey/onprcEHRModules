@@ -1,13 +1,13 @@
-
-/****** Object:  StoredProcedure [dbo].[ArchiveAuditTables_Update]    Script Date: 2/11/2025 10:25:25 AM ******/
+/****** Object:  StoredProcedure [dbo].[ArchiveAuditTables_Update]
+  Code rewritten with Depe Seek assistance
+  Script Date: 2/11/2025 10:25:25 AM ******/
 SET ANSI_NULLS ON
 GO
-
 SET QUOTED_IDENTIFIER ON
 GO
 
 CREATE PROCEDURE [dbo].[ArchiveAuditTables]
-
+AS
 BEGIN
     SET NOCOUNT ON;
 
@@ -15,7 +15,8 @@ BEGIN
     DECLARE @SourceDB NVARCHAR(128) = 'Labkey_testf',
             @DestDB NVARCHAR(128) = 'primeaudit_sandbox',
             @RetentionYears INT = 7,
-            @SchemaName NVARCHAR(128) = 'audit';
+            @SchemaName NVARCHAR(128) = 'audit',
+            @BatchSize INT = 1000; -- Batch size for archiving
 
     -- Calculate cutoff date
     DECLARE @CutoffDate DATETIME = DATEADD(YEAR, -@RetentionYears, GETDATE());
@@ -42,8 +43,8 @@ END
 
 BEGIN TRY
 EXEC sp_executesql @SourceSchemaCheck,
-            N'@SchemaName NVARCHAR(128)',
-            @SchemaName = @SchemaName;
+                          N'@SchemaName NVARCHAR(128)',
+                          @SchemaName = @SchemaName;
 END TRY
 BEGIN CATCH
         DECLARE @SourceSchemaError NVARCHAR(4000) =
@@ -71,12 +72,12 @@ BEGIN CATCH
         RETURN;
 END CATCH
 
-    -- Complete table list from original request
-	--Modified to provide a lookup of Audit tables in Information_schema.tables
+    -- Retrieve list of audit tables
     DECLARE @TableList TABLE (TableName NVARCHAR(128));
-INSERT INTO @TableList SELECT TABLE_NAME
+INSERT INTO @TableList
+SELECT TABLE_NAME
 FROM INFORMATION_SCHEMA.TABLES
-WHERE TABLE_SCHEMA = 'audit';
+WHERE TABLE_SCHEMA = @SchemaName;
 
 -- Cursor to process tables
 DECLARE @CurrentTable NVARCHAR(128);
@@ -116,9 +117,34 @@ BEGIN TRY
             END';
 
 EXEC sp_executesql @CheckTableSQL,
-                N'@SchemaName NVARCHAR(128), @CurrentTable NVARCHAR(128)',
-                @SchemaName = @SchemaName,
-                @CurrentTable = @CurrentTable;
+                              N'@SchemaName NVARCHAR(128), @CurrentTable NVARCHAR(128)',
+                              @SchemaName = @SchemaName,
+                              @CurrentTable = @CurrentTable;
+
+            -- Check if the "Created" column exists in the source table
+            DECLARE @CreatedColumnExists BIT = 0;
+            SET @CheckTableSQL = N'
+            IF EXISTS (SELECT 1
+                       FROM ' + QUOTENAME(@SourceDB) + N'.INFORMATION_SCHEMA.COLUMNS
+                       WHERE TABLE_SCHEMA = @SchemaName
+                         AND TABLE_NAME = @CurrentTable
+                         AND COLUMN_NAME = ''Created'')
+            BEGIN
+                SET @CreatedColumnExists = 1;
+            END';
+
+EXEC sp_executesql @CheckTableSQL,
+                              N'@SchemaName NVARCHAR(128), @CurrentTable NVARCHAR(128), @CreatedColumnExists BIT OUTPUT',
+                              @SchemaName = @SchemaName,
+                              @CurrentTable = @CurrentTable,
+                              @CreatedColumnExists = @CreatedColumnExists OUTPUT;
+
+            IF @CreatedColumnExists = 0
+BEGIN
+                RAISERROR('Table "%s" does not have a "Created" column. Skipping.', 10, 1, @CurrentTable);
+FETCH NEXT FROM TableCursor INTO @CurrentTable;
+CONTINUE;
+END
 
             -- Get the column list (excluding the IDENTITY column)
             DECLARE @ColumnList NVARCHAR(MAX);
@@ -128,37 +154,54 @@ WHERE TABLE_SCHEMA = @SchemaName
   AND TABLE_NAME = @CurrentTable
   AND COLUMNPROPERTY(OBJECT_ID(QUOTENAME(@SchemaName) + N'.' + QUOTENAME(@CurrentTable)), COLUMN_NAME, 'IsIdentity') = 0;
 
--- Archive data with transaction
+-- Archive data in batches
+DECLARE @RecordsProcessed INT = 0,
+                    @TotalRecordsProcessed INT = 0;
+
+            WHILE 1=1
+BEGIN
 BEGIN TRANSACTION;
 
-            SET @ArchiveSQL = N'
-            INSERT INTO ' + @FullDestTable + N' (' + @ColumnList + N')
-            SELECT ' + @ColumnList + N'
-            FROM ' + @FullSourceTable + N'
-            WHERE Created < @CutoffDate;
+                SET @ArchiveSQL = N'
+                INSERT INTO ' + @FullDestTable + N' (' + @ColumnList + N')
+                SELECT TOP (@BatchSize) ' + @ColumnList + N'
+                FROM ' + @FullSourceTable + N'
+                WHERE Created < @CutoffDate
+                ORDER BY Created;
 
-            -- Capture the number of records inserted
-            DECLARE @RecordsInserted INT = @@ROWCOUNT;
+                -- Capture the number of records inserted
+                SET @RecordsProcessed = @@ROWCOUNT;
 
-            DELETE FROM ' + @FullSourceTable + N'
-            WHERE Created < @CutoffDate;
+                DELETE FROM ' + @FullSourceTable + N'
+                WHERE Created < @CutoffDate
+                  AND Created IN (SELECT TOP (@BatchSize) Created
+                                 FROM ' + @FullSourceTable + N'
+                                 WHERE Created < @CutoffDate
+                                 ORDER BY Created);
 
-            -- Capture the number of records deleted
-            DECLARE @RecordsDeleted INT = @@ROWCOUNT;
+                -- Update total records processed
+                SET @TotalRecordsProcessed = @TotalRecordsProcessed + @RecordsProcessed;
 
-            -- Log the total records processed
-            UPDATE dbo.ArchiveAuditLog
-            SET RecordsProcessed = @RecordsInserted,
-                EndTime = GETDATE(),
-                Status = ''Success''
-            WHERE LogID = @LogID;';
+                -- Log the total records processed
+                UPDATE dbo.ArchiveAuditLog
+                SET RecordsProcessed = @TotalRecordsProcessed,
+                    EndTime = GETDATE(),
+                    Status = ''Success''
+                WHERE LogID = @LogID;';
 
 EXEC sp_executesql @ArchiveSQL,
-                N'@CutoffDate DATETIME, @LogID INT',
-                @CutoffDate = @CutoffDate,
-                @LogID = @LogID;
+                                  N'@CutoffDate DATETIME, @LogID INT, @BatchSize INT, @RecordsProcessed INT OUTPUT, @TotalRecordsProcessed INT OUTPUT',
+                                  @CutoffDate = @CutoffDate,
+                                  @LogID = @LogID,
+                                  @BatchSize = @BatchSize,
+                                  @RecordsProcessed = @RecordsProcessed OUTPUT,
+                                  @TotalRecordsProcessed = @TotalRecordsProcessed OUTPUT;
 
 COMMIT TRANSACTION;
+
+-- Exit loop if no more records to process
+IF @RecordsProcessed < @BatchSize BREAK;
+END
 END TRY
 BEGIN CATCH
 IF @@TRANCOUNT > 0
@@ -184,6 +227,3 @@ CLOSE TableCursor;
 DEALLOCATE TableCursor;
 END;
 GO
-
-
-ocessed] [int] NULL)
