@@ -122,10 +122,11 @@ Ext4.define('ONPRC_EHR.window.AddProcedureDefaultsWindow', {
             columns: 'procedureid,comment',
             targetColumns: 'procedureid,remark'
         },
-        'Blood Draws': {
-                schemaName: 'onprc_ehr',
-                queryName: 'procedure_default_blood',
-                columns: 'procedureid,sampletype,chargetype,reason,additionalServices',
+
+        blood: {
+            schemaName: 'onprc_ehr',
+            queryName: 'procedure_default_blood',
+            columns: 'procedureid,sampletype,chargetype,reason,additionalServices',
 
                 },
         snomed_tags: {
@@ -145,7 +146,7 @@ Ext4.define('ONPRC_EHR.window.AddProcedureDefaultsWindow', {
             if (cfg){
                 totalRequests++;
                 multi.add(LABKEY.Query.selectRows, {
-                    schemaName: 'ehr_lookups',
+                    schemaName: cfg.schemaName,
                     queryName: cfg.queryName,
                     requiredVersion: 9.1,
                     columns: cfg.columns,
@@ -512,7 +513,7 @@ EHR.DataEntryUtils.registerDataEntryFormButton('APPLYENCOUNTERDEFAULTSAMENDED', 
         LDK.Assert.assertNotEmpty('Unable to find dataEntryPanel in APPLYENCOUNTERDEFAULTSAMENDED button', panel);
 
         var store = panel.storeCollection.getClientStoreByName('encounters');
-        LDK.Assert.assertNotEmpty('Unable to find encounters store in APPLYENCOUNTERDEFAULTSAMENDEDS button', store);
+        LDK.Assert.assertNotEmpty('Unable to find encounters store in APPLYENCOUNTERDEFAULTSAMENDED button', store);
 
         if (store){
             Ext4.create('ONPRC_EHR.window.AddProcedureDefaultsWindow', {
