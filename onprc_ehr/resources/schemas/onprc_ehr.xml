@@ -1481,7 +1481,7 @@
 
             <column columnName="instructions"/>
 
-            <column columnName="hargetype"/>
+            <column columnName="chargetype"/>
 
         </columns>
     </table>
