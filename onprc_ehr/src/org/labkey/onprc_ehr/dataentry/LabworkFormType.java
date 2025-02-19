@@ -75,6 +75,8 @@ public class LabworkFormType extends TaskForm
 
         //Added 11-2-2022 Blasa
         addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/window/BulkBioFireWindow.js"));
+
+        setDisplayReviewRequired(true);
     }
 
     @Override
