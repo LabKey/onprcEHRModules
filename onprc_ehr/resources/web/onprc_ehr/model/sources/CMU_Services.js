@@ -26,7 +26,7 @@ EHR.model.DataModelManager.registerMetadata('CMU_Services', {
             code: {
                 header: 'Treatment',
                 editorConfig: {
-                    defaultSubset: 'Research'
+                    defaultSubset: 'All'
                 }
             },
             category: {
