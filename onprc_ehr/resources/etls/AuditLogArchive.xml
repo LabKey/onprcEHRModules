@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--This ETL triggers the audit log archiving Audit Logs
- --Currently set to archive records older than 7 years for all audit tables
+ --Currently set to archive records older than 1 year for all audit tables
  -->
 <!--Added By jonesga 2025/02/13 -->
 
