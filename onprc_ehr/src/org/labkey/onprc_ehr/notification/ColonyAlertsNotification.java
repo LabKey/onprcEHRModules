@@ -1306,7 +1306,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         long count = ts.getRowCount();
 
         if (count > 0) {//procedures count
-            msg.append("<br><b>Active procedures with missing USDA categories:</b><br><br>");
+            msg.append("<br><b>The following procedures were performed with missing USDA pain categories:</b><br><br>");
             msg.append("<b>" + count + " procedure(s) found:</b>");
             msg.append("<p><a href='" + getExecuteQueryUrl(c, "onprc_ehr", "Procedures_Missing_PainLevels", null) + "'>Click here to view the procedures in PRIME</a></p>\n");
             msg.append("<hr>");
@@ -1330,7 +1330,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
             TableSelector ts2 = new TableSelector(ti, colMap.values(), null, null);
 
             // Table header
-            msg.append("<br><br><table border=1 style='border-collapse: collapse;'>");
+            msg.append("<table border=1 style='border-collapse: collapse;'>");
             msg.append("<tr bgcolor = " + '"' + "#00FF7F" + '"' + "style='font-weight: bold;'>");
             msg.append("<td> Id </td><td> Center Project </td><td> Date </td><td> Procedure </td><td> USDA Categories </td></tr>");
 
@@ -1396,7 +1396,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
             TableSelector ts2 = new TableSelector(ti, colMap.values(), null, null);
 
             // Table header
-            msg.append("<br><br><table border=1 style='border-collapse: collapse;'>");
+            msg.append("<table border=1 style='border-collapse: collapse;'>");
             msg.append("<tr bgcolor = " + '"' + "#00FF7F" + '"' + "style='font-weight: bold;'>");
             msg.append("<td> Procedure Name </td><td> USDA Pain Categories </td><td> Category </td></tr>");
 
