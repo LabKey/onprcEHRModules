@@ -16,15 +16,15 @@ WHERE (t.category != javaConstant('org.labkey.onprc_ehr.ONPRC_EHRManager.VET_REV
   AND t.category != javaConstant('org.labkey.onprc_ehr.ONPRC_EHRManager.TECH_REVIEW')
   AND t.category = javaConstant('org.labkey.onprc_ehr.ONPRC_EHRManager.OBS_VOMIT')  )
   AND (
-    o.taskId.formtype = javaConstant('org.labkey.onprc_ehr.dataentry.ClinicalRoundsFormType.NAME') OR
-    o.taskId.formtype = javaConstant('org.labkey.onprc_ehr.dataentry.ClinicalReportFormType.NAME') OR
-    o.taskId.formtype = javaConstant('org.labkey.onprc_ehr.dataentry.BulkClinicalEntryFormType.NAME')
+    t.taskId.formtype = javaConstant('org.labkey.onprc_ehr.dataentry.ClinicalRoundsFormType.NAME') OR
+    t.taskId.formtype = javaConstant('org.labkey.onprc_ehr.dataentry.ClinicalReportFormType.NAME') OR
+    t.taskId.formtype = javaConstant('org.labkey.onprc_ehr.dataentry.BulkClinicalEntryFormType.NAME')
     )
   AND t.date >= (select max(a.date) from study.clinical_observations a where a.Id = t.Id
   AND a.category = javaConstant('org.labkey.onprc_ehr.ONPRC_EHRManager.VET_REVIEW')
   AND (
-    o.taskId.formtype = javaConstant('org.labkey.onprc_ehr.dataentry.ClinicalRoundsFormType.NAME') OR
-    o.taskId.formtype = javaConstant('org.labkey.onprc_ehr.dataentry.ClinicalReportFormType.NAME') OR
-    o.taskId.formtype = javaConstant('org.labkey.onprc_ehr.dataentry.BulkClinicalEntryFormType.NAME')
+    a.taskId.formtype = javaConstant('org.labkey.onprc_ehr.dataentry.ClinicalRoundsFormType.NAME') OR
+    a.taskId.formtype = javaConstant('org.labkey.onprc_ehr.dataentry.ClinicalReportFormType.NAME') OR
+    a.taskId.formtype = javaConstant('org.labkey.onprc_ehr.dataentry.BulkClinicalEntryFormType.NAME')
     )  )
 group by t.Id

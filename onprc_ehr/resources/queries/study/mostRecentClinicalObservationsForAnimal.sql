@@ -48,7 +48,7 @@ JOIN (
   FROM study.clinical_observations o2
   WHERE o2.category != javaConstant('org.labkey.onprc_ehr.ONPRC_EHRManager.VET_REVIEW')
     AND o2.category != javaConstant('org.labkey.onprc_ehr.ONPRC_EHRManager.TECH_REVIEW')
-    AND o2.category != 'Vomit'
+    AND o2.category != javaConstant('org.labkey.onprc_ehr.ONPRC_EHRManager.OBS_VOMIT')
     AND (
       o2.taskId.formtype = javaConstant('org.labkey.onprc_ehr.dataentry.ClinicalRoundsFormType.NAME') OR
       o2.taskId.formtype = javaConstant('org.labkey.onprc_ehr.dataentry.ClinicalReportFormType.NAME') OR
@@ -59,7 +59,7 @@ JOIN (
 
 WHERE o.category != javaConstant('org.labkey.onprc_ehr.ONPRC_EHRManager.VET_REVIEW')
   AND o.category != javaConstant('org.labkey.onprc_ehr.ONPRC_EHRManager.TECH_REVIEW')
-  AND o.category != 'Vomit'
+  AND o.category != javaConstant('org.labkey.onprc_ehr.ONPRC_EHRManager.OBS_VOMIT')
   AND (
     o.taskId.formtype = javaConstant('org.labkey.onprc_ehr.dataentry.ClinicalRoundsFormType.NAME') OR
     o.taskId.formtype = javaConstant('org.labkey.onprc_ehr.dataentry.ClinicalReportFormType.NAME') OR
