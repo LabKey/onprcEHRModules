@@ -84,6 +84,9 @@ public class ONPRC_EHRManager
     public static final Double BASE_SUBSIDY = 0.47;
 
     @Queryable
+    public static final String OBS_VOMIT = "Vomit";
+
+    @Queryable
     public static final String CAGE_HEIGHT_EXEMPTION_FLAG = "Obese, or Pregnant";
     @Queryable
     public static final String CAGE_WEIGHT_EXEMPTION_FLAG = "Obese, or Pregnant";

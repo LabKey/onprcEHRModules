@@ -1223,6 +1223,17 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
             ti.addColumn(col17);
         }
 
+       if  (ti.getColumn("mostRecentClinicalObservationsVomit") == null)
+        {
+            UserSchema us = getStudyUserSchema(ti);
+            var col18 = getWrappedCol(us, ti, "mostRecentClinicalObservationsVomit", "mostRecentClinicalObservations_vomit_ForAnimal", "Id", "Id");
+            col18.setLabel("Most Recent Clinical Observations Amended");
+            col18.setDescription("Displays the most recent set of clinical observations Vomit Entries for this animal");
+            col18.setDisplayWidth("150");
+//            col18.setDisplayColumnFactory(new ObservationDisplayColumnFactory());
+            ti.addColumn(col18);
+        }
+
         var birthCol = ti.getMutableColumn("birth");
         if (birthCol != null)
         {
