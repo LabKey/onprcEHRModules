@@ -1,0 +1,9 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="Procedures_Missing_PainLevels" tableDbType="TABLE">
+                <tableTitle>Procedures created with no USDA Pain Categories</tableTitle>
+            </table>
+        </tables>
+    </metadata>
+</query>
