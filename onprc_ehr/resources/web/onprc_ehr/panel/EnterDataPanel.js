@@ -349,20 +349,20 @@ Ext4.define('onprc_ehr.panel.EnterDataPanel', {
                                         text: 'Approved Requests',
                                         linkCls: 'labkey-text-link',
                                         style: 'padding-left: 5px;',
-                                        href: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'study', 'query.queryName': 'Treatment Orders', 'query.viewName': 'Requests', 'query.QCState/Label~eq': 'Request: Approved', 'query.chargetype~eq': item.chargeType})
+                                        href: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'study', 'query.queryName': 'Treatment Orders', 'query.viewName': 'Requests', 'query.QCState/Label~eq': 'Request: Approved', 'query.chargetype~eq': 'DCM: Clinical Services'})
                                   },{
                                          xtype: 'ldk-linkbutton',
                                          text: 'Scheduled Today',
                                          linkCls: 'labkey-text-link',
                                          style: 'padding-left: 5px;',
-                                         href: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'study', 'query.queryName': 'Treatment Orders', 'query.viewName': 'Requests', 'query.QCState/Label~eq': 'Request: Approved', 'query.chargetype~eq': item.chargeType, 'query.date~dateeq': Ext4.Date.format(new Date(), 'Y-m-d')})
+                                         href: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'study', 'query.queryName': 'Treatment Orders', 'query.viewName': 'Requests', 'query.QCState/Label~eq': 'Request: Approved', 'query.chargetype~eq': 'DCM: Clinical Services', 'query.date~dateeq': Ext4.Date.format(new Date(), 'Y-m-d')})
 
                                     }]
                                 }
                             },
                             items: [{
                                 name: 'Treatment Orders Request',
-                                chargeType: 'Research Staff'
+                                chargeType: 'DCM: Clinical Services'
 
                             }]
 
