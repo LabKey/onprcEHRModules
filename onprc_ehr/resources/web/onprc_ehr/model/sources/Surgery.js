@@ -124,6 +124,11 @@ EHR.model.DataModelManager.registerMetadata('onprc_Surgery', {
                 }
             }
         },
+        'study.blood': {
+            reason: {
+                defaultValue: 'Surgical'
+            }
+        },
         'ehr.encounter_summaries': {
             category: {
                 defaultValue: 'Narrative'
