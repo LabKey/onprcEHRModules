@@ -10,9 +10,6 @@
                     </column>
                     <column columnName="observations">
                         <columnTitle>Latest Observations Amended</columnTitle>
-<!--                        <displayColumnFactory>-->
-<!--                            <className>org.labkey.onprc_ehr.table.ObservationDisplayColumnFactory</className>-->
-<!--                        </displayColumnFactory>-->
                      </column>
 
                     <column columnName="date">
