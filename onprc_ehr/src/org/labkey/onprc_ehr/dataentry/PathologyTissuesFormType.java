@@ -21,6 +21,7 @@ import org.labkey.api.ehr.dataentry.AnimalDetailsFormSection;
 import org.labkey.api.ehr.dataentry.DataEntryFormContext;
 import org.labkey.api.ehr.dataentry.FormSection;
 import org.labkey.api.ehr.dataentry.SimpleFormPanelSection;
+import org.labkey.api.ehr.dataentry.WeightFormSection;
 import org.labkey.onprc_ehr.dataentry.TissueInstructionFormSection;
 import org.labkey.api.ehr.dataentry.SimpleFormSection;
 import org.labkey.api.ehr.dataentry.TaskForm;
@@ -58,7 +59,8 @@ public class PathologyTissuesFormType extends TaskForm
                 //                Added: 6-26-2017   R.Blasa
                 new TissueWeightsFormSection(),
                 new TissueDistFormSection(),
-
+                //Added: 2-28-2025  R. Blasa
+                new WeightFormSection(EHRService.FORM_SECTION_LOCATION.Tabs),
 //                Added: 6-26-2017   R.Blasa
                 new TissueMeasurementsFormSection()
         ));
