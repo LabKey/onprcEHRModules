@@ -17,6 +17,7 @@ package org.labkey.onprc_ehr;
 
 import org.labkey.api.data.Container;
 import org.labkey.api.data.PropertyManager;
+import org.labkey.api.data.PropertyManager.WritablePropertyMap;
 import org.labkey.api.query.Queryable;
 import org.labkey.api.security.User;
 import org.labkey.api.settings.LookAndFeelProperties;
@@ -103,7 +104,7 @@ public class ONPRC_EHRManager
 
     public void lockAnimalCreation(Container c, User u, Boolean lock, Integer startingId, Integer idCount)
     {
-        PropertyManager.PropertyMap map = PropertyManager.getWritableProperties(c, LOCK_PROP_KEY, true);
+        WritablePropertyMap map = PropertyManager.getWritableProperties(c, LOCK_PROP_KEY, true);
         map.put("lockedBy", u.getDisplayName(u));
         map.put("locked", lock.toString());
         map.put("lockDate", new SimpleDateFormat(LookAndFeelProperties.getInstance(c).getDefaultDateTimeFormat()).format(new Date()));

@@ -16,6 +16,9 @@
 
 package org.labkey.sla;
 
+import jakarta.mail.Message;
+import jakarta.mail.MessagingException;
+import jakarta.servlet.http.HttpServletResponse;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 import org.labkey.api.action.ApiResponse;
@@ -29,6 +32,7 @@ import org.labkey.api.data.Container;
 import org.labkey.api.data.ContainerManager;
 import org.labkey.api.data.DbScope;
 import org.labkey.api.data.PropertyManager;
+import org.labkey.api.data.PropertyManager.WritablePropertyMap;
 import org.labkey.api.data.SimpleFilter;
 import org.labkey.api.data.TableInfo;
 import org.labkey.api.data.TableSelector;
@@ -63,9 +67,6 @@ import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -164,7 +165,7 @@ public class SLAController extends SpringActionController
         {
             Map<String, Object> resultProperties = new HashMap<>();
 
-            PropertyManager.PropertyMap configMap = PropertyManager.getWritableProperties(ETLRunnable.CONFIG_PROPERTY_DOMAIN, true);
+            WritablePropertyMap configMap = PropertyManager.getWritableProperties(ETLRunnable.CONFIG_PROPERTY_DOMAIN, true);
 
             boolean shouldReschedule = false;
             if (form.getLabkeyUser() != null)
@@ -193,8 +194,8 @@ public class SLAController extends SpringActionController
 
             configMap.save();
 
-            PropertyManager.PropertyMap rowVersionMap = PropertyManager.getWritableProperties(ETLRunnable.ROWVERSION_PROPERTY_DOMAIN, true);
-            PropertyManager.PropertyMap timestampMap = PropertyManager.getWritableProperties(ETLRunnable.TIMESTAMP_PROPERTY_DOMAIN, true);
+            WritablePropertyMap rowVersionMap = PropertyManager.getWritableProperties(ETLRunnable.ROWVERSION_PROPERTY_DOMAIN, true);
+            WritablePropertyMap timestampMap = PropertyManager.getWritableProperties(ETLRunnable.TIMESTAMP_PROPERTY_DOMAIN, true);
 
             if (form.getTimestamps() != null)
             {

@@ -7,6 +7,7 @@ import org.labkey.api.ehr.dataentry.TaskForm;
 import org.labkey.api.ehr.dataentry.TaskFormSection;
 import org.labkey.api.module.Module;
 import org.labkey.api.view.template.ClientDependency;
+import org.labkey.onprc_billing.security.ONPRCArtCoreChargesEntryPermission;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,7 +21,7 @@ public class ChargesARTCoreFormType extends TaskForm
 
     public ChargesARTCoreFormType(DataEntryFormContext ctx, Module owner)
     {
-        super(ctx, owner, NAME, "ART Core Charges", "Billing - ART Core", Arrays.<FormSection>asList(
+        super(ctx, owner, NAME, "ART Core Charges", "Billing", Arrays.<FormSection>asList(
                 new TaskFormSection(),
                 new AnimalDetailsFormSection(),
                 new ChargesInstructionFormSection(),
@@ -41,39 +42,22 @@ public class ChargesARTCoreFormType extends TaskForm
         return defaultButtons;
     }
 
+//Added: 5-14-2024  R.Blasa  Created new permissions
+    @Override
+    public boolean canInsert()
+    {
+        if (!getCtx().getContainer().hasPermission(getCtx().getUser(), ONPRCArtCoreChargesEntryPermission.class))
+            return false;
 
-//    @Override
-//    //Added a new button to the list that submits and reloads the data entry form
-//    protected List<String> getButtonConfigs()
-//    {
-//        List<String> defaultButtons = new ArrayList<String>();
-//        defaultButtons.addAll(super.getButtonConfigs());
-//        defaultButtons.add("BILLINGSAVECLOSE");
-//        defaultButtons.add("BILLINGRELOAD");
-//        defaultButtons.add("BILLINGFINAL");
-//        defaultButtons.remove("SUBMIT");
-//        defaultButtons.remove("CLOSE");
-//
-//        return defaultButtons;
-//    }
+        return super.canInsert();
+    }
 
+    @Override
+    public boolean canRead()
+    {
+        if (!getCtx().getContainer().hasPermission(getCtx().getUser(), ONPRCArtCoreChargesEntryPermission.class))
+            return false;
 
-//    //    Added: 12-3-2019  R.Blasa
-//    @Override
-//    public boolean canInsert()
-//    {
-//        if (!getCtx().getContainer().hasPermission(getCtx().getUser(), ONPRCVirologyCoreEntryPermission.class))
-//            return false;
-//
-//        return super.canInsert();
-//    }
-//
-//    @Override
-//    public boolean canRead()
-//    {
-//        if (!getCtx().getContainer().hasPermission(getCtx().getUser(), ONPRCVirologyCoreEntryPermission.class))
-//            return false;
-//
-//        return super.canRead();
-//    }
+        return super.canRead();
+    }
 }

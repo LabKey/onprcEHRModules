@@ -24,6 +24,7 @@ import org.labkey.api.data.DbSchema;
 import org.labkey.api.data.DbSchemaType;
 import org.labkey.api.data.DbScope;
 import org.labkey.api.data.PropertyManager;
+import org.labkey.api.data.PropertyManager.WritablePropertyMap;
 import org.labkey.api.data.TableInfo;
 import org.labkey.api.security.User;
 import org.labkey.api.security.UserManager;
@@ -349,7 +350,7 @@ public class OGASyncManager
 
     public void setLastRun(Date date)
     {
-        PropertyManager.PropertyMap pm = PropertyManager.getWritableProperties(CONFIG_PROPERTY_DOMAIN, true);
+        WritablePropertyMap pm = PropertyManager.getWritableProperties(CONFIG_PROPERTY_DOMAIN, true);
         pm.put(LAST_RUN_PROP_NAME, String.valueOf(date.getTime()));
         pm.save();
     }

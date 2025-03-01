@@ -3,7 +3,7 @@
 -->
 <div id="purchaseOrderUpdateForm"></div>
 
-<script type="text/javascript">
+<script type="text/javascript" nonce="<%=scriptNonce%>">
     Ext4.onReady(function()
     {
         LABKEY.NavTrail.setTrail(LABKEY.user.canUpdate ? 'Update Purchase Order' : 'Review Purchase Order');

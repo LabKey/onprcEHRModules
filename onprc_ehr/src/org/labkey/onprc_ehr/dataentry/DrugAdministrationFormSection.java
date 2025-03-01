@@ -72,6 +72,10 @@ public class DrugAdministrationFormSection extends SimpleFormSection
         addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/window/SedationWindow.js"));
 
         addClientDependency(ClientDependency.supplierFromPath("ehr/window/RepeatSelectedWindow.js"));
+
+        //        Added:4-18-2024  R. Blasa  to override Template menu
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/window/ApplyTemplateWindow.js"));
+
         if (addScheduledTreatmentWindowClientDependency != null)
         {
             addClientDependency(addScheduledTreatmentWindowClientDependency);
@@ -88,6 +92,10 @@ public class DrugAdministrationFormSection extends SimpleFormSection
         List<String> defaultButtons = super.getTbarButtons();
         defaultButtons.add(0, "SEDATIONHELPER");
 
+//        Added: 4-18-2024  R. Blasa
+        defaultButtons.remove("TEMPLATE");
+        defaultButtons.add("TEMPLATEREV");
+
         int idx = defaultButtons.indexOf("SELECTALL");
         if (idx > -1)
             defaultButtons.add(idx + 1, "DRUGAMOUNTHELPER");
@@ -102,6 +110,10 @@ public class DrugAdministrationFormSection extends SimpleFormSection
     {
         List<String> defaultButtons = super.getTbarMoreActionButtons();
         defaultButtons.add("REPEAT_SELECTED");
+
+//         Added: 4-18-2024  R. Blasa
+        defaultButtons.remove("TEMPLATE");
+        defaultButtons.add("TEMPLATEREV");
 
         if (_showAddTreatments)
             defaultButtons.add("ADDTREATMENTS");

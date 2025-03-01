@@ -10,7 +10,7 @@ Ext.define('App.view.Scheduler', {
     eventStore    : 'event',
     style         : 'border: 1px solid #d0d0d0;',
 
-    readOnly             : true,  // disables the abilitiy to click in calendar to create event
+    readOnly             : true,  // disables the ability to click in calendar to create event
     showTodayLine        : true,
     calendarViewPreset   : 'week',
     mode                 : 'calendar',

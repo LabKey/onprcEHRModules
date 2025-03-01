@@ -23,7 +23,8 @@ AS status,
 d.id.demographics.calculated_status as status_code,
 d.id.demographics.species,
 '' as Display,
-'Demographics' as source
+'Demographics' as source,
+d.modified
 
 FROM study.demographicsParents d
 WHERE d.numParents > 0

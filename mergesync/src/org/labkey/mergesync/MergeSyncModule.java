@@ -74,7 +74,7 @@ public class MergeSyncModule extends ExtendedSimpleModule
         Resource r = getModuleResource("/scripts/mergesync/mergesync.js");
         assert r != null;
         EHRService.get().registerTriggerScript(this, r);
-        DetailsURL details = DetailsURL.fromString("/mergeSync/begin.view", ContainerManager.getSharedContainer());
+        DetailsURL details = DetailsURL.fromString("/mergeSync-begin.view", ContainerManager.getSharedContainer());
         AdminConsole.addLink(AdminConsole.SettingsLinkType.Management, "merge sync admin", details.getActionURL(), AdminPermission.class);
 
         MergeSyncManager.get().init();

@@ -17,14 +17,15 @@
 package org.labkey.mergesync;
 
 import org.apache.commons.lang3.time.DateUtils;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.labkey.api.data.Container;
 import org.labkey.api.data.ContainerManager;
 import org.labkey.api.data.DbSchema;
 import org.labkey.api.data.DbSchemaType;
 import org.labkey.api.data.DbScope;
 import org.labkey.api.data.PropertyManager;
+import org.labkey.api.data.PropertyManager.WritablePropertyMap;
 import org.labkey.api.security.User;
 import org.labkey.api.security.UserManager;
 import org.labkey.api.security.ValidEmail;
@@ -212,7 +213,7 @@ public class MergeSyncManager
 
     public void setLastRun(Date date)
     {
-        PropertyManager.PropertyMap pm = PropertyManager.getWritableProperties(CONFIG_PROPERTY_DOMAIN, true);
+        WritablePropertyMap pm = PropertyManager.getWritableProperties(CONFIG_PROPERTY_DOMAIN, true);
         date = DateUtils.truncate(date, Calendar.MINUTE);  //always round to nearest minute
         pm.put(LAST_RUN_PROP_NAME, String.valueOf(date.getTime()));
         pm.save();

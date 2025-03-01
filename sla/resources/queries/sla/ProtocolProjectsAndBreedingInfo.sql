@@ -8,7 +8,7 @@ SELECT
     a.title As Title,
     i.LastName || ', ' || i.FirstName As PIName,
     aa.Species,
-    aa.Gender,
+    aa.Gender as Sex,
     aa.Strain,
     aa.Allowed As NumAllowed,
     aa.StartDate,

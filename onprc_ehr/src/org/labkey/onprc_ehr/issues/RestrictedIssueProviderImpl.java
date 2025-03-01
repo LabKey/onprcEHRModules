@@ -5,6 +5,7 @@ import org.jetbrains.annotations.Nullable;
 import org.labkey.api.data.Container;
 import org.labkey.api.data.ContainerManager;
 import org.labkey.api.data.PropertyManager;
+import org.labkey.api.data.PropertyManager.WritablePropertyMap;
 import org.labkey.api.issues.Issue;
 import org.labkey.api.issues.RestrictedIssueProvider;
 import org.labkey.api.query.SimpleValidationError;
@@ -60,7 +61,7 @@ public class RestrictedIssueProviderImpl implements RestrictedIssueProvider
 
     private void setPropertyValue(Container c, String issueDefName, String key, String value)
     {
-        PropertyManager.PropertyMap props = PropertyManager.getWritableProperties(c, getPropMapName(issueDefName), true);
+        WritablePropertyMap props = PropertyManager.getWritableProperties(c, getPropMapName(issueDefName), true);
         props.put(key, value);
         props.save();
     }
@@ -93,21 +94,6 @@ public class RestrictedIssueProviderImpl implements RestrictedIssueProvider
             {
                 errors.add(new SimpleValidationError("This issue is in a restricted issue list. You do not have access to this issue"));
                 return false;
-            }
-        }
-
-        // the user must also have access to all related issues
-        for (Issue related : relatedIssues)
-        {
-            Container relatedContainer = ContainerManager.getForId(related.getContainerId());
-            if (relatedContainer != null && isRestrictedIssueTracker(relatedContainer, related.getIssueDefName()))
-            {
-                Group relatedGroup = getRestrictedIssueListGroup(relatedContainer, related.getIssueDefName());
-                if (!checkAccess(user, related, relatedGroup))
-                {
-                    errors.add(new SimpleValidationError(String.format("A related issue : %d is in a restricted issue list. You do not have access to that issue", related.getIssueId())));
-                    return false;
-                }
             }
         }
         return true;
@@ -143,8 +129,8 @@ public class RestrictedIssueProviderImpl implements RestrictedIssueProvider
     @Override
     public void deleteProperties(Container c, String issueDefName)
     {
-        PropertyManager.PropertyMap properties = PropertyManager.getProperties(c, getPropMapName(issueDefName));
-        if (!properties.isEmpty())
+        WritablePropertyMap properties = PropertyManager.getWritableProperties(c, getPropMapName(issueDefName), false);
+        if (properties != null)
         {
             properties.delete();
         }

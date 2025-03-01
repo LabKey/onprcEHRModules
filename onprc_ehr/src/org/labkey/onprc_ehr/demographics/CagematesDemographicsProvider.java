@@ -43,6 +43,12 @@ public class CagematesDemographicsProvider extends AbstractListDemographicsProvi
     }
 
     @Override
+    public boolean isAsync()
+    {
+        return true;
+    }
+
+    @Override
     protected Set<FieldKey> getFieldKeys()
     {
         Set<FieldKey> keys = new HashSet<>();
@@ -63,17 +69,9 @@ public class CagematesDemographicsProvider extends AbstractListDemographicsProvi
 
         List<String> oldAnimals = oldList == null || oldList.isEmpty() ? Collections.emptyList() : toList(oldList.get(0).get("animals"));
         List<String> newAnimals = newList == null || newList.isEmpty() ? Collections.emptyList() : toList(newList.get(0).get("animals"));
-        if (oldAnimals.equals(newAnimals))
-        {
-            if (!oldAnimals.isEmpty())
-            {
-                _log.info(id + ": cagemates before/after move are identical, no changes needed.  list size: " + oldAnimals.size());
-            }
-            return Collections.emptySet();
-        }
 
-        ret.addAll(oldAnimals);
         ret.addAll(newAnimals);
+        ret.addAll(oldAnimals);
         ret.remove(id);
 
         if (!ret.isEmpty())

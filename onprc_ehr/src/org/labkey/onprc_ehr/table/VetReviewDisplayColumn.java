@@ -21,6 +21,7 @@ import org.labkey.api.data.ColumnInfo;
 import org.labkey.api.data.DataColumn;
 import org.labkey.api.data.RenderContext;
 import org.labkey.api.util.PageFlowUtil;
+import org.labkey.api.view.HttpView;
 import org.labkey.api.view.template.ClientDependency;
 
 import java.io.IOException;
@@ -39,6 +40,7 @@ public class VetReviewDisplayColumn extends DataColumn
     {
         super(col);
     }
+    private boolean _clickHandlerRegistered = false;
 
     @Override
     public void renderGridCellContents(RenderContext ctx, Writer out) throws IOException
@@ -64,7 +66,13 @@ public class VetReviewDisplayColumn extends DataColumn
                     text = text.replaceAll("\\*\\*", "<span style=\"background-color: yellow;\">\\*\\*</span>");
                 }
 
-                out.write("<a style=\"max-width: 500px;\" onclick=\"EHR.panel.ClinicalManagementPanel.replaceSoap({objectid: " + PageFlowUtil.jsString(StringUtils.trimToNull(tokens[2])) + ", scope: this, callback: function(){EHR.panel.ClinicalManagementPanel.updateVetColumn(this, arguments[0], arguments[1]);}});\">");
+                out.write("<a style=\"max-width: 500px;\" class=\"labkey-text-link vrdc-row\" data-objectid=\"" + PageFlowUtil.filter(StringUtils.trimToNull(tokens[2])) + "\">");
+
+                if (!_clickHandlerRegistered)
+                {
+                    HttpView.currentPageConfig().addHandlerForQuerySelector("a.vrdc-row", "click", "EHR.panel.ClinicalManagementPanel.replaceSoap({objectid: this.attributes.getNamedItem('data-objectid').value, scope: this, callback: function(){EHR.panel.ClinicalManagementPanel.updateVetColumn(this, arguments[0], arguments[1]);}});" );
+                    _clickHandlerRegistered = true;
+                }
                 out.write(text);
                 out.write("</a>");
             }

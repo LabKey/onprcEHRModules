@@ -54,7 +54,7 @@ public class OGASyncModule extends ExtendedSimpleModule
     public void doStartupAfterSpringConfig(ModuleContext moduleContext)
     {
         OGASyncManager.get().init();
-        DetailsURL details = DetailsURL.fromString("/ogaSync/begin.view", ContainerManager.getSharedContainer());
+        DetailsURL details = DetailsURL.fromString("/ogaSync-begin.view", ContainerManager.getSharedContainer());
         AdminConsole.addLink(AdminConsole.SettingsLinkType.Management, "oga sync admin", details.getActionURL(), AdminPermission.class);
     }
 }
