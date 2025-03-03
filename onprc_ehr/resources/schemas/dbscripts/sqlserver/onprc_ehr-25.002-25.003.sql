@@ -1,6 +1,6 @@
 /****** Object:  StoredProcedure [dbo].[ArchiveAuditTables_Update]
   Code rewritten with Deep Seek assistance
-  Script Date: 2/11/2025 10:25:25 AM ******/
+  Script Date: 2025-03-03 ******/
 SET ANSI_NULLS ON;
 GO
 SET QUOTED_IDENTIFIER ON;
