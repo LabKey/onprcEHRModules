@@ -1,6 +1,6 @@
 /****** Object:  StoredProcedure [dbo].[ArchiveAuditTables_Update]
   Code rewritten with Deep Seek assistance
-  Script Date: 2025-03-03 ******/
+  Script Date: 2025-03-03 TOday ******/
 SET ANSI_NULLS ON;
 GO
 SET QUOTED_IDENTIFIER ON;
@@ -105,7 +105,7 @@ BEGIN
                     @ArchiveSQL NVARCHAR(MAX),
                     @TableExists BIT = 0;
 
-                -- Check if destination table exists
+             EndDate   -- Check if destination table exists
                 SET @CheckTableSQL = N'
             IF NOT EXISTS (SELECT 1
                           FROM ' + QUOTENAME(@DestDB) + N'.INFORMATION_SCHEMA.TABLES
