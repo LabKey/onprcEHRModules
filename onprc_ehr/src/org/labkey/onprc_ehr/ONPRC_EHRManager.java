@@ -81,7 +81,7 @@ public class ONPRC_EHRManager
     @Queryable
     public static final String NURSERY_AREA = "Nursery Area";
     @Queryable
-    public static final Double BASE_SUBSIDY = 0.47;
+    public static final Double BASE_SUBSIDY = 0.475;
 
     @Queryable
     public static final String CAGE_HEIGHT_EXEMPTION_FLAG = "Obese, or Pregnant";
