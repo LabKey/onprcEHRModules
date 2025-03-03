@@ -32,6 +32,7 @@ import java.util.Map;
  * User: bimber
  * Date: 9/21/13
  * Time: 9:55 AM
+ * Update to adjust Base Subsidy
  */
 public class ONPRC_EHRManager
 {
@@ -81,7 +82,7 @@ public class ONPRC_EHRManager
     @Queryable
     public static final String NURSERY_AREA = "Nursery Area";
     @Queryable
-    public static final Double BASE_SUBSIDY = 0.47;
+    public static final Double BASE_SUBSIDY = 0.475; /*Update based on july1,2024 request*/
 
     @Queryable
     public static final String CAGE_HEIGHT_EXEMPTION_FLAG = "Obese, or Pregnant";
