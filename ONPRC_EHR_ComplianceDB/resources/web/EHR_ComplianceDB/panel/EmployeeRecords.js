@@ -6,7 +6,7 @@ EHR.DataEntryUtils.registerDataEntryFormButton('EMPLOYEERUN', {
         requiredQC: 'Completed',
         targetQC: 'Completed',
         errorThreshold: 'ERROR',
-        successURL: LABKEY.ActionURL.getParameter('returnUrl') || LABKEY.ActionURL.getParameter('returnURL') || LABKEY.ActionURL.buildURL('ONPRC_EHR_ComplianceDB', 'enterData.view',(ctx ? ctx['EmployeeContainer'] : null), null),
+        successURL: LABKEY.ActionURL.getParameter('returnUrl') || LABKEY.ActionURL.buildURL('ONPRC_EHR_ComplianceDB', 'enterData.view',(ctx ? ctx['EmployeeContainer'] : null), null),
         itemId: 'submitBtn',
         handler: function(btn){
             var panel = btn.up('ehr-dataentrypanel');
@@ -29,7 +29,7 @@ EHR.DataEntryUtils.registerDataEntryFormButton('EMPLOYEECLOSE', {
     requiredQC: 'In Progress',
     targetQC: 'In Progress',
     errorThreshold: 'WARN',
-    successURL: LABKEY.ActionURL.getParameter('returnUrl') || LABKEY.ActionURL.getParameter('returnURL') || LABKEY.ActionURL.buildURL('ONPRC_EHR_ComplianceDB', 'enterData.view',(ctx ? ctx['EmployeeContainer'] : null), null),
+    successURL: LABKEY.ActionURL.getParameter('returnUrl') || LABKEY.ActionURL.buildURL('ONPRC_EHR_ComplianceDB', 'enterData.view',(ctx ? ctx['EmployeeContainer'] : null), null),
     itemId: 'closeBtn',
         handler: function(btn){
             var panel = btn.up('ehr-dataentrypanel');

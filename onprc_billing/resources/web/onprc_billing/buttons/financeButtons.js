@@ -7,7 +7,7 @@ EHR.DataEntryUtils.registerDataEntryFormButton('FINANCESUBMIT', {
             requiredQC: 'Completed',
             targetQC: 'Completed',
             errorThreshold: 'ERROR',
-            successURL: LABKEY.ActionURL.getParameter('srcURL') || LABKEY.ActionURL.buildURL('onprc_billing', 'financeManagement.view'),
+            successURL: LABKEY.ActionURL.getParameter('returnUrl') || LABKEY.ActionURL.buildURL('onprc_billing', 'financeManagement.view'),
             disabled: true,
             itemId: 'submitBtn',
             handler: function(btn){

@@ -211,7 +211,7 @@ Ext4.define('EHR.window.BehaviorCasesWindow', {
 EHR.DataEntryUtils.registerDataEntryFormButton('BEHAVIOR_CASES', {
     text: 'Close/Review Cases',
     name: 'behaviorCase',
-    successURL: LABKEY.ActionURL.getParameter('srcURL') || LABKEY.ActionURL.buildURL('ehr', 'enterData.view'),
+    successURL: LABKEY.ActionURL.getParameter('returnUrl') || LABKEY.ActionURL.buildURL('ehr', 'enterData.view'),
     disabled: true,
     itemId: 'behaviorCase',
     requiredPermissions: [
