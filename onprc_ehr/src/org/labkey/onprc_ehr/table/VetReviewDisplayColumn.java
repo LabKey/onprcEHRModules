@@ -66,7 +66,7 @@ public class VetReviewDisplayColumn extends DataColumn
                     text = text.replaceAll("\\*\\*", "<span style=\"background-color: yellow;\">\\*\\*</span>");
                 }
 
-                out.write("<a style=\"max-width: 500px;\" data-objectid=\"" + PageFlowUtil.filter(StringUtils.trimToNull(tokens[2])) + "\">");
+                out.write("<a style=\"max-width: 500px;\" class=\"vrdc-row\" data-objectid=\"" + PageFlowUtil.filter(StringUtils.trimToNull(tokens[2])) + "\">");
 
                 if (!_clickHandlerRegistered)
                 {
