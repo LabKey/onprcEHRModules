@@ -35,7 +35,7 @@
                 text: 'More Actions',
                 menu: [{
                     text: 'Edit Project Details',
-                    href: LABKEY.ActionURL.buildURL('ehr', 'dataEntryFormForQuery', null, {schemaName: 'ehr', queryName: 'project', project: project}) + '&returnUrl=' + LDK.Utils.getSrcURL()
+                    href: LABKEY.ActionURL.buildURL('ehr', 'dataEntryFormForQuery', null, {schemaName: 'ehr', queryName: 'project', project: project}) + '&returnUrl=' + LDK.Utils.getReturnUrl()
                 }]
             }]
         }

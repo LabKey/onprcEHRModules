@@ -184,7 +184,7 @@ public class ONPRC_BillingController extends SpringActionController
         @Override
         public @NotNull URLHelper getSuccessURL(QueryForm form)
         {
-            URLHelper url = form.getReturnURLHelper();
+            URLHelper url = form.getReturnUrlHelper();
             return url != null ? url : QueryService.get().urlFor(getUser(), getContainer(), QueryAction.executeQuery, ONPRC_BillingSchema.NAME, ONPRC_BillingSchema.TABLE_INVOICE_RUNS);
         }
     }

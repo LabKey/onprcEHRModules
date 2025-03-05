@@ -187,7 +187,7 @@ EHR.DataEntryUtils.registerDataEntryFormButton('BIRTHARRIVALCLOSE', {
     name: 'closeBtn',
     requiredQC: 'In Progress',
     errorThreshold: 'WARN',
-    successURL: LABKEY.ActionURL.getParameter('srcURL') || LABKEY.ActionURL.getParameter('returnURL') || LABKEY.ActionURL.buildURL('ehr', 'enterData.view'),
+    successURL: LABKEY.ActionURL.getParameter('returnUrl') || LABKEY.ActionURL.buildURL('ehr', 'enterData.view'),
     disabled: true,
     itemId: 'closeBtn1',
     handler: function(btn){
@@ -214,8 +214,7 @@ EHR.DataEntryUtils.registerDataEntryFormButton('BIRTHARRIVALFINAL', {
     requiredQC: 'Completed',
     targetQC: 'Completed',
     errorThreshold: 'WARN',
-    //successURL: LABKEY.ActionURL.buildURL('ehr', 'dataEntryForm.view', null, {formType: LABKEY.ActionURL.getParameter('formType')}),
-    successURL: LABKEY.ActionURL.getParameter('srcURL') || LABKEY.ActionURL.getParameter('returnURL') || LABKEY.ActionURL.buildURL('ehr', 'enterData.view'),
+    successURL: LABKEY.ActionURL.getParameter('returnUrl') || LABKEY.ActionURL.buildURL('ehr', 'enterData.view'),
     disabled: true,
     itemId: 'submitBtn',
     handler: function(btn){
@@ -286,7 +285,7 @@ EHR.DataEntryUtils.registerDataEntryFormButton('BIRTHARRIVALREVIEW', {
     requiredQC: 'Review Required',
     targetQC: 'Review Required',
     errorThreshold: 'WARN',
-    successURL: LABKEY.ActionURL.getParameter('srcURL') || LABKEY.ActionURL.getParameter('returnURL') || LABKEY.ActionURL.buildURL('ehr', 'enterData.view'),
+    successURL: LABKEY.ActionURL.getParameter('returnUrl') || LABKEY.ActionURL.buildURL('ehr', 'enterData.view'),
     disabled: true,
     itemId: 'reviewBtn1',
     handler: function(btn){

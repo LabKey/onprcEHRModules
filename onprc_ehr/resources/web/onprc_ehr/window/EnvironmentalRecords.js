@@ -6,8 +6,7 @@ EHR.DataEntryUtils.registerDataEntryFormButton('ENV_RUN', {
         requiredQC: 'Completed',
         targetQC: 'Completed',
         errorThreshold: 'ERROR',
-        // successURL: LABKEY.ActionURL.getParameter('returnUrl') || LABKEY.ActionURL.getParameter('returnURL') || LABKEY.ActionURL.buildURL('ONPRC_EHR', 'EnvironmentalenterData.view',(ctx ? ctx['EHRStudyContainer'] : null), null),
-    successURL: LABKEY.ActionURL.getParameter('srcURL') || LABKEY.ActionURL.getParameter('returnURL') || LABKEY.ActionURL.buildURL('onprc_ehr', 'EnvironmentalenterData.view'),
+        successURL: LABKEY.ActionURL.getParameter('returnUrl') || LABKEY.ActionURL.buildURL('onprc_ehr', 'EnvironmentalenterData.view'),
         itemId: 'submitBtn',
         handler: function(btn){
             var panel = btn.up('ehr-dataentrypanel');
@@ -30,8 +29,7 @@ EHR.DataEntryUtils.registerDataEntryFormButton('ENV_CLOSE', {
     requiredQC: 'In Progress',
     targetQC: 'In Progress',
     errorThreshold: 'WARN',
-    // successURL: LABKEY.ActionURL.getParameter('returnUrl') || LABKEY.ActionURL.getParameter('returnURL') || LABKEY.ActionURL.buildURL('ONPRC_EHR', 'EnvironmentalenterData.view',(ctx ? ctx['EHRStudyContainer'] : null), null),
-    successURL: LABKEY.ActionURL.getParameter('returnUrl') || LABKEY.ActionURL.getParameter('returnURL') || LABKEY.ActionURL.buildURL('onprc_ehr', 'EnvironmentalenterData.view'),
+    successURL: LABKEY.ActionURL.getParameter('returnUrl') || LABKEY.ActionURL.buildURL('onprc_ehr', 'EnvironmentalenterData.view'),
     itemId: 'closeBtn',
         handler: function(btn){
             var panel = btn.up('ehr-dataentrypanel');
