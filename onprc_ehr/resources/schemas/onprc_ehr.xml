@@ -1148,6 +1148,58 @@
         </columns>
     </table>
 
+    <table tableName="Prima_Animals" tableDbType="TABLE">
+        <columns>
+            <column columnName="Id" />
+            <column columnName="AlternateIdentifier" />
+            <column columnName="BreedId" />
+            <column columnName="DateOfBirth" />
+            <column columnName="FecesId" />
+            <column columnName="Gender" />
+            <column columnName="GeneTarget" />
+            <column columnName="GeneticLine" />
+            <column columnName="Genotype" />
+            <column columnName="Identifier" />
+            <column columnName="MannerOfDeathId" />
+            <column columnName="RoomNumber" />
+            <column columnName="SpeciesId" />
+            <column columnName="StomachContentsId" />
+            <column columnName="StrainId" />
+            <column columnName="DateOfDeath" />
+            <column columnName="Created" />
+            <column columnName="OwnerId" />
+            <column columnName="Perfuse" />
+            <column columnName="SampleType" />
+        </columns>
+    </table>
+
+    <table tableName="Prima_TissueCollections" tableDbType="TABLE">
+        <columns>
+            <column columnName="Id" />
+            <column columnName="Constant" />
+            <column columnName="IsWholeAnimal" />
+            <column columnName="SpeciesId" />
+            <column columnName="SpecimenType" />
+            <column columnName="CreatedByUserId" />
+            <column columnName="Deleted" />
+            <column columnName="DeletedByUserId" />
+            <column columnName="NextVersionId" />
+            <column columnName="PreviousVersionId" />
+            <column columnName="Title" />
+            <column columnName="Created" />
+            <column columnName="LastModified" />
+            <column columnName="Abbreviation" />
+        </columns>
+    </table>
+
+    <table tableName="Prima_VeterinaryResearchCase" tableDbType="TABLE">
+        <columns>
+            <column columnName="Id" />
+            <column columnName="AnimalId" />
+            <column columnName="BillingId" />
+        </columns>
+    </table>
+
     <table tableName="StudyDetails_RandalData" tableDbType="TABLE">
         <columns>
             <column columnName="id" />
