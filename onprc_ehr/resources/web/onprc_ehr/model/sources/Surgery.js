@@ -38,6 +38,13 @@ EHR.model.DataModelManager.registerMetadata('onprc_Surgery', {
             }
 
         },
+        'study.clinical_observations': {
+            category: {
+                shownInGrid: true,
+                hidden: false,
+                defaultValue: 'BCS'
+            },
+        },
         'study.drug': {
             enddate: {
                 hidden: false
