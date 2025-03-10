@@ -2305,10 +2305,11 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
                     summary = summary.replaceAll("\n", " / ");
                 }
 
-                DetailsURL groupUrl = DetailsURL.fromString("/ehr-animalGroupDetails.view", c);
+                DetailsURL groupUrl = DetailsURL.fromString("/onprc_ehr-animalGroupDetails.view?", c);
                 String groupUrlString = AppProps.getInstance().getBaseServerUrl() + "/onprc_ehr/onprc" + groupUrl;
                 groupUrlString += "groupId=" + rs.getInt("groupId");
-
+/*THis is what is returned                        https://prime.ohsu.edu/onprc_ehr/onprc/ehr-animalGroupDetails.viewgroupId=157      */
+/*This is wha the corrected url looks like        https://prime.ohsu.edu/onprc_ehr/onprc/ehr/animalGroupDetails.view?groupId=157         */
                 String group = rs.getString(FieldKey.fromString("groupId/name"));
                 String url2 = url + "&query.groupId/name~eq=" + group;
                 msg.append("<tr><td style='vertical-align:top;'><a href='" + groupUrlString + "'>" + group + ":</a></td><td><a href='" + url2 + "'>" + summary + "</a></td></tr>\n");
