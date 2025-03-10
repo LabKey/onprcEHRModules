@@ -2294,7 +2294,12 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
             msg.append("<b>WARNING: There are " + count + " animal groups with members located in more than 1 room, excluding hospital rooms.  This is not always an error, but may indicate that group designations need to be updated for some of the animals.</b><br>");
             final String url = getExecuteQueryUrl(c, "study", "animalGroupLocationSummary", null) + "&query.totalRooms~gt=1";
             msg.append("<p><a href='" + url + "'>Click here to view them</a><br><br>\n");
-
+/*            https://prime.ohsu.edu/onprc_ehr/ONPRC/EHR/animalGroupDetails.view?groupId=157*/
+            /*http://localhost:8080/onprc_ehr/onprc/animalGroupDetails.view?groupId=157*/
+            /*http://localhost:8080/onprc_ehr/onprc/animalGroupDetails.view?groupId=157*/
+            /*http://localhost:8080/onprc_ehr/onprc/ehr/animalGroupDetails.view?groupId=157*/
+            /*http://localhost:8080/onprc_ehr/onprc/ehr/animalGroupDetails.view?groupId=157 --this url works*/
+            /*http://localhost:8080/onprc_ehr/onprc/ehr/animalGroupDetails.view?groupId=157*/
             msg.append("<table border=1 style='border-collapse: collapse;'>\n");
             ts.forEach(object -> {
                 ResultsImpl rs = new ResultsImpl(object, columns);
@@ -2305,8 +2310,8 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
                     summary = summary.replaceAll("\n", " / ");
                 }
 
-                DetailsURL groupUrl = DetailsURL.fromString("/ehr-animalGroupDetails.view", c);
-                String groupUrlString = AppProps.getInstance().getBaseServerUrl() + "/onprc_ehr/onprc" + groupUrl;
+                DetailsURL groupUrl = DetailsURL.fromString("ehr/animalGroupDetails.view?", c);
+                String groupUrlString = AppProps.getInstance().getBaseServerUrl() + "/onprc_ehr/onprc/" + groupUrl;
                 groupUrlString += "groupId=" + rs.getInt("groupId");
 
                 String group = rs.getString(FieldKey.fromString("groupId/name"));
