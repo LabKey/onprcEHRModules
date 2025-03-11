@@ -105,7 +105,7 @@ public class BehaviorNotification extends ColonyAlertsNotification
         surgeryCasesRecentlyClosed(c, u, msg);
         pairIdConflicts(c, u , msg);
         NHPTraining_BehaviorAlert(c, u , msg);
-        AlopeciaAlert(c, u, msg);
+        AlopeciaAlert(c, u, msg); //Added by Kollil, 3/7/2025
         dcmNotesAlert(c, u , msg);
 
         notesEndingToday(c, u, msg, Arrays.asList("BSU Notes"), null);
@@ -137,7 +137,6 @@ public class BehaviorNotification extends ColonyAlertsNotification
         {
             msg.append("<b>WARNING: There are no animals who receive an alopecia score of 4 or 5, but does not have an open behavioral case for alopecia !</b><br><hr>\n");
         }
-
     }
 
     // Added by Kollil 11/04/2020
