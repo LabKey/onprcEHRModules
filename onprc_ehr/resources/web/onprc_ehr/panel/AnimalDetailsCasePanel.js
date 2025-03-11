@@ -8,9 +8,9 @@
 
 //Created 5-9-2016 R.Blasa
 
-Ext4.define('onprc_ehr.panel.AnimalDetailsCasePanel', {
-    extend: 'EHR.panel.SnapshotPanel',
-    alias: 'widget.onprc_ehr-animaldetailspanel',
+Ext4.define('ONPRC_EHR.panel.AnimalDetailsCasePanel', {
+    extend: 'onprc_ehr.panel.SnapshotPanel',
+    alias: 'widget.onprc_ehr-animaldetailscasepanel',
 
     border: true,
     showExtendedInformation: false,
@@ -88,7 +88,7 @@ Ext4.define('onprc_ehr.panel.AnimalDetailsCasePanel', {
             },
             items: [{
                 xtype: 'container',
-                width: 380,
+                width: 780,       //Modified width  2-15-2024  R. Blasa
                 defaults: {
                     xtype: 'displayfield',
                     labelWidth: this.defaultLabelWidth
@@ -119,6 +119,13 @@ Ext4.define('onprc_ehr.panel.AnimalDetailsCasePanel', {
                     xtype: 'displayfield',
                     fieldLabel: 'Active Cases',
                     name: 'activeCases'
+                },{
+                    // Added: 2-15-2024  R. Blasa
+                    xtype: 'ehr-snapshotchildpanel',
+                    headerLabel: 'Sustained Release Medication',
+                    name: 'sdrug'
+
+
                 }]
             },{
                 xtype: 'container',
@@ -266,6 +273,8 @@ Ext4.define('onprc_ehr.panel.AnimalDetailsCasePanel', {
 
         toSet['assignmentsAndGroups'] = values.length ? values.join('<br>') :  null;
     } ,
+
+
     //Added 4-28-2016 R.Blasa
     appendCases: function(toSet, results){
         var values = [];

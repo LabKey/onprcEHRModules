@@ -25,6 +25,7 @@ import org.labkey.api.action.SpringActionController;
 import org.labkey.api.data.ContainerManager;
 import org.labkey.api.data.ConvertHelper;
 import org.labkey.api.data.PropertyManager;
+import org.labkey.api.data.PropertyManager.WritablePropertyMap;
 import org.labkey.api.security.RequiresPermission;
 import org.labkey.api.security.ValidEmail;
 import org.labkey.api.security.permissions.AdminPermission;
@@ -55,7 +56,7 @@ public class MergeSyncController extends SpringActionController
         {
             Map<String, Object> resultProperties = new HashMap<>();
 
-            PropertyManager.PropertyMap configMap = PropertyManager.getWritableProperties(MergeSyncManager.CONFIG_PROPERTY_DOMAIN, true);
+            WritablePropertyMap configMap = PropertyManager.getWritableProperties(MergeSyncManager.CONFIG_PROPERTY_DOMAIN, true);
 
             configMap.put(MergeSyncManager.DATA_SOURCE_PROP_NAME, form.getDataSourceName());
             configMap.put(MergeSyncManager.SCHEMA_PROP_NAME, form.getSchemaName());

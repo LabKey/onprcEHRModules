@@ -124,6 +124,10 @@
                         <columnTitle>Necropsy Location</columnTitle>
                         <isHidden>true</isHidden>
                     </column>
+                    <column columnName="fileName">
+                        <columnTitle>PDF File</columnTitle>
+                        <isHidden>true</isHidden>
+                    </column>
                     <column columnName="taskid">
                     <fk>
                         <fkDbSchema>ehr</fkDbSchema>

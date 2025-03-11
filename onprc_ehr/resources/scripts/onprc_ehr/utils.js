@@ -105,7 +105,7 @@ ONPRC_EHR.Utils = new function(){
                             if (!row.remark){
                                 EHR.Server.Utils.addError(scriptErrors, cageField, 'You are required to enter a remark', 'INFO');
                                 EHR.Server.Utils.addError(scriptErrors, 'Id', 'You are required to enter a remark', 'INFO');
-                                EHR.Server.Utils.addError(scriptErrors, 'remark', 'A remark is required because of the case size errors.', 'WARN');
+                                EHR.Server.Utils.addError(scriptErrors, 'remark', 'A remark is required because of the cage size errors.', 'WARN');
                             }
                         }
                     }

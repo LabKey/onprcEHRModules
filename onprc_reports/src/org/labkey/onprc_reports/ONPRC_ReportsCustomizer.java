@@ -2,7 +2,6 @@ package org.labkey.onprc_reports;
 
 import org.labkey.api.data.AbstractTableInfo;
 import org.labkey.api.data.BaseColumnInfo;
-import org.labkey.api.data.ColumnInfo;
 import org.labkey.api.data.TableCustomizer;
 import org.labkey.api.data.TableInfo;
 import org.labkey.api.data.WrappedColumn;
@@ -10,7 +9,6 @@ import org.labkey.api.query.QueryForeignKey;
 import org.labkey.api.query.UserSchema;
 
 /***
- * Created with IntelliJ IDEA.
  * User: bimber
  * Date: 5/16/13
  * Time: 3:41 PM

@@ -47,13 +47,15 @@ public class SurgeryFormType extends EncounterForm
     public SurgeryFormType(DataEntryFormContext ctx, Module owner)
     {
         super(ctx, owner, NAME, "Surgeries", "Surgery", Arrays.asList(
-                new NonStoreFormSection("Instructions", "Instructions", "ehr-surgeryinstructionspanel", Arrays.asList(ClientDependency.supplierFromPath("ehr/panel/SurgeryInstructionsPanel.js"))),
+                new NonStoreFormSection("Instructions", "Instructions", "onprc_ehr-surgeryinstructionspanel", Arrays.asList(ClientDependency.supplierFromPath("onprc_ehr/panel/SurgeryInstructionsPanel.js"))),
                 new TaskFormSection(),
                 new ClinicalEncountersFormSection(),
                 new ExtendedAnimalDetailsFormSection(),
                 new EncounterChildFormSection("ehr", "encounter_participants", "Staff", false),
                 new EncounterChildFormSection("ehr", "encounter_summaries", "Narrative", true),
                 new EncounterChildFormSection("study", "weight", "Weight", false, "EHR.data.WeightClientStore", Arrays.asList(ClientDependency.supplierFromPath("ehr/data/WeightClientStore.js")), null),
+                //Added by Kollil on 3/6/2025. Refer to tkt # 12124
+                new ClinicalObservationsFormSection(EHRService.FORM_SECTION_LOCATION.Tabs, true),
                 new EncounterMedicationsFormSection("study", "Drug Administration", "Medications/Treatments Given", true),
                 new EncounterMedicationsFormSection("study", "Treatment Orders", "Medication/Treatment Orders", false),
                 new BloodDrawFormSection(false, EHRService.FORM_SECTION_LOCATION.Tabs),
@@ -64,7 +66,7 @@ public class SurgeryFormType extends EncounterForm
         {
             addSection(new EncounterChildFormSection("onprc_billing", "miscCharges", "Misc. Charges", false, "EHR.data.MiscChargesClientStore", Arrays.asList(ClientDependency.supplierFromPath("ehr/data/MiscChargesClientStore.js")), null));
         }
-//        Modified: 4-20-2021  R.Blasa
+//        Modified: 7-4-2024  R.Blasa
         addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/model/sources/Surgery.js"));
 
         addClientDependency(ClientDependency.supplierFromPath("ehr/window/OpenSurgeryCasesWindow.js"));

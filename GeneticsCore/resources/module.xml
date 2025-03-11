@@ -21,6 +21,13 @@
             </editPermissions>
             <description>This is the containerPath to the folder holding the primary data for Parentage.  Use of slashes is very important - it should be in the format '/myProject/folder'</description>
         </propertyDescriptor>
+        <propertyDescriptor name="KinshipDataPath">
+            <canSetPerContainer>true</canSetPerContainer>
+            <editPermissions>
+                <permission>ADMIN</permission>
+            </editPermissions>
+            <description>This is the filepath of a folder where externally kinship/inbreeding TSVs calculated externally will be deposited. It is used by the KinshipData ETL to initiate import.</description>
+        </propertyDescriptor>
     </properties>
     <clientDependencies>
         <dependency path="clientapi/ext4.lib.xml"/>

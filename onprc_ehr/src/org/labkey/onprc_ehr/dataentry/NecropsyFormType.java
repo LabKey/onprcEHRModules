@@ -51,7 +51,7 @@ public class NecropsyFormType extends EncounterForm
                 new NecropsyInstructionFormSection(),   //Added: 12-21-2021 R.Blasa
                 new ClinicalEncountersFormPanelSection("Necropsy"),
                 //Modified: 12-20-2018  R.Blasa
-                new AnimalDetailssFormSection(),
+                new AnimalDetailsFormSection(),
                 new GrossFindingsFormPanelSection(),
                 new PathologyFormSection("ehr", "encounter_participants", "Staff"),
                 new PathologyNotesFormPanelSection(),

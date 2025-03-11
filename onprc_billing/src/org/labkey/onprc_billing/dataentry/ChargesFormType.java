@@ -10,8 +10,10 @@ import org.labkey.api.security.Group;
 import org.labkey.api.security.GroupManager;
 import org.labkey.api.security.permissions.AdminPermission;
 import org.labkey.api.view.template.ClientDependency;
+import org.labkey.onprc_billing.security.ONPRCMiscChargesEntryPermission;
 import org.labkey.security.xml.GroupEnumType;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -35,39 +37,37 @@ public class ChargesFormType extends TaskForm
 
         addClientDependency(ClientDependency.supplierFromPath("onprc_billing/panel/ChargesInstructionPanel.js"));
         addClientDependency(ClientDependency.supplierFromPath("onprc_billing/buttons/financeButtons.js"));
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/window/MiscCharges_ScanWindow.js"));
+
     }
+
 
     @Override
     protected List<String> getMoreActionButtonConfigs()
     {
         List<String> defaultButtons = super.getMoreActionButtonConfigs();
         defaultButtons.add("COPY_TASK");
+        defaultButtons.add("MISC_SCAN_IMPORT");
 
         return defaultButtons;
     }
+//Modified   5-14-2024  R. Blasa  Created new permissions
+@Override
+public boolean canInsert()
+{
+    if (!getCtx().getContainer().hasPermission(getCtx().getUser(), ONPRCMiscChargesEntryPermission.class))
+        return false;
 
-    //Added: 8-22-2018  R.Blasa
+    return super.canInsert();
+}
+
     @Override
-    public boolean isVisible()
+    public boolean canRead()
     {
-        Group g = GroupManager.getGroup(getCtx().getContainer(), "SLA Users", GroupEnumType.SITE);
-        if (g != null && getCtx().getUser().isInGroup(g.getUserId()) && !getCtx().getContainer().hasPermission(getCtx().getUser(), AdminPermission.class))
-        {
+        if (!getCtx().getContainer().hasPermission(getCtx().getUser(), ONPRCMiscChargesEntryPermission.class))
             return false;
-        }
-//        Added: 12-3-2019  R.blasa
-        Group j = GroupManager.getGroup(getCtx().getContainer(), "Pathology External Entry", GroupEnumType.SITE);
-        if (j != null && getCtx().getUser().isInGroup(j.getUserId()) && !getCtx().getContainer().hasPermission(getCtx().getUser(), AdminPermission.class))
-        {
-            return false;
-        }
 
-        //        Added: 12-3-2019  R.blasa
-        Group L = GroupManager.getGroup(getCtx().getContainer(), "Virology Core", GroupEnumType.SITE);
-        if (L != null && getCtx().getUser().isInGroup(L.getUserId()) && !getCtx().getContainer().hasPermission(getCtx().getUser(), AdminPermission.class))
-        {
-            return false;
-        }
-        return super.isVisible();
+        return super.canRead();
     }
+
 }

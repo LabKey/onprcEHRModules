@@ -32,7 +32,10 @@ Ext4.define('onprc_ehr.panel.SnapshotPanel', {
 
         this.callParent();
 
+        let anmId;
+
         if (this.subjectId){
+            anmId = this.subjectId;
             this.isLoading = true;
             this.setLoading(true);
             this.loadData();
@@ -88,7 +91,23 @@ Ext4.define('onprc_ehr.panel.SnapshotPanel', {
                     },{
                         xtype: 'displayfield',
                         fieldLabel: 'Behavior Alert' ,
-                        name: 'behaviorflag'
+                        name: 'behaviorflag',
+                        listeners: {
+                            change: function(field, newValue, oldValue){
+                                let anchor = field.getEl('onprcBehaviorFlagsLink');
+                                if (this?.up('panel')?.up('panel')) {
+                                    let anmId = this.up('panel').up('panel').subjectId;
+                                    if (anchor) {
+                                        Ext4.get(anchor).on('click', function(e) {
+                                            e.preventDefault();
+                                            if (anmId) {
+                                                EHR.Utils.showFlagPopup(anmId, this);
+                                            }
+                                        });
+                                    }
+                                }
+                            }
+                        }
                     }]
                 },{
                     xtype: 'container',
@@ -103,7 +122,7 @@ Ext4.define('onprc_ehr.panel.SnapshotPanel', {
                         name: 'calculated_status'
                     },{
                         xtype: 'displayfield',
-                        fieldLabel: 'Gender',
+                        fieldLabel: 'Sex',
                         name: 'gender'
                     },{
                         xtype: 'displayfield',
@@ -128,7 +147,24 @@ Ext4.define('onprc_ehr.panel.SnapshotPanel', {
                     items: [{
                         xtype: 'displayfield',
                         fieldLabel: 'Flags',
-                        name: 'flags'
+                        name: 'flags',
+                        itemId: 'flags',
+                        listeners: {
+                            change: function(field, newValue, oldValue){
+                                let anchor = field.getEl('onprcFlagsLink');
+                                if (this?.up('panel')?.up('panel')) {
+                                    let anmId = this.up('panel').up('panel').subjectId;
+                                    if (anchor) {
+                                        Ext4.get(anchor).on('click', function(e) {
+                                            e.preventDefault();
+                                            if (anmId) {
+                                                EHR.Utils.showFlagPopup(anmId, this);
+                                            }
+                                        });
+                                    }
+                                }
+                            }
+                        }
                     },{
                         xtype: 'displayfield',
                         fieldLabel: 'Last TB Date',
@@ -284,9 +320,8 @@ Ext4.define('onprc_ehr.panel.SnapshotPanel', {
 
 
         //Modified: 2-14-2017  R.Blasa  Make animal group name as hyperlink
-        var text = values.length ? values.join('<br>') : 'None';
-        var url =  '<a href="' + LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'ehr', 'query.queryName': 'animal_groups',
-                  'query.name~eq': values.length ? values.join(';') : 'None' }) + '" target="_blank">' + text  + '</a>';
+        var url =  values.length ? '<a href="' + LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'ehr', 'query.queryName': 'animal_groups',
+                  'query.name~in': values.length ? values.join(';') : 'None' }) + '" target="_blank">' + values.map(v=>LABKEY.Utils.encodeHtml(v)).join('<br>') + '</a>' : 'None';
 
 
         toSet['groups'] = url;
@@ -529,7 +564,7 @@ Ext4.define('onprc_ehr.panel.SnapshotPanel', {
                 animals = row.animals.replace(/( )*,( )*/g, ',');
                 animals = animals.split(',');
                 animals.sort();
-                animals = animals.remove(id);
+                animals = animals.filter(animal => animal !== id);
 
             }
 
@@ -543,7 +578,7 @@ Ext4.define('onprc_ehr.panel.SnapshotPanel', {
                     animals = row.animals.replace(/( )*,( )*/g, ',');
                     animals = animals.split(',')
                     animals.sort();
-                    animals = animals.remove(id);
+                    animals = animals.filter(animal => animal !== id);
                     values.push(animals);
 
                 }
@@ -709,10 +744,10 @@ Ext4.define('onprc_ehr.panel.SnapshotPanel', {
             }
         }
 
-        toSet['flags'] = values.length ? '<a onclick="EHR.Utils.showFlagPopup(\'' + this.subjectId + '\', this);">' + values.join('<br>') + '</div>' : null;
+        toSet['flags'] = values.length ? '<a id="onprcFlagsLink" class="labkey-text-link">' + values.join('<br>') + '</div>' : null;
 
         if (behavevalues.length) {
-            toSet['behaviorflag'] = behavevalues.length ? '<a onclick="EHR.Utils.showFlagPopup(\'' + this.subjectId + '\', this);">' + behavevalues.join('<br>') + '</div>' : null;
+            toSet['behaviorflag'] = '<a id="onprcBehaviorFlagsLink" class="labkey-text-link">' + behavevalues.join('<br>') + '</div>';
         }
         else
         {

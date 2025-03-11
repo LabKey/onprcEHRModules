@@ -150,7 +150,8 @@ Ext4.define('SLA.form.SpeciesGrid', {
             },
             {
                 dataIndex: 'gender',
-                text: 'Gender*',
+                // text: 'Gender*',
+                text: 'Sex*',
                 width: 250,
                 editor: this.getComboColumnEditorConfig('Reference_Data','value', 'value','gender', 'sort_order')
             },

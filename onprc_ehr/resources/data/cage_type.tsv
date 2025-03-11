@@ -1,0 +1,8 @@
+cagetype	height	sqft	cageslots	verticalSlots	supportsTunnel
+Double - 1	40	7	2	1	false
+Double - 2	40	6	2	1	false
+Quad - A	50	8	4	1	false
+Quad - B	50	9	4	1	false
+Quad - C	50	10	4	1	false
+Tunnel - I	30	12	2	1	true
+Tunnel - II	30	11	2	1	true

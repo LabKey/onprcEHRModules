@@ -32,14 +32,26 @@ EHR.model.DataModelManager.registerMetadata('onprc_Surgery', {
         },
         'study.treatment_order': {
             category: {
-                defaultValue: 'Surgical'
+                shownInGrid: true,
+                defaultValue: 'Surgical',
+                allowBlank: false
             }
+
+        },
+        'study.clinical_observations': {
+            category: {
+                shownInGrid: true,
+                hidden: false,
+                defaultValue: 'BCS'
+            },
         },
         'study.drug': {
             enddate: {
                 hidden: false
             },
             category: {
+                shownInGrid: true,
+                hidden: false,
                 defaultValue: 'Surgical'
             },
             reason: {
@@ -117,6 +129,11 @@ EHR.model.DataModelManager.registerMetadata('onprc_Surgery', {
                 columnConfig: {
                     width: 300
                 }
+            }
+        },
+        'study.blood': {
+            reason: {
+                defaultValue: 'Surgical'
             }
         },
         'ehr.encounter_summaries': {

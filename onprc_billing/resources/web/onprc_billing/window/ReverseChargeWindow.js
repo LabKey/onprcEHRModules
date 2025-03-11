@@ -2,6 +2,8 @@
  * Copyright (c) 2013 LabKey Corporation
  *
  * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
+ * Modified jonesga October 30, 2024
+ * **Per Finance Issue Tracker 11380 added debit Aklias add function to allow change of debit alias when no center project is associated
  */
 Ext4.define('ONPRC_Billing.window.ReverseChargeWindow', {
     extend: 'Ext.window.Window',
@@ -299,6 +301,35 @@ Ext4.define('ONPRC_Billing.window.ReverseChargeWindow', {
                     }
                 }]
             });
+            //debit alias
+            //Added b y Gary 2024-10-25 Finance issue 11380
+            items.push({
+                xtype: 'checkbox',
+                boxLabel: 'Change Debit Alias',
+                itemId: 'doChangedebitAlias',
+                listeners: {
+                    change: function(field, val){
+                        field.up('panel').down('#debitPanel').setVisible(val);
+                    }
+                }
+            },{
+                xtype: 'panel',
+                itemId: 'debitPanel',
+                hidden: true,
+                defaults: {
+                    border: false,
+                    style: 'margin-left: 20px;'
+                },
+                items: [{
+                    xtype: 'textfield',
+                    itemId: 'newDebitAliasField',
+                    width: 400,
+                    labelWidth: 150,
+                    fieldLabel: 'Debit Alias',
+                    displayField: 'newDebitalias',
+                    valueField: 'NewDebitalias'
+                }]
+            });
 
             //credit alias
             items.push({
@@ -396,6 +427,12 @@ Ext4.define('ONPRC_Billing.window.ReverseChargeWindow', {
                 return;
 
             }
+            //added as part of Finance 11380 update by Gary
+            //this issues is causing error
+           if (this.down('#doChangedebitAlias').getValue() && !this.down('#newDebitAliasField').getValue()){
+                Ext4.Msg.alert('Error', 'You have checked that you want to alter the debit alias, but did not supply the new alias.  Either enter an alias or uncheck the field');
+                return;
+            }
 
             if (this.down('#doChangeCreditAlias').getValue() && !this.down('#creditAliasField').getValue()){
                 Ext4.Msg.alert('Error', 'You have checked that you want to alter the credit alias, but did not supply the new alias.  Either enter an alias or uncheck the field');
@@ -444,6 +481,9 @@ Ext4.define('ONPRC_Billing.window.ReverseChargeWindow', {
             var creditAliasField = this.down('#creditAliasField');
             var unitCostField = this.down('#unitCostField');
 
+
+
+
             if (this.down('#doChangeProject').getValue()){
                 toApply.project = this.down('#projectField').getValue();
                 toApply.debitedaccount = this.down('#debitAliasField').getValue();
@@ -451,7 +491,13 @@ Ext4.define('ONPRC_Billing.window.ReverseChargeWindow', {
                     toApply.debitedaccount = Ext4.String.trim(toApply.debitedaccount);
                 }
             }
-
+           //Added by Gary as part of 11380 update
+            if (this.down('#doChangedebitAlias').getValue()){
+                toApply.debitedaccount = this.down('#newDebitAliasField').getValue();
+                if (toApply.debitedaccount){
+                    toApply.debitedaccount = Ext4.String.trim(toApply.debitedaccount);
+                }
+            }
             if (this.down('#doChangeCreditAlias').getValue()){
                 toApply.creditedaccount = this.down('#creditAliasField').getValue();
                 if (toApply.creditedaccount){

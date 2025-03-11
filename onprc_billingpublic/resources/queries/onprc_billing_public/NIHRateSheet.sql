@@ -1,7 +1,17 @@
+/*Updated 2024-05-03
+Added 23 columns for Rate Sheet Selected and Parameter
+Update of related qview.xml and NIHRateSheet.query.xml
+    Added ne columns and updated Labels for Yr66 to Yr 73
+*/
+
+
 select
+'NIH Rate Sheet' as RateSheetSelected,
+'No Parameter' as ParameterSelected,
 category,
 name,
 UnitCost,
+(UnitCost *(1.475 / (1 ))) as CurrentYear,
 year1,
 year2,
 year3,

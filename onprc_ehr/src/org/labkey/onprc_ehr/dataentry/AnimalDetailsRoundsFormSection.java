@@ -24,7 +24,7 @@ public class AnimalDetailsRoundsFormSection extends NonStoreFormSection
     public AnimalDetailsRoundsFormSection()
     {
         //    //Modified 5-4-2016 R.Blasa
-        super("AnimalDetails", "Animal Details", "onprc_ehr-animaldetailspanel" );
+        super("AnimalDetails", "Animal Details", "onprc_ehr-animaldetailscasepanel" );
 
         //Modified 5-4-2016 R.Blasa
         addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/panel/AnimalDetailsCasePanel.js"));

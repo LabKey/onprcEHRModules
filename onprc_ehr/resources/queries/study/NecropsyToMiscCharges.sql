@@ -24,7 +24,8 @@ FROM  study.encounters b
 Left join (
     Select a.Id, a.date, a.project, a.chargeId, a.quantity, a.unitCost, a.chargecategory, a.QCState, a.taskid
          from  onprc_billing.miscCharges a
-         Where a.chargeid.rowid in (4484,4485,4486,4487,4488,4489,5283, 4516,5296,5297,5298)
+         Where a.chargeid.rowid in (select  j.rowid from onprc_billing_public.chargeableItems j where j.category = 'Pathology'
+                                      And j.active = true)
    group by a.Id, a.date, a.project, a.chargeId, a.quantity, a.unitCost, a.chargecategory, a.QCState, a.taskid
 
 ) r1 on (r1.id = b.id )

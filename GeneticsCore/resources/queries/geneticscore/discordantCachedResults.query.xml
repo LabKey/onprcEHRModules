@@ -1,0 +1,29 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="" tableDbType="TABLE">
+                <tableTitle>Cached Genotyping Results Discordant With Data</tableTitle>
+                <columns>
+                    <column columnName="totalTestsCached">
+                        <columnTitle>Total Tests (Cached)</columnTitle>
+                    </column>
+                    <column columnName="resultCached">
+                        <columnTitle>Result (Cached)</columnTitle>
+                    </column>
+                    <column columnName="scoreCached">
+                        <columnTitle>Score (Cached)</columnTitle>
+                    </column>
+                    <column columnName="totalTestsSource">
+                        <columnTitle>Total Tests (Source)</columnTitle>
+                    </column>
+                    <column columnName="resultSource">
+                        <columnTitle>Result (Source)</columnTitle>
+                    </column>
+                    <column columnName="scoreSource">
+                        <columnTitle>Score (Source)</columnTitle>
+                    </column>
+                </columns>
+            </table>
+        </tables>
+    </metadata>
+</query>

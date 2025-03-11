@@ -4,10 +4,15 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.labkey.GeneticsCore.mhc.MhcTaskRef;
+import org.labkey.api.action.ApiResponse;
+import org.labkey.api.action.ApiSimpleResponse;
 import org.labkey.api.action.ConfirmAction;
+import org.labkey.api.action.MutatingApiAction;
 import org.labkey.api.action.SpringActionController;
+import org.labkey.api.di.DataIntegrationService;
 import org.labkey.api.security.RequiresPermission;
 import org.labkey.api.security.permissions.AdminPermission;
+import org.labkey.api.security.permissions.UpdatePermission;
 import org.labkey.api.util.HtmlString;
 import org.labkey.api.util.URLHelper;
 import org.labkey.api.view.HtmlView;
@@ -60,6 +65,28 @@ public class GeneticsCoreController extends SpringActionController
         public URLHelper getSuccessURL(Object o)
         {
             return getContainer().getStartURL(getUser());
+        }
+    }
+
+
+    @RequiresPermission(UpdatePermission.class)
+    public static class ImportGeneticsDataAction extends MutatingApiAction<Object>
+    {
+        @Override
+        public ApiResponse execute(Object form, BindException errors)
+        {
+            try
+            {
+                DataIntegrationService.get().runTransformNow(getContainer(), getUser(), "{GeneticsCore}/KinshipDataImport");
+
+                return new ApiSimpleResponse("success", true);
+            }
+            catch (Exception e)
+            {
+                _log.error("Unable to initiate genetics data import", e);
+                errors.reject(ERROR_MSG, "Unable to initiate genetics data import");
+                return null;
+            }
         }
     }
 }

@@ -195,6 +195,7 @@ public class BehaviorNotification extends ColonyAlertsNotification
             Refer to tkt #9977
         */
         SimpleFilter filter4 = new SimpleFilter(FieldKey.fromString("enddate"), cal.getTime(), CompareType.DATE_EQUAL);
+        filter4.addCondition(FieldKey.fromString("category"), "Notes Pertaining to DAR", CompareType.EQUAL);
         TableSelector ts4 = new TableSelector(getStudySchema(c, u).getTable("Notes_WithLocation"), filter4, null);
         long count4 = ts4.getRowCount();
 

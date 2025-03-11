@@ -24,7 +24,7 @@ public class ChargesVirologyCoreFormType extends TaskForm
 
     public ChargesVirologyCoreFormType(DataEntryFormContext ctx, Module owner)
     {
-        super(ctx, owner, NAME, "Virology Charges", "Billing - Virology Core", Arrays.<FormSection>asList(
+        super(ctx, owner, NAME, "Virology Charges", "Billing", Arrays.<FormSection>asList(
                 new TaskFormSection(),
 //                new AnimalDetailsFormSection(),
                 new ChargesInstructionFormSection(),

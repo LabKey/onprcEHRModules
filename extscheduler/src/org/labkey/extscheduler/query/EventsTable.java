@@ -1,6 +1,7 @@
 package org.labkey.extscheduler.query;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.labkey.api.data.AbstractTableInfo;
 import org.labkey.api.data.Container;
 import org.labkey.api.data.ContainerFilter;
@@ -101,7 +102,7 @@ public class EventsTable extends FilteredTable<ExtSchedulerQuerySchema>
             }
 
             @Override
-            protected Map<String, Object> updateRow(User user, Container container, Map<String, Object> row, @NotNull Map<String, Object> oldRow) throws InvalidKeyException, ValidationException, QueryUpdateServiceException, SQLException
+            protected Map<String, Object> updateRow(User user, Container container, Map<String, Object> row, @NotNull Map<String, Object> oldRow, @Nullable Map<Enum, Object> configParameters) throws InvalidKeyException, ValidationException, QueryUpdateServiceException, SQLException
             {
                 boolean isAdmin = container.hasPermission(user, AdminPermission.class);
 
@@ -118,7 +119,7 @@ public class EventsTable extends FilteredTable<ExtSchedulerQuerySchema>
                 if (!isAdmin)
                     throw new UnauthorizedException("User does not have permissions ot perform this operation. Must be an admin to update an event.");
 
-                return super.updateRow(user, container, row, oldRow);
+                return super.updateRow(user, container, row, oldRow, configParameters);
             }
 
             @Override

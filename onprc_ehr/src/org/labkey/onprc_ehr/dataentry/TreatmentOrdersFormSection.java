@@ -44,6 +44,10 @@ public class TreatmentOrdersFormSection extends DrugAdministrationFormSection
         setClientStoreClass("ONPRC_EHR.data.TreatmentOrdersClientStore");
         addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/data/sources/TreatmentOrdersClientStore.js"));
 
+//        Added:3-21-2024  R. Blasa  to override Template menu
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/window/ApplyTemplateWindow.js"));
+
+
     }
 
     @Override
@@ -51,6 +55,9 @@ public class TreatmentOrdersFormSection extends DrugAdministrationFormSection
     {
         List<String> defaultButtons = super.getTbarButtons();
         defaultButtons.remove("SEDATIONHELPER");
+        defaultButtons.remove("TEMPLATE");
+
+        defaultButtons.add("TEMPLATEREV");
 
         return defaultButtons;
     }

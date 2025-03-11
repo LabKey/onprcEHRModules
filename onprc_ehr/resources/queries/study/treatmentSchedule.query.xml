@@ -190,16 +190,12 @@
                             <onClick>
                                 EHR.DatasetButtons.historyHandler(dataRegion, dataRegionName);
                             </onClick>
-                            <!--<target>javascript:void(0)</target>-->
                         </item>
                         <item text="Return Distinct Values">
                             <onClick>
                                 EHR.window.GetDistinctWindow.getDistinctHandler(dataRegionName);
                             </onClick>
                         </item>
-                    </item>
-                    <item text=" " requiresSelection="true" insertAfter="More Actions">
-                        <onClick>javascript:void(0);</onClick>
                     </item>
                 </buttonBarOptions>
             </table>

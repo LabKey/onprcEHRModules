@@ -15,12 +15,10 @@
  */
 package org.labkey.sla.etl;
 
-import com.google.common.base.Charsets;
-import com.google.common.io.Files;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.labkey.api.collections.CaseInsensitiveHashMap;
 import org.labkey.api.data.ColumnInfo;
 import org.labkey.api.data.CompareType;
@@ -29,6 +27,7 @@ import org.labkey.api.data.ContainerManager;
 import org.labkey.api.data.DbSchema;
 import org.labkey.api.data.DbScope;
 import org.labkey.api.data.PropertyManager;
+import org.labkey.api.data.PropertyManager.WritablePropertyMap;
 import org.labkey.api.data.SQLFragment;
 import org.labkey.api.data.SimpleFilter;
 import org.labkey.api.data.SqlExecutor;
@@ -47,14 +46,15 @@ import org.labkey.api.query.QueryService;
 import org.labkey.api.query.QueryUpdateService;
 import org.labkey.api.query.UserSchema;
 import org.labkey.api.query.ValidationException;
-import org.labkey.api.resource.FileResource;
 import org.labkey.api.resource.DirectoryResource;
+import org.labkey.api.resource.FileResource;
 import org.labkey.api.resource.Resource;
 import org.labkey.api.security.User;
 import org.labkey.api.security.UserManager;
 import org.labkey.api.security.ValidEmail;
 import org.labkey.api.settings.AppProps;
 import org.labkey.api.study.DatasetTable;
+import org.labkey.api.util.PageFlowUtil;
 import org.labkey.api.util.ResultSetUtil;
 import org.labkey.api.view.ActionURL;
 import org.labkey.api.view.ViewContext;
@@ -828,7 +828,7 @@ public class ETLRunnable implements Runnable
     private void setLastTimestamp(String tableName, Long ts)
     {
         log.info(String.format("setting new baseline timestamp of %s on collection %s", new Date(ts.longValue()).toString(), tableName));
-        PropertyManager.PropertyMap pm = PropertyManager.getWritableProperties(TIMESTAMP_PROPERTY_DOMAIN, true);
+        WritablePropertyMap pm = PropertyManager.getWritableProperties(TIMESTAMP_PROPERTY_DOMAIN, true);
         pm.put(tableName, ts.toString());
         pm.save();
     }
@@ -866,7 +866,7 @@ public class ETLRunnable implements Runnable
      */
     private void setLastVersion(String tableName, byte[] version)
     {
-        PropertyManager.PropertyMap pm = PropertyManager.getWritableProperties(ROWVERSION_PROPERTY_DOMAIN, true);
+        WritablePropertyMap pm = PropertyManager.getWritableProperties(ROWVERSION_PROPERTY_DOMAIN, true);
         byte[] encoded = Base64.encodeBase64(version);
         try
         {
@@ -929,7 +929,7 @@ public class ETLRunnable implements Runnable
             FileResource f = (FileResource)sqlFile;
 
             if (!f.getName().endsWith("sql")) continue;
-            String sql = Files.toString(f.getFile(), Charsets.UTF_8);
+            String sql = PageFlowUtil.getFileContentsAsString(f.getFile());
             String key = f.getName().substring(0, f.getName().indexOf('.'));
             qMap.put(key, sql);
         }

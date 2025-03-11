@@ -35,7 +35,7 @@
                         <columnTitle>Species</columnTitle>
                     </column>
                     <column columnName="Gender">
-                        <columnTitle>Gender</columnTitle>
+                        <columnTitle>Sex</columnTitle>
                     </column>
                     <column columnName="Strain">
                         <columnTitle>Strain</columnTitle>

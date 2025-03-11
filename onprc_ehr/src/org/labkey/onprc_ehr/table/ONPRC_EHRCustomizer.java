@@ -60,6 +60,7 @@ import org.labkey.api.study.DatasetTable;
 import org.labkey.api.study.Study;
 import org.labkey.api.study.StudyService;
 import org.labkey.api.util.PageFlowUtil;
+import org.labkey.api.view.HttpView;
 import org.labkey.onprc_ehr.ONPRC_EHRManager;
 import org.labkey.onprc_ehr.ONPRC_EHRModule;
 
@@ -79,6 +80,10 @@ import java.util.Set;
 public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
 {
     private static final Logger _log = LogManager.getLogger(ONPRC_EHRCustomizer.class);
+
+    private boolean _surgeryChecklistClickHandlerAdded = false;
+    private boolean _caseHistoryClickHandlerAdded = false;
+    private boolean _hctRowClickHandlerAdded = false;
 
     public ONPRC_EHRCustomizer()
     {
@@ -889,12 +894,12 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
             if (realTable == null)
                 return;
 
-            SQLFragment sql = new SQLFragment("(select CAST(" + ti.getSqlDialect().getGroupConcat(new SQLFragment(ti.getSqlDialect().concatenate("pl.category", "CASE WHEN pl.subcategory IS NULL THEN '' ELSE (" + ti.getSqlDialect().concatenate("': '", "pl.subcategory") + ") END")), true, true, getChr(ti) + "(10)").getSqlCharSequence() + "AS varchar(200)) as expr FROM " + realTable.getSelectName() + " pl WHERE pl.caseId = " + ExprColumn.STR_TABLE_ALIAS + ".objectid AND (pl.enddate IS NULL OR pl.enddate > {fn now()}))");
+            SQLFragment sql = new SQLFragment("(select CAST(" + ti.getSqlDialect().getGroupConcat(new SQLFragment(ti.getSqlDialect().concatenate("pl.category", "CASE WHEN pl.subcategory IS NULL THEN '' ELSE (" + ti.getSqlDialect().concatenate("': '", "pl.subcategory") + ") END")), true, true, getNewlineSql(ti)).getSqlCharSequence() + "AS varchar(200)) as expr FROM " + realTable.getSelectName() + " pl WHERE pl.caseId = " + ExprColumn.STR_TABLE_ALIAS + ".objectid AND (pl.enddate IS NULL OR pl.enddate > {fn now()}))");
             ExprColumn newCol = new ExprColumn(ti, problemCategories, sql, JdbcType.VARCHAR, ti.getColumn("objectid"));
             newCol.setLabel("Active Master Problem(s)");
             ti.addColumn(newCol);
 
-            SQLFragment sql2 = new SQLFragment("(select CAST(" + ti.getSqlDialect().getGroupConcat(new SQLFragment(ti.getSqlDialect().concatenate("pl.category", "CASE WHEN pl.subcategory IS NULL THEN '' ELSE (" + ti.getSqlDialect().concatenate("': '", "pl.subcategory") + ") END")), true, true, getChr(ti) + "(10)").getSqlCharSequence() + "AS varchar(200)) as expr FROM " + realTable.getSelectName() + " pl WHERE pl.caseId = " + ExprColumn.STR_TABLE_ALIAS + ".objectid)");
+            SQLFragment sql2 = new SQLFragment("(select CAST(" + ti.getSqlDialect().getGroupConcat(new SQLFragment(ti.getSqlDialect().concatenate("pl.category", "CASE WHEN pl.subcategory IS NULL THEN '' ELSE (" + ti.getSqlDialect().concatenate("': '", "pl.subcategory") + ") END")), true, true, getNewlineSql(ti)).getSqlCharSequence() + "AS varchar(200)) as expr FROM " + realTable.getSelectName() + " pl WHERE pl.caseId = " + ExprColumn.STR_TABLE_ALIAS + ".objectid)");
             ExprColumn newCol2 = new ExprColumn(ti, "allProblemCategories", sql2, JdbcType.VARCHAR, ti.getColumn("objectid"));
             newCol2.setLabel("All Master Problem(s)");
             ti.addColumn(newCol2);
@@ -1065,12 +1070,11 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         String name = "treatmentTimes";
         if (null == ti.getColumn(name) && null != ti.getColumn("objectid"))
         {
-            String chr = ti.getSqlDialect().isPostgreSQL() ? "chr" : "char";
             SQLFragment sql = new SQLFragment("COALESCE(" +
-                "(SELECT " + ti.getSqlDialect().getGroupConcat(new SQLFragment("REPLICATE('0', 4 - LEN(tt.time))  + cast(tt.time as varchar(4))"), true, false, chr + "(10)").getSqlCharSequence() + " as _expr " +
+                "(SELECT " + ti.getSqlDialect().getGroupConcat(new SQLFragment("REPLICATE('0', 4 - LEN(tt.time))  + cast(tt.time as varchar(4))"), true, false, getNewlineSql(ti)).getSqlCharSequence() + " as _expr " +
                 " FROM ehr.treatment_times tt " +
                 " WHERE tt.treatmentId = " + ExprColumn.STR_TABLE_ALIAS + ".objectid)" +
-                ", (SELECT " + ti.getSqlDialect().getGroupConcat(new SQLFragment("REPLICATE('0', 4 - LEN(ft.hourofday))  + cast(ft.hourofday as varchar(4))"), true, false, chr + "(10)").getSqlCharSequence() + " as _expr " +
+                ", (SELECT " + ti.getSqlDialect().getGroupConcat(new SQLFragment("REPLICATE('0', 4 - LEN(ft.hourofday))  + cast(ft.hourofday as varchar(4))"), true, false, getNewlineSql(ti)).getSqlCharSequence() + " as _expr " +
                 " FROM ehr_lookups.treatment_frequency f " +
                 " JOIN ehr_lookups.treatment_frequency_times ft ON (f.meaning = ft.frequency) WHERE f.rowid = " + ExprColumn.STR_TABLE_ALIAS + ".frequency)" +
                 ", 'Custom')"
@@ -1141,7 +1145,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
             ColumnInfo idCol = ti.getColumn("Id");
             assert idCol != null;
 
-            SQLFragment sql = new SQLFragment("(SELECT " + ti.getSqlDialect().getGroupConcat(new SQLFragment("r.hx"), true, false, getChr(ti) + "(10)").getSqlCharSequence() + " FROM " + realTable.getSelectName() +
+            SQLFragment sql = new SQLFragment("(SELECT " + ti.getSqlDialect().getGroupConcat(new SQLFragment("r.hx"), true, false, getNewlineSql(ti)).getSqlCharSequence() + " FROM " + realTable.getSelectName() +
                     " r WHERE r.participantId = " + ExprColumn.STR_TABLE_ALIAS + ".participantId AND r.hx IS NOT NULL AND (r.category != ? OR r.category IS NULL) AND r.date = (SELECT max(date) as expr FROM " + realTable.getSelectName() + " r2 "
                     + " WHERE r2.participantId = r.participantId AND r2.hx is not null AND (r2.category != ? OR r2.category IS NULL)))", ONPRC_EHRManager.REPLACED_SOAP, ONPRC_EHRManager.REPLACED_SOAP
             );
@@ -1331,7 +1335,6 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         if (null == objectId || null == ti.getColumn("Id"))
             return;
 
-        String chr = ti.getSqlDialect().isPostgreSQL() ? "chr" : "char";
         SQLFragment latestHxSql = new SQLFragment("(SELECT " + prefix + " (" + "r.hx" + ") as _expr FROM " + realTable.getSelectName() +
                 " r WHERE "
                 + " r.caseid = " + ExprColumn.STR_TABLE_ALIAS + ".objectid AND "
@@ -1376,7 +1379,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         ti.addColumn(recentCeg_plan);
 
         //does not use caseId
-        SQLFragment p2Sql = new SQLFragment("(SELECT " + ti.getSqlDialect().getGroupConcat(new SQLFragment(ti.getSqlDialect().concatenate("'P2: '", "r.p2")), true, false, chr + "(10)").getSqlCharSequence() + " FROM " + realTable.getSelectName() +
+        SQLFragment p2Sql = new SQLFragment("(SELECT " + ti.getSqlDialect().getGroupConcat(new SQLFragment(ti.getSqlDialect().concatenate("'P2: '", "r.p2")), true, false, getNewlineSql(ti)).getSqlCharSequence() + " FROM " + realTable.getSelectName() +
                 " r WHERE "
                 //+ " r.caseid = " + ExprColumn.STR_TABLE_ALIAS + ".objectid AND "
                 + " r.participantId = " + ExprColumn.STR_TABLE_ALIAS + ".participantId AND r.p2 IS NOT NULL AND CAST(r.date AS date) = CAST(? as date) AND (r.category != ? OR r.category IS NULL))", new Date(), ONPRC_EHRManager.REPLACED_SOAP);
@@ -1390,7 +1393,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         yesterday.add(Calendar.DATE, -1);
 
         //does not use caseId
-        SQLFragment p2Sql2 = new SQLFragment("(SELECT " + ti.getSqlDialect().getGroupConcat(new SQLFragment(ti.getSqlDialect().concatenate("'P2: '", "r.p2")), true, false, chr + "(10)").getSqlCharSequence() + " FROM " + realTable.getSelectName() +
+        SQLFragment p2Sql2 = new SQLFragment("(SELECT " + ti.getSqlDialect().getGroupConcat(new SQLFragment(ti.getSqlDialect().concatenate("'P2: '", "r.p2")), true, false, getNewlineSql(ti)).getSqlCharSequence() + " FROM " + realTable.getSelectName() +
                 " r WHERE "
                 //+ " r.caseid = " + ExprColumn.STR_TABLE_ALIAS + ".objectid AND "
                 + " r.participantId = " + ExprColumn.STR_TABLE_ALIAS + ".participantId AND r.p2 IS NOT NULL AND CAST(r.date AS date) = CAST(? as date) AND (r.category != ? OR r.category IS NULL))", yesterday.getTime(), ONPRC_EHRManager.REPLACED_SOAP);
@@ -1400,7 +1403,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         ti.addColumn(yesterdaysP2);
 
         //uses caseId as a proxy for rounds
-        SQLFragment rmSql = new SQLFragment("(SELECT " + ti.getSqlDialect().getGroupConcat(new SQLFragment("r.remark"), true, false, chr + "(10)").getSqlCharSequence() + " FROM " + realTable.getSelectName() +
+        SQLFragment rmSql = new SQLFragment("(SELECT " + ti.getSqlDialect().getGroupConcat(new SQLFragment("r.remark"), true, false, getNewlineSql(ti)).getSqlCharSequence() + " FROM " + realTable.getSelectName() +
                 " r WHERE "
                 + " r.caseid = " + ExprColumn.STR_TABLE_ALIAS + ".objectid AND "
                 + " r.participantId = " + ExprColumn.STR_TABLE_ALIAS + ".participantId AND r.remark IS NOT NULL AND CAST(r.date AS date) = CAST(? as date) AND (r.category != ? OR r.category IS NULL))", new Date(), ONPRC_EHRManager.REPLACED_SOAP);
@@ -1411,7 +1414,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         ti.addColumn(todaysRemarks);
 
         //TODO: convert to a real column
-        SQLFragment assesmentSql = new SQLFragment("(SELECT " + ti.getSqlDialect().getGroupConcat(new SQLFragment("r.a"), true, false, chr + "(10)").getSqlCharSequence() + " FROM " + realTable.getSelectName() +
+        SQLFragment assesmentSql = new SQLFragment("(SELECT " + ti.getSqlDialect().getGroupConcat(new SQLFragment("r.a"), true, false, getNewlineSql(ti)).getSqlCharSequence() + " FROM " + realTable.getSelectName() +
                 " r WHERE "
                 + " r.caseid = " + ExprColumn.STR_TABLE_ALIAS + ".objectid AND "
                 + " r.participantId = " + ExprColumn.STR_TABLE_ALIAS + ".participantId AND r.a IS NOT NULL AND r.date = " + ExprColumn.STR_TABLE_ALIAS + ".date AND (r.category != ? OR r.category IS NULL))", ONPRC_EHRManager.REPLACED_SOAP);
@@ -1448,8 +1451,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         }
 
         //find any surgical procedures from the same date as this case
-        String chr = ti.getSqlDialect().isPostgreSQL() ? "chr" : "char";
-        SQLFragment procedureSql = new SQLFragment("(SELECT " + ti.getSqlDialect().getGroupConcat(new SQLFragment("p.name"), false, false, chr + "(10)").getSqlCharSequence() +
+        SQLFragment procedureSql = new SQLFragment("(SELECT " + ti.getSqlDialect().getGroupConcat(new SQLFragment("p.name"), false, false, getNewlineSql(ti)).getSqlCharSequence() +
                 " FROM " + realTable.getSelectName() + " r " +
                 " JOIN ehr_lookups.procedures p ON (p.rowid = r.procedureid) " +
                 //r.caseid = " + ExprColumn.STR_TABLE_ALIAS + ".objectid AND
@@ -1502,6 +1504,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         if (titleCol != null)
         {
             titleCol.setURL(detailsURL);
+            titleCol.setDescription("Task title or brief description");
         }
 
         var rowIdCol = ti.getMutableColumn("rowid");
@@ -1537,6 +1540,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
 
         updateCol.setLabel("Title");
         updateCol.setHidden(true);
+        updateCol.setDisplayWidth("150");
 
         updateTaskId.setLabel("Task Id");
         updateTaskId.setHidden(true);
@@ -1810,7 +1814,12 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
                         {
                             String runId = (String)ctx.get(new FieldKey(getBoundColumn().getFieldKey().getParent(), "runIdPLT"));
                             String id = (String)ctx.get(new FieldKey(getBoundColumn().getFieldKey().getParent(), "Id"));
-                            out.write("<span style=\"white-space:nowrap\"><a href=\"javascript:void(0);\" onclick=\"EHR.panel.LabworkSummaryPanel.showRunSummary(" + PageFlowUtil.jsString(runId) + ", '" + id + "', this);\">" + getFormattedHtml(ctx) + "</a></span>");
+                            out.write("<span style=\"white-space:nowrap\"><a class=\"labkey-text-link srg-chk-lst\" data-runid=\"" + PageFlowUtil.filter(runId) + "\" data-id=\"" + PageFlowUtil.filter(id) + "\">" + getFormattedHtml(ctx) + "</a></span>");
+                            if (!_surgeryChecklistClickHandlerAdded)
+                            {
+                                HttpView.currentPageConfig().addHandlerForQuerySelector("a.srg-chk-lst", "click", "EHR.panel.LabworkSummaryPanel.showRunSummary(this.attributes.getNamedItem('data-runid').value, this.attributes.getNamedItem('data-id').value, this);");
+                                _surgeryChecklistClickHandlerAdded = true;
+                            }
                         }
 
                         @Override
@@ -1841,7 +1850,12 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
                         {
                             String runId = (String) ctx.get(new FieldKey(getBoundColumn().getFieldKey().getParent(), "runIdHCT"));
                             String id = (String) ctx.get(new FieldKey(getBoundColumn().getFieldKey().getParent(), "Id"));
-                            out.write("<span style=\"white-space:nowrap\"><a href=\"javascript:void(0);\" onclick=\"EHR.panel.LabworkSummaryPanel.showRunSummary(" + PageFlowUtil.jsString(runId) + ", '" + id + "', this);\">" + getFormattedHtml(ctx) + "</a></span>");
+                            out.write("<span style=\"white-space:nowrap\"><a class=\"labkey-text-link hct-row\" data-runid=\"" + PageFlowUtil.filter(runId) + "\" data-id=\"" + PageFlowUtil.filter(id) + "\">" + getFormattedHtml(ctx) + "</a></span>");
+                            if (!_hctRowClickHandlerAdded)
+                            {
+                                HttpView.currentPageConfig().addHandlerForQuerySelector("a.hct-row", "click", "EHR.panel.LabworkSummaryPanel.showRunSummary(this.attributes.getNamedItem('data-runid').value, this.attributes.getNamedItem('data-id').value, this);");
+                                _hctRowClickHandlerAdded = true;
+                            }
                         }
 
                         @Override
@@ -1962,7 +1976,12 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
                         String objectid = (String)ctx.get("objectid");
                         String id = (String)ctx.get("Id");
 
-                        out.write("<span style=\"white-space:nowrap\"><a href=\"javascript:void(0);\" onclick=\"EHR.window.CaseHistoryWindow.showCaseHistory('" + objectid + "', '" + id + "', this);\">[Show Case Hx]</a></span>");
+                        out.write("<span style=\"white-space:nowrap\"><a class=\"labkey-text-link cs-h-row\" data-objectid=\"" + PageFlowUtil.filter(objectid) + "\" data-id=\"" + PageFlowUtil.filter(id) + "\">[Show Case Hx]</a></span>");
+                        if (!_caseHistoryClickHandlerAdded)
+                        {
+                            HttpView.currentPageConfig().addHandlerForQuerySelector("a.cs-h-row", "click", "EHR.window.CaseHistoryWindow.showCaseHistory(this.attributes.getNamedItem('data-objectid').value, this.attributes.getNamedItem('data-id').value, this);");
+                            _caseHistoryClickHandlerAdded = true;
+                        }
                     }
 
                     @Override

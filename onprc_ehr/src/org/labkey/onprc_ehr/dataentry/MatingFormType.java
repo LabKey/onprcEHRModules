@@ -43,6 +43,8 @@ public class MatingFormType extends TaskForm
             new AnimalDetailsFormSection(),
             new SimpleGridPanel("study", "matings", "Matings")
         ));
+
+        setDisplayReviewRequired(true);
     }
 
     @Override

@@ -29,6 +29,12 @@
                     <column columnName="p2">
                         <columnTitle>Most Recent P2</columnTitle>
                     </column>
+                    <column columnName="lastbiochem">
+                        <columnTitle>Date of Last Biochemistry</columnTitle>
+                    </column>
+                    <column columnName="biochemtype">
+                        <columnTitle>Biochemistry Panel</columnTitle>
+                    </column>
                 </columns>
             </table>
         </tables>
