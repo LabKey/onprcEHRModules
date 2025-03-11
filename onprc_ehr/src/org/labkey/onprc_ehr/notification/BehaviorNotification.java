@@ -105,12 +105,39 @@ public class BehaviorNotification extends ColonyAlertsNotification
         surgeryCasesRecentlyClosed(c, u, msg);
         pairIdConflicts(c, u , msg);
         NHPTraining_BehaviorAlert(c, u , msg);
+        AlopeciaAlert(c, u, msg);
         dcmNotesAlert(c, u , msg);
 
         notesEndingToday(c, u, msg, Arrays.asList("BSU Notes"), null);
         saveValues(c, toSave);
 
         return msg.toString();
+    }
+
+    // Added by Kollil 03/07/2025, Tkt # 12145
+    private void AlopeciaAlert(final Container c, User u, final StringBuilder msg)
+    {
+        if (QueryService.get().getUserSchema(u, c, "study") == null) {
+            msg.append("<b>Warning: The onprc_ehr schema has not been enabled in this folder, so the alert cannot run!<p><hr>");
+            return;
+        }
+        TableInfo ti = QueryService.get().getUserSchema(u, c, "study").getTable("BehaviorAlertforAlopecia",ContainerFilter.Type.AllFolders.create(c, u));
+//        ((ContainerFilterable) ti).setContainerFilter(ContainerFilter.Type.AllFolders.create(u);
+        TableSelector ts = new TableSelector(ti, null, null);
+
+        long total = ts.getRowCount();
+        msg.append("<b>List of animals receive an alopecia score of 4 or 5, but does not have an open behavioral case for alopecia:</b><p>");
+        if (total > 0)
+        {
+            msg.append("There are " + total + " entries found. ");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "BehaviorAlertforAlopecia", null)  + "'>Click here to view them</a></p>\n");
+            msg.append("<hr>\n\n");
+        }
+        else
+        {
+            msg.append("<b>WARNING: There are no animals who receive an alopecia score of 4 or 5, but does not have an open behavioral case for alopecia !</b><br><hr>\n");
+        }
+
     }
 
     // Added by Kollil 11/04/2020
