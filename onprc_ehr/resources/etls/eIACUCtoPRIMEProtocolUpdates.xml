@@ -2,7 +2,7 @@
 
 <etl xmlns="http://labkey.org/etl/xml">
 
-    <name>Update Protocols in EHR First Try</name>
+    <name>Update Protocols in EHR</name>
 
     <description>Runs stored procedures to update the protocol table in schema ehr.</description>
 
@@ -14,9 +14,9 @@
             </procedure>
         </transform>
 
-        <transform id="enddateExpiredProtocolsProtocol" type="StoredProcedure">
-            <description>Adds enddate data to the protocol table in ehr.</description>
-            <procedure schemaName="onprc_ehr" procedureName="ExpiredProtocolUpdate">
+        <transform id="eIACUCtoPRIMEProtocolUpdates" type="StoredProcedure">
+            <description>Runs the processes to handl e end date of Expired and update of Renewed Protocols.</description>
+            <procedure schemaName="onprc_ehr" procedureName="eIACUCtoPRIMEProtocolUpdates">
             </procedure>
         </transform>
 
