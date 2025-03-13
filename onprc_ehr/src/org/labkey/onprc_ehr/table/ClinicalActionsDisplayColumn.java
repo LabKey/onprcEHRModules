@@ -22,6 +22,7 @@ import org.labkey.api.data.RenderContext;
 import org.labkey.api.view.HttpView;
 import org.labkey.api.util.PageFlowUtil;
 import org.labkey.api.view.template.ClientDependency;
+import org.labkey.api.writer.HtmlWriter;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -40,13 +41,13 @@ public class ClinicalActionsDisplayColumn extends DataColumn
     private boolean _clickHandlerAdded = false;
 
     @Override
-    public void renderGridCellContents(RenderContext ctx, Writer out) throws IOException
+    public void renderGridCellContents(RenderContext ctx, Writer oldWriter, HtmlWriter out) throws IOException
     {
         Object o = getValue(ctx);
         if (o != null)
         {
-            out.write("<a class=\"labkey-text-link cadc-row\" data-obj=\"" + PageFlowUtil.filter(o.toString()) + "\">[Actions]");
-            out.write("</a>");
+            oldWriter.write("<a class=\"labkey-text-link cadc-row\" data-obj=\"" + PageFlowUtil.filter(o.toString()) + "\">[Actions]");
+            oldWriter.write("</a>");
             if (!_clickHandlerAdded)
             {
                 HttpView.currentPageConfig().addHandlerForQuerySelector("a.cadc-row", "click", "EHR.panel.ClinicalManagementPanel.displayActionMenu(this, this.attributes.getNamedItem('data-obj').value);" );
