@@ -150,7 +150,8 @@ LEFT JOIN (
   GROUP BY u.Id
 ) u ON (u.Id = d.Id)
 
-
 WHERE d.calculated_status = 'Alive'
+--   Added by Kollil on 3/14/2025. Refer to Tkt # 12174
+And d.species in ('RHESUS MACAQUE', 'JAPANESE MACAQUE')
 
 ) t
