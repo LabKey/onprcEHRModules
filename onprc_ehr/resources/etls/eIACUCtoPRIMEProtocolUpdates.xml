@@ -2,7 +2,7 @@
 
 <etl xmlns="http://labkey.org/etl/xml">
 
-    <name>Update Protocols in EHR</name>
+    <name>Update Protocols in EHR for eIACUC</name>
 
     <description>Runs stored procedures to update the protocol table in schema ehr.</description>
 
