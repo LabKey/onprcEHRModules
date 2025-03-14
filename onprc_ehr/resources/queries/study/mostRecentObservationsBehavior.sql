@@ -1,12 +1,19 @@
 
 --- Created: 8-23-2018  R.Blasa
-select a.id,a.date,a.reviewdate,
-a.isactive,
-a.allproblemcategories,
-a.caseHistory,
-a.isopen,
-b.observations
- from study.cases a, mostrecentobservationsforcase b
-where a.id = b.id
-and a.objectid = b.caseid
-and a.category = 'Behavior'
+-- Converted to left join to allow cases to appear even though the observation is linked to
+-- another animal's case or there is no observation.
+SELECT
+    c.id,
+    c.date,
+    c.reviewdate,
+    c.isactive,
+    c.allProblemCategories,
+    c.caseHistory,
+    c.isOpen,
+    c.objectid,
+    o.observations
+FROM study.cases AS c
+LEFT JOIN study.mostrecentobservationsforcase AS o
+    ON c.id = o.id
+        AND c.objectid = o.caseid
+WHERE c.category = 'Behavior'
