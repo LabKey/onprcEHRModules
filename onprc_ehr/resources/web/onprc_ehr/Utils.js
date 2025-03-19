@@ -44,6 +44,12 @@ ONPRC.Utils = new function(){
             return baseUrl + '/' + ssrsFolder + '/' + reportPath + '&' + LABKEY.ActionURL.queryString(params);
         },
 
+        /**
+         * Handles the SessionID and HostName parameters.
+         * @param extraParams any extra parameters to add
+         * @param clearSession whether to add 'rs:ClearSession=true'
+         * @param command whether to add 'rs:Command=render'
+         */
         getSsrsParams: function(extraParams, clearSession, command) {
             if (!this.sessionId) {
                 const message = 'Failed to preload session ID for SSRS callback';

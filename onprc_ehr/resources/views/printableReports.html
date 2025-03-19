@@ -271,7 +271,7 @@
                             }
 
                             return ONPRC.Utils.getSsrsReportUrl('Clinical/ActiveTreatmentsRevised',
-                                    ONPRC.Utils.getSsrsParams(params));
+                                    ONPRC.Utils.getSsrsParams(params, true, true));
                         },
                         menu: [{
                             text: 'Print',
@@ -354,7 +354,7 @@
                             }
 
                             return ONPRC.Utils.getSsrsReportUrl('Clinical/ActiveTreatmentsRevised',
-                                    ONPRC.Utils.getSsrsParams(params));
+                                    ONPRC.Utils.getSsrsParams(params, true, true));
                         },
                         menu: [{
                             text: 'Print',
@@ -412,7 +412,7 @@
                                 return;
 
                             return ONPRC.Utils.getSsrsReportUrl('Clinical/ActiveClinicalCasesP2Sort',
-                                    ONPRC.Utils.getSsrsParams(params));
+                                    ONPRC.Utils.getSsrsParams(params, true, true));
                         },
                         menu: [{
                             text: 'Print',
@@ -492,7 +492,7 @@
                             }
 
                             return ONPRC.Utils.getSsrsReportUrl('Clinical/ActiveTreatmentsCatch',
-                                    ONPRC.Utils.getSsrsParams(params));
+                                    ONPRC.Utils.getSsrsParams(params, true, true));
                         },
                         menu: [{
                             text: 'Print',
@@ -553,7 +553,7 @@
                                 return;
 
                             return ONPRC.Utils.getSsrsReportUrl('Clinical/ActiveSurgicalCases',
-                                ONPRC.Utils.getSsrsParams(params));
+                                ONPRC.Utils.getSsrsParams(params, true, true));
                         },
                         menu: [{
                             text: 'Print',
@@ -632,7 +632,7 @@
                             }
 
                             return ONPRC.Utils.getSsrsReportUrl('Clinical/ActiveTreatmentsRevised',
-                                    ONPRC.Utils.getSsrsParams(params));
+                                    ONPRC.Utils.getSsrsParams(params, true, true));
                         },
                         menu: [{
                             text: 'Print',
@@ -738,12 +738,13 @@
                             if (!value)
                                 return;
 
-                            var params = ONPRC.Utils.getSsrsParams({}, true, true);
+                            const params = {};
 
                             if (!Ext4.isEmpty(value))
                                 params.Groups = value;
 
-                            return ONPRC.Utils.getSsrsReportUrl('Clinical/WeightSheetsGroup', params);
+                            return ONPRC.Utils.getSsrsReportUrl('Clinical/WeightSheetsGroup',
+                                    ONPRC.Utils.getSsrsParams(params, true, true));
                         },
                         menu: [{
                             text: 'Print',
@@ -813,7 +814,8 @@
                             if (!Ext4.isEmpty(value))
                                 params.AnimalID = val;
 
-                            return ONPRC.Utils.getSsrsReportUrl('Clinical/WeightSheetsID', ONPRC.Utils.getSsrsParams(params, true, true));
+                            return ONPRC.Utils.getSsrsReportUrl('Clinical/WeightSheetsID',
+                                    ONPRC.Utils.getSsrsParams(params, true, true));
                         },
                         menu: [{
                             text: 'Print',
