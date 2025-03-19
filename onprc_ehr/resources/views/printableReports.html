@@ -123,25 +123,16 @@
                             var panel = this.up('#sheetPanel');
                             var userName = panel.down('#userField').getValue();
 
-                            var params = panel.getParams(true, true);
                             if (!userName) {
                                 Ext4.Msg.alert('Error', 'Please choose a vet');
                                 return;
                             }
 
-                            if (userName)
-                              params['assignedvet'] = userName;
+                            var params = panel.getParams(true, true, ';');
+                            params['assignedvet'] = userName;
 
-                            if (params.Rooms)
-                                params.Rooms = params.Rooms.join(';');
-
-                            var url = LABKEY.getModuleProperty('ONPRC_EHR', 'SSRSServerURL');
-                            var ssrsFolder = LABKEY.getModuleProperty('ONPRC_EHR', 'SSRSReportFolder');
-                            ssrsFolder = '/' + ssrsFolder  + '/' + 'Clinical/ActiveClinicalCasesVet';
-
-                            url += ssrsFolder + '&' + LABKEY.ActionURL.queryString(params);
-
-                            return url;
+                            return ONPRC.Utils.getSsrsReportUrl('Clinical/ActiveClinicalCasesVet',
+                                ONPRC.Utils.getSsrsParams(params));
                         },
                         menu: [{
                             text: 'Print',
@@ -192,20 +183,12 @@
                         border: true,
                         getUrlString: function(){
                             var panel = this.up('#sheetPanel');
-                            var params = panel.getParams(true, true);
+                            var params = panel.getParams(true, true, ';');
                             if (!params)
                                 return;
 
-                            if (params.Rooms)
-                                params.Rooms = params.Rooms.join(';');
-
-                            var url = LABKEY.getModuleProperty('ONPRC_EHR', 'SSRSServerURL');
-                            var ssrsFolder = LABKEY.getModuleProperty('ONPRC_EHR', 'SSRSReportFolder');
-                            ssrsFolder = '/' + ssrsFolder  + '/' + 'Clinical/ActiveClinicalCasesNew';
-
-                            url += ssrsFolder + '&' + LABKEY.ActionURL.queryString(params);
-
-                            return url;
+                            return ONPRC.Utils.getSsrsReportUrl('Clinical/ActiveClinicalCasesNew',
+                                ONPRC.Utils.getSsrsParams(params));
                         },
                         menu: [{
                             text: 'Print',
@@ -266,12 +249,9 @@
                         border: true,
                         getUrlString: function(){
                             var panel = this.up('#sheetPanel');
-                            var params = panel.getParams(true, true);
+                            var params = panel.getParams(true, true, ';');
                             if (!params)
                                 return;
-
-                            if (params.Rooms)
-                                params.Rooms = params.Rooms.join(';');
 
                             var date = panel.down('#medicationDateField').getValue();
                             if (!date){
@@ -290,12 +270,8 @@
                                 params['TimeOfDay'] = timeOfDay;
                             }
 
-                            var url = LABKEY.getModuleProperty('ONPRC_EHR', 'SSRSServerURL');
-                            var ssrsFolder = LABKEY.getModuleProperty('ONPRC_EHR', 'SSRSReportFolder');
-                            ssrsFolder = '/' + ssrsFolder  + '/' + 'Clinical/ActiveTreatmentsRevised';
-
-                            url += ssrsFolder + '&' + LABKEY.ActionURL.queryString(params);
-                            return url;
+                            return ONPRC.Utils.getSsrsReportUrl('Clinical/ActiveTreatmentsRevised',
+                                    ONPRC.Utils.getSsrsParams(params));
                         },
                         menu: [{
                             text: 'Print',
@@ -358,12 +334,9 @@
                         border: true,
                         getUrlString: function(){
                             var panel = this.up('#sheetPanel');
-                            var params = panel.getParams(true, true);
+                            var params = panel.getParams(true, true, ';');
                             if (!params)
                                 return;
-
-                            if (params.Rooms)
-                                params.Rooms = params.Rooms.join(';');
 
                             var date = panel.down('#dietDateField').getValue();
                             if (!date){
@@ -380,12 +353,8 @@
                                 params['TimeOfDay'] = timeOfDay;
                             }
 
-                            var url = LABKEY.getModuleProperty('ONPRC_EHR', 'SSRSServerURL');
-                            var ssrsFolder = LABKEY.getModuleProperty('ONPRC_EHR', 'SSRSReportFolder');
-                            ssrsFolder = '/' + ssrsFolder  + '/' + 'Clinical/ActiveTreatmentsRevised';
-
-                            url += ssrsFolder + '&' + LABKEY.ActionURL.queryString(params);
-                            return url;
+                            return ONPRC.Utils.getSsrsReportUrl('Clinical/ActiveTreatmentsRevised',
+                                    ONPRC.Utils.getSsrsParams(params));
                         },
                         menu: [{
                             text: 'Print',
@@ -438,20 +407,12 @@
                         border: true,
                         getUrlString: function(){
                             var panel = this.up('#sheetPanel');
-                            var params = panel.getParams(true, true);
+                            var params = panel.getParams(true, true, ';');
                             if (!params)
                                 return;
 
-                            if (params.Rooms)
-                                params.Rooms = params.Rooms.join(';');
-
-                            var url = LABKEY.getModuleProperty('ONPRC_EHR', 'SSRSServerURL');
-                            var ssrsFolder = LABKEY.getModuleProperty('ONPRC_EHR', 'SSRSReportFolder');
-                            ssrsFolder = '/' + ssrsFolder  + '/' + 'Clinical/ActiveClinicalCasesP2Sort';
-
-                            url += ssrsFolder + '&' + LABKEY.ActionURL.queryString(params);
-
-                            return url;
+                            return ONPRC.Utils.getSsrsReportUrl('Clinical/ActiveClinicalCasesP2Sort',
+                                    ONPRC.Utils.getSsrsParams(params));
                         },
                         menu: [{
                             text: 'Print',
@@ -511,12 +472,9 @@
                         border: true,
                         getUrlString: function(){
                             var panel = this.up('#sheetPanel');
-                            var params = panel.getParams(true, true);
+                            var params = panel.getParams(true, true, ';');
                             if (!params)
                                 return;
-
-                            if (params.Rooms)
-                                params.Rooms = params.Rooms.join(';');
 
                             var date = panel.down('#medicationDateField').getValue();
                             if (!date){
@@ -533,12 +491,8 @@
                                 params['TimeOfDay'] = timeOfDay;
                             }
 
-                            var url = LABKEY.getModuleProperty('ONPRC_EHR', 'SSRSServerURL');
-                            var ssrsFolder = LABKEY.getModuleProperty('ONPRC_EHR', 'SSRSReportFolder');
-                            ssrsFolder = '/' + ssrsFolder  + '/' + 'Clinical/ActiveTreatmentsCatch';
-
-                            url += ssrsFolder + '&' + LABKEY.ActionURL.queryString(params);
-                            return url;
+                            return ONPRC.Utils.getSsrsReportUrl('Clinical/ActiveTreatmentsCatch',
+                                    ONPRC.Utils.getSsrsParams(params));
                         },
                         menu: [{
                             text: 'Print',
@@ -594,19 +548,12 @@
                         border: true,
                         getUrlString: function(){
                             var panel = this.up('#sheetPanel');
-                            var params = panel.getParams(true, true);
+                            var params = panel.getParams(true, true, ';');
                             if (!params)
                                 return;
 
-                            if (params.Rooms)
-                                params.Rooms = params.Rooms.join(';');
-
-                            var url = LABKEY.getModuleProperty('ONPRC_EHR', 'SSRSServerURL');
-                            var ssrsFolder = LABKEY.getModuleProperty('ONPRC_EHR', 'SSRSReportFolder');
-                            ssrsFolder = '/' + ssrsFolder  + '/' + 'Clinical/ActiveSurgicalCases';
-
-                            url += ssrsFolder + '&' + LABKEY.ActionURL.queryString(params);
-                            return url;
+                            return ONPRC.Utils.getSsrsReportUrl('Clinical/ActiveSurgicalCases',
+                                ONPRC.Utils.getSsrsParams(params));
                         },
                         menu: [{
                             text: 'Print',
@@ -665,12 +612,9 @@
                         border: true,
                         getUrlString: function(){
                             var panel = this.up('#sheetPanel');
-                            var params = panel.getParams(true, true);
+                            var params = panel.getParams(true, true, ';');
                             if (!params)
                                 return;
-
-                            if (params.Rooms)
-                                params.Rooms = params.Rooms.join(';');
 
                             var date = panel.down('#surgicalMedicationDateField').getValue();
                             if (!date){
@@ -687,12 +631,8 @@
                                 params['TimeOfDay'] = timeOfDay;
                             }
 
-                            var url = LABKEY.getModuleProperty('ONPRC_EHR', 'SSRSServerURL');
-                            var ssrsFolder = LABKEY.getModuleProperty('ONPRC_EHR', 'SSRSReportFolder');
-                            ssrsFolder = '/' + ssrsFolder  + '/' + 'Clinical/ActiveTreatmentsRevised';
-
-                            url += ssrsFolder + '&' + LABKEY.ActionURL.queryString(params);
-                            return url;
+                            return ONPRC.Utils.getSsrsReportUrl('Clinical/ActiveTreatmentsRevised',
+                                    ONPRC.Utils.getSsrsParams(params));
                         },
                         menu: [{
                             text: 'Print',
@@ -746,17 +686,8 @@
                             if (!params)
                                 return;
 
-                            Ext4.apply(params, {
-                                'rs:ClearSession': true,
-                                'rs:Command': 'render'
-                            });
-
-                            var url = LABKEY.getModuleProperty('ONPRC_EHR', 'SSRSServerURL');
-                            var ssrsFolder = LABKEY.getModuleProperty('ONPRC_EHR', 'SSRSReportFolder');
-                            ssrsFolder = '/' + ssrsFolder  + '/' + 'Clinical/WeightSheetsNew';
-
-                            url += ssrsFolder + '&' + LABKEY.ActionURL.queryString(params);
-                            return url;
+                            return ONPRC.Utils.getSsrsReportUrl('Clinical/WeightSheetsNew',
+                                    ONPRC.Utils.getSsrsParams(params, true, true));
                         },
                         menu: [{
                             text: 'Print',
@@ -983,8 +914,8 @@
                 return items;
             },
 
-            getParams: function(suppressErrors, skipRoomsIfAllSelected){
-                var params = ONPRC.Utils.getSsrsParams({}, true, true);
+            getParams: function(suppressErrors, skipRoomsIfAllSelected, roomSeparator) {
+                var params = {};
 
                 var roomField = this.down('#roomField');
                 var rooms = roomField.getValue() || [];
@@ -992,15 +923,15 @@
 
                 if (!rooms.length && !suppressErrors){
                     Ext4.Msg.alert('Error', 'Must select an area or room');
-                    return;
+                    return false;
                 }
 
-                //NOTE: we now include both area + rooms if supplied.  we reply on the combos to be smart about turning
+                //NOTE: we now include both area + rooms if supplied.  we rely on the combos to be smart about turning
                 //off area if the user picked a set of rooms that differs from the definition
                 //if all rooms are selected, treat this the same as if no rooms are selected
                 if (rooms.length){
                     if (!skipRoomsIfAllSelected || rooms.length < roomField.store.getCount()){
-                        params.Rooms = rooms;
+                        params.Rooms = roomSeparator ? rooms.join(roomSeparator) : rooms;
                     }
                 }
 

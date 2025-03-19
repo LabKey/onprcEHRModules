@@ -5,6 +5,8 @@
         if(!ctx)
             return;
 
+        ONPRC.Utils.preloadSession();
+
         Ext4.create('Ext.panel.Panel', {
             width: 400,
             border: false,
@@ -72,12 +74,12 @@
                     //Modified: 1-17-2019  R.Blasa
                     if (!hideHistory){
                         window.location = ONPRC.Utils.getSsrsReportUrl('Clinical/SalesMedicalHistoryReport',
-                                LABKEY.ActionURL.queryString(ONPRC.Utils.getSsrsParams({
+                                ONPRC.Utils.getSsrsParams({
                                     Redacted: redacted ? 'true' : 'false',
                                     AnimalId: val,
                                     minDate: Ext4.Date.format(mindate1, 'Y-m-d'),      //Added: 11-18-2016 R.Blasa
                                     maxDate: Ext4.Date.format(maxdate1, 'Y-m-d')
-                                }, true)));
+                                }, true));
                     }
                     else {
                         window.location = LABKEY.ActionURL.buildURL('ehr', 'clinicalHistoryExport', null, {
