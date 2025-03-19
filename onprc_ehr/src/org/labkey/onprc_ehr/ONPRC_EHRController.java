@@ -15,45 +15,20 @@
  */
 package org.labkey.onprc_ehr;
 
-import jakarta.servlet.http.HttpServletResponse;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 import org.labkey.api.action.ApiResponse;
 import org.labkey.api.action.ApiSimpleResponse;
-import org.labkey.api.action.ConfirmAction;
-import org.labkey.api.action.ExportAction;
 import org.labkey.api.action.MutatingApiAction;
 import org.labkey.api.action.ReadOnlyApiAction;
-import org.labkey.api.action.SimpleViewAction;
 import org.labkey.api.action.SpringActionController;
 import org.labkey.api.data.Container;
 import org.labkey.api.data.ContainerManager;
-import org.labkey.api.data.CoreSchema;
-import org.labkey.api.data.SimpleFilter;
-import org.labkey.api.data.TableInfo;
-import org.labkey.api.data.TableSelector;
 import org.labkey.api.ehr.security.EHRDataEntryPermission;
-import org.labkey.api.files.FileContentService;
-import org.labkey.api.query.FieldKey;
-import org.labkey.api.security.AdminConsoleAction;
 import org.labkey.api.security.RequiresPermission;
-import org.labkey.api.security.RequiresSiteAdmin;
-import org.labkey.api.security.User;
-import org.labkey.api.security.permissions.AdminPermission;
 import org.labkey.api.security.permissions.ReadPermission;
-import org.labkey.api.util.PageFlowUtil;
-import org.labkey.api.util.URLHelper;
 import org.labkey.api.view.ActionURL;
-import org.labkey.api.view.HtmlView;
-import org.labkey.api.view.NavTree;
 import org.springframework.validation.BindException;
-import org.springframework.validation.Errors;
-import org.springframework.web.servlet.ModelAndView;
 
-import java.io.File;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -74,7 +49,7 @@ public class ONPRC_EHRController extends SpringActionController
     }
 
     @RequiresPermission(ReadPermission.class)
-    public class GetNavItemsAction extends ReadOnlyApiAction<Object>
+    public static class GetNavItemsAction extends ReadOnlyApiAction<Object>
     {
         @Override
         public ApiResponse execute(Object form, BindException errors)
@@ -164,291 +139,22 @@ public class ONPRC_EHRController extends SpringActionController
         }
     }
 
-    public static class EtlAdminForm
-    {
-        private Boolean etlStatus;
-        private String config;
-        private String timestamps;
-        private String labkeyUser;
-        private String labkeyContainer;
-        private String jdbcUrl;
-        private String jdbcDriver;
-        private String runIntervalInMinutes;
-
-        public Boolean getEtlStatus()
-        {
-            return etlStatus;
-        }
-
-        public void setEtlStatus(Boolean etlStatus)
-        {
-            this.etlStatus = etlStatus;
-        }
-
-        public String getConfig()
-        {
-            return config;
-        }
-
-        public void setConfig(String config)
-        {
-            this.config = config;
-        }
-
-        public String getTimestamps()
-        {
-            return timestamps;
-        }
-
-        public void setTimestamps(String timestamps)
-        {
-            this.timestamps = timestamps;
-        }
-
-        public String getLabkeyUser()
-        {
-            return labkeyUser;
-        }
-
-        public void setLabkeyUser(String labkeyUser)
-        {
-            this.labkeyUser = labkeyUser;
-        }
-
-        public String getLabkeyContainer()
-        {
-            return labkeyContainer;
-        }
-
-        public void setLabkeyContainer(String labkeyContainer)
-        {
-            this.labkeyContainer = labkeyContainer;
-        }
-
-        public String getJdbcUrl()
-        {
-            return jdbcUrl;
-        }
-
-        public void setJdbcUrl(String jdbcUrl)
-        {
-            this.jdbcUrl = jdbcUrl;
-        }
-
-        public String getJdbcDriver()
-        {
-            return jdbcDriver;
-        }
-
-        public void setJdbcDriver(String jdbcDriver)
-        {
-            this.jdbcDriver = jdbcDriver;
-        }
-
-        public String getRunIntervalInMinutes()
-        {
-            return runIntervalInMinutes;
-        }
-
-        public void setRunIntervalInMinutes(String runIntervalInMinutes)
-        {
-            this.runIntervalInMinutes = runIntervalInMinutes;
-        }
-    }
-
-    @AdminConsoleAction
-    public class ShowEtlLogAction extends ExportAction
+    /**
+     * Used to get the HTTP Session ID for SSRS integration. See ONPRC.Utils.getSsrsParams().
+     * This allows the cookie to be marked as HTTP-only
+     */
+    @RequiresPermission(ReadPermission.class)
+    public static class GetSessionIdAction extends MutatingApiAction<Object>
     {
         @Override
-        public void export(Object o, HttpServletResponse response, BindException errors) throws Exception
+        public Object execute(Object o, BindException errors)
         {
-            PageFlowUtil.streamLogFile(response, 0, getLogFile("ehr-etl.log"));
-        }
-    }
-
-    private File getLogFile(String name)
-    {
-        File tomcatHome = new File(System.getProperty("catalina.home"));
-        return new File(tomcatHome, "logs/" + name);
-    }
-
-    @RequiresPermission(AdminPermission.class)
-    public class RunEHRTestsAction extends SimpleViewAction<RunEHRTestsForm>
-    {
-        public void validateCommand(RunEHRTestsForm form, Errors errors)
-        {
-
-        }
-
-        public URLHelper getSuccessURL(RunEHRTestsForm form)
-        {
-            return getContainer().getStartURL(getUser());
-        }
-
-        @Override
-        public ModelAndView getView(RunEHRTestsForm form, BindException errors) throws Exception
-        {
-            StringBuilder msg = new StringBuilder();
-
-            ONPRC_EHRTestHelper helper = new ONPRC_EHRTestHelper();
-            Method method = helper.getClass().getMethod("testBloodCalculation", Container.class, User.class);
-            method.invoke(helper, getContainer(), getUser());
-
-
-
-//            List<String> messages = EHRManager.get().verifyDatasetResources(getContainer(),  getUser());
-//            for (String message : messages)
-//            {
-//                msg.append("\t").append(message).append("<br>");
-//            }
-//
-//            if (messages.size() == 0)
-//                msg.append("There are no missing files");
-
-            return new HtmlView(msg.toString());
-        }
-
-        @Override
-        public void addNavTrail(NavTree tree)
-        {
-            tree.addChild("ONPRC EHR Tests");
-        }
-    }
-
-    public static class RunEHRTestsForm
-    {
-        String[] _tests;
-
-        public String[] getTests()
-        {
-            return _tests;
-        }
-
-        public void setTests(String[] tests)
-        {
-            _tests = tests;
-        }
-    }
-
-    @RequiresSiteAdmin
-    public class FixWorkbookPathsAction extends ConfirmAction<Object>
-    {
-        @Override
-        public boolean handlePost(Object form, BindException errors)
-        {
-            inspectWorkbooks(true);
-
-            return true;
-        }
-
-        @Override
-        public ModelAndView getConfirmView(Object form, BindException errors)
-        {
-            List<String> msgs = inspectWorkbooks(false);
-
-            return new HtmlView(StringUtils.join(msgs, "<br><br>"));
-        }
-
-        @Override
-        public void validateCommand(Object form, Errors errors)
-        {
-
-        }
-
-        @Override
-        public @NotNull ActionURL getSuccessURL(Object form)
-        {
-            return getContainer().getStartURL(getUser());
-        }
-
-        private int getChildFileCount(File f)
-        {
-            int count = 0;
-            if (f.isDirectory())
-            {
-                for (File child : f.listFiles())
-                {
-                    count += getChildFileCount(child);
-                }
-            }
-            else
-            {
-                count++;
-            }
-
-            return count;
-        }
-
-        private List<String> inspectWorkbooks(final boolean makeChanges)
-        {
-            final List<String> msgs = new ArrayList<>();
-            TableInfo containers = CoreSchema.getInstance().getTableInfoContainers();
-            TableSelector ts = new TableSelector(containers, new SimpleFilter(FieldKey.fromString("type"), "workbook"), null);
-            ts.forEach(rs ->
-            {
-                try
-                {
-                    Container workbook = ContainerManager.getForId(rs.getString("entityid"));
-                    FileContentService svc = FileContentService.get();
-                    File parentRoot = svc.getFileRoot(workbook.getParent());
-                    if (parentRoot != null)
-                    {
-                        File oldDirectory = new File(parentRoot, "workbook-" + workbook.getRowId());
-                        if (oldDirectory.exists())
-                        {
-                            File target = new File(parentRoot, workbook.getName());
-                            if (target.exists())
-                            {
-                                int count = getChildFileCount(target);
-                                if (count == 0)
-                                {
-                                    msgs.add("no files in target, deleting: " + target.getPath() + ", and moving from: " + oldDirectory.getPath());
-                                    if (makeChanges)
-                                    {
-                                        FileUtils.deleteDirectory(target);
-                                        FileUtils.moveDirectory(oldDirectory, target);
-                                        svc.fireFileMoveEvent(oldDirectory, target, getUser(), workbook);
-                                    }
-                                }
-                                else
-                                {
-                                    msgs.add("has files, copy/merge from: " + oldDirectory.getPath() + ", to: " + target.getPath());
-                                    if (makeChanges)
-                                    {
-                                        FileUtils.copyDirectory(oldDirectory, target);
-                                        FileUtils.deleteDirectory(oldDirectory);
-                                        svc.fireFileMoveEvent(oldDirectory, target, getUser(), workbook);
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                msgs.add("no existing folder, moving from: " + oldDirectory.getPath() + ", to: " + target.getPath());
-                                if (makeChanges)
-                                {
-                                    FileUtils.moveDirectory(oldDirectory, target);
-                                    svc.fireFileMoveEvent(oldDirectory, target, getUser(), workbook);
-                                }
-                            }
-                        }
-                        else
-                        {
-                            msgs.add("old directory does not exist: " + oldDirectory.getPath());
-                        }
-                    }
-                }
-                catch (Exception e)
-                {
-                    throw new RuntimeException(e);
-                }
-            });
-
-            return msgs;
+            return Map.of("SessionId", getViewContext().getRequest().getSession(true).getId());
         }
     }
 
     @RequiresPermission(ReadPermission.class)
-    public class GetAnimalLockAction extends ReadOnlyApiAction<Object>
+    public static class GetAnimalLockAction extends ReadOnlyApiAction<Object>
     {
         @Override
         public ApiResponse execute(Object form, BindException errors)
@@ -458,7 +164,7 @@ public class ONPRC_EHRController extends SpringActionController
     }
 
     @RequiresPermission(EHRDataEntryPermission.class)
-    public class SetAnimalLockAction extends MutatingApiAction<LockAnimalForm>
+    public static class SetAnimalLockAction extends MutatingApiAction<LockAnimalForm>
     {
         @Override
         public ApiResponse execute(LockAnimalForm form, BindException errors)
