@@ -49,7 +49,7 @@ WITH LatestObservationDates AS (
              fo.date,
              CASE
                  WHEN fo.category IS NULL AND fo.observation IS NOT NULL
-                     THEN (fo.observation || fo.remark)
+                     THEN (fo.observation ||  '. ' || fo.remark)
                  WHEN fo.category IS NOT NULL AND fo.observation IS NULL
                      THEN (fo.category || fo.remark)
                  WHEN fo.category IS NOT NULL AND fo.area IS NULL
