@@ -111,7 +111,8 @@ public abstract class AbstractGenericONPRC_EHRTest extends AbstractGenericEHRTes
                 new ModulePropertyValue("ONPRC_EHR", "/" + getProjectName(), "MHC_Container", "/" + getContainerPath()),
                 // Set values for rudimentary validation of SSRS reporting links
                 new ModulePropertyValue("ONPRC_EHR", "/" + getProjectName(), "SSRSReportFolder", "DummySSRSFolder"),
-                new ModulePropertyValue("ONPRC_EHR", "/" + getProjectName(), "SSRSServerURL", "http://ssrs.test")
+                // Treat the LabKey instance as the SSRS target. It'll give a 404 but it'll be enough for testing that we generate links
+                new ModulePropertyValue("ONPRC_EHR", "/" + getProjectName(), "SSRSServerURL", WebTestHelper.getBaseURL())
         );
     }
 

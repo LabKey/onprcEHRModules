@@ -714,7 +714,6 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         switchToMainWindow();
         closeExtraWindows();
 
-
         // Now try the CITES Report
         goToProjectHome();
         waitAndClickAndWait(Locator.tagContainingText("a", "More Reports"));
