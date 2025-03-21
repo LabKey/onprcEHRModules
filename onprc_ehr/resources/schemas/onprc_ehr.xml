@@ -1485,6 +1485,20 @@
 
         </columns>
     </table>
+    <table tableName="housingProblems" tableDbType="TABLE" useColumnOrder="true">
+        <tableTitle>Animals with Multiple Housing Entries</tableTitle>
+        <columns>
+            <column columnName="Id">
+                <columnTitle>Animal ID</columnTitle>
+            </column>
+            <column columnName="room">
+                <columnTitle>Rooms</columnTitle>
+            </column>
+            <column columnName="count1">
+                <columnTitle>Number of Rooms</columnTitle>
+            </column>
+        </columns>
+    </table>
 
 
 
