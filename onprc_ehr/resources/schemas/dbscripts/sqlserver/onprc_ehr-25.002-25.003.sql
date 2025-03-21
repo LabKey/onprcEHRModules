@@ -2,6 +2,7 @@
   Code rewritten with Deep Seek assistance
   Script Date: 2025-03-03 TOday ******/
   --review and deploy with checule to run
+--Update to Add Release Build
 SET ANSI_NULLS ON;
 GO
 SET QUOTED_IDENTIFIER ON;
