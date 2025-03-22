@@ -9,7 +9,7 @@
 SELECT *
 FROM (
          SELECT h.id,
-                group_concat(h.room) AS room,
+                group_concat(h.room,', ') AS room,
                 count(*) AS count1
          FROM study.housing AS h
          WHERE h.isActive = true
