@@ -59,7 +59,7 @@ ONPRC.Utils = new function(){
             }
             else {
                 const result = {
-                    SessionID: this.sessionId,
+                    SessionId: this.sessionId,
                     HostName: location.hostname
                 }
 
