@@ -8,12 +8,6 @@
 
     <transforms>
 
-        <transform id="UpdateBaseProtocol" type="StoredProcedure">
-            <description>Determines and populates BaseProtocol and RevisionNumber data for the protocol table in schema onprc_ehr.</description>
-            <procedure schemaName="onprc_ehr" procedureName="BaseProtocol">
-            </procedure>
-        </transform>
-
         <transform id="enddateExpiredProtocolsProtocol" type="StoredProcedure">
             <description>Adds enddate data to the protocol table in ehr.</description>
             <procedure schemaName="onprc_ehr" procedureName="ExpiredProtocolUpdate">
