@@ -14,6 +14,6 @@ SELECT
     o.observations
 FROM study.cases AS c
 LEFT JOIN study.mostRecentObservationsForCase AS o
-    ON c.Id = oId
+    ON c.Id = o.Id
         AND c.objectId = o.caseId
 WHERE c.category = 'Behavior'
