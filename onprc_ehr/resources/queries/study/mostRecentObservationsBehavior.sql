@@ -1,19 +1,19 @@
 
 --- Created: 8-23-2018  R.Blasa
--- Converted to left join to allow cases to appear even though the observation is linked to
--- another animal's case or there is no observation.
+-- Converted to left join to allow cases to appear even though the most recent observation is linked to
+-- another animal's case. See EHR Issue 12144: Behavior cases not showing.
 SELECT
-    c.id,
+    c.Id,
     c.date,
-    c.reviewdate,
-    c.isactive,
+    c.reviewDate,
+    c.isActive,
     c.allProblemCategories,
     c.caseHistory,
     c.isOpen,
-    c.objectid,
+    c.objectId,
     o.observations
 FROM study.cases AS c
-LEFT JOIN study.mostrecentobservationsforcase AS o
-    ON c.id = o.id
-        AND c.objectid = o.caseid
+LEFT JOIN study.mostRecentObservationsForCase AS o
+    ON c.Id = oId
+        AND c.objectId = o.caseId
 WHERE c.category = 'Behavior'
