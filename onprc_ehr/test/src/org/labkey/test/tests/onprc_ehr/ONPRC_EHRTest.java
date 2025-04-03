@@ -729,12 +729,12 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         String url = getURL().toString();
 
         // Sanity check that the session looks plausible
-        int sessionIdIndex = url.indexOf("SessionID=") + "SessionID=".length();
-        assertTrue("Missing SessionID: " + url, sessionIdIndex > 0);
+        int sessionIdIndex = url.indexOf("SessionId=") + "SessionId=".length();
+        assertTrue("Missing SessionId: " + url, sessionIdIndex > 0);
         for (int i = 0; i < 10; i++)
         {
             char c = url.charAt(sessionIdIndex + i);
-            assertTrue("Unexpected character in SessionID: " + c, (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9'));
+            assertTrue("Unexpected character in SessionId: '" + c + "', full URL was: " + url, (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || (c >= '0' && c <= '9'));
         }
 
         assertTrue("Didn't find report name in: " + url, url.contains(reportName));
