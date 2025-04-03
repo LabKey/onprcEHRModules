@@ -17,21 +17,21 @@
             <source queryName="TissueCollections" schemaName="Prima"/>
             <destination queryName="Prima_TissueCollections" schemaName="onprc_ehr" targetOption="truncate"/>
         </transform>
-        <transform id="step3a">
-            <description>Transfer to VeterinaryResearchCase</description>
-            <source queryName="VeterinaryResearchCase" schemaName="Prima"/>
-            <destination queryName="Prima_VeterinaryResearchCase" schemaName="onprc_ehr" targetOption="truncate"/>
-        </transform>
+<!--        <transform id="step3a">-->
+<!--            <description>Transfer to VeterinaryResearchCase</description>-->
+<!--            <source queryName="VeterinaryResearchCase" schemaName="Prima"/>-->
+<!--            <destination queryName="Prima_VeterinaryResearchCase" schemaName="onprc_ehr" targetOption="truncate"/>-->
+<!--        </transform>-->
         <transform id="step4a">
             <description>Transfer to Animals</description>
             <source queryName="Animals" schemaName="Prima"/>
             <destination queryName="Prima_Animals" schemaName="onprc_ehr" targetOption="truncate"/>
         </transform>
-<!--        <transform id="step5a">-->
-<!--            <description>Transfer to CaseBase</description>-->
-<!--            <source queryName="CaseBase" schemaName="Prima"/>-->
-<!--            <destination queryName="Prima_CaseBase" schemaName="ONPRC_EHR" targetOption="truncate"/>-->
-<!--        </transform>-->
+        <transform id="step5a">
+            <description>Transfer to CaseBase</description>
+            <source queryName="CaseBase" schemaName="Prima"/>
+            <destination queryName="Prima_CaseBase" schemaName="ONPRC_EHR" targetOption="truncate"/>
+        </transform>
 <!--        <transform id="step6a">-->
 <!--            <description>Transfer to CassetteEvents</description>-->
 <!--            <source queryName="CassetteEvents" schemaName="Prima"/>-->

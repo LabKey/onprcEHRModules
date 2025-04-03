@@ -126,7 +126,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
     @Override
     public @Nullable Double getSchemaVersion()
     {
-        return 24.007;
+        return 24.007; //By Kollil 4/2/25
     }
 
     @Override

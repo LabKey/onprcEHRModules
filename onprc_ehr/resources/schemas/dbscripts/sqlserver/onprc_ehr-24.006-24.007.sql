@@ -6,8 +6,9 @@
 
 --Drop if exists...
 EXEC core.fn_dropifexists 'Prima_Animals','onprc_ehr','TABLE';
-EXEC core.fn_dropifexists 'Prima_VeterinaryResearchCase','onprc_ehr','TABLE';
+EXEC core.fn_dropifexists 'Prima_VeterinaryResearchCase','onprc_ehr','TABLE'; --Drop this table permanently
 EXEC core.fn_dropifexists 'Prima_TissueCollections','onprc_ehr','TABLE';
+EXEC core.fn_dropifexists 'Prima_CaseBase','onprc_ehr','TABLE';
 
 GO
 
@@ -58,13 +59,32 @@ CREATE TABLE [onprc_ehr].[Prima_TissueCollections](
     )
 ;
 
---3. VeterinaryResearchCase table
-/****** Object:  Table [onprc_ehr].[Prima_VeterinaryResearchCase]  ******/
-CREATE TABLE [onprc_ehr].[Prima_VeterinaryResearchCase](
-    [Id] [int] NOT NULL,
-    [AnimalId] [int] NOT NULL,
-    [BillingId] [int] NULL
-)
+--3. CaseBase table
+/****** Object:  Table [onprc_ehr].[Prima_CaseBase]  ******/
+CREATE TABLE [onprc_ehr].[Prima_CaseBase](
+    [Id] [int] IDENTITY(1,1) NOT NULL,
+    [DifferentialDiagnosisId] [int] NULL,
+    [PathologistId] [int] NULL,
+    [PriorityLevelId] [int] NOT NULL,
+    [ResidentPathologistId] [int] NULL,
+    [SerialNumber] [int] NOT NULL,
+    [SurgeryDate] [datetime] NULL,
+    [SurgicalWheelId] [int] NOT NULL,
+    [Created] [datetimeoffset](7) NOT NULL,
+    [ResearcherId] [int] NULL,
+    [StudyId] [int] NULL,
+    [Discriminator] [nvarchar](128) NULL,
+    [StudyPhaseId] [int] NULL,
+    [CohortId] [int] NULL,
+    [SavedIdentifier] [nvarchar](max) NULL,
+    [Status] [tinyint] NOT NULL,
+    [AlternateIdentifier] [nvarchar](24) NULL,
+    [SurgeryLocationId] [int] NULL,
+    [ResearchPatientId] [int] NULL,
+    [AnimalId] [int] NULL,
+    [ClinicalPatientId] [int] NULL,
+    [SurgeryAge] [nvarchar](31) NULL
+    )
 ;
 
 GO

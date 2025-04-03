@@ -1029,6 +1029,11 @@
             <column columnName="SavedIdentifier" />
             <column columnName="Status" />
             <column columnName="AlternateIdentifier" />
+            <column columnName="SurgeryLocationId" />
+            <column columnName="ResearchPatientId" />
+            <column columnName="AnimalId" />
+            <column columnName="ClinicalPatientId" />
+            <column columnName="SurgeryAge" />
         </columns>
     </table>
 
