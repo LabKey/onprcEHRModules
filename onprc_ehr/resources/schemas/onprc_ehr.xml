@@ -1197,14 +1197,6 @@
         </columns>
     </table>
 
-    <table tableName="Prima_VeterinaryResearchCase" tableDbType="TABLE">
-        <columns>
-            <column columnName="Id" />
-            <column columnName="AnimalId" />
-            <column columnName="BillingId" />
-        </columns>
-    </table>
-
     <table tableName="StudyDetails_RandalData" tableDbType="TABLE">
         <columns>
             <column columnName="id" />
