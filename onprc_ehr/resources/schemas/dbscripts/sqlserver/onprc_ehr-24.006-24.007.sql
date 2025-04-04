@@ -4,11 +4,23 @@
 -- Description:	Db tables creation for Prima cassette project. Created all the Prima tables in Prime onprc_ehr schema folder. Tkt #
 -- =======================================================================================================================================
 
---Drop if exists...
+--Drop if exists. We are using these 4 tables for the Cassette Project
 EXEC core.fn_dropifexists 'Prima_Animals','onprc_ehr','TABLE';
-EXEC core.fn_dropifexists 'Prima_VeterinaryResearchCase','onprc_ehr','TABLE'; --Drop this table permanently
+EXEC core.fn_dropifexists 'Prima_CassetteBases','onprc_ehr','TABLE'; -- Drop this table and create again
 EXEC core.fn_dropifexists 'Prima_TissueCollections','onprc_ehr','TABLE';
-EXEC core.fn_dropifexists 'Prima_CaseBase','onprc_ehr','TABLE';
+EXEC core.fn_dropifexists 'Prima_CaseBase','onprc_ehr','TABLE'; -- Drop this table and create again
+
+--Drop these tables permanently. We are not using these tables in onprc_ehr.
+EXEC core.fn_dropifexists 'Prima_VeterinaryResearchCase','onprc_ehr','TABLE'; --This table doesn't exist anymore in Prima DB
+EXEC core.fn_dropifexists 'Prima_CassetteEvents','onprc_ehr','TABLE';
+EXEC core.fn_dropifexists 'Prima_CassetteEventLocations','onprc_ehr','TABLE';
+EXEC core.fn_dropifexists 'Prima_LabstationTypes','onprc_ehr','TABLE';
+EXEC core.fn_dropifexists 'Prima_SlideBases','onprc_ehr','TABLE';
+EXEC core.fn_dropifexists 'Prima_SlideEvents','onprc_ehr','TABLE';
+EXEC core.fn_dropifexists 'Prima_SlideEventLocations','onprc_ehr','TABLE';
+EXEC core.fn_dropifexists 'Prima_StainTests','onprc_ehr','TABLE';
+EXEC core.fn_dropifexists 'Prima_SurgicalWheels','onprc_ehr','TABLE';
+EXEC core.fn_dropifexists 'Prima_UserPersons','onprc_ehr','TABLE';
 
 GO
 
@@ -84,6 +96,34 @@ CREATE TABLE [onprc_ehr].[Prima_CaseBase](
     [AnimalId] [int] NULL,
     [ClinicalPatientId] [int] NULL,
     [SurgeryAge] [nvarchar](31) NULL
+    )
+;
+
+--4. CassetteBases table
+/****** Object:  Table [onprc_ehr].[Prima_CassetteBases]  ******/
+CREATE TABLE [onprc_ehr].[Prima_CassetteBases](
+    [Id] [bigint] IDENTITY(1,1) NOT NULL,
+    [CassetteColorId] [int] NOT NULL,
+    [EmbeddingInstructionId] [int] NOT NULL,
+    [HasTissue] [bit] NOT NULL,
+    [ProtocolCassetteId] [int] NULL,
+    [SpecimenBaseId] [bigint] NOT NULL,
+    [TissueCollectionId] [int] NULL,
+    [TissueProcessorProgramId] [int] NULL,
+    [TissueQuantity] [smallint] NOT NULL,
+    [CaseBaseId] [int] NOT NULL,
+    [PriorityLevelId] [int] NOT NULL,
+    [QcStatus] [tinyint] NOT NULL,
+    [SurgicalSerialPart] [smallint] NOT NULL,
+    [Created] [datetimeoffset](7) NOT NULL,
+    [OrderedStatus] [tinyint] NOT NULL,
+    [SavedIdentifier] [nvarchar](24) NULL,
+    [BarcodeContent] [nvarchar](72) NULL,
+    [AlternateIdentifier] [nvarchar](63) NULL,
+    [PrintStatus] [tinyint] NOT NULL,
+    [ItemStatus] [smallint] NOT NULL,
+    [Hazard] [tinyint] NOT NULL,
+    [CurrentContainerId] [int] NULL
     )
 ;
 
