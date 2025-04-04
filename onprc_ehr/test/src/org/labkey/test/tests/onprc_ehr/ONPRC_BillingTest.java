@@ -15,6 +15,7 @@
  */
 package org.labkey.test.tests.onprc_ehr;
 
+import org.jetbrains.annotations.Nullable;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -38,7 +39,6 @@ import org.labkey.test.util.PortalHelper;
 import org.labkey.test.util.ext4cmp.Ext4FieldRef;
 import org.labkey.test.util.ext4cmp.Ext4GridRef;
 
-import javax.annotation.Nullable;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
