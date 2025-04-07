@@ -59,8 +59,8 @@ public class PathologyTissuesFormType extends TaskForm
                 //                Added: 6-26-2017   R.Blasa
                 new TissueWeightsFormSection(),
                 new TissueDistFormSection(),
-                //Added: 2-28-2025  R. Blasa
-                new WeightFormSection(EHRService.FORM_SECTION_LOCATION.Tabs),
+                //Added: 4-7-2025  R. Blasa
+                new WeightPathFormSection(EHRService.FORM_SECTION_LOCATION.Tabs),
 //                Added: 6-26-2017   R.Blasa
                 new TissueMeasurementsFormSection()
         ));
