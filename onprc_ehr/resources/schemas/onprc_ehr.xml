@@ -1486,7 +1486,35 @@
         </columns>
     </table>
 
+    <table tableName="Rpt_AnimalID_Weights" tableDbType="TABLE">
+        <columns>
+            <column columnName="searchid" />
+            <column columnName="animalID" />
+            <column columnName="date" />
+            <column columnName="weight" />
+            <column columnName="taskId " />
+            <column columnName="created" />
+            <column columnName="createdby" />
+            <column columnName="modified" />
+            <column columnName="modifiedby" />
+        </columns>
+    </table>
 
-
+    <table tableName="Rpt_AnimalID_WeightsMaster" tableDbType="TABLE">
+        <columns>
+            <column columnName="searchid" />
+            <column columnName="rowid" />
+            <column columnName="animalID" />
+            <column columnName="date" />
+            <column columnName="weight" />
+            <column columnName="taskId " />
+            <column columnName="created" />
+            <column columnName="createdby" />
+            <column columnName="modified" />
+            <column columnName="modifiedby" />
+            <column columnName="actual_created" />
+            <column columnName="remark" />
+        </columns>
+    </table>
 
 </tables>
