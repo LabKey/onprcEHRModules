@@ -441,7 +441,7 @@ public class ETLRunnable implements Runnable
                         // are constructed from the original objectid plus a suffix. If one of those original records gets deleted we only know the
                         // original objectid. So we need to find the child ones with a LIKE objectid% query. Which is really complicated.
                         SQLFragment like = new SQLFragment("SELECT ");
-                        like.append(filterColumn.getSelectName());
+                        like.append(filterColumn.getSelectIdentifier());
                         like.append(" FROM ");
                         like.append(targetTable.getFromSQL("t"));
                         if (!joins.isEmpty())
@@ -480,7 +480,7 @@ public class ETLRunnable implements Runnable
                                 //log.info(StringUtils.join(likeWithIds.getParams(), ", "));
 
                                 SimpleFilter filter = new SimpleFilter();
-                                filter.addWhereClause("" + filterColumn.getSelectName() + " IN (" + likeWithIds.getSQL() + ")", likeWithIds.getParamsArray(), filterColumn.getFieldKey());
+                                filter.addWhereClause("" + filterColumn.getSelectIdentifier() + " IN (" + likeWithIds.getSQL() + ")", likeWithIds.getParamsArray(), filterColumn.getFieldKey());
                                 deleted += Table.delete(realTable, filter);
 
                                 // Reset the count and SQL
@@ -495,7 +495,7 @@ public class ETLRunnable implements Runnable
                             log.info(StringUtils.join(likeWithIds.getParams(), ", "));
 
                             SimpleFilter filter = new SimpleFilter();
-                            filter.addWhereClause("" + filterColumn.getSelectName() + " IN (" + likeWithIds.getSQL() + ")", likeWithIds.getParamsArray(), filterColumn.getFieldKey());
+                            filter.addWhereClause("" + filterColumn.getSelectIdentifier() + " IN (" + likeWithIds.getSQL() + ")", likeWithIds.getParamsArray(), filterColumn.getFieldKey());
                             deleted += Table.delete(realTable, filter);
                         }
                         else
@@ -1152,11 +1152,11 @@ public class ETLRunnable implements Runnable
                     }
 
                     sql = kv.getValue();
-                    sql = "SELECT t." + filterCol.getSelectName() + " AS col1, t.objectid as objectid, t2." + filterCol.getSelectName() + " AS col2  " +
+                    sql = "SELECT t." + filterCol.getSelectIdentifier() + " AS col1, t.objectid as objectid, t2." + filterCol.getSelectIdentifier() + " AS col2  " +
                             "FROM (" + sql + "\n) t \n" +
                             "FULL JOIN " + scope.getDatabaseName() + "." + realTable.getSelectName() + " t2 \n" +
-                            "ON (t." + filterCol.getSelectName() + " = t2." + filterCol.getSelectName() + ") \n" +
-                            "WHERE (t." + filterCol.getSelectName() + " IS NULL OR t2." + filterCol.getSelectName() + " IS NULL)" +
+                            "ON (t." + filterCol.getSelectIdentifier() + " = t2." + filterCol.getSelectIdentifier() + ") \n" +
+                            "WHERE (t." + filterCol.getSelectIdentifier() + " IS NULL OR t2." + filterCol.getSelectIdentifier() + " IS NULL)" +
                                 (realTable.getColumn("taskid") == null ? "" : " AND t2.taskid IS NULL") +
                                 (realTable.getColumn("container") == null ? "" : " AND (t2.container = '" + targetTable.getUserSchema().getContainer().getId() + "' or t2.container is null)");
 
