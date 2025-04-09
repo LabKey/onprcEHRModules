@@ -20,7 +20,7 @@ WHERE (t.category != javaConstant('org.labkey.onprc_ehr.ONPRC_EHRManager.VET_REV
     t.taskId.formtype = javaConstant('org.labkey.onprc_ehr.dataentry.ClinicalReportFormType.NAME') OR
     t.taskId.formtype = javaConstant('org.labkey.onprc_ehr.dataentry.BulkClinicalEntryFormType.NAME')
     )
-  AND t.date >= (select max(a.date) from study.clinical_observations a where a.Id = t.Id
+  AND t.date >= (select cast(max(a.date) as date) from study.clinical_observations a where a.Id = t.Id
   AND a.category = javaConstant('org.labkey.onprc_ehr.ONPRC_EHRManager.VET_REVIEW')  )
 
 group by t.Id
