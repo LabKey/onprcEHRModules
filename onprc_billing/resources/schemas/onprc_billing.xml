@@ -1228,6 +1228,9 @@
             <column columnName="FUndingSourceNumber"/>
             <column columnName="FUndingSourceName"/>
             <column columnName="OriginatingAgencyAwardNum"/>
+            <column columnName="OGA_AWARD_START_DATE"/>
+            <column columnName="OGA_AWARD_END_DATE"/>
+            <column columnName="indirectrate"/>
             <column columnName="Org"/>
 
         </columns>
@@ -1610,6 +1613,8 @@
             <column columnName="faRate"/>
             <column columnName="Key"/>
             <column columnName="ORIGINATING_AGENCY_AWARD_NUM"/>
+            <column columnName="OGA_AWARD_START_DATE"/>
+            <column columnName="OGA_AWARD_END_DATE"/>
         </columns>
     </table>
     <table tableName="MergeChargtypeUpdates" tableDbType="TABLE">
