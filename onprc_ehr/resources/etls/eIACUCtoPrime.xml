@@ -27,6 +27,11 @@
       <source queryName="PRIME_VIEW_SURGERIES" schemaName="eIACUC"/>
       <destination queryName="eIACUC_PRIME_VIEW_SURGICAL_PROCS" schemaName="ONPRC_EHR" targetOption="truncate"/>
     </transform>
+    <transform id="UpdateBaseProtocol" type="StoredProcedure">
+      <description>Determines and populates BaseProtocol and RevisionNumber data for the protocol table in schema onprc_ehr.</description>
+      <procedure schemaName="onprc_ehr" procedureName="BaseProtocol">
+      </procedure>
+    </transform>
 
   </transforms>
 	<schedule>

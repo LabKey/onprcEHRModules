@@ -13,7 +13,7 @@ SELECT
     y.grantNumber as OGAGrantNumber,
     y.fiscalAuthorityName As FiscalAuthorityName,
     aa.Species,
-    aa.Gender as Sex,
+    aa.Gender,
     aa.Strain,
     aa.Allowed AS NumAllowed,
     calc.NumUsed,

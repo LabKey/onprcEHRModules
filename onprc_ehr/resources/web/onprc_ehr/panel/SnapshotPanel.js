@@ -40,27 +40,6 @@ Ext4.define('onprc_ehr.panel.SnapshotPanel', {
             this.setLoading(true);
             this.loadData();
         }
-
-        this.on('afterrender', function() {
-
-            var displayField = this.down('#flags');
-            if (displayField && displayField.getEl()) {
-
-                var anchors = [displayField.getEl('onprcFlagsLink'), displayField.getEl('onprcBehaviorFlagsLink')];
-
-                for (let i = 0; i < anchors.length; i++) {
-                    let anchor = anchors[i];
-                    if (anchor) {
-                        Ext4.get(anchor).on('click', function(e) {
-                            e.preventDefault();
-                            if (anmId) {
-                                EHR.Utils.showFlagPopup(anmId, this);
-                            }
-                        });
-                    }
-                }
-            }
-        }, this);
     },
 
     getBaseItems: function(){
@@ -112,7 +91,23 @@ Ext4.define('onprc_ehr.panel.SnapshotPanel', {
                     },{
                         xtype: 'displayfield',
                         fieldLabel: 'Behavior Alert' ,
-                        name: 'behaviorflag'
+                        name: 'behaviorflag',
+                        listeners: {
+                            change: function(field, newValue, oldValue){
+                                let anchor = field.getEl('onprcBehaviorFlagsLink');
+                                if (this?.up('panel')?.up('panel')) {
+                                    let anmId = this.up('panel').up('panel').subjectId;
+                                    if (anchor) {
+                                        Ext4.get(anchor).on('click', function(e) {
+                                            e.preventDefault();
+                                            if (anmId) {
+                                                EHR.Utils.showFlagPopup(anmId, this);
+                                            }
+                                        });
+                                    }
+                                }
+                            }
+                        }
                     }]
                 },{
                     xtype: 'container',
@@ -153,7 +148,23 @@ Ext4.define('onprc_ehr.panel.SnapshotPanel', {
                         xtype: 'displayfield',
                         fieldLabel: 'Flags',
                         name: 'flags',
-                        itemId: 'flags'
+                        itemId: 'flags',
+                        listeners: {
+                            change: function(field, newValue, oldValue){
+                                let anchor = field.getEl('onprcFlagsLink');
+                                if (this?.up('panel')?.up('panel')) {
+                                    let anmId = this.up('panel').up('panel').subjectId;
+                                    if (anchor) {
+                                        Ext4.get(anchor).on('click', function(e) {
+                                            e.preventDefault();
+                                            if (anmId) {
+                                                EHR.Utils.showFlagPopup(anmId, this);
+                                            }
+                                        });
+                                    }
+                                }
+                            }
+                        }
                     },{
                         xtype: 'displayfield',
                         fieldLabel: 'Last TB Date',
@@ -733,12 +744,10 @@ Ext4.define('onprc_ehr.panel.SnapshotPanel', {
             }
         }
 
-        toSet['flags'] = values.length ? '<a id="onprcFlagsLink">' + values.join('<br>') + '</div>' : null;
-
-        behavevalues = ['test'];
+        toSet['flags'] = values.length ? '<a id="onprcFlagsLink" class="labkey-text-link">' + values.join('<br>') + '</div>' : null;
 
         if (behavevalues.length) {
-            toSet['behaviorflag'] = '<a id="onprcBehaviorFlagsLink">' + behavevalues.join('<br>') + '</div>';
+            toSet['behaviorflag'] = '<a id="onprcBehaviorFlagsLink" class="labkey-text-link">' + behavevalues.join('<br>') + '</div>';
         }
         else
         {

@@ -95,6 +95,7 @@ public class USDAPainNotification extends ColonyAlertsNotification
         StringBuilder msg = new StringBuilder();
 
         proceduresWithoutUSDAPainLevels(c, u, msg);
+        proceduresCreatedWithNoPainLevels (c,u,msg);
 
         return msg.toString();
     }

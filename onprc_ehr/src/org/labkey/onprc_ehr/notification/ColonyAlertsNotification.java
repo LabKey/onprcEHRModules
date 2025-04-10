@@ -1289,7 +1289,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
     //End of PMIC alert
 
     /**
-     * Kollil, 12/22/2022 : Find the procedure entries where the PainCategory on the procedure is not defined (IS NULL).
+     * Kollil, 12/22/2022 : Find the procedure entries in the encounters table where the PainCategory on the procedure is not defined (IS NULL).
      * This email notification is sent to Jeff every Thursday at 7:30am.
      */
     protected void proceduresWithoutUSDAPainLevels(final Container c, User u, final StringBuilder msg)
@@ -1306,7 +1306,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         long count = ts.getRowCount();
 
         if (count > 0) {//procedures count
-            msg.append("<br><b>Active procedures with missing USDA categories:</b><br><br>");
+            msg.append("<br><b>The following procedures were performed with missing USDA pain categories:</b><br><br>");
             msg.append("<b>" + count + " procedure(s) found:</b>");
             msg.append("<p><a href='" + getExecuteQueryUrl(c, "onprc_ehr", "Procedures_Missing_PainLevels", null) + "'>Click here to view the procedures in PRIME</a></p>\n");
             msg.append("<hr>");
@@ -1330,7 +1330,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
             TableSelector ts2 = new TableSelector(ti, colMap.values(), null, null);
 
             // Table header
-            msg.append("<br><br><table border=1 style='border-collapse: collapse;'>");
+            msg.append("<table border=1 style='border-collapse: collapse;'>");
             msg.append("<tr bgcolor = " + '"' + "#00FF7F" + '"' + "style='font-weight: bold;'>");
             msg.append("<td> Id </td><td> Center Project </td><td> Date </td><td> Procedure </td><td> USDA Categories </td></tr>");
 
@@ -1347,6 +1347,68 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
                     msg.append("<td>" + PageFlowUtil.filter(rs.getString("date")) + "</td>");
                     msg.append("<td>" + PageFlowUtil.filter(rs.getString("name")) + "</td>");
                     msg.append("<td>" + PageFlowUtil.filter(rs.getString("PainCategories")) + "</td>");
+                    msg.append("</tr>");
+                }
+            });
+            msg.append("</table><br>");
+        }
+    }
+
+    /**
+     * Kollil, 2/12/2024 : Find the procedure entries where the PainCategory is not defined (IS NULL).
+     * This email notification is sent to Jeff every Thursday at 7:30am.
+     */
+    protected void proceduresCreatedWithNoPainLevels(final Container c, User u, final StringBuilder msg)
+    {
+        if (QueryService.get().getUserSchema(u, c, "onprc_ehr") == null) {
+            msg.append("<b>Warning: The onprc_ehr schema has not been enabled in this folder, so the alert cannot run!<p><hr>");
+            return;
+        }
+
+        //procedures query
+        TableInfo ti = QueryService.get().getUserSchema(u, c, "onprc_ehr").getTable("NewProcedures_missing_PainLevels", ContainerFilter.Type.AllFolders.create(c, u));
+        //((ContainerFilterable) ti).setContainerFilter(ContainerFilter.Type.AllFolders.create(c, u));
+        TableSelector ts = new TableSelector(ti, null, null);
+        long count = ts.getRowCount();
+
+        if (count > 0) {//procedures count
+            msg.append("<br><b>Procedures created with no USDA pain categories:</b><br><br>");
+            msg.append("<b>" + count + " procedure(s) found:</b>");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "onprc_ehr", "NewProcedures_missing_PainLevels", null) + "'>Click here to view the procedures in PRIME</a></p>\n");
+            msg.append("<hr>");
+        }
+
+        if (count == 0) {
+            msg.append("<b>Currently, there are no active procedures with no USDA pain categories!</b><hr>");
+        }
+
+        //Display the daily report in the email
+        if (count > 0)
+        {
+            Set<FieldKey> columns = new HashSet<>();
+            columns.add(FieldKey.fromString("ProcedureName"));
+            columns.add(FieldKey.fromString("USDAPainCategories"));
+            columns.add(FieldKey.fromString("Category"));
+            columns.add(FieldKey.fromString("IsMajor"));
+            columns.add(FieldKey.fromString("Active"));
+
+            final Map<FieldKey, ColumnInfo> colMap = QueryService.get().getColumns(ti, columns);
+            TableSelector ts2 = new TableSelector(ti, colMap.values(), null, null);
+
+            // Table header
+            msg.append("<table border=1 style='border-collapse: collapse;'>");
+            msg.append("<tr bgcolor = " + '"' + "#00FF7F" + '"' + "style='font-weight: bold;'>");
+            msg.append("<td> Procedure Name </td><td> USDA Pain Categories </td><td> Category </td></tr>");
+
+            ts2.forEach(new Selector.ForEachBlock<ResultSet>()
+            {
+                @Override
+                public void exec(ResultSet object) throws SQLException
+                {
+                    Results rs = new ResultsImpl(object, colMap);
+                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("ProcedureName")) + "</td>");
+                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("USDAPainCategories")) + "</td>");
+                    msg.append("<td>" + PageFlowUtil.filter(rs.getString("Category")) + "</td>");
                     msg.append("</tr>");
                 }
             });
@@ -2243,8 +2305,8 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
                     summary = summary.replaceAll("\n", " / ");
                 }
 
-                DetailsURL groupUrl = DetailsURL.fromString("/ehr-animalGroupDetails.view", c);
-                String groupUrlString = AppProps.getInstance().getBaseServerUrl() + "/onprc_ehr/onprc" + groupUrl;
+                DetailsURL groupUrl = DetailsURL.fromString("ehr/animalGroupDetails.view?", c);
+                String groupUrlString = AppProps.getInstance().getBaseServerUrl() + "/onprc_ehr/onprc/" + groupUrl;
                 groupUrlString += "groupId=" + rs.getInt("groupId");
 
                 String group = rs.getString(FieldKey.fromString("groupId/name"));
