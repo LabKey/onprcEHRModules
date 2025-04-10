@@ -24,7 +24,7 @@ public class ONPRC_EHRCMUMedicationEntryPermission extends AbstractPermission
 {
     public ONPRC_EHRCMUMedicationEntryPermission()
     {
-        super("ONPRC_EHRCMUMedicationEntryPermission", "This is the base permission used to control editing of the CMU Treatment Order Service Request Eentries");
+        super("ONPRC_EHRCMUMedicationEntryPermission", "This is the base permission used to control editing of the CMU Treatment Order Service Request and CMU Med/Diet Entries");
 
     }
 }

@@ -94,12 +94,10 @@ import org.labkey.onprc_ehr.issues.RestrictedIssueProviderImpl;
 import org.labkey.onprc_ehr.notification.*;
 import org.labkey.onprc_ehr.security.ONPRC_EHRCMUAdministrationPermission;
 import org.labkey.onprc_ehr.security.ONPRC_EHRCMUAdministrationRole;
-import org.labkey.onprc_ehr.security.ONPRC_EHRCMUMedicationAdministrationPermission;
 import org.labkey.onprc_ehr.security.ONPRC_EHRCustomerEditPermission;
 import org.labkey.onprc_ehr.security.ONPRC_EHRCustomerEditRole;
-import org.labkey.onprc_ehr.security.ONPRC_EHREnvironmentalPermission;
 import org.labkey.onprc_ehr.security.ONPRC_EHRCMUMedicationEntryRole;
-import org.labkey.onprc_ehr.security.ONPRC_EHRCMUMedicationAdministrationRole;
+import org.labkey.onprc_ehr.security.ONPRC_EHRCMUMedicationEntryPermission;
 import org.labkey.onprc_ehr.security.ONPRC_EHREnvironmentalRole;
 //import org.labkey.onprc_ehr.security.ONPRC_EHRPMICEditRole;
 import org.labkey.onprc_ehr.security.ONPRC_EHRTransferRequestRole;
@@ -153,8 +151,6 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
 //        Added: 10-30-2023 R. Blasa
         RoleManager.registerRole(new ONPRC_EHREnvironmentalRole());
 
-        //        Added: 1-29-2025 R. Blasa
-        RoleManager.registerRole(new ONPRC_EHRCMUMedicationAdministrationRole());
 
 //        Added: 1-29-2025 R. Blasa
         RoleManager.registerRole(new ONPRC_EHRCMUMedicationEntryRole());
@@ -707,7 +703,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         //Added: 2-5-2025  R.Blasa
         EHRService.get().registerMoreActionsButton(new CreateTaskFromRecordButtons(this, "Create CMU Task From Selected", "Treatments/Medications Order", CMUTreatmentsFormType.NAME), "study", "treatment_order");
         //Added: 2-10-2025  R.Blasa
-        EHRService.get().registerMoreActionsButton(new ShowEditUIButton(this, "study", "treatment_order", ONPRC_EHRCMUMedicationAdministrationPermission.class), "study", "treatment_order");
+        EHRService.get().registerMoreActionsButton(new ShowEditUIButton(this, "study", "treatment_order", ONPRC_EHRCMUMedicationEntryPermission.class), "study", "treatment_order");
 
         EHRService.get().registerMoreActionsButton(new ChangeQCStateButton(this), "study", "blood");
         EHRService.get().registerMoreActionsButton(new ChangeQCStateButton(this, "ONPRC_EHR.window.ChangeLabworkStatusWindow", Collections.singletonList(ClientDependency.supplierFromPath("onprc_ehr/window/ChangeLabworkStatusWindow.js"))), "study", "clinpathRuns");
