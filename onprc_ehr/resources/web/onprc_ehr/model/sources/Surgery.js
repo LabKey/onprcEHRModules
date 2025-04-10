@@ -35,7 +35,7 @@ EHR.model.DataModelManager.registerMetadata('onprc_Surgery', {
                 shownInGrid: true,
                 defaultValue: 'Surgical',
                 allowBlank: false
-            }
+            },
 
         },
         'study.clinical_observations': {
@@ -67,6 +67,25 @@ EHR.model.DataModelManager.registerMetadata('onprc_Surgery', {
             type: {
                 defaultValue: 'Surgery',
                 hidden: true
+            },
+            //Added by Kollil, Changed the default begin date & time to next day at 8am. Refer to tkt #12214
+            date: {
+                xtype: 'xdatetime',
+                extFormat: LABKEY.extDefaultDateTimeFormat,
+                allowBlank: false,
+                editorConfig: {
+                    defaultHour: 8,
+                    defaultMinutes: 0
+                },
+                getInitialValue: function(v, rec) {
+                    if (v)
+                        return v;
+
+                    var ret = Ext4.Date.clearTime(new Date());
+                    ret = Ext4.Date.add(ret, Ext4.Date.DAY, 1);
+                    ret.setHours(8);
+                    return ret;
+                }
             },
             title: {
                 hidden: true
@@ -143,3 +162,4 @@ EHR.model.DataModelManager.registerMetadata('onprc_Surgery', {
         }
     }
 });
+
