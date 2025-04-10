@@ -147,7 +147,6 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         RoleManager.registerRole(new ONPRC_EHRCMUAdministrationRole());
         RoleManager.registerRole(new ONPRC_EHRTransferRequestRole());
 
-
 //        Added: 12-5-2019
 //        RoleManager.registerRole(new ONPRC_EHRPMICEditRole());
 
@@ -766,7 +765,6 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         EHRService.get().registerOptionalClinicalHistoryResources(this);
 
         EHRService.get().registerLabworkType(new ONPRCUrinalysisLabworkType(this));
-//        Restored: 4-10-2025
         EHRService.get().registerLabworkType(new ONPRCiStatLabworkType(this));
            //     7-26-2022  R. Blasa
         EHRService.get().registerLabworkType(new ONPRCEpocLabworkType(this));
