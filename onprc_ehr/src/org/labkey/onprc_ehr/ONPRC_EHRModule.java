@@ -766,8 +766,8 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         EHRService.get().registerOptionalClinicalHistoryResources(this);
 
         EHRService.get().registerLabworkType(new ONPRCUrinalysisLabworkType(this));
-//        Removed: 11-4-2024
-//        EHRService.get().registerLabworkType(new ONPRCiStatLabworkType(this));
+//        Restored: 4-10-2025
+        EHRService.get().registerLabworkType(new ONPRCiStatLabworkType(this));
            //     7-26-2022  R. Blasa
         EHRService.get().registerLabworkType(new ONPRCEpocLabworkType(this));
         //R.Blasa   11-28-2016
