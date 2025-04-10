@@ -441,7 +441,7 @@ public class ETLRunnable implements Runnable
                         // are constructed from the original objectid plus a suffix. If one of those original records gets deleted we only know the
                         // original objectid. So we need to find the child ones with a LIKE objectid% query. Which is really complicated.
                         SQLFragment like = new SQLFragment("SELECT ");
-                        like.append(filterColumn.getSelectIdentifier());
+                        like.appendIdentifier(filterColumn.getSelectIdentifier());
                         like.append(" FROM ");
                         like.append(targetTable.getFromSQL("t"));
                         if (!joins.isEmpty())
