@@ -2,7 +2,7 @@ EXEC core.fn_dropifexists 'aliases', 'onprc_billing', 'COLUMN', 'OGA_AWARD_START
 GO
 EXEC core.fn_dropifexists 'aliases', 'onprc_billing', 'COLUMN', 'IndirectRate';
 GO
-GOEXEC core.fn_dropifexists 'aliases', 'onprc_billing', 'COLUMN', 'OGA_AWARD_END_DATE';
+EXEC core.fn_dropifexists 'aliases', 'onprc_billing', 'COLUMN', 'OGA_AWARD_END_DATE';
 GO
 EXEC core.fn_dropifexists 'ogaSynch', 'onprc_billing', 'COLUMN', 'OGA_AWARD_START_DATE';
 GO
