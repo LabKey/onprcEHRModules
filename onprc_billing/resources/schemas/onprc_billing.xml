@@ -1610,6 +1610,9 @@
             <column columnName="faRate"/>
             <column columnName="Key"/>
             <column columnName="ORIGINATING_AGENCY_AWARD_NUM"/>
+            <column columnName="indirectRate"/>
+            <column columnName="oga_award_start_Date"/>
+            <column columnName="oga_award_end_date"/>
         </columns>
     </table>
     <table tableName="MergeChargtypeUpdates" tableDbType="TABLE">
