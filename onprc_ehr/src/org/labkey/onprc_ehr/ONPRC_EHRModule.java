@@ -37,6 +37,7 @@ import org.labkey.api.ldk.notification.NotificationService;
 import org.labkey.api.module.AdminLinkManager;
 import org.labkey.api.module.Module;
 import org.labkey.api.module.ModuleContext;
+import org.labkey.api.onprc_ehr.ONPRC_EHRService;
 import org.labkey.api.query.DefaultSchema;
 import org.labkey.api.query.DetailsURL;
 import org.labkey.api.query.QuerySchema;
@@ -138,6 +139,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
     @Override
     protected void init()
     {
+        ONPRC_EHRService.setInstance(new ONPRC_EHRServiceImpl());
         addController(CONTROLLER_NAME, ONPRC_EHRController.class);
 
         RoleManager.registerRole(new ONPRC_EHRCustomerEditRole());
