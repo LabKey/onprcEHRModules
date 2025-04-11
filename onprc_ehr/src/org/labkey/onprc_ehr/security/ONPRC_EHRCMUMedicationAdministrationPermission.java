@@ -24,6 +24,6 @@ public class ONPRC_EHRCMUMedicationAdministrationPermission extends AbstractPerm
 {
     public ONPRC_EHRCMUMedicationAdministrationPermission()
     {
-        super("ONPRC_EHRCMUMedicationAdministrationPermission", "This is the base permission used to control editing of the CMU Medication entries");
+        super("ONPRC_EHRCMUMedicationAdministrationPermission", "This is the base permission used to control editing of the CMU Medication Service entries");
     }
 }

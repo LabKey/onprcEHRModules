@@ -33,7 +33,7 @@ public class ONPRC_EHRCMUMedicationAdministrationRole extends AbstractRole
 {
     public ONPRC_EHRCMUMedicationAdministrationRole()
     {
-        super("ONPRC EHR CMU Medication Administration", "This role is to track which users can edit the table CMU medication Entries.",
+        super("ONPRC EHR CMU Medication Administration", "This role is to track which users can edit the table CMU medication Service Entries.",
                 ReadPermission.class,
                 InsertPermission.class,
                 UpdatePermission.class,
