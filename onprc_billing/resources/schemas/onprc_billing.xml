@@ -1626,4 +1626,19 @@
             <column columnName="endDate"/>
         </columns>
     </table>
+    <table tableName="BaseSubsidyFoundation" tableDbType="TABLE">
+        <columns>
+            <column columnName="rowid"/>
+            <column columnName="Title"/>
+            <column columnName="BaseSubsidy"/>
+            <column columnName="StartDate"/>
+            <column columnName="EndDate"/>
+            <column columnName="createdBy"/>
+            <column columnName="created"/>
+            <column columnName="modifiedBy"/>
+            <column columnName="modified"/>
+
+
+        </columns>
+    </table>
 </tables>
