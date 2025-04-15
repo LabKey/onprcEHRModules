@@ -8,6 +8,7 @@ import org.labkey.api.ehr.dataentry.TaskFormSection;
 import org.labkey.api.module.Module;
 import org.labkey.api.view.template.ClientDependency;
 import org.labkey.onprc_billing.security.ONPRCArtCoreChargesEntryPermission;
+import org.labkey.api.onprc_ehr.ONPRC_EHRService;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,6 +25,7 @@ public class ChargesARTCoreFormType extends TaskForm
         super(ctx, owner, NAME, "ART Core Charges", "Billing", Arrays.<FormSection>asList(
                 new TaskFormSection(),
                 new AnimalDetailsFormSection(),
+                (FormSection) ONPRC_EHRService.get().getAnimalDetailsFormSection(),
                 new ChargesInstructionFormSection(),
                 new ChargesARTCoreFormSection()
         ));
