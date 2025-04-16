@@ -23,7 +23,6 @@ public class ChargesARTCoreFormType extends TaskForm
     {
         super(ctx, owner, NAME, "ART Core Charges", "Billing", Arrays.<FormSection>asList(
                 new TaskFormSection(),
-                new AnimalDetailsFormSection(),
                 (FormSection) ONPRC_EHRService.get().getAnimalDetailsFormSection(),
                 new ChargesInstructionFormSection(),
                 new ChargesARTCoreFormSection()
