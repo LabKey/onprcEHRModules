@@ -29,15 +29,15 @@ SELECT
     --for non-OGA aliases, we always use the NIH rate
     WHEN (alias.category IS NOT NULL AND alias.category != 'OGA') THEN cr.unitCost
     --if we dont know the aliasType, we also dont know what do to
-     WHEN (alias.aliasType.removeSubsidy = true AND (alias.aliasType.canRaiseFA = true AND mc.chargeId.canRaiseFA = true)) THEN ((cr.unitCost / (1 - COALESCE(cr.subsidy, 0))) * (CASE WHEN (alias.faRate IS NOT NULL AND alias.faRate < CAST(javaConstant('org.labkey.onprc_ehr.ONPRC_EHRManager.BASE_SUBSIDY') AS DOUBLE)) THEN
-    ((1 + (CAST(javaConstant('org.labkey.onprc_ehr.ONPRC_EHRManager.BASE_SUBSIDY') AS DOUBLE) / (1 + alias.faRate)))) ELSE 1 END))
+     WHEN (alias.aliasType.removeSubsidy = true AND (alias.aliasType.canRaiseFA = true AND mc.chargeId.canRaiseFA = true)) THEN ((cr.unitCost / (1 - COALESCE(cr.subsidy, 0))) * (CASE WHEN (alias.faRate IS NOT NULL AND alias.faRate < CAST(ir.IndirectRate AS DOUBLE)) THEN
+    ((1 + (CAST(ir.indirectRate AS DOUBLE) / (1 + alias.faRate)))) ELSE 1 END))
 
     --remove subsidy only
     WHEN (alias.aliasType.removeSubsidy = true AND alias.aliasType.canRaiseFA = false) THEN (cr.unitCost / (1 - COALESCE(cr.subsidy, 0)))
 
     --raise F&A only
     --WHEN (alias.aliasType.removeSubsidy = false AND (alias.aliasType.canRaiseFA = true AND mc.chargeId.canRaiseFA = true)) THEN (cr.unitCost * (CASE WHEN (alias.faRate IS NOT NULL AND alias.faRate < CAST(javaConstant('org.labkey.onprc_ehr.ONPRC_EHRManager.BASE_SUBSIDY') AS DOUBLE)) THEN (1 + (CAST(javaConstant('org.labkey.onprc_ehr.ONPRC_EHRManager.BASE_SUBSIDY') AS DOUBLE) - alias.faRate)) ELSE 1 END))
-   WHEN (alias.aliasType.removeSubsidy = false AND (alias.aliasType.canRaiseFA = true AND mc.chargeId.canRaiseFA = true)) THEN (cr.unitCost * (CASE WHEN (alias.faRate IS NOT NULL AND alias.faRate < CAST(javaConstant('org.labkey.onprc_ehr.ONPRC_EHRManager.BASE_SUBSIDY') AS DOUBLE)) THEN ((1 + (CAST(javaConstant('org.labkey.onprc_ehr.ONPRC_EHRManager.BASE_SUBSIDY') AS DOUBLE)))/(1+ alias.faRate)) ELSE 1 END))
+   WHEN (alias.aliasType.removeSubsidy = false AND (alias.aliasType.canRaiseFA = true AND mc.chargeId.canRaiseFA = true)) THEN (cr.unitCost * (CASE WHEN (alias.faRate IS NOT NULL AND alias.faRate < CAST(ir.IndirectRate AS DOUBLE)) THEN ((1 + (CAST(ir.inDirectRate AS DOUBLE)))/(1+ alias.faRate)) ELSE 1 END))
  --the NIH rate
     ELSE cr.unitCost
   END AS DOUBLE), 2) as unitCost,
@@ -89,3 +89,5 @@ LEFT JOIN onprc_billing_public.projectMultipliers pm ON (
     CAST(mc.date AS DATE) >= CASt(pm.startDate AS DATE) AND
     (CAST(mc.date AS DATE) <= pm.enddateCoalesced OR pm.enddate IS NULL) AND
     alias.alias = pm.account)
+LEFT JOIN onprc_billing.ogaIndirectCharge ir
+          on ir.alias = alias.alias
