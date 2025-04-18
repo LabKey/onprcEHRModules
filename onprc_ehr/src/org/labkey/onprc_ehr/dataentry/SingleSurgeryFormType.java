@@ -19,7 +19,6 @@ import org.labkey.api.ehr.EHRService;
 import org.labkey.api.ehr.dataentry.BloodDrawFormSection;
 import org.labkey.api.ehr.dataentry.DataEntryFormContext;
 import org.labkey.api.ehr.dataentry.EncounterForm;
-import org.labkey.api.ehr.dataentry.ExtendedAnimalDetailsFormSection;
 import org.labkey.api.ehr.dataentry.FormSection;
 import org.labkey.api.ehr.dataentry.NonStoreFormSection;
 import org.labkey.api.ehr.dataentry.TaskFormSection;
@@ -46,7 +45,7 @@ public class SingleSurgeryFormType extends EncounterForm
     public SingleSurgeryFormType(DataEntryFormContext ctx, Module owner)
     {
         super(ctx, owner, NAME, "Surgery", "Surgery", Arrays.asList(
-                new NonStoreFormSection("Instructions", "Instructions", "ehr-surgeryinstructionspanel", Arrays.asList(ClientDependency.supplierFromPath("ehr/panel/SurgeryInstructionsPanel.js"))),
+                new NonStoreFormSection("Instructions", "Instructions", "onprc_ehr-surgeryinstructionspanel", Arrays.asList(ClientDependency.supplierFromPath("onprc_ehr/panel/SurgeryInstructionsPanel.js"))),
                 new TaskFormSection(),
                 new ClinicalEncountersFormPanelSection("Surgery"),
                 new ExtendedAnimalDetailsFormSection(),
@@ -55,6 +54,8 @@ public class SingleSurgeryFormType extends EncounterForm
                 new EncounterMedicationsFormSection("study", "Drug Administration", "Medications/Treatments Given", true),
                 new EncounterMedicationsFormSection("study", "Treatment Orders", "Medication/Treatment Orders", false),
                 new EncounterChildFormSection("study", "weight", "Weight", false, "EHR.data.WeightClientStore", Arrays.asList(ClientDependency.supplierFromPath("ehr/data/WeightClientStore.js")), null),
+                //Added by Kollil on 3/6/2025. Refer to tkt # 12124
+                new ClinicalObservationsFormSection(EHRService.FORM_SECTION_LOCATION.Tabs, true),
                 new BloodDrawFormSection(false, EHRService.FORM_SECTION_LOCATION.Tabs),
                 new EncounterChildFormSection("ehr", "snomed_tags", "Diagnostic Codes", true)
         ));

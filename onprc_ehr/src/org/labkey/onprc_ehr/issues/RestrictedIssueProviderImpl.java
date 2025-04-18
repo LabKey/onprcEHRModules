@@ -96,21 +96,6 @@ public class RestrictedIssueProviderImpl implements RestrictedIssueProvider
                 return false;
             }
         }
-
-        // the user must also have access to all related issues
-        for (Issue related : relatedIssues)
-        {
-            Container relatedContainer = ContainerManager.getForId(related.getContainerId());
-            if (relatedContainer != null && isRestrictedIssueTracker(relatedContainer, related.getIssueDefName()))
-            {
-                Group relatedGroup = getRestrictedIssueListGroup(relatedContainer, related.getIssueDefName());
-                if (!checkAccess(user, related, relatedGroup))
-                {
-                    errors.add(new SimpleValidationError(String.format("A related issue : %d is in a restricted issue list. You do not have access to that issue", related.getIssueId())));
-                    return false;
-                }
-            }
-        }
         return true;
     }
 

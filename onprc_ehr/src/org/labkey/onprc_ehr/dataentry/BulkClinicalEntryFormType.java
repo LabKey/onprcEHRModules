@@ -16,8 +16,6 @@
 package org.labkey.onprc_ehr.dataentry;
 
 import org.labkey.api.ehr.EHRService;
-import org.labkey.api.query.Queryable;
-import org.labkey.onprc_ehr.dataentry.AnimalDetailsFormSection;
 import org.labkey.api.ehr.dataentry.DataEntryFormContext;
 import org.labkey.api.ehr.dataentry.FormSection;
 import org.labkey.api.ehr.dataentry.SimpleGridPanel;
@@ -40,7 +38,6 @@ import java.util.List;
  */
 public class BulkClinicalEntryFormType extends TaskForm
 {
-    @Queryable
     public static final String NAME = "Bulk Clinical Entry";
 
     public BulkClinicalEntryFormType(DataEntryFormContext ctx, Module owner)
