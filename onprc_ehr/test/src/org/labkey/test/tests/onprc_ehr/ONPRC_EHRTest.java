@@ -1743,6 +1743,8 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         waitForElementToDisappear(caseWindow);
         obsGrid.waitForRowCount(1);
         Assert.assertEquals("Alopecia Score", obsGrid.getFieldValue(1, "category"));
+        Assert.assertEquals("Id field should not be editable.", "on", obsGrid.getCell(1, "Id")
+                .findElement(getDriver()).findElement(By.tagName("div")).getDomAttribute("unselectable"));
         String observation = (String)obsGrid.getFieldValue(1, "observation");
         Assert.assertTrue("Expected \"Observation/Score\" to be empty (blank or null) but was \"" + observation + "\"", StringUtils.isEmpty(observation));
         Assert.assertEquals(SUBJECTS[0], obsGrid.getFieldValue(1, "Id"));
