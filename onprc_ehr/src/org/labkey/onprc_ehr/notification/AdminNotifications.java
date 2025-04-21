@@ -119,14 +119,19 @@ public class AdminNotifications extends ColonyAlertsNotification
         TableSelector ts = new TableSelector(ti, null, new Sort("date"));
         long count = ts.getRowCount();
         if (count == 0) {
-            msg.append("<b>There are no meds ordered except E-85760 (Medroxyprogesterone injectable 150mg/ml) and E-Y7735 (Diet - Weekly Multivitamin) with missing end dates!</b><hr>");
+            //msg.append("<b>There are no meds ordered except E-85760 (Medroxyprogesterone injectable 150mg/ml) and E-Y7735 (Diet - Weekly Multivitamin) with missing end dates!</b><hr>");
+            msg.append("<b>No medication orders found with missing end date except the following approved list:" +
+                    " <br>1. E-85760 (Medroxyprogesterone injectable 150mg/ml) " +
+                    " <br>2. E-Y7735 (Diet - Weekly Multivitamin)" +
+                    " <br>3. E-X0500 (Diet, L-Phyto (Low-phytoestrogen)) " +
+                    " <br>4. E-Y9750 (Diet, 5047 High Protein, Jumbo) </b><hr>");
         }
         else if (count > 0)
         {
             //Display the report link on the notification page
             msg.append("<br><b>Meds with missing end date:</b><br><br>");
             msg.append("<b>" + count + " meds found with missing end dates:</b>");
-            msg.append("<p><a href='" + getExecuteQueryUrl(c, "onprc_ehr", "MedsEndDateAlert", null) + "'>Click here to view the meds</a></p>\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "onprc_ehr", "MedsEndDateAlert", null) + "'>Click here to view the meds/diets</a></p>\n");
             msg.append("<hr>");
 
             //Display the report in the email
@@ -158,7 +163,7 @@ public class AdminNotifications extends ColonyAlertsNotification
             msg.append("<tr>");
             msg.append("<br><table border=1 style='border-collapse: collapse;'>");
             msg.append("<tr bgcolor = " + '"' + "#00FF7F" + '"' + "style='font-weight: bold;'>");
-            msg.append("<td> Id </td><td> Begin Date </td><td> End Date </td><td> Frequency </td><td> Times </td><td> Charge To </td><td> Treatment </td><td> Vomune </td><td> Concentration </td><td> Amount </td><td> Route </td><td> Ordered By </td><td> Remark </td><td> Reason </td><td> Modified By </td><td> Modified Date </td><td> Category </td><td> Task Id </td></tr>");
+            msg.append("<td> Id </td><td> Begin Date </td><td> End Date </td><td> Frequency </td><td> Times </td><td> Charge To </td><td> Treatment </td><td> Volume </td><td> Concentration </td><td> Amount </td><td> Route </td><td> Ordered By </td><td> Remark </td><td> Reason </td><td> Modified By </td><td> Modified Date </td><td> Category </td><td> Task Id </td></tr>");
 
             ts2.forEach(object -> {
                 Results rs = new ResultsImpl(object, colMap);
