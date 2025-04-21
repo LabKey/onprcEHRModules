@@ -1,0 +1,36 @@
+SELECT ogasynch.lastIndexed,
+       ogasynch.modifiedBy,
+       ogasynch.container,
+       ogasynch.modified,
+       ogasynch.created,
+       ogasynch.createdBy,
+       ogasynch."ADFM EMP NUM",
+       ogasynch."ADFM FULL NAME",
+       ogasynch."ADFM LAST NAME",
+       ogasynch."ADFM FIRST NAME",
+       ogasynch."PI EMP NUM",
+       ogasynch."PI FULL NAME",
+       ogasynch."PI LAST NAME",
+       ogasynch."PI FIRST NAME",
+       ogasynch."PDFM EMP NUM",
+       ogasynch."PDFM FULL NAME",
+       ogasynch."PDFM LAST NAME",
+       ogasynch."PDFM FIRST NAME",
+       ogasynch."AGENCY AWARD NUMBER",
+       ogasynch."OGA AWARD NUMBER",
+       ogasynch."OGA AWARD TYPE",
+       ogasynch."OGA PROJECT NUMBER",
+       ogasynch.ALIAS,
+       ogasynch."ALIAS ENABLED FLAG",
+       ogasynch."ALIAS ENABLED FLAG_MVIndicator",
+
+       ogasynch.faRate,
+       ogasynch.Key,
+       ogasynch.ORIGINATING_AGENCY_AWARD_NUM,
+       ogasynch.oga_award_start_Date,
+       ogasynch.oga_award_end_date,
+       Case When ogasynch.oga_award_start_Date >= '2024-07-01' then .475
+            else .47
+           End as IndirectRate
+
+FROM ogasynch, indirectRate

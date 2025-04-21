@@ -4,10 +4,10 @@
 --gjones
 --NEW Data Set to Select Ciorrect Subsidy for Unit Cost Calculations
 --
-CREATE TABLE onprc_billing.BaseSubsidyFoundation (
+CREATE TABLE onprc_billing.IndirectRates (
                                                   rowId INT IDENTITY (1,1) NOT NULL,
                                                   Title nvarchar(50)  null,
-                                                  BaseSubsidy decimal,
+                                                  IndirectRate decimal,
                                                    startDate datetime,
                                                    endDate datetime,
 
