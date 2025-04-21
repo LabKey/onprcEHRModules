@@ -1,7 +1,11 @@
 <customView xmlns="http://labkey.org/data/xml/queryCustomView">
     <columns>
         <column name="Id"/>
-        <column name="gender"/>
+        <column name="gender">
+            <properties>
+                <property name="columnTitle" value="Sex"/>
+            </properties>
+        </column>
         <column name="Relationship"/>
         <column name="Offspring"/>
         <column name="offspringgender"/>
