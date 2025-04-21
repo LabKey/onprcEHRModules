@@ -3,6 +3,7 @@
 --cREATED 4/7/2025
 --gjones
 --NEW Data Set to Select Ciorrect Subsidy for Unit Cost Calculations
+--changes name to Indirect
 --
 CREATE TABLE onprc_billing.IndirectRates (
                                                   rowId INT IDENTITY (1,1) NOT NULL,
