@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *  New Build with Module Number Change 8/16/2023 new FB
+ * Update to Add additional SQL Script
  * */
 
 package org.labkey.onprc_billing;
@@ -82,7 +83,7 @@ public class ONPRC_BillingModule extends ExtendedSimpleModule
     @Override
     public @Nullable Double getSchemaVersion()
     {
-        return 25.004;
+        return 25.005;
     }
 
     @Override
