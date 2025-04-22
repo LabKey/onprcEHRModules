@@ -1,67 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--Copy Prima tables into Prime. Runs daily at 3AM -->
-<!--Added By Kollil, 7/26/2021 -->
+<!--Added By Kollil, 7/26/2021 , Modified by Kollil, 03-02-2025-->
 <!--NOTES: The source DB name is "Prima" in production and "PrimaTest" on other servers -->
 
 <etl xmlns="http://labkey.org/etl/xml">
     <name>PrimatoPrime</name>
-    <description>Transfers data from the Prima tables to the Prime tables in ONPRC_EHR</description>
+    <description>Transfers data from the Prima tables to the Prime in ONPRC_EHR</description>
     <transforms>
         <transform id="step1a">
-            <description>Transfer to UserPersons</description>
-            <source queryName="UserPersons" schemaName="Prima"/>
-            <destination queryName="Prima_UserPersons" schemaName="ONPRC_EHR" targetOption="truncate"/>
+            <description>Transfer CassetteBases into onprc_ehr table</description>
+            <source queryName="CassetteBases" schemaName="Prima"/>
+            <destination queryName="Prima_CassetteBases" schemaName="onprc_ehr" targetOption="truncate"/>
         </transform>
         <transform id="step2a">
-            <description>Transfer to SurgicalWheels</description>
-            <source queryName="SurgicalWheels" schemaName="Prima"/>
-            <destination queryName="Prima_SurgicalWheels" schemaName="ONPRC_EHR" targetOption="truncate"/>
+            <description>Transfer to TissueCollections</description>
+            <source queryName="TissueCollections" schemaName="Prima"/>
+            <destination queryName="Prima_TissueCollections" schemaName="onprc_ehr" targetOption="truncate"/>
         </transform>
         <transform id="step3a">
-            <description>Transfer to StainTests</description>
-            <source queryName="StainTests" schemaName="Prima"/>
-            <destination queryName="Prima_StainTests" schemaName="ONPRC_EHR" targetOption="truncate"/>
+            <description>Transfer to Animals</description>
+            <source queryName="Animals" schemaName="Prima"/>
+            <destination queryName="Prima_Animals" schemaName="onprc_ehr" targetOption="truncate"/>
         </transform>
         <transform id="step4a">
-            <description>Transfer to SlideBases</description>
-            <source queryName="SlideBases" schemaName="Prima"/>
-            <destination queryName="Prima_SlideBases" schemaName="ONPRC_EHR" targetOption="truncate"/>
-        </transform>
-        <transform id="step5a">
             <description>Transfer to CaseBase</description>
             <source queryName="CaseBase" schemaName="Prima"/>
             <destination queryName="Prima_CaseBase" schemaName="ONPRC_EHR" targetOption="truncate"/>
         </transform>
-        <transform id="step6a">
-            <description>Transfer to CassetteEvents</description>
-            <source queryName="CassetteEvents" schemaName="Prima"/>
-            <destination queryName="Prima_CassetteEvents" schemaName="ONPRC_EHR" targetOption="truncate"/>
-        </transform>
-        <transform id="step7a">
-            <description>Transfer to CassetteEventLocations</description>
-            <source queryName="CassetteEventLocations" schemaName="Prima"/>
-            <destination queryName="Prima_CassetteEventLocations" schemaName="ONPRC_EHR" targetOption="truncate"/>
-        </transform>
-        <transform id="step8a">
-            <description>Transfer to CassetteBases</description>
-            <source queryName="CassetteBases" schemaName="Prima"/>
-            <destination queryName="Prima_CassetteBases" schemaName="ONPRC_EHR" targetOption="truncate"/>
-        </transform>
-        <transform id="step9a">
-            <description>Transfer to LabstationTypes</description>
-            <source queryName="LabstationTypes" schemaName="Prima"/>
-            <destination queryName="Prima_LabstationTypes" schemaName="ONPRC_EHR" targetOption="truncate"/>
-        </transform>
-        <transform id="step10a">
-            <description>Transfer to SlideEvents</description>
-            <source queryName="SlideEvents" schemaName="Prima"/>
-            <destination queryName="Prima_SlideEvents" schemaName="ONPRC_EHR" targetOption="truncate"/>
-        </transform>
-        <transform id="step11a">
-            <description>Transfer to SlideEventLoctions</description>
-            <source queryName="SlideEventLocations" schemaName="Prima"/>
-            <destination queryName="Prima_SlideEventLocations" schemaName="ONPRC_EHR" targetOption="truncate"/>
-        </transform>
+
 
     </transforms>
     <schedule>
