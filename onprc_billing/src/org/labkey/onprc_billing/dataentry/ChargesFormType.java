@@ -1,6 +1,6 @@
 package org.labkey.onprc_billing.dataentry;
 
-import org.labkey.api.ehr.dataentry.AnimalDetailsFormSection;
+import org.labkey.api.onprc_ehr.ONPRC_EHRService;
 import org.labkey.api.ehr.dataentry.DataEntryFormContext;
 import org.labkey.api.ehr.dataentry.FormSection;
 import org.labkey.api.ehr.dataentry.TaskForm;
@@ -30,7 +30,7 @@ public class ChargesFormType extends TaskForm
     {
         super(ctx, owner, NAME, "Misc Charges", "Billing", Arrays.asList(
                 new TaskFormSection(),
-                new AnimalDetailsFormSection(),
+                (FormSection) ONPRC_EHRService.get().getAnimalDetailsFormSection(),
                 new ChargesInstructionFormSection(),
                 new ChargesFormSection()
         ));

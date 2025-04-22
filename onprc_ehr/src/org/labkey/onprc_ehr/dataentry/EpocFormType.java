@@ -34,6 +34,7 @@ public class EpocFormType extends TaskForm
     {
         super(ctx, owner, NAME, "Epoc Results", "Lab Results", Arrays.asList(
                 new TaskFormSection(),
+                new AnimalDetailsFormSection(),
                 new EpocPanelForm(),
                 new LabworkFormSection("study", "Epoc", "EPOC", true)
         ));
