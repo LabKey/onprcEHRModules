@@ -19,6 +19,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.labkey.api.action.ApiResponse;
 import org.labkey.api.action.ApiSimpleResponse;
@@ -31,12 +32,17 @@ import org.labkey.api.action.SpringActionController;
 import org.labkey.api.data.Container;
 import org.labkey.api.data.ContainerManager;
 import org.labkey.api.data.CoreSchema;
+import org.labkey.api.data.SQLFragment;
 import org.labkey.api.data.SimpleFilter;
+import org.labkey.api.data.SqlSelector;
+import org.labkey.api.data.Table;
 import org.labkey.api.data.TableInfo;
 import org.labkey.api.data.TableSelector;
+import org.labkey.api.ehr.EHRService;
 import org.labkey.api.ehr.security.EHRDataEntryPermission;
 import org.labkey.api.files.FileContentService;
 import org.labkey.api.query.FieldKey;
+import org.labkey.api.query.UserSchema;
 import org.labkey.api.security.AdminConsoleAction;
 import org.labkey.api.security.RequiresPermission;
 import org.labkey.api.security.RequiresSiteAdmin;
@@ -510,6 +516,155 @@ public class ONPRC_EHRController extends SpringActionController
         public void setStartingId(Integer startingId)
         {
             _startingId = startingId;
+        }
+    }
+
+    public static class SnomedForm
+    {
+        private String _subset;
+        private String _snomed;
+
+        public String getSubset()
+        {
+            return _subset;
+        }
+
+        public void setSubset(String subset)
+        {
+            _subset = subset;
+        }
+
+        public String getSnomed()
+        {
+            return _snomed;
+        }
+
+        public void setSnomed(String snomed)
+        {
+            _snomed = snomed;
+        }
+    }
+
+    @RequiresPermission(ReadPermission.class)
+    public class GetSnomedAction extends ReadOnlyApiAction<SnomedForm>
+    {
+        @Override
+        public ApiResponse execute(SnomedForm form, BindException errors)
+        {
+            String[] words = form.getSnomed().split("\\W+");
+
+            SQLFragment sql = new SQLFragment();
+            if (form.getSubset() != null)
+            {
+                sql.append("SELECT sn.code FROM ehr_lookups.snomed sn ");
+                sql.append("LEFT JOIN ehr_lookups.snomed_subset_codes ssc ");
+                sql.append("ON sn.code = ssc.code ");
+                sql.append("WHERE ssc.primaryCategory = ? AND sn.container = ? AND soundex(sn.meaning) = soundex(?)");
+                sql.add(form.getSubset());
+                sql.add(getContainer());
+                sql.add(form.getSnomed());
+            }
+            else
+            {
+                sql.append("SELECT sn.code FROM ehr_lookups.snomed sn ");
+                sql.append("WHERE sn.container = ? AND soundex(sn.meaning) = soundex(?)");
+                sql.add(getContainer());
+                sql.add(form.getSnomed());
+            }
+
+            List<String> results = new SqlSelector(EHRService.get().getEHRLookupsSchema(getUser(), getContainer()).getDbSchema(), sql).getArrayList(String.class);
+            JSONArray array = new JSONArray(results);
+            JSONObject obj = new JSONObject();
+            obj.put("snomeds", array);
+
+            return new ApiSimpleResponse(obj);
+        }
+    }
+
+    @RequiresPermission(AdminPermission.class)
+    public class SaveSnomedAction extends MutatingApiAction<SnomedForm>
+    {
+        private Integer _count;
+        private String _prefix;
+
+        private String hasExactMatch(SnomedForm form)
+        {
+            SQLFragment sql = new SQLFragment("SELECT sn.code FROM ehr_lookups.snomed sn ");
+            sql.append("LEFT JOIN ehr_lookups.snomed_subset_codes ssc ");
+            sql.append("ON sn.code = ssc.code ");
+            sql.append("WHERE ssc.primaryCategory = ? AND sn.container = ? AND sn.meaning = ?");
+            sql.add(form.getSubset());
+            sql.add(getContainer());
+            sql.add(form.getSnomed());
+
+            List<String> results = new SqlSelector(EHRService.get().getEHRLookupsSchema(getUser(), getContainer()).getDbSchema(), sql).getArrayList(String.class);
+            return results.isEmpty() ? null : results.get(0);
+        }
+
+        @Override
+        public void validateForm(SnomedForm form, Errors errors)
+        {
+            super.validateForm(form, errors);
+
+            UserSchema usOnprc = new ONPRC_EHRUserSchema(getUser(), getContainer());
+            TableInfo snomedCount = usOnprc.getTable("snomed_counter");
+            TableSelector ts = new TableSelector(snomedCount, PageFlowUtil.set("count", "prefix"), new SimpleFilter(FieldKey.fromString("subset"), form.getSubset()), null);
+            Map<String, Object>[] results = ts.getMapArray();
+
+            if (results.length == 0)
+            {
+                errors.reject(ERROR_REQUIRED, "The counter for SNOMED codes for subset " + form.getSubset() + " not found in onprc_ehr.snomed_counter. Contact your administrator.");
+            }
+            else
+            {
+                String matchCode = hasExactMatch(form);
+                if (matchCode != null)
+                {
+                    errors.reject(ERROR_UNIQUE, "SNOMED code " + matchCode + " already exists with the meaning '" + form.getSnomed() + "' and subset '" + form.getSubset() + "' in container " + getContainer().getPath() + ".");
+                }
+                else
+                {
+                    _count = ((Integer) results[0].get("count"));
+                    _prefix = ((String) results[0].get("prefix"));
+                }
+            }
+        }
+
+        @Override
+        public ApiResponse execute(SnomedForm form, BindException errors)
+        {
+            String code = _prefix + String.format("%04d", _count);
+            Map<String, Object> row = new HashMap<>();
+            row.put("code", code);
+            row.put("meaning", form.getSnomed());
+            row.put("container", getContainer());
+
+            UserSchema us = EHRService.get().getEHRLookupsSchema(getUser(), getContainer());
+            TableInfo snomedTi = us.getDbSchema().getTable("snomed");
+            Table.insert(getUser(), snomedTi, row);
+
+            row = new HashMap<>();
+            row.put("code", code);
+            row.put("primaryCategory", form.getSubset());
+            row.put("container", getContainer());
+
+            TableInfo snomedSubsetTi = us.getDbSchema().getTable("snomed_subset_codes");
+            Table.insert(getUser(), snomedSubsetTi, row);
+
+            row = new HashMap<>();
+            row.put("subset", form.getSubset());
+            row.put("count", _count + 1);
+            row.put("container", getContainer());
+
+            UserSchema usOnprc = new ONPRC_EHRUserSchema(getUser(), getContainer());
+            TableInfo snomedCounterTi = usOnprc.getDbSchema().getTable("snomed_counter");
+            Table.update(getUser(), snomedCounterTi, row, form.getSubset());
+
+            JSONObject obj = new JSONObject();
+            obj.put("code", code);
+            obj.put("meaning", form.getSnomed());
+
+            return new ApiSimpleResponse(obj);
         }
     }
 }
