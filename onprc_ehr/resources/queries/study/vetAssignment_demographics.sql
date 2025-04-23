@@ -25,6 +25,7 @@ SELECT demographics.id
      , assignedProject.Protocol AS protocol
      , assignedProject.PI AS protocolPI
      , assignedProject.projectType AS assignmentType
+     , assignedObservations.category as observationcategory
      , demographics.calculated_status
      , demographics.gender
      , demographics.species
@@ -38,6 +39,8 @@ ON CMUcases.id = nhp.id
     ON demographics.id = nhp.id
     LEFT JOIN Site.{ substitutePath moduleProperty('EHR', 'EHRStudyContainer') }.study.vetAssignment_projects AS assignedProject
     ON assignedProject.id = nhp.id
+    LEFT JOIN Site.{ substitutePath moduleProperty('EHR', 'EHRStudyContainer') }.study.mostRecentClinicalObservations_Vomit_ForAnimal AS assignedObservation
+    ON assignedObservation.id = nhp.id
 WHERE demographics.Calculated_Status = 'Alive'
   AND nhp.id NOT LIKE '[A-Z]%'
   AND housing.enddate IS NULL
