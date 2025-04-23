@@ -8,7 +8,8 @@ select
     WHEN (t.category IS NOT NULL AND t.observation IS NULL) THEN cast((t.category || t.remark) as varchar(1000))
     WHEN (t.category IS NULL AND t.observation IS NOT NULL) THEN cast((t.observation || t.remark) as varchar(1000))
     else t.remark
-  END, chr(10)) as observations
+  END, chr(10)) as observations,
+ group_concat(t.category, chr(10)) as category
 
 FROM study.clinical_observations t
 

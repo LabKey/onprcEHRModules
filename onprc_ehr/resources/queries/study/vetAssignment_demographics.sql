@@ -25,7 +25,7 @@ SELECT demographics.id
      , assignedProject.Protocol AS protocol
      , assignedProject.PI AS protocolPI
      , assignedProject.projectType AS assignmentType
-     , assignedObservations.category as observationcategory
+     , assignedObservation.category as observationcategory
      , demographics.calculated_status
      , demographics.gender
      , demographics.species
