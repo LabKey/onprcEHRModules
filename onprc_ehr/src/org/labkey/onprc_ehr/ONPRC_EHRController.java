@@ -42,6 +42,7 @@ import org.labkey.api.ehr.EHRService;
 import org.labkey.api.ehr.security.EHRDataEntryPermission;
 import org.labkey.api.files.FileContentService;
 import org.labkey.api.query.FieldKey;
+import org.labkey.api.query.QueryService;
 import org.labkey.api.query.UserSchema;
 import org.labkey.api.security.AdminConsoleAction;
 import org.labkey.api.security.RequiresPermission;
@@ -551,8 +552,6 @@ public class ONPRC_EHRController extends SpringActionController
         @Override
         public ApiResponse execute(SnomedForm form, BindException errors)
         {
-            String[] words = form.getSnomed().split("\\W+");
-
             SQLFragment sql = new SQLFragment();
             if (form.getSubset() != null)
             {
@@ -572,7 +571,7 @@ public class ONPRC_EHRController extends SpringActionController
                 sql.add(form.getSnomed());
             }
 
-            List<String> results = new SqlSelector(EHRService.get().getEHRLookupsSchema(getUser(), getContainer()).getDbSchema(), sql).getArrayList(String.class);
+            List<String> results = new SqlSelector(QueryService.get().getUserSchema(getUser(), getContainer(), "ehr_lookups").getDbSchema(), sql).getArrayList(String.class);
             JSONArray array = new JSONArray(results);
             JSONObject obj = new JSONObject();
             obj.put("snomeds", array);
@@ -597,7 +596,7 @@ public class ONPRC_EHRController extends SpringActionController
             sql.add(getContainer());
             sql.add(form.getSnomed());
 
-            List<String> results = new SqlSelector(EHRService.get().getEHRLookupsSchema(getUser(), getContainer()).getDbSchema(), sql).getArrayList(String.class);
+            List<String> results = new SqlSelector(QueryService.get().getUserSchema(getUser(), getContainer(), "ehr_lookups").getDbSchema(), sql).getArrayList(String.class);
             return results.isEmpty() ? null : results.get(0);
         }
 
@@ -639,7 +638,7 @@ public class ONPRC_EHRController extends SpringActionController
             row.put("meaning", form.getSnomed());
             row.put("container", getContainer());
 
-            UserSchema us = EHRService.get().getEHRLookupsSchema(getUser(), getContainer());
+            UserSchema us = QueryService.get().getUserSchema(getUser(), getContainer(), "ehr_lookups");
             TableInfo snomedTi = us.getDbSchema().getTable("snomed");
             Table.insert(getUser(), snomedTi, row);
 
