@@ -25,8 +25,6 @@ SELECT DISTINCT VAF1.Id
               , VAF1.Area
               , VAF1.Calculated_Status
               , VAF1.MatchedRule
-              , VAF1.observationcategory
-
 FROM vetAssignment_filter AS VAF1
          INNER JOIN (
     SELECT VAF2.Id
