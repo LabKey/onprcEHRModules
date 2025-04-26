@@ -44,7 +44,6 @@ FROM (
                     WHEN R20.UserID IS NOT NULL THEN R20.UserID.DisplayName
                     WHEN R21.UserID IS NOT NULL THEN R21.UserID.DisplayName
                     WHEN R22.UserID IS NOT NULL THEN R22.UserID.DisplayName
-                    WHEN R23.UserID IS NOT NULL THEN R23.UserID.DisplayName
                     ELSE 'Unassigned'
              END AS AssignedVet
               , CASE
@@ -71,7 +70,6 @@ FROM (
                     WHEN R20.UserID IS NOT NULL THEN 'Protocol'
                     WHEN R21.UserID IS NOT NULL THEN 'Room'
                     WHEN R22.UserID IS NOT NULL THEN 'Area'
-                    WHEN R23.UserID IS NOT NULL THEN 'Clinical Observations'
                     ELSE 'No Matching Rule'
              END AS AssignmentType
               , d.CaseVet
@@ -83,7 +81,6 @@ FROM (
               , d.Room
               , d.Area
               , d.Calculated_status
-              , d.observationcategory
               , CASE
                     WHEN d.CaseVet IS NOT NULL  THEN 0
                     WHEN R01.UserID IS NOT NULL THEN 1
@@ -108,7 +105,6 @@ FROM (
                     WHEN R20.UserID IS NOT NULL THEN 20
                     WHEN R21.UserID IS NOT NULL THEN 21
                     WHEN R22.UserID IS NOT NULL THEN 22
-                    WHEN R23.UserID IS NOT NULL THEN 23
                     ELSE 99
              END AS MatchedRule
          FROM study.vetAssignment_demographics AS d
@@ -144,8 +140,5 @@ FROM (
 
 /* R21 Room                           */ LEFT JOIN onprc_ehr.vet_assignment R21 ON (R21.Room = d.Room AND R21.Area IS NULL AND R21.Protocol IS NULL AND R21.Project IS NULL AND R21.Priority = false)
 /* R22 Area                           */ LEFT JOIN onprc_ehr.vet_assignment R22 ON (R22.Area = d.Area AND R22.Room IS NULL AND R22.Protocol IS NULL AND R22.Project IS NULL AND R22.Priority = false)
-
-/* R23 Active clinical observations   */ LEFT JOIN study.mostRecentClinicalObservations_Vomit_ForAnimal R23 ON (R23.id = d.id And R23.observationcategory is not null)
-
      ) placeholderAlias
 

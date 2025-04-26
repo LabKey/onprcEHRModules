@@ -54,7 +54,9 @@
                                             var panel = btn.up('#outerPanel');
                                             var userName = panel.down('#userField').getDisplayValue();
                                             var filterArray = [];
-                                            filterArray.push(LABKEY.Filter.create('totalRemarksEnteredSinceReview', 0, LABKEY.Filter.Types.GT));
+                                            // filterArray.push(LABKEY.Filter.create('totalRemarksEnteredSinceReview', 0, LABKEY.Filter.Types.GTE));
+
+                                            // filterArray.push(LABKEY.Filter.create('mostRecentClinicalObservationsVomit/category', 'Vomit', LABKEY.Filter.Types.EQUAL));
 
 
 
@@ -63,14 +65,14 @@
                                             }
 
 
-
                                             var target = panel.down('#targetPanel');
                                             target.removeAll();
                                             target.add({
                                                 xtype: 'ldk-querypanel',
                                                 queryConfig: {
                                                     schemaName: 'study',
-                                                    queryName: 'demographics',
+                                                    // queryName: 'demographics',
+                                                    queryName: 'demographicsVetReview',
                                                     viewName: 'Vet Review',
                                                     filterArray: filterArray,
                                                     scope: this,
