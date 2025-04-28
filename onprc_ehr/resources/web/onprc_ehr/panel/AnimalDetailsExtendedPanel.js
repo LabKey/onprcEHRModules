@@ -30,7 +30,7 @@ Ext4.define('ONPRC_EHR.panel.AnimalDetailsExtendedPanel', {
                     fieldLabel: 'Location',
                     name: 'location'
                 },{
-                    fieldLabel: 'Gender',
+                    fieldLabel: 'Sex',
                     name: 'gender'
                 },{
                     fieldLabel: 'Species',

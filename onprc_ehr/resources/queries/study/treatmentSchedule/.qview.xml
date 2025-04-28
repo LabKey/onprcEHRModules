@@ -12,6 +12,7 @@
         <column name="amountAndVolume"/>
         <column name="route"/>
         <column name="remark"/>
+        <column name="Id/assignedVet/assignedVet"/>
         <column name="performedby"/>
         <column name="startDate"/>
         <column name="category"/>

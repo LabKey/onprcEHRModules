@@ -16,7 +16,7 @@
                         </fk>
                     </column>
                     <column columnName="gender">
-                        <columnTitle>Gender</columnTitle>
+                        <columnTitle>Sex</columnTitle>
                         <fk>
                             <fkDbSchema>ehr_lookups</fkDbSchema>
                             <fkTable>gender_codes</fkTable>
