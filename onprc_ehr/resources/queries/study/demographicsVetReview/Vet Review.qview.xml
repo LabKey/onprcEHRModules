@@ -10,10 +10,8 @@
         <column name="mostRecentClinicalObservations/observations"/>
         <column name="mostRecentClinicalObservations/date"/>
 
-        <column name="mostRecentClinicalObservationsVomit/category"/>
-        <column name="mostRecentClinicalObservationsVomit/date"/>
-
-
+        <column name="vomitobservation"/>
+        <column name="vomitdate"/>
         <column name="lastVetReview"/>
         <column name="Id/utilization/use"/>
         <column name="Id/activeCases/categories">

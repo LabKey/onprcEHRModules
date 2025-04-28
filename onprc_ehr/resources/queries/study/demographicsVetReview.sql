@@ -15,8 +15,11 @@
  */
 --  Created 4-24-2025  R. Blasa Recreated to allow additional filters
 SELECT
- d.*
+ d.*,
+ es.observations as vomitobservation,
+ es.date as vomitdate
 
-FROM study.demographics d
-Where d.totalRemarksEnteredSinceReview >  0
----or  d.mostRecentClinicalObservationsVomit is not null
+FROM  Site.{ substitutePath moduleProperty('EHR', 'EHRStudyContainer') }.study.demographics d,
+study.mostRecentClinicalObservations_Vomit_ForAnimal es
+Where (d.id = es.id) And (d.totalRemarksEnteredSinceReview >  0
+or  es.category is not null)
