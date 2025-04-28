@@ -30,10 +30,11 @@
 <!--                        <displayWidth>100</displayWidth>-->
                     </column>
                     <column columnName="vomitobservation">
-                        <columnTitle>Observation Vomit</columnTitle>
+                        <columnTitle>Latest Vomit Observations</columnTitle>
+                        <displayWidth>130</displayWidth>-->
                     </column>
                     <column columnName="vomitdate">
-                        <columnTitle>Observation Vomit date</columnTitle>
+                        <columnTitle>Vomit Observation Date</columnTitle>
                     </column>
 
                 </columns>

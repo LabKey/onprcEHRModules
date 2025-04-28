@@ -30,5 +30,6 @@
         <sort column="Id/curLocation/room"/>
         <sort column="Id/curLocation/cage"/>
         <sort column="Id" />
+        <sort column="date" />
     </sorts>
 </customView>
