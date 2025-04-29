@@ -260,7 +260,7 @@ BEGIN
                null as MostRecentDate,
                '' as comment,
                null as snooze_date,
-               null AS MonthsUntilRenewal
+               0.0 AS MonthsUntilRenewal
 
 
 
