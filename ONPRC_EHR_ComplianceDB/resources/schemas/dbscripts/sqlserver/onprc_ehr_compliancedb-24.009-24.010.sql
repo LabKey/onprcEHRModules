@@ -292,8 +292,12 @@ BEGIN
         from  ehr_compliancedb.RequirementsPerEmployee j
           Where j.employeeid in (select p.employeeid from ehr_compliancedb.employees p where j.employeeid = p.employeeid And p.enddate is null)
           And j.requirementname in  (select q.requirementname from ehr_compliancedb.Requirements q where q.requirementname = j.requirementname And q.dateDisabled is null )
+            And  j.requirementname not in (select distinct h.requirementname from ehr_compliancedb.employeeperunit k, ehr_compliancedb.requirementspercategory h Where (k.unit = h.unit
+              or k.category = h.category) And j.employeeid = k.employeeid )
+            And j.requirementname not in (select distinct t.requirementname from ehr_compliancedb.employeerequirementexemptions t Where j.employeeid = t.employeeid  And j.requirementname = t.requirementname)
+            And j.requirementname not in (select distinct k.requirementname from ehr_compliancedb.completiondates k Where k.employeeid = j.employeeid)
 
-        group by j.requirementname,j.employeeid
+          group by j.requirementname,j.employeeid
 
         order by employeeid,requirementname, mostrecentcompleted_date desc
 
