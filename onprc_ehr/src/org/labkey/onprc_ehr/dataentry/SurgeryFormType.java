@@ -19,7 +19,6 @@ import org.labkey.api.ehr.EHRService;
 import org.labkey.api.ehr.dataentry.BloodDrawFormSection;
 import org.labkey.api.ehr.dataentry.DataEntryFormContext;
 import org.labkey.api.ehr.dataentry.EncounterForm;
-import org.labkey.api.ehr.dataentry.ExtendedAnimalDetailsFormSection;
 import org.labkey.api.ehr.dataentry.FormSection;
 import org.labkey.api.ehr.dataentry.NonStoreFormSection;
 import org.labkey.api.ehr.dataentry.TaskFormSection;
@@ -54,6 +53,8 @@ public class SurgeryFormType extends EncounterForm
                 new EncounterChildFormSection("ehr", "encounter_participants", "Staff", false),
                 new EncounterChildFormSection("ehr", "encounter_summaries", "Narrative", true),
                 new EncounterChildFormSection("study", "weight", "Weight", false, "EHR.data.WeightClientStore", Arrays.asList(ClientDependency.supplierFromPath("ehr/data/WeightClientStore.js")), null),
+                //Added by Kollil on 3/6/2025. Refer to tkt # 12124
+                new ClinicalObservationsFormSection(EHRService.FORM_SECTION_LOCATION.Tabs, true),
                 new EncounterMedicationsFormSection("study", "Drug Administration", "Medications/Treatments Given", true),
                 new EncounterMedicationsFormSection("study", "Treatment Orders", "Medication/Treatment Orders", false),
                 new BloodDrawFormSection(false, EHRService.FORM_SECTION_LOCATION.Tabs),
