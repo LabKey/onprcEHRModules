@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--Copy Prima tables into Prime. Runs daily at 3AM -->
+<!--Copy Prima tables into Prime. Runs daily at 9am and 5pm, Refer to tkt #11937 -->
 <!--Added By Kollil, 7/26/2021 , Modified by Kollil, 03-02-2025-->
 <!--NOTES: The source DB name is "Prima" in production and "PrimaTest" on other servers -->
 
@@ -31,8 +31,8 @@
 
     </transforms>
     <schedule>
-        <!--Runs daily 3AM-->
-        <cron expression="0 50 03 * * ?"/>
+        <!--Runs daily 9Am and 5pm-->
+        <cron expression="0 0 9,17 * * ?"/>
     </schedule>
 
 </etl>

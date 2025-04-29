@@ -2,6 +2,7 @@
 -- Author:		Lakshmi Kolli
 -- Create date: 2025-03-04
 -- Description:	Db tables creation for Prima cassette project. Created all the Prima tables in Prime onprc_ehr schema folder.
+-- Refer to tkt #11937
 -- =======================================================================================================================================
 
 --Drop if exists. We are using these 4 tables for the Cassette Project
