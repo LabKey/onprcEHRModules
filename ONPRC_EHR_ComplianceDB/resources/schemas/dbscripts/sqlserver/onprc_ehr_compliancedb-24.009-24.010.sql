@@ -254,38 +254,13 @@ BEGIN
               (select h.supervisor from ehr_compliancedb.employees h where h.employeeid = j.employeeid) as supervisor,
               (select h.type from ehr_compliancedb.employees h where h.employeeid = j.employeeid) as trainee_type,      ----- type trainee, or trainer
               (select h.type from ehr_compliancedb.Requirements h where h.requirementname = j.requirementname) as requirement_type,      ----- type trainee, or trainer
-
-              (select count(zz.date) from ehr_compliancedb.completiondates zz where zz.requirementname= j.requirementname and zz.employeeid= j.employeeid  ) as timesCompleted,
-
-                                (select k.expireperiod from ehr_compliancedb.Requirements k where k.requirementname = j.requirementname) as ExpiredPeriod,
-
-                                ( select  (datediff(month,max(pq.date), tt.reviewdate) )from  ehr_compliancedb.requirements tt, ehr_compliancedb.completiondates pq where tt.requirementname =   j.requirementname and pq.requirementname = tt.requirementname and pq.employeeid = j.employeeid group by tt.expireperiod, tt.reviewdate
-                                  having (tt.expireperiod) > (datediff(month,max(pq.date), tt.reviewdate))  and (tt.reviewdate is not null)  ) as NewExpirePeriod,
-
-                                (select max(zz.date) from ehr_compliancedb.completiondates zz where zz.requirementname= j.requirementname and zz.employeeid= j.employeeid  ) as MostRecentDate,
-
-                                (Select distinct string_agg(yy.comment, char(10))  from ehr_compliancedb.completiondates yy where yy.date in (select max(zz.date) from ehr_compliancedb.completiondates zz where zz.requirementname= j.requirementname and zz.employeeid= j.employeeid )
-                                                                                                              And  yy.requirementname= j.requirementname and yy.employeeid= j.employeeid   ) as comment,
-
-                                (Select distinct string_agg(yy.snooze_date, char(10))  from ehr_compliancedb.completiondates yy where yy.date in (select max(zz.date) from ehr_compliancedb.completiondates zz where zz.requirementname= j.requirementname and zz.employeeid= j.employeeid )
-                                                                                                              And  yy.requirementname= j.requirementname and yy.employeeid= j.employeeid   ) as snooze_date,
-
-                                CAST(
-                                        CASE
-                                            WHEN (select max(st.date) from ehr_compliancedb.completiondates st where st.requirementname = j.requirementname and st.employeeid = j.employeeid ) IS NULL   then 0
-                                            WHEN ( select  (tt.expireperiod)  from  ehr_compliancedb.requirements tt where tt.requirementname = j.requirementname   group by tt.expireperiod  ) = 0 then Null
-
-
-                                            WHEN ( select  count(*) from  ehr_compliancedb.requirements tt, ehr_compliancedb.completiondates pq where tt.requirementname = j.requirementname and pq.requirementname = tt.requirementname and pq.employeeid = j.employeeid group by tt.expireperiod, tt.reviewdate
-                                                   having (tt.reviewdate) >  ( cast(getdate() as date)  )) > 0 THEN
-
-                                                ( select  ( datediff(month,max(pq.date), tt.reviewdate) - (datediff(month,max(pq.date), getdate())) )from  ehr_compliancedb.requirements tt, ehr_compliancedb.completiondates pq where tt.requirementname =   j.requirementname and pq.requirementname = tt.requirementname and pq.employeeid = j.employeeid group by tt.expireperiod, tt.reviewdate
-                                                  having (tt.reviewdate) >  ( cast(getdate() as date)   )      )
-
-
-                                            ELSE ( select  (tt.expireperiod) - ( datediff(month,max(pq.date), getdate())) from  ehr_compliancedb.requirements tt, ehr_compliancedb.completiondates pq where   tt.requirementname =   j.requirementname and pq.requirementname = tt.requirementname and pq.employeeid = j.employeeid group by tt.expireperiod )
-
-                                            END  AS DECIMAL)  AS MonthsUntilRenewal
+              null as timesCompleted,
+              (select k.expireperiod from ehr_compliancedb.Requirements k where k.requirementname = j.requirementname) as ExpiredPeriod,
+               null as NewExpirePeriod,
+               null as MostRecentDate,
+               '' as comment,
+               null as snooze_date,
+               null AS MonthsUntilRenewal
 
 
 

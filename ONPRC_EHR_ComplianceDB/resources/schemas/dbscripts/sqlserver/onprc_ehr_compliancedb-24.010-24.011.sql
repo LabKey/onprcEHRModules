@@ -193,7 +193,7 @@ BEGIN
               (select h.type from ehr_compliancedb.employees h where h.employeeid = j.employeeid) as trainee_type,      ----- type trainee, or trainer
               (select h.type from ehr_compliancedb.Requirements h where h.requirementname = j.requirementname) as requirement_type,    ----- type trainee, or trainer
                null as timesCompleted,
-               null as ExpiredPeriod,
+               (select k.expireperiod from ehr_compliancedb.Requirements k where k.requirementname = j.requirementname) as ExpiredPeriod,
                null as NewExpirePeriod,
                null as MostRecentDate,
                '' as comment,
