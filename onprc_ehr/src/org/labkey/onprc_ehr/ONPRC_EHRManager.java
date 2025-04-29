@@ -16,6 +16,7 @@
 package org.labkey.onprc_ehr;
 
 import org.labkey.api.data.Container;
+import org.labkey.api.data.DbSequenceManager;
 import org.labkey.api.data.PropertyManager;
 import org.labkey.api.data.PropertyManager.WritablePropertyMap;
 import org.labkey.api.query.Queryable;
@@ -90,6 +91,8 @@ public class ONPRC_EHRManager
     @Queryable
     public static final String CAGE_MEDICAL_EXEMPTION_FLAG = "Medical";
 
+    private String _caseSequence = "org.labkey.onprc_ehr.cases";
+
     private ONPRC_EHRManager()
     {
 
@@ -146,6 +149,11 @@ public class ONPRC_EHRManager
         }
 
         return ret;
+    }
+
+    public long getNextCaseNo(Container c)
+    {
+        return DbSequenceManager.get(c, _caseSequence).next();
     }
 }
 
