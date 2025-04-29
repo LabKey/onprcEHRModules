@@ -6,21 +6,21 @@
 /**
  * @cfg dataEntryPanel      Created 4/29/2025   Blasa    Environmental CPL Entries
  */
-Ext4.define('ONPRC_EHR.window.BulkEnvironmental_CPL_ScanWindow', {
+Ext4.define('ONPRC_EHR.window.BulkEnvironmental_CPL_Contact_Window', {
     extend: 'Ext.window.Window',
 
     initComponent: function(){
         Ext4.apply(this, {
             modal: true,
             closeAction: 'destroy',
-            title: 'Bulk Environmental_CPL_ScanWindow Import',
+            title: 'Bulk Environmental CPL Contact Import Window',
             bodyStyle: 'padding: 5px;',
             width: 800,
             defaults: {
                 border: false
             },
             items: [{
-                html : 'This allows you to import record using the Environmental_CPL_ScanWindow Excel form.  To import, cut/paste the contents of the excel file (Ctl + A is a good way to select all) into the box below and hit submit.',
+                html : 'This allows you to import record using the Environmental_CPL_Contact Window Excel form.  To import, cut/paste the contents of the excel file (Ctl + A is a good way to select all) into the box below and hit submit.',
                 style: 'padding-bottom: 10px;'
             },{
                 xtype: 'ldk-linkbutton',
@@ -28,7 +28,7 @@ Ext4.define('ONPRC_EHR.window.BulkEnvironmental_CPL_ScanWindow', {
                 scope: this,
                 style: 'margin-bottom: 10px;',
                 handler: function(){
-                    window.location = LABKEY.contextPath + '/onprc_ehr/templates/BulkEnvironmental_CPL_Template.xlsx'
+                    window.location = LABKEY.contextPath + '/onprc_ehr/templates/BulkEnvironmental_CPL_Contact_Template.xlsx'
                 }
             },{
                 xtype: 'textarea',
@@ -83,11 +83,11 @@ Ext4.define('ONPRC_EHR.window.BulkEnvironmental_CPL_ScanWindow', {
 
         Ext4.Msg.wait('Please be patient while we Process your data...');
 
-        var servicetype = 'Sanitation: ATP';
+        var servicetype = 'Sanitation: Contact Plate';
         var chargeunit = 'Clinpath' ;
 
 
-        var offset = 2;
+        var offset = 1;
         var rowIdx = offset;
         for (var i = offset; i < parsed.length; i++)
         {
@@ -138,45 +138,43 @@ Ext4.define('ONPRC_EHR.window.BulkEnvironmental_CPL_ScanWindow', {
         this.close();
     },
 
-    processRow: function(row, recordMap, errors, rowIdx,tdate, parsed, cnt,servicetype,chargeunit)
-    {
+    processRow: function(row, recordMap, errors, rowIdx,tdate, parsed, cnt,servicetype,chargeunit) {
 
         // Generate labwork Header information
 
         var date = LDK.ConvertUtils.parseDate(this.safeGet(parsed, cnt, 0));
-        if (!date)
-        {
+        if (!date) {
             errors.push('Missing Date');
         }
 
-            var HeaderObjectID = LABKEY.Utils.generateUUID().toUpperCase();
+        var HeaderObjectID = LABKEY.Utils.generateUUID().toUpperCase();
 
-            var obj = {
-                date: date,
-                servicerequested: Ext4.String.trim(row[1]),
-                charge_unit: chargeunit,
-                testing_location:Ext4.String.trim(row[2]),  //Area
-                test_type:Ext4.String.trim(row[4]),  //Initial
-                test_method:Ext4.String.trim(row[5]),  // Testing Method
-                test_results:Ext4.String.trim(row[6]),  //Test Results
-                pass_fail:Ext4.String.trim(row[7]), //Pass/Fail
-                biological_cycle: Ext4.String.trim(row[8]),   //Cycle
-                retest:Ext4.String.trim(row[7]), //Pass/Fail
-                biological_BI:Ext4.String.trim(row[9]),   //BI#
-                action:Ext4.String.trim(row[10]),  // Action
-                water_source:Ext4.String.trim(row[11]),  //Water Source
-                retest:Ext4.String.trim(row[12]),  //Results Read by
-                colony_count: Ext4.String.trim(row[13]),   //Colony Count
-                objectid: HeaderObjectID,
-                performedby: Ext4.String.trim(row[14]),  //Tech Initials
-                remarks:Ext4.String.trim(row[15])       //Ccmments
+        var obj = {
+            date: date,
+            servicer_requested: servicetype,
+            charge_unit: chargeunit,
+            testing_location: Ext4.String.trim(row[2]),  //Testing Location
+            test_type: Ext4.String.trim(row[4]),  //Test Type
+            test_method: Ext4.String.trim(row[5]),  // Testing Method
+            test_results: Ext4.String.trim(row[6]),  //Test Results
+            pass_fail: Ext4.String.trim(row[7]), //Pass/Fail
+            biological_cycle: Ext4.String.trim(row[8]),   //Cycle
+            retest: Ext4.String.trim(row[7]), //Pass/Fail
+            // biological_BI: Ext4.String.trim(row[9]),   //BI#
+            action: Ext4.String.trim(row[10]),  // Action
+            // water_source: Ext4.String.trim(row[11]),  //Water Source
+            // retest: Ext4.String.trim(row[12]),  //Results Read by
+            colony_count: Ext4.String.trim(row[13]),   //Colony Count
+            objectid: HeaderObjectID,
+            performedby: Ext4.String.trim(row[14]),  //Performed by (Collected by)
+            remarks: Ext4.String.trim(row[15])       //Ccmments
 
-            };
+         };
 
-            if (!this.checkRequired(['date', 'servicerequested','charge_unit','testing_location','action','test_results','retest','pass_fail','performedby','retest'], obj, errors, rowIdx))
-            {
-                recordMap.primaryheader.push(obj);
-            }
+        if (!this.checkRequired(['date', 'servicerequested','charge_unit','testing_location','action','test_results','retest','pass_fail','performedby','retest'], obj, errors, rowIdx))
+        {
+            recordMap.primaryheader.push(obj);
+        }
 
     },
 
@@ -242,16 +240,16 @@ Ext4.define('ONPRC_EHR.window.BulkEnvironmental_CPL_ScanWindow', {
     }
 });
 
-EHR.DataEntryUtils.registerDataEntryFormButton('ENV_CPL_SCAN_IMPORT', {
-    text: 'Enviromental CPL Panel Import',
-    name: 'envCPLscan',
-    itemId: 'envCPLPscan',
-    tooltip: 'Click to import using a Environmental CPL Panel template',
+EHR.DataEntryUtils.registerDataEntryFormButton('ENV_CPL_Contact_IMPORT', {
+    text: 'Enviromental CPL Contact Import Window',
+    name: 'envCPLContactscan',
+    itemId: 'envCPLContactscan',
+    tooltip: 'Click to import using a Environmental CPL Contact Panel template',
     handler: function(btn){
         var panel = btn.up('ehr-dataentrypanel');
-        LDK.Assert.assertNotEmpty('Unable to find dataEntryPanel in Environmental CPL Panel button', panel);
+        LDK.Assert.assertNotEmpty('Unable to find dataEntryPanel in Environmental CPL Contact Panel button', panel);
 
-        Ext4.create('ONPRC_EHR.window.BulkEnvironmental_CPL_ScanWindow', {
+        Ext4.create('ONPRC_EHR.window.BulkEnvironmental_CPL_Contact_Window', {
             dataEntryPanel: panel
         }).show();
     }

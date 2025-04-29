@@ -89,7 +89,7 @@ package org.labkey.onprc_ehr.dataentry;
             {
                 List<String> defaultButtons = new ArrayList<>();
                 defaultButtons.addAll(super.getMoreActionButtonConfigs()) ;
-                defaultButtons.add("ENV_CPL_SCAN_IMPORT");
+                defaultButtons.add("ENV_CPL_Water_IMPORT");
 
                 return defaultButtons;
             }
