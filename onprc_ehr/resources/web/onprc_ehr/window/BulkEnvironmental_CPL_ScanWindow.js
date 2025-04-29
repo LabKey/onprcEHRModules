@@ -87,7 +87,7 @@ Ext4.define('ONPRC_EHR.window.BulkEnvironmental_CPL_ScanWindow', {
         var chargeunit = 'Clinpath' ;
 
 
-        var offset = 1;
+        var offset = 2;
         var rowIdx = offset;
         for (var i = offset; i < parsed.length; i++)
         {
@@ -156,7 +156,7 @@ Ext4.define('ONPRC_EHR.window.BulkEnvironmental_CPL_ScanWindow', {
                 servicerequested: Ext4.String.trim(row[1]),
                 charge_unit: chargeunit,
                 testing_location:Ext4.String.trim(row[2]),  //Area
-                test_type:Ext4.String.trim(row[11]),  //Initial
+                test_type:Ext4.String.trim(row[4]),  //Initial
                 test_method:Ext4.String.trim(row[5]),  // Testing Method
                 test_results:Ext4.String.trim(row[6]),  //Test Results
                 pass_fail:Ext4.String.trim(row[7]), //Pass/Fail
@@ -166,15 +166,14 @@ Ext4.define('ONPRC_EHR.window.BulkEnvironmental_CPL_ScanWindow', {
                 action:Ext4.String.trim(row[10]),  // Action
                 water_source:Ext4.String.trim(row[11]),  //Water Source
                 retest:Ext4.String.trim(row[12]),  //Results Read by
-                colony_count: Ext4.String.trim(row[3]),   //Colony Count
-                surface_tested: ' ',  //Surface Tested
+                colony_count: Ext4.String.trim(row[13]),   //Colony Count
                 objectid: HeaderObjectID,
                 performedby: Ext4.String.trim(row[14]),  //Tech Initials
-                remarks:Ext4.String.trim(row[8])       //Ccmments
+                remarks:Ext4.String.trim(row[15])       //Ccmments
 
             };
 
-            if (!this.checkRequired(['date', 'servicerequested','charge_unit','testing_location','action','test_results','surface_tested','retest','pass_fail','performedby','retest','surface_tested'], obj, errors, rowIdx))
+            if (!this.checkRequired(['date', 'servicerequested','charge_unit','testing_location','action','test_results','retest','pass_fail','performedby','retest'], obj, errors, rowIdx))
             {
                 recordMap.primaryheader.push(obj);
             }
