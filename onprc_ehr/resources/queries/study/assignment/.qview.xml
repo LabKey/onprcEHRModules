@@ -3,7 +3,7 @@
         <column name="Id"/>
         <column name="Id/Dataset/Demographics/gender">
             <properties>
-                <property name="columnTitle" value="Gender"/>
+                <property name="columnTitle" value="Sex"/>
             </properties>
         </column>
         <column name="project"/>
