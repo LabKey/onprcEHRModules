@@ -101,6 +101,9 @@
                             <fkColumnName>lsid</fkColumnName>
                         </fk>
                     </column>
+                    <column columnName="gender">
+                        <columnTitle>Sex</columnTitle>
+                    </column>
                 </columns>
             </table>
         </tables>
