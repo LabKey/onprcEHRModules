@@ -1,12 +1,24 @@
 <query xmlns="http://labkey.org/data/xml/query">
     <metadata>
         <tables xmlns="http://labkey.org/data/xml">
-            <table tableName="Requirements" tableDbType="NOT_IN_DB">
+            <table tableName="requirements" tableDbType="NOT_IN_DB">
+<!--                <javaCustomizer class="org.labkey.ONPRCEHR_ComplianceDB.query.ONPRC_EHR_ComplianceDBTableCustomizer" />-->
                 <tableTitle>Requirements</tableTitle>
                 <columns>
                     <column columnName="reviewdate">
                         <columnTitle>Review Date</columnTitle>
                         <displayWidth>70</displayWidth>
+                    </column>
+
+                    <column columnName="requiementname">
+                        <columnTitle>Requirment Name</columnTitle>
+                        <url>/query/executeQuery.view?
+                            schemaName=onprc_ehr_compliancedb&amp;
+                            query.queryName=requirements&amp;
+                            query.Id~eq=${Id}&amp;
+                            query.requirementDetails.view?requirementname=${requirementname}
+
+                        </url>
                     </column>
                 </columns>
             </table>

@@ -1,0 +1,21 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="requirementsperemployee" tableDbType="NOT_IN_DB">
+                <tableTitle>Requirements Per Employee</tableTitle>
+
+                <columns>
+                    <column columnName="trackingflag">
+                        <columnTitle>Essential</columnTitle>
+                        <fk>
+                            <fkDbSchema>ehr_compliancedb</fkDbSchema>
+                            <fkTable>essentialflag</fkTable>
+                            <fkColumnName>value</fkColumnName>
+                        </fk>
+                    </column>
+                 </columns>
+            </table>
+        </tables>
+    </metadata>
+</query>
+
