@@ -246,7 +246,7 @@ BEGIN
                j.employeeid,
                null as unit,
                null as category,
-               'Yes' as trackingflag,
+               j.trackingflag as trackingflag,
               (select h.email from ehr_compliancedb.employees h where h.employeeid = j.employeeid) as  email,
               (select h.lastname from ehr_compliancedb.employees h where h.employeeid = j.employeeid) as lastname,
               (select h.firstname from ehr_compliancedb.employees h where h.employeeid = j.employeeid) as firstname,
