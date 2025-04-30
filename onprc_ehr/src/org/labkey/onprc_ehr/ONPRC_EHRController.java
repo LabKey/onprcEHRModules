@@ -601,7 +601,7 @@ public class ONPRC_EHRController extends SpringActionController
                 counter++;
 
                 // Batch boundary
-                if (counter % 5000 == 0)
+                if (counter % 1000 == 0)
                 {
                     newBatch = true;
                     sql.append(") AS updates(dsrowid, caseNo) ");
