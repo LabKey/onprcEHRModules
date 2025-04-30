@@ -579,11 +579,14 @@ public class ONPRC_EHRController extends SpringActionController
 
             logger.info("Starting case number updates.");
 
+            // Stream cases with no case number, sorted by date
             SimpleFilter filter = SimpleFilter.createContainerFilter(getContainer());
             filter.addCondition(FieldKey.fromParts("caseNo"), null, CompareType.ISBLANK);
             ResultSet rs = new TableSelector(ti, filter, new Sort("date")).getResultSet(false, false);
+
             boolean newBatch = true;
             int counter = 0;
+
             while( rs.next() )
             {
                 if (newBatch) {
@@ -597,6 +600,7 @@ public class ONPRC_EHRController extends SpringActionController
                 sql.add(ONPRC_EHRManager.get().getNextCaseNo(c));
                 counter++;
 
+                // Batch boundary
                 if (counter % 5000 == 0)
                 {
                     newBatch = true;
@@ -605,7 +609,7 @@ public class ONPRC_EHRController extends SpringActionController
 
                     new SqlExecutor(ti.getSchema()).execute(sql);
 
-                    logger.info(counter + " case numbers added.");
+                    logger.info(counter + " total case numbers added.");
 
                     sql = new SQLFragment("UPDATE c SET c.caseNo = updates.caseNo FROM studydataset." + _casesProvisionedName + " c JOIN (VALUES ");
                 }
@@ -622,7 +626,7 @@ public class ONPRC_EHRController extends SpringActionController
             ret.put("rows", counter);
             ret.put("success", true);
 
-            logger.info("Case number update completed. " + counter + " case numbers updated in total.");
+            logger.info("Case number update completed. " + counter + " total case numbers updated.");
 
 
             return new ApiSimpleResponse(ret);
