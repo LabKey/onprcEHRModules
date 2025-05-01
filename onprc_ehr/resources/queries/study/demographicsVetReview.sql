@@ -16,6 +16,8 @@
 --  Created 4-24-2025  R. Blasa Recreated to allow additional filters
 SELECT
  d.*,
+ d.mostRecentClinicalObservations.date as observationdate,
+ d.mostRecentClinicalObservations.observations,
  es.observations as vomitobservation,
  es.date as vomitdate
 

@@ -15,7 +15,7 @@
                             <className>org.labkey.onprc_ehr.table.ObservationDisplayColumnFactory</className>
                         </displayColumnFactory>
                     </column>
-                    <column columnName="mostRecentClinicalObservationsdate">
+                    <column columnName="observationdate">
                         <columnTitle>Observation Date</columnTitle>
                     </column>
                     <column columnName="clinicalremarks">

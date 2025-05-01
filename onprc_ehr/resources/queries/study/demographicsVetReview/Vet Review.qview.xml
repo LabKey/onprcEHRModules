@@ -7,8 +7,8 @@
         <column name="mostRecentHx"/>
         <!--<column name="latestP2"/>-->
         <column name="remarksEnteredSinceReview"/>
-        <column name="mostRecentClinicalObservations/observations"/>
-        <column name="mostRecentClinicalObservations/date"/>
+        <column name="observationdate"/>
+        <column name="observations"/>
 
         <column name="vomitobservation"/>
         <column name="vomitdate"/>
