@@ -2,6 +2,10 @@
   Get all the meds except the following two medications that are allowed to enter without the end dates.
 1. E-85760 - Medroxyprogesterone injectable (150mg/ml)
 2. E-Y7735 - Diet - Weekly Multivitamin
+
+   Added these two Diets to the list by Kollil on 4/15/25. Refer to tkt #12363
+3. E-X0500 - Diet, L-Phyto (Low-phytoestrogen)
+4. E-Y9750 - Diet, 5047 High Protein, Jumbo
 */
 SELECT
     Id,
@@ -21,7 +25,7 @@ SELECT
     modifiedby,
     modified,
     category,
-    taskid
+    taskid.rowid as TaskId
 FROM study.treatment_order
-WHERE code NOT IN ('E-85760', 'E-Y7735')
+WHERE code NOT IN ('E-85760', 'E-Y7735', 'E-X0500', 'E-Y9750')
   AND enddate is null
