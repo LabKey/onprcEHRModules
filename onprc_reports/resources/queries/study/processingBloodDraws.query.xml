@@ -22,7 +22,7 @@
                     <column columnName="PCRBloodVolume">
                         <columnTitle>PCR PTT (mL)</columnTitle>
                     </column>
-                    <column columnName="dnaBloodVolume">
+                    <column columnName="dnaBloodDrawVolume">
                         <columnTitle>DNA Pink/PTT (mL)</columnTitle>
                     </column>
                     <column columnName="serologyBloodVol">
