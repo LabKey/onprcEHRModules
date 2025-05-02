@@ -24,4 +24,4 @@ SELECT
 FROM  Site.{ substitutePath moduleProperty('EHR', 'EHRStudyContainer') }.study.demographics d,
 study.mostRecentClinicalObservations_Vomit_ForAnimal es
 Where (d.id = es.id) And (d.totalRemarksEnteredSinceReview >  0
-or  es.category = javaConstant('org.labkey.onprc_ehr.ONPRC_EHRManager.OBS_VOMIT') )
+   or  es.category is not null )
