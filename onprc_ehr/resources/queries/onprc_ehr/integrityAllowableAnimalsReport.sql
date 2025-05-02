@@ -34,7 +34,8 @@ With eIACUCAuthorized as (
 
      --This query finds the nukmbder assigned from the assignment table
      -- added thatg this is for NHP assignments
-     CurrentAssignedNHP as
+    --Kim Ray says this is not needed
+     /*CurrentAssignedNHP as
          (Select
               --a.project.protocol as Protocol,
               p.external_id as Protocol,
@@ -46,7 +47,7 @@ With eIACUCAuthorized as (
           Group By
               p.external_id,
               a.id.demographics.species
-         ),
+         ),*/
      AllowablefromProtocol as (
          Select
              a.protocol,
@@ -62,23 +63,33 @@ With eIACUCAuthorized as (
      ),
 --This will be the final report
      --Need to add a CTE for SLA
-     SummaryReport as (
+     AuthorizedNHP as (
          Select
-             e.Protocol,
+             p.Protocol,
              --a.project,
              e.species,
-             Sum(e.TotalForSpecies)
+             Sum(e.TotalForSpecies) as TotalAuthorized
 
 
 
-         from   eIACUCAuthorized e --, CurrentAssigned a
-         -- Where e.protocol = a.protocol
+         from   eIACUCAuthorized e , ehr.protocol p
+         Where e.protocol = p.protocol
          Group by
              e.Protocol,
              e.species
-     )
---Select * from eIACUCAuthorized
+     ),
+    SummaryNHP as (
+        Select
+            a.protocol,
+            a.species,
+            a.TotalAuthorized
+
+        from AuthorizedNHP a
+        where a.species not in ('Rat','Mice','Rabbit')
+
+    )
+Select * from eIACUCAuthorized
 --Select * from CurrentAssigned
---Select * from SummaryReport
+--Select * from SummaryNHP
 --Select * from BaseProtocolAssigned
-select * from AllowablefromProtocol
+--select * from AllowablefromProtocol
