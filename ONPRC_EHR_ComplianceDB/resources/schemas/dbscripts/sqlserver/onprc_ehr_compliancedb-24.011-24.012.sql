@@ -1,1 +1,0 @@
-ALTER TABLE ehr_compliancedb.requirementsperemployee ADD trackingflag varchar(100);
