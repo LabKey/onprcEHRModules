@@ -91,7 +91,7 @@ public class ONPRC_EHRManager
     @Queryable
     public static final String CAGE_MEDICAL_EXEMPTION_FLAG = "Medical";
 
-    private String _caseSequence = "org.labkey.onprc_ehr.cases";
+    private static final String CASE_SEQUENCE = "org.labkey.onprc_ehr.cases";
 
     private ONPRC_EHRManager()
     {
@@ -153,7 +153,7 @@ public class ONPRC_EHRManager
 
     public long getNextCaseNo(Container c)
     {
-        return DbSequenceManager.get(c, _caseSequence).next();
+        return DbSequenceManager.get(c, CASE_SEQUENCE).next();
     }
 }
 

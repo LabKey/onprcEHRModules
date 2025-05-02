@@ -575,7 +575,12 @@ public class ONPRC_EHRController extends SpringActionController
             Container c = EHRService.get().getEHRStudyContainer(getContainer());
             TableInfo ti = QueryService.get().getUserSchema(getUser(), c, "study").getTable("cases");
 
-            SQLFragment sql = new SQLFragment("UPDATE c SET c.caseNo = updates.caseNo FROM studydataset." + _casesProvisionedName + " c JOIN (VALUES ");
+            SQLFragment sqlStart = new SQLFragment("UPDATE c SET c.caseNo = updates.caseNo FROM studydataset.");
+            sqlStart.appendIdentifier(_casesProvisionedName);
+            sqlStart.append(" c JOIN (VALUES ");
+
+            SQLFragment sqlEnd = new SQLFragment(") AS updates(dsrowid, caseNo) ");
+            sqlEnd.append("ON c.dsrowid = updates.dsrowid");
 
             logger.info("Starting case number updates.");
 
@@ -586,6 +591,7 @@ public class ONPRC_EHRController extends SpringActionController
 
             boolean newBatch = true;
             int counter = 0;
+            SQLFragment sql = new SQLFragment().append(sqlStart);
 
             while( rs.next() )
             {
@@ -604,21 +610,19 @@ public class ONPRC_EHRController extends SpringActionController
                 if (counter % 1000 == 0)
                 {
                     newBatch = true;
-                    sql.append(") AS updates(dsrowid, caseNo) ");
-                    sql.append("ON c.dsrowid = updates.dsrowid");
+                    sql.append(sqlEnd);
 
                     new SqlExecutor(ti.getSchema()).execute(sql);
 
                     logger.info(counter + " total case numbers added.");
 
-                    sql = new SQLFragment("UPDATE c SET c.caseNo = updates.caseNo FROM studydataset." + _casesProvisionedName + " c JOIN (VALUES ");
+                    sql = new SQLFragment().append(sqlStart);
                 }
             }
 
             if (!newBatch)
             {
-                sql.append(") AS updates(dsrowid, caseNo) ");
-                sql.append("ON c.dsrowid = updates.dsrowid");
+                sql.append(sqlEnd);
                 new SqlExecutor(ti.getSchema()).execute(sql);
             }
 
