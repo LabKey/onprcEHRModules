@@ -69,6 +69,7 @@ EHR.model.DataModelManager.registerMetadata('onprc_Surgery', {
                 hidden: true
             },
             //Added by Kollil, Changed the default begin date & time to next day at 8am. Refer to tkt #12214
+            //This change will automatically update the times in the bottom data entry panels ont eh screen
             date: {
                 xtype: 'xdatetime',
                 extFormat: LABKEY.extDefaultDateTimeFormat,
