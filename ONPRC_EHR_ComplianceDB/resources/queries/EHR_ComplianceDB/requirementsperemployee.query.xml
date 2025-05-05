@@ -7,6 +7,7 @@
                 <columns>
                     <column columnName="trackingflag">
                         <columnTitle>Essential</columnTitle>
+                        <isHidden>false</isHidden>
                         <fk>
                             <fkDbSchema>ehr_compliancedb</fkDbSchema>
                             <fkTable>essentialflag</fkTable>
