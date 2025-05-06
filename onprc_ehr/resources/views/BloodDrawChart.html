@@ -1,0 +1,21 @@
+<script type="text/javascript" nonce="<%=scriptNonce%>">
+
+    Ext4.onReady(function(){
+        var webpart = <%=webpartContext%>;
+        var ctx = EHR.Utils.getEHRContext(webpart.wrapperDivId);
+        if(!ctx)
+            return;
+
+        Ext4.get(webpart.wrapperDivId).update(
+
+                '<div> ' +
+
+               '<img src="<%=contextPath%>/onprc_ehr/icons/BloodDrawChart.png" style="border: 1px solid black"/>' +
+
+                '</div>'
+
+        );
+
+
+    });
+</script>
