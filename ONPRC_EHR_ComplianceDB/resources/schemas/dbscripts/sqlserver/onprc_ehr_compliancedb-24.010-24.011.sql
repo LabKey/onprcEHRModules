@@ -78,7 +78,7 @@ BEGIN
                (select k.expireperiod from ehr_compliancedb.Requirements k where k.requirementname = b.requirementname) as ExpiredPeriod,
 
                ( select  (datediff(month,max(pq.date), tt.reviewdate) ) from  ehr_compliancedb.requirements tt, ehr_compliancedb.completiondates pq where tt.requirementname =   b.requirementname and pq.requirementname = tt.requirementname and pq.employeeid = a.employeeid group by tt.expireperiod, tt.reviewdate
-                 having (tt.expireperiod) > (datediff(month,max(pq.date), tt.reviewdate))   and (tt.reviewdate is not null)  ) as NewExpirePeriod,
+                 having (COALESCE(tt.expireperiod,0)) > (datediff(month,max(pq.date), tt.reviewdate))   and (tt.reviewdate is not null)  ) as NewExpirePeriod,
 
                (select max(zz.date) from ehr_compliancedb.completiondates zz where zz.requirementname= b.requirementname and zz.employeeid= a.employeeid  ) as mostrecentcompleted_date,
 
@@ -92,7 +92,7 @@ BEGIN
                        CASE
 
                            WHEN (select max(st.date) from ehr_compliancedb.completiondates st where st.requirementname = b.requirementname and st.employeeid = a.employeeid ) IS NULL   then 0
-                           WHEN ( select  (tt.expireperiod)  from  ehr_compliancedb.requirements tt where tt.requirementname = b.requirementname   group by tt.expireperiod  ) = 0 then Null
+                           WHEN ( select (COALESCE(tt.expireperiod,0))  from  ehr_compliancedb.requirements tt where tt.requirementname = b.requirementname   group by tt.expireperiod  ) = 0 then Null
 
 
                            WHEN ( select  count(*) from  ehr_compliancedb.requirements tt, ehr_compliancedb.completiondates pq where tt.requirementname = b.requirementname and pq.requirementname = tt.requirementname and pq.employeeid = a.employeeid group by tt.expireperiod, tt.reviewdate
@@ -102,7 +102,7 @@ BEGIN
                                  having (tt.reviewdate) >  ( cast(getdate() as date)   )      )
 
 
-                           ELSE ( select  (tt.expireperiod) - ( datediff(month,max(pq.date), getdate()) )  from  ehr_compliancedb.requirements tt, ehr_compliancedb.completiondates pq where   tt.requirementname =   b.requirementname and pq.requirementname = tt.requirementname and pq.employeeid = a.employeeid group by tt.expireperiod )
+                           ELSE ( select  (COALESCE(tt.expireperiod,0)) - ( datediff(month,max(pq.date), getdate()) )  from  ehr_compliancedb.requirements tt, ehr_compliancedb.completiondates pq where   tt.requirementname =   b.requirementname and pq.requirementname = tt.requirementname and pq.employeeid = a.employeeid group by tt.expireperiod )
 
                            END  AS Float)  AS MonthsUntilRenewal
 
@@ -139,7 +139,7 @@ BEGIN
                  (select k.expireperiod from ehr_compliancedb.Requirements k where k.requirementname = a.requirementname) as ExpiredPeriod,
 
                  ( select  (datediff(month,max(pq.date), tt.reviewdate) )from  ehr_compliancedb.requirements tt, ehr_compliancedb.completiondates pq where tt.requirementname =   a.requirementname and pq.requirementname = tt.requirementname and pq.employeeid = a.employeeid group by tt.expireperiod, tt.reviewdate
-                   having (tt.expireperiod) > (datediff(month,max(pq.date), tt.reviewdate))  and (tt.reviewdate is not null)  ) as NewExpirePeriod,
+                   having (COALESCE(tt.expireperiod,0)) > (datediff(month,max(pq.date), tt.reviewdate))  and (tt.reviewdate is not null)  ) as NewExpirePeriod,
 
                  (select max(zz.date) from ehr_compliancedb.completiondates zz where zz.requirementname= a.requirementname and zz.employeeid= a.employeeid  ) as MostRecentDate,
 
@@ -152,7 +152,7 @@ BEGIN
                  CAST(
                          CASE
                              WHEN (select max(st.date) from ehr_compliancedb.completiondates st where st.requirementname = a.requirementname and st.employeeid = a.employeeid ) IS NULL   then 0
-                             WHEN ( select  (tt.expireperiod)  from  ehr_compliancedb.requirements tt where tt.requirementname = a.requirementname   group by tt.expireperiod  ) = 0 then Null
+                             WHEN ( select  (COALESCE(tt.expireperiod,0))  from  ehr_compliancedb.requirements tt where tt.requirementname = a.requirementname   group by tt.expireperiod  ) = 0 then Null
 
 
                              WHEN ( select  count(*) from  ehr_compliancedb.requirements tt, ehr_compliancedb.completiondates pq where tt.requirementname = a.requirementname and pq.requirementname = tt.requirementname and pq.employeeid = a.employeeid group by tt.expireperiod, tt.reviewdate
@@ -162,7 +162,7 @@ BEGIN
                                    having (tt.reviewdate) >  ( cast(getdate() as date)   )      )
 
 
-                             ELSE ( select  (tt.expireperiod) - ( datediff(month,max(pq.date), getdate())) from  ehr_compliancedb.requirements tt, ehr_compliancedb.completiondates pq where   tt.requirementname =   a.requirementname and pq.requirementname = tt.requirementname and pq.employeeid = a.employeeid group by tt.expireperiod )
+                             ELSE ( select  (COALESCE(tt.expireperiod,0)) - ( datediff(month,max(pq.date), getdate())) from  ehr_compliancedb.requirements tt, ehr_compliancedb.completiondates pq where   tt.requirementname =   a.requirementname and pq.requirementname = tt.requirementname and pq.employeeid = a.employeeid group by tt.expireperiod )
 
                              END  AS FLOAT)  AS MonthsUntilRenewal
 
@@ -195,7 +195,7 @@ BEGIN
                0 as timesCompleted,
                (select k.expireperiod from ehr_compliancedb.Requirements k where k.requirementname = j.requirementname) as ExpiredPeriod,
                ( select  (datediff(month,max(pq.date), tt.reviewdate) )from  ehr_compliancedb.requirements tt, ehr_compliancedb.completiondates pq where tt.requirementname = j.requirementname and pq.requirementname = tt.requirementname and pq.employeeid = j.employeeid group by tt.expireperiod, tt.reviewdate
-                 having (tt.expireperiod) > (datediff(month,max(pq.date), tt.reviewdate))  and (tt.reviewdate is not null)  ) as NewExpirePeriod,
+                 having (COALESCE(tt.expireperiod,0)) > (datediff(month,max(pq.date), tt.reviewdate))  and (tt.reviewdate is not null)  ) as NewExpirePeriod,
                null as MostRecentDate,
                '' as comment,
                null as snooze_date,
@@ -203,7 +203,7 @@ BEGIN
                    CASE
 
                        WHEN (select max(st.date) from ehr_compliancedb.completiondates st where st.requirementname = j.requirementname and st.employeeid = j.employeeid ) IS NULL   then 0
-                       WHEN ( select  (tt.expireperiod)  from  ehr_compliancedb.requirements tt where tt.requirementname = j.requirementname  group by tt.expireperiod  ) = 0 then Null
+                       WHEN ( select  (COALESCE(tt.expireperiod,0))  from  ehr_compliancedb.requirements tt where tt.requirementname = j.requirementname  group by tt.expireperiod  ) = 0 then Null
 
 
                        WHEN ( select  count(*) from  ehr_compliancedb.requirements tt, ehr_compliancedb.completiondates pq where tt.requirementname = j.requirementname and pq.requirementname = tt.requirementname and pq.employeeid = j.employeeid group by tt.expireperiod, tt.reviewdate
@@ -215,7 +215,7 @@ BEGIN
 
 
 
-                       ELSE ( select  (tt.expireperiod) - ( datediff(month,max(pq.date), getdate())) from  ehr_compliancedb.requirements tt, ehr_compliancedb.completiondates pq where   tt.requirementname =   j.requirementname and pq.requirementname = tt.requirementname and pq.employeeid = j.employeeid group by tt.expireperiod )
+                       ELSE ( select  (COALESCE(tt.expireperiod,0)) - ( datediff(month,max(pq.date), getdate())) from  ehr_compliancedb.requirements tt, ehr_compliancedb.completiondates pq where   tt.requirementname =   j.requirementname and pq.requirementname = tt.requirementname and pq.employeeid = j.employeeid group by tt.expireperiod )
 
                        END  AS FLOAT)  AS MonthsUntilRenewal
 
