@@ -15,13 +15,41 @@
  */
 --  Created 4-24-2025  R. Blasa Recreated to allow additional filters
 SELECT
- d.*,
+ d.Id,
+ d.Id.curLocation.room,
+ d.Id.curLocation.cage,
+ d.mostRecentHX,
+ d.remarksEnteredSinceReview,
+ d.mosrecentClinicalObservations.observations,
  d.mostRecentClinicalObservations.date as observationdate,
- d.mostRecentClinicalObservations.observations,
- es.observations as vomitobservation,
- es.date as vomitdate
+ d.lastVetReview,
+ d.Id.utilization.use,
+ d.Id.activeCases.categories,
+ d.calculated_status
+ null as vomitobservation,
+ null as vomitdate
 
-FROM  Site.{ substitutePath moduleProperty('EHR', 'EHRStudyContainer') }.study.demographics d,
-study.mostRecentClinicalObservations_Vomit_ForAnimal es
-Where (d.id = es.id) And (d.totalRemarksEnteredSinceReview >  0
-   or  es.category is not null )
+FROM  Site.{ substitutePath moduleProperty('EHR', 'EHRStudyContainer') }.study.demographics d
+Where  d.totalRemarksEnteredSinceReview >  0
+
+
+union
+
+select
+    es.Id as Id,
+    es.Id.curLocation.room,
+    es.Id.curLocation.cage,
+    null as mostRecentHX,
+    null as remarksEnteredSinceReview,
+    null as observations,
+    null as observationdate,
+    null as lastVetReview,
+   null as use,
+   null as categories,
+    es.Id.calculated_status
+    es.observations as vomitobservation,
+    es.date as vomitdate
+From study.mostRecentClinicalObservations_Vomit_ForAnimal es
+Where  es.category is not null
+
+group by id
