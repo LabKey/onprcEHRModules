@@ -89,5 +89,5 @@ LEFT JOIN onprc_billing_public.projectMultipliers pm ON (
     CAST(mc.date AS DATE) >= CASt(pm.startDate AS DATE) AND
     (CAST(mc.date AS DATE) <= pm.enddateCoalesced OR pm.enddate IS NULL) AND
     alias.alias = pm.account)
-LEFT JOIN onprc_billing.ogaIndirectCharge ir
+LEFT JOIN onprc_billing.ogaSynchIR ir
           on ir.alias = alias.alias

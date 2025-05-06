@@ -4,7 +4,7 @@ SELECT ogasynch.lastIndexed,
        ogasynch.modified,
        ogasynch.created,
        ogasynch.createdBy,
-       ogasynch."ADFM EMP NUM",
+      /* ogasynch."ADFM EMP NUM",
        ogasynch."ADFM FULL NAME",
        ogasynch."ADFM LAST NAME",
        ogasynch."ADFM FIRST NAME",
@@ -15,7 +15,7 @@ SELECT ogasynch.lastIndexed,
        ogasynch."PDFM EMP NUM",
        ogasynch."PDFM FULL NAME",
        ogasynch."PDFM LAST NAME",
-       ogasynch."PDFM FIRST NAME",
+       ogasynch."PDFM FIRST NAME",*/
        ogasynch."AGENCY AWARD NUMBER",
        ogasynch."OGA AWARD NUMBER",
        ogasynch."OGA AWARD TYPE",
@@ -29,8 +29,10 @@ SELECT ogasynch.lastIndexed,
        ogasynch.ORIGINATING_AGENCY_AWARD_NUM,
        ogasynch.oga_award_start_Date,
        ogasynch.oga_award_end_date,
-       Case When ogasynch.oga_award_start_Date >= '2024-07-01' then .475
-            else .47
-           End as IndirectRate
-
-FROM ogasynch, indirectRate
+       ir.IndirectRate AS IndirectRate -- Retrieve from the `indirectRate` tab
+/*  Case When ogasynch.oga_award_start_Date >= '2024-07-01' then .475
+       else .47
+      End as IndirectRate
+*/
+FROM ogasynch LEFT JOIN indirectRates ir
+    ON ogasynch.oga_award_start_Date BETWEEN ir.StartDate AND ir.EndDate

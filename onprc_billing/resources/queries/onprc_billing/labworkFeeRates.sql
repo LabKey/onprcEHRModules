@@ -161,7 +161,7 @@ LEFT JOIN onprc_billing_public.chargeUnitAccounts cu ON (
   cast(cu.startDate AS date) <= cast(p.date as date) AND
   cast(cu.endDate AS date) >= cast(p.date as date)
 )
-LEFT JOIN onprc_billing.ogaIndirectCharge ir
+LEFT JOIN onprc_billing.ogaSynch ir
           on ir.alias = alias.alias
 
 UNION ALL

@@ -300,7 +300,7 @@ LEFT JOIN onprc_billing_public.projectMultipliers pm ON (
     (CAST(p.date AS DATE) <= pm.enddateCoalesced OR pm.enddate IS NULL) AND
     alias.alias = pm.account
 )
-LEFT JOIN onprc_billing.ogaIndirectCharge ir
+LEFT JOIN onprc_billing.ogaSynchIR ir
           on ir.alias = alias.alias
 
 ) t
