@@ -746,6 +746,11 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         //Added: 9-16-2022  R.Blasa
       EHRService.get().registerMoreActionsButton(new CreateNecropsyRequestButton(this), "study", "NecropsyRequestdata");
 
+        //Added: 4-6-2025  R.Blasa
+        EHRService.get().registerMoreActionsButton(new VetReviewButton(this), "study", "demographicsVetReview");
+        EHRService.get().registerMoreActionsButton(new ShowEditUIButton(this, "study", "demographicsVetReview", ONPRC_EHRCMUAdministrationPermission.class), "study", "demographicsVetReview");
+        EHRService.get().registerMoreActionsButton(new ManageFlagsButton(this), "study", "demographicsVetReview");
+
         EHRService.get().registerHistoryDataSource(new DefaultSnomedDataSource(this));
         EHRService.get().registerHistoryDataSource(new DefaultAnimalGroupsDataSource(this));
         EHRService.get().registerHistoryDataSource(new DefaultAnimalGroupsEndDataSource(this));
