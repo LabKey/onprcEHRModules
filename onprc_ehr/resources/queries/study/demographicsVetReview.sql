@@ -14,42 +14,33 @@
  * limitations under the License.
  */
 --  Created 4-24-2025  R. Blasa Recreated to allow additional filters
+
 SELECT
- d.Id,
- d.Id.curLocation.room,
- d.Id.curLocation.cage,
- d.mostRecentHX,
- d.remarksEnteredSinceReview,
- d.mosrecentClinicalObservations.observations,
- d.mostRecentClinicalObservations.date as observationdate,
- d.lastVetReview,
- d.Id.utilization.use,
- d.Id.activeCases.categories,
- d.calculated_status
- null as vomitobservation,
- null as vomitdate
+    d.Id,
+    group_concat(distinct d.Id.curLocation.room, chr(10)),
+    group_concat(distinct d.Id.curLocation.cage, chr(10)),
+    d.mostRecentHX,
+    d.remarksEnteredSinceReview,
+    group_concat(distinct d.mostRecentClinicalObservations.observations, chr(10)),
+    group_concat(distinct d.mostRecentClinicalObservations.date, chr(10)),
+    t.vomitobservation,
+    t.vomitdate,
+    d.lastVetReview,
+    d.Id.utilization.use,
+    d.Id.activeCases.categories,
+    d.calculated_status
 
-FROM  Site.{ substitutePath moduleProperty('EHR', 'EHRStudyContainer') }.study.demographics d
-Where  d.totalRemarksEnteredSinceReview >  0
+FROM study.demographics d
+         LEFT JOIN (
+    SELECT
+    f.Id,
+    group_concat(f.observations, chr(10)) as vomitobservation,
+    group_concat(distinct f.date, chr(10)) as vomitdate
 
+    FROM study.mostRecentClinicalObservations_Vomit_ForAnimal f
+    Where  f.category is not null
 
-union
-
-select
-    es.Id as Id,
-    es.Id.curLocation.room,
-    es.Id.curLocation.cage,
-    null as mostRecentHX,
-    null as remarksEnteredSinceReview,
-    null as observations,
-    null as observationdate,
-    null as lastVetReview,
-   null as use,
-   null as categories,
-    es.Id.calculated_status
-    es.observations as vomitobservation,
-    es.date as vomitdate
-From study.mostRecentClinicalObservations_Vomit_ForAnimal es
-Where  es.category is not null
-
-group by id
+    GROUP BY f.id
+) t ON (d.id = t.id)
+where d.remarksEnteredSinceReview > 0
+group by d.Id
