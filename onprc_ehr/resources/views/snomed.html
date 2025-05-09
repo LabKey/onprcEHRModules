@@ -4,19 +4,50 @@
     }
 
     .errorMsg {
-        color: #FF7377;
+        color: #C04044;
     }
+
+    body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+    }
+
+    .snomed-section {
+        border: 1px solid #ccc;
+        background-color: #f5f5f5;
+        padding: 16px 20px;
+        margin-bottom: 10px;
+        display: inline-block;
+    }
+
+    .snomed-section label {
+        display: inline-block;
+        margin-right: 10px;
+    }
+
+    .snomed-section input[type="text"] {
+        width: 500px;
+        margin-right: 10px;
+    }
+
+    .snomed-section button:hover {
+        background-color: #0056b3;
+    }
+
 </style>
 
 <script type="text/javascript" nonce="<%=scriptNonce%>">
 
     const searchBySubset = false;
+    let codeInProgress;
 
     function onEdit() {
         document.getElementById("createSnomed").style.display = "none";
+        document.getElementById("addSnomed").style.display = "none";
         document.getElementById("postSearch").innerHTML = "";
         document.getElementById("results").innerHTML = "";
         document.getElementById("showMessage").innerHTML = "";
+        codeInProgress = undefined;
     }
 
     function showMessage(msg, error) {
@@ -29,23 +60,81 @@
         }
     }
 
+    function postSearch(msg) {
+        document.getElementById("showMessage").innerHTML = msg;
+        if (error) {
+            document.getElementById("showMessage").className = "errorMsg";
+        }
+        else {
+            document.getElementById("showMessage").className = "";
+        }
+    }
+
+    function addSnomed() {
+
+        const subset = "Organisms";
+        const row = {code: codeInProgress, subset: subset};
+
+        LABKEY.Query.saveRows({
+            containerPath: LABKEY.container.id,
+            commands: [{
+                schemaName: 'ehr_lookups',
+                queryName: 'snomed_subset_codes',
+                command: 'insert',
+                rows: [row]
+            }],
+            scope: this,
+            method: 'POST',
+            success: function (response) {
+                if (response?.result?.[0]?.rows?.[0]?.code)
+                {
+                    showSnomed(response.result[0].rows[0].code, true);
+                }
+                showMessage("SNOMED code added to " + subset + ".", false);
+
+                codeInProgress = undefined;
+            },
+            failure: LABKEY.Utils.getCallbackWrapper((response) => {
+                showMessage(response.exception, true);
+                codeInProgress = undefined;
+            })
+        });
+    }
+
     function createSnomed() {
 
-        const subset = document.getElementById("subsetOptions").value;
+        // TODO: change to subset if supporting subset dropdown
+        // const subset = document.getElementById("subsetOptions").value;
+        const subset = "Organisms";
+
         const snomed = document.getElementById("snomed").value;
 
         LABKEY.Ajax.request({
             url: LABKEY.ActionURL.buildURL("onprc_ehr", "saveSnomed"),
             method: 'POST',
             jsonData: {
-                subset: 'Organisms', // TODO: change to subset if supporting subset dropdown
+                subset: subset,
                 snomed: snomed
             },
             timeout: 100000,
             success: LABKEY.Utils.getCallbackWrapper((response) => {
-                if (response.code) {
+                if (response.status === "success" && response.code) {
                     showMessage("SNOMED code added.", false);
-                    showSnomed(response.code);
+                    showSnomed(response.code, true);
+                }
+                else if (response.status === "SNOMED exists")
+                {
+                    const postSearch = document.getElementById("postSearch");
+                    postSearch.innerHTML = `<br><p>A SNOMED with this meaning already exists. Would you like to add it to the subset '${subset}'?</p>`;
+
+                    showSnomed(response.code, false);
+
+                    document.getElementById("createSnomed").style.display = "none";
+                    document.getElementById("addSnomed").style.display = "block";
+                    codeInProgress = response.code;
+                }
+                else {
+                    showMessage(response.status);
                 }
             }),
             failure: LABKEY.Utils.getCallbackWrapper((response) => {
@@ -54,10 +143,14 @@
         });
     }
 
-    function showSnomed(code) {
+    function showSnomed(code, showFinal) {
         document.getElementById("results").innerHTML = "";
-        document.getElementById("postSearch").innerHTML = "";
-        document.getElementById("createSnomed").style.display = "none";
+
+        if (showFinal) {
+            document.getElementById("postSearch").innerHTML = "";
+            document.getElementById("createSnomed").style.display = "none";
+            document.getElementById("addSnomed").style.display = "none";
+        }
 
         new LABKEY.QueryWebPart({
             renderTo: 'results',
@@ -70,8 +163,11 @@
 
     function searchSnomed() {
 
-        const subset = document.getElementById("subsetOptions").value;
+        const subset = "Organisms";
+        // const subset = document.getElementById("subsetOptions").value;
         const snomed = document.getElementById("snomed").value;
+
+        onEdit();
 
         LABKEY.Ajax.request({
             url: LABKEY.ActionURL.buildURL("onprc_ehr", "getSnomed"),
@@ -89,11 +185,11 @@
                 const postSearch = document.getElementById("postSearch");
 
                 if (snomeds.length === 0) {
-                    postSearch.innerHTML = "<br><p>No matches found. Click the Create button to create this as a new SNOMED code.</p>";
+                    postSearch.innerHTML = `<br><p>No matches found. Click the Create button to create this as a new SNOMED code for the ${subset} subset.</p>`;
                 }
                 else {
 
-                    postSearch.innerHTML = `<br><p>${snomeds.length} potential current SNOMED match${snomeds.length > 1 ? 'es' : ''} found. If you still want to create the SNOMED, click the Create button.</p>`;
+                    postSearch.innerHTML = `<br><p>${snomeds.length} potential current SNOMED match${snomeds.length > 1 ? 'es' : ''} found. If you still want to create the SNOMED for the ${subset} subset, click the Create button.</p>`;
 
                     new LABKEY.QueryWebPart({
                         renderTo: 'results',
@@ -144,6 +240,7 @@
     LABKEY.Utils.onReady(function(){
         document.getElementById('searchSnomed')['onclick'] = function(){ searchSnomed(); return false; }
         document.getElementById('createSnomed')['onclick'] = function(){ createSnomed(); return false; }
+        document.getElementById('addSnomed')['onclick'] = function(){ addSnomed(); return false; }
         document.getElementById('snomed')['onchange'] = function(){ onEdit(); return false; }
         document.getElementById('subsetOptions')['onchange'] = function(){ onEdit(); return false; }
     });
@@ -160,15 +257,14 @@
         </select>
         <br><br>
     </div>
-
-    <label for="snomed">Meaning:</label>
-    <input type="text" id="snomed" name="snomed" />
-
-    <br><br>
-
-    <button id="searchSnomed">Search</button>
+    <div class="snomed-section">
+        <label for="snomed">Meaning:</label>
+        <input type="text" id="snomed" name="snomed" />
+        <button id="searchSnomed">Search</button>
+    </div>
     <div id="postSearch"></div>
     <button id="createSnomed" class="hiddenEl">Create Organism</button>
+    <button id="addSnomed" class="hiddenEl">Add Organism</button>
     <br>
     <div id="showMessage"></div>
     <br>

@@ -62,9 +62,12 @@ import org.springframework.web.servlet.ModelAndView;
 import java.io.File;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * User: bbimber
@@ -585,6 +588,7 @@ public class ONPRC_EHRController extends SpringActionController
     {
         private Integer _count;
         private String _prefix;
+        private Map<String, Object>[] _snomedMatches;
 
         private String hasExactMatch(SnomedForm form)
         {
@@ -598,6 +602,18 @@ public class ONPRC_EHRController extends SpringActionController
 
             List<String> results = new SqlSelector(QueryService.get().getUserSchema(getUser(), getContainer(), "ehr_lookups").getDbSchema(), sql).getArrayList(String.class);
             return results.isEmpty() ? null : results.get(0);
+        }
+
+        private Map<String, Object>[] findSnomed(SnomedForm form)
+        {
+            SQLFragment sql = new SQLFragment("SELECT sn.code, ssc.primaryCategory FROM ehr_lookups.snomed sn ");
+            sql.append("LEFT JOIN ehr_lookups.snomed_subset_codes ssc ");
+            sql.append("ON sn.code = ssc.code ");
+            sql.append("WHERE sn.container = ? AND sn.meaning = ?");
+            sql.add(getContainer());
+            sql.add(form.getSnomed());
+
+            return new SqlSelector(QueryService.get().getUserSchema(getUser(), getContainer(), "ehr_lookups").getDbSchema(), sql).getMapArray();
         }
 
         @Override
@@ -623,8 +639,23 @@ public class ONPRC_EHRController extends SpringActionController
                 }
                 else
                 {
-                    _count = ((Integer) results[0].get("count"));
-                    _prefix = ((String) results[0].get("prefix"));
+                    Set<String> codes = new HashSet<>();
+                    _snomedMatches = findSnomed(form);
+                    for (Map<String, Object> snomedResult : _snomedMatches)
+                    {
+                        codes.add((String)snomedResult.get("code"));
+                    }
+
+                    if (codes.size() > 1)
+                    {
+                        String dupes = Arrays.stream(_snomedMatches).reduce("", (acc, map) -> acc + map.toString() + "\n", String::concat);
+                        errors.reject(ERROR_UNIQUE, "There are multiple existing matches. Cannot proceed with adding this SNOMED. Contact your administrator to add this SNOMED. Matches: \n" + dupes);
+                    }
+                    else
+                    {
+                        _count = ((Integer) results[0].get("count"));
+                        _prefix = ((String) results[0].get("prefix"));
+                    }
                 }
             }
         }
@@ -632,38 +663,49 @@ public class ONPRC_EHRController extends SpringActionController
         @Override
         public ApiResponse execute(SnomedForm form, BindException errors)
         {
-            String code = _prefix + String.format("%04d", _count);
-            Map<String, Object> row = new HashMap<>();
-            row.put("code", code);
-            row.put("meaning", form.getSnomed());
-            row.put("container", getContainer());
+            JSONObject ret = new JSONObject();
+            if (_snomedMatches.length > 0)
+            {
+                String sameSnomed = Arrays.stream(_snomedMatches).reduce("", (acc, map) -> acc + map.toString(), String::concat);
+                ret.put("code", _snomedMatches[0].get("code"));
+                ret.put("meaning", form.getSnomed());
+                ret.put("status", "SNOMED exists");
+                ret.put("matches", sameSnomed);
+            }
+            else
+            {
+                String code = _prefix + String.format("%04d", _count);
+                Map<String, Object> row = new HashMap<>();
+                row.put("code", code);
+                row.put("meaning", form.getSnomed());
+                row.put("container", getContainer());
 
-            UserSchema us = QueryService.get().getUserSchema(getUser(), getContainer(), "ehr_lookups");
-            TableInfo snomedTi = us.getDbSchema().getTable("snomed");
-            Table.insert(getUser(), snomedTi, row);
+                UserSchema us = QueryService.get().getUserSchema(getUser(), getContainer(), "ehr_lookups");
+                TableInfo snomedTi = us.getDbSchema().getTable("snomed");
+                Table.insert(getUser(), snomedTi, row);
 
-            row = new HashMap<>();
-            row.put("code", code);
-            row.put("primaryCategory", form.getSubset());
-            row.put("container", getContainer());
+                row = new HashMap<>();
+                row.put("code", code);
+                row.put("primaryCategory", form.getSubset());
+                row.put("container", getContainer());
 
-            TableInfo snomedSubsetTi = us.getDbSchema().getTable("snomed_subset_codes");
-            Table.insert(getUser(), snomedSubsetTi, row);
+                TableInfo snomedSubsetTi = us.getDbSchema().getTable("snomed_subset_codes");
+                Table.insert(getUser(), snomedSubsetTi, row);
 
-            row = new HashMap<>();
-            row.put("subset", form.getSubset());
-            row.put("count", _count + 1);
-            row.put("container", getContainer());
+                row = new HashMap<>();
+                row.put("subset", form.getSubset());
+                row.put("count", _count + 1);
+                row.put("container", getContainer());
 
-            UserSchema usOnprc = new ONPRC_EHRUserSchema(getUser(), getContainer());
-            TableInfo snomedCounterTi = usOnprc.getDbSchema().getTable("snomed_counter");
-            Table.update(getUser(), snomedCounterTi, row, form.getSubset());
+                UserSchema usOnprc = new ONPRC_EHRUserSchema(getUser(), getContainer());
+                TableInfo snomedCounterTi = usOnprc.getDbSchema().getTable("snomed_counter");
+                Table.update(getUser(), snomedCounterTi, row, form.getSubset());
 
-            JSONObject obj = new JSONObject();
-            obj.put("code", code);
-            obj.put("meaning", form.getSnomed());
-
-            return new ApiSimpleResponse(obj);
+                ret.put("code", code);
+                ret.put("meaning", form.getSnomed());
+                ret.put("status", "success");
+            }
+            return new ApiSimpleResponse(ret);
         }
     }
 }
