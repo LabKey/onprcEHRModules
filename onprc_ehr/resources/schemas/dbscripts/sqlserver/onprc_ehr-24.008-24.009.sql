@@ -1,38 +1,25 @@
 
+CREATE TABLE onprc_ehr.Rpt_AnimalIDTissues(
+    [Searchkey] 	[int] IDENTITY(1,1) NOT NULL,
+    [animalID]      varchar(100) NULL,
+    [date]          smalldatetime NULL
 
-CREATE TABLE [onprc_ehr].[Rpt_AnimalID_Weights](
-    searchid      int IDENTITY(100,1) NOT NULL,
-    animalID      varchar(100) NULL,
-    date         smalldatetime NULL,
-    weight       decimal(12,5) NULL,
-    taskId       ENTITYID NULL,
-    created      smalldatetime NULL,
-    createdby    smallint NULL,
-    modified     smalldatetime NULL,
-    modifiedby   smallint NULL
 
-    ) ON [PRIMARY]
-
+ ) ON [PRIMARY]
     GO
 
+CREATE TABLE onprc_ehr.Rpt_AnimalIDTissues_Master(
+    [rowid] 		[int] IDENTITY(1,1) NOT NULL,
+    [SearchID]          int NULL,
+    [animalID]      	varchar(100) NULL,
+    [date]          	smalldatetime NULL,
+    [actual_Created]  	smalldatetime NUll,
+    [remarks]       	varchar(500)
 
-CREATE TABLE [onprc_ehr].[Rpt_AnimalID_WeightsMaster](
-    searchid      int IDENTITY(100,1) NOT NULL,
-    rowid         int,
-    animalID      varchar(100) NULL,
-    date         smalldatetime NULL,
-    weight       decimal(12,5) NULL,
-    taskId       ENTITYID NULL,
-    created      smalldatetime NULL,
-    createdby    smallint NULL,
-    modified     smalldatetime NULL,
-    modifiedby   smallint NULL,
-    actual_created  smalldatetime NULL,
-    remark       varchar(1000) NULL
 
-    ) ON [PRIMARY]
-
+ ) ON [PRIMARY]
     GO
+
 
 
 /*
@@ -42,30 +29,13 @@ CREATE TABLE [onprc_ehr].[Rpt_AnimalID_WeightsMaster](
 **      Blasa  		        4/4/2025  Process to attached Tissues Distribution records to Patholody Tissue records
 **
 **
-   CREATE TABLE onprc_ehr.Rpt_AnimalID(
-	[Searchkey] 	[int] IDENTITY(1,1) NOT NULL,
-        [animalID]      varchar(100) NULL,
-	[date]          smalldatetime NULL
 
+**
+**
+**
+**
+**
 
- ) ON [PRIMARY]
-    GO
-**
-**
-**
-**
-**
-   CREATE TABLE onprc_ehr.Rpt_AnimalID_Master(
-	    [rowid] 		[int] IDENTITY(1,1) NOT NULL,
-	    [SearchID]          int NULL,
-            [animalID]      	varchar(100) NULL,
-	    [date]          	smalldatetime NULL,
-            [actual_Created]  	smalldatetime NUll,
-            [remarks]       	varchar(500)
-
-
- ) ON [PRIMARY]
-    GO
 **
 **
 **
@@ -87,14 +57,14 @@ DECLARE @ReturnValue  		Int,
 			  		 @SearchKey             Int,
 			  		 @TempsearchKey		Int,
 			  		 @TaskId		varchar(4000),
-		          	 @ObjectId              Varchar(4000),
-                     @AnimalID              varchar(100),
-                     @Date                  smalldatetime,
-                     @Created               smalldatetime,
-                     @Createdby             smallint,
-                     @modified              smalldatetime,
-                     @modifiedby            smallint ,
-                     @RunID                 varchar(4000)
+		          		 @ObjectId              Varchar(4000),
+                          		 @AnimalID              varchar(100),
+                                         @Date                  smalldatetime,
+                                         @Created               smalldatetime,
+                                         @Createdby             smallint,
+                                         @modified              smalldatetime,
+                                         @modifiedby            smallint ,
+                                         @RunID                 varchar(4000)
 
 Begin
 
@@ -105,7 +75,7 @@ Begin
 
 
 
-			                 Delete onprc_ehr.Rpt_AnimalID
+			                 Delete onprc_ehr.Rpt_AnimalIDTissues
 
 
 				          	 If @@Error <> 0
@@ -114,7 +84,7 @@ Begin
 
 				----Create the set of records to process
 
-					Insert into onprc_ehr.Rpt_AnimalID
+					Insert into onprc_ehr.Rpt_AnimalIDTissues
 select distinct
 
     e.participantid,
@@ -138,7 +108,7 @@ Set @TempsearchKey = 0
 Set @SearchKey = 0
 Set @TaskID = null
 
-Select Top 1 @Searchkey = Searchkey from onprc_ehr.Rpt_AnimalID
+Select Top 1 @Searchkey = Searchkey from onprc_ehr.Rpt_AnimalIDTissues
 Order by Searchkey
 
 
@@ -190,51 +160,51 @@ Begin
 
 
 Select  @AnimalID = rpt.AnimalID, @Date= rpt.date, @Created=TDS.created, @Createdby= TDS.createdby, @modified = TDS.modified
-from studydataset.c6d265_tissuedistributions TDS, onprc_ehr.Rpt_AnimalID Rpt
+from studydataset.c6d265_tissuedistributions TDS, onprc_ehr.Rpt_AnimalIDTissues Rpt
 Where TDS.participantid = Rpt.AnimalID
   And TDS.date = RPT.date And Rpt.searchkey = @Searchkey
 
 
 
   ----- Create a Encounter record
-    set @RunID = NEWID()
+    ---set @RunID = NEWID()
 
 
-Insert into studyDataset.c6d214_encounters
-(participantid,
- date,
- type,
- objectid,
- created,
- createdby,
- modified,
- modifiedby,
- taskid,
- chargetype,              --------DCM: Pathology Services
- lsid
-)
-values
-    (
-    @animalid,
-    @date,
-    'Tissues',             ---- encounter type
-    @RunID,              ------- encounter object id
-    @Created,
-    @Createdby,
-    @modified,
-    @modifiedby,
-    @TaskID,
-    'DCM: Pathology Services',     ------Charge type
-    'urn:lsid:ohsu.edu:Study.Data-6:1067.' + @AnimalID + '.' + format(cast(@date as date), 'yyyyMMdd') + '.0000.' + @RunID + ''
-    )
+                                 /*        Insert into studyDataset.c6d214_encounters
+                                                (participantid,
+                                                 date,
+                                                 type,
+                                                 objectid,
+                                                 created,
+                                                 createdby,
+                                                 modified,
+                                                 modifiedby,
+                                                 taskid,
+                                                 chargetype,              --------DCM: Pathology Services
+                                                 lsid
+                                                  )
+                                           values
+                                                (
+                                                 @animalid,
+                                                 @date,
+                                                 'Tissues',             ---- encounter type
+                                                 @RunID,              ------- encounter object id
+                                                 @Created,
+					         @Createdby,
+                                                 @modified,
+                                                 @modifiedby,
+                                                 @TaskID,
+                                                 'DCM: Pathology Services',     ------Charge type
+						'urn:lsid:ohsu.edu:Study.Data-6:1067.' + @AnimalID + '.' + format(cast(@date as date), 'yyyyMMdd') + '.0000.' + @RunID + ''
+                                                 )
 
-    If @@Error <> 0
-    GoTo Err_Proc
-
-
+						       	 If @@Error <> 0
+		    					 GoTo Err_Proc  */
 
 
-    If exists (Select * from studydataset.c6d265_tissuedistributions Where participantid = @AnimalID And date = @date)
+
+
+				If exists (Select * from studydataset.c6d265_tissuedistributions Where participantid = @AnimalID And date = @date)
 Begin
 Update TDS
 
@@ -256,7 +226,7 @@ End
 			            Set @TempSearchkey = @SearchKey
 
 
-Select Top 1 @Searchkey = Searchkey from onprc_ehr.Rpt_AnimalID
+Select Top 1 @Searchkey = Searchkey from onprc_ehr.Rpt_AnimalIDTissues
 Where Searchkey > @TempSearchkey
 Order by Searchkey
 
@@ -265,11 +235,11 @@ End -----(While)
 
                                  ------- Create a audit records
 
-Insert into onprc_ehr.Rpt_Animalid_Master
+Insert into onprc_ehr.Rpt_AnimalidTissues_Master
 Select *,
        getdate(),
        'Tissue Distribution entries'
-from onprc_ehr.Rpt_AnimalID
+from onprc_ehr.Rpt_AnimalIDTissues
 
 
 
