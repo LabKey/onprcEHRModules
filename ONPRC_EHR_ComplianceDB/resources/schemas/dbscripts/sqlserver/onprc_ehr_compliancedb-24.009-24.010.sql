@@ -99,10 +99,10 @@ BEGIN
 
 
                            WHEN ( select  count(*) from  ehr_compliancedb.requirements tt, ehr_compliancedb.completiondates pq where tt.requirementname = b.requirementname and pq.requirementname = tt.requirementname and pq.employeeid = a.employeeid group by tt.expireperiod, tt.reviewdate
-                                  having (tt.reviewdate) <=  ( dateadd(month,tt.expireperiod,max(pq.date))  ) ) > 0 THEN
+                                  having (tt.reviewdate) >  (max(pq.date))  ) > 0 THEN
 
                                ( select  (datediff(month,max(pq.date), tt.reviewdate) - ( datediff(month,max(pq.date), getdate())) ) from  ehr_compliancedb.requirements tt, ehr_compliancedb.completiondates pq where tt.requirementname =   b.requirementname and pq.requirementname = tt.requirementname and pq.employeeid = a.employeeid group by tt.expireperiod, tt.reviewdate
-                                 having (tt.reviewdate) <=  ( dateadd(month,tt.expireperiod,max(pq.date))  )    )
+                                 having (tt.reviewdate) >  (max(pq.date))   )
 
 
 
@@ -162,10 +162,10 @@ BEGIN
 
 
                            WHEN ( select  count(*) from  ehr_compliancedb.requirements tt, ehr_compliancedb.completiondates pq where tt.requirementname = a.requirementname and pq.requirementname = tt.requirementname and pq.employeeid = a.employeeid group by tt.expireperiod, tt.reviewdate
-                                  having (tt.reviewdate)  <=  ( dateadd(month,tt.expireperiod,max(pq.date))  ) ) > 0 THEN
+                                  having (tt.reviewdate) >  (max(pq.date))  ) > 0 THEN
 
                                ( select  (datediff(month,max(pq.date), tt.reviewdate) - ( datediff(month,max(pq.date), getdate())) ) from  ehr_compliancedb.requirements tt, ehr_compliancedb.completiondates pq where tt.requirementname =   a.requirementname and pq.requirementname = tt.requirementname and pq.employeeid = a.employeeid group by tt.expireperiod, tt.reviewdate
-                                 having (tt.reviewdate) <=  ( dateadd(month,tt.expireperiod,max(pq.date))  )      )
+                                 having (tt.reviewdate) >  (max(pq.date))   )
 
 
                            ELSE ( select  (COALESCE(tt.expireperiod,0)) - ( datediff(month,max(pq.date), getdate())) from  ehr_compliancedb.requirements tt, ehr_compliancedb.completiondates pq where   tt.requirementname =   a.requirementname and pq.requirementname = tt.requirementname and pq.employeeid = a.employeeid group by tt.expireperiod )
@@ -223,10 +223,10 @@ BEGIN
 
 
                                WHEN ( select  count(*) from  ehr_compliancedb.requirements tt, ehr_compliancedb.completiondates pq where tt.requirementname = a.requirementname and pq.requirementname = tt.requirementname and pq.employeeid = a.employeeid group by tt.expireperiod, tt.reviewdate
-                                      having (tt.reviewdate) <=  ( dateadd(month,tt.expireperiod,max(pq.date))  ) ) > 0 THEN
+                                      having (tt.reviewdate) >  (max(pq.date)) ) > 0 THEN
 
                                    ( select  ( datediff(month,max(pq.date), tt.reviewdate) - (datediff(month,max(pq.date), getdate())) )from  ehr_compliancedb.requirements tt, ehr_compliancedb.completiondates pq where tt.requirementname =   a.requirementname and pq.requirementname = tt.requirementname and pq.employeeid = a.employeeid group by tt.expireperiod, tt.reviewdate
-                                     having (tt.reviewdate) <=  ( dateadd(month,tt.expireperiod,max(pq.date))  )     )
+                                     having (tt.reviewdate) >  (max(pq.date))   )
 
 
                                ELSE ( select  (COALESCE(tt.expireperiod,0)) - ( datediff(month,max(pq.date), getdate())) from  ehr_compliancedb.requirements tt, ehr_compliancedb.completiondates pq where   tt.requirementname =   a.requirementname and pq.requirementname = tt.requirementname and pq.employeeid = a.employeeid group by tt.expireperiod )
@@ -270,10 +270,10 @@ BEGIN
                            WHEN ( select  (COALESCE(tt.expireperiod,0))  from  ehr_compliancedb.requirements tt where tt.requirementname = j.requirementname  group by tt.expireperiod  ) = 0 then Null
 
                            WHEN ( select  count(*) from  ehr_compliancedb.requirements tt, ehr_compliancedb.completiondates pq where tt.requirementname = j.requirementname and pq.requirementname = tt.requirementname and pq.employeeid = j.employeeid group by tt.expireperiod, tt.reviewdate
-                                  having (tt.reviewdate) <=  ( dateadd(month,tt.expireperiod,max(pq.date))  ) ) > 0 THEN
+                                  having (tt.reviewdate) >  (max(pq.date)) ) > 0 THEN
 
                                ( select  (datediff(month,max(pq.date), tt.reviewdate) - ( datediff(month,max(pq.date), getdate())) ) from  ehr_compliancedb.requirements tt, ehr_compliancedb.completiondates pq where tt.requirementname = j.requirementname and pq.requirementname = tt.requirementname and pq.employeeid = j.employeeid group by tt.expireperiod, tt.reviewdate
-                                 having (tt.reviewdate) <=  ( dateadd(month,tt.expireperiod,max(pq.date))  )      )
+                                 having (tt.reviewdate) >  (max(pq.date))   )
 
 
                            ELSE ( select  (COALESCE(tt.expireperiod,0)) - ( datediff(month,max(pq.date), getdate())) from  ehr_compliancedb.requirements tt, ehr_compliancedb.completiondates pq where   tt.requirementname =   j.requirementname and pq.requirementname = tt.requirementname and pq.employeeid = j.employeeid group by tt.expireperiod )
