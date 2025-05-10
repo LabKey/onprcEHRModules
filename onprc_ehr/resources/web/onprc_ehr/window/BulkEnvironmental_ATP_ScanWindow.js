@@ -108,7 +108,7 @@ Ext4.define('ONPRC_EHR.window.BulkEnvironmental_ATP_ScanWindow', {
 
             var cnt = i;
 
-            this.processRow(row, recordMap, errors, rowIdx, id, parsed, cnt,servicetype,chargeunit);
+            this.processRow(row, recordMap, errors, rowIdx, tdate, parsed, cnt,servicetype,chargeunit);
         }
 
         Ext4.Msg.hide();

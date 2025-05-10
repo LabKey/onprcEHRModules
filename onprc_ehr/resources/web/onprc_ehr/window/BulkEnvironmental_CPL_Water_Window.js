@@ -83,7 +83,8 @@ Ext4.define('ONPRC_EHR.window.BulkEnvironmental_CPL_Water_Window', {
 
         Ext4.Msg.wait('Please be patient while we Process your data...');
 
-        var servicetype = 'Sanitation: Water Test';
+      //  var servicetype = 'Sanitation: Water Test';
+        var servicetype = 'Sanitation: ATP';
         var chargeunit = 'Clinpath' ;
 
 
@@ -99,7 +100,7 @@ Ext4.define('ONPRC_EHR.window.BulkEnvironmental_CPL_Water_Window', {
                 continue;
             }
 
-            var tdate = parsed[i][1];
+            var tdate = parsed[i][0];
             if (!tdate)
             {
                 errors.push('Row ' + rowIdx + ': missing date');
@@ -108,7 +109,7 @@ Ext4.define('ONPRC_EHR.window.BulkEnvironmental_CPL_Water_Window', {
 
             var cnt = i;
 
-            this.processRow(row, recordMap, errors, rowIdx, id, parsed, cnt,servicetype,chargeunit);
+            this.processRow(row, recordMap, errors, rowIdx, parsed, cnt,servicetype,chargeunit);
         }
 
         Ext4.Msg.hide();
@@ -138,7 +139,7 @@ Ext4.define('ONPRC_EHR.window.BulkEnvironmental_CPL_Water_Window', {
         this.close();
     },
 
-    processRow: function(row, recordMap, errors, rowIdx,tdate, parsed, cnt,servicetype,chargeunit) {
+    processRow: function(row, recordMap, errors, rowIdx, parsed, cnt,servicetype,chargeunit) {
 
         // Generate labwork Header information
 
@@ -151,26 +152,22 @@ Ext4.define('ONPRC_EHR.window.BulkEnvironmental_CPL_Water_Window', {
 
         var obj = {
             date: date,
-            servicer_requested: servicetype,
+            servicerequested: servicetype,
             charge_unit: chargeunit,
-            testing_location: Ext4.String.trim(row[2]),  //Area
-            test_type: Ext4.String.trim(row[4]),  //Initial
+            testing_location: Ext4.String.trim(row[3]),  //Area
+            test_type: Ext4.String.trim(row[4]),  //Test Typw = Initial
             test_method: Ext4.String.trim(row[5]),  // Testing Method
             test_results: Ext4.String.trim(row[6]),  //Test Results
             pass_fail: Ext4.String.trim(row[7]), //Pass/Fail
-            biological_cycle: Ext4.String.trim(row[8]),   //Cycle
-            biological_BI: Ext4.String.trim(row[9]),   //BI#
-            action: Ext4.String.trim(row[10]),  // Action
-            water_source: Ext4.String.trim(row[11]),  //Water Source
-            retest: Ext4.String.trim(row[12]),  //Results Read by
-            colony_count: Ext4.String.trim(row[13]),   //Colony Count
-            objectid: HeaderObjectID,
-            performedby: Ext4.String.trim(row[14]),  //Tech Initials
-            remarks: Ext4.String.trim(row[15])       //Ccmments
+            water_source: Ext4.String.trim(row[8]),  //Water Source
+            retest: Ext4.String.trim(row[9]),  //Results Read by
+            // remarks: Ext4.String.trim(row[10]),       //Ccmments
+            objectid: HeaderObjectID
+
 
          };
 
-        if (!this.checkRequired(['date', 'servicerequested','charge_unit','testing_location','action','test_results','retest','pass_fail','performedby','retest'], obj, errors, rowIdx))
+        if (!this.checkRequired(['date', 'servicerequested','charge_unit','testing_location','test_results','retest','pass_fail','retest'], obj, errors, rowIdx))
         {
             recordMap.primaryheader.push(obj);
         }
@@ -240,7 +237,7 @@ Ext4.define('ONPRC_EHR.window.BulkEnvironmental_CPL_Water_Window', {
 });
 
 EHR.DataEntryUtils.registerDataEntryFormButton('ENV_CPL_Water_IMPORT', {
-    text: 'Enviromental CPL Panel Import',
+    text: 'Enviromental CPL Water Import',
     name: 'envCPLscan',
     itemId: 'envCPLscan',
     tooltip: 'Click to import using a Environmental CPL Water Panel template',
