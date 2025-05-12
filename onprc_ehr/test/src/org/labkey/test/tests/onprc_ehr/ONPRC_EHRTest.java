@@ -73,6 +73,7 @@ import java.util.Map;
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -1715,9 +1716,12 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         SelectRowsCommand select = new SelectRowsCommand("study", "cases");
         select.addFilter(new Filter("Id", SUBJECTS[0], Filter.Operator.EQUAL));
         select.addFilter(new Filter("category", "Behavior", Filter.Operator.EQUAL));
-        select.setColumns(Arrays.asList("Id", "objectid"));
+        select.setColumns(Arrays.asList("Id", "objectid, caseNo"));
         SelectRowsResponse resp = select.execute(getApiHelper().getConnection(), getContainerPath());
         String caseId = (String)resp.getRows().get(0).get("objectid");
+        Integer caseNo = (Integer)resp.getRows().get(0).get("caseNo");
+
+        assertNotNull("Case number is missing.", caseNo);
 
         getApiHelper().deleteAllRecords("study", "clinical_observations", new Filter("Id", SUBJECTS[0], Filter.Operator.EQUAL));
         InsertRowsCommand insertRowsCommand = new InsertRowsCommand("study", "clinical_observations");
