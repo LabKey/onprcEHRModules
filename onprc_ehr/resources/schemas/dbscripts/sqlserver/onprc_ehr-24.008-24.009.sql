@@ -55,16 +55,16 @@ AS
 
 DECLARE @ReturnValue  		Int,
 			  		 @SearchKey             Int,
-			  		 @TempsearchKey		Int,
-			  		 @TaskId		varchar(4000),
-		          		 @ObjectId              Varchar(4000),
-                          		 @AnimalID              varchar(100),
-                                         @Date                  smalldatetime,
-                                         @Created               smalldatetime,
-                                         @Createdby             smallint,
-                                         @modified              smalldatetime,
-                                         @modifiedby            smallint ,
-                                         @RunID                 varchar(4000)
+			  		 @TempsearchKey		    Int,
+			  		 @TaskId		         varchar(4000),
+		          	 @ObjectId              Varchar(4000),
+                     @AnimalID              varchar(100),
+                     @Date                  smalldatetime,
+                     @Created               smalldatetime,
+                     @Createdby             smallint,
+                     @modified              smalldatetime,
+                     @modifiedby            smallint ,
+                     @RunID                 varchar(4000)
 
 Begin
 
@@ -75,7 +75,7 @@ Begin
 
 
 
-			                 Delete onprc_ehr.Rpt_AnimalIDTissues
+			    Delete onprc_ehr.Rpt_AnimalIDTissues
 
 
 				          	 If @@Error <> 0
@@ -84,11 +84,10 @@ Begin
 
 				----Create the set of records to process
 
-					Insert into onprc_ehr.Rpt_AnimalIDTissues
-select distinct
-
-    e.participantid,
-    e.date
+	Insert into onprc_ehr.Rpt_AnimalIDTissues
+         select distinct
+          e.participantid,
+          e.date
 
 
 from studydataset.c6d265_tissuedistributions e
@@ -100,7 +99,7 @@ order by e.participantid, e.date
 
 
     If @@Error <> 0
-		    					 GoTo Err_Proc
+		GoTo Err_Proc
 
 
 
@@ -124,27 +123,27 @@ Begin
                       				  (
                            			  taskid,
                           			  description,
-                            			  title,
+                            		  title,
                            			  qcstate,
-                            			  formType,
+                            		  formType,
                            			  category,
-                            			  container,
-                                                  assignedto,
-                                                  created,
-                                                  createdby,
-                                                  modified,
-                                                  modifiedby
+                            		  container,
+                                      assignedto,
+                                      created,
+                                      createdby,
+                                      modified,
+                                      modifiedby
 
-                                                    )
+                                        )
 
-                                           Values  (
+                                Values  (
 
-                                                  @TaskID,
-                                                 'Path Tissues ' + cast(@Date as varchar(50)) ,   	        ------ Title
+                                      @TaskID,
+                                      'Path Tissues ' + cast(@Date as varchar(50)) ,   	        ------ Title
                            			 'PathologyTissues',
                            			  18,                     	                     --- Qc State (In Progress)
-                            			  'PathologyTissues',              	             ------ FormType
-                            			  'task',                 		      -----  category,
+                            		  'PathologyTissues',              	             ------ FormType
+                            		   'task',                 		      -----  category,
                            			 'CD17027B-C55F-102F-9907-5107380A54BE',    ---- EHR Container
                            			  1693,                                   -------- Assigned To DCM Pathology
                            			  getdate(),                                ------- Created Date
@@ -165,50 +164,10 @@ Where TDS.participantid = Rpt.AnimalID
   And TDS.date = RPT.date And Rpt.searchkey = @Searchkey
 
 
-
-  ----- Create a Encounter record
-    ---set @RunID = NEWID()
-
-
-                                 /*        Insert into studyDataset.c6d214_encounters
-                                                (participantid,
-                                                 date,
-                                                 type,
-                                                 objectid,
-                                                 created,
-                                                 createdby,
-                                                 modified,
-                                                 modifiedby,
-                                                 taskid,
-                                                 chargetype,              --------DCM: Pathology Services
-                                                 lsid
-                                                  )
-                                           values
-                                                (
-                                                 @animalid,
-                                                 @date,
-                                                 'Tissues',             ---- encounter type
-                                                 @RunID,              ------- encounter object id
-                                                 @Created,
-					         @Createdby,
-                                                 @modified,
-                                                 @modifiedby,
-                                                 @TaskID,
-                                                 'DCM: Pathology Services',     ------Charge type
-						'urn:lsid:ohsu.edu:Study.Data-6:1067.' + @AnimalID + '.' + format(cast(@date as date), 'yyyyMMdd') + '.0000.' + @RunID + ''
-                                                 )
-
-						       	 If @@Error <> 0
-		    					 GoTo Err_Proc  */
-
-
-
-
-				If exists (Select * from studydataset.c6d265_tissuedistributions Where participantid = @AnimalID And date = @date)
+If exists (Select * from studydataset.c6d265_tissuedistributions Where participantid = @AnimalID And date = @date)
 Begin
-Update TDS
-
-set  TDS.taskid = @TaskID
+         Update TDS
+         set  TDS.taskid = @TaskID
 
     from studydataset.c6d265_tissuedistributions TDS
 Where TDS.participantid = @AnimalID
@@ -218,12 +177,10 @@ Where TDS.participantid = @AnimalID
     If @@Error <> 0
     GoTo Err_Proc
 
-End
-
-	              --
+End            --
 
 
-			            Set @TempSearchkey = @SearchKey
+		  Set @TempSearchkey = @SearchKey
 
 
 Select Top 1 @Searchkey = Searchkey from onprc_ehr.Rpt_AnimalIDTissues
@@ -242,10 +199,7 @@ Select *,
 from onprc_ehr.Rpt_AnimalIDTissues
 
 
-
-
-
-         RETURN 0
+ RETURN 0
 
 Err_Proc:
 
