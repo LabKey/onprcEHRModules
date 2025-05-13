@@ -19,8 +19,8 @@ SELECT
     d.Id,
     group_concat(distinct d.Id.curLocation.room, chr(10)),
     group_concat(distinct d.Id.curLocation.cage, chr(10)),
-    d.mostRecentHX,
-    d.remarksEnteredSinceReview,
+    t2.mostRecentHX,
+    t2.remarksEnteredSinceReview,
     group_concat(distinct d.mostRecentClinicalObservations.observations, chr(10)),
     group_concat(distinct d.mostRecentClinicalObservations.date, chr(10)),
     t.vomitobservation,
@@ -29,9 +29,9 @@ SELECT
     d.Id.utilization.use,
     d.Id.activeCases.categories,
     d.calculated_status
-
-FROM study.demographics d
-         LEFT JOIN (
+FROM (
+  Select * from  study.demographics d
+LEFT JOIN (
     SELECT
     f.Id,
     group_concat(f.observations, chr(10)) as vomitobservation,
@@ -40,7 +40,13 @@ FROM study.demographics d
     FROM study.mostRecentClinicalObservations_Vomit_ForAnimal f
     Where  f.category is not null
 
-    GROUP BY f.id
 ) t ON (d.id = t.id)
-where d.remarksEnteredSinceReview > 0
+LEFT JOIN (Select
+               g.id,
+               g.mostRecentHx,
+               g.remarksEnteredSinceReview
+           FROM study.demographics g
+           where g.remarksEnteredSinceReview > 0
+)t2 ON (d.id = t2.id)
+
 group by d.Id
