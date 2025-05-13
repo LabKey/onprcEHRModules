@@ -25,9 +25,9 @@ package org.labkey.onprc_ehr.dataentry;
         import org.labkey.api.module.Module;
         import org.labkey.onprc_ehr.security.ONPRC_EHREnvironmentalPermission;
 
-        import java.util.ArrayList;
         import java.util.Arrays;
         import java.util.List;
+        import java.util.ArrayList;
 
 //Created: 9-9-2022  R.Blasa
 
@@ -47,7 +47,9 @@ package org.labkey.onprc_ehr.dataentry;
 
                 addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/window/EnvironmentalRecords.js"));
 
-                addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/window/BulkEnvironmental_CPL_ScanWindow.js"));
+                           //Added 5-9-2025 R. Blasa
+                addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/window/BulkEnvironmental_CPL_Water_Window.js"));
+
 
 
                 for  (FormSection s : getFormSections())
