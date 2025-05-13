@@ -30,6 +30,7 @@ import org.labkey.api.data.Container;
 import org.labkey.api.data.ContainerManager;
 import org.labkey.api.data.DbSchema;
 import org.labkey.api.data.DbScope;
+import org.labkey.api.data.DbSequenceManager;
 import org.labkey.api.data.Results;
 import org.labkey.api.data.ResultsImpl;
 import org.labkey.api.data.SQLFragment;
@@ -2629,5 +2630,10 @@ public class ONPRC_EHRTriggerHelper
     public void recalculateAllVetAssignmentRecords()
     {
         EHRDemographicsService.get().recalculateForAllIdsInCache(_container, "onprc_ehr", "vet_assignment", true);
+    }
+
+    public long getNextCaseDisplayId()
+    {
+        return ONPRC_EHRManager.get().getNextCaseNo(_container);
     }
 }
