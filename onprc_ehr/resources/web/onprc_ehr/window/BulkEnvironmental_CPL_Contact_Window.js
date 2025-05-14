@@ -22,14 +22,7 @@ Ext4.define('ONPRC_EHR.window.BulkEnvironmental_CPL_Contact_Window', {
             items: [{
                 html : 'This allows you to import record using the Environmental_CPL_Contact Window Excel form.  To import, cut/paste the contents of the excel file (Ctl + A is a good way to select all) into the box below and hit submit.',
                 style: 'padding-bottom: 10px;'
-            },{
-                xtype: 'ldk-linkbutton',
-                text: '[Download Template]',
-                scope: this,
-                style: 'margin-bottom: 10px;',
-                handler: function(){
-                    window.location = LABKEY.contextPath + '/onprc_ehr/templates/BulkEnvironmental_CPL_Contact_Template.xlsx'
-                }
+
             },{
                 xtype: 'textarea',
                 width: 770,
@@ -108,7 +101,7 @@ Ext4.define('ONPRC_EHR.window.BulkEnvironmental_CPL_Contact_Window', {
 
             var cnt = i;
 
-            this.processRow(row, recordMap, errors, rowIdx, id, parsed, cnt,servicetype,chargeunit);
+            this.processRow(row, recordMap, errors, rowIdx, parsed, cnt,servicetype,chargeunit);
         }
 
         Ext4.Msg.hide();
@@ -138,7 +131,7 @@ Ext4.define('ONPRC_EHR.window.BulkEnvironmental_CPL_Contact_Window', {
         this.close();
     },
 
-    processRow: function(row, recordMap, errors, rowIdx,tdate, parsed, cnt,servicetype,chargeunit) {
+    processRow: function(row, recordMap, errors, rowIdx, parsed, cnt,servicetype,chargeunit) {
 
         // Generate labwork Header information
 
@@ -155,23 +148,21 @@ Ext4.define('ONPRC_EHR.window.BulkEnvironmental_CPL_Contact_Window', {
             charge_unit: chargeunit,
             testing_location: Ext4.String.trim(row[2]),  //Testing Location
             test_type: Ext4.String.trim(row[4]),  //Test Type
+            service_requested: servicetype,
+            charge_unit: chargeunit,
+            testing_location: Ext4.String.trim(row[3]),  //test Locatinn
+            test_type: Ext4.String.trim(row[4]),  //test Type
             test_method: Ext4.String.trim(row[5]),  // Testing Method
-            test_results: Ext4.String.trim(row[6]),  //Test Results
             pass_fail: Ext4.String.trim(row[7]), //Pass/Fail
-            biological_cycle: Ext4.String.trim(row[8]),   //Cycle
-            retest: Ext4.String.trim(row[7]), //Pass/Fail
-            // biological_BI: Ext4.String.trim(row[9]),   //BI#
             action: Ext4.String.trim(row[10]),  // Action
-            // water_source: Ext4.String.trim(row[11]),  //Water Source
-            // retest: Ext4.String.trim(row[12]),  //Results Read by
-            colony_count: Ext4.String.trim(row[13]),   //Colony Count
+            retest: Ext4.String.trim(row[12]),  //Results Read by
             objectid: HeaderObjectID,
-            performedby: Ext4.String.trim(row[14]),  //Performed by (Collected by)
+            performedby: Ext4.String.trim(row[14]),  //Tech Initials
             remarks: Ext4.String.trim(row[15])       //Ccmments
 
          };
 
-        if (!this.checkRequired(['date', 'servicerequested','charge_unit','testing_location','action','test_results','retest','pass_fail','performedby','retest'], obj, errors, rowIdx))
+        if (!this.checkRequired(['date', 'service_requested','charge_unit','testing_location','action','retest','pass_fail','performedby','retest'], obj, errors, rowIdx))
         {
             recordMap.primaryheader.push(obj);
         }
