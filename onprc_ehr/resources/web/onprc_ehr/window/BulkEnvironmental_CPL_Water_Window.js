@@ -83,8 +83,8 @@ Ext4.define('ONPRC_EHR.window.BulkEnvironmental_CPL_Water_Window', {
 
         Ext4.Msg.wait('Please be patient while we Process your data...');
 
-      //  var servicetype = 'Sanitation: Water Test';
-        var servicetype = 'Sanitation: ATP';
+       var servicetype = 'Sanitation: Water Test';
+
         var chargeunit = 'Clinpath' ;
 
 
