@@ -21,18 +21,48 @@ import org.labkey.api.action.ApiSimpleResponse;
 import org.labkey.api.action.MutatingApiAction;
 import org.labkey.api.action.ReadOnlyApiAction;
 import org.labkey.api.action.SpringActionController;
+import org.labkey.api.data.CompareType;
 import org.labkey.api.data.Container;
 import org.labkey.api.data.ContainerManager;
 import org.labkey.api.ehr.security.EHRDataEntryPermission;
+import org.labkey.api.data.CoreSchema;
+import org.labkey.api.data.SQLFragment;
+import org.labkey.api.data.SimpleFilter;
+import org.labkey.api.data.Sort;
+import org.labkey.api.data.SqlExecutor;
+import org.labkey.api.data.Table;
+import org.labkey.api.data.TableInfo;
+import org.labkey.api.data.TableSelector;
+import org.labkey.api.ehr.EHRService;
+import org.labkey.api.ehr.security.EHRDataEntryPermission;
+import org.labkey.api.exp.property.Domain;
+import org.labkey.api.files.FileContentService;
+import org.labkey.api.query.FieldKey;
+import org.labkey.api.query.QueryService;
+import org.labkey.api.security.AdminConsoleAction;
+import org.labkey.api.security.LimitedUser;
 import org.labkey.api.security.RequiresPermission;
 import org.labkey.api.security.permissions.ReadPermission;
 import org.labkey.api.view.ActionURL;
+import org.labkey.api.study.Dataset;
+import org.labkey.api.study.DatasetTable;
+import org.labkey.api.study.StudyService;
+import org.labkey.api.util.PageFlowUtil;
+import org.labkey.api.util.URLHelper;
+import org.labkey.api.view.ActionURL;
+import org.labkey.api.view.HtmlView;
+import org.labkey.api.view.NavTree;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.validation.BindException;
-
+import java.io.File;
+import java.lang.reflect.Method;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * User: bbimber
@@ -216,6 +246,114 @@ public class ONPRC_EHRController extends SpringActionController
         public void setStartingId(Integer startingId)
         {
             _startingId = startingId;
+        }
+    }
+
+    @RequiresPermission(EHRDataEntryPermission.class)
+    public class PopulateCaseNumbersAction extends MutatingApiAction<Object>
+    {
+        private String _casesProvisionedName;
+
+        @Override
+        public void validateForm(Object o, Errors errors)
+        {
+            super.validateForm(o, errors);
+
+            StudyService ss = StudyService.get();
+            if (ss == null)
+            {
+                errors.reject(ERROR_REQUIRED, "No study");
+                return;
+            }
+
+            int datasetId = ss.getDatasetIdByName(getContainer(), "cases");
+            Dataset dataset = ss.getDataset(getContainer(), datasetId);
+
+            if (dataset == null)
+            {
+                errors.reject(ERROR_REQUIRED, "Cases dataset not found.");
+                return;
+            }
+
+            Domain domain = dataset.getDomain();
+            if (domain == null)
+            {
+                errors.reject(ERROR_REQUIRED, "Cases dataset domain not found.");
+                return;
+            }
+
+            _casesProvisionedName = domain.getStorageTableName();
+            if (_casesProvisionedName == null)
+            {
+                errors.reject(ERROR_REQUIRED, "Cases dataset provisioned name not found.");
+            }
+        }
+
+        @Override
+        public ApiResponse execute(Object form, BindException errors) throws SQLException
+        {
+            Container c = EHRService.get().getEHRStudyContainer(getContainer());
+            TableInfo ti = QueryService.get().getUserSchema(getUser(), c, "study").getTable("cases");
+
+            SQLFragment sqlStart = new SQLFragment("UPDATE c SET c.caseNo = updates.caseNo FROM studydataset.");
+            sqlStart.appendIdentifier(_casesProvisionedName);
+            sqlStart.append(" c JOIN (VALUES ");
+
+            SQLFragment sqlEnd = new SQLFragment(") AS updates(dsrowid, caseNo) ");
+            sqlEnd.append("ON c.dsrowid = updates.dsrowid");
+
+            logger.info("Starting case number updates.");
+
+            // Stream cases with no case number, sorted by date
+            SimpleFilter filter = SimpleFilter.createContainerFilter(getContainer());
+            filter.addCondition(FieldKey.fromParts("caseNo"), null, CompareType.ISBLANK);
+            ResultSet rs = new TableSelector(ti, filter, new Sort("date")).getResultSet(false, false);
+
+            boolean newBatch = true;
+            int counter = 0;
+            SQLFragment sql = new SQLFragment().append(sqlStart);
+
+            while( rs.next() )
+            {
+                if (newBatch) {
+                    newBatch = false;
+                }
+                else {
+                    sql.append(",");
+                }
+                sql.append("(?, ?)");
+                sql.add(rs.getInt("dsrowid"));
+                sql.add(ONPRC_EHRManager.get().getNextCaseNo(c));
+                counter++;
+
+                // Batch boundary
+                if (counter % 1000 == 0)
+                {
+                    newBatch = true;
+                    sql.append(sqlEnd);
+
+                    new SqlExecutor(ti.getSchema()).execute(sql);
+
+                    logger.info(counter + " total case numbers added.");
+
+                    sql = new SQLFragment().append(sqlStart);
+                }
+            }
+
+            if (!newBatch)
+            {
+                sql.append(sqlEnd);
+                new SqlExecutor(ti.getSchema()).execute(sql);
+            }
+
+            JSONObject ret = new JSONObject();
+            ret.put("rows", counter);
+            ret.put("success", true);
+
+            logger.info("Case number update completed. " + counter + " total case numbers updated.");
+
+
+            return new ApiSimpleResponse(ret);
         }
     }
 }
