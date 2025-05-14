@@ -20,16 +20,9 @@ Ext4.define('ONPRC_EHR.window.BulkEnvironmental_CPL_Water_Window', {
                 border: false
             },
             items: [{
-                html : 'This allows you to import record using the Environmental_CPL_Water_Window Excel form.  To import, cut/paste the contents of the excel file (Ctl + A is a good way to select all) into the box below, and click submit.',
+                html : 'This allows you to import records using the Environmental_CPL_Water_Window Excel form.  To import, cut/paste the contents of an excel file (Ctl + A is a good way to select all) into the box below, and click submit.',
                 style: 'padding-bottom: 10px;'
-            },{
-                xtype: 'ldk-linkbutton',
-                text: '[Download Template]',
-                scope: this,
-                style: 'margin-bottom: 10px;',
-                handler: function(){
-                    window.location = LABKEY.contextPath + '/onprc_ehr/templates/BulkEnvironmental_CPL_Water_Template.xlsx'
-                }
+
             },{
                 xtype: 'textarea',
                 width: 770,
