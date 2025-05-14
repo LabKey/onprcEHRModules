@@ -1103,8 +1103,11 @@ exports.init = function(EHR){
             3. E-X0500 - Diet, L-Phyto (Low-phytoestrogen)
             4. E-Y9750 - Diet, 5047 High Protein, Jumbo
 
+            Added Diet to the list by Kollil on 5/14/25. Refer to tkt #12506
+            5. E-X1380 - Diet Daily (Non-standard), 5LOP (TAD)
+
          */
-        if (row.code != 'E-85760' && row.code != 'E-Y7735' && row.code != 'E-X0500' && row.code != 'E-Y9750'){
+        if (row.code != 'E-85760' && row.code != 'E-Y7735' && row.code != 'E-X0500' && row.code != 'E-Y9750' && row.code != 'E-X1380'){
             if (!row.enddate) {
                 EHR.Server.Utils.addError(scriptErrors, 'enddate', 'Must enter enddate', 'WARN');
             }
