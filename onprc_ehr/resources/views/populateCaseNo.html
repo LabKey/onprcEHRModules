@@ -1,0 +1,37 @@
+<script type="text/javascript" nonce="<%=scriptNonce%>">
+    LABKEY.Utils.onReady(function () {
+        const el = document.getElementById('populate');
+        el['onclick'] = function () { populateCaseNumbers(el); };
+    });
+
+    function populateCaseNumbers() {
+        const output = document.getElementById("output");
+        output.innerHTML = "Starting. See site log for batch counts."
+
+        LABKEY.Ajax.request({
+            url : LABKEY.ActionURL.buildURL('onprc_ehr', 'populateCaseNumbers'),
+            method : 'POST',
+            scope: this,
+            failure: LABKEY.Utils.getCallbackWrapper((response) => {
+                const output = document.getElementById("output");
+                output.innerHTML += `<br><br>${response.exception}`;
+            }),
+            success: LABKEY.Utils.getCallbackWrapper((result) => {
+                const output = document.getElementById("output");
+                if (result.rows && result.rows > 0) {
+                    output.innerHTML += `<br><br>Successfully populated ${result.rows} case numbers.`
+                } else {
+                    output.innerHTML += `<br><br>No cases found missing caseNo.`
+                }
+            })
+        });
+    }
+</script>
+
+<div>
+    <button id="populate">Populate Case Numbers</button>
+    <br><br>
+    <p>
+        <span id="output"></span>
+    </p>
+</div>
