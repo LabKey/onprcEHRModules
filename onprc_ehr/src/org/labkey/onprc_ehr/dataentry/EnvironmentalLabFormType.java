@@ -20,7 +20,6 @@ package org.labkey.onprc_ehr.dataentry;
         import org.labkey.api.ehr.dataentry.FormSection;
         import org.labkey.api.ehr.dataentry.TaskForm;
         import org.labkey.api.ehr.dataentry.TaskFormSection;
-        import org.labkey.api.ehr.security.EHRLabworkEntryPermission;
         import org.labkey.api.view.template.ClientDependency;
         import org.labkey.api.module.Module;
         import org.labkey.onprc_ehr.security.ONPRC_EHREnvironmentalPermission;
@@ -49,6 +48,9 @@ package org.labkey.onprc_ehr.dataentry;
 
                            //Added 5-9-2025 R. Blasa
                 addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/window/BulkEnvironmental_CPL_Water_Window.js"));
+
+            //Added 5-9-2025 R. Blasa
+            addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/window/BulkEnvironmental_CPL_Contact_Window.js"));
 
 
 
@@ -92,6 +94,7 @@ package org.labkey.onprc_ehr.dataentry;
                 List<String> defaultButtons = new ArrayList<>();
                 defaultButtons.addAll(super.getMoreActionButtonConfigs()) ;
                 defaultButtons.add("ENV_CPL_Water_IMPORT");
+                defaultButtons.add("ENV_CPL_Contact_IMPORT");
 
                 return defaultButtons;
             }
