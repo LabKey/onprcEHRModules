@@ -148,7 +148,7 @@ Ext4.define('ONPRC_EHR.window.BulkEnvironmental_CPL_Water_Window', {
             service_requested: servicetype,
             charge_unit: chargeunit,
             testing_location: Ext4.String.trim(row[3]),  //Area
-            test_type: Ext4.String.trim(row[4]),  //Test Typw = Initial
+            test_type: Ext4.String.trim(row[4]),  //Test Typw
             test_method: Ext4.String.trim(row[5]),  // Testing Method
             test_results: Ext4.String.trim(row[6]),  //Test Results
             pass_fail: Ext4.String.trim(row[7]), //Pass/Fail
