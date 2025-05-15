@@ -22,7 +22,7 @@
 
     </transforms>
     <schedule>
-
+        <!--Runs at 4:30 each morning-->
         <cron expression="0 30 04 * * ?"/>
     </schedule>
 
