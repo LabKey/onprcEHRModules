@@ -22,7 +22,7 @@
 
     </transforms>
     <schedule>
-        &lt;!&ndash;4:30am&ndash;&gt;
+
         <cron expression="0 30 04 * * ?"/>
     </schedule>
 
