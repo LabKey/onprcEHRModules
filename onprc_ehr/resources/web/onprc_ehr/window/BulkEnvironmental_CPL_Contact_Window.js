@@ -144,25 +144,22 @@ Ext4.define('ONPRC_EHR.window.BulkEnvironmental_CPL_Contact_Window', {
 
         var obj = {
             date: date,
-            servicer_requested: servicetype,
-            charge_unit: chargeunit,
-            testing_location: Ext4.String.trim(row[2]),  //Testing Location
-            test_type: Ext4.String.trim(row[4]),  //Test Type
             service_requested: servicetype,
             charge_unit: chargeunit,
-            testing_location: Ext4.String.trim(row[3]),  //test Locatinn
-            test_type: Ext4.String.trim(row[4]),  //test Type
-            test_method: Ext4.String.trim(row[5]),  // Testing Method
-            pass_fail: Ext4.String.trim(row[7]), //Pass/Fail
-            action: Ext4.String.trim(row[10]),  // Action
-            retest: Ext4.String.trim(row[12]),  //Results Read by
+            testing_location: Ext4.String.trim(row[3]),  //Testing Location
+            test_type: Ext4.String.trim(row[4]),  //Test Type
+            test_method: Ext4.String.trim(row[5]),  // Method
+            pass_fail: Ext4.String.trim(row[6]), //Pass/Fail
+            action: Ext4.String.trim(row[7]),  // Action
+            retest: Ext4.String.trim(row[8]),  //Results Read by
+            colony_count: Ext4.String.trim(row[9]),  //Colony Count
             objectid: HeaderObjectID,
-            performedby: Ext4.String.trim(row[14]),  //Tech Initials
-            remarks: Ext4.String.trim(row[15])       //Ccmments
+            performedby: Ext4.String.trim(row[10]),  //Collected by
+            remarks: Ext4.String.trim(row[11])       //Ccmments
 
          };
 
-        if (!this.checkRequired(['date', 'service_requested','charge_unit','testing_location','action','retest','pass_fail','performedby','retest'], obj, errors, rowIdx))
+        if (!this.checkRequired(['date', 'service_requested','charge_unit','testing_location','test_type','action','retest','test_method','colony_count','pass_fail','performedby','retest'], obj, errors, rowIdx))
         {
             recordMap.primaryheader.push(obj);
         }
