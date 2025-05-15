@@ -520,6 +520,9 @@
             <column columnName="problem">
                 <datatype>varchar</datatype>
             </column>
+            <column columnName="caseNo">
+                <datatype>integer</datatype>
+            </column>
         </columns>
         <tableTitle>Cases</tableTitle>
     </table>
