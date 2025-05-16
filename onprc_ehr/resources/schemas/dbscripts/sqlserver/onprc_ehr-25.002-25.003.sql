@@ -39,7 +39,7 @@ END
                    WHERE TABLE_SCHEMA = ''dbo'' AND TABLE_NAME = ''ArchiveAuditLog'')
     BEGIN
         CREATE TABLE dbo.ArchiveAuditLog (
-            LogID INT IDENTITY(1,1) PRIMARY KEY,
+            LogID INT IDENTITY(1,1) ,
             TableName NVARCHAR(128) NOT NULL,
             Operation NVARCHAR(50) NOT NULL,
             StartTime DATETIME NOT NULL,
