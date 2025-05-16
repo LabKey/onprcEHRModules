@@ -1,6 +1,6 @@
-USE [Labkey_testF]
-GO
-/****** Object:  StoredProcedure [dbo].[ArchiveAuditTables_DeepSeek1]    Script Date: 5/15/2025 11:50:18 AM ******/
+/****** Object:  StoredProcedure [dbo].[ArchiveAuditTables_DeepSeek1]    Script Date: 5/15/2025 11:50:18 AM
+** Removed Use statement and also creating the Primary Key in the Code
+  ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
