@@ -1,6 +1,4 @@
 
-ALTER TABLE ehr_compliancedb.requirementsperemployee ADD trackingflag varchar(100);
-GO
 
 EXEC core.fn_dropifexists 'p_ComplianceRecentOverDueSoon_Process', 'onprc_ehr_compliancedb', 'PROCEDURE';
 GO
