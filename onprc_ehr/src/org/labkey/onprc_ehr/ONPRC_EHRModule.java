@@ -112,6 +112,7 @@ import java.util.Collections;
  * Date: 6/26/2018
  * Change of ONPRC Module Number
  * 2025-03-03 Change for Audit Log Archiveing update
+ * 2025-05-16 removing build of table as Labkey Does not allow setting primary key as part of the build table
  *
  */
 public class ONPRC_EHRModule extends ExtendedSimpleModule
@@ -128,7 +129,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
     @Override
     public @Nullable Double getSchemaVersion()
     {
-        return 25.002;
+        return 25.003;
     }
 
     @Override
