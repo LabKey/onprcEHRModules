@@ -134,33 +134,28 @@ Ext4.define('ONPRC_EHR.window.BulkEnvironmental_CPL_Water_Window', {
 
     processRow: function(row, recordMap, errors, rowIdx, parsed, cnt,servicetype,chargeunit) {
 
-        // Generate labwork Header information
-
-        var date = LDK.ConvertUtils.parseDate(this.safeGet(parsed, cnt, 0));
-        if (!date) {
-            errors.push('Missing Date');
-        }
+        // Generate  Header information
 
         var HeaderObjectID = LABKEY.Utils.generateUUID().toUpperCase();
 
         var obj = {
-            date: date,
+            // date: date,
             service_requested: servicetype,
             charge_unit: chargeunit,
-            testing_location: Ext4.String.trim(row[3]),  //Area
-            test_type: Ext4.String.trim(row[4]),  //Test Typw
-            test_method: Ext4.String.trim(row[5]),  // Testing Method
-            test_results: Ext4.String.trim(row[6]),  //Test Results
-            pass_fail: Ext4.String.trim(row[7]), //Pass/Fail
-            water_source: Ext4.String.trim(row[8]),  //Water Source
-            retest: Ext4.String.trim(row[9]),  //Results Read by
-            remarks: Ext4.String.trim(row[10]),       //Ccmments
+            testing_location: Ext4.String.trim(row[2]),  //Area
+            test_type: Ext4.String.trim(row[3]),  //Test Typw
+            test_method: Ext4.String.trim(row[4]),  // Testing Method
+            // test_results: Ext4.String.trim(row[3]),  //Test Results
+            // pass_fail: Ext4.String.trim(row[7]), //Pass/Fail
+            water_source: Ext4.String.trim(row[5]),  //Water Source
+            // retest: Ext4.String.trim(row[9]),  //Results Read by
+            // remarks: Ext4.String.trim(row[10]),       //Ccmments
             objectid: HeaderObjectID
 
 
          };
 
-        if (!this.checkRequired(['date', 'service_requested','charge_unit','testing_location','test_results','retest','pass_fail','retest'], obj, errors, rowIdx))
+        if (!this.checkRequired(['service_requested','charge_unit','testing_location','test_method'], obj, errors, rowIdx))
         {
             recordMap.primaryheader.push(obj);
         }

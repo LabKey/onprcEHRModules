@@ -133,33 +133,28 @@ Ext4.define('ONPRC_EHR.window.BulkEnvironmental_CPL_Contact_Window', {
 
     processRow: function(row, recordMap, errors, rowIdx, parsed, cnt,servicetype,chargeunit) {
 
-        // Generate labwork Header information
-
-        var date = LDK.ConvertUtils.parseDate(this.safeGet(parsed, cnt, 0));
-        if (!date) {
-            errors.push('Missing Date');
-        }
+        // Generate Header information
 
         var HeaderObjectID = LABKEY.Utils.generateUUID().toUpperCase();
 
         var obj = {
-            date: date,
+            // date: date,
             service_requested: servicetype,
             charge_unit: chargeunit,
-            testing_location: Ext4.String.trim(row[3]),  //Testing Location
-            test_type: Ext4.String.trim(row[4]),  //Test Type
-            test_method: Ext4.String.trim(row[5])  // Method
+            testing_location: Ext4.String.trim(row[2]),  //Testing Location
+            test_type: Ext4.String.trim(row[3]),  //Test Type
+            test_method: Ext4.String.trim(row[4]) , // Method
             // pass_fail: Ext4.String.trim(row[6]), //Pass/Fail
             // action: Ext4.String.trim(row[7]),  // Action
             // retest: Ext4.String.trim(row[8]),  //Results Read by
             // colony_count: Ext4.String.trim(row[9]),  //Colony Count
-            // objectid: HeaderObjectID,
+            objectid: HeaderObjectID
             // performedby: Ext4.String.trim(row[10]),  //Collected by
             // remarks: Ext4.String.trim(row[11])       //Ccmments
 
          };
 
-        if (!this.checkRequired(['date', 'service_requested','charge_unit','testing_location','test_type','test_method'], obj, errors, rowIdx))
+        if (!this.checkRequired([ 'service_requested','charge_unit','testing_location','test_type','test_method'], obj, errors, rowIdx))
         {
             recordMap.primaryheader.push(obj);
         }
