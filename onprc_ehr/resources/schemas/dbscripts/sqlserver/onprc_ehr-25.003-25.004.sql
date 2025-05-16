@@ -1,0 +1,3 @@
+
+ALTER TABLE dbo.ArchiveAuditLog
+    ADD CONSTRAINT PK_Logs PRIMARY KEY (LogID);
