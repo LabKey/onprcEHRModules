@@ -148,18 +148,18 @@ Ext4.define('ONPRC_EHR.window.BulkEnvironmental_CPL_Contact_Window', {
             charge_unit: chargeunit,
             testing_location: Ext4.String.trim(row[3]),  //Testing Location
             test_type: Ext4.String.trim(row[4]),  //Test Type
-            test_method: Ext4.String.trim(row[5]),  // Method
-            pass_fail: Ext4.String.trim(row[6]), //Pass/Fail
-            action: Ext4.String.trim(row[7]),  // Action
-            retest: Ext4.String.trim(row[8]),  //Results Read by
-            colony_count: Ext4.String.trim(row[9]),  //Colony Count
-            objectid: HeaderObjectID,
-            performedby: Ext4.String.trim(row[10]),  //Collected by
-            remarks: Ext4.String.trim(row[11])       //Ccmments
+            test_method: Ext4.String.trim(row[5])  // Method
+            // pass_fail: Ext4.String.trim(row[6]), //Pass/Fail
+            // action: Ext4.String.trim(row[7]),  // Action
+            // retest: Ext4.String.trim(row[8]),  //Results Read by
+            // colony_count: Ext4.String.trim(row[9]),  //Colony Count
+            // objectid: HeaderObjectID,
+            // performedby: Ext4.String.trim(row[10]),  //Collected by
+            // remarks: Ext4.String.trim(row[11])       //Ccmments
 
          };
 
-        if (!this.checkRequired(['date', 'service_requested','charge_unit','testing_location','test_type','action','retest','test_method','colony_count','pass_fail','performedby','retest'], obj, errors, rowIdx))
+        if (!this.checkRequired(['date', 'service_requested','charge_unit','testing_location','test_type','test_method'], obj, errors, rowIdx))
         {
             recordMap.primaryheader.push(obj);
         }
