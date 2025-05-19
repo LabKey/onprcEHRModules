@@ -19,19 +19,15 @@ import org.jetbrains.annotations.NotNull;
 import org.labkey.api.data.ColumnInfo;
 import org.labkey.api.data.DataColumn;
 import org.labkey.api.data.RenderContext;
+import org.labkey.api.util.LinkBuilder;
 import org.labkey.api.view.HttpView;
-import org.labkey.api.util.PageFlowUtil;
 import org.labkey.api.view.template.ClientDependency;
 import org.labkey.api.writer.HtmlWriter;
 
-import java.io.IOException;
-import java.io.Writer;
 import java.util.Collections;
+import java.util.Map;
 import java.util.Set;
 
-/**
-
- */
 public class ClinicalActionsDisplayColumn extends DataColumn
 {
     public ClinicalActionsDisplayColumn(ColumnInfo col)
@@ -41,13 +37,12 @@ public class ClinicalActionsDisplayColumn extends DataColumn
     private boolean _clickHandlerAdded = false;
 
     @Override
-    public void renderGridCellContents(RenderContext ctx, Writer oldWriter, HtmlWriter out) throws IOException
+    public void renderGridCellContents(RenderContext ctx, HtmlWriter out)
     {
         Object o = getValue(ctx);
         if (o != null)
         {
-            oldWriter.write("<a class=\"labkey-text-link cadc-row\" data-obj=\"" + PageFlowUtil.filter(o.toString()) + "\">[Actions]");
-            oldWriter.write("</a>");
+            out.write(LinkBuilder.simpleLink("[Actions]").addClass("labkey-text-link cadc-row").attributes(Map.of("data-obj", o.toString())));
             if (!_clickHandlerAdded)
             {
                 HttpView.currentPageConfig().addHandlerForQuerySelector("a.cadc-row", "click", "EHR.panel.ClinicalManagementPanel.displayActionMenu(this, this.attributes.getNamedItem('data-obj').value);" );
