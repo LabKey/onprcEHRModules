@@ -5,7 +5,7 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE PROCEDURE [dbo].[ArchiveAuditTables]
+CREATE PROCEDURE [onprc_ehr].[ArchiveAuditTables]
 AS
 BEGIN
     SET NOCOUNT ON;

@@ -13,7 +13,7 @@
 
         <transform id="ArchiveAuditLogs" type="StoredProcedure">
             <description>Runs a Stored Procedure</description>
-            <procedure schemaName="dbo" procedureName="ArchiveAuditTables">
+            <procedure schemaName="onprc_ehr" procedureName="ArchiveAuditTables">
             </procedure>
         </transform>
 
