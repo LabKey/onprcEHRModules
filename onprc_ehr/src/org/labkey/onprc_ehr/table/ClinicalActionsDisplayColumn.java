@@ -30,11 +30,12 @@ import java.util.Set;
 
 public class ClinicalActionsDisplayColumn extends DataColumn
 {
+    private boolean _clickHandlerAdded = false;
+
     public ClinicalActionsDisplayColumn(ColumnInfo col)
     {
         super(col);
     }
-    private boolean _clickHandlerAdded = false;
 
     @Override
     public void renderGridCellContents(RenderContext ctx, HtmlWriter out)
