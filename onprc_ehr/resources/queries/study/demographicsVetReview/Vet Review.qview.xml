@@ -2,15 +2,30 @@
     <columns>
         <column name="Id/clinicalActions"/>
         <column name="Id"/>
-        <column name="Id/curLocation/room"/>
-        <column name="Id/curLocation/cage"/>
-        <column name="mostRecentHx"/>
-        <!--<column name="latestP2"/>-->
-        <column name="remarksEnteredSinceReview"/>
-        <column name="observations"/>
-        <column name="observationdate"/>
-        <column name="vomitobservation"/>
-        <column name="vomitdate"/>
+        <column name="room"/>
+        <column name="cage"/>
+        <column name="Hx"/>
+        <column name="Remarks">
+            <properties>
+                <property name="columnTitle" value="Remarks Entered Since Last Vet Review"/>
+            </properties>
+        </column>
+        <column name="Recent Observations">
+            <properties>
+                <property name="columnTitle" value="Latest Observations"/>
+            </properties>
+        </column>
+        <column name="Recent Observation Date"/>
+        <column name="VomitObservations">
+            <properties>
+                <property name="columnTitle" value="Vomit Observations"/>
+            </properties>
+        </column>
+        <column name="vomitObservationsdate">
+            <properties>
+                <property name="columnTitle" value="Vomit Observations Date"/>
+            </properties>
+        </column>
         <column name="lastVetReview"/>
         <column name="Id/utilization/use"/>
         <column name="Id/activeCases/categories">
@@ -18,8 +33,8 @@
                 <property name="columnTitle" value="Active Cases"/>
             </properties>
         </column>
-        <!--<column name="Id/assignedVet/assignedVet"/>-->
-        <column name="calculated_status">
+
+        <column name="Status">
             <properties>
                 <property name="columnTitle" value="Status"/>
             </properties>

@@ -17,36 +17,44 @@
 
 SELECT
     d.Id,
-    group_concat(distinct d.Id.curLocation.room, chr(10)),
-    group_concat(distinct d.Id.curLocation.cage, chr(10)),
-    t2.mostRecentHX,
-    t2.remarksEnteredSinceReview,
-    group_concat(distinct d.mostRecentClinicalObservations.observations, chr(10)),
-    group_concat(distinct d.mostRecentClinicalObservations.date, chr(10)),
-    t.vomitobservation,
-    t.vomitdate,
-    d.lastVetReview,
-    d.Id.utilization.use,
-    d.Id.activeCases.categories,
-    d.calculated_status
-FROM (
-  Select * from  study.demographics d
-LEFT JOIN (
-    SELECT
-    f.Id,
-    group_concat(f.observations, chr(10)) as vomitobservation,
-    group_concat(distinct f.date, chr(10)) as vomitdate
+    group_concat(distinct d.Id.curLocation.room, chr(10)) as Room,
+    group_concat(distinct d.Id.curLocation.cage, chr(10)) as Cage,
+    group_concat(distinct d.mostRecentHX, chr(10)) as Hx,
+    group_concat(distinct d.remarksEnteredSinceReview, chr(10)) as Remarks,
+    group_concat(distinct d.mostRecentClinicalObservations.observations, chr(10)) as "Recent Observations",
+    group_concat(distinct d.mostRecentClinicalObservations.date, chr(10)) as "Recent Observation Date",
+    null as VomitObservations,
+    null as vomitObservationsdate,
+    group_concat(distinct cast(d.lastVetReview as date), chr(10)) as "Last Vet Review",
+    group_concat(distinct d.Id.assignedVet.assignedVet, chr(10)) as "Assigned Vet",
+    group_concat(distinct d.Id.utilization.use, chr(10)) as "Project",
+    group_concat(distinct d.Id.activeCases.categories, chr(10)) as "Active Cases",
+    group_Concat(distinct d.calculated_status, chr(10)) as "Status"
 
-    FROM study.mostRecentClinicalObservations_Vomit_ForAnimal f
-    Where  f.category is not null
-
-) t ON (d.id = t.id)
-LEFT JOIN (Select
-               g.id,
-               g.mostRecentHx,
-               g.remarksEnteredSinceReview
-           FROM study.demographics g
-           where g.remarksEnteredSinceReview > 0
-)t2 ON (d.id = t2.id)
+from  study.demographics d  where d.Id.assignedVet.assignedVet = 'dozier'
+                              And d.totalRemarksEnteredSinceReview > 0
 
 group by d.Id
+
+Union
+
+select
+    e.Id,
+    group_concat(distinct e.Id.curLocation.room, chr(10)) as Room,
+    group_concat(distinct e.Id.curLocation.cage, chr(10)) as Cage,
+    null as Hx,
+    null as Remarks,
+    null as  "Recent Observations",
+    null as  "Recent Observation Date",
+    group_concat(distinct g.Observations, chr(10)) as VomitObservations,
+    group_concat(distinct g.date, chr(10)) as VomitObservationsdate,
+    group_concat(distinct cast(e.lastVetReview as date), chr(10)) as "Last Vet Review",
+    group_concat(distinct e.Id.assignedVet.assignedVet, chr(10)) as "Assigned Vet",
+    group_concat(distinct e.Id.utilization.use, chr(10)) as "Project",
+    group_concat(distinct e.Id.activeCases.categories, chr(10)) as "Active Cases",
+    group_Concat(distinct e.calculated_status, chr(10)) as "Status"
+
+from study.demographics e, study.mostRecentClinicalObservations_Vomit_ForAnimal g
+where e.Id = g.Id
+
+group by e.Id
