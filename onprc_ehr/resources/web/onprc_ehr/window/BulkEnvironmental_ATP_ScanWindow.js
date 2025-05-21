@@ -168,7 +168,7 @@ Ext4.define('ONPRC_EHR.window.BulkEnvironmental_ATP_ScanWindow', {
 
                         };
 
-                        if (!this.checkRequired(['date', 'service_requested','charge_unit','testing_location','action','test_results','surface_tested','retest','pass_fail','performedby','retest','surface_tested'], obj, errors, rowIdx))
+                        if (!this.checkRequired(['date', 'service_requested','charge_unit','testing_location','action','test_results','surface_tested','retest','pass_fail','performedby'], obj, errors, rowIdx))
                         {
                             recordMap.primaryheader.push(obj);
                         }
