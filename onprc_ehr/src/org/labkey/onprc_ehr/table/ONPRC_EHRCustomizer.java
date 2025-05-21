@@ -70,6 +70,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 import static org.labkey.api.util.DOM.Attribute.style;
@@ -1813,9 +1814,10 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
                         {
                             String runId = (String)ctx.get(new FieldKey(getBoundColumn().getFieldKey().getParent(), "runIdPLT"));
                             String id = (String)ctx.get(new FieldKey(getBoundColumn().getFieldKey().getParent(), "Id"));
+
                             SPAN(
                                 at(style, "white-space:nowrap"),
-                                LinkBuilder.simpleLink(getFormattedHtml(ctx)).addClass("labkey-text-link srg-chk-lst").attributes(Map.of("data-runid", runId, "data-id", id))
+                                LinkBuilder.simpleLink(getFormattedHtml(ctx)).addClass("labkey-text-link srg-chk-lst").attributes(Map.of("data-runid", Optional.ofNullable(runId).orElse(""), "data-id", id))
                             ).appendTo(out);
                             if (!_surgeryChecklistClickHandlerAdded)
                             {
@@ -1855,7 +1857,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
 
                             SPAN(
                                 at(style, "white-space:nowrap"),
-                                LinkBuilder.simpleLink(getFormattedHtml(ctx)).addClass("labkey-text-link hct-row").attributes(Map.of("data-runid", runId, "data-id", id))
+                                LinkBuilder.simpleLink(getFormattedHtml(ctx)).addClass("labkey-text-link hct-row").attributes(Map.of("data-runid", Optional.ofNullable(runId).orElse(""), "data-id", id))
                             ).appendTo(out);
 
                             if (!_hctRowClickHandlerAdded)
