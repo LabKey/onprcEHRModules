@@ -159,7 +159,7 @@ Ext4.define('ONPRC_EHR.window.BulkEnvironmental_ATP_ScanWindow', {
 
 
             if (!labgroup){
-                labgroup = 'N/A'
+                labgroup = '{N/A}'
             }
 
             if (!labretest){
@@ -169,11 +169,11 @@ Ext4.define('ONPRC_EHR.window.BulkEnvironmental_ATP_ScanWindow', {
                 lablocation = 'N/A';
             }
             if (!labsurface){
-                labsurface = 'N/A';
+                labsurface = '(N/A)';
             }
 
             if (!labinitial){
-                labinitial = 'N/A';
+                labinitial = '[N/A]';
             }
 
 
