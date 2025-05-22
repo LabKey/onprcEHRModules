@@ -154,6 +154,8 @@ Ext4.define('ONPRC_EHR.window.BulkEnvironmental_ATP_ScanWindow', {
             var labgroup = Ext4.String.trim(row[3]);
             var labretest = Ext4.String.trim(row[7]);
             var lablocation = Ext4.String.trim(row[4]);
+            var labsurface = Ext4.String.trim(row[5]);
+            var labinitial = Ext4.String.trim(row[6]);
 
             if (!labgroup){
                 labgroup = 'N/A'
@@ -165,8 +167,13 @@ Ext4.define('ONPRC_EHR.window.BulkEnvironmental_ATP_ScanWindow', {
             if (!lablocation){
                 lablocation = 'N/A';
             }
+            if (!labsurface){
+                labsurface = 'N/A';
+            }
 
-
+            if (!labinitial){
+                labinitial = 'N/A';
+            }
 
 
         var obj = {
@@ -176,9 +183,9 @@ Ext4.define('ONPRC_EHR.window.BulkEnvironmental_ATP_ScanWindow', {
                             testing_location:Ext4.String.trim(row[2]),  //Area
                             action:lablocation,  //Location
                             test_results:labgroup,   //LAB/GROUP
-                            surface_tested:Ext4.String.trim(row[5]),  //Surface
+                            surface_tested:labsurface,  //Surface
                             retest:labretest,  //Retest
-                            pass_fail:Ext4.String.trim(row[6]),   // Initial
+                            pass_fail:labinitial,   // Initial
                             objectid: HeaderObjectID,
                             performedby: Ext4.String.trim(row[1]),  //Tech
                             remarks:Ext4.String.trim(row[8])       //Ccmments
