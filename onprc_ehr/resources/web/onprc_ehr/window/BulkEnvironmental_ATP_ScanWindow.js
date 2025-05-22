@@ -150,20 +150,21 @@ Ext4.define('ONPRC_EHR.window.BulkEnvironmental_ATP_ScanWindow', {
         }
 
 
-                        var HeaderObjectID = LABKEY.Utils.generateUUID().toUpperCase();
-                        var labgroup = Ext4.String.trim(row[3]);
-                        var labretest = Ext4.String.trim(row[7]);
-                        var lablocation = Ext4.String.trim(row[4]);
-                        if (!labgroup){
-                            labgroup = 'not Applicable'
-                        }
+            var HeaderObjectID = LABKEY.Utils.generateUUID().toUpperCase();
+            var labgroup = Ext4.String.trim(row[3]);
+            var labretest = Ext4.String.trim(row[7]);
+            var lablocation = Ext4.String.trim(row[4]);
 
-                        if (!labretest){
-                            labretest = 0;
-                        }
-                        if (!lablocation){
-                            lablocation = 'not Applicable';
-                        }
+            if (!labgroup){
+                labgroup = 'N/A'
+            }
+
+            if (!labretest){
+                labretest = 0;
+            }
+            if (!lablocation){
+                lablocation = 'N/A';
+            }
 
 
 
@@ -173,12 +174,9 @@ Ext4.define('ONPRC_EHR.window.BulkEnvironmental_ATP_ScanWindow', {
                             service_requested: servicetype,
                             charge_unit: chargeunit,
                             testing_location:Ext4.String.trim(row[2]),  //Area
-                            // action:Ext4.String.trim(row[4]),  //Location
                             action:lablocation,  //Location
                             test_results:labgroup,   //LAB/GROUP
-                            // test_results:Ext4.String.trim(row[3]),   //LAB/GROUP
                             surface_tested:Ext4.String.trim(row[5]),  //Surface
-                            // retest:Ext4.String.trim(row[7]),  //Retest
                             retest:labretest,  //Retest
                             pass_fail:Ext4.String.trim(row[6]),   // Initial
                             objectid: HeaderObjectID,
