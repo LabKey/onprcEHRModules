@@ -58,6 +58,13 @@ public class VetReviewDisplayColumn extends DataColumn
         Object o = getValue(ctx);
         if (o != null)
         {
+            HtmlString asterisk = DOM.createHtmlFragment(
+                SPAN(
+                        at(style, "background-color: yellow;"),
+                        "**"
+                )
+            );
+
             String val = o.toString();
             String[] parts = val.split("<:>");
             boolean first = true;
@@ -85,25 +92,13 @@ public class VetReviewDisplayColumn extends DataColumn
                     for (String line : lines)
                     {
                         HtmlStringBuilder sub = HtmlStringBuilder.of(Pattern.compile("\\*\\*").splitAsStream(line).map(HtmlString::of)
-                                .collect(LabKeyCollectors.joining(
-                                        DOM.createHtmlFragment(
-                                                SPAN(
-                                                        at(style, "background-color: yellow;"),
-                                                        "**"
-                                                )
-                                        )
-                                )
+                                .collect(LabKeyCollectors.joining(asterisk)
                         ));
 
                         // splitting won't catch the last one
                         if (line.endsWith("**"))
                         {
-                            sub.append(DOM.createHtmlFragment(
-                                    SPAN(
-                                            at(style, "background-color: yellow;"),
-                                            "**"
-                                    )
-                            ));
+                            sub.append(asterisk);
                         }
 
                         htmlStrings.add(sub.getHtmlString());
