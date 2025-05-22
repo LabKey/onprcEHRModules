@@ -1,46 +1,28 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--update of procedure to production for daily run -->
-<!--Added 11/23/2018 -->
-<!--Update 2,25,2020-->
-
-
 <etl xmlns="http://labkey.org/etl/xml">
-
-    <name>OGASync2020</name>
-
+    <name>OGASync2020Admin</name>
     <description>Copies OGA Data from external source to PRIME for PRocessing </description>
-
-
     <transforms>
+        <transform id="OGAsync_Remove" type="StoredProcedure">
+            <description>Runs a stored procedure to Update Transaction log based on OGA External Schema.</description>
+            <procedure procedureName="ClearOGASync" schemaName="ONPRC_billing"/>
+        </transform>
         <transform id="OGASync">
-
             <description>Import to OGA Sync in Prime</description>
-
-            <source schemaName="OGA" queryName="ZGMS_PRIM_ALL_V"/>
-
-            <destination schemaName="ONPRC_billing" queryName="ogasynch" targetOption="truncate" />
-
+            <source queryName="ogaSourceOutPut" schemaName="OGA"/>
+            <destination queryName="ogasyncNew" schemaName="ONPRC_billing" targetOption="truncate"/>
         </transform>
         <!--This removes all records from aliases dataset that are not OHSU GL Category -->
         <transform id="OGA_Remove" type="StoredProcedure">
-             <description>Runs a stored procedure to Update Transaction log based on OGA External Schema.</description>
-             <procedure schemaName="ONPRC_billing" procedureName="OGA_RemoveRecords">
-             </procedure>
-          </transform>
-      <!-- This inserts records into the Alias from OGA Sync   -->
-
-       <transform id="OGA_Insert" type="StoredProcedure">
-           <description>Runs a stored procedure Update the OGA Associated Datasets in Prime based on Transaction Log.</description>
-           <procedure schemaName="ONPRC_billing" procedureName="oga_InsertRecords">
-           </procedure>
-       </transform>
-
-
+            <description>Runs a stored procedure to Update Transaction log based on OGA External Schema.</description>
+            <procedure procedureName="OGA_RemoveRecords" schemaName="ONPRC_billing"/>
+        </transform>
+        <!-- This inserts records into the Alias from OGA Sync -->
+        <transform id="OGA_Insert" type="StoredProcedure">
+            <description>Runs a stored procedure Update the OGA Associated Datasets in Prime based on Transaction Log.</description>
+            <procedure procedureName="oga_InsertRecords" schemaName="ONPRC_billing"/>
+        </transform>
     </transforms>
-
-
-    <schedule><cron expression="0 0 0 * * ?" /></schedule>
-
-
-
+    <schedule>
+        <cron expression="0 0 0 * * ?"/>
+    </schedule>
 </etl>

@@ -1152,11 +1152,11 @@
             </column>
             <column columnName="grantNumber">
                 <columnTitle>OGA Grant Number</columnTitle>
-               
+
             </column>
             <column columnName="agencyAwardNumber">
                 <columnTitle>Agency Award Number</columnTitle>
-               
+
             </column>
             <column columnName="investigatorId">
                 <columnTitle>Investigator</columnTitle>
@@ -1610,6 +1610,10 @@
             <column columnName="faRate"/>
             <column columnName="Key"/>
             <column columnName="ORIGINATING_AGENCY_AWARD_NUM"/>
+            <!--update to add Needed Fields-->
+            <column columnName="indirectRate"/>
+            <column columnName="oga_award_start_Date"/>
+            <column columnName="oga_award_end_date"/>
         </columns>
     </table>
     <table tableName="MergeChargtypeUpdates" tableDbType="TABLE">
@@ -1621,6 +1625,21 @@
             <column columnName="objectid"/>
             <column columnName="startDate"/>
             <column columnName="endDate"/>
+        </columns>
+    </table>
+    <table tableName="inDirectRates" tableDbType="TABLE">
+        <columns>
+            <column columnName="rowid"/>
+            <column columnName="Title"/>
+            <column columnName="IndirectRate"/>
+            <column columnName="StartDate"/>
+            <column columnName="EndDate"/>
+            <column columnName="createdBy"/>
+            <column columnName="created"/>
+            <column columnName="modifiedBy"/>
+            <column columnName="modified"/>
+
+
         </columns>
     </table>
 </tables>
