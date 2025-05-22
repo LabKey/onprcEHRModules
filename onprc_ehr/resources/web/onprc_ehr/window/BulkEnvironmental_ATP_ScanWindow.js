@@ -162,7 +162,7 @@ Ext4.define('ONPRC_EHR.window.BulkEnvironmental_ATP_ScanWindow', {
                             labretest = 0;
                         }
                         if (!lablocation){
-                            lablocation = 0;
+                            lablocation = 'not Applicable';
                         }
 
 
