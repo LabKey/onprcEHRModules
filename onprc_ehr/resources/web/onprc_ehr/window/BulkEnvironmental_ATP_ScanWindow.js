@@ -157,6 +157,7 @@ Ext4.define('ONPRC_EHR.window.BulkEnvironmental_ATP_ScanWindow', {
             var labsurface = Ext4.String.trim(row[5]);
             var labinitial = Ext4.String.trim(row[6]);
 
+
             if (!labgroup){
                 labgroup = 'N/A'
             }
@@ -176,6 +177,8 @@ Ext4.define('ONPRC_EHR.window.BulkEnvironmental_ATP_ScanWindow', {
             }
 
 
+
+
         var obj = {
                             date: date,
                             service_requested: servicetype,
@@ -188,7 +191,7 @@ Ext4.define('ONPRC_EHR.window.BulkEnvironmental_ATP_ScanWindow', {
                             pass_fail:labinitial,   // Initial
                             objectid: HeaderObjectID,
                             performedby: Ext4.String.trim(row[1]),  //Tech
-                            remarks:Ext4.String.trim(row[8])       //Ccmments
+                            remarks:Ext4.String.trim(row[8])     //Ccmments
 
                         };
 
