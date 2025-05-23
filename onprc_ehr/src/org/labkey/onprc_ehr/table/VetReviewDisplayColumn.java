@@ -17,18 +17,27 @@ package org.labkey.onprc_ehr.table;
 
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
+import org.labkey.api.collections.LabKeyCollectors;
 import org.labkey.api.data.ColumnInfo;
 import org.labkey.api.data.DataColumn;
 import org.labkey.api.data.RenderContext;
-import org.labkey.api.util.PageFlowUtil;
+import org.labkey.api.util.DOM;
+import org.labkey.api.util.HtmlString;
+import org.labkey.api.util.HtmlStringBuilder;
 import org.labkey.api.view.HttpView;
 import org.labkey.api.view.template.ClientDependency;
 import org.labkey.api.writer.HtmlWriter;
 
-import java.io.IOException;
-import java.io.Writer;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Set;
+import java.util.regex.Pattern;
+
+import static org.labkey.api.util.DOM.A;
+import static org.labkey.api.util.DOM.Attribute.style;
+import static org.labkey.api.util.DOM.SPAN;
+import static org.labkey.api.util.DOM.at;
 
 /**
  * User: bimber
@@ -44,38 +53,70 @@ public class VetReviewDisplayColumn extends DataColumn
     private boolean _clickHandlerRegistered = false;
 
     @Override
-    public void renderGridCellContents(RenderContext ctx, Writer oldWriter, HtmlWriter out) throws IOException
+    public void renderGridCellContents(RenderContext ctx, HtmlWriter out)
     {
         Object o = getValue(ctx);
         if (o != null)
         {
+            HtmlString asterisk = DOM.createHtmlFragment(
+                SPAN(
+                        at(style, "background-color: yellow;"),
+                        "**"
+                )
+            );
+
             String val = o.toString();
             String[] parts = val.split("<:>");
-            String delim = "";
+            boolean first = true;
             for (String part : parts)
             {
-                part = StringUtils.trimToNull(part);
+                part = StringUtils.trimToEmpty(part);
                 String[] tokens = part.split("<>");
 
-                oldWriter.write(delim);
-                delim = "<br><br>";
-                //String key = StringUtils.trimToNull(tokens[0]);
-                String text = StringUtils.trimToNull(tokens[1]);
-                if (text != null)
+                if (!first)
                 {
-                    text = text.replaceAll("\\r?\\n", "<br>");
-                    text = text.replaceAll("\\*\\*", "<span style=\"background-color: yellow;\">\\*\\*</span>");
+                    out.write(HtmlString.BR);
+                    out.write(HtmlString.BR);
+                }
+                else
+                {
+                    first = false;
                 }
 
-                oldWriter.write("<a style=\"max-width: 500px;\" class=\"labkey-text-link vrdc-row\" data-objectid=\"" + PageFlowUtil.filter(StringUtils.trimToNull(tokens[2])) + "\">");
+                String trimmedText = StringUtils.trimToNull(tokens[1]);
+                HtmlString text = HtmlString.of("");
+                if (trimmedText != null)
+                {
+                    List<HtmlString> htmlStrings = new ArrayList<>();
+                    String[] lines = trimmedText.split("\\r?\\n");
+                    for (String line : lines)
+                    {
+                        HtmlStringBuilder sub = HtmlStringBuilder.of(Pattern.compile("\\*\\*").splitAsStream(line).map(HtmlString::of)
+                                .collect(LabKeyCollectors.joining(asterisk)
+                        ));
+
+                        // splitting won't catch the last one
+                        if (line.endsWith("**"))
+                        {
+                            sub.append(asterisk);
+                        }
+
+                        htmlStrings.add(sub.getHtmlString());
+                    }
+
+                    text = htmlStrings.stream().collect(LabKeyCollectors.joining(HtmlString.BR));
+                }
+
+                A(
+                        at(style, "max-width: 500px;").cl("labkey-text-link vrdc-row").data("objectid", StringUtils.trimToEmpty(tokens[2])),
+                        text
+                ).appendTo(out);
 
                 if (!_clickHandlerRegistered)
                 {
                     HttpView.currentPageConfig().addHandlerForQuerySelector("a.vrdc-row", "click", "EHR.panel.ClinicalManagementPanel.replaceSoap({objectid: this.attributes.getNamedItem('data-objectid').value, scope: this, callback: function(){EHR.panel.ClinicalManagementPanel.updateVetColumn(this, arguments[0], arguments[1]);}});" );
                     _clickHandlerRegistered = true;
                 }
-                oldWriter.write(text);
-                oldWriter.write("</a>");
             }
         }
     }
