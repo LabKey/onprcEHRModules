@@ -1109,7 +1109,9 @@ exports.init = function(EHR){
          */
         if (row.code != 'E-85760' && row.code != 'E-Y7735' && row.code != 'E-X0500' && row.code != 'E-Y9750' && row.code != 'E-X1380'){
             if (!row.enddate) {
-                EHR.Server.Utils.addError(scriptErrors, 'enddate', 'Must enter enddate', 'WARN');
+                //Changed by Kollil on 5/28/25 - Changed the 'WARN' to 'ERROR' to tighten the end date validation.
+                //This will prevent the user to submit the med/diet data without passing the validation. The "Force Submit" button WILL NOT WORK with this setting.
+                EHR.Server.Utils.addError(scriptErrors, 'enddate', 'Must enter enddate', 'ERROR');
             }
         }
     });
