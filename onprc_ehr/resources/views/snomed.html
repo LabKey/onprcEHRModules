@@ -12,10 +12,13 @@
         margin: 20px;
     }
 
+    .post-search {
+        border-top: 1px solid #ccc;
+        padding: 20px 0 10px 0;
+    }
+
     .snomed-section {
-        border: 1px solid #ccc;
-        background-color: #f5f5f5;
-        padding: 16px 20px;
+        padding: 16px 0 20px 0;
         margin-bottom: 10px;
         display: inline-block;
     }
@@ -44,7 +47,10 @@
     function onEdit() {
         document.getElementById("createSnomed").style.display = "none";
         document.getElementById("addSnomed").style.display = "none";
+
         document.getElementById("postSearch").innerHTML = "";
+        document.getElementById("postSearch").hidden = true;
+
         document.getElementById("results").innerHTML = "";
         document.getElementById("showMessage").innerHTML = "";
         codeInProgress = undefined;
@@ -126,6 +132,7 @@
                 {
                     const postSearch = document.getElementById("postSearch");
                     postSearch.innerHTML = `<br><p>A SNOMED with this meaning already exists. Would you like to add it to the subset '${subset}'?</p>`;
+                    postSearch.hidden = false;
 
                     showSnomed(response.code, false);
 
@@ -148,6 +155,8 @@
 
         if (showFinal) {
             document.getElementById("postSearch").innerHTML = "";
+            document.getElementById("postSearch").hidden = true;
+
             document.getElementById("createSnomed").style.display = "none";
             document.getElementById("addSnomed").style.display = "none";
         }
@@ -186,10 +195,12 @@
 
                 if (snomeds.length === 0) {
                     postSearch.innerHTML = `<br><p>No matches found. Click the Create button to create this as a new SNOMED code for the ${subset} subset.</p>`;
+                    postSearch.hidden = false;
                 }
                 else {
 
-                    postSearch.innerHTML = `<br><p>${snomeds.length} potential current SNOMED match${snomeds.length > 1 ? 'es' : ''} found. If you still want to create the SNOMED for the ${subset} subset, click the Create button.</p>`;
+                    postSearch.innerHTML = `<p>${snomeds.length} potential current SNOMED match${snomeds.length > 1 ? 'es' : ''} found. If you still want to create the SNOMED for the ${subset} subset, click the Create button.</p>`;
+                    postSearch.hidden = false;
 
                     new LABKEY.QueryWebPart({
                         renderTo: 'results',
@@ -262,7 +273,7 @@
         <input type="text" id="snomed" name="snomed" />
         <button id="searchSnomed">Search</button>
     </div>
-    <div id="postSearch"></div>
+    <div class="post-search" id="postSearch" hidden="hidden"></div>
     <button id="createSnomed" class="hiddenEl">Create Organism</button>
     <button id="addSnomed" class="hiddenEl">Add Organism</button>
     <br>
