@@ -1398,5 +1398,24 @@
             <column columnName="remark"/>
         </columns>
     </table>
+    <table tableName="Rpt_AnimalIDTissues" tableDbType="TABLE">
+        <columns>
+            <column columnName="Searchkey"/>
+            <column columnName="animalID"/>
+            <column columnName="date"/>
+          </columns>
+    </table>
+
+    <table tableName="Rpt_AnimalIDTissues_Master" tableDbType="TABLE">
+        <columns>
+            <column columnName="rowid"/>
+            <column columnName="SearchID"/>
+            <column columnName="animalID"/>
+            <column columnName="date"/>
+            <column columnName="actual_Created"/>
+            <column columnName="remarks"/>
+        </columns>
+    </table>
+
 
 </tables>
