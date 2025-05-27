@@ -129,7 +129,7 @@ public class AdminNotifications extends ColonyAlertsNotification
         else if (count > 0)
         {
             //Display the report link on the notification page
-            msg.append("<br><b>Meds with missing end date:</b><br><br>");
+            msg.append("<br><b>Medication orders with missing end date:</b><br><br>");
             msg.append("<b>" + count + " meds found with missing end dates:</b>");
             msg.append("<p><a href='" + getExecuteQueryUrl(c, "onprc_ehr", "MedsEndDateAlert", null) + "'>Click here to view the meds/diets</a></p>\n");
             msg.append("<hr>");
