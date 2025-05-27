@@ -32,22 +32,7 @@ With eIACUCAuthorized as (
 
      ),
 
-     --This query finds the nukmbder assigned from the assignment table
-     -- added thatg this is for NHP assignments
-    --Kim Ray says this is not needed
-     /*CurrentAssignedNHP as
-         (Select
-              --a.project.protocol as Protocol,
-              p.external_id as Protocol,
-              a.id.demographics.species as Species,
-              Count(a.id) as TotalAssignedbySpecies
-          from study.assignment a join ehr.protocol p on a.project.protocol = p.protocol
-          where (a.date <= Now() -- Take care of future assignments in the date
-                     and a.enddate is null or a.enddate > Now())
-          Group By
-              p.external_id,
-              a.id.demographics.species
-         ),*/
+
      AllowablefromProtocol as (
          Select
              a.protocol,

@@ -54,29 +54,53 @@ With eIACUCAuthorized as (
 
 
        From ehr.animalusage a
+       where Isactive = True
 
 
 
     ),
 --This will be the final report
     --Need to add a CTE for SLA
+    --Not getting a solid connection  between
+    --summary needs to combine eIACUCAuthorized with Allowable by Protocol
     SummaryReport as (
 Select
     e.Protocol,
+    a.protocol as PrimeProtocol,
     --a.project,
     e.species,
-    Sum(e.TotalForSpecies)
 
+    Sum(e.TotalForSpecies) as eIACUCAuthorized,
+    Sum(a.allowed) as PrimeAuthorized
 
-
-from   eIACUCAuthorized e --, CurrentAssigned a
-    -- Where e.protocol = a.protocol
+from   eIACUCAuthorized e left outer join AllowablefromProtocol a on  e.protocol = a.protocol.displayName
+    Where e.Species not in ('Rat','Rabbit','Mouse',	'Guinea Pig')
     Group by
         e.Protocol,
+        a.protocol,
         e.species
+    ),
+    CompareReport as (
+        Select
+            s.protocol,
+            s.PrimeProtocol,
+            s.species,
+            s.eIACUCAuthorized,
+            s.PrimeAuthorized,
+            (s.eIACUCAuthorized - s.primeAuthorized) as AuthorizedCompare,
+            'Review Authorized Animals' as UpdateAuthorizedNHPS
+
+        from SummaryReport s
+        Group by
+            s.protocol,
+            s.PrimeProtocol,
+            s.species,
+            s.eIACUCAuthorized,
+            s.primeAuthorized
     )
 --Select * from eIACUCAuthorized
 --Select * from CurrentAssigned
 --Select * from SummaryReport
 --Select * from BaseProtocolAssigned
-select * from AllowablefromProtocol
+--select * from AllowablefromProtocol
+Select * from CompareReport
