@@ -37,7 +37,7 @@ EHR.model.DataModelManager.registerMetadata('Environmental', {
             },
             test_results: {
                 xtype: 'onprc-env_testresults',
-                header: 'Test Results-',
+                header: 'Test Results',
                 columnConfig: {
                     width: 100
                 }

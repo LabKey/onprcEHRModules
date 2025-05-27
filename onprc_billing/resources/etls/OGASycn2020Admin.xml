@@ -9,7 +9,7 @@
         <transform id="OGASync">
             <description>Import to OGA Sync in Prime</description>
             <source queryName="ogaSourceOutPut" schemaName="OGA"/>
-            <destination queryName="ogasynch" schemaName="ONPRC_billing" targetOption="truncate"/>
+            <destination queryName="ogasynchNew" schemaName="ONPRC_billing" targetOption="truncate"/>
         </transform>
         <!--This removes all records from aliases dataset that are not OHSU GL Category -->
         <transform id="OGA_Remove" type="StoredProcedure">
