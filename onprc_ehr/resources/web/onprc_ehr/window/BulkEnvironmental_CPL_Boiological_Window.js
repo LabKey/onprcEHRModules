@@ -4,23 +4,23 @@
  * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
  */
 /**
- * @cfg dataEntryPanel      Created 1/17/2024   Blasa    Environmental ATP Entries
+ * @cfg dataEntryPanel      Created 4/29/2025   Blasa    Environmental CPL Entries
  */
-Ext4.define('ONPRC_EHR.window.BulkEnvironmental_ATP_ScanWindow', {
+Ext4.define('ONPRC_EHR.window.BulkEnvironmental_CPL_Biological_Window', {
     extend: 'Ext.window.Window',
 
     initComponent: function(){
         Ext4.apply(this, {
             modal: true,
             closeAction: 'destroy',
-            title: 'Bulk Environmental_ATP_ScanWindow Import',
+            title: 'Bulk Environmental CPL Biological Indicagtors Import',
             bodyStyle: 'padding: 5px;',
             width: 800,
             defaults: {
                 border: false
             },
             items: [{
-                html : 'This allows you to import record using the Environmental_ATP_ScanWindow Excel form.  To import, cut/paste the contents of the excel file (Ctl + A is a good way to select all) into the box below and hit submit.',
+                html : 'This allows you to import record using the Environmental_CPL_Biological Indicators_Window Excel form.  To import, cut/paste the contents of the excel file (Ctl + A is a good way to select all) into the box below, and click submit.',
                 style: 'padding-bottom: 10px;'
             },{
                 xtype: 'ldk-linkbutton',
@@ -28,7 +28,7 @@ Ext4.define('ONPRC_EHR.window.BulkEnvironmental_ATP_ScanWindow', {
                 scope: this,
                 style: 'margin-bottom: 10px;',
                 handler: function(){
-                    window.location = LABKEY.contextPath + '/onprc_ehr/templates/BulkEnvironmental_ATP_Template.xlsx'
+                    window.location = LABKEY.contextPath + '/onprc_ehr/templates/BulkEnvironmental_CPL_Biological_Template.xlsx'
                 }
             },{
                 xtype: 'textarea',
@@ -83,8 +83,8 @@ Ext4.define('ONPRC_EHR.window.BulkEnvironmental_ATP_ScanWindow', {
 
         Ext4.Msg.wait('Please be patient while we Process your data...');
 
-        var servicetype = 'Sanitation: ATP';
-        var chargeunit = 'Kati' ;
+        var servicetype = 'Sanitation: Bio-indicator';
+        var chargeunit = 'Clinpath' ;
 
 
         var offset = 1;
@@ -108,7 +108,7 @@ Ext4.define('ONPRC_EHR.window.BulkEnvironmental_ATP_ScanWindow', {
 
             var cnt = i;
 
-            this.processRow(row, recordMap, errors, rowIdx, tdate, parsed, cnt,servicetype,chargeunit);
+            this.processRow(row, recordMap, errors, rowIdx, id, parsed, cnt,servicetype,chargeunit);
         }
 
         Ext4.Msg.hide();
@@ -138,72 +138,39 @@ Ext4.define('ONPRC_EHR.window.BulkEnvironmental_ATP_ScanWindow', {
         this.close();
     },
 
-    processRow: function(row, recordMap, errors, rowIdx,tdate, parsed, cnt,servicetype,chargeunit)
-    {
+    processRow: function(row, recordMap, errors, rowIdx,tdate, parsed, cnt,servicetype,chargeunit) {
 
         // Generate labwork Header information
 
         var date = LDK.ConvertUtils.parseDate(this.safeGet(parsed, cnt, 0));
-        if (!date)
-        {
+        if (!date) {
             errors.push('Missing Date');
         }
 
-
-            var HeaderObjectID = LABKEY.Utils.generateUUID().toUpperCase();
-            var labgroup = Ext4.String.trim(row[3]);
-            var labretest = Ext4.String.trim(row[7]);
-            var lablocation = Ext4.String.trim(row[4]);
-            var labsurface = Ext4.String.trim(row[5]);
-            var labinitial = Ext4.String.trim(row[6]);
-
-
-            if (!labgroup){
-                labgroup = '{n/a}'
-            }
-
-            if (!labretest){
-                labretest = 0;
-            }
-            if (!lablocation){
-                lablocation = 'n/a';
-            }
-            if (!labsurface){
-                labsurface = '(n/a)';
-            }
-
-            if (!labinitial){
-                labinitial = '[n/a]';
-            }
-
-
-
+        var HeaderObjectID = LABKEY.Utils.generateUUID().toUpperCase();
 
         var obj = {
-                            date: date,
-                            service_requested: servicetype,
-                            charge_unit: chargeunit,
-                            testing_location:Ext4.String.trim(row[2]),  //Area
-                            action:lablocation,  //Location
-                            test_results:labgroup,   //LAB/GROUP
-                            surface_tested:labsurface,  //Surface
-                            retest:labretest,  //Retest
-                            pass_fail:labinitial,   // Initial
-                            objectid: HeaderObjectID,
-                            performedby: Ext4.String.trim(row[1]),  //Tech
-                            remarks:Ext4.String.trim(row[8])     //Ccmments
+            date: date,
+            servicer_requested: servicetype,
+            charge_unit: chargeunit,
+            testing_location: Ext4.String.trim(row[2]),  //Autoclave
+            test_type: Ext4.String.trim(row[4]),  //Initial
+            test_method: Ext4.String.trim(row[5]),  // Testing Method
+            pass_fail: Ext4.String.trim(row[7]), //Pass/Fail
+            biological_cycle: Ext4.String.trim(row[8]),   //Cycle
+            biological_BI: Ext4.String.trim(row[9]),   //BI#
+            action: Ext4.String.trim(row[10]),  // Action
+            retest: Ext4.String.trim(row[12]),  //Results Read by
+            objectid: HeaderObjectID,
+            performedby: Ext4.String.trim(row[14]),  //Tech Initials
+            remarks: Ext4.String.trim(row[15])       //Ccmments
 
-                        };
+         };
 
-                        if (!this.checkRequired(['date', 'service_requested','charge_unit','testing_location','action','test_results','surface_tested','retest','pass_fail','performedby'], obj, errors, rowIdx))
-                        {
-                            recordMap.primaryheader.push(obj);
-                        }
-
-                // };
-
-        // };
-
+        if (!this.checkRequired(['date', 'servicerequested','charge_unit','testing_location','action','test_results','retest','pass_fail','performedby','retest'], obj, errors, rowIdx))
+        {
+            recordMap.primaryheader.push(obj);
+        }
 
     },
 
@@ -269,16 +236,16 @@ Ext4.define('ONPRC_EHR.window.BulkEnvironmental_ATP_ScanWindow', {
     }
 });
 
-EHR.DataEntryUtils.registerDataEntryFormButton('ENV_ATP_SCAN_IMPORT', {
-    text: 'Enviromental ATP Panel Import',
-    name: 'envATPscan',
-    itemId: 'envATPscan',
-    tooltip: 'Click to import using a Environmantal ATP Panel template',
+EHR.DataEntryUtils.registerDataEntryFormButton('ENV_CPL_Boiological_IMPORT', {
+    text: 'Enviromental CPL Panel Import',
+    name: 'envCPLBioscan',
+    itemId: 'envCPLBioscan',
+    tooltip: 'Click to import using a Environmental CPL Biological Panel template',
     handler: function(btn){
         var panel = btn.up('ehr-dataentrypanel');
-        LDK.Assert.assertNotEmpty('Unable to find dataEntryPanel in Environmantal ATP Panel button', panel);
+        LDK.Assert.assertNotEmpty('Unable to find dataEntryPanel in Environmental CPL Biological Panel button', panel);
 
-        Ext4.create('ONPRC_EHR.window.BulkEnvironmental_ATP_ScanWindow', {
+        Ext4.create('ONPRC_EHR.window.BulkEnvironmental_CPL_Biological_Window', {
             dataEntryPanel: panel
         }).show();
     }
