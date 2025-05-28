@@ -1262,12 +1262,12 @@ exports.init = function(EHR){
         });
 
         //Added 3-5-2019  R.Blasa
-        EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.AFTER_INSERT, 'ehr',  'project', function(helper, scriptErrors, row, oldRow){
-
+        // EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.AFTER_INSERT, 'ehr',  'project', function(helper, scriptErrors, row, oldRow){
+            EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.AFTER_UPSERT, 'ehr', 'project', function(helper, errors, row, oldRow){
             var triggerHelper = new org.labkey.onprc_ehr.query.ONPRC_EHRTriggerHelper(LABKEY.Security.currentUser.id, LABKEY.Security.currentContainer.id);
 
-            if (row.project){
-                console.log("project data collected  " + row.project)
+            if (row.project || (oldRow.startdate != row.startdate &&  oldRow.enddate != row.enddate ) ){
+                console.log("project data add or project start and end date updated " + row.project)
                 var msg = triggerHelper.sendProjectNotifications(row.project);
                 if (msg){
                     EHR.Server.Utils.addError(scriptErrors, 'project', msg, 'ERROR');
