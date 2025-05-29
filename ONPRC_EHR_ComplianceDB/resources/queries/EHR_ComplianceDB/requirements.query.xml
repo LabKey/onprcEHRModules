@@ -10,7 +10,7 @@
                         <displayWidth>70</displayWidth>
                     </column>
 
-                    <column columnName="requiementname">
+                    <column columnName="requirementname">
                         <columnTitle>Requirment Name</columnTitle>
                         <url>/query/executeQuery.view?
                             schemaName=onprc_ehr_compliancedb&amp;
