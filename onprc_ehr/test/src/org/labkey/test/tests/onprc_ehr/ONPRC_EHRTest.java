@@ -1020,6 +1020,9 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         Assert.assertEquals("mg/tablet", ordersGrid.getFieldValue(3, "conc_units"));
         Assert.assertEquals(3L, ordersGrid.getFieldValue(3, "dosage"));
         Assert.assertEquals("mg/kg", ordersGrid.getFieldValue(3, "dosage_units"));
+        //Added enddate by kollil
+        Date date_tr = DateUtils.truncate(new Date(), Calendar.DATE);
+        Assert.assertEquals(date_tr, ordersGrid.getDateFieldValue(3, "enddate"));
 
         //note: amount calculation testing handled in surgery test
 
