@@ -2366,7 +2366,7 @@ public class ONPRC_EHRTriggerHelper
             return;
         }
 
-        String subject = "Center Project Notification: ";
+        String subject = "Center Project Created or Updated Notification: ";
 
         Set<UserPrincipal> recipients = NotificationService.get().getRecipients(new ProjectAlertsNotification(ModuleLoader.getInstance().getModule(ONPRC_EHRModule.class)), getContainer());
 
