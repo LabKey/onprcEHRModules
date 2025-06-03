@@ -1,11 +1,11 @@
 package org.labkey.onprc_billing.dataentry;
 
-import org.labkey.api.ehr.dataentry.AnimalDetailsFormSection;
 import org.labkey.api.ehr.dataentry.DataEntryFormContext;
 import org.labkey.api.ehr.dataentry.FormSection;
 import org.labkey.api.ehr.dataentry.TaskForm;
 import org.labkey.api.ehr.dataentry.TaskFormSection;
 import org.labkey.api.module.Module;
+import org.labkey.api.onprc_ehr.ONPRC_EHRService;
 import org.labkey.api.view.template.ClientDependency;
 import org.labkey.onprc_billing.security.ONPRCBillingAdminPermission;
 
@@ -27,7 +27,7 @@ public class ChargesAdvancedFormType extends TaskForm
     {
         super(ctx, owner, NAME, "Charges", "Billing", Arrays.asList(
                 new TaskFormSection(),
-                new AnimalDetailsFormSection(),
+                (FormSection) ONPRC_EHRService.get().getAnimalDetailsFormSection(),
                 new ChargesAdvancedInstructionFormSection(),
                 new ChargesFormSection()
         ));

@@ -1,6 +1,5 @@
 package org.labkey.onprc_billing.dataentry;
 
-import org.labkey.api.ehr.dataentry.AnimalDetailsFormSection;
 import org.labkey.api.ehr.dataentry.DataEntryFormContext;
 import org.labkey.api.ehr.dataentry.FormSection;
 import org.labkey.api.ehr.dataentry.TaskForm;
@@ -13,6 +12,8 @@ import org.labkey.security.xml.GroupEnumType;
 import org.labkey.api.security.GroupManager;
 import org.labkey.api.security.permissions.AdminPermission;
 import org.labkey.api.security.Group;
+import org.labkey.api.onprc_ehr.ONPRC_EHRService;
+
 
 import java.util.Arrays;
 import java.util.List;
@@ -26,7 +27,7 @@ public class ChargesVirologyCoreFormType extends TaskForm
     {
         super(ctx, owner, NAME, "Virology Charges", "Billing", Arrays.<FormSection>asList(
                 new TaskFormSection(),
-//                new AnimalDetailsFormSection(),
+                (FormSection) ONPRC_EHRService.get().getAnimalDetailsFormSection(),
                 new ChargesInstructionFormSection(),
                 new ChargesVirologyCoreFormSection()
         ));
