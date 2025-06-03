@@ -219,7 +219,7 @@ BEGIN
 
 
 
-        from  ehr_compliancedb.RequirementsPerEmployee j
+        from  onprc_ehr_compliancedb.RequirementsPerEmployee j
           Where j.employeeid in (select p.employeeid from ehr_compliancedb.employees p where j.employeeid = p.employeeid And p.enddate is null)
          And j.requirementname in  (select q.requirementname from ehr_compliancedb.Requirements q where q.requirementname = j.requirementname And q.dateDisabled is null )
           And  j.requirementname not in (select distinct h.requirementname from ehr_compliancedb.employeeperunit k, ehr_compliancedb.requirementspercategory h Where (k.unit = h.unit

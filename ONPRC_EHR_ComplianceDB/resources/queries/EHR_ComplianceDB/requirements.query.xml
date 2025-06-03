@@ -9,6 +9,11 @@
                         <columnTitle>Review Date</columnTitle>
                         <displayWidth>70</displayWidth>
                     </column>
+
+                    <column columnName="requirementname">
+                        <columnTitle>Requirement Name</columnTitle>
+                        <url>/onprc_ehr_compliancedb/ONPRC/Admin/Compliance/requirementDetails.view?requirementname=${requirementname}</url>
+                    </column>
                 </columns>
             </table>
         </tables>
