@@ -16,7 +16,7 @@
 package org.labkey.onprc_ehr.dataentry;
 
 import org.json.JSONObject;
-import org.labkey.api.ehr.dataentry.AnimalDetailsFormSection;
+
 import org.labkey.api.ehr.dataentry.DataEntryFormContext;
 import org.labkey.api.ehr.dataentry.TaskForm;
 import org.labkey.api.ehr.dataentry.TaskFormSection;

@@ -13,11 +13,20 @@
                     <column columnName="isU42">
                         <columnTitle>Is U42?</columnTitle>
                     </column>
+                    <column columnName="parentageBloodDrawVol">
+                        <columnTitle>Parentage PTT (mL)</columnTitle>
+                    </column>
+                    <column columnName="mhcBloodDrawVol">
+                        <columnTitle>MHC PTT (mL)</columnTitle>
+                    </column>
                     <column columnName="PCRBloodVolume">
-                        <columnTitle>PCR Blood Volume (mL)</columnTitle>
+                        <columnTitle>PCR PTT (mL)</columnTitle>
+                    </column>
+                    <column columnName="dnaBloodDrawVol">
+                        <columnTitle>DNA Pink/PTT (mL)</columnTitle>
                     </column>
                     <column columnName="serologyBloodVol">
-                        <columnTitle>Serology Blood Vol (mL)</columnTitle>
+                        <columnTitle>Serology RTT (mL)</columnTitle>
                     </column>
                     <column columnName="geneticsBloodVol">
                         <columnTitle>Genetics Blood Vol (mL)</columnTitle>

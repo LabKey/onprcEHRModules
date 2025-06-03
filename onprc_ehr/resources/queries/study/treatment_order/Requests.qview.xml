@@ -1,0 +1,21 @@
+<customView xmlns="http://labkey.org/data/xml/queryCustomView">
+    <columns>
+        <column name="Id"/>
+        <column name="date"/>
+        <column name="project"/>
+        <column name="chargetype"/>
+        <column name="code"/>
+        <column name="route"/>
+        <column name="amountAndVolume"/>
+        <column name="remark"/>
+        <column name="qcstate" />
+        <column name="taskid" />
+        <column name="requestid" />
+        <column name="requestid/createdby"/>
+        <column name="isAssignedToProtocolAtTime" />
+    </columns>
+    <sorts>
+        <sort column="date" descending="false"/>
+        <sort column="Id" descending="true"/>
+    </sorts>
+</customView>

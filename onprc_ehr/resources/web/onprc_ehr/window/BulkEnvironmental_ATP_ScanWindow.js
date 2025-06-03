@@ -108,7 +108,7 @@ Ext4.define('ONPRC_EHR.window.BulkEnvironmental_ATP_ScanWindow', {
 
             var cnt = i;
 
-            this.processRow(row, recordMap, errors, rowIdx, id, parsed, cnt,servicetype,chargeunit);
+            this.processRow(row, recordMap, errors, rowIdx, tdate, parsed, cnt,servicetype,chargeunit);
         }
 
         Ext4.Msg.hide();
@@ -149,31 +149,53 @@ Ext4.define('ONPRC_EHR.window.BulkEnvironmental_ATP_ScanWindow', {
             errors.push('Missing Date');
         }
 
-        // for (var k = 1; k < 13; k++)         // Process only if  data exists
-        //
-        // {
-        //     if (row[k])
-        //     {
 
-                        var HeaderObjectID = LABKEY.Utils.generateUUID().toUpperCase();
+            var HeaderObjectID = LABKEY.Utils.generateUUID().toUpperCase();
+            var labgroup = Ext4.String.trim(row[3]);
+            var labretest = Ext4.String.trim(row[7]);
+            var lablocation = Ext4.String.trim(row[4]);
+            var labsurface = Ext4.String.trim(row[5]);
+            var labinitial = Ext4.String.trim(row[6]);
 
-                        var obj = {
+
+            if (!labgroup){
+                labgroup = '{n/a}'
+            }
+
+            if (!labretest){
+                labretest = 0;
+            }
+            if (!lablocation){
+                lablocation = 'n/a';
+            }
+            if (!labsurface){
+                labsurface = '(n/a)';
+            }
+
+            if (!labinitial){
+                labinitial = '[n/a]';
+            }
+
+
+
+
+        var obj = {
                             date: date,
-                            servicerequested: servicetype,
+                            service_requested: servicetype,
                             charge_unit: chargeunit,
                             testing_location:Ext4.String.trim(row[2]),  //Area
-                            action:Ext4.String.trim(row[4]),  //Area
-                            test_results:Ext4.String.trim(row[3]),   //LAB/GROUP
-                            surface_tested:Ext4.String.trim(row[5]),  //Surface Tested
-                            retest:Ext4.String.trim(row[7]),  //Retest
-                            pass_fail:Ext4.String.trim(row[6]),   // Initial
+                            action:lablocation,  //Location
+                            test_results:labgroup,   //LAB/GROUP
+                            surface_tested:labsurface,  //Surface
+                            retest:labretest,  //Retest
+                            pass_fail:labinitial,   // Initial
                             objectid: HeaderObjectID,
-                            performedby: Ext4.String.trim(row[1]),  //Tech Initials
-                            remarks:Ext4.String.trim(row[8])       //Ccmments
+                            performedby: Ext4.String.trim(row[1]),  //Tech
+                            remarks:Ext4.String.trim(row[8])     //Ccmments
 
                         };
 
-                        if (!this.checkRequired(['date', 'servicerequested','charge_unit','testing_location','action','test_results','surface_tested','retest','pass_fail','performedby','retest','surface_tested'], obj, errors, rowIdx))
+                        if (!this.checkRequired(['date', 'service_requested','charge_unit','testing_location','action','test_results','surface_tested','retest','pass_fail','performedby'], obj, errors, rowIdx))
                         {
                             recordMap.primaryheader.push(obj);
                         }
