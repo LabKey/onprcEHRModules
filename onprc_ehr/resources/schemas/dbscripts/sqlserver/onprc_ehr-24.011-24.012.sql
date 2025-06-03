@@ -43,13 +43,7 @@ BEGIN
 
 
 
-    ---- Reset temp table
 
-         Delete onprc_ehr.CenterProjectsTemp
-
-
-	 If @@Error <> 0
-	  GoTo Err_Proc
 
 
    Insert into  onprc_ehr.CenterProjectsTemp
