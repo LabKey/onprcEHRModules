@@ -25,7 +25,8 @@ CREATE TABLE onprc_ehr.CenterProjectsTemp(
 /*
 **
 ** 	Created by
-**      Blasa  		5/31/2025                   Process to create Center Projects historical records
+**      Blasa  		5/31/2025          Process to create Center Projects historical records.  First create a complete set
+**                                     of currently active records, and after the intitial date, just create a record of entries that
 **
 
 **
@@ -35,16 +36,67 @@ CREATE TABLE onprc_ehr.CenterProjectsTemp(
 */
 
 CREATE Procedure onprc_ehr.p_CenterProjectsHistoricalProcess
+             @InitialDate smalldatetime
 
 
     AS
 
 BEGIN
 
+   ----- Create a fulle record once only
+
+IF (cast(getdate() as date) = @InitialDate  )
+BEGIN
+   Insert into  onprc_ehr.CenterProjectsTemp
+     (
+    project,
+    protocol,
+    account,
+    title,
+    research,
+    createdby,
+    created,
+    modified,
+    modifiedby,
+    startdate,
+    enddate,
+    displayname,
+    investigatorid,
+    use_category,
+    projecttype,
+    objectid,
+    date_posted
+)
+
+Select
+    project,
+    protocol,
+    account,
+    title,
+    research,
+    createdby,
+    created,
+    modified,
+    modifiedby,
+    startdate,
+    enddate,
+    name,                 -----displayname
+    investigatorid,
+    use_category,
+    projecttype,
+    objectid,
+    getdate()
+
+    From ehr.project where (enddate is null or enddate >= getdate())
+    order by modified
+
+   END
+
+    If @@Error <> 0
+    GoTo Err_Proc
 
 
-
-
+   ------ Create modiified records
 
    Insert into  onprc_ehr.CenterProjectsTemp
      (
