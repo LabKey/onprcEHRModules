@@ -265,17 +265,7 @@
                 <isKeyField>true</isKeyField>
                 <columnTitle>Key</columnTitle>
             </column>
-            <column columnName="lsid">
-                <datatype>lsidtype</datatype>
-                <isReadOnly>true</isReadOnly>
-                <isHidden>true</isHidden>
-                <isUserEditable>false</isUserEditable>
-                <fk>
-                    <fkColumnName>ObjectUri</fkColumnName>
-                    <fkTable>Object</fkTable>
-                    <fkDbSchema>exp</fkDbSchema>
-                </fk>
-            </column>
+
             <column columnName="employeeid">
                 <columnTitle>Employee Id</columnTitle>
                 <fk>
@@ -292,15 +282,7 @@
                     <fkColumnName>requirementname</fkColumnName>
                 </fk>
             </column>
-            <column columnName="container">
-                <isUserEditable>false</isUserEditable>
-                <isHidden>true</isHidden>
-                <fk>
-                    <fkDbSchema>core</fkDbSchema>
-                    <fkTable>containers</fkTable>
-                    <fkColumnName>entityid</fkColumnName>
-                </fk>
-            </column>
+
             <column columnName="createdby">
                 <isUserEditable>false</isUserEditable>
                 <nullable>true</nullable>

@@ -4,7 +4,6 @@ CREATE TABLE onprc_ehr_compliancedb.RequirementsPerEmployee
     RowId INT IDENTITY(1,1) NOT NULL,
     EmployeeId varchar(255) not null,
     RequirementName varchar(255) not null,
-    Container ENTITYID NOT NULL,
     CreatedBy USERID,
     Created datetime,
     ModifiedBy USERID,
