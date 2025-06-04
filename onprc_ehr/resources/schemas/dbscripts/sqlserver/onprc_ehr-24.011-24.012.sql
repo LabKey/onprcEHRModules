@@ -139,7 +139,7 @@ Select
     getdate()
 
 From ehr.project where (enddate is null or enddate >= getdate())
-                   And modified >= cast(getdate()) as date)
+                   And modified >= cast(getdate() as date)
 order by modified
 
 
