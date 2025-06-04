@@ -2235,12 +2235,12 @@ private void appendFlagsAlertActiveCol(final UserSchema ehrSchema, AbstractTable
             String name = tableName + "_flagsAtTime";
             QueryDefinition qd = QueryService.get().createQueryDef(targetSchema.getUser(), targetSchema.getContainer(), targetSchema, name);
             qd.setSql("SELECT\n" +
-                    "sd." + pkCol.getColumnName() + ",\n" +
+                    "sd." + pkCol.getName() + ",\n" +
                     "group_concat(DISTINCT h.flag.value, chr(10)) as flagsAlertsActive\n" +
                     "FROM \"" + schemaName + "\".\"" + queryName + "\" sd\n" +
                     "JOIN \"" + ehrPath + "\".study.flags h\n" +
                     "    ON (sd.id = h.id AND h.flag.category = 'Alert' AND (h.dateOnly <= CAST(NOW() AS DATE) AND ((CAST(NOW() AS DATE) <= h.enddateCoalesced) or h.enddate is null)) AND h.qcstate.publicdata = true)\n" +
-                    "group by sd." + pkCol.getColumnName());
+                    "group by sd." + pkCol.getName());
             qd.setIsTemporary(true);
 
             List<QueryException> errors = new ArrayList<>();
@@ -2300,13 +2300,13 @@ private void appendFlagsAlertActiveCol(final UserSchema ehrSchema, AbstractTable
                 String name = tableName + "_nhpHistory";
                 QueryDefinition qd = QueryService.get().createQueryDef(targetSchema.getUser(), targetSchema.getContainer(), targetSchema, name);
                 qd.setSql("SELECT\n" +
-                        "sd." + pkCol.getColumnName() + ",\n" +
+                        "sd." + pkCol.getName() + ",\n" +
                         "group_concat(DISTINCT h.training_type, chr(10)) as nhptrainingtype,\n" +
                         "group_concat(DISTINCT h.training_results, chr(10)) as nhptrainingresults,\n" +
                         "FROM \"" + schemaName + "\".\"" + queryName + "\" sd\n" +
                         "JOIN \"" + ehrPath + "\".onprc_ehr.NHP_Training h\n" +
                         "  ON (sd.id = h.id  AND (h.training_type in ('Procedure Cage','Tower')) AND h.qcstate.publicdata = true)\n" +
-                        "group by sd." + pkCol.getColumnName());
+                        "group by sd." + pkCol.getName());
 
                 qd.setIsTemporary(true);
 

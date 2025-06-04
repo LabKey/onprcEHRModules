@@ -541,11 +541,11 @@ public class ETLRunnable implements Runnable
                             {
 
                                 assert filterColumn != null;
-                                searchParams.add(rs.getObject(filterColumn.getColumnName()));
+                                searchParams.add(rs.getObject(filterColumn.getName()));
                             }
                             catch (SQLException e)
                             {
-                                log.error("Unable to find column " + filterColumn.getColumnName() + " in ETL script for " + targetTableName);
+                                log.error("Unable to find column " + filterColumn.getName() + " in ETL script for " + targetTableName);
                                 throw e;
                             }
                         }
@@ -566,13 +566,13 @@ public class ETLRunnable implements Runnable
                                 long start = new Date().getTime();
 
                                 //use objectId to obtain LSIDs
-                                SimpleFilter filter = new SimpleFilter(FieldKey.fromString(filterColumn.getColumnName()), searchParams, CompareType.IN);
+                                SimpleFilter filter = new SimpleFilter(FieldKey.fromString(filterColumn.getName()), searchParams, CompareType.IN);
                                 Set<String> cols = new HashSet(targetTable.getPkColumnNames());
                                 TableSelector ts = new TableSelector(targetTable, cols, filter, null);
                                 Map<String, Object>[] rows = ts.getMapArray();
 
                                 long duration = ((new Date()).getTime() - start) / 1000;
-                                log.info("Pre-selected " + searchParams.size() + " rows for table: " + targetTable.getName() + " using column: " + filterColumn.getColumnName() + ", which took: " + duration + "s");
+                                log.info("Pre-selected " + searchParams.size() + " rows for table: " + targetTable.getName() + " using column: " + filterColumn.getName() + ", which took: " + duration + "s");
 
                                 if (rows.length > 0)
                                 {
