@@ -27,6 +27,7 @@ CREATE TABLE onprc_ehr.CenterProjectsTemp(
 ** 	Created by
 **      Blasa  		5/31/2025          Process to create Center Projects historical records.  First create a complete set
 **                                     of currently active records, and after the intitial date, just create a record of entries that
+**                                     was recently modified.
 **
 
 **
