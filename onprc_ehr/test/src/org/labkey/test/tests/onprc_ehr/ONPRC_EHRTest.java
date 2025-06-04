@@ -61,6 +61,7 @@ import org.openqa.selenium.WebElement;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -1550,6 +1551,8 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
     @Test
     public void testSurgeryForm()
     {
+        LocalDateTime tomorrow = LocalDateTime.now().plusDays(1);
+
         _helper.goToTaskForm("Surgeries");
 
         Ext4GridRef proceduresGrid = _helper.getExt4GridForFormSection("Procedures");
@@ -1689,6 +1692,17 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         waitForElementToDisappear(caseWindow);
         waitForElement(Ext4Helper.Locators.window("Success").append(Locator.tagWithText("div", "Surgical cases opened")));
         waitAndClick(Ext4Helper.Locators.window("Success").append(Ext4Helper.Locators.ext4ButtonEnabled("OK")));
+
+        _ext4Helper.clickExt4Tab("Medication/Treatment Orders");
+        treatmentGrid = _helper.getExt4GridForFormSection("Medication/Treatment Orders");
+        treatmentGrid.clickTbarButton("Add Record");
+        treatmentGrid.completeEdit();
+
+        Assert.assertEquals(tomorrow.withHour(8).withMinute(0).withSecond(0).withNano(0),
+                treatmentGrid.getDateFieldValue(3, "date").toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDateTime());
+
         _helper.discardForm();
     }
 
