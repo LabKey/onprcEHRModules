@@ -1441,4 +1441,17 @@
         </columns>
     </table>
 
+    <table tableName="snomed_counter" tableDbType="TABLE">
+        <columns>
+            <column columnName="subset"/>
+            <column columnName="count"/>
+            <column columnName="prefix"/>
+            <column columnName="container"/>
+            <column columnName="createdby"/>
+            <column columnName="created"/>
+            <column columnName="modifiedby"/>
+            <column columnName="modified"/>
+        </columns>
+    </table>
+
 </tables>
