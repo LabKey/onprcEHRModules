@@ -84,7 +84,7 @@ public class InfantsBornAssignedNotification extends AbstractEHRNotification
     public String getMessageBodyHTML(Container c, User u)
     {
         Map<String, String> saved = getSavedValues(c);
-        Map<String, String> toSave = new HashMap<String, String>();
+        Map<String, String> toSave = new HashMap<>();
 
         StringBuilder msg = new StringBuilder();
 
@@ -127,7 +127,7 @@ public class InfantsBornAssignedNotification extends AbstractEHRNotification
             msg.append("<tr style='font-weight: bold;'><td>Monkey ID</td><td>Date</td><td>Project Name</td><td>Dam</tr>\n");
 
 
-            ts.forEach(new Selector.ForEachBlock<ResultSet>()
+            ts.forEach(new Selector.ForEachBlock<>()
             {
                 @Override
                 public void exec(ResultSet rs) throws SQLException
@@ -138,7 +138,7 @@ public class InfantsBornAssignedNotification extends AbstractEHRNotification
                     String dams = results.getString(FieldKey.fromString("dam"));
                     String projectname = results.getString(FieldKey.fromString("ProjectName"));
 
-                    msg.append("<tr><td>" + PageFlowUtil.filter(Ids)  + "</td><td>" + PageFlowUtil.filter(getDateTimeFormat(c).format(datess)) + "</td><td>"  + PageFlowUtil.filter(projectname) + "</td><td>" + PageFlowUtil.filter(dams) + "</td></tr>\n");
+                    msg.append("<tr><td>" + PageFlowUtil.filter(Ids) + "</td><td>" + PageFlowUtil.filter(getDateTimeFormat(c).format(datess)) + "</td><td>" + PageFlowUtil.filter(projectname) + "</td><td>" + PageFlowUtil.filter(dams) + "</td></tr>\n");
 
                 }
             });

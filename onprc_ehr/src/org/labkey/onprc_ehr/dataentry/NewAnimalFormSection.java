@@ -27,7 +27,7 @@ import java.util.List;
  */
 public class NewAnimalFormSection extends SimpleGridPanel
 {
-    private boolean _allowSetSpecies = false;
+    private boolean _allowSetSpecies;
 
     public NewAnimalFormSection(String schemaName, String queryName, String label, boolean allowSetSpecies)
     {

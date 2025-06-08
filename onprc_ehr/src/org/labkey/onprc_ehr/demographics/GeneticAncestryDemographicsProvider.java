@@ -25,6 +25,7 @@ public class GeneticAncestryDemographicsProvider extends AbstractDemographicsPro
         return "Genetic Ancestry";
     }
 
+    @Override
     protected Collection<FieldKey> getFieldKeys()
     {
         Set<FieldKey> keys = new HashSet<>();

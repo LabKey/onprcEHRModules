@@ -665,14 +665,14 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
         sc.setSql("SELECT max(CAST(Id as integer)) as expr FROM (SELECT Id FROM study.demographics WHERE isNumericId = true UNION ALL SELECT Id FROM study.birth WHERE isNumericId = true) t");
         SelectRowsResponse resp = sc.execute(getApiHelper().getConnection(), getContainerPath());
         Assert.assertEquals(1, resp.getRowCount().intValue());
-        final Integer lastId = Integer.parseInt(resp.getRows().get(0).get("expr").toString()) + 1;
+        final int lastId = Integer.parseInt(resp.getRows().get(0).get("expr").toString()) + 1;
 
         grid = _helper.getExt4GridForFormSection("Arrivals");
         grid.clickTbarButton("Add");
         grid.waitForRowCount(1);
         final Ext4FieldRef field = grid.getActiveEditor(1, "Id");
         field.clickTrigger();
-        waitFor(() -> field.getValue() != null && field.getValue().toString().equals(lastId.toString()),
+        waitFor(() -> field.getValue() != null && field.getValue().toString().equals(Integer.toString(lastId)),
                 "Expected ID not set", WAIT_FOR_JAVASCRIPT);
         grid.completeEdit();
 

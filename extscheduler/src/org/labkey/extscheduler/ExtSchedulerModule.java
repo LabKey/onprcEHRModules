@@ -10,7 +10,6 @@ import org.labkey.api.query.DefaultSchema;
 import org.labkey.api.query.QuerySchema;
 import org.labkey.extscheduler.query.ExtSchedulerQuerySchema;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
 

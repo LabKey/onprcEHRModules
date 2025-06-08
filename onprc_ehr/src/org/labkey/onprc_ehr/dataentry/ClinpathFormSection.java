@@ -36,7 +36,7 @@ public class ClinpathFormSection extends SimpleGridPanel
     @Override
     public List<String> getTbarButtons()
     {
-        List<String> defaultButtons = new ArrayList<String>();
+        List<String> defaultButtons = new ArrayList<>();
         defaultButtons.add("COPYFROMCLINPATHRUNS");
         defaultButtons.addAll(super.getTbarButtons());
 

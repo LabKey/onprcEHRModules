@@ -33,6 +33,7 @@ public class ONPRCUrinalysisLabworkType extends SortingLabworkType
         _remarkField = "remark";
     }
 
+    @Override
     protected String getLine(Results rs, boolean redacted) throws SQLException
     {
         StringBuilder sb = new StringBuilder();

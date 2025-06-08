@@ -15,18 +15,13 @@
  */
 package org.labkey.onprc_ehr.demographics;
 
-import org.labkey.api.data.CompareType;
-import org.labkey.api.data.SimpleFilter;
 import org.labkey.api.ehr.demographics.AbstractListDemographicsProvider;
 import org.labkey.api.module.Module;
 import org.labkey.api.query.FieldKey;
-import org.apache.commons.lang3.time.DateUtils;
 
 import java.util.Collection;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.Calendar;
 
 
 //Created: 10-4-2019  R.Blasa  72 hours Drugs Given
@@ -41,7 +36,7 @@ public class ActiveDrugsGivenDemographicsProvider extends AbstractListDemographi
     @Override
     protected Set<FieldKey> getFieldKeys()
     {
-        Set<FieldKey> keys = new HashSet<FieldKey>();
+        Set<FieldKey> keys = new HashSet<>();
         keys.add(FieldKey.fromString("Id"));
         keys.add(FieldKey.fromString("code"));
         keys.add(FieldKey.fromString("meaning"));

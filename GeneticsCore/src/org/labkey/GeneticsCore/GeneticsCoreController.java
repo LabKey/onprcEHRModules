@@ -36,7 +36,7 @@ public class GeneticsCoreController extends SpringActionController
     }
 
     @RequiresPermission(AdminPermission.class)
-    public class ResetMhcAggregateTimeAction extends ConfirmAction<Object>
+    public static class ResetMhcAggregateTimeAction extends ConfirmAction<Object>
     {
         @Override
         public ModelAndView getConfirmView(Object o, BindException errors) throws Exception

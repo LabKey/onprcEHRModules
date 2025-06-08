@@ -94,7 +94,7 @@ public class ColonyAlertsLiteNotification extends ColonyAlertsNotification
 
         //since we dont want to trigger an email if there's no alerts, conditionally append the title
         //if msg.legnth == 0, notification service wont send the message
-        if (msg.length() > 0)
+        if (!msg.isEmpty())
         {
             msg.insert(0, "This email contains a series of automatic alerts about the colony.  It was run on: " + getDateFormat(c).format(now) + " at " + AbstractEHRNotification._timeFormat.format(now) + ".<p>");
         }

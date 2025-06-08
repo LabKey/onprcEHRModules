@@ -16,7 +16,6 @@
 package org.labkey.onprc_ehr.dataentry;
 
 import org.labkey.api.ehr.dataentry.DataEntryFormContext;
-import org.labkey.api.ehr.dataentry.FormSection;
 import org.labkey.api.ehr.dataentry.RequestForm;
 import org.labkey.api.ehr.dataentry.RequestFormSection;
 import org.labkey.api.module.Module;

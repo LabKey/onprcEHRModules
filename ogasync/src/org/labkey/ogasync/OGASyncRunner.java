@@ -211,7 +211,7 @@ public class OGASyncRunner implements Job
         TableSelector existingTs2 = new TableSelector(targetTable, PageFlowUtil.set("alias", "fiscalAuthority", "investigatorid"), filter2, null);
         final Map<String, Integer> faMap = new HashMap<>();
         final Map<String, Integer> investigatorMap = new HashMap<>();
-        existingTs2.forEach(new Selector.ForEachBlock<ResultSet>()
+        existingTs2.forEach(new Selector.ForEachBlock<>()
         {
             @Override
             public void exec(ResultSet rs) throws SQLException
@@ -339,7 +339,7 @@ public class OGASyncRunner implements Job
             totals.put("total", 0);
             final Date start = new Date();
 
-            selector.forEach(new Selector.ForEachBlock<ResultSet>()
+            selector.forEach(new Selector.ForEachBlock<>()
             {
                 @Override
                 public void exec(ResultSet rs) throws SQLException
@@ -393,7 +393,7 @@ public class OGASyncRunner implements Job
                             }
                             else if (key.equals(AWARD_STATUS) || key.equals(PROJECT_STATUS))
                             {
-                                String val = (String)rs.getObject(fieldMap.get(key));
+                                String val = (String) rs.getObject(fieldMap.get(key));
                                 if ("1000".equals(val))
                                 {
                                     val = "At Risk";
@@ -458,7 +458,8 @@ public class OGASyncRunner implements Job
                     {
                         //TODO: consider update
                     }
-                    else {
+                    else
+                    {
                         if (faMap != null && faMap.containsKey(row.get("alias")))
                         {
                             row.put("fiscalAuthority", faMap.get(row.get("alias")));
@@ -471,7 +472,7 @@ public class OGASyncRunner implements Job
 
                         row.put("modifiedby", u.getUserId());
                         row.put("modified", new Date());
-    
+
                         row.put("createdby", u.getUserId());
                         row.put("created", new Date());
                         Table.insert(u, targetTable, row);

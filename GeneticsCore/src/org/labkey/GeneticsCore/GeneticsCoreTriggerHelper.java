@@ -17,13 +17,13 @@ import java.util.Map;
 
 public class GeneticsCoreTriggerHelper
 {
-    private Container _container = null;
-    private User _user = null;
+    private Container _container;
+    private User _user;
     private static final Logger _log = LogManager.getLogger(GeneticsCoreTriggerHelper.class);
 
-    private String _schema;
-    private String _query;
-    private Map<String, TableInfo> _tableMap = new HashMap<>();
+    private final String _schema;
+    private final String _query;
+    private final Map<String, TableInfo> _tableMap = new HashMap<>();
 
     public GeneticsCoreTriggerHelper(int userId, String containerId, String schema, String query)
     {

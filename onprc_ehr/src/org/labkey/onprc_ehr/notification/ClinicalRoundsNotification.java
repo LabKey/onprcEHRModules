@@ -118,7 +118,7 @@ public class ClinicalRoundsNotification extends ColonyAlertsNotification
             msg.append("<table border=1 style='border-collapse: collapse;'>");
             msg.append("<tr style='font-weight: bold;'><td>Room</td><td>Cage</td><td>Id</td><td>Assigned Vet</td><td>Problem(s)</td><td>Days Since Last Rounds</td></tr>");
 
-            ts.forEach(new Selector.ForEachBlock<ResultSet>()
+            ts.forEach(new Selector.ForEachBlock<>()
             {
                 @Override
                 public void exec(ResultSet object) throws SQLException
@@ -169,7 +169,7 @@ public class ClinicalRoundsNotification extends ColonyAlertsNotification
             msg.append("<table border=1 style='border-collapse: collapse;'>");
             msg.append("<tr style='font-weight: bold;'><td>Room</td><td>Cage</td><td>Id</td><td>Assigned Vet</td><td>Problem(s)</td><td>Days Since last Vet Review</td></tr>");
 
-            ts.forEach(new Selector.ForEachBlock<ResultSet>()
+            ts.forEach(new Selector.ForEachBlock<>()
             {
                 @Override
                 public void exec(ResultSet object) throws SQLException

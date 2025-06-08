@@ -51,16 +51,19 @@ public class TreatmentAlertsPostOpsNotificationThird extends AbstractEHRNotifica
         super(owner);
     }
 
+    @Override
     public String getName()
     {
         return "Treatment PostOpsMed Third Alert";
     }
 
+    @Override
     public String getDescription()
     {
         return "This runs every evening at 5:00PM  if there are treatments scheduled that have not yet been marked complete";
     }
 
+    @Override
     public String getEmailSubject(Container c)
     {
         return "Daily Treatment PostOpsMed Alerts: " + getDateTimeFormat(c).format(new Date());
@@ -69,6 +72,7 @@ public class TreatmentAlertsPostOpsNotificationThird extends AbstractEHRNotifica
     @Override                      //Modified 7/29/2015 Blasa
     public String getCronString() { return "0 0 17 * * ?";}
 
+    @Override
     public String getScheduleDescription()
     {
         return "Evenings at 5:00 PM";
@@ -146,7 +150,7 @@ public class TreatmentAlertsPostOpsNotificationThird extends AbstractEHRNotifica
 
             final Map<String, Integer> totalByArea = new TreeMap<>();
 
-            ts.forEach(new Selector.ForEachBlock<ResultSet>()
+            ts.forEach(new Selector.ForEachBlock<>()
             {
                 @Override
                 public void exec(ResultSet object) throws SQLException
@@ -221,7 +225,7 @@ public class TreatmentAlertsPostOpsNotificationThird extends AbstractEHRNotifica
                 msg.append("<table border=1 style='border-collapse: collapse;'>");
                 msg.append("<tr style='font-weight: bold;'><td>Id</td><td>Status</td><td>Treatment Status</td><td>Room</td><td>Cage</td><td>Treatment Date</td><td>Treatment Start Date</td><td>Treatment End Date</td><td>Days Elapsed</td><td>Category</td><td>Treatment</td><td>Volume</td><td>Volume Units</td><td>Drug Conc</td><td>Conc Units</td><td>Amount</td><td>Amount And Volume</td><td>Dosage</td><td>Dosage Units</td><td>Frequency</td><td>Route</td><td>Reason</td><td>Remark</td><td>Ordered By</td></tr>");
 
-                ts1.forEach(new Selector.ForEachBlock<ResultSet>()
+                ts1.forEach(new Selector.ForEachBlock<>()
                 {
                     @Override
                     public void exec(ResultSet object) throws SQLException
@@ -229,11 +233,12 @@ public class TreatmentAlertsPostOpsNotificationThird extends AbstractEHRNotifica
                     {
                         Results rs = new ResultsImpl(object, colMap1);
                         String status = rs.getString("TreatmentStatus");
-                        if  ("completed".equalsIgnoreCase(status))
+                        if ("completed".equalsIgnoreCase(status))
                         {
                             msg.append("<tr>");
                         }
-                        else {
+                        else
+                        {
                             //If not "completed", highlight the record with yellow color
                             msg.append("<tr bgcolor = " + '"' + "#FFFF00" + '"' + ">");
                         }
@@ -242,12 +247,12 @@ public class TreatmentAlertsPostOpsNotificationThird extends AbstractEHRNotifica
                         msg.append("<td>" + PageFlowUtil.filter(rs.getString("calculated_status")) + "</td>");
                         msg.append("<td>" + PageFlowUtil.filter(rs.getString("TreatmentStatus")) + "</td>");
                         msg.append("<td>" + PageFlowUtil.filter(rs.getString("room")) + "</td>");
-                        msg.append("<td>" + PageFlowUtil.filter(rs.getString("cage"))+ "</td>");
+                        msg.append("<td>" + PageFlowUtil.filter(rs.getString("cage")) + "</td>");
                         msg.append("<td>" + PageFlowUtil.filter(rs.getString("date")) + "</td>");
                         msg.append("<td>" + PageFlowUtil.filter(rs.getString("startDate")) + "</td>");
                         msg.append("<td>" + PageFlowUtil.filter(rs.getString("endDate")) + "</td>");
                         msg.append("<td>" + PageFlowUtil.filter(rs.getString("dayselapsed")) + "</td>");
-                        msg.append("<td>" + PageFlowUtil.filter(rs.getString("category"))+ "</td>");
+                        msg.append("<td>" + PageFlowUtil.filter(rs.getString("category")) + "</td>");
                         msg.append("<td>" + PageFlowUtil.filter(rs.getString("medication")) + "</td>");
                         msg.append("<td>" + PageFlowUtil.filter(rs.getString("volume")) + "</td>");
                         msg.append("<td>" + PageFlowUtil.filter(rs.getString("vol_units")) + "</td>");

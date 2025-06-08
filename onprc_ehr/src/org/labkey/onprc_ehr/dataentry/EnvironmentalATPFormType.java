@@ -79,9 +79,9 @@ import java.util.List;
             ret.add("ENV_CLOSE");
 
         return ret;
-    };
+    }
 
-    //Added 1-19-2024 Blasa
+            //Added 1-19-2024 Blasa
     @Override
     protected List<String> getMoreActionButtonConfigs()
     {

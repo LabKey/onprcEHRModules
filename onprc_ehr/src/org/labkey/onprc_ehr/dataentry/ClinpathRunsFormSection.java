@@ -29,7 +29,7 @@ import java.util.List;
  */
 public class ClinpathRunsFormSection extends SimpleGridPanel
 {
-    boolean _isRequest = false;
+    boolean _isRequest;
 
     public ClinpathRunsFormSection(boolean isRequest)
     {
@@ -44,7 +44,7 @@ public class ClinpathRunsFormSection extends SimpleGridPanel
     @Override
     public List<String> getTbarButtons()
     {
-        List<String> defaultButtons = new ArrayList<String>();
+        List<String> defaultButtons = new ArrayList<>();
         defaultButtons.addAll(super.getTbarButtons());
 
         if (!_isRequest)
