@@ -22,12 +22,17 @@ EHR.model.DataModelManager.registerMetadata('Pairing_Properties', {
                 }
             },
 
+            // eventtype: {
+            //     allowBlank: false,
+            //     lookup: {
+            //         sort: 'sort_order'
+            //     }
+            // },
             eventtype: {
-                allowBlank: false,
-                lookup: {
-                    sort: 'sort_order'
-                }
+                xtype: 'onprc_ehr-pairingscombo',
+                defaultSubset: 'Common Treatments'
             },
+
             goal: {
                 allowBlank: false,
                 lookup: {
