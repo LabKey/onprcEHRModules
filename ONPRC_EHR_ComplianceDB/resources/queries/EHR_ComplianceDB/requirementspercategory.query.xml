@@ -7,6 +7,7 @@
                 <columns>
                     <column columnName="requirementname">
                         <columnTitle>Requirement Name</columnTitle>
+                            <url>/onprc_ehr_compliancedb/ONPRC/Admin/Compliance/requirementDetails.view?requirementname=${requirementname}</url>
                         <fk>
                             <fkFolderPath>/ONPRC/Admin/Compliance</fkFolderPath>
                             <fkDbSchema>ehr_compliancedb</fkDbSchema>
