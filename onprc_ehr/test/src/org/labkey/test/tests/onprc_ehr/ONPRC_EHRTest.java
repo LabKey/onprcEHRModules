@@ -680,7 +680,7 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         waitForElement(Locator.tagContainingText("span", "Active Groups"));
         DataRegionTable dr = new DataRegionTable("query", this);
         clickAndWait(dr.link(0, dr.getColumnIndex("Name")));
-        DataRegionTable membersTable = DataRegionTable.DataRegion(getDriver()).find(new BodyWebPart(this.getDriver(), "Group Members", 0));
+        DataRegionTable membersTable = DataRegionTable.DataRegion(getDriver()).find(new BodyWebPart<>(this.getDriver(), "Group Members", 0));
         Assert.assertEquals(2, membersTable.getDataRowCount());
 
         //more reports
@@ -701,13 +701,13 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
     }
 
     @Test
-    public void testPedigreeReport() throws Exception
+    public void testPedigreeReport()
     {
         goToProjectHome();
         beginAtAnimalHistoryTab();
 
         String id = ID_PREFIX + 10;
-        AnimalHistoryPage animalHistoryPage = new AnimalHistoryPage(getDriver());
+        AnimalHistoryPage<?> animalHistoryPage = new AnimalHistoryPage<>(getDriver());
 
         animalHistoryPage.searchSingleAnimal(id);
         animalHistoryPage.clickCategoryTab("Genetics");
@@ -1199,7 +1199,7 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
     }
 
     @Test
-    public void testGeneticsPipeline() throws Exception
+    public void testGeneticsPipeline()
     {
         goToProjectHome();
 
@@ -1226,7 +1226,7 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
 
         goToProjectHome();
         beginAtAnimalHistoryTab();
-        AnimalHistoryPage animalHistoryPage = new AnimalHistoryPage(getDriver());
+        AnimalHistoryPage<?> animalHistoryPage = new AnimalHistoryPage<>(getDriver());
         animalHistoryPage.searchSingleAnimal("99995,99996,99997,99998,99999,999910");
         animalHistoryPage.refreshReport();
         animalHistoryPage.clickCategoryTab("Genetics")
@@ -1774,7 +1774,7 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         Date twoWeeks = prepareDate(DateUtils.truncate(new Date(), Calendar.DATE), 14, 0);
         Date fourWeeks = prepareDate(DateUtils.truncate(new Date(), Calendar.DATE), 28, 0);
         Assert.assertEquals(twoWeeks, caseField1.getDateValue());
-        Assert.assertEquals(null, changeField.getValue());
+        Assert.assertNull(changeField.getValue());
         changeField.setValue(_df.format(fourWeeks));
         click(Locator.id(changeBtn.getId()));
         Assert.assertEquals(fourWeeks, caseField1.getDateValue());

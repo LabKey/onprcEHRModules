@@ -52,6 +52,7 @@ import org.labkey.api.security.permissions.AdminPermission;
 import org.labkey.api.security.permissions.ReadPermission;
 import org.labkey.api.study.Dataset;
 import org.labkey.api.study.StudyService;
+import org.labkey.api.util.HtmlString;
 import org.labkey.api.util.PageFlowUtil;
 import org.labkey.api.util.URLHelper;
 import org.labkey.api.view.ActionURL;
@@ -299,24 +300,11 @@ public class ONPRC_EHRController extends SpringActionController
         @Override
         public ModelAndView getView(RunEHRTestsForm form, BindException errors) throws Exception
         {
-            String msg = "";
-
             ONPRC_EHRTestHelper helper = new ONPRC_EHRTestHelper();
             Method method = helper.getClass().getMethod("testBloodCalculation", Container.class, User.class);
             method.invoke(helper, getContainer(), getUser());
 
-
-
-//            List<String> messages = EHRManager.get().verifyDatasetResources(getContainer(),  getUser());
-//            for (String message : messages)
-//            {
-//                msg.append("\t").append(message).append("<br>");
-//            }
-//
-//            if (messages.size() == 0)
-//                msg.append("There are no missing files");
-
-            return new HtmlView(msg);
+            return new HtmlView(HtmlString.EMPTY_STRING);
         }
 
         @Override

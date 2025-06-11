@@ -38,10 +38,8 @@ public class DefaultAnimalRecordFlagDataSource extends AbstractDataSource
     @Override
     protected String getHtml(Container c, Results rs, boolean redacted) throws SQLException
     {
-
-        String sb = safeAppend(rs, "Remark", "remark") +
+        return safeAppend(rs, "Remark", "remark") +
                 safeAppend(rs, "Entered by", "performedby");
-        return sb;
     }
 
     @Override
