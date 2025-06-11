@@ -212,7 +212,7 @@ public class BillingTask extends PipelineJob.Task<BillingTask.Factory>
             {
                 csv.writeNext(headers);
 
-                if (rows.size() > 0)
+                if (!rows.isEmpty())
                 {
                     for (Map<String, Object> row : rows)
                     {
@@ -459,7 +459,7 @@ public class BillingTask extends PipelineJob.Task<BillingTask.Factory>
 
             if (!colKeys.containsKey(col))
             {
-                getJob().getLogger().warn("Unable to find column with key: " + col.toString() + " for table: " + ti.getPublicName());
+                getJob().getLogger().warn("Unable to find column with key: " + col + " for table: " + ti.getPublicName());
             }
         }
 
@@ -467,7 +467,7 @@ public class BillingTask extends PipelineJob.Task<BillingTask.Factory>
         ts.setNamedParameters(params);
 
         final List<Map<String, Object>> rows = new ArrayList<>();
-        ts.forEach(new Selector.ForEachBlock<ResultSet>()
+        ts.forEach(new Selector.ForEachBlock<>()
         {
             @Override
             public void exec(ResultSet object) throws SQLException
@@ -492,10 +492,10 @@ public class BillingTask extends PipelineJob.Task<BillingTask.Factory>
         Map<String, Object> params = new HashMap<>();
         params.put("StartDate", getSupport().getStartDate());
         params.put("EndDate", getSupport().getEndDate());
-        Long numDays = Math.round(((Long)(getSupport().getEndDate().getTime() - getSupport().getStartDate().getTime())).doubleValue() / DateUtils.MILLIS_PER_DAY);
+        long numDays = Math.round(((Long)(getSupport().getEndDate().getTime() - getSupport().getStartDate().getTime())).doubleValue() / DateUtils.MILLIS_PER_DAY);
         numDays++;
-        params.put("NumDays", numDays.intValue());
-        getJob().getLogger().info("Using start date: " + _dateFormat.format(getSupport().getStartDate()) + ", end date: " + _dateFormat.format(getSupport().getEndDate()) + ", with number of days: " + numDays.intValue());
+        params.put("NumDays", (int) numDays);
+        getJob().getLogger().info("Using start date: " + _dateFormat.format(getSupport().getStartDate()) + ", end date: " + _dateFormat.format(getSupport().getEndDate()) + ", with number of days: " + (int) numDays);
 
         String[] colNames = new String[]{
                 "Id",

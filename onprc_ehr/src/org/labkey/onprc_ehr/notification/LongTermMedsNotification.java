@@ -15,37 +15,11 @@
  */
 package org.labkey.onprc_ehr.notification;
 
-import org.apache.commons.lang3.StringUtils;
-import org.labkey.api.data.AbstractTableInfo;
-import org.labkey.api.data.CompareType;
 import org.labkey.api.data.Container;
-import org.labkey.api.data.Selector;
-import org.labkey.api.data.SimpleFilter;
-import org.labkey.api.data.Sort;
-import org.labkey.api.data.TableInfo;
-import org.labkey.api.data.TableSelector;
-import org.labkey.api.ehr.EHRService;
-import org.labkey.api.ldk.LDKService;
 import org.labkey.api.module.Module;
-import org.labkey.api.query.FieldKey;
-import org.labkey.api.query.QueryService;
-import org.labkey.api.query.UserSchema;
 import org.labkey.api.security.User;
-import org.labkey.api.settings.AppProps;
-import org.labkey.api.util.PageFlowUtil;
-import org.labkey.api.data.ColumnInfo;
-import org.labkey.api.data.Results;
-import org.labkey.api.data.ResultsImpl;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Date;
-import java.util.Map;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
 
 /**
  * User: bimber

@@ -66,7 +66,7 @@ public class PivotedImportMethod extends PivotingImportMethod
         return new Parser(this, c, u, assayId);
     }
 
-    private class Parser extends PivotingAssayParser
+    private static class Parser extends PivotingAssayParser
     {
         private final Pattern _testAndUnits = Pattern.compile("(.*)(\\(.*\\))");
         private Map<String, String> _allowableResults = null;

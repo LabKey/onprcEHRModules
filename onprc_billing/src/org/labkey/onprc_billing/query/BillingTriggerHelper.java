@@ -3,15 +3,12 @@ package org.labkey.onprc_billing.query;
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
-import org.labkey.api.collections.CaseInsensitiveHashMap;
 import org.labkey.api.data.Aggregate;
 import org.labkey.api.data.CompareType;
 import org.labkey.api.data.Container;
 import org.labkey.api.data.ContainerManager;
 import org.labkey.api.data.DbSchema;
-import org.labkey.api.data.Selector;
 import org.labkey.api.data.SimpleFilter;
-import org.labkey.api.data.Table;
 import org.labkey.api.data.TableInfo;
 import org.labkey.api.data.TableSelector;
 import org.labkey.api.ehr.security.EHRDataAdminPermission;
@@ -25,8 +22,6 @@ import org.labkey.onprc_billing.ONPRC_BillingManager;
 import org.labkey.onprc_billing.ONPRC_BillingSchema;
 import org.labkey.onprc_billing.security.ONPRCBillingAdminPermission;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
@@ -41,8 +36,8 @@ import java.util.Map;
  */
 public class BillingTriggerHelper
 {
-    private Container _container = null;
-    private User _user = null;
+    private Container _container;
+    private User _user;
     private static final Logger _log = LogManager.getLogger(BillingTriggerHelper.class);
 
     public BillingTriggerHelper(int userId, String containerId)
@@ -143,7 +138,7 @@ public class BillingTriggerHelper
         return false; //unknown charge, assume false
     }
 
-    private Map<Integer, Map<String, Object>> _cachedCharges = new HashMap<>();
+    private final Map<Integer, Map<String, Object>> _cachedCharges = new HashMap<>();
 
     private Map<String, Object> getCharge(Integer chargeId)
     {

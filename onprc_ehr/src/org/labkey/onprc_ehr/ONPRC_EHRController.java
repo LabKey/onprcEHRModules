@@ -39,7 +39,6 @@ import org.labkey.api.data.SqlSelector;
 import org.labkey.api.data.Table;
 import org.labkey.api.data.Sort;
 import org.labkey.api.data.SqlExecutor;
-import org.labkey.api.data.Table;
 import org.labkey.api.data.TableInfo;
 import org.labkey.api.data.TableSelector;
 import org.labkey.api.ehr.EHRService;
@@ -49,23 +48,19 @@ import org.labkey.api.files.FileContentService;
 import org.labkey.api.query.FieldKey;
 import org.labkey.api.query.QueryService;
 import org.labkey.api.query.UserSchema;
-import org.labkey.api.query.QueryService;
 import org.labkey.api.security.AdminConsoleAction;
-import org.labkey.api.security.LimitedUser;
 import org.labkey.api.security.RequiresPermission;
 import org.labkey.api.security.RequiresSiteAdmin;
 import org.labkey.api.security.User;
 import org.labkey.api.security.permissions.AdminPermission;
 import org.labkey.api.security.permissions.ReadPermission;
 import org.labkey.api.study.Dataset;
-import org.labkey.api.study.DatasetTable;
 import org.labkey.api.study.StudyService;
+import org.labkey.api.util.HtmlString;
 import org.labkey.api.util.PageFlowUtil;
-import org.labkey.api.util.URLHelper;
 import org.labkey.api.view.ActionURL;
 import org.labkey.api.view.HtmlView;
 import org.labkey.api.view.NavTree;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;
 import org.springframework.web.servlet.ModelAndView;
@@ -81,7 +76,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Objects;
 
 /**
  * User: bbimber
@@ -98,7 +92,7 @@ public class ONPRC_EHRController extends SpringActionController
     }
 
     @RequiresPermission(ReadPermission.class)
-    public class GetNavItemsAction extends ReadOnlyApiAction<Object>
+    public static class GetNavItemsAction extends ReadOnlyApiAction<Object>
     {
         @Override
         public ApiResponse execute(Object form, BindException errors)
@@ -281,7 +275,7 @@ public class ONPRC_EHRController extends SpringActionController
     }
 
     @AdminConsoleAction
-    public class ShowEtlLogAction extends ExportAction
+    public class ShowEtlLogAction extends ExportAction<Object>
     {
         @Override
         public void export(Object o, HttpServletResponse response, BindException errors) throws Exception
@@ -297,39 +291,16 @@ public class ONPRC_EHRController extends SpringActionController
     }
 
     @RequiresPermission(AdminPermission.class)
-    public class RunEHRTestsAction extends SimpleViewAction<RunEHRTestsForm>
+    public static class RunEHRTestsAction extends SimpleViewAction<Object>
     {
-        public void validateCommand(RunEHRTestsForm form, Errors errors)
-        {
-
-        }
-
-        public URLHelper getSuccessURL(RunEHRTestsForm form)
-        {
-            return getContainer().getStartURL(getUser());
-        }
-
         @Override
-        public ModelAndView getView(RunEHRTestsForm form, BindException errors) throws Exception
+        public ModelAndView getView(Object form, BindException errors) throws Exception
         {
-            StringBuilder msg = new StringBuilder();
-
             ONPRC_EHRTestHelper helper = new ONPRC_EHRTestHelper();
             Method method = helper.getClass().getMethod("testBloodCalculation", Container.class, User.class);
             method.invoke(helper, getContainer(), getUser());
 
-
-
-//            List<String> messages = EHRManager.get().verifyDatasetResources(getContainer(),  getUser());
-//            for (String message : messages)
-//            {
-//                msg.append("\t").append(message).append("<br>");
-//            }
-//
-//            if (messages.size() == 0)
-//                msg.append("There are no missing files");
-
-            return new HtmlView(msg.toString());
+            return new HtmlView(HtmlString.EMPTY_STRING);
         }
 
         @Override
@@ -339,23 +310,8 @@ public class ONPRC_EHRController extends SpringActionController
         }
     }
 
-    public static class RunEHRTestsForm
-    {
-        String[] _tests;
-
-        public String[] getTests()
-        {
-            return _tests;
-        }
-
-        public void setTests(String[] tests)
-        {
-            _tests = tests;
-        }
-    }
-
     @RequiresSiteAdmin
-    public class FixWorkbookPathsAction extends ConfirmAction<Object>
+    public static class FixWorkbookPathsAction extends ConfirmAction<Object>
     {
         @Override
         public boolean handlePost(Object form, BindException errors)
@@ -472,7 +428,7 @@ public class ONPRC_EHRController extends SpringActionController
     }
 
     @RequiresPermission(ReadPermission.class)
-    public class GetAnimalLockAction extends ReadOnlyApiAction<Object>
+    public static class GetAnimalLockAction extends ReadOnlyApiAction<Object>
     {
         @Override
         public ApiResponse execute(Object form, BindException errors)
@@ -482,7 +438,7 @@ public class ONPRC_EHRController extends SpringActionController
     }
 
     @RequiresPermission(EHRDataEntryPermission.class)
-    public class SetAnimalLockAction extends MutatingApiAction<LockAnimalForm>
+    public static class SetAnimalLockAction extends MutatingApiAction<LockAnimalForm>
     {
         @Override
         public ApiResponse execute(LockAnimalForm form, BindException errors)
@@ -538,7 +494,7 @@ public class ONPRC_EHRController extends SpringActionController
     }
 
     @RequiresPermission(EHRDataEntryPermission.class)
-    public class PopulateCaseNumbersAction extends MutatingApiAction<Object>
+    public static class PopulateCaseNumbersAction extends MutatingApiAction<Object>
     {
         private String _casesProvisionedName;
 

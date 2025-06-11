@@ -65,7 +65,7 @@ public class ONPRC_BillingController extends SpringActionController
     }
 
     @RequiresPermission(UpdatePermission.class)
-    public class RunBillingPipelineAction extends MutatingApiAction<BillingPipelineForm>
+    public static class RunBillingPipelineAction extends MutatingApiAction<BillingPipelineForm>
     {
         @Override
         public ApiResponse execute(BillingPipelineForm form, BindException errors) throws PipelineJobException
@@ -144,13 +144,13 @@ public class ONPRC_BillingController extends SpringActionController
     }
 
     @RequiresPermission(ONPRCBillingAdminPermission.class)
-    public class DeleteBillingPeriodAction extends ConfirmAction<QueryForm>
+    public static class DeleteBillingPeriodAction extends ConfirmAction<QueryForm>
     {
         @Override
         public void validateCommand(QueryForm form, Errors errors)
         {
             Set<String> ids = DataRegionSelection.getSelected(form.getViewContext(), true);
-            if (ids.size() == 0)
+            if (ids.isEmpty())
             {
                 errors.reject(ERROR_MSG, "Must select at least one item to delete");
             }
@@ -190,7 +190,7 @@ public class ONPRC_BillingController extends SpringActionController
     }
 
     @RequiresPermission(ReadPermission.class)
-    public class BillingValidationAction extends SimpleViewAction<BillingValidationForm>
+    public static class BillingValidationAction extends SimpleViewAction<BillingValidationForm>
     {
         private String _title = null;
 
@@ -220,10 +220,7 @@ public class ONPRC_BillingController extends SpringActionController
             BillingValidationNotification v = new BillingValidationNotification();
             Container financeContainer = ONPRC_BillingManager.get().getBillingContainer(getContainer());
 
-            StringBuilder sb = new StringBuilder();
-            sb.append(v.runValidation(financeContainer, getUser(), form.getStart(), form.getEnd()));
-
-            return new HtmlView(sb.toString());
+            return new HtmlView(v.runValidation(financeContainer, getUser(), form.getStart(), form.getEnd()));
         }
 
         @Override

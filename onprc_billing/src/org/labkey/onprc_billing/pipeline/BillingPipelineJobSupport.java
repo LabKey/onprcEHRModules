@@ -25,13 +25,13 @@ import java.util.Date;
  */
 public interface BillingPipelineJobSupport
 {
-    public Date getStartDate();
+    Date getStartDate();
 
-    public Date getEndDate();
+    Date getEndDate();
 
-    public String getComment();
+    String getComment();
 
-    public String getName();
+    String getName();
 
-    public File getAnalysisDir();
+    File getAnalysisDir();
 }

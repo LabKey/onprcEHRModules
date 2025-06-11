@@ -417,7 +417,8 @@ public abstract class AbstractGenericONPRC_EHRTest extends AbstractGenericEHRTes
         {
             log("creating room: " + room);
             InsertRowsCommand insertRowsCommand = new InsertRowsCommand("ehr_lookups", "rooms");
-            insertRowsCommand.addRow(new HashMap<String, Object>(){
+            insertRowsCommand.addRow(new HashMap<>()
+            {
                 {
                     put("room", room);
                     put("housingType", 1);
@@ -466,7 +467,8 @@ public abstract class AbstractGenericONPRC_EHRTest extends AbstractGenericEHRTes
         if (resp.getRowCount().intValue() == 0)
         {
             InsertRowsCommand insertRowsCommand = new InsertRowsCommand("study", "animal_group_members");
-            insertRowsCommand.addRow(new HashMap<String, Object>(){
+            insertRowsCommand.addRow(new HashMap<>()
+            {
                 {
                     put("Id", animalId);
                     put("date", prepareDate(new Date(), -2, 0));
@@ -489,7 +491,8 @@ public abstract class AbstractGenericONPRC_EHRTest extends AbstractGenericEHRTes
         if (objectid == null)
         {
             InsertRowsCommand insertRowsCommand = new InsertRowsCommand("ehr_lookups", "flag_values");
-            insertRowsCommand.addRow(new HashMap<String, Object>(){
+            insertRowsCommand.addRow(new HashMap<>()
+            {
                 {
                     put("category", "SPF");
                     put("value", name);

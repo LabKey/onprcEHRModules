@@ -31,7 +31,7 @@ import java.util.List;
  */
 public class LabworkFormSection extends SimpleGridPanel
 {
-    private boolean _allowPanelEdit = false;
+    private boolean _allowPanelEdit;
 
     public LabworkFormSection(String schemaName, String queryName, String label)
     {
@@ -54,7 +54,7 @@ public class LabworkFormSection extends SimpleGridPanel
     @Override
     public List<String> getTbarButtons()
     {
-        List<String> defaultButtons = new ArrayList<String>();
+        List<String> defaultButtons = new ArrayList<>();
         defaultButtons.add("COPYFROMCLINPATHRUNS");
         defaultButtons.addAll(super.getTbarButtons());
         defaultButtons.remove("ADDANIMALS");

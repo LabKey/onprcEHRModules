@@ -90,7 +90,7 @@ public class BehaviorNotification extends ColonyAlertsNotification
     public String getMessageBodyHTML(Container c, User u)
     {
         Map<String, String> saved = getSavedValues(c);
-        Map<String, String> toSave = new HashMap<String, String>();
+        Map<String, String> toSave = new HashMap<>();
 
         StringBuilder msg = new StringBuilder();
 
@@ -149,6 +149,7 @@ public class BehaviorNotification extends ColonyAlertsNotification
     /**
      * Modified: 12-9-2021  R.Blasa using Lakshmi's original code
      */
+    @Override
     protected void dcmNotesAlert(final Container c, User u, final StringBuilder msg)
     {
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("actiondate"), new Date(), CompareType.DATE_EQUAL);

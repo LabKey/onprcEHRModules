@@ -69,7 +69,7 @@ public class ONPRC_BillingTest extends AbstractONPRC_EHRTest
     @LogMethod
     public static void setupProject() throws Exception
     {
-        ONPRC_BillingTest initTest = (ONPRC_BillingTest) getCurrentTest();
+        ONPRC_BillingTest initTest = getCurrentTest();
         initTest.doSetUp();
     }
 
@@ -199,7 +199,7 @@ public class ONPRC_BillingTest extends AbstractONPRC_EHRTest
         final String demoLsid = (String) demoResp.getRows().get(0).get("lsid");
 
         UpdateRowsCommand demoUpdateCmd = new UpdateRowsCommand("study", "demographics");
-        demoUpdateCmd.addRow(new HashMap<String, Object>()
+        demoUpdateCmd.addRow(new HashMap<>()
         {
             {
                 put("lsid", demoLsid);

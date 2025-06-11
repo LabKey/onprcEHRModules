@@ -87,7 +87,7 @@ public class ObeseFlagNotification extends AbstractEHRNotification
     public String getMessageBodyHTML(Container c, User u)
     {
         Map<String, String> saved = getSavedValues(c);
-        Map<String, String> toSave = new HashMap<String, String>();
+        Map<String, String> toSave = new HashMap<>();
 
         StringBuilder msg = new StringBuilder();
 
@@ -146,7 +146,7 @@ public class ObeseFlagNotification extends AbstractEHRNotification
             msg.append("<tr style='font-weight: bold;'><td>Monkey ID</td><td>Room</td><td>Cage</td><td>Current Weight (kg)</td><td>Start Date</td><td>Removal Date</td><td>Assigned Vet</td></tr>\n");
 
 
-            ts.forEach(new Selector.ForEachBlock<ResultSet>()
+            ts.forEach(new Selector.ForEachBlock<>()
             {
                 @Override
                 public void exec(ResultSet rs) throws SQLException
@@ -165,11 +165,10 @@ public class ObeseFlagNotification extends AbstractEHRNotification
                     String cages = results.getString(FieldKey.fromString("Id/curLocation/cage"));
 
 
-
-                    msg.append("<td>" + PageFlowUtil.filter(Ids)  + "</td>" +
-                            "<td>" + PageFlowUtil.filter(rooms) +  "</td><td>"  + PageFlowUtil.filter(cages)  + "</td>" +
-                            "<td>" + PageFlowUtil.filter("  ") + PageFlowUtil.filter(weights)  + "</td><td>" +
-                            PageFlowUtil.filter(DateUtil.formatDateTime(c, datess)) + "</td><td>" + PageFlowUtil.filter(DateUtil.formatDateTime(c, enddates)) + "</td><td>" + "  " + PageFlowUtil.filter(vetname)  + "</td></tr>\n");
+                    msg.append("<td>" + PageFlowUtil.filter(Ids) + "</td>" +
+                            "<td>" + PageFlowUtil.filter(rooms) + "</td><td>" + PageFlowUtil.filter(cages) + "</td>" +
+                            "<td>" + PageFlowUtil.filter("  ") + PageFlowUtil.filter(weights) + "</td><td>" +
+                            PageFlowUtil.filter(DateUtil.formatDateTime(c, datess)) + "</td><td>" + PageFlowUtil.filter(DateUtil.formatDateTime(c, enddates)) + "</td><td>" + "  " + PageFlowUtil.filter(vetname) + "</td></tr>\n");
 
 
                 }

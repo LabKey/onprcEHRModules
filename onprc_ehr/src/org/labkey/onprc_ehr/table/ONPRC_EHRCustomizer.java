@@ -1935,7 +1935,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
             {
                 sb.append(d.getName() + ", ");
             }
-            _log.info("datasets present: " + sb.toString());
+            _log.info("datasets present: " + sb);
 
             return null;
         }
@@ -2180,7 +2180,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
 
                 List<QueryException> errors = new ArrayList<>();
                 TableInfo ti = qd.getTable(errors, true);
-                if (errors.size() > 0)
+                if (!errors.isEmpty())
                 {
                     _log.error("Error creating lookup table for: " + schemaName + "." + queryName + " in container: " + targetSchema.getContainer().getPath());
                     for (QueryException error : errors)
@@ -2230,6 +2230,7 @@ private void appendFlagsAlertActiveCol(final UserSchema ehrSchema, AbstractTable
     col.setIsUnselectable(true);
     col.setUserEditable(false);
     col.setFk(new LookupForeignKey(){
+        @Override
         public TableInfo getLookupTableInfo()
         {
             String name = tableName + "_flagsAtTime";
@@ -2245,7 +2246,7 @@ private void appendFlagsAlertActiveCol(final UserSchema ehrSchema, AbstractTable
 
             List<QueryException> errors = new ArrayList<>();
             TableInfo ti = qd.getTable(errors, true);
-            if (errors.size() > 0)
+            if (!errors.isEmpty())
             {
                 _log.error("Error creating lookup table for: " + schemaName + "." + queryName + " in container: " + targetSchema.getContainer().getPath());
                 for (QueryException error : errors)
@@ -2295,6 +2296,7 @@ private void appendFlagsAlertActiveCol(final UserSchema ehrSchema, AbstractTable
         col.setIsUnselectable(true);
         col.setUserEditable(false);
         col.setFk(new LookupForeignKey(){
+            @Override
             public TableInfo getLookupTableInfo()
             {
                 String name = tableName + "_nhpHistory";
@@ -2312,7 +2314,7 @@ private void appendFlagsAlertActiveCol(final UserSchema ehrSchema, AbstractTable
 
                 List<QueryException> errors = new ArrayList<>();
                 TableInfo ti = qd.getTable(errors, true);
-                if (errors.size() > 0)
+                if (!errors.isEmpty())
                 {
                     _log.error("Error creating lookup table for: " + schemaName + "." + queryName + " in container: " + targetSchema.getContainer().getPath());
                     for (QueryException error : errors)
@@ -2378,7 +2380,7 @@ private void appendFlagsAlertActiveCol(final UserSchema ehrSchema, AbstractTable
 
                 List<QueryException> errors = new ArrayList<>();
                 TableInfo ti = qd.getTable(errors, true);
-                if (errors.size() > 0)
+                if (!errors.isEmpty())
                 {
                     _log.error("Error creating lookup table for: " + schemaName + "." + queryName + " in container: " + targetSchema.getContainer().getPath());
                     for (QueryException error : errors)
@@ -2444,7 +2446,7 @@ private void appendFlagsAlertActiveCol(final UserSchema ehrSchema, AbstractTable
 
                 List<QueryException> errors = new ArrayList<>();
                 TableInfo ti = qd.getTable(errors, true);
-                if (errors.size() > 0)
+                if (!errors.isEmpty())
                 {
                     _log.error("Error creating lookup table for: " + schemaName + "." + queryName + " in container: " + targetSchema.getContainer().getPath());
                     for (QueryException error : errors)

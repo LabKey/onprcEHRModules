@@ -109,21 +109,21 @@ public class WeightAlertsNotification extends AbstractEHRNotification
         StringBuilder sb = new StringBuilder();
 
         //first weight drops
-        Set<String> dropDistinctIds = new HashSet<String>();
+        Set<String> dropDistinctIds = new HashSet<>();
         processWeights(c, u, sb, 0, 30, CompareType.LTE, -10, dropDistinctIds);
         consecutiveWeightDrops(c, u, sb, dropDistinctIds);
 
-        if (dropDistinctIds.size() > 0)
+        if (!dropDistinctIds.isEmpty())
         {
             String url = getExecuteQueryUrl(c, "study", "Demographics", "By Location") + "&query.calculated_status~eq=Alive&query.Id~in=" + (StringUtils.join(new ArrayList(dropDistinctIds), ";"));
             sb.insert(0, "<b>WARNING: There are " + dropDistinctIds.size() + " animals that experienced either a large weight loss, or 3 consecutive weight drops.</b>  <a href='" + url + "'>Click here to view this list</a>, or view the data below.<p><hr>");
         }
 
         //also weight gains
-        Set<String> gainDistinctIds = new HashSet<String>();
+        Set<String> gainDistinctIds = new HashSet<>();
         processWeights(c, u, sb, 0, 30, CompareType.GTE, 10, gainDistinctIds);
 
-        if (gainDistinctIds.size() > 0)
+        if (!gainDistinctIds.isEmpty())
         {
             String url = getExecuteQueryUrl(c, "study", "Demographics", "By Location") + "&query.calculated_status~eq=Alive&query.Id~in=" + (StringUtils.join(new ArrayList(gainDistinctIds), ";"));
             sb.insert(0, "<b>WARNING: There are " + gainDistinctIds.size() + " animals that experienced large weight gain (>10%).</b>  <a href='" + url + "'>Click here to view this list</a>, or view the data below.<p><hr>");
@@ -150,7 +150,8 @@ public class WeightAlertsNotification extends AbstractEHRNotification
             msg.append("<b>WARNING: The animals listed below do not have a weight.</b>\n");
             msg.append("  <a href='" + getExecuteQueryUrl(c, "study", "Demographics", "By Location") + "&query.calculated_status~eq=Alive&query.Id/MostRecentWeight/MostRecentWeightDate~isblank'>Click here to view these animals</a></p>\n");
 
-            ts.forEach(new TableSelector.ForEachBlock<ResultSet>(){
+            ts.forEach(new TableSelector.ForEachBlock<>()
+            {
                 @Override
                 public void exec(ResultSet rs) throws SQLException
                 {
@@ -211,10 +212,10 @@ public class WeightAlertsNotification extends AbstractEHRNotification
         TableSelector ts = new TableSelector(ti, columns.values(), filter, null);
 
         msg.append("<b>Weights since " + getDateFormat(c).format(date.getTime()) + " representing changes of " + (pct > 0 ? "+" : "") + pct + "% in the past " + max + " days:</b><p>");
-        final Set<String> distinctAnimals = new HashSet<String>();
+        final Set<String> distinctAnimals = new HashSet<>();
 
         final Map<String, Map<String, List<Map<String, Object>>>> summary = new TreeMap<>();
-        ts.forEach(new Selector.ForEachBlock<ResultSet>()
+        ts.forEach(new Selector.ForEachBlock<>()
         {
             @Override
             public void exec(ResultSet object) throws SQLException
@@ -259,7 +260,7 @@ public class WeightAlertsNotification extends AbstractEHRNotification
             }
         });
 
-        if (summary.size() > 0)
+        if (!summary.isEmpty())
         {
             msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Demographics", "By Location") + "&query.calculated_status~eq=Alive&query.Id~in=" + (StringUtils.join(new ArrayList(distinctAnimals), ";"))+ "'>Click here to view these " + distinctAnimals.size() + " animals</a></p>\n");
 
@@ -309,7 +310,7 @@ public class WeightAlertsNotification extends AbstractEHRNotification
             msg.append("There are no changes during this period.<hr>");
         }
 
-        if (distinctIds != null && distinctAnimals.size() > 0)
+        if (distinctIds != null && !distinctAnimals.isEmpty())
             distinctIds.addAll(distinctAnimals);
     }
 
@@ -352,7 +353,8 @@ public class WeightAlertsNotification extends AbstractEHRNotification
 
             final StringBuilder tableMsg = new StringBuilder();
             tableMsg.append("<table border=1><tr><td>Room</td><td>Cage</td><td>Id</td><td>Investigator(s)</td><td>Responsible Vet</td><td>Open Problems</td><td>Days Since Last PE</td><td>Weight Date</td><td>Interval (days)</td><td>Weight (kg)</td><td>% Change</td></tr>");
-            ts.forEach(new TableSelector.ForEachBlock<ResultSet>(){
+            ts.forEach(new TableSelector.ForEachBlock<>()
+            {
                 @Override
                 public void exec(ResultSet rs) throws SQLException
                 {
@@ -406,7 +408,7 @@ public class WeightAlertsNotification extends AbstractEHRNotification
             msg.append(tableMsg);
             msg.append("<hr>\n");
 
-            if (distinctIds != null && animalIds.size() > 0)
+            if (distinctIds != null && !animalIds.isEmpty())
                 distinctIds.addAll(animalIds);
         }
     }
