@@ -48,7 +48,6 @@ import org.labkey.api.files.FileContentService;
 import org.labkey.api.query.FieldKey;
 import org.labkey.api.query.QueryService;
 import org.labkey.api.query.UserSchema;
-import org.labkey.api.query.QueryService;
 import org.labkey.api.security.AdminConsoleAction;
 import org.labkey.api.security.RequiresPermission;
 import org.labkey.api.security.RequiresSiteAdmin;
@@ -59,7 +58,6 @@ import org.labkey.api.study.Dataset;
 import org.labkey.api.study.StudyService;
 import org.labkey.api.util.HtmlString;
 import org.labkey.api.util.PageFlowUtil;
-import org.labkey.api.util.URLHelper;
 import org.labkey.api.view.ActionURL;
 import org.labkey.api.view.HtmlView;
 import org.labkey.api.view.NavTree;
@@ -78,7 +76,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Objects;
 
 /**
  * User: bbimber
@@ -278,7 +275,7 @@ public class ONPRC_EHRController extends SpringActionController
     }
 
     @AdminConsoleAction
-    public class ShowEtlLogAction extends ExportAction
+    public class ShowEtlLogAction extends ExportAction<Object>
     {
         @Override
         public void export(Object o, HttpServletResponse response, BindException errors) throws Exception
@@ -294,20 +291,10 @@ public class ONPRC_EHRController extends SpringActionController
     }
 
     @RequiresPermission(AdminPermission.class)
-    public static class RunEHRTestsAction extends SimpleViewAction<RunEHRTestsForm>
+    public static class RunEHRTestsAction extends SimpleViewAction<Object>
     {
-        public void validateCommand(RunEHRTestsForm form, Errors errors)
-        {
-
-        }
-
-        public URLHelper getSuccessURL(RunEHRTestsForm form)
-        {
-            return getContainer().getStartURL(getUser());
-        }
-
         @Override
-        public ModelAndView getView(RunEHRTestsForm form, BindException errors) throws Exception
+        public ModelAndView getView(Object form, BindException errors) throws Exception
         {
             ONPRC_EHRTestHelper helper = new ONPRC_EHRTestHelper();
             Method method = helper.getClass().getMethod("testBloodCalculation", Container.class, User.class);
@@ -320,21 +307,6 @@ public class ONPRC_EHRController extends SpringActionController
         public void addNavTrail(NavTree tree)
         {
             tree.addChild("ONPRC EHR Tests");
-        }
-    }
-
-    public static class RunEHRTestsForm
-    {
-        String[] _tests;
-
-        public String[] getTests()
-        {
-            return _tests;
-        }
-
-        public void setTests(String[] tests)
-        {
-            _tests = tests;
         }
     }
 
