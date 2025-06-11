@@ -1074,7 +1074,7 @@ public class ONPRC_EHRTriggerHelper
         TableSelector ts = new TableSelector(flagValues, Collections.singleton("objectid"), flagFilter, null);
 
         List<String> ret = ts.getArrayList(String.class);
-        if (ret == null || ret.isEmpty())
+        if (ret.isEmpty())
         {
             return null;
         }
@@ -1626,7 +1626,7 @@ public class ONPRC_EHRTriggerHelper
 
                 animals.add(id);
 
-                if (recordsInTransaction != null && !recordsInTransaction.isEmpty())
+                if (recordsInTransaction != null)
                 {
                     for (Map<String, Object> r : recordsInTransaction)
                     {
@@ -1745,7 +1745,7 @@ public class ONPRC_EHRTriggerHelper
             filter.addCondition(FieldKey.fromString("category"), "Condition");
             TableSelector ts = new TableSelector(ti, Collections.singleton("code"), filter, null);
             List<Integer> ret = ts.getArrayList(Integer.class);
-            if (ret != null && !ret.isEmpty())
+            if (!ret.isEmpty())
             {
                 _cachedConditionCodes.put(flag, ret.get(0));
             }
@@ -1770,7 +1770,7 @@ public class ONPRC_EHRTriggerHelper
             filter.addCondition(FieldKey.fromString("category"), "Condition");
             TableSelector ts = new TableSelector(ti, Collections.singleton("code"), filter, null);
             List<Integer> ret = ts.getArrayList(Integer.class);
-            if (ret != null && !ret.isEmpty())
+            if (!ret.isEmpty())
             {
                 _cachedConditionCodeMeanings.put(meaning, ret.get(0));
             }
@@ -1803,7 +1803,7 @@ public class ONPRC_EHRTriggerHelper
         TableInfo flagsTable = getTableInfo("study", "Animal Record Flags");
         TableSelector ts = new TableSelector(flagsTable, PageFlowUtil.set("flag"), filter, null);
         List<String> values = ts.getArrayList(String.class);
-        if (values != null && !values.isEmpty())
+        if (!values.isEmpty())
         {
             for (String v : values)
             {
@@ -2181,7 +2181,7 @@ public class ONPRC_EHRTriggerHelper
         TableSelector ts = new TableSelector(ti, PageFlowUtil.set("category"), filter, null);  // Menses
         List<String> ret = ts.getArrayList(String.class);
 
-        if (ret != null && !ret.isEmpty())
+        if (!ret.isEmpty())
         {
             TableInfo t2 = getTableInfo("study", "assignment");
             SimpleFilter filters = new SimpleFilter(FieldKey.fromString("id"), id);
@@ -2190,7 +2190,7 @@ public class ONPRC_EHRTriggerHelper
             TableSelector ts2 = new TableSelector(t2, PageFlowUtil.set("project"), filters, null);  //
             List<Integer> ret2 = ts2.getArrayList(Integer.class);
 
-            if (ret2 != null && !ret2.isEmpty())
+            if (!ret2.isEmpty())
             {
                 for (Integer jcode : ret2)
                 {
@@ -2241,7 +2241,7 @@ public class ONPRC_EHRTriggerHelper
 
         TableSelector ts = new TableSelector(ti, PageFlowUtil.set("code"), filter, null);  // 908 or 909
         List<Integer> ret = ts.getArrayList(Integer.class);
-        if (ret != null && !ret.isEmpty())
+        if (!ret.isEmpty())
         {
             for (Integer scode : ret)
             {
@@ -2331,7 +2331,7 @@ public class ONPRC_EHRTriggerHelper
 
                                TableSelector ts2 = new TableSelector(ti2, PageFlowUtil.set("lastname"), filter2, null);
                                List<String> ret2 = ts2.getArrayList(String.class);
-                               if (ret2 != null && !ret2.isEmpty())
+                               if (!ret2.isEmpty())
                                {
                                    for (String Investname : ret2)
                                    {
@@ -2423,7 +2423,7 @@ public class ONPRC_EHRTriggerHelper
 
                                TableSelector ts2 = new TableSelector(ti2, PageFlowUtil.set("lastname"), filter2, null);
                                List<String> ret2 = ts2.getArrayList(String.class);
-                               if (ret2 != null && !ret2.isEmpty())
+                               if (!ret2.isEmpty())
                                {
                                    for (String Investname : ret2)
                                    {
