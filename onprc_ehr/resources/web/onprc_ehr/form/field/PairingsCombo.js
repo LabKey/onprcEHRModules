@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018-2019 LabKey Corporation
+ * Copyright (c) 2013-2019 LabKey Corporation
  *
  * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
  */
@@ -12,12 +12,12 @@
  * @param {string} [config.defaultSubset] The default SNOMED subset to load
  *
  */
-Ext4.define('ONPRC_EHR.form.field.pairingCombo', {
-    extend: 'Ext.ux.CheckCombo',
-    alias: 'widget.onprc_ehr-pairingcombo',
+
+    Ext4.define('ONPRC_EHR.form.field.pairingCombo', {
+        extend: 'EHR.form.field.SnomedCombo',
+        alias: 'widget.onprc_ehr-pairingcombo',
 
     activeSubset: null,
-    addAllSelector: true,
 
     initComponent: function(){
         this.getSnomedStore();
@@ -62,7 +62,7 @@ Ext4.define('ONPRC_EHR.form.field.pairingCombo', {
         this.on('render', function(field){
             Ext4.QuickTips.register({
                 target: field.triggerEl.elements[0],
-                text: 'Click to change the SNOMED subset'
+                text: 'Click to change the pairings event type'
             });
         }, this);
     },
@@ -77,13 +77,13 @@ Ext4.define('ONPRC_EHR.form.field.pairingCombo', {
         cfg.value = this.activeSubset || cfg.value;
 
         this.window = Ext4.create('Ext.window.Window', {
-            title: 'Choose Event Type Category',
+            title: 'Choose the Event Type Category',
             modal: true,
             closeAction: 'destroy',
             width: 410,
             bodyStyle: 'padding: 5px;',
             items: [{
-                html: 'Because the entire SNOMED list is long, most SNOMED fields show a subset of the full list.  The field below can be used to change which subset is shown, or you can choose all codes.  Please note that the SNOMED field should narrow down the list of codes as you begin typing.',
+                html: ' The field below can be used to change which category to be displayed, or you can choose all catgories.  Please note that the event type field should narrow down the list of event types as you begin typing.',
                 border: false,
                 style: 'padding-bottom: 10px;'
             }, cfg],
@@ -94,7 +94,7 @@ Ext4.define('ONPRC_EHR.form.field.pairingCombo', {
                     var win = btn.up('window');
                     var val = win.down('#filterCombo').getValue();
                     if (!val){
-                        Ext4.Msg.alert('Error', 'Must choose a subset');
+                        Ext4.Msg.alert('Error', 'Must choose a event type category');
                         return;
                     }
 
@@ -189,10 +189,10 @@ Ext4.define('ONPRC_EHR.form.field.pairingCombo', {
         return {
             xtype: 'combo',
             itemId: 'filterCombo',
-            emptyText: 'Pick subset...',
+            emptyText: 'Pick event type category...',
             typeAhead: true,
             isFormField: false,
-            fieldLabel: 'Choose Subset',
+            fieldLabel: 'Choose a category',
             labelWidth: 120,
             width: 380,
             valueField: 'subset',

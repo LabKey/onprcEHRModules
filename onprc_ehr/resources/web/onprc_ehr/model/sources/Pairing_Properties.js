@@ -23,13 +23,22 @@ EHR.model.DataModelManager.registerMetadata('Pairing_Properties', {
             },
 
 
+            // eventtype: {
+            //
+            //     editorConfig: {
+            //         xtype: 'ehr-snomedcombo',
+            //         defaultSubset: 'Common Treatments'
+            //     }
+            // },
+
             eventtype: {
 
                 editorConfig: {
-                    xtype: 'ehr-snomedcombo',
+                    xtype: 'onprc_ehr-pairingcombo',
                     defaultSubset: 'Common Treatments'
                 }
             },
+
 
             goal: {
                 allowBlank: false,
