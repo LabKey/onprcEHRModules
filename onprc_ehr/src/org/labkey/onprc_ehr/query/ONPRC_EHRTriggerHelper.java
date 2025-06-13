@@ -2366,7 +2366,7 @@ public class ONPRC_EHRTriggerHelper
             return;
         }
 
-        String subject = "Center Project Created or Updated Notification: ";
+        String subject = "Center Project Notification: ";
 
         Set<UserPrincipal> recipients = NotificationService.get().getRecipients(new ProjectAlertsNotification(ModuleLoader.getInstance().getModule(ONPRC_EHRModule.class)), getContainer());
 
@@ -2411,7 +2411,7 @@ public class ONPRC_EHRTriggerHelper
             //Create header information on the report
 
             html.append("<table border=1 style='border-collapse: collapse;'>");
-            html.append("<tr style='font-weight: bold;'><td>Center Project</td><td>Project ID</td><td>Iacuc Protocol</td><td> Investigator</td><td>  Project Start Date</td><td>  Project End Date</td></tr>\n");
+            html.append("<tr style='font-weight: bold;'><td>Center Project</td><td>Project ID</td><td>Iacuc Protocol</td><td> Investigator</td><td>  Project Start Date</td><td>  Previous End Date</td><td>  Project End Date</td></tr>\n");
             ts.forEach(new Selector.ForEachBlock<ResultSet>()
                        {
 
