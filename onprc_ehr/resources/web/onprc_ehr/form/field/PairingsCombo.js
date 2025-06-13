@@ -13,6 +13,8 @@
  *
  */
 
+EHR.DataEntryUtils.getSnomedStore();
+
     Ext4.define('ONPRC_EHR.form.field.pairingCombo', {
         extend: 'EHR.form.field.SnomedCombo',
         alias: 'widget.onprc_ehr-pairingcombo',
