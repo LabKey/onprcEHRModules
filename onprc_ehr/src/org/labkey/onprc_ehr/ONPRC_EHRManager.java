@@ -16,6 +16,7 @@
 package org.labkey.onprc_ehr;
 
 import org.labkey.api.data.Container;
+import org.labkey.api.data.DbSequenceManager;
 import org.labkey.api.data.PropertyManager;
 import org.labkey.api.data.PropertyManager.WritablePropertyMap;
 import org.labkey.api.query.Queryable;
@@ -81,7 +82,7 @@ public class ONPRC_EHRManager
     @Queryable
     public static final String NURSERY_AREA = "Nursery Area";
     @Queryable
-    public static final Double BASE_SUBSIDY = 0.47;
+    public static final Double BASE_SUBSIDY = 0.475;
 
     @Queryable
     public static final String CAGE_HEIGHT_EXEMPTION_FLAG = "Obese, or Pregnant";
@@ -89,6 +90,8 @@ public class ONPRC_EHRManager
     public static final String CAGE_WEIGHT_EXEMPTION_FLAG = "Obese, or Pregnant";
     @Queryable
     public static final String CAGE_MEDICAL_EXEMPTION_FLAG = "Medical";
+
+    private static final String CASE_SEQUENCE = "org.labkey.onprc_ehr.cases";
 
     private ONPRC_EHRManager()
     {
@@ -146,6 +149,11 @@ public class ONPRC_EHRManager
         }
 
         return ret;
+    }
+
+    public long getNextCaseNo(Container c)
+    {
+        return DbSequenceManager.get(c, CASE_SEQUENCE).next();
     }
 }
 
