@@ -1417,5 +1417,41 @@
         </columns>
     </table>
 
+    <table tableName="CenterProjectsTemp" tableDbType="TABLE">
+        <columns>
+            <column columnName="Searchid"/>
+            <column columnName="project"/>
+            <column columnName="protocol"/>
+            <column columnName="account"/>
+            <column columnName="title"/>
+            <column columnName="research"/>
+            <column columnName="createdby"/>
+            <column columnName="created"/>
+            <column columnName="modified"/>
+            <column columnName="modifiedby"/>
+            <column columnName="startdate"/>
+            <column columnName="enddate"/>
+            <column columnName="displayname"/>
+            <column columnName="investigatorid"/>
+            <column columnName="use_category"/>
+            <column columnName="projecttype"/>
+            <column columnName="objectid"/>
+            <column columnName="date_posted"/>
+
+        </columns>
+    </table>
+
+    <table tableName="snomed_counter" tableDbType="TABLE">
+        <columns>
+            <column columnName="subset"/>
+            <column columnName="count"/>
+            <column columnName="prefix"/>
+            <column columnName="container"/>
+            <column columnName="createdby"/>
+            <column columnName="created"/>
+            <column columnName="modifiedby"/>
+            <column columnName="modified"/>
+        </columns>
+    </table>
 
 </tables>
