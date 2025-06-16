@@ -16,7 +16,7 @@
 EHR.DataEntryUtils.getSnomedStore();
 
     Ext4.define('ONPRC_EHR.form.field.pairingCombo', {
-        extend: 'EHR.form.field.SnomedCombo',
+        extend: 'Ext.form.field.ComboBox',
         alias: 'widget.onprc_ehr-pairingcombo',
 
     activeSubset: null,
@@ -34,18 +34,18 @@ EHR.DataEntryUtils.getSnomedStore();
             name: this.name,
             typeAhead: true,
             snomedStore: this.snomedStore,
-            displayField: 'codeAndMeaning',
-            valueField: 'code',
+            displayField: 'value',
+            valueField: 'value',
             forceSelection: true,
             caseSensitive: false,
             anyMatch: true,
             store: {
                 type: 'labkey-store',
-                schemaName: 'ehr_lookups',
+                schemaName: 'sla',
                 storeId: 'snomedStore_' + this.id,
-                queryName: 'snomed_combo_list',
-                columns: 'code,meaning,codeAndMeaning,categories',
-                sort: 'meaning',
+                queryName: 'Reference_Data',
+                columns: 'value,columnnName',
+                sort: 'value',
                 maxRows: 0,
                 autoLoad: true,
                 listeners: {
@@ -126,9 +126,9 @@ EHR.DataEntryUtils.getSnomedStore();
             LDK.Assert.assertNotEmpty('this.store is null in SnomedCombo.ensureRecord()', this.store);
         }
 
-        var recIdx = this.store.findExact('code', val);
+        var recIdx = this.store.findExact('value', val);
         if (recIdx == -1){
-            recIdx = this.snomedStore.findExact('code', val);
+            recIdx = this.snomedStore.findExact('value', val);
 
             if (recIdx != -1){
                 if (this.store.isLoading()){
@@ -178,10 +178,10 @@ EHR.DataEntryUtils.getSnomedStore();
             this.ensureRecord(val);
         }
         else if (Ext4.isArray(val) && val.length == 1 && val[0].isModel) {
-            this.ensureRecord(val[0].get('code'));
+            this.ensureRecord(val[0].get('value'));
         }
-        else if (Ext4.isObject(val) && val.code){
-            this.ensureRecord(val.code);
+        else if (Ext4.isObject(val) && val.value){
+            this.ensureRecord(val.value);
         }
 
         this.callOverridden(arguments);
@@ -197,8 +197,8 @@ EHR.DataEntryUtils.getSnomedStore();
             fieldLabel: 'Choose a category',
             labelWidth: 120,
             width: 380,
-            valueField: 'subset',
-            displayField: 'subset',
+            valueField: 'value',
+            displayField: 'value',
             queryMode: 'local',
             initialValue: this.activeSubset,
             value: this.activeSubset,
@@ -206,8 +206,8 @@ EHR.DataEntryUtils.getSnomedStore();
             store: {
                 type: 'labkey-store',
                 schemaName: 'ehr_lookups',
-                queryName: 'snomed_subsets',
-                sort: 'subset',
+                queryName: 'pairing_Subsets',
+                sort: 'value',
                 autoLoad: true,
                 listeners: {
                     scope: this,
@@ -241,13 +241,13 @@ EHR.DataEntryUtils.getSnomedStore();
         else {
             var re = new RegExp('(,|^)' + subset + '(,|$)');
             this.snomedStore.each(function(r){
-                if (r.get('categories') && r.get('categories').match(re))
+                if (r.get('columnName') && r.get('columnName').match(re))
                     records.push(r);
             }, this);
         }
 
         this.store.add(records);
         if (code)
-            this.ensureRecord(code);
+            this.ensureRecord(value);
     }
 });
