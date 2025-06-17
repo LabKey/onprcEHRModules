@@ -23,13 +23,13 @@ ONPRC.Utils = new function(){
                 success: LABKEY.Utils.getCallbackWrapper(LABKEY.Utils.getOnSuccess(config), config.scope)
             });
         },
-        getSnomedStore: function(){
-            if (ONPRC_EHR._snomedStore)
-                return ONPRC_EHR._snomedStore;
+        getpairingStore: function(){
+            if (ONPRC_EHR._pairingStore)
+                return ONPRC_EHR._pairingStore;
 
             var storeId = ['sla', 'Reference_Data', 'value', 'columnName'].join('||');
 
-            ONPRC_EHR._snomedStore = Ext4.StoreMgr.get(storeId) || Ext4.create('LABKEY.ext4.data.Store', {
+            ONPRC_EHR._pairingStore = Ext4.StoreMgr.get(storeId) || Ext4.create('LABKEY.ext4.data.Store', {
                 type: 'labkey-store',
                 schemaName: 'sla',
                 queryName: 'Reference_Data',
@@ -45,7 +45,7 @@ ONPRC.Utils = new function(){
                 }
             });
 
-            return ONPRC_EHR._snomedStore;
+            return ONPRC_EHR._pairingStore;
         },
 
         preloadSession: function() {
