@@ -220,7 +220,7 @@ EHR.DataEntryUtils.getSnomedStore();
     },
 
     applyFilter: function(subset){
-        var code = this.getValue();
+        var value = this.getValue();
         this.activeSubset = subset;
 
         if (this.snomedStore.loading || this.isDestroyed){
