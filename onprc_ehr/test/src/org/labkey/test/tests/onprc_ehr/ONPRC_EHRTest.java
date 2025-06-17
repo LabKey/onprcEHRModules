@@ -70,7 +70,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -82,7 +81,6 @@ import static org.junit.Assert.fail;
 public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
 {
     protected String PROJECT_NAME = "ONPRC_EHR_TestProject";
-    private boolean _hasCreatedBirthRecords = false;
     private final String ANIMAL_HISTORY_URL = "/" + getProjectName() + "/ehr-animalHistory.view";
 
     @Override
@@ -101,13 +99,12 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
     @LogMethod
     public static void doSetup() throws Exception
     {
-        ONPRC_EHRTest initTest = (ONPRC_EHRTest)getCurrentTest();
+        ONPRC_EHRTest initTest = getCurrentTest();
 
         initTest.initProject();
         initTest.createTestSubjects();
         initTest.createBirthRecords();
         new RReportHelper(initTest).ensureRConfig();
-
     }
 
     @Override
@@ -208,7 +205,7 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         final Integer projectId = (Integer)resp.getRows().get(0).get("project");
         final String invest = (String) resp.getRows().get(0).get("investigatorId/lastName");
 
-        assertEquals("Investigator name not correct in project table", invest, investLastName);
+        assertEquals("Investigator name not correct in project table", investLastName, invest);
 
         // Try with a row that doesn't pass validation
         Map<String, Object> protocolCountsRow = new HashMap<>();
@@ -236,15 +233,17 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
 
         //create assignment
         InsertRowsCommand assignmentCommand = new InsertRowsCommand("study", "assignment");
-        assignmentCommand.addRow(new HashMap<String, Object>(){
+        assignmentCommand.addRow(new HashMap<>()
         {
-            put("Id", SUBJECTS[1]);
-            put("date", prepareDate(new Date(), -10, 0));
-            put("objectid", generateGUID());
-            put("assignCondition", 202); //Protocol Restricted
-            put("projectedReleaseCondition", 203); //Surgically Restricted
-            put("project", projectId);
-        }});
+            {
+                put("Id", SUBJECTS[1]);
+                put("date", prepareDate(new Date(), -10, 0));
+                put("objectid", generateGUID());
+                put("assignCondition", 202); //Protocol Restricted
+                put("projectedReleaseCondition", 203); //Surgically Restricted
+                put("project", projectId);
+            }
+        });
         assignmentCommand.execute(getApiHelper().getConnection(), getContainerPath());
 
         //setting of enddatefinalized, datefinalized
@@ -257,7 +256,7 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         Assert.assertNull(assignmentResponse1.getRows().get(0).get("enddatefinalized"));
 
         final String assignInvest = (String)assignmentResponse1.getRows().get(0).get("project/investigatorId/lastName");
-        assertEquals("Investigator name link broken from assignment dataset", assignInvest, investLastName);
+        assertEquals("Investigator name link broken from assignment dataset", investLastName, assignInvest);
 
         final String assignmentLsid1 = (String)assignmentResponse1.getRows().get(0).get("lsid");
 
@@ -272,12 +271,14 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
 
         //terminate, expect animal condition to change based on release condition
         UpdateRowsCommand assignmentUpdateCommand = new UpdateRowsCommand("study", "assignment");
-        assignmentUpdateCommand.addRow(new HashMap<String, Object>(){
+        assignmentUpdateCommand.addRow(new HashMap<>()
+        {
             {
                 put("lsid", assignmentLsid1);
                 put("enddate", prepareDate(new Date(), -5, 0));
                 put("releaseCondition", 203); //Surgically Restricted
-            }});
+            }
+        });
         assignmentUpdateCommand.execute(getApiHelper().getConnection(), getContainerPath());
 
         SelectRowsCommand conditionSelect2 = new SelectRowsCommand("study", "flags");
@@ -677,7 +678,7 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         waitForElement(Locator.tagContainingText("span", "Active Groups"));
         DataRegionTable dr = new DataRegionTable("query", this);
         clickAndWait(dr.link(0, dr.getColumnIndex("Name")));
-        DataRegionTable membersTable = DataRegionTable.DataRegion(getDriver()).find(new BodyWebPart(this.getDriver(), "Group Members", 0));
+        DataRegionTable membersTable = DataRegionTable.DataRegion(getDriver()).find(new BodyWebPart<>(this.getDriver(), "Group Members", 0));
         Assert.assertEquals(2, membersTable.getDataRowCount());
 
         //more reports
@@ -689,22 +690,69 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
     @Test
     public void testPrintableReports()
     {
-        // NOTE: these primarily run SSRS, so we will just setup the UI and test whether the URL matches expectations
+        // NOTE: these primarily run SSRS, so we will just set up the UI and test whether the URL matches expectations
         goToProjectHome();
         waitAndClickAndWait(Locator.tagContainingText("a", "Printable Reports"));
         waitForElement(Ext4Helper.Locators.ext4Button("Print Version"));
 
-        //TODO: test JSESSIONID
+        // First button is for Active Clinical Cases by Vets. It requires a selection from the Vet drop-down
+        click(Ext4Helper.Locators.ext4Button("Print Version"));
+        click(Ext4Helper.Locators.menuItem("Print"));
+        assertExt4MsgBox("Please choose a vet", "OK");
+        _ext4Helper.selectComboBoxItem("Choose Vet:", "vet");
+
+        click(Ext4Helper.Locators.ext4Button("Print Version"));
+        click(Ext4Helper.Locators.menuItem("Print"));
+
+        // Be sure to be looking at the separate SSRS tab
+        switchToWindow(1);
+
+        // We'll be on an error page as we're pointing at a server that doesn't exist. Just check the URL contains
+        // parameters that we expect
+        validateSsrsUrlParams("ActiveClinicalCasesVet", "assignedvet");
+
+        // Close the extra window/tab
+        switchToMainWindow();
+        closeExtraWindows();
+
+        // Now try the CITES Report
+        goToProjectHome();
+        waitAndClickAndWait(Locator.tagContainingText("a", "More Reports"));
+        waitAndClickAndWait(Locator.tagContainingText("a", "Cites Report"));
+        waitForElement(Locator.textarea("animalField"));
+        setFormElement(Locator.textarea("animalField"), "12345");
+        click(Ext4Helper.Locators.ext4Button("Submit"));
+        validateSsrsUrlParams("CITESReport", "AnimalID");
+    }
+
+    private void validateSsrsUrlParams(String reportName, String... additionalParams)
+    {
+        String url = getURL().toString();
+
+        // Sanity check that the session looks plausible
+        int sessionIdIndex = url.indexOf("SessionId=") + "SessionId=".length();
+        assertTrue("Missing SessionId: " + url, sessionIdIndex > 0);
+        for (int i = 0; i < 10; i++)
+        {
+            char c = url.charAt(sessionIdIndex + i);
+            assertTrue("Unexpected character in SessionId: '" + c + "', full URL was: " + url, (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || (c >= '0' && c <= '9'));
+        }
+
+        assertTrue("Didn't find report name in: " + url, url.contains(reportName));
+        for (String additionalParam : additionalParams)
+        {
+            assertTrue("Didn't find " + additionalParam + " parameter in: " + url, url.contains("&" + additionalParam + "="));
+        }
     }
 
     @Test
-    public void testPedigreeReport() throws Exception
+    public void testPedigreeReport()
     {
         goToProjectHome();
         beginAtAnimalHistoryTab();
 
         String id = ID_PREFIX + 10;
-        AnimalHistoryPage animalHistoryPage = new AnimalHistoryPage(getDriver());
+        AnimalHistoryPage<?> animalHistoryPage = new AnimalHistoryPage<>(getDriver());
 
         animalHistoryPage.searchSingleAnimal(id);
         animalHistoryPage.clickCategoryTab("Genetics");
@@ -788,7 +836,7 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         submitBtn.waitForEnabled();
         click(Ext4Helper.Locators.ext4Button("Submit"));
 
-        if (expectedRows.size() == 0)
+        if (expectedRows.isEmpty())
         {
             grid.waitForRowCount(1);
 
@@ -830,7 +878,7 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
             //iterate rows, checking keyboard navigation
             if (testFieldName != null)
             {
-                Integer rowCount = grid.getRowCount();
+                int rowCount = grid.getRowCount();
 
                 //TODO: test keyboard navigation
                 //grid.startEditing(1, grid.getIndexOfColumn(testFieldName));
@@ -987,8 +1035,8 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         Assert.assertEquals("Incorrect row count", 0, weightGrid.getRowCount());
         _helper.addRecordToGrid(weightGrid);
         Assert.assertEquals("Id not copied property", MORE_ANIMAL_IDS[0], weightGrid.getFieldValue(1, "Id"));
-        Double weight = 5.3;
-        weightGrid.setGridCell(1, "weight", weight.toString());
+        double weight = 5.3;
+        weightGrid.setGridCell(1, "weight", Double.toString(weight));
 
         //procedures section
         waitAndClick(Ext4Helper.Locators.ext4Tab("Procedures"));
@@ -1002,9 +1050,9 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         Ext4GridRef drugGrid = _helper.getExt4GridForFormSection("Medications/Treatments Given");
         Assert.assertEquals("Incorrect row count", 7, drugGrid.getRowCount());
 
-        Assert.assertEquals(drugGrid.getFieldValue(1, "code"), "E-721X0");
-        Assert.assertEquals(drugGrid.getFieldValue(1, "route"), "IM");
-        Assert.assertEquals(drugGrid.getFieldValue(1, "dosage"), 25L);
+        Assert.assertEquals("E-721X0", drugGrid.getFieldValue(1, "code"));
+        Assert.assertEquals("IM", drugGrid.getFieldValue(1, "route"));
+        Assert.assertEquals(25L, drugGrid.getFieldValue(1, "dosage"));
 
         //verify formulary used
         drugGrid.setGridCellJS(1, "code", "E-YY035");
@@ -1045,13 +1093,13 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         waitAndClick(Ext4Helper.Locators.ext4Button("Submit"));
         bloodGrid.waitForRowCount(4);
 
-        Assert.assertEquals(bloodGrid.getDateFieldValue(1, "date"), date);
-        Assert.assertEquals(bloodGrid.getDateFieldValue(2, "date"), date);
-        Assert.assertEquals(bloodGrid.getDateFieldValue(3, "date"), date2);
-        Assert.assertEquals(bloodGrid.getDateFieldValue(4, "date"), date2);
+        Assert.assertEquals(date, bloodGrid.getDateFieldValue(1, "date"));
+        Assert.assertEquals(date, bloodGrid.getDateFieldValue(2, "date"));
+        Assert.assertEquals(date2, bloodGrid.getDateFieldValue(3, "date"));
+        Assert.assertEquals(date2, bloodGrid.getDateFieldValue(4, "date"));
 
-        Assert.assertEquals(bloodGrid.getFieldValue(3, "remark"), remark);
-        Assert.assertEquals(bloodGrid.getFieldValue(4, "remark"), remark);
+        Assert.assertEquals(remark, bloodGrid.getFieldValue(3, "remark"));
+        Assert.assertEquals(remark, bloodGrid.getFieldValue(4, "remark"));
 
         waitAndClickAndWait(_helper.getDataEntryButton("Save & Close"));
         waitForElement(Locator.tagWithText("a", "Enter New Data"));
@@ -1158,9 +1206,9 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
 
         for (int i=0;i<expectedRecords;i++)
         {
-            Assert.assertEquals(drugGrid.getFieldValue(i + 1, "lot"), "Lot");
-            Assert.assertEquals(drugGrid.getFieldValue(i+1, "reason"), "Weight");
-            Assert.assertEquals(drugGrid.getFieldValue(i + 1, "amount"), 94.5);
+            Assert.assertEquals("Lot", drugGrid.getFieldValue(i + 1, "lot"));
+            Assert.assertEquals("Weight", drugGrid.getFieldValue(i+1, "reason"));
+            Assert.assertEquals(94.5, drugGrid.getFieldValue(i + 1, "amount"));
         }
 
         //TB section
@@ -1169,7 +1217,7 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         waitForElement(Ext4Helper.Locators.window("Copy From Medications/Treatments Given"));
         for (Ext4FieldRef field : _ext4Helper.componentQuery("field[fieldName='exclude']", Ext4FieldRef.class))
         {
-            Assert.assertEquals(field.getValue(), true);
+            Assert.assertEquals(true, field.getValue());
         }
 
         //deselect the first row
@@ -1196,7 +1244,7 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
     }
 
     @Test
-    public void testGeneticsPipeline() throws Exception
+    public void testGeneticsPipeline()
     {
         goToProjectHome();
 
@@ -1223,7 +1271,7 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
 
         goToProjectHome();
         beginAtAnimalHistoryTab();
-        AnimalHistoryPage animalHistoryPage = new AnimalHistoryPage(getDriver());
+        AnimalHistoryPage<?> animalHistoryPage = new AnimalHistoryPage<>(getDriver());
         animalHistoryPage.searchSingleAnimal("99995,99996,99997,99998,99999,999910");
         animalHistoryPage.refreshReport();
         animalHistoryPage.clickCategoryTab("Genetics")
@@ -1771,7 +1819,7 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         Date twoWeeks = prepareDate(DateUtils.truncate(new Date(), Calendar.DATE), 14, 0);
         Date fourWeeks = prepareDate(DateUtils.truncate(new Date(), Calendar.DATE), 28, 0);
         Assert.assertEquals(twoWeeks, caseField1.getDateValue());
-        Assert.assertEquals(null, changeField.getValue());
+        Assert.assertNull(changeField.getValue());
         changeField.setValue(_df.format(fourWeeks));
         click(Locator.id(changeBtn.getId()));
         Assert.assertEquals(fourWeeks, caseField1.getDateValue());
@@ -1785,7 +1833,7 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
     public void testClinicalHistoryPanelOptions(){
         beginAtAnimalHistoryTab();
         openClinicalHistoryForAnimal("TEST1020148");
-        List<String> expectedLabels = new ArrayList<String>(
+        List<String> expectedLabels = new ArrayList<>(
                 Arrays.asList(
                         "Alert",
                         "Antibiotic Sensitivity",
