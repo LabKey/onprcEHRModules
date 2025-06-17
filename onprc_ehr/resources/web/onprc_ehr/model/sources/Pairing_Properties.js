@@ -27,7 +27,7 @@ EHR.model.DataModelManager.registerMetadata('Pairing_Properties', {
 
                 editorConfig: {
                     xtype: 'onprc_ehr-pairingcombo',
-                    defaultSubset: 'PairingStartType'
+                    defaultSubset: 'PairingStarttype'
                 }
             },
 

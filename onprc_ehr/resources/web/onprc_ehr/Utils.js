@@ -23,6 +23,30 @@ ONPRC.Utils = new function(){
                 success: LABKEY.Utils.getCallbackWrapper(LABKEY.Utils.getOnSuccess(config), config.scope)
             });
         },
+        getSnomedStore: function(){
+            if (ONPRC_EHR._snomedStore)
+                return ONPRC_EHR._snomedStore;
+
+            var storeId = ['sla', 'Reference_Data', 'value', 'columnName'].join('||');
+
+            ONPRC_EHR._snomedStore = Ext4.StoreMgr.get(storeId) || Ext4.create('LABKEY.ext4.data.Store', {
+                type: 'labkey-store',
+                schemaName: 'sla',
+                queryName: 'Reference_Data',
+                columns: 'value, columnName',
+                sort: 'value',
+                storeId: storeId,
+                autoLoad: true,
+                getRecordForCode: function(value){
+                    var recIdx = this.findExact('value', value);
+                    if (recIdx != -1){
+                        return this.getAt(recIdx);
+                    }
+                }
+            });
+
+            return ONPRC_EHR._snomedStore;
+        },
 
         preloadSession: function() {
             LABKEY.Ajax.request({

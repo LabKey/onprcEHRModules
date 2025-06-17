@@ -13,9 +13,10 @@
  *
  */
 
-EHR.DataEntryUtils.getSnomedStore();
 
-    Ext4.define('ONPRC_EHR.form.field.pairingCombo', {
+ONPRC.Utils.getSnomedStore();
+
+Ext4.define('ONPRC_EHR.form.field.pairingCombo', {
         extend: 'Ext.form.field.ComboBox',
         alias: 'widget.onprc_ehr-pairingcombo',
 
@@ -123,7 +124,7 @@ EHR.DataEntryUtils.getSnomedStore();
         }
 
         if (!this.store){
-            LDK.Assert.assertNotEmpty('this.store is null in SnomedCombo.ensureRecord()', this.store);
+            LDK.Assert.assertNotEmpty('this.store is null in pairingCombo.ensureRecord()', this.store);
         }
 
         var recIdx = this.store.findExact('value', val);
@@ -158,7 +159,7 @@ EHR.DataEntryUtils.getSnomedStore();
         if (this.snomedStore)
             return this.snomedStore;
 
-        this.snomedStore = EHR.DataEntryUtils.getSnomedStore();
+        this.snomedStore = ONPRC.Utils.getSnomedStore();
 
         if (!this.snomedStore.loading){
             if (this.activeSubset)
@@ -227,7 +228,7 @@ EHR.DataEntryUtils.getSnomedStore();
             return;
         }
 
-        LDK.Assert.assertNotEmpty('SnomedCombo.applyFilter() called w/ a null store', this.store);
+        LDK.Assert.assertNotEmpty('pairingCombo.applyFilter() called w/ a null store', this.store);
         if (!this.store){
             return;
         }
