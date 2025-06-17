@@ -14,7 +14,7 @@
  */
 
 
-ONPRC.Utils.getSnomedStore();
+ONPRC.Utils.getpairingStore();
 
 Ext4.define('ONPRC_EHR.form.field.pairingCombo', {
         extend: 'Ext.form.field.ComboBox',
@@ -23,7 +23,7 @@ Ext4.define('ONPRC_EHR.form.field.pairingCombo', {
     activeSubset: null,
 
     initComponent: function(){
-        this.getSnomedStore();
+        this.getpairingStore();
         this.activeSubset = this.defaultSubset;
 
         Ext4.apply(this, {
@@ -34,7 +34,7 @@ Ext4.define('ONPRC_EHR.form.field.pairingCombo', {
             queryMode: 'local',
             name: this.name,
             typeAhead: true,
-            snomedStore: this.snomedStore,
+            pairingStore: this.pairingStore,
             displayField: 'value',
             valueField: 'value',
             forceSelection: true,
@@ -43,7 +43,7 @@ Ext4.define('ONPRC_EHR.form.field.pairingCombo', {
             store: {
                 type: 'labkey-store',
                 schemaName: 'sla',
-                storeId: 'snomedStore_' + this.id,
+                storeId: 'pairingStore_' + this.id,
                 queryName: 'Reference_Data',
                 columns: 'value,columnnName',
                 sort: 'value',
@@ -129,7 +129,7 @@ Ext4.define('ONPRC_EHR.form.field.pairingCombo', {
 
         var recIdx = this.store.findExact('value', val);
         if (recIdx == -1){
-            recIdx = this.snomedStore.findExact('value', val);
+            recIdx = this.pairingStore.findExact('value', val);
 
             if (recIdx != -1){
                 if (this.store.isLoading()){
@@ -139,12 +139,12 @@ Ext4.define('ONPRC_EHR.form.field.pairingCombo', {
                     }, me, {single: true});
                 }
                 else {
-                    this.store.add(this.snomedStore.getAt(recIdx));
+                    this.store.add(this.pairingStore.getAt(recIdx));
                 }
             }
-            else if (this.snomedStore.isLoading()){
+            else if (this.pairingStore.isLoading()){
                 var me = this;
-                me.snomedStore.on('load', function(){
+                me.pairingStore.on('load', function(){
                     me.ensureRecord(val);
                     //NOTE: if the value becomes NULL, it is likely because a user clicked on the combo prior to SNOMED store loading.
                     if (!me.getValue()) {
@@ -155,23 +155,23 @@ Ext4.define('ONPRC_EHR.form.field.pairingCombo', {
         }
     },
 
-    getSnomedStore: function(){
-        if (this.snomedStore)
-            return this.snomedStore;
+    getpairingStore: function(){
+        if (this.pairingStore)
+            return this.pairingStore;
 
-        this.snomedStore = ONPRC.Utils.getSnomedStore();
+        this.pairingStore = ONPRC.Utils.getpairingStore();
 
-        if (!this.snomedStore.loading){
+        if (!this.pairingStore.loading){
             if (this.activeSubset)
                 this.applyFilter(this.activeSubset);
         }
 
-        this.mon(this.snomedStore, 'load', function(){
+        this.mon(this.pairingStore, 'load', function(){
             if (this.activeSubset)
                 this.applyFilter(this.activeSubset);
         }, this);
 
-        return this.snomedStore;
+        return this.pairingStore;
     },
 
     setValue: function(val){
@@ -208,6 +208,7 @@ Ext4.define('ONPRC_EHR.form.field.pairingCombo', {
                 type: 'labkey-store',
                 schemaName: 'ehr_lookups',
                 queryName: 'pairing_Subsets',
+                columns: 'value,columnnName,title',
                 sort: 'value',
                 autoLoad: true,
                 listeners: {
@@ -224,7 +225,7 @@ Ext4.define('ONPRC_EHR.form.field.pairingCombo', {
         var value = this.getValue();
         this.activeSubset = subset;
 
-        if (this.snomedStore.loading || this.isDestroyed){
+        if (this.pairingStore.loading || this.isDestroyed){
             return;
         }
 
@@ -237,18 +238,18 @@ Ext4.define('ONPRC_EHR.form.field.pairingCombo', {
 
         var records = [];
         if (!subset || subset == 'All'){
-            records = this.snomedStore.getRange();
+            records = this.pairingStore.getRange();
         }
         else {
             var re = new RegExp('(,|^)' + subset + '(,|$)');
-            this.snomedStore.each(function(r){
+            this.pairingStore.each(function(r){
                 if (r.get('columnName') && r.get('columnName').match(re))
                     records.push(r);
             }, this);
         }
 
         this.store.add(records);
-        if (code)
+        if (value)
             this.ensureRecord(value);
     }
 });
