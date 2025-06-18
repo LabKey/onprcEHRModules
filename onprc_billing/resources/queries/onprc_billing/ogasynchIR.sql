@@ -11,7 +11,6 @@ SELECT ogasynch.lastIndexed,
        ogasynch.ALIAS,
        ogasynch."ALIAS ENABLED FLAG",
        ogasynch."ALIAS ENABLED FLAG_MVIndicator",
-
        ogasynch.faRate,
        ogasynch.Key,
        ogasynch.ORIGINATING_AGENCY_AWARD_NUM,

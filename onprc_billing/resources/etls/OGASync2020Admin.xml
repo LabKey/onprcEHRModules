@@ -1,6 +1,6 @@
 <etl xmlns="http://labkey.org/etl/xml">
     <name>OGASync2020Admin</name>
-    <description>Copies OGA Data from external source to PRIME for PRocessing </description>
+    <description>Copies OGA Data from external_source to PRIME for Processing </description>
     <transforms>
         <transform id="OGAsync_Remove" type="StoredProcedure">
             <description>Runs a stored procedure to Update Transaction log based on OGA External Schema.</description>
