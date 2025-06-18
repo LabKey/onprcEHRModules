@@ -70,7 +70,7 @@ Ext4.define('ONPRC_EHR.form.field.pairingCombo', {
         }, this);
     },
 
-    //used to prevent combo/editor from closing when toggling snomed subsets
+    //used to prevent combo/editor from closing when toggling pairing subsets
     validateBlur: function(){
         return !this.window;
     },
