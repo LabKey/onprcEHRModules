@@ -81,7 +81,6 @@ import static org.junit.Assert.fail;
 public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
 {
     protected String PROJECT_NAME = "ONPRC_EHR_TestProject";
-    private final boolean _hasCreatedBirthRecords = false;
     private final String ANIMAL_HISTORY_URL = "/" + getProjectName() + "/ehr-animalHistory.view";
 
     @Override
@@ -106,7 +105,6 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         initTest.createTestSubjects();
         initTest.createBirthRecords();
         new RReportHelper(initTest).ensureRConfig();
-
     }
 
     @Override
@@ -692,12 +690,59 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
     @Test
     public void testPrintableReports()
     {
-        // NOTE: these primarily run SSRS, so we will just setup the UI and test whether the URL matches expectations
+        // NOTE: these primarily run SSRS, so we will just set up the UI and test whether the URL matches expectations
         goToProjectHome();
         waitAndClickAndWait(Locator.tagContainingText("a", "Printable Reports"));
         waitForElement(Ext4Helper.Locators.ext4Button("Print Version"));
 
-        //TODO: test JSESSIONID
+        // First button is for Active Clinical Cases by Vets. It requires a selection from the Vet drop-down
+        click(Ext4Helper.Locators.ext4Button("Print Version"));
+        click(Ext4Helper.Locators.menuItem("Print"));
+        assertExt4MsgBox("Please choose a vet", "OK");
+        _ext4Helper.selectComboBoxItem("Choose Vet:", "vet");
+
+        click(Ext4Helper.Locators.ext4Button("Print Version"));
+        click(Ext4Helper.Locators.menuItem("Print"));
+
+        // Be sure to be looking at the separate SSRS tab
+        switchToWindow(1);
+
+        // We'll be on an error page as we're pointing at a server that doesn't exist. Just check the URL contains
+        // parameters that we expect
+        validateSsrsUrlParams("ActiveClinicalCasesVet", "assignedvet");
+
+        // Close the extra window/tab
+        switchToMainWindow();
+        closeExtraWindows();
+
+        // Now try the CITES Report
+        goToProjectHome();
+        waitAndClickAndWait(Locator.tagContainingText("a", "More Reports"));
+        waitAndClickAndWait(Locator.tagContainingText("a", "Cites Report"));
+        waitForElement(Locator.textarea("animalField"));
+        setFormElement(Locator.textarea("animalField"), "12345");
+        click(Ext4Helper.Locators.ext4Button("Submit"));
+        validateSsrsUrlParams("CITESReport", "AnimalID");
+    }
+
+    private void validateSsrsUrlParams(String reportName, String... additionalParams)
+    {
+        String url = getURL().toString();
+
+        // Sanity check that the session looks plausible
+        int sessionIdIndex = url.indexOf("SessionId=") + "SessionId=".length();
+        assertTrue("Missing SessionId: " + url, sessionIdIndex > 0);
+        for (int i = 0; i < 10; i++)
+        {
+            char c = url.charAt(sessionIdIndex + i);
+            assertTrue("Unexpected character in SessionId: '" + c + "', full URL was: " + url, (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || (c >= '0' && c <= '9'));
+        }
+
+        assertTrue("Didn't find report name in: " + url, url.contains(reportName));
+        for (String additionalParam : additionalParams)
+        {
+            assertTrue("Didn't find " + additionalParam + " parameter in: " + url, url.contains("&" + additionalParam + "="));
+        }
     }
 
     @Test
@@ -1048,10 +1093,10 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         waitAndClick(Ext4Helper.Locators.ext4Button("Submit"));
         bloodGrid.waitForRowCount(4);
 
-        Assert.assertEquals(bloodGrid.getDateFieldValue(1, "date"), date);
-        Assert.assertEquals(bloodGrid.getDateFieldValue(2, "date"), date);
-        Assert.assertEquals(bloodGrid.getDateFieldValue(3, "date"), date2);
-        Assert.assertEquals(bloodGrid.getDateFieldValue(4, "date"), date2);
+        Assert.assertEquals(date, bloodGrid.getDateFieldValue(1, "date"));
+        Assert.assertEquals(date, bloodGrid.getDateFieldValue(2, "date"));
+        Assert.assertEquals(date2, bloodGrid.getDateFieldValue(3, "date"));
+        Assert.assertEquals(date2, bloodGrid.getDateFieldValue(4, "date"));
 
         Assert.assertEquals(remark, bloodGrid.getFieldValue(3, "remark"));
         Assert.assertEquals(remark, bloodGrid.getFieldValue(4, "remark"));

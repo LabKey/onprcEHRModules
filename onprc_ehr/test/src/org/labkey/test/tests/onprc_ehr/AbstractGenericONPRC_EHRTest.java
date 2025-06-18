@@ -65,7 +65,6 @@ public abstract class AbstractGenericONPRC_EHRTest extends AbstractGenericEHRTes
     protected static final String REFERENCE_STUDY_PATH = "/resources/referenceStudy";
     protected static final String GENETICS_PIPELINE_LOG_PATH = REFERENCE_STUDY_PATH + "/kinship/EHR Kinship Calculation/kinship.txt.log";
     protected static final String ID_PREFIX = "9999";
-    private boolean _hasCreatedBirthRecords = false;
 
     //NOTE: use 0-23H to be compatible w/ client-side Ext4 fields
     protected static final SimpleDateFormat _tf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
@@ -77,7 +76,6 @@ public abstract class AbstractGenericONPRC_EHRTest extends AbstractGenericEHRTes
     protected static String[] SUBJECTS = {"12345", "23456", "34567", "45678", "56789"};
     protected static String[] ROOMS = {"Room1", "Room2", "Room3"};
     protected static String[] CAGES = {"A1", "B2", "A3"};
-    protected static Integer[] PROJECTS = {12345, 123456, 1234567};
 
     @Override
     public List<String> getAssociatedModules()
@@ -110,7 +108,11 @@ public abstract class AbstractGenericONPRC_EHRTest extends AbstractGenericEHRTes
                 new ModulePropertyValue("ONPRC_Billing", "/" + getProjectName(), "BillingContainer_Public", "/" + getContainerPath()),
                 new ModulePropertyValue("SLA", "/" + getProjectName(), "SLAContainer", "/" + getContainerPath()),
                 new ModulePropertyValue("ONPRC_EHR", "/" + getProjectName(), "DCM_NHP_Resources_Container", "/" + getContainerPath()),
-                new ModulePropertyValue("ONPRC_EHR", "/" + getProjectName(), "MHC_Container", "/" + getContainerPath())
+                new ModulePropertyValue("ONPRC_EHR", "/" + getProjectName(), "MHC_Container", "/" + getContainerPath()),
+                // Set values for rudimentary validation of SSRS reporting links
+                new ModulePropertyValue("ONPRC_EHR", "/" + getProjectName(), "SSRSReportFolder", "DummySSRSFolder"),
+                // Treat the LabKey instance as the SSRS target. It'll give a 404 but it'll be enough for testing that we generate links
+                new ModulePropertyValue("ONPRC_EHR", "/" + getProjectName(), "SSRSServerURL", WebTestHelper.getBaseURL())
         );
     }
 
@@ -178,8 +180,6 @@ public abstract class AbstractGenericONPRC_EHRTest extends AbstractGenericEHRTes
 
         //force caching of demographics on new IDs.
         cacheIds(createdIds);
-
-        _hasCreatedBirthRecords = true;
     }
     @Override
     protected void doExtraPreStudyImportSetup() throws IOException, CommandException
