@@ -112,14 +112,13 @@ import java.util.Collections;
 
 /**
  * User: jonesga
- * Date: 6/26/2018
+ * Date: 6/18/2025
  * Change of ONPRC Module Number
  */
 public class ONPRC_EHRModule extends ExtendedSimpleModule
 {
     public static final String NAME = "ONPRC_EHR";
     public static final String CONTROLLER_NAME = "onprc_ehr";
-
     @Override
     public String getName()
     {
@@ -127,10 +126,9 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
     }
 
     @Override
-    /*Update to 24.012*/
     public @Nullable Double getSchemaVersion()
     {
-        return 24.012;
+        return 24.014;
     }
 
     @Override
