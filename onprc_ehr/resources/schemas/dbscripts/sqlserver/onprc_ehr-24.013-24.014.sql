@@ -1,4 +1,6 @@
-/****** Object:  StoredProcedure [audit].[ArchiveAuditTable]    Script Date: 6/17/2025 1:40:29 PM ******/
+/****** Object:  StoredProcedure [audit].[ArchiveAuditTable]
+*Update to puish 2025-0618
+Script Date: 6/17/2025 1:40:29 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
