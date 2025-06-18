@@ -27,7 +27,10 @@ EHR.model.DataModelManager.registerMetadata('Pairing_Properties', {
 
                 editorConfig: {
                     xtype: 'onprc_ehr-pairingcombo',
-                    defaultSubset: 'PairingStarttype'
+                    defaultSubset: 'PairingStarttype',
+                    columnConfig: {
+                        width: 300
+                    }
                 }
             },
 
@@ -44,6 +47,9 @@ EHR.model.DataModelManager.registerMetadata('Pairing_Properties', {
             endeventType: {
                 lookup: {
                     sort: 'sort_order'
+                },
+                columnConfig: {
+                    width: 200
                 }
             },
 

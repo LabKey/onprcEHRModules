@@ -146,7 +146,7 @@ Ext4.define('ONPRC_EHR.form.field.pairingCombo', {
                 var me = this;
                 me.pairingStore.on('load', function(){
                     me.ensureRecord(val);
-                    //NOTE: if the value becomes NULL, it is likely because a user clicked on the combo prior to SNOMED store loading.
+                    //NOTE: if the value becomes NULL, it is likely because a user clicked on the combo prior to pairing store loading.
                     if (!me.getValue()) {
                         me.setValue(val);
                     }
@@ -199,7 +199,7 @@ Ext4.define('ONPRC_EHR.form.field.pairingCombo', {
             labelWidth: 120,
             width: 380,
             valueField: 'value',
-            displayField: 'value',
+            displayField: 'title',
             queryMode: 'local',
             initialValue: this.activeSubset,
             value: this.activeSubset,

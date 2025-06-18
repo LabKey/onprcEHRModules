@@ -25,6 +25,7 @@
                     </column>
                     <column columnName="eventtype">
                         <columnTitle>Start Type</columnTitle>
+                        <displayWidth>200</displayWidth>
                         <fk>
                             <fkDbSchema>sla</fkDbSchema>
                             <fkTable>Reference_Data</fkTable>
