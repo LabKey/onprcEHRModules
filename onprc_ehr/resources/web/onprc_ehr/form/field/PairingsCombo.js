@@ -45,7 +45,7 @@ Ext4.define('ONPRC_EHR.form.field.pairingCombo', {
                 schemaName: 'sla',
                 storeId: 'pairingStore_' + this.id,
                 queryName: 'Reference_Data',
-                columns: 'value,columnnName',
+                columns: 'value,columnName',
                 filterArray: [LABKEY.Filter.create('enddate', null, LABKEY.Filter.Types.ISBLANK)],
                 sort: 'value',
                 maxRows: 0,
@@ -209,7 +209,7 @@ Ext4.define('ONPRC_EHR.form.field.pairingCombo', {
                 type: 'labkey-store',
                 schemaName: 'ehr_lookups',
                 queryName: 'pairing_Subsets',
-                columns: 'value,columnnName,title',
+                columns: 'value,columnName,title',
                 sort: 'value',
                 autoLoad: true,
                 listeners: {

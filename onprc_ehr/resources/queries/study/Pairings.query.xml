@@ -77,12 +77,23 @@
                         <columnTitle>End Date</columnTitle>
                     </column>
 
+<!--                    <column columnName="endeventType">-->
+<!--                        <columnTitle>End Type</columnTitle>-->
+<!--                        <fk>-->
+<!--                            <fkDbSchema>onprc_ehr</fkDbSchema>-->
+<!--                            <fkTable>PairingEndType</fkTable>-->
+<!--                            <fkColumnName>value</fkColumnName>-->
+<!--                        </fk>-->
+<!--                    </column>-->
                     <column columnName="endeventType">
                         <columnTitle>End Type</columnTitle>
+                        <displayWidth>200</displayWidth>
                         <fk>
-                            <fkDbSchema>onprc_ehr</fkDbSchema>
-                            <fkTable>PairingEndType</fkTable>
+                            <fkFolderPath>/ONPRC/EHR</fkFolderPath>
+                            <fkDbSchema>sla</fkDbSchema>
+                            <fkTable>Reference_Data</fkTable>
                             <fkColumnName>value</fkColumnName>
+
                         </fk>
                     </column>
 
