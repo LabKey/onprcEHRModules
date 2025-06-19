@@ -10,6 +10,10 @@
                 <columns>
                     <column columnName="Id">
                     </column>
+                    <column columnName="infant_ID">
+                        <isHidden>false</isHidden>
+                        <columnTitle>Infant ID</columnTitle>
+                    </column>
                     <column columnName="lowestcage">
                         <columnTitle>Pair Id</columnTitle>
                         <description>This is used to identify the lowest cage number of the pair.  It is used to determine which animals in the group are considered part of the pair.</description>
@@ -27,12 +31,27 @@
                         <columnTitle>Start Type</columnTitle>
                         <displayWidth>200</displayWidth>
                         <fk>
+                           <fkFolderPath>/ONPRC/EHR</fkFolderPath>
                             <fkDbSchema>sla</fkDbSchema>
                             <fkTable>Reference_Data</fkTable>
                             <fkColumnName>value</fkColumnName>
 
                         </fk>
                     </column>
+<!--                    <column columnName="eventtype">-->
+<!--                        <columnTitle>Start Type</columnTitle>-->
+<!--                        <fk>-->
+<!--                            <fkDbSchema>onprc_ehr</fkDbSchema>-->
+<!--                            <fkTable>PairingStartType</fkTable>-->
+<!--                            <fkColumnName>value</fkColumnName>-->
+<!--                        </fk>-->
+<!--                    </column>-->
+
+                    <column columnName="prior_group_housing">
+                        <isHidden>false</isHidden>
+                        <columnTitle>Prior Group Housing</columnTitle>
+                    </column>
+
                     <column columnName="remark">
                         <columnTitle>Start Remark</columnTitle>
                         <displayWidth>300</displayWidth>
@@ -84,7 +103,10 @@
                             <fkColumnName>value</fkColumnName>
                         </fk>
                     </column>
-
+                    <column columnName="other_infant">
+                        <isHidden>false</isHidden>
+                        <columnTitle>Other Infant</columnTitle>
+                    </column>
                     <column columnName="remark2">
                         <columnTitle>End Remark</columnTitle>
                         <displayWidth>300</displayWidth>
@@ -110,6 +132,7 @@
                     <column columnName="project">
                         <isHidden>true</isHidden>
                     </column>
+
                 </columns>
             </table>
         </tables>
