@@ -34,6 +34,7 @@ ONPRC.Utils = new function(){
                 schemaName: 'sla',
                 queryName: 'Reference_Data',
                 columns: 'value, columnName',
+                filterArray: [LABKEY.Filter.create('enddate', null, LABKEY.Filter.Types.ISBLANK)],
                 sort: 'value',
                 storeId: storeId,
                 autoLoad: true,
