@@ -48,9 +48,11 @@ EHR.model.DataModelManager.registerMetadata('Pairing_Properties', {
                     xtype: 'onprc_ehr-pairingcombo',
                     defaultSubset: 'PairingEndtype',
                     columnConfig: {
-                        width: 300
+                        width: 500
                     }
+
                 }
+
             },
 
             enddate: {

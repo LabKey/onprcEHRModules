@@ -14,7 +14,6 @@
  */
 
 
-ONPRC.Utils.getpairingStore();
 
 Ext4.define('ONPRC_EHR.form.field.pairingCombo', {
         extend: 'Ext.form.field.ComboBox',
@@ -209,7 +208,7 @@ Ext4.define('ONPRC_EHR.form.field.pairingCombo', {
                 type: 'labkey-store',
                 schemaName: 'ehr_lookups',
                 queryName: 'pairing_Subsets',
-                columns: 'value,columnName,title',
+                columns: 'value,title',
                 sort: 'value',
                 autoLoad: true,
                 listeners: {
