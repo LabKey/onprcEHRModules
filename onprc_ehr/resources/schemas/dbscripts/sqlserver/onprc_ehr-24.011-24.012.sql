@@ -6,7 +6,7 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-ALTER PROCEDURE [audit].[InitializeArchiveEnvironment]
+CREATE PROCEDURE audit.InitializeArchiveEnvironment
     @SourceDB NVARCHAR(128),
     @DestDB NVARCHAR(128),
     @SchemaName NVARCHAR(128)

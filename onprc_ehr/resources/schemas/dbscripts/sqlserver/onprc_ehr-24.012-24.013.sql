@@ -1,18 +1,18 @@
 /****** Object:  StoredProcedure [audit].[GetAuditTables]
   *Update to puish 2025-0618
 Script Date: 6/17/2025 1:40:29 PM ******/
- */
+
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-ALTER PROCEDURE [audit].[GetAuditTables]
+CREATE PROCEDURE audit.GetAuditTables
 AS
 BEGIN
     SET NOCOUNT ON;
 
     DECLARE
-@SourceDB NVARCHAR(128) = 'Labkey_next_GJ',
+@SourceDB NVARCHAR(128) = 'Labkey_GJ',
         @SchemaName NVARCHAR(128) = 'audit',
         @SQL NVARCHAR(MAX);
 
