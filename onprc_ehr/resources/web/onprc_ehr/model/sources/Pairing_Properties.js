@@ -15,6 +15,9 @@ EHR.model.DataModelManager.registerMetadata('Pairing_Properties', {
 
             outcome: {
                 allowBlank: false,
+                columnConfig: {
+                    width: 160
+                },
                 lookup: {
                     filterArray: [
                         LABKEY.Filter.create('date_disabled', null, LABKEY.Filter.Types.ISBLANK)
@@ -26,16 +29,20 @@ EHR.model.DataModelManager.registerMetadata('Pairing_Properties', {
             eventtype: {
                 editorConfig: {
                     xtype: 'onprc_ehr-pairingcombo',
-                    defaultSubset: 'PairingStarttype',
-                    columnConfig: {
-                        width: 300
-                    }
+                    defaultSubset: 'PairingStarttype'
+                },
+                columnConfig: {
+                    width: 150
                 }
             },
 
 
             goal: {
                 allowBlank: false,
+                header: 'Divider Goal',
+                columnConfig: {
+                    width: 170
+                },
                 lookup: {
                     filterArray: [
                         LABKEY.Filter.create('date_disabled', null, LABKEY.Filter.Types.ISBLANK)
@@ -46,13 +53,11 @@ EHR.model.DataModelManager.registerMetadata('Pairing_Properties', {
             endeventType: {
                 editorConfig: {
                     xtype: 'onprc_ehr-pairingcombo',
-                    defaultSubset: 'PairingEndtype',
-                    columnConfig: {
-                        width: 500
-                    }
-
+                    defaultSubset: 'PairingEndtype'
+                },
+                columnConfig: {
+                    width: 150
                 }
-
             },
 
             enddate: {
@@ -61,7 +66,9 @@ EHR.model.DataModelManager.registerMetadata('Pairing_Properties', {
 
             separationreason: {
                 allowBlank: true,
-
+                columnConfig: {
+                    width: 160
+                },
                 lookup: {
                     filterArray: [
                         LABKEY.Filter.create('date_disabled', null, LABKEY.Filter.Types.ISBLANK)
@@ -72,7 +79,7 @@ EHR.model.DataModelManager.registerMetadata('Pairing_Properties', {
             observation: {
                 allowBlank: true,
                 columnConfig: {
-                    width: 200
+                    width: 170
                 },
                 lookup: {
                     filterArray: [
@@ -81,20 +88,25 @@ EHR.model.DataModelManager.registerMetadata('Pairing_Properties', {
                 }
 
             },
-
             remark2: {
                     xtype: 'textareafield',
-                    width: 400,
-
+                    columnConfig: {
+                    width: 150
+                    }
                 },
             room: {
                 allowBlank: false,
+                columnConfig: {
+                    width: 130
+                }
               },
             remark: {
-                    width: 400
-                },
+                columnConfig: {
+                    width: 100
+                }
+             }
 
-            }
+          }
 
     }
 });
