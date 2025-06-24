@@ -86,7 +86,6 @@ EHR.model.DataModelManager.registerMetadata('Pairing_Properties', {
                         LABKEY.Filter.create('date_disabled', null, LABKEY.Filter.Types.ISBLANK)
                     ]
                 }
-
             },
             remark2: {
                     xtype: 'textareafield',
@@ -100,6 +99,12 @@ EHR.model.DataModelManager.registerMetadata('Pairing_Properties', {
                     width: 130
                 }
               },
+            prior_group_housing: {
+                allowBlank: false,
+                columnConfig: {
+                    width: 100
+                }
+            },
             remark: {
                 columnConfig: {
                     width: 100
