@@ -2626,7 +2626,33 @@ public class ONPRC_EHRTriggerHelper
             demographics.getUpdateService().updateRows(_user, _container, toUpdate, oldKeys, null, getExtraContext());
         }
     }
+    public void closeActivePairingsRecords(List<Map<String, Object>> records) throws Exception
+    {
+        TableInfo housing = getTableInfo("study", "pairings");
+        List<Map<String, Object>> toUpdate = new ArrayList<>();
+        List<Map<String, Object>> oldKeys = new ArrayList<>();
 
+        //sort on date
+        records = new ArrayList<>(records);
+        records.sort(new Comparator<Map<String, Object>>()
+        {
+            @Override
+            public int compare(Map<String, Object> o1, Map<String, Object> o2)
+            {
+                try
+                {
+                    Date date = dateTimeFormat.parse(o1.get("date").toString());
+                    Date date2 = dateTimeFormat.parse(o2.get("date").toString());
+
+                    return date == null ? -1 : date.compareTo(date2);
+                }
+                catch (ParseException e)
+                {
+                    return 0;
+                }
+            }
+        });
+    }
     public void recalculateAllVetAssignmentRecords()
     {
         EHRDemographicsService.get().recalculateForAllIdsInCache(_container, "onprc_ehr", "vet_assignment", true);
