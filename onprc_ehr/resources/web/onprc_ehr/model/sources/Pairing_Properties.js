@@ -120,10 +120,7 @@ EHR.model.DataModelManager.registerMetadata('Pairing_Properties', {
             },
             other_infant: {
                 xtype: 'onprc_ehr-infantentryfield',
-                // editorConfig: {
-                //     idFieldIndex: 'Id',
-                //     cageFieldIndex: 'other_infant'
-                // },
+
                 columnConfig: {
                     width: 160,
                     showLink: false
