@@ -113,6 +113,7 @@ EHR.model.DataModelManager.registerMetadata('Pairing_Properties', {
                 }
             },
             duration: {
+                xtype: 'onprc_ehr-durationentryfield',
                 allowBlank:true,
                 columnConfig: {
                     width: 100
@@ -120,10 +121,8 @@ EHR.model.DataModelManager.registerMetadata('Pairing_Properties', {
             },
             other_infant: {
                 xtype: 'onprc_ehr-infantentryfield',
-
                 columnConfig: {
-                    width: 160,
-                    showLink: false
+                    width: 160
                 }
             },
             remark: {
