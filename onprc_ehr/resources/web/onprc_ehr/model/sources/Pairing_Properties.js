@@ -32,7 +32,7 @@ EHR.model.DataModelManager.registerMetadata('Pairing_Properties', {
                     defaultSubset: 'PairingStarttype'
                 },
                 columnConfig: {
-                    width: 150
+                    width: 200
                 }
             },
 
@@ -56,7 +56,7 @@ EHR.model.DataModelManager.registerMetadata('Pairing_Properties', {
                     defaultSubset: 'PairingEndtype'
                 },
                 columnConfig: {
-                    width: 150
+                    width: 200
                 }
             },
 
@@ -87,12 +87,19 @@ EHR.model.DataModelManager.registerMetadata('Pairing_Properties', {
                     ]
                 }
             },
-            remark2: {
+            other_IDs: {
                     xtype: 'textareafield',
+                    header:'Other ID',
                     columnConfig: {
-                    width: 150
+                    width: 200
                     }
                 },
+            remark2: {
+                xtype: 'textareafield',
+                columnConfig: {
+                    width: 200
+                }
+            },
             room: {
                 allowBlank: false,
                 columnConfig: {
@@ -100,14 +107,32 @@ EHR.model.DataModelManager.registerMetadata('Pairing_Properties', {
                 }
               },
             prior_group_housing: {
-                allowBlank: false,
+                allowBlank: true,
                 columnConfig: {
                     width: 100
                 }
             },
-            remark: {
+            duration: {
+                allowBlank:true,
                 columnConfig: {
                     width: 100
+                }
+            },
+            other_infant: {
+                xtype: 'onprc_ehr-infantentryfield',
+                // editorConfig: {
+                //     idFieldIndex: 'Id',
+                //     cageFieldIndex: 'other_infant'
+                // },
+                columnConfig: {
+                    width: 160,
+                    showLink: false
+                }
+            },
+            remark: {
+                xtype: 'textareafield',
+                columnConfig: {
+                    width: 200
                 }
              }
 

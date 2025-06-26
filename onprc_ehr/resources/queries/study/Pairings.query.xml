@@ -24,6 +24,14 @@
                     <column columnName="cage">
                         <columnTitle>Cage</columnTitle>
                     </column>
+                    <column columnName="other_IDs">
+                        <isHidden>false</isHidden>
+                        <columnTitle>Other ID</columnTitle>
+                    </column>
+                    <column columnName="other_infant">
+                        <isHidden>false</isHidden>
+                        <columnTitle>Other Infant</columnTitle>
+                    </column>
                     <column columnName="date">
                         <columnTitle>Start Date</columnTitle>
                     </column>
@@ -98,22 +106,20 @@
                             <fkColumnName>value</fkColumnName>
                         </fk>
                     </column>
-                    <column columnName="other_infant">
-                        <isHidden>false</isHidden>
-                        <columnTitle>Other Infant</columnTitle>
-                    </column>
 
-                    <column columnName="remark2">
+                    <column columnName="duration">
+                        <columnTitle>Duration</columnTitle>
+                    </column>                    <column columnName="remark2">
                         <columnTitle>End Remark</columnTitle>
                         <displayWidth>300</displayWidth>
                     </column>
-
 
                     <column columnName="pairid">
                         <columnTitle>Pair ID</columnTitle>
                         <isHidden>true</isHidden>
                         <description>This field is used to differentiate pairs.  By convention is should usually be the lowest cage number in the group; however, it does not need to match this</description>
                     </column>
+
                     <column columnName="performedby">
                         <columnTitle>Performed By</columnTitle>
                     </column>
