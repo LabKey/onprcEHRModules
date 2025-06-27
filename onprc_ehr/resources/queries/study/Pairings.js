@@ -6,6 +6,8 @@
 
 require("ehr/triggers").initScript(this);
 
+var ONPRC_triggerHelper = new org.labkey.onprc_ehr.query.ONPRC_EHRTriggerHelper(LABKEY.Security.currentUser.id, LABKEY.Security.currentContainer.id);
+
 function onInit(event, helper) {
     helper.setScriptOptions({
         errorSeverityForImproperHousing: 'INFO'

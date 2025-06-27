@@ -2626,11 +2626,13 @@ public class ONPRC_EHRTriggerHelper
             demographics.getUpdateService().updateRows(_user, _container, toUpdate, oldKeys, null, getExtraContext());
         }
     }
+
     public void closeActivePairingsRecords(List<Map<String, Object>> records) throws Exception
     {
         TableInfo housing = getTableInfo("study", "pairings");
         List<Map<String, Object>> toUpdate = new ArrayList<>();
         List<Map<String, Object>> oldKeys = new ArrayList<>();
+
 
         //sort on date
         records = new ArrayList<>(records);
@@ -2652,7 +2654,56 @@ public class ONPRC_EHRTriggerHelper
                 }
             }
         });
+
+        Set<String> encounteredLsids = new HashSet<>();
+        for (Map<String, Object> row : records)
+        {
+            Date date = dateTimeFormat.parse(row.get("date").toString());
+            if (date.getHours() == 0 && date.getMinutes() == 0)
+            {
+                Exception e = new Exception();
+                _log.error("Attempting to terminate study details records with a rounded date.  This might indicate upstream code is rounding the date: " + dateTimeFormat.format(date), e);
+            }
+
+            SimpleFilter filter = new SimpleFilter(FieldKey.fromString("Id"), row.get("Id"));
+            filter.addCondition(FieldKey.fromString("enddate"), null, CompareType.ISBLANK);
+
+            //we want to only close those records starting prior to this record
+            filter.addCondition(FieldKey.fromString("date"), date, CompareType.LTE);
+            filter.addCondition(FieldKey.fromString("objectid"), row.get("objectid"), CompareType.NEQ_OR_NULL);
+            if (!encounteredLsids.isEmpty())
+            {
+                filter.addCondition(FieldKey.fromString("lsid"), encounteredLsids, CompareType.NOT_IN);
+            }
+
+            TableSelector ts = new TableSelector(housing, Collections.singleton("lsid"), filter, null);
+            List<String> ret = ts.getArrayList(String.class);
+            if (!ret.isEmpty())
+            {
+                encounteredLsids.addAll(ret);
+                for (String lsid : ret)
+                {
+                    Map<String, Object> r = new CaseInsensitiveHashMap<>();
+                    r.put("lsid", lsid);
+                    r.put("enddate", date);
+                    toUpdate.add(r);
+
+                    Map<String, Object> keyMap = new CaseInsensitiveHashMap<>();
+                    keyMap.put("lsid", lsid);
+                    oldKeys.add(keyMap);
+                }
+            }
+        }
+
+        if (!toUpdate.isEmpty())
+        {
+            _log.info("closing study pairing records: " + toUpdate.size());
+            Map<String, Object> context = getExtraContext();
+            context.put("skipAnnounceChangedParticipants", true);
+            housing.getUpdateService().updateRows(getUser(), getContainer(), toUpdate, oldKeys, null, context);
+        }
     }
+
     public void recalculateAllVetAssignmentRecords()
     {
         EHRDemographicsService.get().recalculateForAllIdsInCache(_container, "onprc_ehr", "vet_assignment", true);
