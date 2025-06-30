@@ -1,3 +1,8 @@
+/*Revised : 2025-06030
+        GjOnes ga
+        Thsi modified the query to allow blank end dates to be evaluated
+ */
+ */
 SELECT ogasynch.lastIndexed,
        ogasynch.modifiedBy,
        ogasynch.container,
