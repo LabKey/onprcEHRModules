@@ -4,9 +4,9 @@
  * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
  */
 
-Ext4.define('ONPRC_EHR.form.field.InfantEntryField', {
+Ext4.define('ONPRC_EHR.form.field.PairedIDEntryField', {
     extend: 'LABKEY.ext4.ComboBox',
-    alias: 'widget.onprc_ehr-infantentryfield',
+    alias: 'widget.onprc_ehr-pairedidentryfield',
 
 
     trigger1Cls: 'x4-form-search-trigger',
@@ -34,8 +34,8 @@ Ext4.define('ONPRC_EHR.form.field.InfantEntryField', {
         this.queryValue(rec, function(ret){
             Ext4.Msg.hide();
 
-            if (ret && ret.InfantCageMate){
-                this.setValue(ret.InfantCageMate);
+            if (ret && ret.adultcagemate){
+                this.setValue(ret.adultcagemate);
                 }
         }, true);
     },
@@ -45,8 +45,8 @@ Ext4.define('ONPRC_EHR.form.field.InfantEntryField', {
 
         LABKEY.Query.selectRows({
             schemaName: 'study',
-            queryName: 'CageMateInfant',
-            columns: 'Id,InfantCageMate',
+            queryName: 'CageMateAdults',
+            columns: 'Id,adultcagemate',
             filterArray: [
                 LABKEY.Filter.create('Id', id , LABKEY.Filter.Types.EQUAL)
             ],
