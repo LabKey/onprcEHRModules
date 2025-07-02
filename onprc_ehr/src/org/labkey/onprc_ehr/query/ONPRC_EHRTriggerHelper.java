@@ -2356,7 +2356,7 @@ public class ONPRC_EHRTriggerHelper
     }
 
 
-    //Added 3-6-2019 Blasa
+    //Modified 7-2-2025 Blasa
     public void sendProjectNotifications(Integer projectid)
     {
 
@@ -2381,7 +2381,7 @@ public class ONPRC_EHRTriggerHelper
         Date roundedMax = new Date();
         roundedMax = DateUtils.truncate(roundedMax, Calendar.DATE);
 
-        TableInfo ti = getTableInfo("ehr", "project");
+        TableInfo ti = getTableInfo("onprc_ehr", "projectNotication");
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("project"), projectid);
         filter.addCondition(FieldKey.fromString("enddateCoalesced"), roundedMax, CompareType.GTE);
 
@@ -2394,7 +2394,7 @@ public class ONPRC_EHRTriggerHelper
         names.add(FieldKey.fromString("investigatorId"));
         names.add(FieldKey.fromString("startdate"));
         names.add(FieldKey.fromString("enddate"));
-        names.add(FieldKey.fromString("project"));
+        names.add(FieldKey.fromString("previousdate"));
 
         final Map<FieldKey, ColumnInfo> colKeys = QueryService.get().getColumns(ti, names);
         final ColumnInfo protocolColumn = colKeys.get(protocolFieldKey);
