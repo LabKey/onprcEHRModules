@@ -114,6 +114,7 @@ EHR.model.DataModelManager.registerMetadata('Pairing_Properties', {
             },
             lowestcage: {
                 xtype: 'textareafield',
+                height:50,
                 columnConfig: {
                     width: 200
                 }
