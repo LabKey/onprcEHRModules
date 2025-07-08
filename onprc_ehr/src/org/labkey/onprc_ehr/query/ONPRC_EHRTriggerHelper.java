@@ -2381,7 +2381,7 @@ public class ONPRC_EHRTriggerHelper
         Date roundedMax = new Date();
         roundedMax = DateUtils.truncate(roundedMax, Calendar.DATE);
 
-        TableInfo ti = getTableInfo("onprc_ehr", "projectNotication");
+        TableInfo ti = getTableInfo("onprc_ehr", "projectNotification");
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("project"), projectid);
         filter.addCondition(FieldKey.fromString("enddateCoalesced"), roundedMax, CompareType.GTE);
 
