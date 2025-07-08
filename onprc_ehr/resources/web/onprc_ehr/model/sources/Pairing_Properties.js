@@ -112,6 +112,12 @@ EHR.model.DataModelManager.registerMetadata('Pairing_Properties', {
                     width: 100
                 }
             },
+            lowestcage: {
+                xtype: 'textareafield',
+                columnConfig: {
+                    width: 200
+                }
+            },
             duration: {
                 xtype: 'onprc_ehr-durationentryfield',
                 allowBlank:true,
