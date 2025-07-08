@@ -5,7 +5,8 @@ SELECT  proj.project,
         group_concat(proj.investigatorid) as investigatorid,
         group_concat(proj.startdate) as startdate,
         group_concat(proj.enddate) as enddate,
-        group_concat(cps.enddate) as previousdate
+        group_concat(cps.enddate) as previousdate,
+        group_concat(proj.protocol.external_iD) as protocolID
 
 FROM ehr.project proj, onprc_ehr.CenterProjectsTemp cps
 WHERE (proj.enddate is null or proj.enddate >= now() )

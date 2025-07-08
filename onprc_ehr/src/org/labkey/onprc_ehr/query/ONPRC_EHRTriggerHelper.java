@@ -2388,7 +2388,7 @@ public class ONPRC_EHRTriggerHelper
         Sort sort = new Sort("name");
 
         List<FieldKey> names= new ArrayList<>();
-        FieldKey protocolFieldKey = FieldKey.fromString("protocol/external_id");
+        FieldKey protocolFieldKey = FieldKey.fromString("protocolID");
         names.add(protocolFieldKey);
         names.add(FieldKey.fromString("name"));
         names.add(FieldKey.fromString("investigatorId"));
