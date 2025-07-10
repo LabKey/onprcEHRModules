@@ -2383,7 +2383,6 @@ public class ONPRC_EHRTriggerHelper
 
         TableInfo ti = getTableInfo("onprc_ehr", "projectNotification");
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("project"), projectid);
-//        filter.addCondition(FieldKey.fromString("enddateCoalesced"), roundedMax, CompareType.GTE);
 
         Sort sort = new Sort("name");
 
