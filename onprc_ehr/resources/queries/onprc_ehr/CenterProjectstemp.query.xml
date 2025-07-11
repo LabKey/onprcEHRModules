@@ -4,7 +4,7 @@
             <table tableName="CenterProjectsTemp" tableDbType="TABLE">
                 <tableTitle>Center Projects Historical Data</tableTitle>
                 <columns>
-                        <column columnName="Searchid">
+                    <column columnName="Searchid">
                         <isHidden>true</isHidden>
                     </column>
                     <column columnName="project">
@@ -28,21 +28,25 @@
                     </column>
                     <column columnName="account"/>
                     <column columnName="title"/>
-                    <column columnName="research"/>
-                    <column columnName="createdby"/>
-                    <column columnName="created"/>
-                    <column columnName="modified"/>
-                    <column columnName="modifiedby"/>
-                    <column columnName="startdate"/>
-                    <column columnName="enddate"/>
-                    <column columnName="displayname"/>
+                    <column columnName="research">
+                        <isHidden>true</isHidden>
+                    </column>
                     <column columnName="investigatorId">
+                        <columnTitle>Investigator</columnTitle>
                         <fk>
                             <fkDbSchema>onprc_ehr</fkDbSchema>
                             <fkTable>investigators</fkTable>
                             <fkColumnName>rowid</fkColumnName>
                             <fkDisplayColumnName>lastName</fkDisplayColumnName>
                         </fk>
+                    </column>
+                    <column columnName="startdate">
+                        <columnTitle>Start Date</columnTitle>
+                        <formatString>Date</formatString>
+                    </column>
+                    <column columnName="enddate">
+                        <columnTitle>End Date</columnTitle>
+                        <formatString>Date</formatString>
                     </column>
                     <column columnName="use_category">
                         <fk>
@@ -60,12 +64,27 @@
                             <fkDisplayColumnName useRawValue="true"/>
                         </fk>
                     </column>
-
                     <column columnName="objectid">
                          <isHidden>true</isHidden>
                     </column>
+                    <column columnName="created">
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="createdby">
+                        <isHidden>true</isHidden>
+                    </column>   <column columnName="created">
+                        <isHidden>true</isHidden>
+                   </column>
+                    <column columnName="modified">
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="modifiedby">
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="displayname">
+                        <isHidden>true</isHidden>
+                    </column>
                     <column columnName="date_posted"/>
-
                 </columns>
             </table>
         </tables>
