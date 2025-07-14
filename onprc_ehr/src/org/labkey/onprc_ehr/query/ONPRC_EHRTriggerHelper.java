@@ -2377,6 +2377,8 @@ public class ONPRC_EHRTriggerHelper
         }
         final StringBuilder html = new StringBuilder();
 
+        SimpleDateFormat stdFormat = new SimpleDateFormat("yyyy-MM-dd");
+
 //        Added: 4-3-2019  R.Blasa
         Date roundedMax = new Date();
         roundedMax = DateUtils.truncate(roundedMax, Calendar.DATE);
@@ -2429,8 +2431,8 @@ public class ONPRC_EHRTriggerHelper
                                {
                                    for (String Investname : ret2)
                                    {
-                                       html.append("<tr><td>" + PageFlowUtil.filter(rs.getString("name"))  + "</td><td>" + PageFlowUtil.filter(rs.getString("protocolID"))  + "</td><td>   " + PageFlowUtil.filter(Investname) + "   </td><td>" +  PageFlowUtil.filter(rs.getString("startdate")) + "</td><td>" +  PageFlowUtil.filter(rs.getString("previousdate")) + "</td><td>" +  PageFlowUtil.filter(rs.getString("enddate")) + "</td></tr>\n");
-                                       break;
+                                           html.append("<tr><td>" + PageFlowUtil.filter(rs.getString("name"))  + "</td><td>" + PageFlowUtil.filter(rs.getString("protocolID"))  + "</td><td>   " + PageFlowUtil.filter(Investname) + "   </td><td>" +  PageFlowUtil.filter(stdFormat.format(rs.getString("startdate"))) + "</td><td>" +  PageFlowUtil.filter(stdFormat.format(rs.getString("previousdate"))) + "</td><td>" +  PageFlowUtil.filter(stdFormat.format(rs.getString("enddate"))) + "</td></tr>\n");
+                                           break;
 
                                    }
                                }
