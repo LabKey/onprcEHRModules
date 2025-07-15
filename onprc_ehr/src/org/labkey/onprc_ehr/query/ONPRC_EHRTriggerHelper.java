@@ -2377,8 +2377,6 @@ public class ONPRC_EHRTriggerHelper
         }
         final StringBuilder html = new StringBuilder();
 
-        SimpleDateFormat stdFormat = new SimpleDateFormat("yyyy-MM-dd");
-
 //        Added: 4-3-2019  R.Blasa
         Date roundedMax = new Date();
         roundedMax = DateUtils.truncate(roundedMax, Calendar.DATE);
