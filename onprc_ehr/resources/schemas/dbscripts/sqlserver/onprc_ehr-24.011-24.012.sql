@@ -1,15 +1,12 @@
-DECLARE @ProcSQL NVARCHAR(MAX);
-
--- Check if the procedure already exists
-IF EXISTS (
+IF NOT EXISTS (
     SELECT 1
     FROM sys.procedures p
-             JOIN sys.schemas s ON p.schema_id = s.schema_id
+    JOIN sys.schemas s ON p.schema_id = s.schema_id
     WHERE p.name = 'ArchiveAuditTables' AND s.name = 'audit'
 )
-    BEGIN
-        SET @ProcSQL = '
-    ALTER PROCEDURE audit.ArchiveAuditTables
+BEGIN
+EXEC('
+    CREATE PROCEDURE audit.ArchiveAuditTables
         @SourceDB NVARCHAR(128) = NULL,
         @DestDB NVARCHAR(128) = ''primeaudit_sandbox'',
         @RetentionYears INT = 1,
@@ -17,6 +14,7 @@ IF EXISTS (
     AS
     BEGIN
         SET NOCOUNT ON;
+        SET XACT_ABORT ON;
 
         -- Set default source DB
         IF @SourceDB IS NULL
@@ -24,7 +22,7 @@ IF EXISTS (
 
         DECLARE @CutoffDate DATETIME = DATEADD(YEAR, -@RetentionYears, GETDATE());
 
-        -- Validate source and destination databases
+        -- Validate databases
         IF NOT EXISTS (SELECT 1 FROM sys.databases WHERE name = @SourceDB)
         BEGIN
             RAISERROR(''Source database "%s" does not exist'', 16, 1, @SourceDB);
@@ -37,15 +35,13 @@ IF EXISTS (
             RETURN;
         END
 
-        -- Create ArchiveAuditLog table if it doesn't exist
-        DECLARE @CreateLogTableSQL NVARCHAR(MAX) = ''
-        IF NOT EXISTS (
-            SELECT 1 FROM '' + QUOTENAME(@DestDB) + ''.INFORMATION_SCHEMA.TABLES
-            WHERE TABLE_SCHEMA = '''''' + @SchemaName + '''''' AND TABLE_NAME = ''''ArchiveAuditLog''''
-        )
-            BEGIN
-                EXEC(''''CREATE TABLE '' + QUOTENAME(@DestDB) + ''.'' + QUOTENAME(@SchemaName) + ''.ArchiveAuditLog (
-                                                                                                                        LogID INT IDENTITY(1,1),
+        -- Ensure log table exists
+        DECLARE @LogTable NVARCHAR(500) = QUOTENAME(@DestDB) + ''.'' + QUOTENAME(@SchemaName) + ''.ArchiveAuditLog'';
+        IF OBJECT_ID(@LogTable, ''U'') IS NULL
+        BEGIN
+            EXEC(''
+                CREATE TABLE '' + @LogTable + '' (
+                    LogID INT IDENTITY(1,1) PRIMARY KEY,
                     TableName NVARCHAR(128) NOT NULL,
                     Operation NVARCHAR(50) NOT NULL,
                     StartTime DATETIME NOT NULL,
@@ -54,149 +50,234 @@ IF EXISTS (
                     RecordsProcessed INT NULL,
                     ErrorMessage NVARCHAR(MAX) NULL,
                     RetentionYears INT NULL
-                    )'''');
-            END'';
+                )
+            '');
+        END
 
-        EXEC sp_executesql @CreateLogTableSQL;
-
-        -- Get list of audit tables
-        CREATE TABLE #TableList (TableName NVARCHAR(128));
-
+        -- Get tables to process
+        CREATE TABLE #Tables (TableName NVARCHAR(128) PRIMARY KEY);
         DECLARE @GetTablesSQL NVARCHAR(MAX) = ''
-        INSERT INTO #TableList
-        SELECT TABLE_NAME
-        FROM '' + QUOTENAME(@SourceDB) + ''.INFORMATION_SCHEMA.TABLES
-        WHERE TABLE_SCHEMA = '''''' + @SchemaName + '''''''';
-
+            INSERT INTO #Tables
+            SELECT t.name
+            FROM '' + QUOTENAME(@SourceDB) + ''.sys.tables t
+            JOIN '' + QUOTENAME(@SourceDB) + ''.sys.schemas s ON t.schema_id = s.schema_id
+            WHERE s.name = '''''' + @SchemaName + ''''''
+        '';
         EXEC sp_executesql @GetTablesSQL;
 
-        -- Cursor to loop through tables
-        DECLARE @CurrentTable NVARCHAR(128);
-        DECLARE TableCursor CURSOR LOCAL FAST_FORWARD FOR
-            SELECT TableName FROM #TableList;
+        DECLARE @TableName NVARCHAR(128), @LogID INT, @RecordsProcessed INT;
+        DECLARE @SrcTable NVARCHAR(500), @DstTable NVARCHAR(500);
+        DECLARE @SQL NVARCHAR(MAX), @ErrorMsg NVARCHAR(MAX);
 
-        OPEN TableCursor;
-        FETCH NEXT FROM TableCursor INTO @CurrentTable;
+        WHILE EXISTS (SELECT 1 FROM #Tables)
+        BEGIN
+            SELECT TOP 1 @TableName = TableName FROM #Tables;
 
-        WHILE @@FETCH_STATUS = 0
-            BEGIN
-                DECLARE @LogID INT;
+            -- Initialize variables
+            SET @SrcTable = QUOTENAME(@SourceDB) + ''.'' + QUOTENAME(@SchemaName) + ''.'' + QUOTENAME(@TableName);
+            SET @DstTable = QUOTENAME(@DestDB) + ''.'' + QUOTENAME(@SchemaName) + ''.'' + QUOTENAME(@TableName);
 
-                -- Insert log entry
-                DECLARE @InsertLogSQL NVARCHAR(MAX) = ''
-                INSERT INTO '' + QUOTENAME(@DestDB) + ''.'' + QUOTENAME(@SchemaName) + ''.ArchiveAuditLog
-                (TableName, Operation, StartTime, Status, RetentionYears)
-                VALUES (@TableName, ''''Archive'''', GETDATE(), ''''Started'''', @RetentionYears);
-                SELECT @LogIDOUT = SCOPE_IDENTITY();'';
+            -- Start log entry
+            INSERT INTO audit.ArchiveAuditLog (
+                TableName, Operation, StartTime, Status, RetentionYears
+            ) VALUES (
+                @TableName, ''Archive'', GETDATE(), ''Started'', @RetentionYears
+            );
+            SET @LogID = SCOPE_IDENTITY();
 
-                EXEC sp_executesql @InsertLogSQL,
-                     N''@TableName NVARCHAR(128), @RetentionYears INT, @LogIDOUT INT OUTPUT'',
-                 @TableName = @CurrentTable, @RetentionYears = @RetentionYears, @LogIDOUT = @LogID OUTPUT;
+            BEGIN TRY
+                -- Create destination table if missing
+                IF OBJECT_ID(@DstTable, ''U'') IS NULL
+                BEGIN
+                    EXEC(''
+                        SELECT * INTO '' + @DstTable + ''
+                        FROM '' + @SrcTable + ''
+                        WHERE 1 = 0
+                    '');
+                END
 
-                BEGIN TRY
-                    DECLARE @FullSourceTable NVARCHAR(512) = QUOTENAME(@SourceDB) + ''.'' + QUOTENAME(@SchemaName) + ''.'' + QUOTENAME(@CurrentTable),
-                        @FullDestTable NVARCHAR(512) = QUOTENAME(@DestDB) + ''.'' + QUOTENAME(@SchemaName) + ''.'' + QUOTENAME(@CurrentTable),
-                        @ColumnList NVARCHAR(MAX) = '''';
+                BEGIN TRANSACTION;
 
-                    -- Create destination table if it doesn't exist
-                    DECLARE @CheckTableSQL NVARCHAR(MAX) = ''
-                    IF NOT EXISTS (
-                        SELECT 1 FROM '' + QUOTENAME(@DestDB) + ''.INFORMATION_SCHEMA.TABLES
-                        WHERE TABLE_SCHEMA = '''''' + @SchemaName + '''''' AND TABLE_NAME = '''''' + @CurrentTable + ''''''
-                    )
-                        BEGIN
-                            SELECT * INTO '' + @FullDestTable + '' FROM '' + @FullSourceTable + '' WHERE 1 = 0;
-                        END'';
-
-                    EXEC sp_executesql @CheckTableSQL;
-
-                    -- Get non-identity columns
-                    CREATE TABLE #Columns (ColumnName NVARCHAR(128), IsIdentity BIT);
-
-                    DECLARE @GetColumnsSQL NVARCHAR(MAX) = ''
-                    INSERT INTO #Columns
-                    SELECT c.name,
-                           COLUMNPROPERTY(c.object_id, c.name, ''''IsIdentity'''')
-                    FROM '' + QUOTENAME(@SourceDB) + ''.sys.columns c
-                JOIN '' + QUOTENAME(@SourceDB) + ''.sys.tables t ON c.object_id = t.object_id
-                        JOIN '' + QUOTENAME(@SourceDB) + ''.sys.schemas s ON t.schema_id = s.schema_id
-                    WHERE s.name = '''''' + @SchemaName + '''''' AND t.name = '''''' + @CurrentTable + '''''''';
-
-                    EXEC sp_executesql @GetColumnsSQL;
-
-                    SELECT @ColumnList = STRING_AGG(QUOTENAME(ColumnName), '', '')
-                    FROM #Columns
-                    WHERE IsIdentity = 0;
-
-                    DROP TABLE #Columns;
-
-                    -- Archive data
-                    BEGIN TRANSACTION;
-
-                    DECLARE @ArchiveSQL NVARCHAR(MAX) = ''
-                    INSERT INTO '' + @FullDestTable + '' ('' + @ColumnList + '')
-                    SELECT '' + @ColumnList + ''
-                    FROM '' + @FullSourceTable + ''
+                -- Archive data
+                SET @SQL = ''
+                    INSERT INTO '' + @DstTable + ''
+                    SELECT *
+                    FROM '' + @SrcTable + ''
                     WHERE Created < @CutoffDate;
 
-                    DELETE FROM '' + @FullSourceTable + ''
-                    WHERE Created < @CutoffDate;'';
+                    DELETE FROM '' + @SrcTable + ''
+                    WHERE Created < @CutoffDate;
+                '';
+                EXEC sp_executesql @SQL, N''@CutoffDate DATETIME'', @CutoffDate;
+                SET @RecordsProcessed = @@ROWCOUNT;
 
-                    EXEC sp_executesql @ArchiveSQL,
-                         N''@CutoffDate DATETIME'',
-                     @CutoffDate = @CutoffDate;
-
-                    DECLARE @RecordsProcessed INT = @@ROWCOUNT;
-
-                    -- Update log
-                    DECLARE @UpdateLogSQL NVARCHAR(MAX) = ''
-                    UPDATE '' + QUOTENAME(@DestDB) + ''.'' + QUOTENAME(@SchemaName) + ''.ArchiveAuditLog
-                    SET RecordsProcessed = @RecordsProcessed,
+                -- Update log
+                UPDATE audit.ArchiveAuditLog
+                SET
                     EndTime = GETDATE(),
-                    Status = ''''Success''''
-                WHERE LogID = @LogID;'';
+                    Status = ''Success'',
+                    RecordsProcessed = @RecordsProcessed
+                WHERE LogID = @LogID;
 
-                    EXEC sp_executesql @UpdateLogSQL,
-                         N''@RecordsProcessed INT, @LogID INT'',
-                     @RecordsProcessed = @RecordsProcessed,
-                     @LogID = @LogID;
+                COMMIT TRANSACTION;
+            END TRY
+            BEGIN CATCH
+                IF @@TRANCOUNT > 0 ROLLBACK TRANSACTION;
 
-                    COMMIT TRANSACTION;
-                END TRY
-                BEGIN CATCH
-                    IF @@TRANCOUNT > 0
-                        ROLLBACK TRANSACTION;
+                SET @ErrorMsg = ''Error archiving '' + @TableName + '': '' + ERROR_MESSAGE();
 
-                    DECLARE @ErrorMessage NVARCHAR(4000) =
-                        ''Error archiving '' + @CurrentTable + '': '' + ERROR_MESSAGE();
+                UPDATE audit.ArchiveAuditLog
+                SET
+                    EndTime = GETDATE(),
+                    Status = ''Error'',
+                    ErrorMessage = @ErrorMsg
+                WHERE LogID = @LogID;
 
-                    DECLARE @UpdateLogSQL_gj NVARCHAR(MAX) = ''
-                    UPDATE '' + QUOTENAME(@DestDB) + ''.'' + QUOTENAME(@SchemaName) + ''.ArchiveAuditLog
-                    SET EndTime = GETDATE(),
-                    Status = ''''Error'''',
-                    ErrorMessage = @ErrorMessage
-                WHERE LogID = @LogID;'';
+                RAISERROR(@ErrorMsg, 16, 1);
+            END CATCH
 
-                    EXEC sp_executesql @UpdateLogSQL_gj,
-                         N''@ErrorMessage NVARCHAR(4000), @LogID INT'',
-                     @ErrorMessage = @ErrorMessage, @LogID = @LogID;
+            DELETE FROM #Tables WHERE TableName = @TableName;
+        END
 
-                    PRINT @ErrorMessage;
-                END CATCH
-
-                FETCH NEXT FROM TableCursor INTO @CurrentTable;
-            END
-
-        CLOSE TableCursor;
-        DEALLOCATE TableCursor;
-
-        DROP TABLE #TableList;
-    END';
+        DROP TABLE #Tables;
+    END');
 END
 ELSE
 BEGIN
-    SET @ProcSQL = REPLACE(@ProcSQL, 'ALTER PROCEDURE', 'CREATE PROCEDURE');
-END
+EXEC('
+    ALTER PROCEDURE audit.ArchiveAuditTables
+        @SourceDB NVARCHAR(128) = NULL,
+        @DestDB NVARCHAR(128) = ''primeaudit_sandbox'',
+        @RetentionYears INT = 1,
+        @SchemaName NVARCHAR(128) = ''audit''
+    AS
+    BEGIN
+        SET NOCOUNT ON;
+        SET XACT_ABORT ON;
 
--- Execute the dynamic SQL
-EXEC sp_executesql @ProcSQL;
+        -- Set default source DB
+        IF @SourceDB IS NULL
+            SET @SourceDB = DB_NAME();
+
+        DECLARE @CutoffDate DATETIME = DATEADD(YEAR, -@RetentionYears, GETDATE());
+
+        -- Validate databases
+        IF NOT EXISTS (SELECT 1 FROM sys.databases WHERE name = @SourceDB)
+        BEGIN
+            RAISERROR(''Source database "%s" does not exist'', 16, 1, @SourceDB);
+            RETURN;
+        END
+
+        IF NOT EXISTS (SELECT 1 FROM sys.databases WHERE name = @DestDB)
+        BEGIN
+            RAISERROR(''Destination database "%s" does not exist'', 16, 1, @DestDB);
+            RETURN;
+        END
+
+        -- Ensure log table exists
+        DECLARE @LogTable NVARCHAR(500) = QUOTENAME(@DestDB) + ''.'' + QUOTENAME(@SchemaName) + ''.ArchiveAuditLog'';
+        IF OBJECT_ID(@LogTable, ''U'') IS NULL
+        BEGIN
+            EXEC(''
+                CREATE TABLE '' + @LogTable + '' (
+                    LogID INT IDENTITY(1,1) PRIMARY KEY,
+                    TableName NVARCHAR(128) NOT NULL,
+                    Operation NVARCHAR(50) NOT NULL,
+                    StartTime DATETIME NOT NULL,
+                    EndTime DATETIME NULL,
+                    Status NVARCHAR(50) NULL,
+                    RecordsProcessed INT NULL,
+                    ErrorMessage NVARCHAR(MAX) NULL,
+                    RetentionYears INT NULL
+                )
+            '');
+        END
+
+        -- Get tables to process
+        CREATE TABLE #Tables (TableName NVARCHAR(128) PRIMARY KEY);
+        DECLARE @GetTablesSQL NVARCHAR(MAX) = ''
+            INSERT INTO #Tables
+            SELECT t.name
+            FROM '' + QUOTENAME(@SourceDB) + ''.sys.tables t
+            JOIN '' + QUOTENAME(@SourceDB) + ''.sys.schemas s ON t.schema_id = s.schema_id
+            WHERE s.name = '''''' + @SchemaName + ''''''
+        '';
+        EXEC sp_executesql @GetTablesSQL;
+
+        DECLARE @TableName NVARCHAR(128), @LogID INT, @RecordsProcessed INT;
+        DECLARE @SrcTable NVARCHAR(500), @DstTable NVARCHAR(500);
+        DECLARE @SQL NVARCHAR(MAX), @ErrorMsg NVARCHAR(MAX);
+
+        WHILE EXISTS (SELECT 1 FROM #Tables)
+        BEGIN
+            SELECT TOP 1 @TableName = TableName FROM #Tables;
+
+            -- Initialize variables
+            SET @SrcTable = QUOTENAME(@SourceDB) + ''.'' + QUOTENAME(@SchemaName) + ''.'' + QUOTENAME(@TableName);
+            SET @DstTable = QUOTENAME(@DestDB) + ''.'' + QUOTENAME(@SchemaName) + ''.'' + QUOTENAME(@TableName);
+
+            -- Start log entry
+            INSERT INTO audit.ArchiveAuditLog (
+                TableName, Operation, StartTime, Status, RetentionYears
+            ) VALUES (
+                @TableName, ''Archive'', GETDATE(), ''Started'', @RetentionYears
+            );
+            SET @LogID = SCOPE_IDENTITY();
+
+            BEGIN TRY
+                -- Create destination table if missing
+                IF OBJECT_ID(@DstTable, ''U'') IS NULL
+                BEGIN
+                    EXEC(''
+                        SELECT * INTO '' + @DstTable + ''
+                        FROM '' + @SrcTable + ''
+                        WHERE 1 = 0
+                    '');
+                END
+
+                BEGIN TRANSACTION;
+
+                -- Archive data
+                SET @SQL = ''
+                    INSERT INTO '' + @DstTable + ''
+                    SELECT *
+                    FROM '' + @SrcTable + ''
+                    WHERE Created < @CutoffDate;
+
+                    DELETE FROM '' + @SrcTable + ''
+                    WHERE Created < @CutoffDate;
+                '';
+                EXEC sp_executesql @SQL, N''@CutoffDate DATETIME'', @CutoffDate;
+                SET @RecordsProcessed = @@ROWCOUNT;
+
+                -- Update log
+                UPDATE audit.ArchiveAuditLog
+                SET
+                    EndTime = GETDATE(),
+                    Status = ''Success'',
+                    RecordsProcessed = @RecordsProcessed
+                WHERE LogID = @LogID;
+
+                COMMIT TRANSACTION;
+            END TRY
+            BEGIN CATCH
+                IF @@TRANCOUNT > 0 ROLLBACK TRANSACTION;
+
+                SET @ErrorMsg = ''Error archiving '' + @TableName + '': '' + ERROR_MESSAGE();
+
+                UPDATE audit.ArchiveAuditLog
+                SET
+                    EndTime = GETDATE(),
+                    Status = ''Error'',
+                    ErrorMessage = @ErrorMsg
+                WHERE LogID = @LogID;
+
+                RAISERROR(@ErrorMsg, 16, 1);
+            END CATCH
+
+            DELETE FROM #Tables WHERE TableName = @TableName;
+        END
+
+        DROP TABLE #Tables;
+    END');
+END
