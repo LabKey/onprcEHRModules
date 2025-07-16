@@ -1,14 +1,15 @@
 /****** Object:  StoredProcedure [audit].[ArchiveAuditTables]    Script Date: 7/16/2025 7:59:34 AM ******/
-SET ANSI_NULLS ON
+SET ANSI_NULLS ON;
 GO
-SET QUOTED_IDENTIFIER ON
+SET QUOTED_IDENTIFIER ON;
 GO
-/*Update to handle size issues with Source DB*/
+
 ALTER PROCEDURE [audit].[ArchiveAuditTables]
 AS
 BEGIN
     SET NOCOUNT ON;
 
+    -- Declare variables
     DECLARE @SourceDB NVARCHAR(128) = DB_NAME(),
             @DestDB NVARCHAR(128) = 'primeaudit_sandbox',
             @RetentionYears INT = 1,
@@ -16,18 +17,21 @@ BEGIN
 
     DECLARE @CutoffDate DATETIME = DATEADD(YEAR, -@RetentionYears, GETDATE());
 
+    -- Validate if source database exists
     IF NOT EXISTS(SELECT 1 FROM sys.databases WHERE name = @SourceDB)
-BEGIN
-        RAISERROR('Source database "%s" does not exist', 16, 1, @SourceDB);
+    BEGIN
+        RAISERROR('Source database "%s" does not exist.', 16, 1, @SourceDB);
         RETURN;
-END
+    END
 
+    -- Validate if destination database exists
     IF NOT EXISTS(SELECT 1 FROM sys.databases WHERE name = @DestDB)
-BEGIN
-        RAISERROR('Destination database "%s" does not exist', 16, 1, @DestDB);
+    BEGIN
+        RAISERROR('Destination database "%s" does not exist.', 16, 1, @DestDB);
         RETURN;
-END
+    END
 
+    -- Create ArchiveAuditLog table if not exists
     DECLARE @CreateLogTableSQL NVARCHAR(MAX) = '
     IF NOT EXISTS (SELECT 1 FROM ' + QUOTENAME(@DestDB) + '.INFORMATION_SCHEMA.TABLES
                    WHERE TABLE_SCHEMA = ''dbo'' AND TABLE_NAME = ''ArchiveAuditLog'')
@@ -45,9 +49,9 @@ END
             RetentionYears INT NULL
         )'');
     END';
+    EXEC sp_executesql @CreateLogTableSQL;
 
-EXEC sp_executesql @CreateLogTableSQL;
-
+    -- Validate if source schema exists
     DECLARE @SourceSchemaCheck NVARCHAR(MAX) = '
     IF NOT EXISTS (SELECT 1 FROM ' + QUOTENAME(@SourceDB) + '.sys.schemas WHERE name = ''' + @SchemaName + ''')
     BEGIN
