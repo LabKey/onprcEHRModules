@@ -87,13 +87,20 @@ EHR.model.DataModelManager.registerMetadata('Pairing_Properties', {
                     ]
                 }
             },
-            other_IDs: {
+            lowestcage: {
                     xtype: 'onprc_ehr-pairedidentryfield',
-                    header:'Other ID',
+                    // header:'Other ID',
                     columnConfig: {
                     width: 200
                     }
                 },
+            other_IDs: {
+                xtype: 'onprc_ehr-paireddamdentryfield',
+                header:'Other ID',
+                columnConfig: {
+                    width: 200
+                }
+            },
             remark2: {
                 xtype: 'textareafield',
                 columnConfig: {
@@ -112,13 +119,7 @@ EHR.model.DataModelManager.registerMetadata('Pairing_Properties', {
                     width: 100
                 }
             },
-            lowestcage: {
-                xtype: 'textareafield',
-                height:50,
-                columnConfig: {
-                    width: 200
-                }
-            },
+
             duration: {
                 xtype: 'onprc_ehr-durationentryfield',
                 allowBlank:true,
