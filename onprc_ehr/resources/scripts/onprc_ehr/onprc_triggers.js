@@ -1272,6 +1272,14 @@ exports.init = function(EHR){
                     EHR.Server.Utils.addError(scriptErrors, 'project', msg, 'ERROR');
                 }
             }
+
+           else if (row.project && (row.date != null && (row.enddate == null || row.enddate >= now()) ) ){
+                console.log("project data added, or end date updated " + row.project)
+                var msg = triggerHelper.sendProjectNotifications(row.project);
+                if (msg){
+                    EHR.Server.Utils.addError(scriptErrors, 'project', msg, 'ERROR');
+                }
+            }
         });
 
         //Added 10-5-2022  R.Blasa
