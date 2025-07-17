@@ -1,2 +1,2 @@
 ALTER TABLE onprc_billing.indirectRate
-ALTER COLUMN enddate [data_type] NULL;
+ALTER COLUMN enddate DATETIME NULL;
