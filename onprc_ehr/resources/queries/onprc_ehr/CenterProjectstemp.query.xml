@@ -1,0 +1,94 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="CenterProjectsTemp" tableDbType="TABLE">
+                <tableTitle>Center Projects Historical Data</tableTitle>
+                <columns>
+                    <column columnName="Searchid">
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="project">
+                    <columnTitle>Center Project</columnTitle>
+                        <displayWidth>80</displayWidth>
+                    <fk>
+                        <fkDbSchema>ehr</fkDbSchema>
+                        <fkTable>project</fkTable>
+                        <fkColumnName>project</fkColumnName>
+                        <fkDisplayColumnName>name</fkDisplayColumnName>
+                    </fk>
+                    </column>
+                    <column columnName="protocol">
+                        <columnTitle>IACUC Protocol</columnTitle>
+                        <fk>
+                            <fkDbSchema>ehr</fkDbSchema>
+                            <fkTable>protocol</fkTable>
+                            <fkColumnName>protocol</fkColumnName>
+                            <fkDisplayColumnName>displayName</fkDisplayColumnName>
+                        </fk>
+                    </column>
+                    <column columnName="account"/>
+                    <column columnName="title"/>
+                    <column columnName="research">
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="investigatorId">
+                        <columnTitle>Investigator</columnTitle>
+                        <fk>
+                            <fkDbSchema>onprc_ehr</fkDbSchema>
+                            <fkTable>investigators</fkTable>
+                            <fkColumnName>rowid</fkColumnName>
+                            <fkDisplayColumnName>lastName</fkDisplayColumnName>
+                        </fk>
+                    </column>
+                    <column columnName="startdate">
+                        <columnTitle>Start Date</columnTitle>
+                        <formatString>Date</formatString>
+                    </column>
+                    <column columnName="enddate">
+                        <columnTitle>End Date</columnTitle>
+                        <formatString>Date</formatString>
+                    </column>
+                    <column columnName="use_category">
+                        <fk>
+                            <fkDbSchema>ehr_lookups</fkDbSchema>
+                            <fkTable>project_use_category</fkTable>
+                            <fkColumnName>value</fkColumnName>
+                            <fkDisplayColumnName useRawValue="true"/>
+                        </fk>
+                    </column>
+                    <column columnName="projectType">
+                        <fk>
+                            <fkDbSchema>ehr_lookups</fkDbSchema>
+                            <fkTable>project_types</fkTable>
+                            <fkColumnName>value</fkColumnName>
+                            <fkDisplayColumnName useRawValue="true"/>
+                        </fk>
+                    </column>
+                    <column columnName="objectid">
+                         <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="created">
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="createdby">
+                        <isHidden>true</isHidden>
+                    </column>   <column columnName="created">
+                        <isHidden>true</isHidden>
+                   </column>
+                    <column columnName="modified">
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="modifiedby">
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="displayname">
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="date_posted"/>
+                </columns>
+            </table>
+        </tables>
+    </metadata>
+</query>
+
+
