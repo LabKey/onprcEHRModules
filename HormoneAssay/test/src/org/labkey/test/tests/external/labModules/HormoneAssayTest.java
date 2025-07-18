@@ -24,7 +24,7 @@ import org.labkey.remoteapi.CommandException;
 import org.labkey.remoteapi.Connection;
 import org.labkey.remoteapi.query.Filter;
 import org.labkey.remoteapi.query.InsertRowsCommand;
-import org.labkey.remoteapi.query.SaveRowsResponse;
+import org.labkey.remoteapi.query.RowsResponse;
 import org.labkey.remoteapi.query.SelectRowsCommand;
 import org.labkey.remoteapi.query.SelectRowsResponse;
 import org.labkey.test.Locator;
@@ -631,7 +631,7 @@ public class HormoneAssayTest extends AbstractLabModuleAssayTest
                 row.put("code", tests.get(test)[0]);
                 row.put("units", tests.get(test)[1]);
                 insertCmd.addRow(row);
-                SaveRowsResponse saveResp = insertCmd.execute(cn, getProjectName());
+                RowsResponse saveResp = insertCmd.execute(cn, getProjectName());
                 assertEquals("Incorrect row count", 1, saveResp.getRowsAffected().intValue());
             }
         }
