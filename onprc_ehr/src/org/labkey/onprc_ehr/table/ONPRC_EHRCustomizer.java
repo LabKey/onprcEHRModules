@@ -1111,7 +1111,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         ColumnInfo existing = ti.getColumn(name);
         if (null == existing && null != ti.getColumn("meaning"))
         {
-            SQLFragment sql = new SQLFragment("(SELECT " + ti.getSqlDialect().getGroupConcat(new SQLFragment("REPLICATE('0', 4 - LEN(t.hourofday))  + cast(t.hourofday as varchar(4))"), true, true, "','").getSqlCharSequence() +
+            SQLFragment sql = new SQLFragment("(SELECT " + ti.getSqlDialect().getGroupConcat(new SQLFragment("REPLICATE('0', 4 - LEN(t.hourofday))  + cast(t.hourofday as varchar(4))"), true, true, ",").getSqlCharSequence() +
                     "FROM ehr_lookups.treatment_frequency_times t " +
                     " WHERE t.frequency = " + ExprColumn.STR_TABLE_ALIAS + ".meaning " +
                     " GROUP BY t.frequency " +
