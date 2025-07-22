@@ -6,7 +6,7 @@
 
 //Created: 2-4-2021  R.Blasa
 
-Ext4.define('ONPRC_EHR.panel.ExamCasesDataEntryPanel', {
+Ext4.define('ONPRC_EHR.panel.ExamCasesHousingDataEntryPanel', {
     extend: 'EHR.panel.TaskDataEntryPanel',
 
 
@@ -67,5 +67,38 @@ Ext4.define('ONPRC_EHR.panel.ExamCasesDataEntryPanel', {
        }, this);
 
        return false;
+    },
+
+    onStoreCollectionCommitComplete: function(sc, extraContext){
+        if (Ext4.Msg.isVisible())
+            Ext4.Msg.hide();
+
+
+        var store = sc.getClientStoreByName('housing');
+        LDK.Assert.assertNotEmpty('Unable to find housing store in HousingDataEntryPanel', store);
+
+        if (extraContext && extraContext.successURL  && store.getCount() > 0){
+            Ext4.Msg.confirm('Success', 'Do you want to view the room layout now?  This will allow you to verify and/or change dividers', function(val){
+                window.onbeforeunload = Ext4.emptyFn;
+                if (val == 'yes'){
+
+                    var rooms = [];
+                    store.each(function(r){
+                        if (r.get('room') && rooms.indexOf(r.get('room')) == -1){
+                            rooms.push(r.get('room'));
+                        }
+                    }, this);
+                    window.location = LABKEY.ActionURL.buildURL('onprc_ehr', 'printRoom', null, {rooms: rooms});
+
+                }
+                else {
+                    window.location = extraContext.successURL;
+                }
+            }, this);
+
+            return;
+        }
+
+        this.callParent(arguments);
     }
     });
