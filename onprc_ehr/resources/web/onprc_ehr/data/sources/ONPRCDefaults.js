@@ -32,6 +32,18 @@ EHR.model.DataModelManager.registerMetadata('Default', {
                     defaultHour: 23,
                     defaultMinutes: 59
                 }
+            },
+            date: {
+                inheritDateFromParent: false,
+                getInitialValue: function(v, rec){
+                    if (v)
+                        return v;
+
+                    var ret = Ext4.Date.clearTime(new Date());
+                    ret = Ext4.Date.add(ret, Ext4.Date.DAY, 1);
+                    ret.setHours(8);
+                    return ret;
+                }
             }
         },
 

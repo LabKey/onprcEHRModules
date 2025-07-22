@@ -2355,7 +2355,7 @@ public class ONPRC_EHRTriggerHelper
     }
 
 
-    //Added 3-6-2019 Blasa
+    //Modified 7-2-2025 Blasa
     public void sendProjectNotifications(Integer projectid)
     {
 
@@ -2380,19 +2380,20 @@ public class ONPRC_EHRTriggerHelper
         Date roundedMax = new Date();
         roundedMax = DateUtils.truncate(roundedMax, Calendar.DATE);
 
-        TableInfo ti = getTableInfo("ehr", "project");
+        TableInfo ti = getTableInfo("onprc_ehr", "projectNotification");
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("project"), projectid);
-        filter.addCondition(FieldKey.fromString("enddateCoalesced"), roundedMax, CompareType.GTE);
 
         Sort sort = new Sort("name");
 
         List<FieldKey> names= new ArrayList<>();
-        FieldKey protocolFieldKey = FieldKey.fromString("protocol/external_id");
+        FieldKey protocolFieldKey = FieldKey.fromString("protocolID");
         names.add(protocolFieldKey);
         names.add(FieldKey.fromString("name"));
         names.add(FieldKey.fromString("investigatorId"));
         names.add(FieldKey.fromString("startdate"));
+        names.add(FieldKey.fromString("enddate"));
         names.add(FieldKey.fromString("project"));
+        names.add(FieldKey.fromString("previousdate"));
 
         final Map<FieldKey, ColumnInfo> colKeys = QueryService.get().getColumns(ti, names);
         final ColumnInfo protocolColumn = colKeys.get(protocolFieldKey);
@@ -2409,8 +2410,8 @@ public class ONPRC_EHRTriggerHelper
             //Create header information on the report
 
             html.append("<table border=1 style='border-collapse: collapse;'>");
-            html.append("<tr style='font-weight: bold;'><td>Center Project</td><td>Project ID</td><td>Iacuc Protocol</td><td> Investigator</td><td>  Center Project Start Date</td></tr>\n");
-            ts.forEach(new Selector.ForEachBlock<>()
+            html.append("<tr style='font-weight: bold;'><td>Center Project</td><td>Iacuc Protocol</td><td> Investigator</td><td>  Project Start Date</td><td>  Previous End Date</td><td>  Project End Date</td></tr>\n");
+            ts.forEach(new Selector.ForEachBlock<ResultSet>()
                        {
 
                            @Override
@@ -2427,7 +2428,7 @@ public class ONPRC_EHRTriggerHelper
                                {
                                    for (String Investname : ret2)
                                    {
-                                       html.append("<tr><td>" + PageFlowUtil.filter(rs.getString("name")) + "</td><td>" + PageFlowUtil.filter(rs.getString("project")) + "</td><td>   " + PageFlowUtil.filter(protocolColumn.getValue(rs)) + "</td><td>   " + PageFlowUtil.filter(Investname) + "   </td><td>" + PageFlowUtil.filter(rs.getString("startdate")) + "</td></tr>\n");
+                                       html.append("<tr><td>" + PageFlowUtil.filter(rs.getString("name"))  + "</td><td>" + PageFlowUtil.filter(rs.getString("protocolID"))  + "</td><td>   " + PageFlowUtil.filter(Investname) + "   </td><td>" +  PageFlowUtil.filter(rs.getString("startdate")) + "</td><td>" +  PageFlowUtil.filter(rs.getString("previousdate")) + "</td><td>" +  PageFlowUtil.filter(rs.getString("enddate")) + "</td></tr>\n");
                                        break;
 
                                    }
