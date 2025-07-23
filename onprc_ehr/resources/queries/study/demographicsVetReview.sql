@@ -31,8 +31,8 @@ SELECT
     group_concat(distinct d.Id.activeCases.categories, chr(10)) as "Active Cases",
     group_Concat(distinct d.calculated_status, chr(10)) as "Status"
 
-from  study.demographics d  where d.Id.assignedVet.assignedVet = 'dozier'
-                              And d.totalRemarksEnteredSinceReview > 0
+from  study.demographics d  where d.totalRemarksEnteredSinceReview > 0
+
 
 group by d.Id
 
