@@ -17,6 +17,7 @@
 
 SELECT
     d.Id,
+
     group_concat(distinct d.Id.curLocation.room, chr(10)) as Room,
     group_concat(distinct d.Id.curLocation.cage, chr(10)) as Cage,
     group_concat(distinct d.mostRecentHX, chr(10)) as Hx,
@@ -29,7 +30,9 @@ SELECT
     group_concat(distinct d.Id.assignedVet.assignedVet, chr(10)) as "Assigned Vet",
     group_concat(distinct d.Id.utilization.use, chr(10)) as "Project",
     group_concat(distinct d.Id.activeCases.categories, chr(10)) as "Active Cases",
-    group_Concat(distinct d.calculated_status, chr(10)) as "Status"
+    group_Concat(distinct d.calculated_status, chr(10)) as "Status",
+    group_Concat(distinct d.lsid, chr(10)) as "lsid"
+
 
 from  study.demographics d  where d.totalRemarksEnteredSinceReview > 0
 
@@ -40,6 +43,7 @@ Union
 
 select
     e.Id,
+
     group_concat(distinct e.Id.curLocation.room, chr(10)) as Room,
     group_concat(distinct e.Id.curLocation.cage, chr(10)) as Cage,
     null as Hx,
@@ -52,9 +56,11 @@ select
     group_concat(distinct e.Id.assignedVet.assignedVet, chr(10)) as "Assigned Vet",
     group_concat(distinct e.Id.utilization.use, chr(10)) as "Project",
     group_concat(distinct e.Id.activeCases.categories, chr(10)) as "Active Cases",
-    group_Concat(distinct e.calculated_status, chr(10)) as "Status"
+    group_Concat(distinct e.calculated_status, chr(10)) as "Status",
+    group_Concat(distinct e.lsid, chr(10)) as "lsid"
 
 from study.demographics e, study.mostRecentClinicalObservations_Vomit_ForAnimal g
 where e.Id = g.Id
+And  e.totalRemarksEnteredSinceReview > 0
 
 group by e.Id

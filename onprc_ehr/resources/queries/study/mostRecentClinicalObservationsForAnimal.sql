@@ -15,7 +15,7 @@
  */
 SELECT
   t.Id,
-  group_concat(cast(distinct t.date as date), chr(10)) as date,
+  group_concat(distinct cast(t.date as date), chr(10)) as date,
 
   GROUP_CONCAT(CASE
     WHEN (t.category IS NOT NULL AND t.area IS NULL AND t.observation IS NOT NULL) THEN cast((t.category || ': ' || t.observation || t.remark) as varchar(1000))
