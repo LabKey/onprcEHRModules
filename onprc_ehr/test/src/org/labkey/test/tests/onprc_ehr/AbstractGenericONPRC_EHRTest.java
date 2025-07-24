@@ -84,12 +84,6 @@ public abstract class AbstractGenericONPRC_EHRTest extends AbstractGenericEHRTes
     }
 
     @Override
-    public String getContainerPath()
-    {
-        return getProjectName();
-    }
-
-    @Override
     protected EHRClientAPIHelper getApiHelper()
     {
         return new EHRClientAPIHelper(this, getContainerPath());
@@ -100,6 +94,10 @@ public abstract class AbstractGenericONPRC_EHRTest extends AbstractGenericEHRTes
     {
         log("Setting EHR Module Properties");
         clickProject(getProjectName());
+        super._containerHelper.enableModule("ONPRC_Billing");
+        super._containerHelper.enableModule("ONPRC_BillingPublic");
+        super._containerHelper.enableModule("SLA");
+        goToEHRFolder();
         super._containerHelper.enableModule("ONPRC_Billing");
         super._containerHelper.enableModule("ONPRC_BillingPublic");
         super._containerHelper.enableModule("SLA");
@@ -134,7 +132,7 @@ public abstract class AbstractGenericONPRC_EHRTest extends AbstractGenericEHRTes
         log("creating birth records");
 
         //note: these should cascade insert into demographics
-        EHRClientAPIHelper apiHelper = new EHRClientAPIHelper(this, getProjectName());
+        EHRClientAPIHelper apiHelper = new EHRClientAPIHelper(this, getContainerPath());
         String schema = "study";
         String query = "birth";
         String parentageQuery = "parentage";
@@ -185,12 +183,12 @@ public abstract class AbstractGenericONPRC_EHRTest extends AbstractGenericEHRTes
     protected void doExtraPreStudyImportSetup() throws IOException, CommandException
     {
         //create onprc_billing_public linked schema
-        beginAt(getProjectName());
+        goToEHRFolder();
         SchemaHelper schemaHelper = new SchemaHelper(this);
-        schemaHelper.createLinkedSchema(this.getProjectName(), "onprc_billing_public", "/" + this.getContainerPath(), "onprc_billing_public", null, null, null);
+        schemaHelper.createLinkedSchema(getContainerPath(), "onprc_billing_public", "/" + getContainerPath(), "onprc_billing_public", null, null, null);
 
         //create Labfee_NoChargeProjects
-        beginAt(getProjectName());
+        goToEHRFolder();
 
         ListDefinition listDef = new IntListDefinition("Labfee_NoChargeProjects", "key");
         listDef.addField(new FieldDefinition("project", FieldDefinition.ColumnType.Integer));
@@ -198,7 +196,7 @@ public abstract class AbstractGenericONPRC_EHRTest extends AbstractGenericEHRTes
         listDef.addField(new FieldDefinition("dateDisabled", FieldDefinition.ColumnType.DateAndTime));
         listDef.addField(new FieldDefinition("Createdb", FieldDefinition.ColumnType.Integer));
         listDef.addField(new FieldDefinition("Notes", FieldDefinition.ColumnType.String));
-        listDef.getCreateCommand().execute(createDefaultConnection(), getProjectName());
+        listDef.getCreateCommand().execute(createDefaultConnection(), getContainerPath());
 
         ListDefinition listDef2 = new VarListDefinition("GeneticValue");
         listDef2.setKeyName("Id");
@@ -212,12 +210,12 @@ public abstract class AbstractGenericONPRC_EHRTest extends AbstractGenericEHRTes
         listDef2.addField(new FieldDefinition("import", FieldDefinition.ColumnType.String));
         listDef2.addField(new FieldDefinition("value", FieldDefinition.ColumnType.String));
         listDef2.addField(new FieldDefinition("rank", FieldDefinition.ColumnType.Integer));
-        listDef2.getCreateCommand().execute(createDefaultConnection(), getProjectName());
+        listDef2.getCreateCommand().execute(createDefaultConnection(), getContainerPath());
 
         ListDefinition listDef3 = new IntListDefinition("Special_Aliases", "Key");
         listDef3.addField(new FieldDefinition("Category", FieldDefinition.ColumnType.String));
         listDef3.addField(new FieldDefinition("Alias", FieldDefinition.ColumnType.String));
-        listDef3.getCreateCommand().execute(createDefaultConnection(), getProjectName());
+        listDef3.getCreateCommand().execute(createDefaultConnection(), getContainerPath());
 
         ListDefinition listDef4 = new IntListDefinition("Rpt_ChargesProjection", "RowId");
         listDef4.addField(new FieldDefinition("ChargeId", FieldDefinition.ColumnType.Integer));
@@ -240,7 +238,7 @@ public abstract class AbstractGenericONPRC_EHRTest extends AbstractGenericEHRTes
         listDef4.addField(new FieldDefinition("Aprate8", FieldDefinition.ColumnType.Decimal));
         listDef4.addField(new FieldDefinition("Aprate9", FieldDefinition.ColumnType.Decimal));
         listDef4.addField(new FieldDefinition("PostedDate", FieldDefinition.ColumnType.DateAndTime));
-        listDef4.getCreateCommand().execute(createDefaultConnection(), getProjectName());
+        listDef4.getCreateCommand().execute(createDefaultConnection(), getContainerPath());
 
         // Mock up a table in the MHC_Data schema instead of needing to mock up all of its dependencies too
         ListDefinition listDef5 = new IntListDefinition("MHC_Data_Unified", "RowId");
@@ -255,17 +253,17 @@ public abstract class AbstractGenericONPRC_EHRTest extends AbstractGenericEHRTes
         listDef5.addField(new FieldDefinition("datatype", FieldDefinition.ColumnType.String));
         listDef5.addField(new FieldDefinition("result", FieldDefinition.ColumnType.String));
         listDef5.addField(new FieldDefinition("type", FieldDefinition.ColumnType.String));
-        listDef5.getCreateCommand().execute(createDefaultConnection(), getProjectName());
+        listDef5.getCreateCommand().execute(createDefaultConnection(), getContainerPath());
 
-        schemaHelper.createLinkedSchema(this.getProjectName(), "dbo", "/" + this.getContainerPath(), null, "lists", null, null);
-        schemaHelper.createLinkedSchema(this.getProjectName(), "MHC_Data", "/" + this.getContainerPath(), null, "lists", null, null);
-        schemaHelper.createLinkedSchema(this.getProjectName(), "ehrSLA", "/" + this.getContainerPath(), "ehrSLA", "sla", null, null);
-        schemaHelper.createLinkedSchema(this.getProjectName(), "financepublic", "/" + this.getContainerPath(), "financepublic", "onprc_billing", null, null);
-        schemaHelper.createLinkedSchema(this.getProjectName(), "publicehr", "/" + this.getContainerPath(), null, "ehr", null, null);
-        schemaHelper.createLinkedSchema(this.getProjectName(), "onprc_ehrSLA", "/" + this.getContainerPath(), null, "onprc_ehr", null, null);
-        schemaHelper.createLinkedSchema(this.getProjectName(), "pf_onprcehrPublic", "/" + this.getContainerPath(), "pf_onprcehrPublic", null, null, null);
-        schemaHelper.createLinkedSchema(this.getProjectName(), "pf_publicEHR", "/" + this.getContainerPath(), "pf_publicEHR", null, null, null);
-        schemaHelper.createLinkedSchema(this.getProjectName(), "pf_publicFinance", "/" + this.getContainerPath(), "pf_publicFinance", null, null, null);
+        schemaHelper.createLinkedSchema(getContainerPath(), "dbo", "/" + getContainerPath(), null, "lists", null, null);
+        schemaHelper.createLinkedSchema(getContainerPath(), "MHC_Data", "/" + getContainerPath(), null, "lists", null, null);
+        schemaHelper.createLinkedSchema(getContainerPath(), "ehrSLA", "/" + getContainerPath(), "ehrSLA", "sla", null, null);
+        schemaHelper.createLinkedSchema(getContainerPath(), "financepublic", "/" + getContainerPath(), "financepublic", "onprc_billing", null, null);
+        schemaHelper.createLinkedSchema(getContainerPath(), "publicehr", "/" + getContainerPath(), null, "ehr", null, null);
+        schemaHelper.createLinkedSchema(getContainerPath(), "onprc_ehrSLA", "/" + getContainerPath(), null, "onprc_ehr", null, null);
+        schemaHelper.createLinkedSchema(getContainerPath(), "pf_onprcehrPublic", "/" + getContainerPath(), "pf_onprcehrPublic", null, null, null);
+        schemaHelper.createLinkedSchema(getContainerPath(), "pf_publicEHR", "/" + getContainerPath(), "pf_publicEHR", null, null, null);
+        schemaHelper.createLinkedSchema(getContainerPath(), "pf_publicFinance", "/" + getContainerPath(), "pf_publicFinance", null, null, null);
     }
 
     @Override
