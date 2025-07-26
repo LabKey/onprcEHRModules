@@ -1,4 +1,4 @@
-<customView xmlns="http://labkey.org/data/xml/queryCustomView" hidden="true">
+<customView xmlns="http://labkey.org/data/xml/queryCustomView" hidden="false">
     <columns>
         <column name="Id/clinicalActions"/>
         <column name="Id"/>
@@ -30,7 +30,7 @@
     </columns>
 
     <filters>
-        <filter column="totalRemarksEnteredSinceReview" operator="gt" value="0"/>
+        <filter column="mostRecentClinicalObservationsVomit/totalcount" operator="gt" value="0"/>
     </filters>
     <sorts>
         <sort column="Id/curLocation/room"/>

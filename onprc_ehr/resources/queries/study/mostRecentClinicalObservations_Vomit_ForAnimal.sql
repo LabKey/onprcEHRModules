@@ -1,6 +1,7 @@
 select
     t.Id,
     group_concat(cast(t.date as date), chr(10)) as date,
+    count(t.date) as totalcount,
 
   GROUP_CONCAT(CASE
     WHEN (t.category IS NOT NULL AND t.area IS NULL AND t.observation IS NOT NULL) THEN cast((t.category || ': ' || t.observation || t.remark) as varchar(1000))
@@ -21,7 +22,7 @@ WHERE (t.category != javaConstant('org.labkey.onprc_ehr.ONPRC_EHRManager.VET_REV
     t.taskId.formtype = javaConstant('org.labkey.onprc_ehr.dataentry.ClinicalReportFormType.NAME') OR
     t.taskId.formtype = javaConstant('org.labkey.onprc_ehr.dataentry.BulkClinicalEntryFormType.NAME')
     )
-  AND t.date >= (select cast(max(a.date) as date) from study.clinical_observations a where a.Id = t.Id
+  AND t.date  >= (select cast(max(a.date) as date) from study.clinical_observations a where a.Id = t.Id
   AND (a.category = javaConstant('org.labkey.onprc_ehr.ONPRC_EHRManager.VET_REVIEW')   OR
     a.category = javaConstant('org.labkey.onprc_ehr.ONPRC_EHRManager.TECH_REVIEW') )     )
 

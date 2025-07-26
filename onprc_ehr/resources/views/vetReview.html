@@ -58,12 +58,9 @@
 
                                             // filterArray.push(LABKEY.Filter.create('mostRecentClinicalObservationsVomit/category', 'Vomit', LABKEY.Filter.Types.EQUAL));
 
-
-
                                             if (userName){
                                                 filterArray.push(LABKEY.Filter.create('Id/assignedVet/assignedVet', userName, LABKEY.Filter.Types.CONTAINS));
                                             }
-
 
                                             var target = panel.down('#targetPanel');
                                             target.removeAll();
@@ -71,8 +68,9 @@
                                                 xtype: 'ldk-querypanel',
                                                 queryConfig: {
                                                     schemaName: 'study',
-                                                    // queryName: 'demographics',
-                                                    queryName: 'demographicsVetReview',
+                                                    queryName: 'demographics',
+
+                                                    // queryName: 'demographicsVetReview',
                                                     viewName: 'Vet Review',
                                                     filterArray: filterArray,
                                                     scope: this,
