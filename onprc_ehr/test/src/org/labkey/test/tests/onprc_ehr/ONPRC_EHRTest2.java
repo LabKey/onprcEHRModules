@@ -82,7 +82,7 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
     private final String PROJECT_NAME = "ONPRC_EHR_TestProject2";
     private final String ANIMAL_HISTORY_URL = "/ehr/" + getProjectName() + "/animalHistory.view?";
     public AbstractContainerHelper _containerHelper = new APIContainerHelper(this);
-    public DataIntegrationHelper _etlHelper = new DataIntegrationHelper(PROJECT_NAME);
+    public DataIntegrationHelper _etlHelper = new DataIntegrationHelper(getContainerPath());
     protected DateTimeFormatter _dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     @BeforeClass
