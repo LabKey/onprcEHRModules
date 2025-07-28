@@ -30,7 +30,7 @@
     </columns>
 
     <filters>
-        <filter column="totalRemarksEnteredSinceReview" operator="gt" value="0"/>
+        <filter column="totalRemarksEnteredSinceReview" operator="gte" value="0"/>
     </filters>
     <sorts>
         <sort column="Id/curLocation/room"/>

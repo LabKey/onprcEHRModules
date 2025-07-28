@@ -4,9 +4,9 @@
         <column name="Id"/>
         <column name="Id/curLocation/room"/>
         <column name="Id/curLocation/cage"/>
-        <column name="mostRecentHx"/>
+<!--        <column name="mostRecentHx"/>-->
         <!--<column name="latestP2"/>-->
-        <column name="remarksEnteredSinceReview"/>
+<!--        <column name="remarksEnteredSinceReview"/>-->
         <column name="mostRecentClinicalObservations/observations"/>
         <column name="mostRecentClinicalObservations/date"/>
 
@@ -31,6 +31,7 @@
 
     <filters>
         <filter column="mostRecentClinicalObservationsVomit/totalcount" operator="gt" value="0"/>
+        <filter column="totalRemarksEnteredSinceReview" operator="eq" value="0"/>
     </filters>
     <sorts>
         <sort column="Id/curLocation/room"/>
