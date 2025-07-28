@@ -30,7 +30,6 @@ import org.labkey.api.ehr.dataentry.SingleQueryFormProvider;
 import org.labkey.api.ehr.demographics.ActiveFlagsDemographicsProvider;
 import org.labkey.api.ehr.security.EHRDataAdminPermission;
 import org.labkey.api.ehr.security.EHRProjectEditPermission;
-import org.labkey.api.ehr.security.EHRVeterinarianPermission;
 import org.labkey.api.issues.IssuesListDefService;
 import org.labkey.api.ldk.ExtendedSimpleModule;
 import org.labkey.api.ldk.buttons.ShowEditUIButton;
@@ -746,11 +745,6 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
 
         //Added: 9-16-2022  R.Blasa
       EHRService.get().registerMoreActionsButton(new CreateNecropsyRequestButton(this), "study", "NecropsyRequestdata");
-
-        //Added: 4-6-2025  R.Blasa
-        EHRService.get().registerMoreActionsButton(new VetReviewButton(this), "study", "demographicsVetReview");
-        EHRService.get().registerMoreActionsButton(new ShowEditUIButton(this, "study", "demographicsVetReview", EHRVeterinarianPermission.class), "study", "demographicsVetReview");
-        EHRService.get().registerMoreActionsButton(new ManageFlagsButton(this), "study", "demographicsVetReview");
 
         EHRService.get().registerHistoryDataSource(new DefaultSnomedDataSource(this));
         EHRService.get().registerHistoryDataSource(new DefaultAnimalGroupsDataSource(this));
