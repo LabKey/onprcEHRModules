@@ -44,7 +44,6 @@ public class EncounterChildFormSection extends SimpleGridPanel
 //        Modified: 2-13-2025  R. Blasa
         addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/window/AddProcedureDefaultsWindow.js"));
 
-        addConfigSource("Encounter");
         addConfigSource("EncounterChild");
 
         setTemplateMode(TEMPLATE_MODE.ENCOUNTER);
