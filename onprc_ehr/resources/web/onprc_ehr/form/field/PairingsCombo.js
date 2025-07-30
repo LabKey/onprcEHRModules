@@ -41,11 +41,11 @@ Ext4.define('ONPRC_EHR.form.field.pairingCombo', {
             anyMatch: true,
             store: {
                 type: 'labkey-store',
-                schemaName: 'sla',
+                schemaName: 'onprc_ehr',
                 storeId: 'pairingStore_' + this.id,
-                queryName: 'Reference_Data',
-                columns: 'value,columnName',
-                filterArray: [LABKEY.Filter.create('enddate', null, LABKEY.Filter.Types.ISBLANK)],
+                queryName: 'Pairingmenus',
+                columns: 'value,category',
+                filterArray: [LABKEY.Filter.create('date_disabled', null, LABKEY.Filter.Types.ISBLANK)],
                 sort: 'value',
                 maxRows: 0,
                 autoLoad: true,
@@ -243,7 +243,7 @@ Ext4.define('ONPRC_EHR.form.field.pairingCombo', {
         else {
             var re = new RegExp('(,|^)' + subset + '(,|$)');
             this.pairingStore.each(function(r){
-                if (r.get('columnName') && r.get('columnName').match(re))
+                if (r.get('category') && r.get('category').match(re))
                     records.push(r);
             }, this);
         }
