@@ -122,6 +122,12 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
         return true;
     }
 
+    @Override
+    public void testCrawlEhrLinks()
+    {
+        // This is being done in ONPRC_EHRTest, don't need to do it here as well.
+    }
+
     @Test
     public void testBirthStatusApi() throws Exception
     {
