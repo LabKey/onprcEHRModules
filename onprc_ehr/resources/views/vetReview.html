@@ -77,6 +77,20 @@
                                                     }
                                                 }
                                             });
+                                            target.add({
+                                                xtype: 'ldk-querypanel',
+                                                queryConfig: {
+                                                    schemaName: 'study',
+                                                    queryName: 'demographics',
+                                                    viewName: 'Vomit_Observation_Review',
+                                                    filterArray: filterArray,
+                                                    scope: this,
+                                                    success: function(dr){
+                                                        var itemWidth = Ext4.get(dr.domId).getSize().width + 150;
+                                                        this.doResize(itemWidth);
+                                                    }
+                                                }
+                                            });
                                         }
                                     }]
                                 },]
