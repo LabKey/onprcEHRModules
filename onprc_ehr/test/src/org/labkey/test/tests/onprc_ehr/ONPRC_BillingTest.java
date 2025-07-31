@@ -101,6 +101,12 @@ public class ONPRC_BillingTest extends AbstractONPRC_EHRTest
         _portalHelper.moveWebPart("Finance", PortalHelper.Direction.UP);
     }
 
+    @Override
+    public void testCrawlEhrLinks()
+    {
+        // This is being done in ONPRC_EHRTest, don't need to do it here as well.
+    }
+
     @Test
     public void testNotifications()
     {
