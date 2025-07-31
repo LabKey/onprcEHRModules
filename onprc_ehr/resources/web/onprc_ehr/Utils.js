@@ -27,14 +27,14 @@ ONPRC.Utils = new function(){
             if (ONPRC_EHR._pairingStore)
                 return ONPRC_EHR._pairingStore;
 
-            var storeId = ['sla', 'Reference_Data', 'value', 'columnName'].join('||');
+            var storeId = ['onprc_ehr', 'Pairingmenus', 'value', 'category'].join('||');
 
             ONPRC_EHR._pairingStore = Ext4.StoreMgr.get(storeId) || Ext4.create('LABKEY.ext4.data.Store', {
                 type: 'labkey-store',
-                schemaName: 'sla',
-                queryName: 'Reference_Data',
-                columns: 'value, columnName',
-                filterArray: [LABKEY.Filter.create('enddate', null, LABKEY.Filter.Types.ISBLANK)],
+                schemaName: 'onprc_ehr',
+                queryName: 'Pairingmenus',
+                columns: 'value, category',
+                filterArray: [LABKEY.Filter.create('date_disabled', null, LABKEY.Filter.Types.ISBLANK)],
                 sort: 'value',
                 storeId: storeId,
                 autoLoad: true,
