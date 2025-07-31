@@ -15,7 +15,6 @@
  */
 package org.labkey.onprc_ehr.dataentry;
 
-import org.labkey.api.ehr.dataentry.AnimalDetailsFormSection;
 import org.labkey.api.ehr.dataentry.DataEntryFormContext;
 import org.labkey.api.ehr.dataentry.FormSection;
 import org.labkey.api.ehr.dataentry.TaskForm;
@@ -75,6 +74,8 @@ public class LabworkFormType extends TaskForm
 
         //Added 11-2-2022 Blasa
         addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/window/BulkBioFireWindow.js"));
+
+        setDisplayReviewRequired(true);
     }
 
     @Override

@@ -19,7 +19,6 @@ import org.labkey.api.ehr.EHRService;
 import org.labkey.api.ehr.dataentry.BloodDrawFormSection;
 import org.labkey.api.ehr.dataentry.DataEntryFormContext;
 import org.labkey.api.ehr.dataentry.EncounterForm;
-import org.labkey.api.ehr.dataentry.ExtendedAnimalDetailsFormSection;
 import org.labkey.api.ehr.dataentry.FormSection;
 import org.labkey.api.ehr.dataentry.NonStoreFormSection;
 import org.labkey.api.ehr.dataentry.TaskFormSection;
@@ -74,16 +73,8 @@ public class SingleSurgeryFormType extends EncounterForm
 
         for (FormSection s : this.getFormSections())
         {
-            s.addConfigSource("Encounter");
-
             //   Modified: 4-20-2021  R. Blasa
             s.addConfigSource("onprc_Surgery");
-
-            //Added: 9-6-2017  R.Blasa
-            s.addConfigSource("Surgery_Blood");
-
-            //Added: 10-13-2017  R.Blasa
-            s.addConfigSource("Biopsy_Staff");
         }
     }
 
