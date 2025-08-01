@@ -13,3 +13,11 @@ select value,
 
 from ehr_lookups.pairingendtypes
 Where date_disabled is null
+
+union
+
+select value,
+       category
+
+from ehr_lookups.pairing_STF_clinical
+Where date_disabled is null
