@@ -29,7 +29,7 @@ EHR.model.DataModelManager.registerMetadata('Pairing_Properties', {
             eventtype: {
                 editorConfig: {
                     xtype: 'onprc_ehr-pairingcombo',
-                    defaultSubset: 'PairingStarttype'
+                    defaultSubset: 'divider_change'  //Use the category name here
                 },
                 columnConfig: {
                     width: 200
@@ -53,7 +53,7 @@ EHR.model.DataModelManager.registerMetadata('Pairing_Properties', {
             endeventType: {
                 editorConfig: {
                     xtype: 'onprc_ehr-pairingcombo',
-                    defaultSubset: 'PairingEndtype'
+                    defaultSubset: 'pairing_endtype'
                 },
                 columnConfig: {
                     width: 200
