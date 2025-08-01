@@ -98,9 +98,7 @@ public abstract class AbstractGenericONPRC_EHRTest extends AbstractGenericEHRTes
         super._containerHelper.enableModule("ONPRC_BillingPublic");
         super._containerHelper.enableModule("SLA");
         goToEHRFolder();
-        super._containerHelper.enableModule("ONPRC_Billing");
-        super._containerHelper.enableModule("ONPRC_BillingPublic");
-        super._containerHelper.enableModule("SLA");
+        super._containerHelper.enableModules(List.of("ONPRC_Billing", "ONPRC_BillingPublic", "SLA"));
         super.setEHRModuleProperties(
                 new ModulePropertyValue("ONPRC_Billing", "/" + getProjectName(), "BillingContainer", "/" + getContainerPath()),
                 new ModulePropertyValue("ONPRC_Billing", "/" + getProjectName(), "BillingContainer_Public", "/" + getContainerPath()),
