@@ -55,4 +55,10 @@ public abstract class AbstractONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
 
     @Override
     public void customActionsTest(){}
+
+    @Override
+    public void testCrawlEhrLinks()
+    {
+        // This is being done in ONPRC_EHRTest, don't need to do it here as well.
+    }
 }
