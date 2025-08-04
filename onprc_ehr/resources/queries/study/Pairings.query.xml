@@ -10,7 +10,7 @@
                 <columns>
                     <column columnName="Id">
                     </column>
-                    <column columnName="infant_ID">
+                    <column columnName="infant_id">
                         <isHidden>false</isHidden>
                         <columnTitle>Infant ID</columnTitle>
                     </column>

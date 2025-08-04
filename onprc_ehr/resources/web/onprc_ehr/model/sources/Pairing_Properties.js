@@ -24,7 +24,12 @@ EHR.model.DataModelManager.registerMetadata('Pairing_Properties', {
                     ]
                 }
             },
-
+            Id: {
+                allowBlank: false,
+                columnConfig: {
+                    width: 100
+                }
+            },
 
             eventtype: {
                 editorConfig: {
