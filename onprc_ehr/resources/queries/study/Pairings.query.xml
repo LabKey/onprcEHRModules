@@ -26,7 +26,7 @@
                     </column>
                     <column columnName="other_IDs">
                         <isHidden>false</isHidden>
-                        <columnTitle>Other ID</columnTitle>
+                        <columnTitle>Other IDs</columnTitle>
                     </column>
                     <column columnName="other_infant">
                         <isHidden>false</isHidden>

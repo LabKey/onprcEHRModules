@@ -96,7 +96,7 @@ EHR.model.DataModelManager.registerMetadata('Pairing_Properties', {
                 },
             other_IDs: {
                 xtype: 'onprc_ehr-paireddamdentryfield',
-                header:'Other Infant',     // should display the infant's dam
+                header:'Other IDs',     // should display the infant's dam
                 columnConfig: {
                     width: 200
                 }
