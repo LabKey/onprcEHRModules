@@ -48,10 +48,10 @@ Ext4.define('ONPRC_EHR.form.field.PairedDamEntryField', {
 
         LABKEY.Query.selectRows({
             schemaName: 'study',
-            queryName: 'demographicParents',
+            queryName: 'demographicsParents',
             columns: 'Id,dam,fosterMom',
             filterArray: [
-                LABKEY.Filter.create('Id', id , LABKEY.Filter.Types.CONTAINS)
+                LABKEY.Filter.create('Id', id , LABKEY.Filter.Types.CONTAINS_ONE_OF)
             ],
             failure: LDK.Utils.getErrorCallback(),
             scope: this,
