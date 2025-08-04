@@ -1,6 +1,6 @@
 
 --- Created: 8-23-2018  R.Blasa
--- Converted to left join to allow cases to appear even though the most recent observation is linked to
+-- Converted to a left join to allow cases to appear even though the most recent observation is linked to
 -- another animal's case. See EHR Issue 12144: Behavior cases not showing.
 SELECT
     c.Id,
