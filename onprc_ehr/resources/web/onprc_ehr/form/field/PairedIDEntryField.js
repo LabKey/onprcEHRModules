@@ -23,8 +23,12 @@ Ext4.define('ONPRC_EHR.form.field.PairedIDEntryField', {
         }
 
 
-        if (!rec || !rec.get('Id')){
-            Ext4.Msg.alert('Error', 'No Id Entered');
+        if (!rec || !rec.get('room')){
+            Ext4.Msg.alert('Error', 'No room Entered');
+            return;
+        }
+        if (!rec || !rec.get('cage')){
+            Ext4.Msg.alert('Error', 'No cage Entered');
             return;
         }
 
@@ -41,14 +45,17 @@ Ext4.define('ONPRC_EHR.form.field.PairedIDEntryField', {
     },
 
     queryValue: function(rec, cb, alwaysUseCallback){
-        var id = rec.get('Id');
+        var roomt = rec.get('room');
+        var caget = rec.get('cage');
 
         LABKEY.Query.selectRows({
             schemaName: 'study',
             queryName: 'CageMateAdults',
-            columns: 'Id,adultcagemate',
+            columns: 'adultcagemate',
+            sort:'Id',
             filterArray: [
-                LABKEY.Filter.create('Id', id , LABKEY.Filter.Types.EQUAL)
+                LABKEY.Filter.create('room', roomt , LABKEY.Filter.Types.EQUAL),
+                LABKEY.Filter.create('cage', caget , LABKEY.Filter.Types.EQUAL)
             ],
             failure: LDK.Utils.getErrorCallback(),
             scope: this,

@@ -23,8 +23,8 @@ Ext4.define('ONPRC_EHR.form.field.PairedDamEntryField', {
         }
 
 
-        if (!rec || !rec.get('Id')){
-            Ext4.Msg.alert('Error', 'No Id Entered');
+        if (!rec || !rec.get('other_infant')){
+            Ext4.Msg.alert('Error', 'No Infant Entered');
             return;
         }
 
@@ -51,7 +51,7 @@ Ext4.define('ONPRC_EHR.form.field.PairedDamEntryField', {
             queryName: 'demographicParents',
             columns: 'Id,dam,fosterMom',
             filterArray: [
-                LABKEY.Filter.create('Id', id , LABKEY.Filter.Types.EQUAL)
+                LABKEY.Filter.create('Id', id , LABKEY.Filter.Types.CONTAINS)
             ],
             failure: LDK.Utils.getErrorCallback(),
             scope: this,

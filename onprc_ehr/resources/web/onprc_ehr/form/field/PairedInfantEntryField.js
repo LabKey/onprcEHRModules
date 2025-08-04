@@ -4,9 +4,9 @@
  * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
  */
 
-Ext4.define('ONPRC_EHR.form.field.InfantEntryField', {
+Ext4.define('ONPRC_EHR.form.field.PairedInfantEntryField', {
     extend: 'LABKEY.ext4.ComboBox',
-    alias: 'widget.onprc_ehr-infantentryfield',
+    alias: 'widget.onprc_ehr-pairedinfantentryfield',
 
 
     trigger1Cls: 'x4-form-search-trigger',
@@ -23,10 +23,15 @@ Ext4.define('ONPRC_EHR.form.field.InfantEntryField', {
         }
 
 
-        if (!rec || !rec.get('Id')){
-            Ext4.Msg.alert('Error', 'No Id Entered');
+        if (!rec || !rec.get('room')){
+            Ext4.Msg.alert('Error', 'No room Entered');
             return;
         }
+        if (!rec || !rec.get('cage')){
+            Ext4.Msg.alert('Error', 'No cage Entered');
+            return;
+        }
+
 
         Ext4.Msg.wait('Loading...');
 
@@ -34,21 +39,25 @@ Ext4.define('ONPRC_EHR.form.field.InfantEntryField', {
         this.queryValue(rec, function(ret){
             Ext4.Msg.hide();
 
-            if (ret && ret.InfantCageMate){
-                this.setValue(ret.InfantCageMate);
+            if (ret && ret.infantcagemate){
+                this.setValue(ret.infantcagemate);
                 }
         }, true);
     },
 
     queryValue: function(rec, cb, alwaysUseCallback){
-        var id = rec.get('Id');
+        var roomt = rec.get('room');
+        var caget = rec.get('cage');
+
 
         LABKEY.Query.selectRows({
             schemaName: 'study',
             queryName: 'CageMateInfant',
-            columns: 'Id,InfantCageMate',
+            columns: 'infantcagemate',
+            sort:'Id',
             filterArray: [
-                LABKEY.Filter.create('Id', id , LABKEY.Filter.Types.EQUAL)
+                LABKEY.Filter.create('room', roomt , LABKEY.Filter.Types.EQUAL),
+                LABKEY.Filter.create('cage', caget , LABKEY.Filter.Types.EQUAL)
             ],
             failure: LDK.Utils.getErrorCallback(),
             scope: this,
