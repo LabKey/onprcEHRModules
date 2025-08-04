@@ -21,8 +21,6 @@ import org.labkey.api.pipeline.PipelineDirectory;
 import org.labkey.api.pipeline.PipelineProvider;
 import org.labkey.api.view.ViewContext;
 
-import java.io.File;
-
 /**
  * User: bimber
  * Date: 9/10/13

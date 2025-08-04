@@ -123,7 +123,7 @@ public class VetReviewNotification extends ColonyAlertsNotification
         TableSelector ts = new TableSelector(ti, cols.values(), filter, new Sort("Id"));
         final List<String> rows = new ArrayList<>();
         final String urlBase = getExecuteQueryUrl(c, "study", "demographics", "Vet Review") + "&query.Id~eq=";
-        ts.forEach(new Selector.ForEachBlock<ResultSet>()
+        ts.forEach(new Selector.ForEachBlock<>()
         {
             @Override
             public void exec(ResultSet object) throws SQLException

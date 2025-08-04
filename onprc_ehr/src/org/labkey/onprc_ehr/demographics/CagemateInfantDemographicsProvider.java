@@ -15,8 +15,6 @@
  */
 package org.labkey.onprc_ehr.demographics;
 
-import org.labkey.api.data.CompareType;
-import org.labkey.api.data.SimpleFilter;
 import org.labkey.api.ehr.demographics.AbstractListDemographicsProvider;
 import org.labkey.api.module.Module;
 import org.labkey.api.query.FieldKey;

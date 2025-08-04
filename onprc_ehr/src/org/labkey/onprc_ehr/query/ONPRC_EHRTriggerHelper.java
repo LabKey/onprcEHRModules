@@ -30,7 +30,6 @@ import org.labkey.api.data.Container;
 import org.labkey.api.data.ContainerManager;
 import org.labkey.api.data.DbSchema;
 import org.labkey.api.data.DbScope;
-import org.labkey.api.data.DbSequenceManager;
 import org.labkey.api.data.Results;
 import org.labkey.api.data.ResultsImpl;
 import org.labkey.api.data.SQLFragment;
@@ -176,7 +175,7 @@ public class ONPRC_EHRTriggerHelper
 
     public Map<String, Object> getExtraContext()
     {
-        Map<String, Object> map = new HashMap<String, Object>();
+        Map<String, Object> map = new HashMap<>();
         map.put("quickValidation", true);
         map.put("generatedByServer", true);
 
@@ -193,7 +192,7 @@ public class ONPRC_EHRTriggerHelper
 
         //sort on date
         records = new ArrayList<>(records);
-        records.sort(new Comparator<Map<String, Object>>()
+        records.sort(new Comparator<>()
         {
             @Override
             public int compare(Map<String, Object> o1, Map<String, Object> o2)
@@ -350,8 +349,8 @@ public class ONPRC_EHRTriggerHelper
     {
 
 
-        Date earliestDose = null;
-        Boolean results =false;
+        Date earliestDose;
+        boolean results =false;
         Date curDate = new Date();
         earliestDose = startDate;
         if (earliestDose.before(new Date()))
@@ -405,7 +404,7 @@ public class ONPRC_EHRTriggerHelper
             DbSchema dbSchema;
             if (targetTable instanceof DatasetTable)
             {
-                Domain domain = ((FilteredTable) targetTable).getDomain();
+                Domain domain = targetTable.getDomain();
                 if (domain != null)
                 {
                     realTable = StorageProvisioner.createTableInfo(domain);
@@ -436,7 +435,7 @@ public class ONPRC_EHRTriggerHelper
         {
             TableInfo ti = getTableInfo("ehr_lookups", "treatment_frequency");
             TableSelector ts = new TableSelector(ti, PageFlowUtil.set("rowid", "active"), new SimpleFilter(FieldKey.fromString("rowid"), frequency), null);
-            ts.forEach(new Selector.ForEachBlock<ResultSet>()
+            ts.forEach(new Selector.ForEachBlock<>()
             {
                 @Override
                 public void exec(ResultSet rs) throws SQLException
@@ -515,7 +514,7 @@ public class ONPRC_EHRTriggerHelper
             ));
 
             TableSelector ts = new TableSelector(cagesTable, cols.values(), new SimpleFilter(FieldKey.fromString("room"), room), new Sort("cagePosition/cage_sortValue"));
-            ts.forEach(new Selector.ForEachBlock<ResultSet>()
+            ts.forEach(new Selector.ForEachBlock<>()
             {
                 @Override
                 public void exec(ResultSet rs) throws SQLException
@@ -533,19 +532,19 @@ public class ONPRC_EHRTriggerHelper
 
     public static class CageRecord
     {
-        private String _room;
-        private String _cage;
-        private String _cageType;
-        private Double _sqFt;
-        private Double _height;
-        private Integer _divider;
-        private String _dividerName;
-        private String _status;
-        private String _lowerCage;
-        private Boolean _isAvailable;
-        private String _row;
-        private Integer _columnIdx;
-        private Integer _cageslots;
+        private final String _room;
+        private final String _cage;
+        private final String _cageType;
+        private final Double _sqFt;
+        private final Double _height;
+        private final Integer _divider;
+        private final String _dividerName;
+        private final String _status;
+        private final String _lowerCage;
+        private final Boolean _isAvailable;
+        private final String _row;
+        private final Integer _columnIdx;
+        private final Integer _cageslots;
 
         public CageRecord(Results results) throws SQLException
         {
@@ -750,7 +749,7 @@ public class ONPRC_EHRTriggerHelper
 
         final Map<String, Set<String>> map = new HashMap<>();
         TableSelector ts = new TableSelector(ti, PageFlowUtil.set("Id", "cage"), filter, null);
-        ts.forEach(new Selector.ForEachBlock<ResultSet>()
+        ts.forEach(new Selector.ForEachBlock<>()
         {
             @Override
             public void exec(ResultSet rs) throws SQLException
@@ -866,7 +865,7 @@ public class ONPRC_EHRTriggerHelper
                     FieldKey.fromString("housingCondition")
             ));
             TableSelector ts = new TableSelector(roomsTable, cols.values(), new SimpleFilter(FieldKey.fromString("room"), room), null);
-            ts.forEach(new Selector.ForEachBlock<ResultSet>()
+            ts.forEach(new Selector.ForEachBlock<>()
             {
                 @Override
                 public void exec(ResultSet rs) throws SQLException
@@ -912,7 +911,7 @@ public class ONPRC_EHRTriggerHelper
         Double availableHeight = cageRow.getHeight();
         String dividername = cageRow.getDividerName();
 
-        Double requiredSqFt = 0.0;
+        double requiredSqFt = 0.0;
         for (Double w : weights)
         {
             Double s = getRequiredCageSize(w, setName);
@@ -998,7 +997,7 @@ public class ONPRC_EHRTriggerHelper
             final List<Map<String, Object>> ret = new ArrayList<>();
             TableInfo ti = DbSchema.get("ehr_lookups").getTable("cageclass");
             TableSelector ts = new TableSelector(ti);
-            ts.forEach(new Selector.ForEachBlock<ResultSet>()
+            ts.forEach(new Selector.ForEachBlock<>()
             {
                 @Override
                 public void exec(ResultSet rs) throws SQLException
@@ -1075,7 +1074,7 @@ public class ONPRC_EHRTriggerHelper
         TableSelector ts = new TableSelector(flagValues, Collections.singleton("objectid"), flagFilter, null);
 
         List<String> ret = ts.getArrayList(String.class);
-        if (ret == null || ret.isEmpty())
+        if (ret.isEmpty())
         {
             return null;
         }
@@ -1153,7 +1152,7 @@ public class ONPRC_EHRTriggerHelper
     //Added on 10/5/2016, L.Kolli
     public Map<String, Object> onAnimalArrival_AddDemographics(String id, Map<String, Object> row) throws QueryUpdateServiceException, DuplicateKeyException, SQLException, BatchValidationException
     {
-        Map<String, Object> demographicsProps = new HashMap<String, Object>();
+        Map<String, Object> demographicsProps = new HashMap<>();
 
         for (String key : new String[]{"Id", "gender", "species", "dam", "sire", "origin", "source", "geographic_origin", "birth"})
         {
@@ -1241,7 +1240,7 @@ public class ONPRC_EHRTriggerHelper
         if (nonRestrictedFlag != null)
         {
             //Modified: 10-14-2016 R.Blasa
-            Date Arrival_date = null;
+            Date Arrival_date;
             if (Arrival_Date != null)
             {
                 Arrival_date = Arrival_Date;
@@ -1281,7 +1280,7 @@ public class ONPRC_EHRTriggerHelper
             if (nonRestrictedFlag != null)
             {
                 //Modified: 10-14-2016 R.Blasa
-                Date Arrival_date = null;
+                Date Arrival_date;
                 if (Arrival_Date != null)
                 {
                     Arrival_date = Arrival_Date;
@@ -1360,7 +1359,7 @@ public class ONPRC_EHRTriggerHelper
             {
                 _log.error("dam has more than 1 active SPF flag: " + dam);
             }
-            else if (flagList.size() == 0)
+            else if (flagList.isEmpty())
             {
                 //        Added: 6-19-2019   R.Blasa  Create new flag if dam is not assigned to SPRF and Rhesus Macaque
                 if ("Live Birth".equalsIgnoreCase(birthCondition) && "RHESUS MACAQUE".equalsIgnoreCase(species)  )
@@ -1517,7 +1516,7 @@ public class ONPRC_EHRTriggerHelper
         final List<Integer> foundCodes = new ArrayList<>();
         if (flagTs.exists())
         {
-            flagTs.forEach(new Selector.ForEachBlock<ResultSet>()
+            flagTs.forEach(new Selector.ForEachBlock<>()
             {
                 @Override
                 public void exec(ResultSet object) throws SQLException
@@ -1609,14 +1608,14 @@ public class ONPRC_EHRTriggerHelper
         TableSelector ts = new TableSelector(ti, filter, null);
         final List<String> errors = new ArrayList<>();
         final List<String> encounteredRows = new ArrayList<>();
-        ts.forEach(new Selector.ForEachBlock<ResultSet>()
+        ts.forEach(new Selector.ForEachBlock<>()
         {
             @Override
             public void exec(ResultSet rs) throws SQLException
             {
                 encounteredRows.add("row");
 
-                Integer allowed = rs.getInt("allowed");
+                int allowed = rs.getInt("allowed");
                 String gender = rs.getString("gender");
                 Set<String> animals = new CaseInsensitiveHashSet();
                 String animalString = rs.getString("animals");
@@ -1627,7 +1626,7 @@ public class ONPRC_EHRTriggerHelper
 
                 animals.add(id);
 
-                if (recordsInTransaction != null && recordsInTransaction.size() > 0)
+                if (recordsInTransaction != null)
                 {
                     for (Map<String, Object> r : recordsInTransaction)
                     {
@@ -1661,7 +1660,7 @@ public class ONPRC_EHRTriggerHelper
                     }
                 }
 
-                Integer remaining = allowed - animals.size();
+                int remaining = allowed - animals.size();
                 if (remaining < 0)
                 {
                     errors.add("There are not enough spaces on protocol: " + protocolPair.second + ". Allowed: " + allowed + ", used: " + animals.size());
@@ -1687,7 +1686,7 @@ public class ONPRC_EHRTriggerHelper
             TableInfo ti = getTableInfo("ehr", "project");
             final Map<FieldKey, ColumnInfo> cols = QueryService.get().getColumns(ti, PageFlowUtil.set(FieldKey.fromString("protocol"), FieldKey.fromString("protocol/displayName")));
             TableSelector ts = new TableSelector(ti, cols.values(), new SimpleFilter(FieldKey.fromString("project"), project), null);
-            ts.forEach(new Selector.ForEachBlock<ResultSet>()
+            ts.forEach(new Selector.ForEachBlock<>()
             {
                 @Override
                 public void exec(ResultSet object) throws SQLException
@@ -1718,7 +1717,7 @@ public class ONPRC_EHRTriggerHelper
 
             TableInfo ti = getTableInfo("onprc_ehr", "birth_condition");
             TableSelector ts = new TableSelector(ti);
-            ts.forEach(new Selector.ForEachBlock<ResultSet>()
+            ts.forEach(new Selector.ForEachBlock<>()
             {
                 @Override
                 public void exec(ResultSet rs) throws SQLException
@@ -1746,7 +1745,7 @@ public class ONPRC_EHRTriggerHelper
             filter.addCondition(FieldKey.fromString("category"), "Condition");
             TableSelector ts = new TableSelector(ti, Collections.singleton("code"), filter, null);
             List<Integer> ret = ts.getArrayList(Integer.class);
-            if (ret != null && !ret.isEmpty())
+            if (!ret.isEmpty())
             {
                 _cachedConditionCodes.put(flag, ret.get(0));
             }
@@ -1771,7 +1770,7 @@ public class ONPRC_EHRTriggerHelper
             filter.addCondition(FieldKey.fromString("category"), "Condition");
             TableSelector ts = new TableSelector(ti, Collections.singleton("code"), filter, null);
             List<Integer> ret = ts.getArrayList(Integer.class);
-            if (ret != null && !ret.isEmpty())
+            if (!ret.isEmpty())
             {
                 _cachedConditionCodeMeanings.put(meaning, ret.get(0));
             }
@@ -1804,7 +1803,7 @@ public class ONPRC_EHRTriggerHelper
         TableInfo flagsTable = getTableInfo("study", "Animal Record Flags");
         TableSelector ts = new TableSelector(flagsTable, PageFlowUtil.set("flag"), filter, null);
         List<String> values = ts.getArrayList(String.class);
-        if (values != null && !values.isEmpty())
+        if (!values.isEmpty())
         {
             for (String v : values)
             {
@@ -1965,7 +1964,7 @@ public class ONPRC_EHRTriggerHelper
     {
         if (_nextProtocolId == null)
         {
-            String suffix = "";
+            String suffix;
             if (DbScope.getLabKeyScope().getSqlDialect().isPostgreSQL())
             {
                 suffix = "protocol ~ '^([0-9]+)$'";
@@ -2051,7 +2050,7 @@ public class ONPRC_EHRTriggerHelper
         return null;
     }
 
-    private Map<String, Set<String>> _cachedObservations = new HashMap<>();
+    private final Map<String, Set<String>> _cachedObservations = new HashMap<>();
 
     private
     @NotNull
@@ -2166,7 +2165,7 @@ public class ONPRC_EHRTriggerHelper
 
         Set<UserPrincipal> recipients = NotificationService.get().getRecipients(new MensesTMBNotification(ModuleLoader.getInstance().getModule(ONPRC_EHRModule.class)), getContainer());
 
-        if (recipients.size() == 0)
+        if (recipients.isEmpty())
         {
             _log.warn("No recipients, Menses TMB notification");
             return;
@@ -2182,7 +2181,7 @@ public class ONPRC_EHRTriggerHelper
         TableSelector ts = new TableSelector(ti, PageFlowUtil.set("category"), filter, null);  // Menses
         List<String> ret = ts.getArrayList(String.class);
 
-        if (ret != null && !ret.isEmpty())
+        if (!ret.isEmpty())
         {
             TableInfo t2 = getTableInfo("study", "assignment");
             SimpleFilter filters = new SimpleFilter(FieldKey.fromString("id"), id);
@@ -2191,7 +2190,7 @@ public class ONPRC_EHRTriggerHelper
             TableSelector ts2 = new TableSelector(t2, PageFlowUtil.set("project"), filters, null);  //
             List<Integer> ret2 = ts2.getArrayList(Integer.class);
 
-            if (ret2 != null && !ret2.isEmpty())
+            if (!ret2.isEmpty())
             {
                 for (Integer jcode : ret2)
                 {
@@ -2228,7 +2227,7 @@ public class ONPRC_EHRTriggerHelper
 
         Set<UserPrincipal> recipients = NotificationService.get().getRecipients(new CullListNotification(ModuleLoader.getInstance().getModule(ONPRC_EHRModule.class)), getContainer());
 
-        if (recipients.size() == 0)
+        if (recipients.isEmpty())
         {
             _log.warn("No recipients, Cull notification");
             return;
@@ -2242,7 +2241,7 @@ public class ONPRC_EHRTriggerHelper
 
         TableSelector ts = new TableSelector(ti, PageFlowUtil.set("code"), filter, null);  // 908 or 909
         List<Integer> ret = ts.getArrayList(Integer.class);
-        if (ret != null && !ret.isEmpty())
+        if (!ret.isEmpty())
         {
             for (Integer scode : ret)
             {
@@ -2291,7 +2290,7 @@ public class ONPRC_EHRTriggerHelper
 
         Set<UserPrincipal> recipients = NotificationService.get().getRecipients(new ProtocolAlertsNotification(ModuleLoader.getInstance().getModule(ONPRC_EHRModule.class)), getContainer());
 
-        if (recipients.size() == 0)
+        if (recipients.isEmpty())
         {
             _log.warn("No recipients, Protocol notification");
             return;
@@ -2318,7 +2317,7 @@ public class ONPRC_EHRTriggerHelper
             html.append("<table border=1 style='border-collapse: collapse;'>");
             html.append("<tr style='font-weight: bold;'><td>Iacuc Protocol</td><td> Investigator</td><td>  Iacuc Approval Date</td></tr>\n");
 
-            ts.forEach(new Selector.ForEachBlock<ResultSet>()
+            ts.forEach(new Selector.ForEachBlock<>()
                        {
 
                            @Override
@@ -2332,7 +2331,7 @@ public class ONPRC_EHRTriggerHelper
 
                                TableSelector ts2 = new TableSelector(ti2, PageFlowUtil.set("lastname"), filter2, null);
                                List<String> ret2 = ts2.getArrayList(String.class);
-                               if (ret2 != null && !ret2.isEmpty())
+                               if (!ret2.isEmpty())
                                {
                                    for (String Investname : ret2)
                                    {
@@ -2370,7 +2369,7 @@ public class ONPRC_EHRTriggerHelper
 
         Set<UserPrincipal> recipients = NotificationService.get().getRecipients(new ProjectAlertsNotification(ModuleLoader.getInstance().getModule(ONPRC_EHRModule.class)), getContainer());
 
-        if (recipients.size() == 0)
+        if (recipients.isEmpty())
         {
             _log.warn("No recipients, Center Project notification");
             return;
@@ -2425,7 +2424,7 @@ public class ONPRC_EHRTriggerHelper
 
                                TableSelector ts2 = new TableSelector(ti2, PageFlowUtil.set("lastname"), filter2, null);
                                List<String> ret2 = ts2.getArrayList(String.class);
-                               if (ret2 != null && !ret2.isEmpty())
+                               if (!ret2.isEmpty())
                                {
                                    for (String Investname : ret2)
                                    {
@@ -2471,7 +2470,7 @@ public class ONPRC_EHRTriggerHelper
                 }
             }
 
-            if (emails.size() == 0)
+            if (emails.isEmpty())
             {
                 _log.warn("No emails, unable to send EHR trigger script email");
                 return;
@@ -2522,7 +2521,7 @@ public class ONPRC_EHRTriggerHelper
         final List<Map<String, Object>> toUpdate = new ArrayList<>();
         final List<Map<String, Object>> oldKeys = new ArrayList<>();
         TableSelector ts = new TableSelector(ti, colMap.values(), new SimpleFilter(FieldKey.fromString("Id"), ids, CompareType.IN), null);
-        ts.forEach(new Selector.ForEachBlock<ResultSet>()
+        ts.forEach(new Selector.ForEachBlock<>()
         {
             @Override
             public void exec(ResultSet object) throws SQLException
@@ -2599,7 +2598,7 @@ public class ONPRC_EHRTriggerHelper
         final List<Map<String, Object>> toUpdate = new ArrayList<>();
         final List<Map<String, Object>> oldKeys = new ArrayList<>();
         TableSelector ts = new TableSelector(ti, colMap.values(), new SimpleFilter(FieldKey.fromString("Id"), id, CompareType.IN), null);
-        ts.forEach(new Selector.ForEachBlock<ResultSet>()
+        ts.forEach(new Selector.ForEachBlock<>()
         {
             @Override
             public void exec(ResultSet object) throws SQLException
@@ -2608,14 +2607,14 @@ public class ONPRC_EHRTriggerHelper
                 String origin = rs.getString(FieldKey.fromString("Id"));
                 String lsid = rs.getString(FieldKey.fromString("lsid"));
 
-                    Map<String, Object> row = new CaseInsensitiveHashMap<>();
-                    row.put("lsid", lsid);
-                    row.put("date", date);
-                    Map<String, Object> keyRow = new CaseInsensitiveHashMap<>();
-                    keyRow.put("lsid", lsid);
+                Map<String, Object> row = new CaseInsensitiveHashMap<>();
+                row.put("lsid", lsid);
+                row.put("date", date);
+                Map<String, Object> keyRow = new CaseInsensitiveHashMap<>();
+                keyRow.put("lsid", lsid);
 
-                    oldKeys.add(keyRow);
-                    toUpdate.add(row);
+                oldKeys.add(keyRow);
+                toUpdate.add(row);
 
 
             }

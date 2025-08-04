@@ -55,8 +55,8 @@ public class RequestSyncHelper
     private static final Logger _log = LogManager.getLogger(RequestSyncHelper.class);
     protected final static SimpleDateFormat _dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-    private Container _container = null;
-    private User _user = null;
+    private Container _container;
+    private User _user;
 
     public RequestSyncHelper(int userId, String containerId)
     {
@@ -595,7 +595,7 @@ public class RequestSyncHelper
         return cal.getTime();
     }
 
-    private char[] ALPHABET = new char[]{'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
+    private final char[] ALPHABET = new char[]{'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
 
     private int createContainer(DbSchema mergeSchema, User u, int orderId, int mergeTestId, int doctorId, int techId, Date date, Character containerName) throws SQLException
     {
@@ -664,7 +664,7 @@ public class RequestSyncHelper
 
         SqlSelector ss = new SqlSelector(mergeSchema, sql);
         final Pair<Integer, String> pair = Pair.of(null, null);
-        ss.forEach(new Selector.ForEachBlock<ResultSet>()
+        ss.forEach(new Selector.ForEachBlock<>()
         {
             @Override
             public void exec(ResultSet rs) throws SQLException

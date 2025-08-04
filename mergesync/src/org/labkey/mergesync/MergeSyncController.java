@@ -49,7 +49,7 @@ public class MergeSyncController extends SpringActionController
     }
 
     @RequiresPermission(AdminPermission.class)
-    public class SetEtlDetailsAction extends MutatingApiAction<EtlAdminForm>
+    public static class SetEtlDetailsAction extends MutatingApiAction<EtlAdminForm>
     {
         @Override
         public ApiResponse execute(EtlAdminForm form, BindException errors)
@@ -238,7 +238,7 @@ public class MergeSyncController extends SpringActionController
     }
 
     @RequiresPermission(AdminPermission.class)
-    public class GetEtlDetailsAction extends ReadOnlyApiAction<Object>
+    public static class GetEtlDetailsAction extends ReadOnlyApiAction<Object>
     {
         @Override
         public ApiResponse execute(Object form, BindException errors)
@@ -260,7 +260,7 @@ public class MergeSyncController extends SpringActionController
     }
 
     @RequiresPermission(AdminPermission.class)
-    public class PullFromMergeAction extends MutatingApiAction<Object>
+    public static class PullFromMergeAction extends MutatingApiAction<Object>
     {
         @Override
         public ApiResponse execute(Object form, BindException errors)
@@ -293,7 +293,7 @@ public class MergeSyncController extends SpringActionController
     }
 
     @RequiresPermission(AdminPermission.class)
-    public class ResyncRunsAction extends MutatingApiAction<ResyncRunsForm>
+    public static class ResyncRunsAction extends MutatingApiAction<ResyncRunsForm>
     {
         @Override
         public ApiResponse execute(ResyncRunsForm form, BindException errors)
@@ -323,17 +323,7 @@ public class MergeSyncController extends SpringActionController
                     }
                 }
             }
-            catch (NumberFormatException e)
-            {
-                errors.reject(ERROR_MSG, e.getMessage());
-                return null;
-            }
-            catch (RuntimeException e)
-            {
-                errors.reject(ERROR_MSG, e.getMessage());
-                return null;
-            }
-            catch (SQLException e)
+            catch (SQLException | RuntimeException e)
             {
                 errors.reject(ERROR_MSG, e.getMessage());
                 return null;

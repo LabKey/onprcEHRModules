@@ -22,8 +22,6 @@ import org.labkey.api.security.User;
 import org.labkey.api.util.DateUtil;
 import org.labkey.api.ehr.notification.AbstractEHRNotification;
 
-import java.util.Date;
-
 //Added 4-1-2016  Blasa
 
 public class ProtocolAlertsNotification extends AbstractEHRNotification

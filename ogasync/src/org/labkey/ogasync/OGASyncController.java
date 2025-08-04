@@ -44,7 +44,7 @@ public class OGASyncController extends SpringActionController
     }
 
     @RequiresPermission(AdminPermission.class)
-    public class RunEtlAction extends MutatingApiAction<Object>
+    public static class RunEtlAction extends MutatingApiAction<Object>
     {
         @Override
         public ApiResponse execute(Object form, BindException errors)
@@ -77,7 +77,7 @@ public class OGASyncController extends SpringActionController
     }
 
     @RequiresPermission(AdminPermission.class)
-    public class SetEtlDetailsAction extends MutatingApiAction<EtlAdminForm>
+    public static class SetEtlDetailsAction extends MutatingApiAction<EtlAdminForm>
     {
         @Override
         public ApiResponse execute(EtlAdminForm form, BindException errors)
@@ -235,7 +235,7 @@ public class OGASyncController extends SpringActionController
     }
 
     @RequiresPermission(AdminPermission.class)
-    public class GetEtlDetailsAction extends ReadOnlyApiAction<Object>
+    public static class GetEtlDetailsAction extends ReadOnlyApiAction<Object>
     {
         @Override
         public ApiResponse execute(Object form, BindException errors)

@@ -147,7 +147,7 @@ public class SSU_Notification extends AbstractNotification
             final List<Long> countList = new ArrayList<>();
             countList.add(count);
 
-            ts.forEach(new Selector.ForEachBlock<ResultSet>()
+            ts.forEach(new Selector.ForEachBlock<>()
             {
                 @Override
                 public void exec(ResultSet rs) throws SQLException
@@ -207,7 +207,7 @@ public class SSU_Notification extends AbstractNotification
         {
             final TableInfo treatmentsTable = QueryService.get().getUserSchema(u, ehrContainer, "study").getTable("treatment_order");
             final StringBuilder rows = new StringBuilder();
-            ts.forEach(new Selector.ForEachBlock<ResultSet>()
+            ts.forEach(new Selector.ForEachBlock<>()
             {
                 @Override
                 public void exec(ResultSet object) throws SQLException
@@ -300,7 +300,7 @@ public class SSU_Notification extends AbstractNotification
             msg.append("<table border=1 style='border-collapse: collapse;'>");
             msg.append("<tr style='font-weight: bold;'><td>Id</td><td>Date Opened</td><td>Date Closed</td><td>Description</td></tr>");
 
-            ts.forEach(new Selector.ForEachBlock<ResultSet>()
+            ts.forEach(new Selector.ForEachBlock<>()
             {
                 @Override
                 public void exec(ResultSet rs) throws SQLException
@@ -367,7 +367,7 @@ public class SSU_Notification extends AbstractNotification
             msg.append("<table border=1 style='border-collapse: collapse;'>");
             msg.append("<tr style='font-weight: bold;'><td>Id</td><td>Date</td><td>Procedure</td><td>Project</td><td>Assigned To Protocol?</td><td>PLT</td><td>HCT</td><td>Labwork Flags</td></tr>");
 
-            ts.forEach(new Selector.ForEachBlock<ResultSet>()
+            ts.forEach(new Selector.ForEachBlock<>()
             {
                 @Override
                 public void exec(ResultSet object) throws SQLException
@@ -426,7 +426,7 @@ public class SSU_Notification extends AbstractNotification
             msg.append("<table border=1 style='border-collapse: collapse;'>");
             msg.append("<tr style='font-weight: bold;'><td>Room</td><td>Cage</td><td>Id</td><td>Description</td><td>Days Since Last Rounds</td></tr>");
 
-            ts.forEach(new Selector.ForEachBlock<ResultSet>()
+            ts.forEach(new Selector.ForEachBlock<>()
             {
                 @Override
                 public void exec(ResultSet object) throws SQLException

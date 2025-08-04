@@ -36,7 +36,7 @@ import java.util.Map;
  */
 public class ONPRC_EHRManager
 {
-    private static ONPRC_EHRManager _instance = new ONPRC_EHRManager();
+    private static final ONPRC_EHRManager _instance = new ONPRC_EHRManager();
     public static final String VetReviewStartDateProp = "VetReviewStartDate";
 
     @Queryable
@@ -103,7 +103,7 @@ public class ONPRC_EHRManager
         return _instance;
     }
 
-    private String LOCK_PROP_KEY = getClass().getName() + "||animalLock";
+    private final String LOCK_PROP_KEY = getClass().getName() + "||animalLock";
 
     public void lockAnimalCreation(Container c, User u, Boolean lock, Integer startingId, Integer idCount)
     {

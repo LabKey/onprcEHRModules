@@ -401,7 +401,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         }
         catch (URISyntaxException e)
         {
-            throw new UnexpectedException(e);
+            throw UnexpectedException.wrap(e);
         }
 
         //Modified 9-9-2019 R.Blasa  Show Full Exposure report instead of Basic Expsoure
@@ -420,7 +420,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         }
         catch (URISyntaxException e)
         {
-            throw new UnexpectedException(e);
+            throw UnexpectedException.wrap(e);
         }
 
 
@@ -441,7 +441,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         }
         catch (URISyntaxException e)
         {
-            throw new UnexpectedException(e);
+            throw UnexpectedException.wrap(e);
         }
 
         //Modified: 9-7-2023  R.Blasa
@@ -461,7 +461,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         }
         catch (URISyntaxException e)
         {
-            throw new UnexpectedException(e);
+            throw UnexpectedException.wrap(e);
         }
 
 

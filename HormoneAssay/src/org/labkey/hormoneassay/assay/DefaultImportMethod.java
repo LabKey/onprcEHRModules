@@ -74,10 +74,10 @@ public class DefaultImportMethod extends DefaultAssayImportMethod
 
     public static List<Map<String, Object>> handleRows(List<Map<String, Object>> rows)
     {
-        List<Map<String, Object>> newRows = new ArrayList<Map<String, Object>>();
+        List<Map<String, Object>> newRows = new ArrayList<>();
         for (Map<String, Object> row : rows)
         {
-            Map<String, Object> map = new CaseInsensitiveHashMap<Object>(row);
+            Map<String, Object> map = new CaseInsensitiveHashMap<>(row);
             if (StringUtils.isEmpty((String)map.get(CATEGORY_FIELD)))
             {
                 map.put(CATEGORY_FIELD, SAMPLE_CATEGORY.Unknown.name());
