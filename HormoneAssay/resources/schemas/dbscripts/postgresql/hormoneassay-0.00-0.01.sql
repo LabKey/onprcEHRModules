@@ -45,6 +45,7 @@ CREATE TABLE hormoneassay.instruments (
     CONSTRAINT PK_instruments PRIMARY KEY (instrument)
 );
 
+-- @SkipOnEmptySchemasBegin
 INSERT INTO hormoneassay.rochee411_tests (test,code,sampletype,samplevolume,rangemin,rangemax,units,assaytype,controlmodule,samplediluent,testkey) VALUES ('ACTH', null, 'P(EDTA)', 50, 1, 2000, 'pg/ml', 'sand', 'PCMM', 'MD1', '80');
 INSERT INTO hormoneassay.rochee411_tests (test,code,sampletype,samplevolume,rangemin,rangemax,units,assaytype,controlmodule,samplediluent,testkey) VALUES ('Cortisol', null, 'S,P,Sal,U', 20, 0.036, 63.4, 'ug/dl', 'comp', 'PCU', 'DU', '160');
 INSERT INTO hormoneassay.rochee411_tests (test,code,sampletype,samplevolume,rangemin,rangemax,units,assaytype,controlmodule,samplediluent,testkey) VALUES ('C-Peptide', null, 'S,P,U', 20, 0.01, 40, 'ng/ml', 'sand', 'MA/MM?', 'MA', '70');
@@ -65,3 +66,4 @@ INSERT INTO hormoneassay.rochee411_tests (test,code,sampletype,samplevolume,rang
 INSERT INTO hormoneassay.rochee411_tests (test,code,sampletype,samplevolume,rangemin,rangemax,units,assaytype,controlmodule,samplediluent,testkey) VALUES ('Total T4', null, 'S,P', 15, 0.42, 24.9, 'ug/dl', 'comp', 'PCU', 'none', '21');
 INSERT INTO hormoneassay.rochee411_tests (test,code,sampletype,samplevolume,rangemin,rangemax,units,assaytype,controlmodule,samplediluent,testkey) VALUES ('Testosterone', 'TESTO', 'S,P', 20, 0.025, 15, 'ng/ml', 'comp', 'PCU', 'MD1', '111');
 INSERT INTO hormoneassay.rochee411_tests (test,code,sampletype,samplevolume,rangemin,rangemax,units,assaytype,controlmodule,samplediluent,testkey) VALUES ('TSH', null, 'S,P', 50, 0.005, 100, 'uIU/ml', 'sand', 'PCU', 'MA', '10');
+-- @SkipOnEmptySchemasEnd
