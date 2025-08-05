@@ -2410,7 +2410,7 @@ public class ONPRC_EHRTriggerHelper
             //Create header information on the report
 
             html.append("<table border=1 style='border-collapse: collapse;'>");
-            html.append("<tr style='font-weight: bold;'><td>Center Project</td><td>Iacuc Protocol</td><td> Investigator</td><td>  Project Start Date</td><td>  Previous End Date</td><td>  Project End Date</td></tr>\n");
+            html.append("<tr style='font-weight: bold;'><td>Center Project</td><td>Project ID</td><td>Iacuc Protocol</td><td> Investigator</td><td>  Project Start Date</td><td>  Project Previous End Date</td><td>  Project End Date</td></tr>\n");
             ts.forEach(new Selector.ForEachBlock<ResultSet>()
                        {
 
@@ -2428,7 +2428,7 @@ public class ONPRC_EHRTriggerHelper
                                {
                                    for (String Investname : ret2)
                                    {
-                                       html.append("<tr><td>" + PageFlowUtil.filter(rs.getString("name"))  + "</td><td>" + PageFlowUtil.filter(rs.getString("protocolID"))  + "</td><td>   " + PageFlowUtil.filter(Investname) + "   </td><td>" +  PageFlowUtil.filter(rs.getString("startdate")) + "</td><td>" +  PageFlowUtil.filter(rs.getString("previousdate")) + "</td><td>" +  PageFlowUtil.filter(rs.getString("enddate")) + "</td></tr>\n");
+                                       html.append("<tr><td>" + PageFlowUtil.filter(rs.getString("name"))  + "</td><td>" + PageFlowUtil.filter(rs.getString("project"))  + "</td><td>" + PageFlowUtil.filter(rs.getString("protocolID"))  + "</td><td>   " + PageFlowUtil.filter(Investname) + "   </td><td>" +  PageFlowUtil.filter(rs.getString("startdate")) + "</td><td>" +  PageFlowUtil.filter(rs.getString("previousdate")) + "</td><td>" +  PageFlowUtil.filter(rs.getString("enddate")) + "</td></tr>\n");
                                        break;
 
                                    }
