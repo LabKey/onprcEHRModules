@@ -100,7 +100,7 @@ public class ONPRC_BillingTest extends AbstractONPRC_EHRTest
         _portalHelper.addWebPart("ONPRC Finance");
         _portalHelper.moveWebPart("Finance", PortalHelper.Direction.UP);
     }
-
+    
     @Test
     public void testNotifications()
     {
