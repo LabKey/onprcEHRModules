@@ -1,7 +1,7 @@
 SELECT
 
     h1.Id,
-    group_concat(h2.Id) as InfantCageMate
+    group_concat(h2.Id) as infantcagemate
 
 FROM study.demographicsCurrentLocation h1
          JOIN study.demographicsCurrentLocation h2 ON (
