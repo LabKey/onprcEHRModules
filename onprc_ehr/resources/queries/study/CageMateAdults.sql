@@ -17,7 +17,9 @@
 SELECT
 
     h1.Id,
-    group_concat(h2.Id) as adultcagemate
+    group_concat(h2.Id) as adultcagemate,
+    group_Concat(distinct h2.room) as room,
+    group_concat(distinct h1.cage) as cage
 
 FROM study.demographicsCurrentLocation h1
          JOIN study.demographicsCurrentLocation h2 ON (
