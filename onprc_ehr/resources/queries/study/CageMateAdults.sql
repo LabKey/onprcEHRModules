@@ -15,21 +15,21 @@
  */
 
 SELECT
+
     h1.Id,
-    group_concat(h1.Id, '; ') as adultcagemate,
+    group_concat(h2.Id) as adultcagemate
 
-    group_Concat(distinct h1.room) as room,
-    group_concat(distinct h1.Id.curLocation.cage) as cage
+FROM study.demographicsCurrentLocation h1
+         JOIN study.demographicsCurrentLocation h2 ON (
+    h1.room = h2.room AND
+    h1.cage = h2.cage
 
+    )
 
-FROM study.demographicspaired h1
-
-
-where
-
+WHERE
     h1.room.housingType.value = 'Cage Location'
 
 
-group by h1.room, h1.Id.curLocation.cage, h1.Id
+GROUP BY h1.Id
 
 
