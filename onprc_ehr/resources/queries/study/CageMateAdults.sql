@@ -15,7 +15,7 @@
  */
 
 SELECT
-
+    h1.Id,
     group_concat(h1.Id, '; ') as adultcagemate,
 
     group_Concat(distinct h1.room) as room,
@@ -30,6 +30,6 @@ where
     h1.room.housingType.value = 'Cage Location'
 
 
-group by h1.room, h1.Id.curLocation.cage
+group by h1.room, h1.Id.curLocation.cage, h1.Id
 
 
