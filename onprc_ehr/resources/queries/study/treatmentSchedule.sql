@@ -41,7 +41,7 @@ SELECT
     ELSE minute(t1.date)
   END as minutes,
   dr.date as origDate,
-  ft.timedescription as std_time,     //Modified: 8-6-2025  required value to the ssrs reports
+  ft.timedescription as stdtime,     //Modified: 8-6-2025  required value to the ssrs reports
   CASE
     WHEN (tt.time IS NULL) THEN 'Default'
     ELSE 'Custom'
