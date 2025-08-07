@@ -19,7 +19,7 @@ SELECT
   s.*,
   timestampadd('SQL_TSI_MINUTE', ((s.hours * 60) + s.minutes), s.origDate) as date,
   CASE
-   WHEN (s.stdtime = 'EVENING') THEN 'PM'
+   WHEN (stdtime = 'EVENING') THEN 'AM'
     WHEN (hours >= 6 AND hours < 20) THEN 'AM'
     WHEN (hours < 6 OR hours >= 20) THEN 'PM'
     ELSE 'Other'
@@ -42,7 +42,7 @@ SELECT
     ELSE minute(t1.date)
   END as minutes,
   dr.date as origDate,
-  ft.timedescription as stdtime,     //Modified: 8-6-2025  required value to the ssrs reports
+  ft.timedescription as stdtime,   ----Modified: 8-6-2025  required field for SSRS reports
   CASE
     WHEN (tt.time IS NULL) THEN 'Default'
     ELSE 'Custom'
