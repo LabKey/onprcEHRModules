@@ -1,4 +1,4 @@
-reportname	category	reporttype	reporttitle	visible	containerpath	schemaname	queryname	viewname	report	datefieldname	todayonly	queryhaslocation	sort_order	QCStateLabelFieldName	description
+reportname	category	reporttype	reporttitle	visible	containerpath	schemaname	queryname	viewname	report	datefieldname	todayonly	queryhaslocation	sort_order	QCStatePublicDataFieldName	description
 activeAssignments	Assignments and Groups	query	Active Assignments	true		study	Assignment	Active Assignments		date	false	false			This report shows the active assignments for each animal
 assignmentHistory	Assignments and Groups	query	Assignment History	true		study	Assignment			date	false	false			This report shows all assignments records for the animals
 activeGroups	Assignments and Groups	query	Active Groups	true		study	animal_group_members	Active Members		date	false	false			This report shows the active assignments for each animal
