@@ -13,50 +13,64 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+WITH LatestObservationDates AS (
+    SELECT
+        Id,
+        caseid,
+        MAX(date) AS latest_date
+    FROM study.clinical_observations
+    WHERE caseid IS NOT NULL
+      AND category NOT IN ('Vet Review', 'Reviewed')
+    GROUP BY Id, caseid
+),
+     FilteredObservations AS (
+         SELECT
+             o.Id,
+             o.caseid,
+             o.date,
+             CASE WHEN o.category <> 'Observations' THEN o.category END AS category,
+             NULLIF(o.area, 'N/A') AS area,
+             o.observation,
+             COALESCE(
+                     CASE WHEN o.remark IS NOT NULL AND o.observation IS NOT NULL
+                              THEN ('.  ' || o.remark )
+                          ELSE o.remark
+                         END,
+                     ''
+             ) AS remark
+         FROM study.clinical_observations o
+         WHERE o.caseid IS NOT NULL
+           AND o.category NOT IN ('Vet Review', 'Reviewed')
+     ),
+     ObservationStrings AS (
+         SELECT
+             fo.Id,
+             fo.caseid,
+             fo.date,
+             CASE
+                 WHEN fo.category IS NULL AND fo.observation IS NOT NULL
+                     THEN (fo.observation ||  '. ' || fo.remark)
+                 WHEN fo.category IS NOT NULL AND fo.observation IS NULL
+                     THEN (fo.category || fo.remark)
+                 WHEN fo.category IS NOT NULL AND fo.area IS NULL
+                     THEN (fo.category || ': ' || fo.observation || fo.remark)
+                 WHEN fo.category IS NOT NULL AND fo.area IS NOT NULL
+                     THEN (fo.category || ': ' || fo.area || ', ' || fo.observation)
+                 ELSE fo.remark
+                 END AS observation_string
+         FROM FilteredObservations fo
+                  INNER JOIN LatestObservationDates lod
+                             ON fo.Id = lod.Id
+                                 AND fo.caseid = lod.caseid
+                                 AND fo.date = lod.latest_date
+     )
 SELECT
-  t.Id,
-  t.caseid,
-  max(t.date) as date,
-
-  GROUP_CONCAT(CASE
-    WHEN (t.category IS NOT NULL AND t.area IS NULL AND t.observation IS NOT NULL) THEN cast((t.category || ': ' || t.observation || t.remark) as varchar(1000))
-    WHEN (t.category IS NOT NULL AND t.area IS NOT NULL AND t.observation IS NOT NULL) THEN cast((t.category || ': ' || t.area || ', ' || t.observation) as varchar(1000))
-    WHEN (t.category IS NOT NULL AND t.observation IS NULL) THEN cast((t.category || t.remark) as varchar(1000))
-    WHEN (t.category IS NULL AND t.observation IS NOT NULL) THEN cast((t.observation || t.remark) as varchar(1000))
-    else t.remark
-  END, chr(10)) as observations
-
-FROM (SELECT
-  o.Id,
-  o.caseid,
-  o.date,
-  CASE
-    WHEN o.category = 'Observations' THEN null
-    ELSE o.category
-  END as category,
-  CASE
-    WHEN o.area = 'N/A' THEN null
-    ELSE o.area
-  END as area,
-  o.observation,
-  COALESCE(CASE
-    WHEN (o.remark IS NOT NULL AND o.observation IS NOT NULL) THEN ('.  ' || o.remark)
-    ELSE o.remark
-  END, '') as remark
-
-FROM study.clinical_observations o
-JOIN (
-  SELECT o2.Id, o2.caseid, max(o2.date) as date
-  FROM study.clinical_observations o2
-  WHERE o2.caseid IS NOT NULL
-     AND o2.category != 'Vet Review'
-     AND o2.category != 'Reviewed'
-  GROUP BY o2.Id, o2.caseid
-) t ON (t.Id = o.Id AND t.caseid = o.caseid AND t.date = o.date)
-
-WHERE o.caseid IS NOT NULL
-    AND o.category != 'Vet Review'
-    AND o.category != 'Reviewed'
-
-) t
-GROUP BY t.Id, t.caseid
+    Id,
+    caseid,
+    MAX(date) AS latest_date,
+    GROUP_CONCAT(
+            CAST(observation_string AS VARCHAR(1000)),
+            CHAR(10)
+    ) AS observations
+FROM ObservationStrings
+GROUP BY Id, caseid
