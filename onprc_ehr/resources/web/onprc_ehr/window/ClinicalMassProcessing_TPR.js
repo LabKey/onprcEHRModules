@@ -473,7 +473,7 @@ Ext4.define('ONPRC_EHR.window.ClinicalProcessingTPRWindow', {
 });
 
 EHR.DataEntryUtils.registerDataEntryFormButton('CLINICPROC_TPR_IMPORT', {
-    text: 'Clinical Processingv + TPR Template',
+    text: 'Clinical Processing + TPR Template',
     name: 'clinicprocimptpr',
     itemId: 'clinicprocimptpr',
     tooltip: 'Click to import using a Clinical Processing TPR excel template',
