@@ -4,6 +4,7 @@ import au.com.bytecode.opencsv.CSVWriter;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 import org.labkey.api.collections.CaseInsensitiveHashMap;
+import org.labkey.api.collections.IntHashMap;
 import org.labkey.api.data.Container;
 import org.labkey.api.data.TableInfo;
 import org.labkey.api.data.TableSelector;
@@ -157,7 +158,7 @@ public class RocheE411ImportMethod extends DefaultImportMethod
         {
             ParserErrors errors = context.getErrors();
 
-            Map<Integer, Integer> testColumnMap = new HashMap<>();
+            Map<Integer, Integer> testColumnMap = new IntHashMap<>();
 
             Map<String, Integer> headerMap = new HashMap<>();
             headerMap.put("well", 3);

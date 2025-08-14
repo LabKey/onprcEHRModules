@@ -24,6 +24,7 @@ import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.labkey.api.collections.CaseInsensitiveHashMap;
 import org.labkey.api.collections.CaseInsensitiveHashSet;
+import org.labkey.api.collections.IntHashMap;
 import org.labkey.api.data.ColumnInfo;
 import org.labkey.api.data.CompareType;
 import org.labkey.api.data.Container;
@@ -109,17 +110,17 @@ public class ONPRC_EHRTriggerHelper
     private final Container _container;
     private final User _user ;
     private final Map<String, Map<String, Object>> _cachedRooms = new HashMap<>();
-    private final Map<Integer, Pair<String, String>> _cachedProtocols = new HashMap<>();
+    private final Map<Integer, Pair<String, String>> _cachedProtocols = new IntHashMap<>();
     private final Map<String, Map<String, Set<String>>> _cachedHousing = new HashMap<>();
-    private final Map<Integer, String> _cachedProcedureCategories = new HashMap<>();
+    private final Map<Integer, String> _cachedProcedureCategories = new IntHashMap<>();
 
     //NOTE: we probably do not want to cache this outside this transaction, unless we can keep it accurate
     private final Map<String, List<CageRecord>> _cachedCages = new HashMap<>();
-    private final Map<Integer, Boolean> _cachedFrequencies = new HashMap<>();
-    private final Map<Integer, List<Integer>> _cachedFrequencyTimes = new HashMap<>();
+    private final Map<Integer, Boolean> _cachedFrequencies = new IntHashMap<>();
+    private final Map<Integer, List<Integer>> _cachedFrequencyTimes = new IntHashMap<>();
     private final Map<String, Integer> _cachedConditionCodes = new HashMap<>();
     private final Map<String, Integer> _cachedConditionCodeMeanings = new HashMap<>();
-    private final Map<Integer, DividerRecord> _cachedDividerRecords = new HashMap<>();
+    private final Map<Integer, DividerRecord> _cachedDividerRecords = new IntHashMap<>();
     private final SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd kk:mm");
 
     private Map<String, Boolean> _cachedBirthConditions = null;
