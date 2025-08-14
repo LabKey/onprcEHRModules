@@ -103,11 +103,12 @@ public class BulkClinicalEntryFormType extends TaskForm
 //        Added: 5-26-2021  R.Blasa
         defaultButtons.add("CLINICPROC_IMPORT");
 
+        //        Added: 8-12-2025 R.Blasa
+        defaultButtons.add("CLINICPROC_TPR_IMPORT");
+
         // Added 1-6-2015 Blasa
         defaultButtons.add("STROKE_ROUNDS")  ;
 
-        //        Added: 8-12-2025 R.Blasa
-        defaultButtons.add("CLINICPROC_TPR_IMPORT");
 
         return defaultButtons;
     }

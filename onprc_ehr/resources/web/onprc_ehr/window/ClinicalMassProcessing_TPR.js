@@ -30,7 +30,7 @@ Ext4.define('ONPRC_EHR.window.ClinicalProcessingTPRWindow', {
                 scope: this,
                 style: 'margin-bottom: 10px;',
                 handler: function(){
-                    window.location = LABKEY.contextPath + '/onprc_ehr/templates/ClinicalProcessing_TPR_Template.xlsx'
+                    window.location = LABKEY.contextPath + '/onprc_ehr/templates/ClinicalProcessingTemplate_TPR_Master.xlsx'
                 }
             },{
                 xtype: 'textarea',
