@@ -211,7 +211,7 @@ Ext4.define('ONPRC_EHR.window.ClinicalProcessingTPRWindow', {
         }
 
 
-        // if (row[0] && row[4])
+
         if (row[0] && row[7])
         {
             var obj = {
@@ -231,7 +231,7 @@ Ext4.define('ONPRC_EHR.window.ClinicalProcessingTPRWindow', {
         };
 
 
-        // if (row[0] && row[5] && row[6]){
+
         if (row[0] && row[8] && row[9]){
             var obj = {
                 Id: id,
@@ -249,8 +249,7 @@ Ext4.define('ONPRC_EHR.window.ClinicalProcessingTPRWindow', {
             }
         };
 
-        // if (row[0] && row[5]){
-        if (row[0] && row[8]){
+         if (row[0] && row[8]){
             var obj = {
                 Id: id,
                 date: this.getTime(date, times, errors, rowIdx),
@@ -267,7 +266,7 @@ Ext4.define('ONPRC_EHR.window.ClinicalProcessingTPRWindow', {
             }
         };
         // BCS Only
-        // if (row[0] && row[4]){
+
         if (row[0] && row[7]){
             var obj = {
                 Id: id,
@@ -285,7 +284,7 @@ Ext4.define('ONPRC_EHR.window.ClinicalProcessingTPRWindow', {
             }
         };
         // Temp Only
-        // if (row[10]){
+
            if (row[4]){
             var obj = {
                 Id: id,
@@ -304,7 +303,7 @@ Ext4.define('ONPRC_EHR.window.ClinicalProcessingTPRWindow', {
         };
 
         // Pulse Only
-        // if (row[11]){
+
           if (row[5]){
             var obj = {
                 Id: id,
@@ -322,7 +321,7 @@ Ext4.define('ONPRC_EHR.window.ClinicalProcessingTPRWindow', {
             }
         };
         // Resp
-        // if (row[12]){
+
         if (row[6]){
             var obj = {
                 Id: id,
@@ -340,7 +339,7 @@ Ext4.define('ONPRC_EHR.window.ClinicalProcessingTPRWindow', {
             }
         };
 
-        // if (row[1] && row[4] && row[8] && (row[1]  == 'Female')){
+
         if (row[1] && row[7] && row[11] && (row[1]  == 'Female')){
             var obj = {
                 Id: id,
@@ -356,7 +355,7 @@ Ext4.define('ONPRC_EHR.window.ClinicalProcessingTPRWindow', {
         };
         
 
-        // if (row[1] && row[4] && row[7] && (row[1]  == 'Female')){
+
         if (row[1] && row[7] && row[10] && (row[1]  == 'Female')){
             var snomedcode;
             if (row[10] == 1 )
