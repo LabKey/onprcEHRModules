@@ -211,7 +211,8 @@ Ext4.define('ONPRC_EHR.window.ClinicalProcessingTPRWindow', {
         }
 
 
-        if (row[0] && row[4])
+        // if (row[0] && row[4])
+        if (row[0] && row[7])
         {
             var obj = {
                 Id: id,
@@ -230,7 +231,8 @@ Ext4.define('ONPRC_EHR.window.ClinicalProcessingTPRWindow', {
         };
 
 
-        if (row[0] && row[5] && row[6]){
+        // if (row[0] && row[5] && row[6]){
+        if (row[0] && row[8] && row[9]){
             var obj = {
                 Id: id,
                 date: this.getTime(date, times, errors, rowIdx),
@@ -247,13 +249,14 @@ Ext4.define('ONPRC_EHR.window.ClinicalProcessingTPRWindow', {
             }
         };
 
-        if (row[0] && row[5]){
+        // if (row[0] && row[5]){
+        if (row[0] && row[8]){
             var obj = {
                 Id: id,
                 date: this.getTime(date, times, errors, rowIdx),
                 category: this.safeGet(parsed, 41, 1),
                 area: this.safeGet(parsed, 42, 1),
-                observation:Ext4.String.trim(row[5]) ,  // Alopecia score
+                observation:Ext4.String.trim(row[8]) ,  // Alopecia score
                 performedby: performedBy
 
             };
@@ -264,13 +267,14 @@ Ext4.define('ONPRC_EHR.window.ClinicalProcessingTPRWindow', {
             }
         };
         // BCS Only
-        if (row[0] && row[4]){
+        // if (row[0] && row[4]){
+        if (row[0] && row[7]){
             var obj = {
                 Id: id,
                 date: this.getTime(date, times, errors, rowIdx),
                 category: this.safeGet(parsed, 34, 1),
                 area: this.safeGet(parsed, 35, 1),
-                observation:Ext4.String.trim(row[4]) ,  // BCS score
+                observation:Ext4.String.trim(row[7]) ,  // BCS score
                 performedby: performedBy
 
             };
@@ -281,13 +285,14 @@ Ext4.define('ONPRC_EHR.window.ClinicalProcessingTPRWindow', {
             }
         };
         // Temp Only
-        if (row[10]){
+        // if (row[10]){
+           if (row[4]){
             var obj = {
                 Id: id,
                 date: this.getTime(date, times, errors, rowIdx),
                 category: this.safeGet(parsed, 55, 1),
                 area: this.safeGet(parsed, 56, 1),
-                observation:Ext4.String.trim(row[10]) ,
+                observation:Ext4.String.trim(row[4]) ,
                 performedby: performedBy
 
             };
@@ -299,13 +304,14 @@ Ext4.define('ONPRC_EHR.window.ClinicalProcessingTPRWindow', {
         };
 
         // Pulse Only
-        if (row[11]){
+        // if (row[11]){
+          if (row[5]){
             var obj = {
                 Id: id,
                 date: this.getTime(date, times, errors, rowIdx),
                 category: this.safeGet(parsed, 62, 1),
                 area: this.safeGet(parsed, 63, 1),
-                observation:Ext4.String.trim(row[11]) ,
+                observation:Ext4.String.trim(row[5]) ,
                 performedby: performedBy
 
             };
@@ -316,13 +322,14 @@ Ext4.define('ONPRC_EHR.window.ClinicalProcessingTPRWindow', {
             }
         };
         // Resp
-        if (row[12]){
+        // if (row[12]){
+        if (row[6]){
             var obj = {
                 Id: id,
                 date: this.getTime(date, times, errors, rowIdx),
                 category: this.safeGet(parsed, 69, 1),
                 area: this.safeGet(parsed, 70, 1),
-                observation:Ext4.String.trim(row[12]) ,
+                observation:Ext4.String.trim(row[6]) ,
                 performedby: performedBy
 
             };
@@ -333,7 +340,8 @@ Ext4.define('ONPRC_EHR.window.ClinicalProcessingTPRWindow', {
             }
         };
 
-        if (row[1] && row[4] && row[8] && (row[1]  == 'Female')){
+        // if (row[1] && row[4] && row[8] && (row[1]  == 'Female')){
+        if (row[1] && row[7] && row[11] && (row[1]  == 'Female')){
             var obj = {
                 Id: id,
                 date: this.getTime(date, times, errors, rowIdx),
@@ -348,13 +356,14 @@ Ext4.define('ONPRC_EHR.window.ClinicalProcessingTPRWindow', {
         };
         
 
-        if (row[1] && row[4] && row[7] && (row[1]  == 'Female')){
+        // if (row[1] && row[4] && row[7] && (row[1]  == 'Female')){
+        if (row[1] && row[7] && row[10] && (row[1]  == 'Female')){
             var snomedcode;
-            if (row[7] == 1 )
+            if (row[10] == 1 )
             {snomedcode = 'F-31020'}
-            if (row[7] == 2 )
+            if (row[10] == 2 )
             {snomedcode = 'F-31030'}
-            if (row[7]== 3 )
+            if (row[10]== 3 )
             {snomedcode = 'F-31040'}
             var obj = {
                 Id: id,
@@ -372,7 +381,8 @@ Ext4.define('ONPRC_EHR.window.ClinicalProcessingTPRWindow', {
 
 
 
-        if (row[4] && !row[9]) {
+        // if (row[4] && !row[9]) {
+        if (row[7] && !row[12]) {
             var obj = {
                 Id: id,
                 date: this.getTime(date, times, errors, rowIdx),
@@ -389,13 +399,14 @@ Ext4.define('ONPRC_EHR.window.ClinicalProcessingTPRWindow', {
             }
         }
 
-         else   if (row[4] && row[9]) {
+         // else   if (row[4] && row[9]) {
+        else   if (row[7] && row[12]) {
                 var obj = {
                     Id: id,
                     date: this.getTime(date, times, errors, rowIdx),
                     s: this.safeGet(parsed, 20, 1),
                     p: this.safeGet(parsed, 25, 1),
-                    o:row[9],
+                    o:row[12],
                     assignedVet: performedBy,
                     performedby: performedBy
 
