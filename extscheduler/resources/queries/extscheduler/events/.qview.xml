@@ -1,0 +1,17 @@
+<customView xmlns="http://labkey.org/data/xml/queryCustomView">
+    <columns>
+        <column name="ResouceId"/>
+        <column name="Name"/>
+        <column name="StartDate"/>
+        <column name="StartDate"/>
+        <column name="EndDate"/>
+        <column name="UserId"/>
+        <column name="Alias"/>
+    </columns>
+    <filters>
+        <filter column="StartDate" operator="dategte" value="-30d" />
+    </filters>
+    <sorts>
+        <sort column="date" descending="true"/>
+    </sorts>
+</customView>
