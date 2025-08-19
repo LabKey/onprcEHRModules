@@ -15,6 +15,7 @@ Notes:
     the same rule*
   * Unassigned animals can be found by filtering for "unassigned" in
     the AssignedVet column
+  * Added Species for future development
  */
 
 SELECT *
