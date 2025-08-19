@@ -134,7 +134,7 @@ EHR.model.DataModelManager.registerMetadata('Pairing_Properties', {
             },
             other_infant: {
                 xtype: 'onprc_ehr-pairedinfantentryfield',
-                header: 'Infant ID',     // should display the infant
+                header: 'Other Infant ID',     // should display the infant
                 columnConfig: {
                     width: 160
                 }
