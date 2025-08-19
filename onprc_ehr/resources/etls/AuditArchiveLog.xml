@@ -1,0 +1,16 @@
+<etl xmlns="http://labkey.org/etl/xml">
+    <name>ArchiveAuditFor1Year</name>
+    <description>Triggers a stored procedure to Archive Audit Tables where records older than 1 year</description>
+    <transforms>
+        <transform id="EndDateRecord" type="StoredProcedure">
+            <description>Code to enddate or remove Aliases not Assocatied with ONPRC.</description>
+            <procedure procedureName="ArchiveAuditTables" schemaName="audit"/>
+        </transform>
+    </transforms>
+
+    <schedule>
+
+        <cron expression=" 23 ? * * *"/>
+
+    </schedule>
+</etl>
