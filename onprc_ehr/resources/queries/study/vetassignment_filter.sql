@@ -19,8 +19,8 @@ Notes:
 
 SELECT *
 FROM (
-         SELECT d.Id
-              , CASE
+         SELECT d.Id,
+              CASE
                     WHEN d.CaseVet IS NOT NULL  THEN d.CaseVet
                     WHEN R01.UserID IS NOT NULL THEN R01.UserID.DisplayName
                     WHEN R02.UserID IS NOT NULL THEN R02.UserID.DisplayName
@@ -45,8 +45,8 @@ FROM (
                     WHEN R21.UserID IS NOT NULL THEN R21.UserID.DisplayName
                     WHEN R22.UserID IS NOT NULL THEN R22.UserID.DisplayName
                     ELSE 'Unassigned'
-             END AS AssignedVet
-              , CASE
+              END AS AssignedVet,
+              CASE
                     WHEN d.CaseVet IS NOT NULL 	THEN 'Open Case'
                     WHEN R01.UserID IS NOT NULL THEN 'Room Priority'
                     WHEN R02.UserID IS NOT NULL THEN 'Area Priority'
@@ -71,17 +71,18 @@ FROM (
                     WHEN R21.UserID IS NOT NULL THEN 'Room'
                     WHEN R22.UserID IS NOT NULL THEN 'Area'
                     ELSE 'No Matching Rule'
-             END AS AssignmentType
-              , d.CaseVet
-              , d.CaseDate
-              , d.Project
-              , d.AssignmentType AS ProjectType
-              , d.Protocol
-              , d.ProtocolPI
-              , d.Room
-              , d.Area
-              , d.Calculated_status
-              , CASE
+              END AS AssignmentType,
+              d.CaseVet,
+              d.CaseDate,
+              d.Project,
+              d.AssignmentType AS ProjectType,
+              d.Protocol,
+              d.ProtocolPI,
+              d.Room,
+              d.Area,
+              d.Calculated_status,
+              d.Species,
+              CASE
                     WHEN d.CaseVet IS NOT NULL  THEN 0
                     WHEN R01.UserID IS NOT NULL THEN 1
                     WHEN R02.UserID IS NOT NULL THEN 2
@@ -108,6 +109,7 @@ FROM (
                     ELSE 99
              END AS MatchedRule
          FROM study.vetAssignment_demographics AS d
+
 /* R01 Room Priority                  */ LEFT JOIN onprc_ehr.vet_assignment R01 ON (R01.Room = d.Room AND R01.Area IS NULL AND R01.Project IS NULL AND R01.Protocol IS NULL AND R01.Priority = true)
 /* R02 Area Priority                  */ LEFT JOIN onprc_ehr.vet_assignment R02 ON (R02.Area = d.Area AND R02.Room IS NULL AND R02.Project IS NULL AND R02.Protocol IS NULL AND R02.Priority = true)
 
@@ -141,4 +143,3 @@ FROM (
 /* R21 Room                           */ LEFT JOIN onprc_ehr.vet_assignment R21 ON (R21.Room = d.Room AND R21.Area IS NULL AND R21.Protocol IS NULL AND R21.Project IS NULL AND R21.Priority = false)
 /* R22 Area                           */ LEFT JOIN onprc_ehr.vet_assignment R22 ON (R22.Area = d.Area AND R22.Room IS NULL AND R22.Protocol IS NULL AND R22.Project IS NULL AND R22.Priority = false)
      ) placeholderAlias
-
