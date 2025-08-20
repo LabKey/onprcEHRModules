@@ -12,6 +12,7 @@
             </procedure>
         </transform>
     </transforms>
+    <!--Updated 20250820 to add schduled time-->
     <schedule>
         <cronString>0 0 23 * * ?</cronString>
         <enabled>true</enabled>
