@@ -8,9 +8,10 @@
         </transform>
     </transforms>
 
+
     <schedule>
-
-        <cron expression=" 23 ? * * *"/>
-
+        <cron expression="0 0 23 * * ?"/>
     </schedule>
+
+
 </etl>
