@@ -39,7 +39,7 @@
                         <isHidden>false</isHidden>
                         <columnTitle>Category</columnTitle>
                         <fk>
-                            <fkDbSchema>ehr</fkDbSchema>
+                            <fkDbSchema>onprc_ehr</fkDbSchema>
                             <fkTable>observation_types</fkTable>
                             <fkColumnName>value</fkColumnName>
                         </fk>
