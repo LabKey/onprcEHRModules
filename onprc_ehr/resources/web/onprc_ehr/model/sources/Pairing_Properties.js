@@ -132,6 +132,21 @@ EHR.model.DataModelManager.registerMetadata('Pairing_Properties', {
                     width: 100
                 }
             },
+
+            category: {
+                allowBlank: false,
+                editorConfig: {
+                    plugins: [Ext4.create('LDK.plugin.UserEditableCombo', {
+                        allowChooseOther: false
+                    })]
+                },
+                lookup: {
+                    columns: 'value,description'
+                },
+                columnConfig: {
+                    width: 200
+                }
+            },
             other_infant: {
                 xtype: 'onprc_ehr-pairedinfantentryfield',
                 header: 'Other Infant ID',     // should display the infant
