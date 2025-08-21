@@ -31,15 +31,15 @@ EHR.model.DataModelManager.registerMetadata('Pairing_Properties', {
                 }
             },
 
-            eventtype: {
-                editorConfig: {
-                    xtype: 'onprc_ehr-pairingcombo',
-                    defaultSubset: 'divider_change'  //Use the category name here
-                },
-                columnConfig: {
-                    width: 200
-                }
-            },
+            // eventtype: {
+            //     editorConfig: {
+            //         xtype: 'onprc_ehr-pairingcombo',
+            //         defaultSubset: 'divider_change'  //Use the category name here
+            //     },
+            //     columnConfig: {
+            //         width: 200
+            //     }
+            // },
 
 
             goal: {
