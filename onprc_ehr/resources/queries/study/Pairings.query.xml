@@ -45,13 +45,9 @@
                         </fk>
                     </column>
 
+
                     <column columnName="eventtype">
                         <columnTitle>Start Type</columnTitle>
-                        <fk>
-                            <fkDbSchema>onprc_ehr</fkDbSchema>
-                            <fkTable>PairingStartType</fkTable>
-                            <fkColumnName>value</fkColumnName>
-                        </fk>
                     </column>
 
                      <column columnName="housingtype">
@@ -92,8 +88,8 @@
                     <column columnName="endeventType">
                         <columnTitle>End Type</columnTitle>
                         <fk>
-                            <fkDbSchema>onprc_ehr</fkDbSchema>
-                            <fkTable>PairingEndType</fkTable>
+                            <fkDbSchema>ehr_lookkups</fkDbSchema>
+                            <fkTable>pairingEndType</fkTable>
                             <fkColumnName>value</fkColumnName>
                         </fk>
                     </column>
@@ -135,15 +131,7 @@
                     <column columnName="project">
                         <isHidden>true</isHidden>
                     </column>
-                    <column columnName="category">
-                        <isHidden>false</isHidden>
-                        <columnTitle>Category</columnTitle>
-                        <fk>
-                            <fkDbSchema>ehr</fkDbSchema>
-                            <fkTable>observation_types</fkTable>
-                            <fkColumnName>value</fkColumnName>
-                        </fk>
-                    </column>
+
                 </columns>
             </table>
         </tables>

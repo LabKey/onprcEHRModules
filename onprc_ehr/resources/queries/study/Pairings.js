@@ -6,33 +6,9 @@
 
 require("ehr/triggers").initScript(this);
 
-var ONPRC_triggerHelper = new org.labkey.onprc_ehr.query.ONPRC_EHRTriggerHelper(LABKEY.Security.currentUser.id, LABKEY.Security.currentContainer.id);
-
-function onInit(event, helper) {
+function onInit(event, helper){
     helper.setScriptOptions({
         errorSeverityForImproperHousing: 'INFO'
     });
-
 }
-function onComplete(event, errors, triggerHelper){
-    if (!triggerHelper.isETL() && !triggerHelper.isValidateOnly()){
-        var studyRows = triggerHelper.getRows();
-        var idsToClose = [];
-        if (studyRows){
-            for (var i=0;i<studyRows.length;i++){
-                if (studyRows[i].row.date){
-                    idsToClose.push({
-                        Id: studyRows[i].row.Id,
-                        date: EHR.Server.Utils.datetimeToString(studyRows[i].row.date),  //stringify to serialize properly
-                        objectid: studyRows[i].row.objectid
-                    });
-                }
-            }
-        }
 
-        if (idsToClose.length){
-            //NOTE: this list should be limited to 1 row per animalId
-            ONPRC_triggerHelper.closeActivePairingsRecords(idsToClose);
-        }
-    }
-}

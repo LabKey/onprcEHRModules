@@ -49,7 +49,20 @@ ONPRC.Utils = new function(){
             return ONPRC_EHR._pairingStore;
         },
 
-        preloadSession: function() {
+        getpairingObservationTypesStore: function() {
+            if (ONPRC_EHR._pairingobservationTypesStore)
+                return ONPRC_EHR._pairingobservationTypesStore;
+
+            EHR._observationTypesStore = Ext4.create('LABKEY.ext4.data.Store', {
+                type: 'labkey-store',
+                schemaName: 'onprc_ehr',
+                queryName: 'observation_types',
+                columns: 'value,editorconfig',
+                autoLoad: true
+            });
+        },
+
+            preloadSession: function() {
             LABKEY.Ajax.request({
                 url: LABKEY.ActionURL.buildURL('onprc_ehr', 'getSessionId'),
                 method: 'POST',
