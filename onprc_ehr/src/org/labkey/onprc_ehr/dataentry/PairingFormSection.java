@@ -15,6 +15,7 @@
  */
 package org.labkey.onprc_ehr.dataentry;
 
+import org.labkey.api.ehr.EHRService;
 import org.labkey.api.ehr.dataentry.SimpleFormSection;
 import org.labkey.api.view.template.ClientDependency;
 
@@ -29,10 +30,17 @@ public class PairingFormSection extends SimpleFormSection
 {
     public PairingFormSection()
     {
-        super("study", "pairings", "Pairing Observations", "ehr-gridpanel");
+        super("study", "pairings", "Pairing Observations", "onprc_ehr-pairingobservationgridpanel");
         setConfigSources(Collections.singletonList("Task"));
-        addClientDependency(ClientDependency.supplierFromPath("ehr/form/field/LowestCageField.js"));
-        addClientDependency(ClientDependency.supplierFromPath("ehr/data/PairingClientStore.js"));
-        setClientStoreClass("EHR.data.PairingClientStore");
+
+        //Modified: 8-25-2025 R. Blasa No longer being used as search tool
+//        addClientDependency(ClientDependency.supplierFromPath("ehr/form/field/LowestCageField.js"));
+//        addClientDependency(ClientDependency.supplierFromPath("ehr/data/PairingClientStore.js"));
+//        setClientStoreClass("EHR.data.PairingClientStore");
+
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/plugin/PairingObservationsCellEditing.js"));
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/grid/PairingObservationGridPanel.js"));
+
+
     }
 }
