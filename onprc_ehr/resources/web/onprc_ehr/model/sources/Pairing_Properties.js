@@ -93,7 +93,7 @@ EHR.model.DataModelManager.registerMetadata('Pairing_Properties', {
             },
             lowestcage: {
                     xtype: 'onprc_ehr-pairedidentryfield',
-                    // header:'Other ID',
+                    header:'Pair ID',
                     columnConfig: {
                     width: 200
                     }
