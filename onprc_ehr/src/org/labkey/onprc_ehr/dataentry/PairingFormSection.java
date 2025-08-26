@@ -35,7 +35,7 @@ public class PairingFormSection extends SimpleFormSection
 
 
         addClientDependency(ClientDependency.supplierFromPath("ehr/form/field/LowestCageField.js"));
-        addClientDependency(ClientDependency.supplierFromPath("ehr/data/PairingClientStore.js"));
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/data/PairingClientStore.js"));
         setClientStoreClass("EHR.data.PairingClientStore");
 
         addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/plugin/PairingObservationsCellEditing.js"));
