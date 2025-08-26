@@ -8,7 +8,7 @@
  */
 Ext4.define('ONPRC_EHR.grid.PairingObservationGridPanel', {
     extend: 'EHR.grid.Panel',
-    alias: 'widget.onprc_ehr-pairingbservationgridpanel',
+    alias: 'widget.onprc_ehr-pairingobservationgridpanel',
 
     initComponent: function(){
         this.pairingobservationTypesStore = ONPRC.Utils.getpairingObservationTypesStore();
