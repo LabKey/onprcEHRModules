@@ -6,7 +6,7 @@
 /**
  *
  */
-Ext4.define('EHR.data.PairingClientStore', {
+Ext4.define('ONPRC_EHR.data.PairingClientStore', {
     extend: 'EHR.data.DataEntryClientStore',
 
     constructor: function(){
