@@ -31,10 +31,10 @@ EHR.model.DataModelManager.registerMetadata('Pairing_Properties', {
                 }
             },
             infant_id: {
-                xtype: 'onprc_ehr-paireddamdentryfield',
+                xtype: 'onprc_ehr-pairedinfantentryfield',
                 allowBlank: false,
                 columnConfig: {
-                    width: 200
+                    width: 120
                 }
             },
 
@@ -59,6 +59,9 @@ EHR.model.DataModelManager.registerMetadata('Pairing_Properties', {
             },
 
             endeventType: {
+                columnConfig: {
+                    width: 180
+                },
                 lookup: {
                     sort: 'sort_order'
                 }
@@ -83,7 +86,7 @@ EHR.model.DataModelManager.registerMetadata('Pairing_Properties', {
             observation: {
                 allowBlank: true,
                 columnConfig: {
-                    width: 170
+                    width: 250
                 },
                 lookup: {
                     filterArray: [

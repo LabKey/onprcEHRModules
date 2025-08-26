@@ -19,7 +19,7 @@ Ext4.define('ONPRC_EHR.grid.PairingObservationGridPanel', {
     getEditingPlugin: function(){
         LDK.Assert.assertNotEmpty('this.pairingobservationTypesStore is null in PairingObservationsGridPanel', this.pairingobservationTypesStore);
 
-        return Ext4.create('ONPRC_EHR.grid.plugin.pairingObservationsCellEditing', {
+        return Ext4.create('ONPRC_EHR.grid.plugin.PairingObservationsCellEditing', {
             pluginId: this.editingPluginId,
             clicksToEdit: this.clicksToEdit,
             pairingobservationTypesStore: ONPRC.Utils.getpairingObservationTypesStore()

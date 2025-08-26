@@ -34,9 +34,9 @@ public class PairingFormSection extends SimpleFormSection
         setConfigSources(Collections.singletonList("Task"));
 
         //Modified: 8-25-2025 R. Blasa No longer being used as search tool
-        addClientDependency(ClientDependency.supplierFromPath("ehr/form/field/LowestCageField.js"));
-        addClientDependency(ClientDependency.supplierFromPath("ehr/data/PairingClientStore.js"));
-        setClientStoreClass("EHR.data.PairingClientStore");
+//        addClientDependency(ClientDependency.supplierFromPath("ehr/form/field/LowestCageField.js"));
+//        addClientDependency(ClientDependency.supplierFromPath("ehr/data/PairingClientStore.js"));
+//        setClientStoreClass("EHR.data.PairingClientStore");
 
         addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/plugin/PairingObservationsCellEditing.js"));
         addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/grid/PairingObservationGridPanel.js"));

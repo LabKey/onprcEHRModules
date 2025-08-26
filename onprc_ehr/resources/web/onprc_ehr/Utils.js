@@ -53,7 +53,7 @@ ONPRC.Utils = new function(){
             if (ONPRC_EHR._pairingobservationTypesStore)
                 return ONPRC_EHR._pairingobservationTypesStore;
 
-            EHR._observationTypesStore = Ext4.create('LABKEY.ext4.data.Store', {
+            ONPRC_EHR._pairingobservationTypesStore = Ext4.create('LABKEY.ext4.data.Store', {
                 type: 'labkey-store',
                 schemaName: 'onprc_ehr',
                 queryName: 'observation_types',
