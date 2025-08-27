@@ -163,7 +163,7 @@ public class RoutineClinicalTestsNotification extends ColonyAlertsNotification
             fieldKeyMap.put(col.getFieldKey(), col);
         }
 
-        ts.forEach(new Selector.ForEachBlock<ResultSet>()
+        ts.forEach(new Selector.ForEachBlock<>()
         {
             @Override
             public void exec(ResultSet object) throws SQLException
@@ -253,7 +253,6 @@ public class RoutineClinicalTestsNotification extends ColonyAlertsNotification
 
     /**
      * find animals not weighed in the past 60 days
-     * @param msg
      */
     protected void getAnimalsNotWeightedInPast60Days(StringBuilder msg, Container c, User u)
     {

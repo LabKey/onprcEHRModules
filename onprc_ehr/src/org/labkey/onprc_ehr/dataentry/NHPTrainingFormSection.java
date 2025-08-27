@@ -16,7 +16,6 @@
 package org.labkey.onprc_ehr.dataentry;
 
 import org.labkey.api.ehr.dataentry.SimpleGridPanel;
-import org.labkey.api.view.template.ClientDependency;
 
 //Created: 12-5-2016 R.Blasa
 public class NHPTrainingFormSection extends SimpleGridPanel

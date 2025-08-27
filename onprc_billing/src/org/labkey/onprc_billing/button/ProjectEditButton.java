@@ -1,8 +1,6 @@
 package org.labkey.onprc_billing.button;
 
 import org.labkey.api.ehr.buttons.EHRShowEditUIButton;
-import org.labkey.api.ehr.security.EHRProjectEditPermission;
-import org.labkey.api.ldk.buttons.ShowEditUIButton;
 import org.labkey.api.module.Module;
 import org.labkey.api.security.permissions.Permission;
 import org.labkey.onprc_billing.security.ONPRCBillingAdminPermission;

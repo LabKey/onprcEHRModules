@@ -16,7 +16,7 @@
 package org.labkey.onprc_ehr.dataentry;
 
 import org.json.JSONObject;
-import org.labkey.api.ehr.dataentry.AnimalDetailsFormSection;
+
 import org.labkey.api.ehr.dataentry.DataEntryFormContext;
 import org.labkey.api.ehr.dataentry.TaskForm;
 import org.labkey.api.ehr.dataentry.TaskFormSection;
@@ -76,7 +76,7 @@ public class ArrivalFormType extends TaskForm
     {
         List<String> ret = super.getButtonConfigs();
 
-        List<String> defaultButtons = new ArrayList<String>();
+        List<String> defaultButtons = new ArrayList<>();
 
         defaultButtons.add("BIRTHARRIVALFINAL");
         defaultButtons.add("BIRTHARRIVALREVIEW");

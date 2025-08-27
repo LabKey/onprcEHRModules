@@ -101,7 +101,6 @@ public class LabTestScheduleNotifications extends AbstractEHRNotification
 
     /**
      * we find any record requested since the last email
-     * @param msg
      */
     private void requestsSubmittedSinceLastEmail(Container c, User u, StringBuilder msg)
     {
@@ -151,7 +150,6 @@ public class LabTestScheduleNotifications extends AbstractEHRNotification
 
     /**
      * we find any requests not yet approved
-     * @param msg
      */
     private void requestsNotYetApproved(Container c, User u, StringBuilder msg)
     {
@@ -199,7 +197,6 @@ public class LabTestScheduleNotifications extends AbstractEHRNotification
 
     /**
      * we find any record not completed where the date requested is today
-     * @param msg
      */
     private void testsNotYetCompleted(Container c, User u, StringBuilder msg)
     {

@@ -16,7 +16,6 @@
 package org.labkey.onprc_ehr.dataentry;
 
 import org.json.JSONObject;
-import org.labkey.api.ehr.dataentry.AnimalDetailsFormSection;
 import org.labkey.api.ehr.dataentry.DataEntryFormContext;
 import org.labkey.api.ehr.dataentry.FormSection;
 import org.labkey.api.ehr.dataentry.TaskForm;
@@ -98,7 +97,7 @@ public class BirthFormType extends TaskForm
     {
         List<String> ret = super.getButtonConfigs();
 
-        List<String> defaultButtons = new ArrayList<String>();
+        List<String> defaultButtons = new ArrayList<>();
         defaultButtons.add("SAVEDRAFT");
         defaultButtons.add("BIRTHARRIVALCLOSE");
         defaultButtons.add("BIRTHARRIVALREVIEW");

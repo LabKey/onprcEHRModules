@@ -16,6 +16,7 @@
 package org.labkey.onprc_ehr;
 
 import org.labkey.api.data.Container;
+import org.labkey.api.data.DbSequenceManager;
 import org.labkey.api.data.PropertyManager;
 import org.labkey.api.data.PropertyManager.WritablePropertyMap;
 import org.labkey.api.query.Queryable;
@@ -35,7 +36,7 @@ import java.util.Map;
  */
 public class ONPRC_EHRManager
 {
-    private static ONPRC_EHRManager _instance = new ONPRC_EHRManager();
+    private static final ONPRC_EHRManager _instance = new ONPRC_EHRManager();
     public static final String VetReviewStartDateProp = "VetReviewStartDate";
 
     @Queryable
@@ -90,6 +91,8 @@ public class ONPRC_EHRManager
     @Queryable
     public static final String CAGE_MEDICAL_EXEMPTION_FLAG = "Medical";
 
+    private static final String CASE_SEQUENCE = "org.labkey.onprc_ehr.cases";
+
     private ONPRC_EHRManager()
     {
 
@@ -100,7 +103,7 @@ public class ONPRC_EHRManager
         return _instance;
     }
 
-    private String LOCK_PROP_KEY = getClass().getName() + "||animalLock";
+    private final String LOCK_PROP_KEY = getClass().getName() + "||animalLock";
 
     public void lockAnimalCreation(Container c, User u, Boolean lock, Integer startingId, Integer idCount)
     {
@@ -146,6 +149,11 @@ public class ONPRC_EHRManager
         }
 
         return ret;
+    }
+
+    public long getNextCaseNo(Container c)
+    {
+        return DbSequenceManager.get(c, CASE_SEQUENCE).next();
     }
 }
 

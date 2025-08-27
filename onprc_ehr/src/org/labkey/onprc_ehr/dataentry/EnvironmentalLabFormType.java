@@ -20,13 +20,13 @@ package org.labkey.onprc_ehr.dataentry;
         import org.labkey.api.ehr.dataentry.FormSection;
         import org.labkey.api.ehr.dataentry.TaskForm;
         import org.labkey.api.ehr.dataentry.TaskFormSection;
-        import org.labkey.api.ehr.security.EHRLabworkEntryPermission;
         import org.labkey.api.view.template.ClientDependency;
         import org.labkey.api.module.Module;
         import org.labkey.onprc_ehr.security.ONPRC_EHREnvironmentalPermission;
 
         import java.util.Arrays;
         import java.util.List;
+        import java.util.ArrayList;
 
 //Created: 9-9-2022  R.Blasa
 
@@ -45,6 +45,13 @@ package org.labkey.onprc_ehr.dataentry;
                 addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/model/sources/Env_Sanitation.js"));
 
                 addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/window/EnvironmentalRecords.js"));
+
+                           //Added 5-9-2025 R. Blasa
+                addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/window/BulkEnvironmental_CPL_Water_Window.js"));
+
+            //Added 5-9-2025 R. Blasa
+            addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/window/BulkEnvironmental_CPL_Contact_Window.js"));
+
 
 
                 for  (FormSection s : getFormSections())
@@ -77,7 +84,21 @@ package org.labkey.onprc_ehr.dataentry;
                     ret.add("ENV_CLOSE");
 
                 return ret;
-            };
+            }
+
+
+            //Added 1-19-2024 Blasa
+            @Override
+            protected List<String> getMoreActionButtonConfigs()
+            {
+                List<String> defaultButtons = new ArrayList<>();
+                defaultButtons.addAll(super.getMoreActionButtonConfigs()) ;
+                defaultButtons.add("ENV_CPL_Water_IMPORT");
+                defaultButtons.add("ENV_CPL_Contact_IMPORT");
+
+                return defaultButtons;
+            }
+
 
             @Override
             protected boolean canInsert()

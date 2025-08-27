@@ -68,12 +68,12 @@ public class MergeSyncRunner implements Job
     protected final static SimpleDateFormat _dateFormat = new SimpleDateFormat("yyyy-MM-dd");
     private final Set<String> EXCLUDED_RESULTS = PageFlowUtil.set("received", "recieved", ".", "SENT TO RHEIN CONSULTING LAB");
 
-    private Map<String, TableInfo> _cachedResultTables = new HashMap<>();
-    private Map<String, Integer> _cachedProjectNames = new HashMap<>();
-    private Map<String, String> _cachedTasks = new HashMap<>();
-    private Map<String, Map<String, Object>> _cachedRuns = new HashMap<>();
-    private Map<String, String> _cachedMethods = new HashMap<>();
-    private Map<String, String> _cachedTissues = new HashMap<>();
+    private final Map<String, TableInfo> _cachedResultTables = new HashMap<>();
+    private final Map<String, Integer> _cachedProjectNames = new HashMap<>();
+    private final Map<String, String> _cachedTasks = new HashMap<>();
+    private final Map<String, Map<String, Object>> _cachedRuns = new HashMap<>();
+    private final Map<String, String> _cachedMethods = new HashMap<>();
+    private final Map<String, String> _cachedTissues = new HashMap<>();
 
     public MergeSyncRunner()
     {
@@ -178,7 +178,7 @@ public class MergeSyncRunner implements Job
         //runFilter.addCondition(FieldKey.fromString("numericLastName"), true, CompareType.EQUAL);
 
         TableSelector runTs = new TableSelector(runsTable, runFilter, null);
-        Long count = runTs.getRowCount();
+        long count = runTs.getRowCount();
         if (count > 0)
         {
             _log.info("found " + count + " new merge runs to sync");
@@ -205,7 +205,7 @@ public class MergeSyncRunner implements Job
 
     private void processRuns(final Container c, final User u, TableSelector runTs, final TableInfo mergeResultTable)
     {
-        runTs.forEach(new Selector.ForEachBlock<ResultSet>()
+        runTs.forEach(new Selector.ForEachBlock<>()
         {
             @Override
             public void exec(ResultSet runRs) throws SQLException
@@ -234,7 +234,7 @@ public class MergeSyncRunner implements Job
         if (runTs.exists())
         {
             _log.info("verifying previous " + offset + " days of merge runs are present");
-            runTs.forEach(new Selector.ForEachBlock<ResultSet>()
+            runTs.forEach(new Selector.ForEachBlock<>()
             {
                 @Override
                 public void exec(ResultSet mergeRunRs) throws SQLException
@@ -296,7 +296,7 @@ public class MergeSyncRunner implements Job
 
 
         TableSelector runTs = new TableSelector(runsTable, runFilter, null);
-        runTs.forEach(new Selector.ForEachBlock<ResultSet>()
+        runTs.forEach(new Selector.ForEachBlock<>()
         {
             @Override
             public void exec(ResultSet runRs) throws SQLException
@@ -331,7 +331,7 @@ public class MergeSyncRunner implements Job
                                 changed = true;
                             }
 
-                            if (!DateUtils.isSameInstant((Date)runRow.get("date"), runRs.getDate("date")))
+                            if (!DateUtils.isSameInstant((Date) runRow.get("date"), runRs.getDate("date")))
                             {
                                 runRow.put("date", runRs.getDate("date"));
                                 changed = true;
@@ -441,7 +441,7 @@ public class MergeSyncRunner implements Job
 
         Set<String> completedTasks = new HashSet<>();
         TableSelector resultsTs = new TableSelector(mergeResultTable, resultFilter, null);
-        resultsTs.forEach(new Selector.ForEachBlock<ResultSet>()
+        resultsTs.forEach(new Selector.ForEachBlock<>()
         {
             @Override
             public void exec(ResultSet rs) throws SQLException
@@ -869,7 +869,7 @@ public class MergeSyncRunner implements Job
     private Map<String, Object> createRun(Container c, User u, ResultSet mergeRunRs, String taskId, boolean hasResults) throws SQLException
     {
         Integer accessionId = mergeRunRs.getInt("accession");
-        Integer panelId = mergeRunRs.getInt(("panelid"));
+        int panelId = mergeRunRs.getInt(("panelid"));
 
         String key = accessionId + "||" + panelId;
         if (_cachedRuns.containsKey(key))
@@ -979,7 +979,7 @@ public class MergeSyncRunner implements Job
         toInsert.put("modifiedby", u.getUserId());
 
         _log.info("creating order record for merge data: " + accession + "/" + panelId);
-        toInsert = Table.insert(u, MergeSyncSchema.getInstance().getSchema().getTable(MergeSyncManager.TABLE_ORDERSSYNCED), toInsert);
+        Table.insert(u, MergeSyncSchema.getInstance().getSchema().getTable(MergeSyncManager.TABLE_ORDERSSYNCED), toInsert);
 
         return objectId;
     }
@@ -1053,7 +1053,7 @@ public class MergeSyncRunner implements Job
             TableInfo ti = QueryService.get().getUserSchema(u, c, "ehr_lookups").getTable("lab_tests");
             TableSelector ts = new TableSelector(ti);
             final Map<String, Map<String, Object>> results = new HashMap<>();
-            ts.forEach(new Selector.ForEachBlock<ResultSet>()
+            ts.forEach(new Selector.ForEachBlock<>()
             {
                 @Override
                 public void exec(ResultSet rs) throws SQLException
@@ -1220,7 +1220,7 @@ public class MergeSyncRunner implements Job
                 final Map<FieldKey, ColumnInfo> cols = QueryService.get().getColumns(projects, fks);
 
                 TableSelector projectTs = new TableSelector(projects, cols.values(), new SimpleFilter(FieldKey.fromString("displayName"), sublist, CompareType.IN), null);
-                projectTs.forEach(new Selector.ForEachBlock<ResultSet>()
+                projectTs.forEach(new Selector.ForEachBlock<>()
                 {
                     @Override
                     public void exec(ResultSet object) throws SQLException

@@ -18,8 +18,6 @@ package org.labkey.onprc_billing.table;
 import org.labkey.api.data.AbstractTableInfo;
 import org.labkey.api.data.TableCustomizer;
 import org.labkey.api.data.TableInfo;
-import org.labkey.api.ehr.EHRService;
-import org.labkey.api.ldk.LDKService;
 import org.labkey.api.query.DetailsURL;
 import org.labkey.onprc_billing.ONPRC_BillingSchema;
 

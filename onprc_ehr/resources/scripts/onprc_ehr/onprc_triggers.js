@@ -1098,8 +1098,13 @@ exports.init = function(EHR){
          Validation code on the Prime side to bypass the following two medications without entering the end dates.
             1. E-85760 - Medroxyprogesterone injectable (150mg/ml)
             2. E-Y7735 - Diet - Weekly Multivitamin
+
+            Added these two Diets to the list by Kollil on 4/15/25. Refer to tkt #12363
+            3. E-X0500 - Diet, L-Phyto (Low-phytoestrogen)
+            4. E-Y9750 - Diet, 5047 High Protein, Jumbo
+
          */
-        if (row.code != 'E-85760' && row.code != 'E-Y7735'){
+        if (row.code != 'E-85760' && row.code != 'E-Y7735' && row.code != 'E-X0500' && row.code != 'E-Y9750'){
             if (!row.enddate) {
                 EHR.Server.Utils.addError(scriptErrors, 'enddate', 'Must enter enddate', 'WARN');
             }
@@ -1256,13 +1261,20 @@ exports.init = function(EHR){
             }
         });
 
-        //Added 3-5-2019  R.Blasa
-        EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.AFTER_INSERT, 'ehr',  'project', function(helper, scriptErrors, row, oldRow){
-
+        //Modified 5-30-2025  R.Blasa
+            EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.AFTER_UPSERT, 'ehr', 'project', function(helper, errors, row, oldRow){
             var triggerHelper = new org.labkey.onprc_ehr.query.ONPRC_EHRTriggerHelper(LABKEY.Security.currentUser.id, LABKEY.Security.currentContainer.id);
 
-            if (row.project){
-                console.log("project data collected  " + row.project)
+            if (row.project || (oldRow.enddate != row.enddate) ){
+                console.log("project data added, or end date updated " + row.project)
+                var msg = triggerHelper.sendProjectNotifications(row.project);
+                if (msg){
+                    EHR.Server.Utils.addError(scriptErrors, 'project', msg, 'ERROR');
+                }
+            }
+
+           else if (row.project && (row.date != null && (row.enddate == null || row.enddate >= now()) ) ){
+                console.log("project data added, or end date updated " + row.project)
                 var msg = triggerHelper.sendProjectNotifications(row.project);
                 if (msg){
                     EHR.Server.Utils.addError(scriptErrors, 'project', msg, 'ERROR');

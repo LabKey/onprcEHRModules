@@ -2,8 +2,6 @@ package org.labkey.extscheduler.query;
 
 import org.jetbrains.annotations.Nullable;
 import org.labkey.api.data.ColumnInfo;
-import org.labkey.api.data.Container;
-import org.labkey.api.data.ContainerManager;
 import org.labkey.api.data.DisplayColumn;
 import org.labkey.api.data.RenderContext;
 import org.labkey.api.data.TableInfo;
@@ -14,12 +12,12 @@ import org.labkey.api.query.QuerySettings;
 import org.labkey.api.query.QueryView;
 import org.labkey.api.query.UserSchema;
 import org.labkey.api.security.permissions.AdminPermission;
+import org.labkey.api.util.HtmlString;
 import org.labkey.api.util.StringExpression;
+import org.labkey.api.writer.HtmlWriter;
 import org.labkey.extscheduler.ExtSchedulerManager;
 import org.springframework.validation.Errors;
 
-import java.io.IOException;
-import java.io.Writer;
 import java.util.List;
 import java.util.Set;
 
@@ -49,7 +47,7 @@ public class EventsQueryView extends QueryView
                 }
 
                 @Override
-                public void renderGridCellContents(RenderContext ctx, Writer out) throws IOException
+                public void renderGridCellContents(RenderContext ctx, HtmlWriter out)
                 {
                     boolean isAdmin = getContainer().hasPermission(getUser(), AdminPermission.class);
                     boolean isOwner = ExtSchedulerManager.getInstance().isEventOwner(getUser(), ctx.getRow());
@@ -60,7 +58,7 @@ public class EventsQueryView extends QueryView
                     if (isAdmin || ((isOwner || isCreator) && !isInPast))
                         super.renderGridCellContents(ctx, out);
                     else
-                        out.write("&nbsp;");
+                        out.write(HtmlString.NBSP);
                 }
             };
             ret.add(0, update);

@@ -1,6 +1,5 @@
 package org.labkey.onprc_ehr.dataentry;
 
-import org.labkey.onprc_ehr.dataentry.AnimalDetailsFormSection;
 import org.labkey.api.ehr.dataentry.NonStoreFormSection;
 import org.labkey.api.view.template.ClientDependency;
 

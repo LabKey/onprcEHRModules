@@ -164,7 +164,7 @@ public class TreatmentAlertsNotification extends AbstractEHRNotification
 
             final Map<String, Integer> totalByArea = new TreeMap<>();
 
-            ts.forEach(new Selector.ForEachBlock<ResultSet>()
+            ts.forEach(new Selector.ForEachBlock<>()
             {
                 @Override
                 public void exec(ResultSet object) throws SQLException

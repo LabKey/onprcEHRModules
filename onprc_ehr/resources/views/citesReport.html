@@ -5,9 +5,7 @@
         if(!ctx)
             return;
 
-        /* get the participant id from the request URL: this parameter is required. */
-        var subjectIds = LABKEY.ActionURL.getParameter('subjectIds');
-        subjectIds = subjectIds ? subjectIds.split(';') : [];
+        ONPRC.Utils.preloadSession();
 
         Ext4.create('Ext.panel.Panel', {
             width: 400,
@@ -20,7 +18,8 @@
                 width: 400,
                 height: 200,
                 fieldLabel: 'Enter Animal Id(s)',
-                itemId: 'animalField'
+                itemId: 'animalField',
+                name: 'animalField'
             }],
             buttons: [{
                 text: 'Submit',
@@ -40,19 +39,9 @@
                         return;
                     }
                 //Modified: 1-17-2019  R.Blasa
-                    var url = LABKEY.getModuleProperty('ONPRC_EHR', 'SSRSServerURL');
-                    var ssrsFolder = LABKEY.getModuleProperty('ONPRC_EHR', 'SSRSReportFolder');
-                    ssrsFolder = '/' + ssrsFolder  + '/' + 'Clinical/CITESReport';
-
-                    url += ssrsFolder + '&' + LABKEY.ActionURL.queryString({
-                        SessionID: LABKEY.Utils.getSessionID(),
-                        HostName: location.hostname,
+                    window.location = ONPRC.Utils.getSsrsReportUrl('Clinical/CITESReport', ONPRC.Utils.getSsrsParams({
                         AnimalID: val
-                    });
-
-                    //url += '&rs:Format=PDF'
-                    console.log(url)
-                    window.location = url;
+                    }));
                 }
             }]
         }).render(webpart.wrapperDivId);

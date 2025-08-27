@@ -82,7 +82,7 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
     private final String PROJECT_NAME = "ONPRC_EHR_TestProject2";
     private final String ANIMAL_HISTORY_URL = "/ehr/" + getProjectName() + "/animalHistory.view?";
     public AbstractContainerHelper _containerHelper = new APIContainerHelper(this);
-    public DataIntegrationHelper _etlHelper = new DataIntegrationHelper(PROJECT_NAME);
+    public DataIntegrationHelper _etlHelper = new DataIntegrationHelper(getContainerPath());
     protected DateTimeFormatter _dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     @BeforeClass
@@ -125,7 +125,7 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
     @Test
     public void testBirthStatusApi() throws Exception
     {
-        goToProjectHome();
+        goToEHRFolder();
 
         //first create record for dam, along w/ animal group and SPF status.  we expect this to automatically create a demographics record w/ the right status
         final String damId1 = "Dam1";
@@ -665,14 +665,14 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
         sc.setSql("SELECT max(CAST(Id as integer)) as expr FROM (SELECT Id FROM study.demographics WHERE isNumericId = true UNION ALL SELECT Id FROM study.birth WHERE isNumericId = true) t");
         SelectRowsResponse resp = sc.execute(getApiHelper().getConnection(), getContainerPath());
         Assert.assertEquals(1, resp.getRowCount().intValue());
-        final Integer lastId = Integer.parseInt(resp.getRows().get(0).get("expr").toString()) + 1;
+        final int lastId = Integer.parseInt(resp.getRows().get(0).get("expr").toString()) + 1;
 
         grid = _helper.getExt4GridForFormSection("Arrivals");
         grid.clickTbarButton("Add");
         grid.waitForRowCount(1);
         final Ext4FieldRef field = grid.getActiveEditor(1, "Id");
         field.clickTrigger();
-        waitFor(() -> field.getValue() != null && field.getValue().toString().equals(lastId.toString()),
+        waitFor(() -> field.getValue() != null && field.getValue().toString().equals(Integer.toString(lastId)),
                 "Expected ID not set", WAIT_FOR_JAVASCRIPT);
         grid.completeEdit();
 
@@ -724,7 +724,7 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
         Date damBirth = prepareDate(DateUtils.truncate(new Date(), Calendar.DATE), -720, 0);
 
         // Navigate to the start of the project
-        goToProjectHome();
+        goToEHRFolder();
 
         // Insert dam into birth via API
         log("Creating Dam");
@@ -860,7 +860,7 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
         });
         getApiHelper().doSaveRows(PasswordUtil.getUsername(), insertCommand, getExtraContext());
 
-        goToProjectHome();
+        goToEHRFolder();
         waitAndClickAndWait(Locator.linkWithText("Animal History"));
 
         String query = "textfield[itemId=subjArea]";
@@ -1267,7 +1267,7 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
         String animalId = "12345";
 
         log("Creating the Treatment order request");
-        goToProjectHome();
+        goToEHRFolder();
         clickAndWait(Locator.linkWithText("Enter Data / Task Review"));
         waitAndClickAndWait(Locator.linkWithText("Medications/Diet"));
 
@@ -1302,7 +1302,7 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
         LocalDateTime now = LocalDateTime.now();
         String animalId = "12345";
 
-        goToProjectHome();
+        goToEHRFolder();
 
         log("Inserting the charge unit necessary for blood draw request");
         InsertRowsCommand chargeUnitCommand = new InsertRowsCommand("onprc_billing", "chargeUnits");

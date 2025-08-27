@@ -34,17 +34,17 @@ public class RequestAdminNotification extends ColonyAlertsNotification
         super(owner);
     }
 
-    public static enum TimeOfDay {
+    public enum TimeOfDay {
         AM(9),
         Noon(12),
         PM(15);
 
-        private TimeOfDay(int hour)
+        TimeOfDay(int hour)
         {
             this.hour = hour;
         }
 
-        private int hour;
+        private final int hour;
     }
 
     @Override

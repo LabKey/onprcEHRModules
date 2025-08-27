@@ -55,7 +55,7 @@ public class ONPRC_EHR_ComplianceDBModule extends ExtendedSimpleModule
     @Override
     public Double getSchemaVersion()
     {
-        return 24.009;
+        return 24.011;
     }
 
     @Override
@@ -83,6 +83,7 @@ public class ONPRC_EHR_ComplianceDBModule extends ExtendedSimpleModule
         });
     }
 
+    @Override
     protected void init()
     {
         addController(CONTROLLER_NAME,ONPRC_EHR_ComplianceDBController.class);

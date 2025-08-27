@@ -205,11 +205,11 @@ public class FinanceNotification extends AbstractNotification
         return msg.toString();
     }
 
-    protected class FieldDescriptor {
-        private String _fieldName;
-        private boolean _flagIfNonNull;
-        private String _label;
-        private boolean _shouldHighlight;
+    protected static class FieldDescriptor {
+        private final String _fieldName;
+        private final boolean _flagIfNonNull;
+        private final String _label;
+        private final boolean _shouldHighlight;
 
         public FieldDescriptor(String fieldName, boolean flagIfNonNull, String label, boolean shouldHighlight)
         {            
@@ -272,21 +272,21 @@ public class FinanceNotification extends AbstractNotification
     protected FieldDescriptor[] _fields = new FieldDescriptor[]
     {
         new MissingProjectFieldDescriptor(),
-        new FieldDescriptor("isMissingAccount", true, "Missing Alias", true),
-        new FieldDescriptor("isExpiredAccount", true, "Expired/Invalid Alias", true),
-        new FieldDescriptor("isAcceptingCharges", true, "Alias Not Accepting Charges", true),
-        new FieldDescriptor("lacksRate", true, "Lacks Rate", true),
-        new FieldDescriptor("creditAccount", false, "Missing Credit Alias", true),
-        new FieldDescriptor("isMissingFaid", true, "Missing FAID", true),
-        new FieldDescriptor("investigatorId/lastName", false, "Missing Investigator", true),
-        new FieldDescriptor("isUnknownAliasType", true, "Unknown Alias Type", true),
-        new FieldDescriptor("matchesProject", true, "Project Does Not Match Assignment", false),
+            new FieldDescriptor("isMissingAccount", true, "Missing Alias", true),
+            new FieldDescriptor("isExpiredAccount", true, "Expired/Invalid Alias", true),
+            new FieldDescriptor("isAcceptingCharges", true, "Alias Not Accepting Charges", true),
+            new FieldDescriptor("lacksRate", true, "Lacks Rate", true),
+            new FieldDescriptor("creditAccount", false, "Missing Credit Alias", true),
+            new FieldDescriptor("isMissingFaid", true, "Missing FAID", true),
+            new FieldDescriptor("investigatorId/lastName", false, "Missing Investigator", true),
+            new FieldDescriptor("isUnknownAliasType", true, "Unknown Alias Type", true),
+            new FieldDescriptor("matchesProject", true, "Project Does Not Match Assignment", false),
         //new FieldDescriptor("isMiscCharge", true, "Manually Entered", false),
-        new FieldDescriptor("isAdjustment", true, "Adjustment/Reversal", false),
-        new FieldDescriptor("isExemption", true, "Rate Exemption", false),
-        new FieldDescriptor("isNonStandardRate", true, "Industry/Reduced F&A", false),
-        new FieldDescriptor("isOldCharge", true, "Over 45 Days Old", false),
-        new FieldDescriptor("isMultipleProjects", true, "Per Diems Split Between Projects", false)
+            new FieldDescriptor("isAdjustment", true, "Adjustment/Reversal", false),
+            new FieldDescriptor("isExemption", true, "Rate Exemption", false),
+            new FieldDescriptor("isNonStandardRate", true, "Industry/Reduced F&A", false),
+            new FieldDescriptor("isOldCharge", true, "Over 45 Days Old", false),
+            new FieldDescriptor("isMultipleProjects", true, "Per Diems Split Between Projects", false)
     };
 
     private void getProjectSummary(Container c, User u, final Calendar start, Calendar endDate, final String categoryName, Map<String, String> categoryToQuery, final Map<String, Map<String, Map<String, Map<String, Integer>>>> dataMap, final Map<String, Map<String, Double>> totalsByCategory)
@@ -302,10 +302,10 @@ public class FinanceNotification extends AbstractNotification
         }
 
         Map<String, Object> params = new HashMap<>();
-        Long numDays = ((DateUtils.truncate(new Date(), Calendar.DATE).getTime() - start.getTimeInMillis()) / DateUtils.MILLIS_PER_DAY) + 1;
+        long numDays = ((DateUtils.truncate(new Date(), Calendar.DATE).getTime() - start.getTimeInMillis()) / DateUtils.MILLIS_PER_DAY) + 1;
         params.put("StartDate", start.getTime());
         params.put("EndDate", endDate.getTime());
-        params.put("NumDays", numDays.intValue());
+        params.put("NumDays", (int) numDays);
 
         Set<FieldKey> fieldKeys = new HashSet<>();
         for (ColumnInfo col : ti.getColumns())
@@ -327,7 +327,7 @@ public class FinanceNotification extends AbstractNotification
         TableSelector ts = new TableSelector(ti, cols.values(), null, null);
         ts.setNamedParameters(params);
 
-        ts.forEach(new Selector.ForEachBlock<ResultSet>()
+        ts.forEach(new Selector.ForEachBlock<>()
         {
             @Override
             public void exec(ResultSet object) throws SQLException
@@ -341,20 +341,20 @@ public class FinanceNotification extends AbstractNotification
                 Double quantity = rs.getDouble(FieldKey.fromString("quantity"));
                 if (unitCost != null && quantity != null)
                 {
-                    Double t = totalsMap.containsKey("totalCost") ? totalsMap.get("totalCost") : 0.0;
+                    double t = totalsMap.containsKey("totalCost") ? totalsMap.get("totalCost") : 0.0;
                     t += (quantity * unitCost);
                     totalsMap.put("totalCost", t);
                 }
 
                 if (quantity != null)
                 {
-                    Double t = totalsMap.containsKey("total") ? totalsMap.get("total") : 0.0;
+                    double t = totalsMap.containsKey("total") ? totalsMap.get("total") : 0.0;
                     t += quantity;
                     totalsMap.put("total", t);
                 }
 
                 totalsByCategory.put(categoryName, totalsMap);
-                
+
                 String projectDisplay = rs.getString(FieldKey.fromString("project/displayName"));
                 if (projectDisplay == null)
                 {

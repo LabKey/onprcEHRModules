@@ -37,6 +37,7 @@ import org.labkey.api.ldk.notification.NotificationService;
 import org.labkey.api.module.AdminLinkManager;
 import org.labkey.api.module.Module;
 import org.labkey.api.module.ModuleContext;
+import org.labkey.api.onprc_ehr.ONPRC_EHRService;
 import org.labkey.api.query.DefaultSchema;
 import org.labkey.api.query.DetailsURL;
 import org.labkey.api.query.QuerySchema;
@@ -96,7 +97,9 @@ import org.labkey.onprc_ehr.security.ONPRC_EHRCMUAdministrationPermission;
 import org.labkey.onprc_ehr.security.ONPRC_EHRCMUAdministrationRole;
 import org.labkey.onprc_ehr.security.ONPRC_EHRCustomerEditPermission;
 import org.labkey.onprc_ehr.security.ONPRC_EHRCustomerEditRole;
-import org.labkey.onprc_ehr.security.ONPRC_EHREnvironmentalPermission;
+import org.labkey.onprc_ehr.security.ONPRC_EHRCMUMedicationEntryRole;
+import org.labkey.onprc_ehr.security.ONPRC_EHRCMUMedicationAdministrationRole;
+import org.labkey.onprc_ehr.security.ONPRC_EHRCMUMedicationAdministrationPermission;
 import org.labkey.onprc_ehr.security.ONPRC_EHREnvironmentalRole;
 //import org.labkey.onprc_ehr.security.ONPRC_EHRPMICEditRole;
 import org.labkey.onprc_ehr.security.ONPRC_EHRTransferRequestRole;
@@ -126,7 +129,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
     @Override
     public @Nullable Double getSchemaVersion()
     {
-        return 24.006;
+        return 24.012;
     }
 
     @Override
@@ -138,6 +141,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
     @Override
     protected void init()
     {
+        ONPRC_EHRService.setInstance(new ONPRC_EHRServiceImpl());
         addController(CONTROLLER_NAME, ONPRC_EHRController.class);
 
         RoleManager.registerRole(new ONPRC_EHRCustomerEditRole());
@@ -149,6 +153,13 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
 
 //        Added: 10-30-2023 R. Blasa
         RoleManager.registerRole(new ONPRC_EHREnvironmentalRole());
+
+
+//        Added: 1-29-2025 R. Blasa
+        RoleManager.registerRole(new ONPRC_EHRCMUMedicationEntryRole());
+
+        //        Added: 4-11-2025 R. Blasa
+        RoleManager.registerRole(new ONPRC_EHRCMUMedicationAdministrationRole());
 
         // register the permissions provider for a restricted issue list
         IssuesListDefService.get().registerRestrictedIssueProvider(new RestrictedIssueProviderImpl());
@@ -390,7 +401,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         }
         catch (URISyntaxException e)
         {
-            throw new UnexpectedException(e);
+            throw UnexpectedException.wrap(e);
         }
 
         //Modified 9-9-2019 R.Blasa  Show Full Exposure report instead of Basic Expsoure
@@ -409,7 +420,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         }
         catch (URISyntaxException e)
         {
-            throw new UnexpectedException(e);
+            throw UnexpectedException.wrap(e);
         }
 
 
@@ -430,7 +441,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         }
         catch (URISyntaxException e)
         {
-            throw new UnexpectedException(e);
+            throw UnexpectedException.wrap(e);
         }
 
         //Modified: 9-7-2023  R.Blasa
@@ -450,7 +461,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         }
         catch (URISyntaxException e)
         {
-            throw new UnexpectedException(e);
+            throw UnexpectedException.wrap(e);
         }
 
 
@@ -607,6 +618,12 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         //Added: 9-5-2024  R.Blasa
         EHRService.get().registerFormType(new DefaultDataEntryFormFactory(BloodDrawFormType.class, this));
 
+        //Modified: 11-4-2024 R.Blasa
+        EHRService.get().registerFormType(new DefaultDataEntryFormFactory(CMURequestFormType.class, this));
+
+        //Modified: 1-29-2025 R.Blasa
+        EHRService.get().registerFormType(new DefaultDataEntryFormFactory(CMUTreatmentsFormType.class, this));
+
         //single section forms
         EHRService.get().registerSingleFormOverride(new SingleQueryFormProvider(this, "study", "treatment_order", new MedicationsQueryFormSection("study", "Treatment Orders", "Medication/Treatment Orders")));
         EHRService.get().registerSingleFormOverride(new SingleQueryFormProvider(this, "study", "drug", new MedicationsQueryFormSection("study", "Drug Administration", "Medication/Treatments Given")));
@@ -689,12 +706,20 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         EHRService.get().registerMoreActionsButton(new CreateTaskFromRecordButtons(this, "Create PMIC Task From Selected", "PMIC Procedures", PMICDataEntryFormType.NAME), "study", "encounters");
         //EHRService.get().registerMoreActionsButton(new CreateTaskFromRecordButtons(this, "Create Task From Selected", "PMIC Procedures", PMICDataEntryFormType.NAME), "study", "PMIC_encounters");
 
+        //Added: 2-5-2025  R.Blasa
+        EHRService.get().registerMoreActionsButton(new CreateTaskFromRecordButtons(this, "Create CMU Task From Selected", "Treatments/Medications Order", CMUTreatmentsFormType.NAME), "study", "treatment_order");
+        //Added: 2-10-2025  R.Blasa
+        EHRService.get().registerMoreActionsButton(new ShowEditUIButton(this, "study", "treatment_order", ONPRC_EHRCMUMedicationAdministrationPermission.class), "study", "treatment_order");
+
         EHRService.get().registerMoreActionsButton(new ChangeQCStateButton(this), "study", "blood");
         EHRService.get().registerMoreActionsButton(new ChangeQCStateButton(this, "ONPRC_EHR.window.ChangeLabworkStatusWindow", Collections.singletonList(ClientDependency.supplierFromPath("onprc_ehr/window/ChangeLabworkStatusWindow.js"))), "study", "clinpathRuns");
         EHRService.get().registerMoreActionsButton(new ChangeQCStateButton(this), "onprc_ehr", "housing_transfer_requests");
         EHRService.get().registerMoreActionsButton(new ChangeQCStateButton(this), "study", "encounters");
         EHRService.get().registerMoreActionsButton(new ChangeQCStateButton(this), "study", "drug");
         EHRService.get().registerTbarButton(new ChangeQCStateButton(this, "Mark Delivered", "ONPRC_EHR.window.MarkLabworkDeliveredWindow", Collections.singletonList(ClientDependency.supplierFromPath("onprc_ehr/window/MarkLabworkDeliveredWindow.js"))), "study", "clinpathRuns");
+
+        //Added: 12-30-2024  R.Blasa
+        EHRService.get().registerMoreActionsButton(new ChangeQCStateButton(this), "study", "treatment_order");
 
         EHRService.get().registerMoreActionsButton(new ReassignRequestButton(this, "bloodChargeType"), "study", "blood");
         EHRService.get().registerMoreActionsButton(new ReassignRequestButton(this, "medicationChargeType"), "study", "drug");

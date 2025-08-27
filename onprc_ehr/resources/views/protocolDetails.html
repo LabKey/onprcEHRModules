@@ -103,7 +103,7 @@ Ext4.onReady(function (){
             text: 'More Actions',
             menu: [{
                 text: 'Edit Protocol Details',
-                href: LABKEY.ActionURL.buildURL('ehr', 'dataEntryFormForQuery', null, {schemaName: 'ehr', queryName: 'protocol', protocol: protocol}) + '&returnUrl=' + LDK.Utils.getSrcURL()
+                href: LABKEY.ActionURL.buildURL('ehr', 'dataEntryFormForQuery', null, {schemaName: 'ehr', queryName: 'protocol', protocol: protocol}) + '&returnUrl=' + LDK.Utils.getReturnUrl()
             }]
         }]
     }
