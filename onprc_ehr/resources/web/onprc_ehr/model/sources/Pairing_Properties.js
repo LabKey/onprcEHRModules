@@ -39,11 +39,6 @@ EHR.model.DataModelManager.registerMetadata('Pairing_Properties', {
             },
 
             eventtype: {
-                lookup: {
-                    filterArray: [
-                        LABKEY.Filter.create('date_disabled', null, LABKEY.Filter.Types.ISBLANK)
-                    ]
-                },
                     columnConfig: {
                     width: 200
                 }
@@ -148,7 +143,7 @@ EHR.model.DataModelManager.registerMetadata('Pairing_Properties', {
                     })]
                 },
                 lookup: {
-                    columns: 'value,description'
+                    columns: 'value'
                 },
                 columnConfig: {
                     width: 200
