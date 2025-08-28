@@ -46,6 +46,11 @@
                     </column>
                     <column columnName="eventtype">
                         <columnTitle>Start Type</columnTitle>
+                        <fk>
+                            <fkDbSchema>ehr_lookups</fkDbSchema>
+                            <fkTable>pairingstarttypes</fkTable>
+                            <fkColumnName>value</fkColumnName>
+                        </fk>
                     </column>
 
                     <column columnName="housingtype">

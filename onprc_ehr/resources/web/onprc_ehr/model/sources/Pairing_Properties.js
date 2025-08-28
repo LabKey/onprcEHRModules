@@ -14,7 +14,7 @@ EHR.model.DataModelManager.registerMetadata('Pairing_Properties', {
         'study.pairings': {
 
             outcome: {
-                allowBlank: false,
+                allowBlank: true,
                 columnConfig: {
                     width: 160
                 },
@@ -32,7 +32,7 @@ EHR.model.DataModelManager.registerMetadata('Pairing_Properties', {
             },
             infant_id: {
                 xtype: 'onprc_ehr-pairedinfantentryfield',
-                allowBlank: false,
+                allowBlank: true,
                 columnConfig: {
                     width: 120
                 }
@@ -46,7 +46,7 @@ EHR.model.DataModelManager.registerMetadata('Pairing_Properties', {
 
 
             goal: {
-                allowBlank: false,
+                allowBlank: true,
                 header: 'Divider Goal',
                 columnConfig: {
                     width: 170
@@ -103,6 +103,7 @@ EHR.model.DataModelManager.registerMetadata('Pairing_Properties', {
                 },
             other_IDs: {
                 xtype: 'onprc_ehr-paireddamdentryfield',
+                allowBlank: true,
                 header:'Other IDs',     // should display the infant's dam
                 columnConfig: {
                     width: 200
@@ -151,6 +152,7 @@ EHR.model.DataModelManager.registerMetadata('Pairing_Properties', {
             },
             other_infant: {
                 xtype: 'onprc_ehr-pairedinfantentryfield',
+                allowBlank: true,
                 header: 'Other Infant ID',     // should display the infant
                 columnConfig: {
                     width: 160
