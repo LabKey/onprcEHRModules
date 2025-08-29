@@ -121,6 +121,12 @@ EHR.model.DataModelManager.registerMetadata('Pairing_Properties', {
                     width: 130
                 }
               },
+            cage: {
+                allowBlank: false,
+                columnConfig: {
+                    width: 100
+                }
+            },
             prior_group_housing: {
                 allowBlank: true,
                 columnConfig: {
