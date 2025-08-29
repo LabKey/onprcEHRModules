@@ -45,7 +45,8 @@ Ext4.define('ONPRC_EHR.form.field.PairedAdultsEntryField', {
     },
 
     queryValue: function(rec, cb, alwaysUseCallback){
-        var id = rec.get('other_infant');
+        var roomt = rec.get('room');
+        var caget = rec.get('cage');
 
         LABKEY.Query.selectRows({
             schemaName: 'study',
