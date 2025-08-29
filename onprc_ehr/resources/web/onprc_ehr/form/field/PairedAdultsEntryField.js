@@ -6,7 +6,7 @@
 
 Ext4.define('ONPRC_EHR.form.field.PairedAdultsEntryField', {
     extend: 'LABKEY.ext4.ComboBox',
-    alias: 'widget.onprc_ehr-pairedadultentryfield',
+    alias: 'widget.onprc_ehr-pairedadultsentryfield',
 
 
     trigger1Cls: 'x4-form-search-trigger',

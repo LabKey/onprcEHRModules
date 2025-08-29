@@ -100,11 +100,11 @@ EHR.model.DataModelManager.registerMetadata('Pairing_Properties', {
                     xtype: 'onprc_ehr-pairedidentryfield',
                     header:'Pair ID',
                     columnConfig: {
-                    width: 200
+                    width: 250
                     }
                 },
             other_IDs: {
-                xtype: 'onprc_ehr-pairedadultentryfield',
+                xtype: 'onprc_ehr-pairedadultsentryfield',
                 allowBlank: true,
                 header:'Other IDs',     // should display just adults, and not infants
                 columnConfig: {
