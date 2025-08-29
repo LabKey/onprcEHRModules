@@ -22,6 +22,7 @@ SELECT
   p.room,
   p.cage,
   p.eventType,
+  (select j.category from ehr_lookups.pairingstarttype where j.value = p.eventype) as category
   p.goal,
   p.observation,
   p.outcome,

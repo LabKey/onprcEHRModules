@@ -6,6 +6,7 @@
         <column name="otherIds"/>
         <column name="date"/>
         <column name="eventtype"/>
+        <column name="category"/>
         <column name="remark"/>
         <column name="goal"/>
         <column name="outcome"/>

@@ -7,11 +7,11 @@
         <column name="date"/>
 
         <column name="eventtype"/>
+        <column name="category"/>
         <column name="remark"/>
         <column name="goal"/>
         <column name="outcome"/>
         <column name="enddate"/>
-
         <column name="endeventType"/>
         <column name="separationreason"/>
         <column name="observation"/>
