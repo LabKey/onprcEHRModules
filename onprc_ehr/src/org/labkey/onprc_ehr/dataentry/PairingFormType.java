@@ -62,8 +62,8 @@ public class PairingFormType extends TaskForm
         //Added 7-1-2025 R.Blasa
         addClientDependency(ClientDependency.supplierFromPath("/onprc_ehr/form/field/PairedIDEntryField.js"));
 
-        //Added 8-5-2025 R.Blasa
-        addClientDependency(ClientDependency.supplierFromPath("/onprc_ehr/form/field/PairedDamEntryField.js"));
+        //Added 8-29-2025 R.Blasa
+        addClientDependency(ClientDependency.supplierFromPath("/onprc_ehr/form/field/PairedAdultsEntryField.js"));
 
 
 

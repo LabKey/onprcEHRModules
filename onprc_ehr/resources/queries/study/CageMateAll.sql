@@ -29,8 +29,7 @@ FROM study.demographicsCurrentLocation h1
     )
 
 WHERE
-    h1.room.housingType.value = 'Cage Location' AND
-    h2.Id.age.ageInyears > 1
+    h1.room.housingType.value = 'Cage Location'
 
 
 GROUP BY h1.Id

@@ -63,7 +63,9 @@ EHR.model.DataModelManager.registerMetadata('Pairing_Properties', {
                     width: 180
                 },
                 lookup: {
-                    sort: 'sort_order'
+                    filterArray: [
+                        LABKEY.Filter.create('date_disabled', null, LABKEY.Filter.Types.ISBLANK)
+                    ]
                 }
             },
 
@@ -102,9 +104,9 @@ EHR.model.DataModelManager.registerMetadata('Pairing_Properties', {
                     }
                 },
             other_IDs: {
-                xtype: 'onprc_ehr-paireddamdentryfield',
+                xtype: 'onprc_ehr-pairedadultentryfield',
                 allowBlank: true,
-                header:'Other IDs',     // should display the infant's dam
+                header:'Other IDs',     // should display just adults, and not infants
                 columnConfig: {
                     width: 200
                 }
@@ -133,15 +135,6 @@ EHR.model.DataModelManager.registerMetadata('Pairing_Properties', {
                     width: 100
                 }
             },
-
-            duration: {
-                xtype: 'onprc_ehr-durationentryfield',
-                allowBlank:true,
-                columnConfig: {
-                    width: 100
-                }
-            },
-
             category: {
                 allowBlank: false,
                 editorConfig: {

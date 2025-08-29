@@ -4,9 +4,9 @@
  * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
  */
 
-Ext4.define('ONPRC_EHR.form.field.PairedIDEntryField', {
+Ext4.define('ONPRC_EHR.form.field.PairedAdultsEntryField', {
     extend: 'LABKEY.ext4.ComboBox',
-    alias: 'widget.onprc_ehr-pairedidentryfield',
+    alias: 'widget.onprc_ehr-pairedadultentryfield',
 
 
     trigger1Cls: 'x4-form-search-trigger',
@@ -22,7 +22,6 @@ Ext4.define('ONPRC_EHR.form.field.PairedIDEntryField', {
             return;
         }
 
-
         if (!rec || !rec.get('room')){
             Ext4.Msg.alert('Error', 'No room Entered');
             return;
@@ -31,7 +30,6 @@ Ext4.define('ONPRC_EHR.form.field.PairedIDEntryField', {
             Ext4.Msg.alert('Error', 'No cage Entered');
             return;
         }
-
         Ext4.Msg.wait('Loading...');
 
 
@@ -41,16 +39,17 @@ Ext4.define('ONPRC_EHR.form.field.PairedIDEntryField', {
             if (ret && ret.adultcagemate){
                 this.setValue(ret.adultcagemate);
                 }
+
+
         }, true);
     },
 
     queryValue: function(rec, cb, alwaysUseCallback){
-        var roomt = rec.get('room');
-        var caget = rec.get('cage');
+        var id = rec.get('other_infant');
 
         LABKEY.Query.selectRows({
             schemaName: 'study',
-            queryName: 'CageMateAll',
+            queryName: 'CageMatesAdults',
             columns: 'adultcagemate',
             sort:'Id',
             filterArray: [

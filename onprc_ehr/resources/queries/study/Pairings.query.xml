@@ -113,10 +113,7 @@
                             <fkColumnName>value</fkColumnName>
                         </fk>
                     </column>
-                    <column columnName="duration">
-                        <columnTitle>Duration</columnTitle>
-                        <description>Computes the elaspse time between record date and current date</description>
-                    </column>
+
                     <column columnName="remark2">
                         <columnTitle>End Remark</columnTitle>
                         <displayWidth>300</displayWidth>
