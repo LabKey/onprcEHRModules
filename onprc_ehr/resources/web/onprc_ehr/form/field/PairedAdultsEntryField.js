@@ -50,7 +50,7 @@ Ext4.define('ONPRC_EHR.form.field.PairedAdultsEntryField', {
 
         LABKEY.Query.selectRows({
             schemaName: 'study',
-            queryName: 'CageMatesAdults',
+            queryName: 'CageMateAdults',
             columns: 'adultcagemate',
             sort:'Id',
             filterArray: [
