@@ -105,38 +105,12 @@ public class BehaviorNotification extends ColonyAlertsNotification
         surgeryCasesRecentlyClosed(c, u, msg);
         pairIdConflicts(c, u , msg);
         NHPTraining_BehaviorAlert(c, u , msg);
-        AlopeciaScoreAlert(c, u , msg);
         dcmNotesAlert(c, u , msg);
 
         notesEndingToday(c, u, msg, Arrays.asList("BSU Notes"), null);
         saveValues(c, toSave);
 
         return msg.toString();
-    }
-
-
-    /* Added by Kollil 08/22/2025
-    New alert/notification for when an animal receives an alopecia score of 4 or 5, but does not have an open behavioral case for alopecia.
-    Refer to tkt # 12145
-    */
-    private void AlopeciaScoreAlert(final Container c, User u, final StringBuilder msg)
-    {
-        TableInfo ti = getStudySchema(c, u).getTable("AlopeciaScoreMissingBehaviorCases");
-
-        TableSelector ts = new TableSelector(ti, null, null);
-        long total = ts.getRowCount();
-        msg.append("<b>Animals with alopecia score of 4 or 5, but does not have an open behavioral case for alopecia:</b><p>");
-        if (total > 0)
-        {
-            msg.append("There are " + total + " entries found. ");
-            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "AlopeciaScoreMissingBehaviorCases", null)  + "'>Click here to view them</a></p>\n");
-            msg.append("<hr>\n\n");
-        }
-        else
-        {
-            msg.append("<b>WARNING: No animals found with alopecia score of 4 or 5, but does not have an open behavioral case for alopecia!</b><br><hr>\n");
-        }
-
     }
 
     // Added by Kollil 11/04/2020
