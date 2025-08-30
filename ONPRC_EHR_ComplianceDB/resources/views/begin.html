@@ -43,6 +43,9 @@ Ext4.onReady(function(){
              ]
         },{
             header: 'Employee Information',
+            itemDefaults: {
+                linkTarget: '_blank'
+            },
             items: [{
                 name: 'Employee List', url: '<%=contextPath%>' + container + '/ldk-updateQuery.view?schemaName=ehr_compliancedb&query.queryName=Employees&query.viewName=' + employeeDefaultView
             },{
@@ -67,6 +70,9 @@ Ext4.onReady(function(){
             }]
         },{
             header: 'Administration / System Maintenance',
+            itemDefaults: {
+                linkTarget: '_blank'
+            },
             items: [{
                 name: 'View/Edit Allowable Employee Categories', url: '<%=contextPath%>' + container + '/query-executeQuery.view?schemaName=ehr_compliancedb&query.queryName=EmployeeCategory'
             },{
@@ -100,6 +106,9 @@ Ext4.onReady(function(){
         },{
 
         header: 'Printable Reports',
+            itemDefaults: {
+                linkTarget: '_blank'
+            },
         items: [{
             name: 'Employees Summary Report', url: LABKEY.ActionURL.buildURL('ONPRC_EHR_ComplianceDB', 'printableComplianceReports', LABKEY.ActionURL.getContainer())
         },{
