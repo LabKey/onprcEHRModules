@@ -20,6 +20,10 @@ Ext4.onReady(function(){
         width: 450,
         sections: [{
             header: 'Reports',
+            itemDefaults: {
+                linkTarget: '_blank'
+            },
+
             items: [{
                 name: 'Summary of Requirements By Employee', url: '<%=contextPath%>' + container + '/query-executeQuery.view?schemaName=ehr_compliancedb&query.queryName=ComplianceRecentTests&query.employeeid/isActive~eq=true'
             },{
@@ -35,17 +39,21 @@ Ext4.onReady(function(){
                 name: 'Requirements Overdue/Due Soon (Full SSRS Reports)', url: ctx['SSRSServerURL'] +'%2fPrime+Reports%2fCompliance%2fOverdue_Soon_Report&rs:Command=Render'
             },{
                 name: 'Requirements Overdue/Due Soon (SSRS Reports by Host)', url: ctx['SSRSServerURL'] +'%2fPrime+Reports%2fCompliance%2fOverdue_Soon_Host_Report&rs:Command=Render'
-
             }
-            ]
+             ]
         },{
             header: 'Employee Information',
+            itemDefaults: {
+                linkTarget: '_blank'
+            },
             items: [{
                 name: 'Employee List', url: '<%=contextPath%>' + container + '/ldk-updateQuery.view?schemaName=ehr_compliancedb&query.queryName=Employees&query.viewName=' + employeeDefaultView
             },{
                 name: 'View/Edit Dates Employees Completed Requirements', url: '<%=contextPath%>/ldk' + container + '/updateQuery.view?schemaName=ehr_compliancedb&query.queryName=CompletionDates'
-             },{
+            },{
                 name:  'Enter Dates Employees Completed Requirements (SA)', url: '<%=contextPath%>/ldk' + '/ONPRC/Admin/Compliance/Compliance Access' + '/updateQuery.view?schemaName=ehr_compliancedb&query.queryName=completionDates'
+            },{
+                name:  'Compliance File Uploads', url: '<%=contextPath%>' + '/project/ONPRC/Admin/Compliance/' + '/Compliance%20File_Uploads' + '/begin.view?wizard=true'
             }]
         },{
             header: 'Configuration of Requirements',
@@ -62,6 +70,9 @@ Ext4.onReady(function(){
             }]
         },{
             header: 'Administration / System Maintenance',
+            itemDefaults: {
+                linkTarget: '_blank'
+            },
             items: [{
                 name: 'View/Edit Allowable Employee Categories', url: '<%=contextPath%>' + container + '/query-executeQuery.view?schemaName=ehr_compliancedb&query.queryName=EmployeeCategory'
             },{
@@ -86,8 +97,18 @@ Ext4.onReady(function(){
                 name: 'SciShield input form',url: '<%=contextPath%>/query' + container + '/executeQuery.view?schemaName=onprc_ehr_compliancedb&query.queryName=SciShield_Data'
             }]
         },{
+            header: 'Audit Reports',
+            items: [{
+                name: 'List of Unused Training Names',  url: ctx['SSRSServerURL'] +'%2fPrime+Reports%2fCompliance%2fCompliance_Unassigned_requirements&rs:Command=Render'
+            },{
+                name:  'List of Duplicate Completion Dates',  url: ctx['SSRSServerURL'] +'%2fPrime+Reports%2fCompliance%2fCompliance_Duplicate_CompletedDates&rs:Command=Render'
+            }]
+        },{
 
         header: 'Printable Reports',
+            itemDefaults: {
+                linkTarget: '_blank'
+            },
         items: [{
             name: 'Employees Summary Report', url: LABKEY.ActionURL.buildURL('ONPRC_EHR_ComplianceDB', 'printableComplianceReports', LABKEY.ActionURL.getContainer())
         },{
