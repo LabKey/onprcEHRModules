@@ -20,6 +20,10 @@ Ext4.onReady(function(){
         width: 450,
         sections: [{
             header: 'Reports',
+            itemDefaults: {
+                linkTarget: '_blank'
+            },
+
             items: [{
                 name: 'Summary of Requirements By Employee', url: '<%=contextPath%>' + container + '/query-executeQuery.view?schemaName=ehr_compliancedb&query.queryName=ComplianceRecentTests&query.employeeid/isActive~eq=true'
             },{
