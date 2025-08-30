@@ -53,6 +53,7 @@ public class SingleSurgeryFormType extends EncounterForm
                 new EncounterChildFormSection("ehr", "encounter_summaries", "Narrative", true),
                 new EncounterMedicationsFormSection("study", "Drug Administration", "Medications/Treatments Given", true),
                 new EncounterMedicationsFormSection("study", "Treatment Orders", "Medication/Treatment Orders", false),
+                new ClinicalObservationsFormSection(EHRService.FORM_SECTION_LOCATION.Tabs),
                 new EncounterChildFormSection("study", "weight", "Weight", false, "EHR.data.WeightClientStore", Arrays.asList(ClientDependency.supplierFromPath("ehr/data/WeightClientStore.js")), null),
                 //Added by Kollil on 3/6/2025. Refer to tkt # 12124
                 new ClinicalObservationsFormSection(EHRService.FORM_SECTION_LOCATION.Tabs, true),
@@ -66,8 +67,13 @@ public class SingleSurgeryFormType extends EncounterForm
         }
 
         addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/model/sources/Surgery.js"));
-        addClientDependency(ClientDependency.supplierFromPath("ehr/window/OpenSurgeryCasesWindow.js"));
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/window/OpenSurgeryCasesWindow.js"));
         addClientDependency(ClientDependency.supplierFromPath("ehr/panel/SurgeryDataEntryPanel.js"));
+
+//    Added: 8-27-2024  r. Blasa
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/form/field/SurgeryEntryField.js"));
+
+
         setDisplayReviewRequired(true);
         setJavascriptClass("EHR.panel.SurgeryDataEntryPanel");
 
@@ -82,7 +88,7 @@ public class SingleSurgeryFormType extends EncounterForm
     protected List<String> getButtonConfigs()
     {
         List<String> ret = super.getButtonConfigs();
-        ret.add("OPENSURGERYCASES");
+        ret.add("OPENSURGERYCASEST");
 
         return ret;
     }

@@ -840,6 +840,21 @@
             <column columnName="formSort">
                 <datatype>integer</datatype>
             </column>
+            <column columnName="inflammation">
+                <datatype>varchar</datatype>
+            </column>
+            <column columnName="bruising">
+                <datatype>varchar</datatype>
+            </column>
+            <column columnName="other">
+                <datatype>varchar</datatype>
+            </column>
+            <column columnName="type">
+                <datatype>varchar</datatype>
+            </column>
+            <column columnName="obs_remark">
+                <datatype>varchar</datatype>
+            </column>
         </columns>
         <tableTitle>Clinical Observations</tableTitle>
     </table>

@@ -50,15 +50,15 @@ public class SurgicalRoundsFormType extends TaskForm
 
         for (FormSection s : this.getFormSections())
         {
-            s.addConfigSource("SurgicalRounds");
+            s.addConfigSource("SurgicalRoundsExt");
 
             if (s instanceof ClinicalObservationsFormSection)
             {
                 ((ClinicalObservationsFormSection)s).setHidden(true);
             }
         }
-
-        addClientDependency(ClientDependency.supplierFromPath("ehr/model/sources/SurgicalRounds.js"));
+//        Modified: 1-1-2025 R. Blasa
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/model/sources/SurgicalRounds.js"));
         setDisplayReviewRequired(true);
     }
 
