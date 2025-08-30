@@ -48,6 +48,13 @@ EHR.model.DataModelManager.registerMetadata('BehaviorRounds', {
                 columnConfig: {
                     editable: false
                 }
+            },
+            caseid: {
+                hidden: false,
+                columnConfig: {
+                    width: 10,
+                    editable: false
+                }
             }
         }
     }
