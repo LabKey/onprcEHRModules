@@ -1,0 +1,45 @@
+/* Added by Kollil 08/22/2025
+New query created for when an animal receives an alopecia score of 4 or 5, but does not have an open behavioral case for alopecia.
+Refer to tkt # 12145.
+Show 1 year data.
+*/
+SELECT
+    mr.Id,
+    d.species,
+    d.gender,
+    d.Id.age.ageinYearsRounded,
+    d.Id.curLocation.area,
+    d.Id.curLocation.room,
+    d.Id.curLocation.cage,
+    mr.observation AS MostRecentAlopeciaScore,
+    mr.date,
+    mr.performedby
+FROM (
+         SELECT co.Id, co.created, co.observation, co.date, co.performedby
+         FROM study.clinical_observations AS co
+         WHERE
+           co.category = 'Alopecia Score'
+           AND co.created >= TIMESTAMPADD(SQL_TSI_YEAR, -1, NOW())
+           AND co.created = (
+             SELECT MAX(co2.created)
+             FROM study.clinical_observations AS co2
+             WHERE
+               co2.Id = co.Id
+               AND co2.category = 'Alopecia Score'
+               AND co2.created >= TIMESTAMPADD(SQL_TSI_YEAR, -1, NOW())
+         )
+     ) AS mr
+         INNER JOIN study.demographics AS d ON mr.Id = d.Id
+WHERE
+  d.calculated_status = 'Alive'
+  AND mr.observation IN ('4', '5')
+  AND NOT EXISTS (
+    SELECT 1
+    FROM study.Cases AS c
+    WHERE
+      c.Id = mr.Id
+      AND c.category = 'Behavior'
+      AND c.allProblemCategories = 'Behavioral: Alopecia'
+      AND c.date <= mr.date
+      AND (c.enddate IS NULL OR c.enddate > mr.date)
+)
