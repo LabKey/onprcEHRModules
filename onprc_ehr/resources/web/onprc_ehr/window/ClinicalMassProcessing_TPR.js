@@ -92,7 +92,7 @@ Ext4.define('ONPRC_EHR.window.ClinicalProcessingTPRWindow', {
 
         Ext4.Msg.wait('Please be patient while we Process your data...');
 
-        var offset = 87;
+        var offset = 96;
         var rowIdx = offset;
         for (var i = offset; i < parsed.length; i++)
         {
@@ -329,6 +329,62 @@ Ext4.define('ONPRC_EHR.window.ClinicalProcessingTPRWindow', {
                 category: this.safeGet(parsed, 69, 1),
                 area: this.safeGet(parsed, 70, 1),
                 observation:Ext4.String.trim(row[6]) ,
+                performedby: performedBy
+
+            };
+
+            if (!this.checkRequired(['Id', 'date', 'category', 'area', 'observation','performedby'], obj, errors, rowIdx))
+            {
+                recordMap.observations.push(obj);
+            }
+        };
+
+        //Add:  Observations-->
+
+        // N: MM-- Pink/Moist
+
+        if (row[13]){
+            var obj = {
+                Id: id,
+                date: this.getTime(date, times, errors, rowIdx),
+                category: this.safeGet(parsed, 85, 1),
+                area: this.safeGet(parsed, 86, 1),
+                observation:this.safeGet(parsed, 87, 1),
+                performedby: performedBy
+
+            };
+
+            if (!this.checkRequired(['Id', 'date', 'category', 'area', 'observation','performedby'], obj, errors, rowIdx))
+            {
+                recordMap.observations.push(obj);
+            }
+        };
+        //CRT
+        if (row[14]){
+            var obj = {
+                Id: id,
+                date: this.getTime(date, times, errors, rowIdx),
+                category: this.safeGet(parsed, 88, 1),
+                area: this.safeGet(parsed, 89, 1),
+                observation:this.safeGet(parsed, 90, 1),
+                performedby: performedBy
+
+            };
+
+            if (!this.checkRequired(['Id', 'date', 'category', 'area', 'observation','performedby'], obj, errors, rowIdx))
+            {
+                recordMap.observations.push(obj);
+            }
+        };
+
+            //Turgor
+        if (row[15]){
+            var obj = {
+                Id: id,
+                date: this.getTime(date, times, errors, rowIdx),
+                category: this.safeGet(parsed, 91, 1),
+                area: this.safeGet(parsed, 92, 1),
+                observation:this.safeGet(parsed, 93, 1),
                 performedby: performedBy
 
             };
