@@ -28,7 +28,7 @@ import org.labkey.api.view.template.ClientDependency;
  */
 public class BulkEditRequestsButton extends SimpleButtonConfigFactory
 {
-    private String _formType;
+    private final String _formType;
 
     public BulkEditRequestsButton(Module owner, String formType)
     {

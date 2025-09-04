@@ -20,7 +20,6 @@ import org.labkey.api.data.CompareType;
 import org.labkey.api.data.Container;
 import org.labkey.api.data.ContainerManager;
 import org.labkey.api.data.DbScope;
-import org.labkey.api.data.RuntimeSQLException;
 import org.labkey.api.data.SimpleFilter;
 import org.labkey.api.data.Table;
 import org.labkey.api.data.TableInfo;
@@ -33,7 +32,6 @@ import org.labkey.api.query.FieldKey;
 import org.labkey.api.query.Queryable;
 import org.labkey.api.security.User;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -47,7 +45,7 @@ import java.util.Map;
  */
 public class ONPRC_BillingManager
 {
-    private static ONPRC_BillingManager _instance = new ONPRC_BillingManager();
+    private static final ONPRC_BillingManager _instance = new ONPRC_BillingManager();
     public static final String BillingContainerPropName = "BillingContainer";
     public static final String IssuesContainerPropName = "IssuesContainer";
     public static final String SLAContainerPropName = "SLAContainer";
@@ -106,7 +104,7 @@ public class ONPRC_BillingManager
                 {
                     Map<String, Object> map = new CaseInsensitiveHashMap<>();
                     map.put("invoiceId", null);
-                    map = Table.update(user, miscCharges, map, objectid);
+                    Table.update(user, miscCharges, map, objectid);
                 }
 
                 long deleted3 = Table.delete(invoiceRuns, new SimpleFilter(FieldKey.fromString("objectid"), pks, CompareType.IN));

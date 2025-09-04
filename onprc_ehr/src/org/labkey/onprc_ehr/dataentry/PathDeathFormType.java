@@ -22,7 +22,6 @@ import org.labkey.api.ehr.dataentry.TaskFormSection;
 import org.labkey.api.ehr.dataentry.UnsaveableTask;
 import org.labkey.api.ehr.security.EHRCompletedInsertPermission;
 import org.labkey.api.ehr.security.EHRPathologyEntryPermission;
-import org.labkey.api.ehr.security.EHRSurgeryEntryPermission;
 import org.labkey.api.module.Module;
 
 import java.util.Arrays;

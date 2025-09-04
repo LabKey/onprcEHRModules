@@ -84,7 +84,7 @@ package org.labkey.onprc_ehr.dataentry;
                     ret.add("ENV_CLOSE");
 
                 return ret;
-            };
+            }
 
 
             //Added 1-19-2024 Blasa

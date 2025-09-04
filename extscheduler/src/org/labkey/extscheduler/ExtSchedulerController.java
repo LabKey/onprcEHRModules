@@ -1,10 +1,8 @@
 package org.labkey.extscheduler;
 
 import org.labkey.api.action.ReadOnlyApiAction;
-import org.labkey.api.action.ApiResponse;
 import org.labkey.api.action.ApiSimpleResponse;
 import org.labkey.api.action.SpringActionController;
-import org.labkey.api.data.Container;
 import org.labkey.api.security.Group;
 import org.labkey.api.security.MemberType;
 import org.labkey.api.security.RequiresPermission;
@@ -12,7 +10,6 @@ import org.labkey.api.security.SecurityManager;
 import org.labkey.api.security.User;
 import org.labkey.api.security.permissions.ReadPermission;
 import org.springframework.validation.BindException;
-import org.springframework.validation.Errors;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,7 +26,7 @@ public class ExtSchedulerController extends SpringActionController
     }
 
     @RequiresPermission(ReadPermission.class)
-    public class GetSchedulerGroupMembersAction extends ReadOnlyApiAction<Object>
+    public static class GetSchedulerGroupMembersAction extends ReadOnlyApiAction<Object>
     {
         @Override
         public Object execute(Object o, BindException errors) throws Exception

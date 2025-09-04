@@ -5,8 +5,6 @@ import org.jetbrains.annotations.Nullable;
 import org.labkey.api.data.AbstractTableInfo;
 import org.labkey.api.data.Container;
 import org.labkey.api.data.ContainerFilter;
-import org.labkey.api.data.ContainerManager;
-import org.labkey.api.data.DatabaseTableType;
 import org.labkey.api.data.JdbcType;
 import org.labkey.api.data.SQLFragment;
 import org.labkey.api.data.TableInfo;
@@ -14,7 +12,6 @@ import org.labkey.api.data.dialect.SqlDialect;
 import org.labkey.api.query.DefaultQueryUpdateService;
 import org.labkey.api.query.DuplicateKeyException;
 import org.labkey.api.query.ExprColumn;
-import org.labkey.api.query.FieldKey;
 import org.labkey.api.query.FilteredTable;
 import org.labkey.api.query.InvalidKeyException;
 import org.labkey.api.query.QueryUpdateService;
@@ -28,8 +25,6 @@ import org.labkey.api.view.UnauthorizedException;
 import org.labkey.extscheduler.ExtSchedulerManager;
 
 import java.sql.SQLException;
-import java.util.Collections;
-import java.util.Date;
 import java.util.Map;
 
 public class EventsTable extends FilteredTable<ExtSchedulerQuerySchema>

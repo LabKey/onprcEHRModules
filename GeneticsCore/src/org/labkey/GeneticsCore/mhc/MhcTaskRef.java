@@ -28,6 +28,7 @@ import org.labkey.api.query.DuplicateKeyException;
 import org.labkey.api.query.FieldKey;
 import org.labkey.api.query.InvalidKeyException;
 import org.labkey.api.query.QueryService;
+import org.labkey.api.query.QueryUpdateService;
 import org.labkey.api.query.QueryUpdateServiceException;
 import org.labkey.api.query.UserSchema;
 import org.labkey.api.util.GUID;
@@ -135,7 +136,9 @@ public class MhcTaskRef implements TaskRefTask
             try
             {
                 job.getLogger().info("deleting existing rows: " + toDelete.size());
-                mhcData.getUpdateService().deleteRows(job.getUser(), getTargetContainer(job), toDelete, null, null);
+                QueryUpdateService qus = mhcData.getUpdateService();
+                qus.setBulkLoad(true);
+                qus.deleteRows(job.getUser(), getTargetContainer(job), toDelete, null, null);
             }
             catch (InvalidKeyException | BatchValidationException | QueryUpdateServiceException | SQLException e)
             {
@@ -162,7 +165,9 @@ public class MhcTaskRef implements TaskRefTask
             {
                 job.getLogger().info("inserting rows: " + toInsert.size());
                 BatchValidationException bve = new BatchValidationException();
-                mhcData.getUpdateService().insertRows(job.getUser(), getTargetContainer(job), toInsert, bve, null, null);
+                QueryUpdateService qus = mhcData.getUpdateService();
+                qus.setBulkLoad(true);
+                qus.insertRows(job.getUser(), getTargetContainer(job), toInsert, bve, null, null);
                 if (bve.hasErrors())
                 {
                     throw bve;

@@ -38,12 +38,11 @@ public class DefaultEnrichmentDataSource extends AbstractEHRDataSource
     @Override
     protected String getHtml(Container c, Results rs, boolean redacted) throws SQLException
     {
-        StringBuilder sb = new StringBuilder();
-        sb.append(safeAppend(rs, "Toy", "toycode/meaning"));
-        sb.append(safeAppend(rs, "Reason", "reason"));
-        sb.append(safeAppend(rs, "Remark", "remark"));
-        sb.append(safeAppend(rs, "Performed By", "performedby"));
-        return sb.toString();
+        String sb = safeAppend(rs, "Toy", "toycode/meaning") +
+                safeAppend(rs, "Reason", "reason") +
+                safeAppend(rs, "Remark", "remark") +
+                safeAppend(rs, "Performed By", "performedby");
+        return sb;
     }
 
     @Override

@@ -15,6 +15,7 @@
  */
 package org.labkey.test.tests.onprc_ehr;
 
+import org.jetbrains.annotations.Nullable;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -38,7 +39,6 @@ import org.labkey.test.util.PortalHelper;
 import org.labkey.test.util.ext4cmp.Ext4FieldRef;
 import org.labkey.test.util.ext4cmp.Ext4GridRef;
 
-import javax.annotation.Nullable;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -69,7 +69,7 @@ public class ONPRC_BillingTest extends AbstractONPRC_EHRTest
     @LogMethod
     public static void setupProject() throws Exception
     {
-        ONPRC_BillingTest initTest = (ONPRC_BillingTest) getCurrentTest();
+        ONPRC_BillingTest initTest = getCurrentTest();
         initTest.doSetUp();
     }
 
@@ -100,7 +100,7 @@ public class ONPRC_BillingTest extends AbstractONPRC_EHRTest
         _portalHelper.addWebPart("ONPRC Finance");
         _portalHelper.moveWebPart("Finance", PortalHelper.Direction.UP);
     }
-
+    
     @Test
     public void testNotifications()
     {
@@ -199,7 +199,7 @@ public class ONPRC_BillingTest extends AbstractONPRC_EHRTest
         final String demoLsid = (String) demoResp.getRows().get(0).get("lsid");
 
         UpdateRowsCommand demoUpdateCmd = new UpdateRowsCommand("study", "demographics");
-        demoUpdateCmd.addRow(new HashMap<String, Object>()
+        demoUpdateCmd.addRow(new HashMap<>()
         {
             {
                 put("lsid", demoLsid);

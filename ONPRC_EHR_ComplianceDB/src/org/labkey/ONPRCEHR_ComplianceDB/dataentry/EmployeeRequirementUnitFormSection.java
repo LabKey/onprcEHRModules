@@ -50,7 +50,7 @@ public class EmployeeRequirementUnitFormSection extends SimpleFormSection
         int idx = 0;
         if (defaultButtons.contains("ADDANIMALS"))
         {
-            idx = defaultButtons.indexOf("ADDANIMALS");
+            defaultButtons.indexOf("ADDANIMALS");
             defaultButtons.remove("ADDANIMALS");
         }
 

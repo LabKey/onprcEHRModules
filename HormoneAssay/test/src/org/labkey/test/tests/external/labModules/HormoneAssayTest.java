@@ -159,7 +159,7 @@ public class HormoneAssayTest extends AbstractLabModuleAssayTest
         {"904", "Unknown", "Subject95", "2012-04-05", "", "", "Serum"}
     };
 
-    private String[][] PIVOT_DATA = new String[][]{
+    private final String[][] PIVOT_DATA = new String[][]{
             {"Subject Id", "Sample Date", "E2 (pg/ml)", "P4 (ng/ml)"},
             {"9835", "2012-03-17", "24.82", "<0.01"},
             {"9785", "2012-03-17", "48.51", "2.72"},

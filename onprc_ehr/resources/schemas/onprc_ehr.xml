@@ -1431,8 +1431,8 @@
             <column columnName="modifiedby"/>
             <column columnName="startdate"/>
             <column columnName="enddate"/>
-            <column columnName="displayname"/>
             <column columnName="investigatorid"/>
+            <column columnName="displayname"/>
             <column columnName="use_category"/>
             <column columnName="projecttype"/>
             <column columnName="objectid"/>

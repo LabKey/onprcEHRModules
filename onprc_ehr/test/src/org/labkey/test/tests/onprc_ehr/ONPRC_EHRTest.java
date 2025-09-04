@@ -61,6 +61,7 @@ import org.openqa.selenium.WebElement;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -81,7 +82,7 @@ import static org.junit.Assert.fail;
 public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
 {
     protected String PROJECT_NAME = "ONPRC_EHR_TestProject";
-    private final String ANIMAL_HISTORY_URL = "/" + getProjectName() + "/ehr-animalHistory.view";
+    private final String ANIMAL_HISTORY_URL = "/" + getContainerPath() + "/ehr-animalHistory.view";
 
     @Override
     protected String getProjectName()
@@ -160,7 +161,7 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
     {
         final String investLastName = "Tester";
 
-        goToProjectHome();
+        goToEHRFolder();
 
         String[][] CONDITION_FLAGS = new String[][]{
                 {"Nonrestricted", "201"},
@@ -345,7 +346,7 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
     @Test
     public void testAnimalGroupsApi() throws Exception
     {
-        goToProjectHome();
+        goToEHRFolder();
 
         int group1 = getOrCreateGroup("Group1");
         int group2 = getOrCreateGroup("Group2");
@@ -364,7 +365,7 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
     @Test
     public void testProjectProtocolApi() throws Exception
     {
-        goToProjectHome();
+        goToEHRFolder();
 
         //auto-assignment of IDs
         String protocolTitle = generateGUID();
@@ -399,7 +400,7 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
     @Test
     public void testDrugApi()
     {
-        goToProjectHome();
+        goToEHRFolder();
 
         getApiHelper().testValidationMessage(DATA_ADMIN.getEmail(), "study", "drug", new String[]{"Id", "date", "code", "outcome", "remark", "amount", "amount_units", "volume", "vol_units", "QCStateLabel", "objectid", "_recordId"}, new Object[][]{
                 {MORE_ANIMAL_IDS[0], new Date(), "code", "Abnormal", null, 1.0, "mg", 2.0, "mL", EHRQCState.COMPLETED.label, generateGUID(), "recordID"}
@@ -470,7 +471,7 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
     @Test
     public void testArrivalApi() throws Exception
     {
-        goToProjectHome();
+        goToEHRFolder();
 
         final String arrivalId1 = "Arrival1";
         final String arrivalId2 = "Arrival2";
@@ -578,11 +579,11 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         }
 
         //colony overview
-        goToProjectHome();
+        goToEHRFolder();
         waitAndClickAndWait(Locator.tagContainingText("a", "Colony Overview"));
 
         //NOTE: depending on the test order and whether demographics records were created, so we test this
-        EHRClientAPIHelper apiHelper = new EHRClientAPIHelper(this, getProjectName());
+        EHRClientAPIHelper apiHelper = new EHRClientAPIHelper(this, getContainerPath());
         boolean hasDemographics = apiHelper.getRowCount("study", "demographics") > 0;
         boolean hasCases = apiHelper.getRowCount("study", "cases") > 0;
         int aggregatePanelCount = 0;
@@ -629,7 +630,7 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
 
         //bulk history export
         log("testing bulk history export");
-        goToProjectHome();
+        goToEHRFolder();
         waitAndClickAndWait(Locator.tagContainingText("a", "Bulk History Export"));
         waitForElement(Locator.tagContainingText("label", "Enter Animal Id(s)"));
         Ext4FieldRef.getForLabel(this, "Enter Animal Id(s)").setValue("12345;23432\nABCDE");
@@ -643,7 +644,7 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         assertElementNotPresent(Locator.tagContainingText("label", "Projects").notHidden()); //check redaction
 
         //compare lists of animals
-        goToProjectHome();
+        goToEHRFolder();
         waitAndClickAndWait(Locator.tagContainingText("a", "Compare Lists of Animals"));
         waitForElement(Locator.id("unique"));
         setFormElement(Locator.id("unique"), "1,2,1\n3,3;4");
@@ -673,7 +674,7 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         ensureGroupMember(groupId, MORE_ANIMAL_IDS[0]);
         ensureGroupMember(groupId, MORE_ANIMAL_IDS[1]);
 
-        goToProjectHome();
+        goToEHRFolder();
         waitAndClickAndWait(Locator.tagContainingText("a", "Animal Groups"));
         waitForElement(Locator.tagContainingText("span", "Active Groups"));
         DataRegionTable dr = new DataRegionTable("query", this);
@@ -682,7 +683,7 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         Assert.assertEquals(2, membersTable.getDataRowCount());
 
         //more reports
-        goToProjectHome();
+        goToEHRFolder();
         waitAndClickAndWait(Locator.tagContainingText("a", "More Reports"));
         waitForElement(Locator.tagContainingText("a", "View Summary of Clinical Tasks"));
     }
@@ -691,7 +692,7 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
     public void testPrintableReports()
     {
         // NOTE: these primarily run SSRS, so we will just set up the UI and test whether the URL matches expectations
-        goToProjectHome();
+        goToEHRFolder();
         waitAndClickAndWait(Locator.tagContainingText("a", "Printable Reports"));
         waitForElement(Ext4Helper.Locators.ext4Button("Print Version"));
 
@@ -716,7 +717,7 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         closeExtraWindows();
 
         // Now try the CITES Report
-        goToProjectHome();
+        goToEHRFolder();
         waitAndClickAndWait(Locator.tagContainingText("a", "More Reports"));
         waitAndClickAndWait(Locator.tagContainingText("a", "Cites Report"));
         waitForElement(Locator.textarea("animalField"));
@@ -748,7 +749,7 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
     @Test
     public void testPedigreeReport()
     {
-        goToProjectHome();
+        goToEHRFolder();
         beginAtAnimalHistoryTab();
 
         String id = ID_PREFIX + 10;
@@ -1246,7 +1247,7 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
     @Test
     public void testGeneticsPipeline()
     {
-        goToProjectHome();
+        goToEHRFolder();
 
         //retain pipeline log for debugging
         getArtifactCollector().addArtifactLocation(new File(TestFileUtils.getLabKeyRoot(), getModulePath() + GENETICS_PIPELINE_LOG_PATH),
@@ -1269,7 +1270,7 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         Test coverage for : https://www.labkey.org/ONPRC/Support%20Tickets/issues-details.view?issueId=41231
         */
 
-        goToProjectHome();
+        goToEHRFolder();
         beginAtAnimalHistoryTab();
         AnimalHistoryPage<?> animalHistoryPage = new AnimalHistoryPage<>(getDriver());
         animalHistoryPage.searchSingleAnimal("99995,99996,99997,99998,99999,999910");
@@ -1315,7 +1316,7 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
     {
         setupNotificationService();
 
-        goToProjectHome();
+        goToEHRFolder();
         waitAndClickAndWait(Locators.bodyPanel().append(Locator.tagContainingText("a", "EHR Admin Page")));
         waitAndClickAndWait(Locator.tagContainingText("a", "Notification Admin"));
 
@@ -1598,6 +1599,8 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
     @Test
     public void testSurgeryForm()
     {
+        LocalDateTime tomorrow = LocalDateTime.now().plusDays(1);
+
         _helper.goToTaskForm("Surgeries");
 
         Ext4GridRef proceduresGrid = _helper.getExt4GridForFormSection("Procedures");
@@ -1737,6 +1740,17 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         waitForElementToDisappear(caseWindow);
         waitForElement(Ext4Helper.Locators.window("Success").append(Locator.tagWithText("div", "Surgical cases opened")));
         waitAndClick(Ext4Helper.Locators.window("Success").append(Ext4Helper.Locators.ext4ButtonEnabled("OK")));
+
+        _ext4Helper.clickExt4Tab("Medication/Treatment Orders");
+        treatmentGrid = _helper.getExt4GridForFormSection("Medication/Treatment Orders");
+        treatmentGrid.clickTbarButton("Add Record");
+        treatmentGrid.completeEdit();
+
+        Assert.assertEquals(tomorrow.withHour(8).withMinute(0).withSecond(0).withNano(0),
+                treatmentGrid.getDateFieldValue(3, "date").toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDateTime());
+
         _helper.discardForm();
     }
 
@@ -1758,6 +1772,8 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
     @Test
     public void testBehaviorRounds() throws Exception
     {
+        goToEHRFolder();
+
         _helper.goToTaskForm("BSU Rounds");
 
         //create a previous observation for the active case

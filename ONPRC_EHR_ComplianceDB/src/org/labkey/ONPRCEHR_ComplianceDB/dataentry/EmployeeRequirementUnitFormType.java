@@ -8,7 +8,6 @@ import org.labkey.api.ehr.dataentry.TaskFormSection;
 import org.labkey.api.module.Module;
 import org.labkey.api.view.template.ClientDependency;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -57,7 +56,7 @@ public class EmployeeRequirementUnitFormType extends  TaskForm
             ret.add("EMPLOYEECLOSE");
 
         return ret;
-    };
+    }
 
 
     @Override

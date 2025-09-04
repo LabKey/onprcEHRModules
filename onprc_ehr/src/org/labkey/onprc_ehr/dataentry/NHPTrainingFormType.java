@@ -24,7 +24,6 @@ import org.labkey.api.module.Module;
 import org.labkey.api.view.template.ClientDependency;
 
 import java.util.Arrays;
-import java.util.Collections;
 
 //Created: 12-6-2016  R.Blasa
 

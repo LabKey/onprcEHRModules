@@ -19,14 +19,9 @@ package org.labkey.onprc_ssu;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.labkey.api.data.Container;
-import org.labkey.api.data.ContainerManager;
-import org.labkey.api.data.DbSchema;
 import org.labkey.api.ldk.ExtendedSimpleModule;
 import org.labkey.api.ldk.notification.NotificationService;
-import org.labkey.api.module.DefaultModule;
 import org.labkey.api.module.ModuleContext;
-import org.labkey.api.util.PageFlowUtil;
-import org.labkey.api.view.WebPartFactory;
 import org.labkey.onprc_ssu.notification.SSU_Notification;
 
 import java.util.Collection;

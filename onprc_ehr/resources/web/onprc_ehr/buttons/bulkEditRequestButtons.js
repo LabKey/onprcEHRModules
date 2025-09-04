@@ -75,14 +75,14 @@ ONPRC_EHR.Buttons.bulkEditRequestHandler = function(dataRegionName, formType, is
 
             function viewForm(keys){
                 var re = new RegExp('^' + window.location.origin);
-                var srcURL = window.location.href.replace(re, '');
+                var returnUrl = window.location.href.replace(re, '');
 
                 if (keys.length < 10){
-                    window.location = LABKEY.ActionURL.buildURL('ehr', 'dataEntryForm', null, {formType: formType, pkValues: keys.join(';'), srcURL: srcURL});
+                    window.location = LABKEY.ActionURL.buildURL('ehr', 'dataEntryForm', null, {formType: formType, pkValues: keys.join(';'), returnUrl: returnUrl});
                 }
                 else {
                     var newForm = Ext4.DomHelper.append(document.getElementsByTagName('body')[0],
-                            '<form method="POST" action="' + LABKEY.ActionURL.buildURL('ehr', 'dataEntryForm', null, {formType: formType, srcURL: srcURL}) + '">' +
+                            '<form method="POST" action="' + LABKEY.ActionURL.buildURL('ehr', 'dataEntryForm', null, {formType: formType, returnUrl: returnUrl}) + '">' +
                                 '<input type="hidden" name="pkValues" value="' + Ext4.htmlEncode(keys.join(';')) + '" />' +
                             '<input type="hidden" name="X-LABKEY-CSRF" value="' + Ext4.htmlEncode(LABKEY.CSRF) + '" />' +
                             '</form>');

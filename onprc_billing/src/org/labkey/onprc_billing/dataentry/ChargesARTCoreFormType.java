@@ -9,7 +9,6 @@ import org.labkey.api.view.template.ClientDependency;
 import org.labkey.onprc_billing.security.ONPRCArtCoreChargesEntryPermission;
 import org.labkey.api.onprc_ehr.ONPRC_EHRService;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 

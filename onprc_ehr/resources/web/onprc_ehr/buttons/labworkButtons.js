@@ -137,7 +137,7 @@ EHR.DataEntryUtils.registerDataEntryFormButton('LABWORK_SUBMIT', {
     requiredQC: 'Completed',
     targetQC: 'Completed',
     errorThreshold: 'INFO',
-    successURL: LABKEY.ActionURL.getParameter('srcURL') || LABKEY.ActionURL.getParameter('returnUrl') || LABKEY.ActionURL.getParameter('returnURL') || LABKEY.ActionURL.buildURL('ehr', 'enterData.view'),
+    successURL: LABKEY.ActionURL.getParameter('returnUrl') || LABKEY.ActionURL.buildURL('ehr', 'enterData.view'),
     disabled: true,
     itemId: 'submitBtn',
     handler: function(btn){

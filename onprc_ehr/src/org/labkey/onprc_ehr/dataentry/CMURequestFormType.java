@@ -16,7 +16,6 @@
 package org.labkey.onprc_ehr.dataentry;
 
 import org.labkey.api.ehr.dataentry.AnimalDetailsFormSection;
-import org.labkey.api.ehr.dataentry.BloodDrawFormSection;
 import org.labkey.onprc_ehr.dataentry.TreatmentOrdersRequestFormSection;
 import org.labkey.api.ehr.dataentry.DataEntryFormContext;
 import org.labkey.api.ehr.dataentry.FormSection;
@@ -25,7 +24,6 @@ import org.labkey.api.ehr.dataentry.RequestFormSection;
 import org.labkey.api.module.Module;
 import org.labkey.api.view.template.ClientDependency;
 import org.labkey.onprc_ehr.security.ONPRC_EHRCMUMedicationEntryPermission;
-import org.labkey.onprc_ehr.security.ONPRC_EHREnvironmentalPermission;
 
 
 import java.util.Arrays;

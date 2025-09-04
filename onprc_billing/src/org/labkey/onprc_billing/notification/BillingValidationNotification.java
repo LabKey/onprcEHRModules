@@ -114,10 +114,10 @@ public class BillingValidationNotification extends FinanceNotification
     private void performCheck(Container financeContainer, User u, StringBuilder msg, Date startDate, Date enddate, String label, String queryName1, String queryName2)
     {
         Map<String, Object> params = new HashMap<>();
-        Long numDays = ((DateUtils.truncate(enddate, Calendar.DATE).getTime() - startDate.getTime()) / DateUtils.MILLIS_PER_DAY) + 1;
+        long numDays = ((DateUtils.truncate(enddate, Calendar.DATE).getTime() - startDate.getTime()) / DateUtils.MILLIS_PER_DAY) + 1;
         params.put("StartDate", startDate);
         params.put("EndDate", enddate);
-        params.put("NumDays", numDays.intValue());
+        params.put("NumDays", (int) numDays);
 
         UserSchema us = QueryService.get().getUserSchema(u, financeContainer, ONPRC_BillingSchema.NAME);
         TableInfo table1 = us.getTable(queryName1);
@@ -135,7 +135,7 @@ public class BillingValidationNotification extends FinanceNotification
             String url = getExecuteQueryUrl(financeContainer, "onprc_billing", queryName1, null);
             url += "&query.param.StartDate=" + getDateFormat(financeContainer).format(startDate);
             url += "&query.param.EndDate=" + getDateFormat(financeContainer).format(enddate);
-            url += "&query.param.NumDays=" + numDays.intValue();
+            url += "&query.param.NumDays=" + (int) numDays;
             url += "&query.sort=-date,Id";
 
             msg.append("<a href='" + url + "'>Click here to view them</a>");
@@ -157,7 +157,7 @@ public class BillingValidationNotification extends FinanceNotification
             String url = getExecuteQueryUrl(financeContainer, "onprc_billing", queryName2, null);
             url += "&query.param.StartDate=" + getDateFormat(financeContainer).format(startDate);
             url += "&query.param.EndDate=" + getDateFormat(financeContainer).format(enddate);
-            url += "&query.param.NumDays=" + numDays.intValue();
+            url += "&query.param.NumDays=" + (int) numDays;
             url += "&query.sort=-date,Id";
 
             msg.append("<a href='").append(url).append("'>Click here to view them</a>");

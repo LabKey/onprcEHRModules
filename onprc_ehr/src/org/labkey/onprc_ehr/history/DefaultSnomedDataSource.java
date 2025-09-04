@@ -84,7 +84,7 @@ public class DefaultSnomedDataSource extends AbstractEHRDataSource
                 rowMap.put("html", html);
 
                 Date roundedDate = DateUtils.truncate((Date) rowMap.get("date"), Calendar.DATE);
-                String key = results.getString(FieldKey.fromString("taskid")) + "||" + rowMap.get("Id") + "||" + roundedDate.toString();
+                String key = results.getString(FieldKey.fromString("taskid")) + "||" + rowMap.get("Id") + "||" + roundedDate;
                 List<Map<String, Object>> obsRows = idMap.get(key);
                 if (obsRows == null)
                     obsRows = new ArrayList<>();
@@ -130,8 +130,7 @@ public class DefaultSnomedDataSource extends AbstractEHRDataSource
             }
 
             HistoryRow row = new HistoryRowImpl(this, categoryText, categoryGroup, categoryColor, subjectId, date, html.toString(), null, publicData, taskId, taskRowId, formType, objectId);
-            if (row != null)
-                rows.add(row);
+            rows.add(row);
         }
 
         return rows;
@@ -147,7 +146,7 @@ public class DefaultSnomedDataSource extends AbstractEHRDataSource
         if (rs.getString(FieldKey.fromString("code")) != null)
         {
             boolean addSuffix = false;
-            if (sb.length() > 0)
+            if (!sb.isEmpty())
             {
                 sb.append(" (");
                 addSuffix = true;
@@ -159,7 +158,7 @@ public class DefaultSnomedDataSource extends AbstractEHRDataSource
                 sb.append(")");
         }
 
-        if (sb.length() > 0)
+        if (!sb.isEmpty())
             sb.append("\n");
 
         return sb.toString();

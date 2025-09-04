@@ -19,11 +19,8 @@ package org.labkey.sla;
 import org.labkey.api.data.Container;
 import org.labkey.api.data.ContainerManager;
 import org.labkey.api.data.DbSchema;
-import org.labkey.api.data.DbSchemaType;
-import org.labkey.api.data.DbScope;
 import org.labkey.api.data.SimpleFilter;
 import org.labkey.api.data.Sort;
-import org.labkey.api.data.SqlSelector;
 import org.labkey.api.data.Table;
 import org.labkey.api.data.TableInfo;
 import org.labkey.api.data.TableSelector;
@@ -40,7 +37,6 @@ import org.labkey.sla.model.PurchaseForm;
 import org.labkey.sla.model.Requestor;
 import org.labkey.sla.model.Vendor;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class SLAManager
@@ -170,7 +166,7 @@ public class SLAManager
     {
         ModuleProperty adminContainerPath = SLAManager.get().getModuleProperty("SLAPurchaseOrderAdminContainer");
         if (adminContainerPath != null)
-            return ContainerManager.getForPath(adminContainerPath.getEffectiveValue(c));;
+            return ContainerManager.getForPath(adminContainerPath.getEffectiveValue(c));
 
         return null;
     }

@@ -53,7 +53,7 @@ public class EmployeeRequirementCategoryFormSection extends SimpleGridPanel
         int idx = 0;
         if (defaultButtons.contains("ADDANIMALS"))
         {
-            idx = defaultButtons.indexOf("ADDANIMALS");
+            defaultButtons.indexOf("ADDANIMALS");
             defaultButtons.remove("ADDANIMALS");
         }
 

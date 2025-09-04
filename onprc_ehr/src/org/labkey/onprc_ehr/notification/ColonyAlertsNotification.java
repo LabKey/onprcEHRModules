@@ -1334,7 +1334,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
             msg.append("<tr bgcolor = " + '"' + "#00FF7F" + '"' + "style='font-weight: bold;'>");
             msg.append("<td> Id </td><td> Center Project </td><td> Date </td><td> Procedure </td><td> USDA Categories </td></tr>");
 
-            ts2.forEach(new Selector.ForEachBlock<ResultSet>()
+            ts2.forEach(new Selector.ForEachBlock<>()
             {
                 @Override
                 public void exec(ResultSet object) throws SQLException
@@ -1400,7 +1400,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
             msg.append("<tr bgcolor = " + '"' + "#00FF7F" + '"' + "style='font-weight: bold;'>");
             msg.append("<td> Procedure Name </td><td> USDA Pain Categories </td><td> Category </td></tr>");
 
-            ts2.forEach(new Selector.ForEachBlock<ResultSet>()
+            ts2.forEach(new Selector.ForEachBlock<>()
             {
                 @Override
                 public void exec(ResultSet object) throws SQLException
@@ -1716,7 +1716,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
 
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("death"), cal.getTime(), CompareType.DATE_GTE);
         TableSelector ts = new TableSelector(getStudySchema(c, u).getTable("validateFinalWeights"), filter, new Sort(getStudy(c).getSubjectColumnName()));
-        Long total = ts.getRowCount();
+        long total = ts.getRowCount();
 
         if (total > 0)
         {
@@ -1848,7 +1848,6 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
 
     /**
      * then we find all animals with cage size problems
-     * @param msg
      */
     private void cageReview(final Container c, User u, final StringBuilder msg, boolean notifyOnNone, String filterTerm, String message, String requirementSet)
     {
@@ -2135,7 +2134,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
 
                 //String url = getParticipantURL(c, rs.getString(getStudy(c).getSubjectColumnName()));
                 String url = getExecuteQueryUrl(c, "study", "Blood Draws", "With Blood Volume") + "&query.Id~eq=" + rs.getString(getStudy(c).getSubjectColumnName());
-                lines.add("<a href='" + url + "'>" + text.toString() + "</a><br>\n");
+                lines.add("<a href='" + url + "'>" + text + "</a><br>\n");
             });
 
             //simple way to enforce uniqueness
