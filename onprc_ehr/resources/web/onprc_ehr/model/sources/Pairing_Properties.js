@@ -159,14 +159,6 @@ EHR.model.DataModelManager.registerMetadata('Pairing_Properties', {
             },
             category: {
                 allowBlank: false,
-                editorConfig: {
-                    plugins: [Ext4.create('LDK.plugin.UserEditableCombo', {
-                        allowChooseOther: false
-                    })]
-                },
-                lookup: {
-                    columns: 'value'
-                },
                 columnConfig: {
                     width: 200
                 }

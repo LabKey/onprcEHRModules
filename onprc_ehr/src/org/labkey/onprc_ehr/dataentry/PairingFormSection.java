@@ -29,17 +29,10 @@ public class PairingFormSection extends SimpleFormSection
 {
     public PairingFormSection()
     {
-        super("study", "pairings", "Pairing Observations", "onprc_ehr-pairingobservationgridpanel");
+        super("study", "pairings", "Pairing Observations", "ehr-gridpanel");
         setConfigSources(Collections.singletonList("Task"));
-
-
         addClientDependency(ClientDependency.supplierFromPath("ehr/form/field/LowestCageField.js"));
-        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/data/PairingClientStore.js"));
-        setClientStoreClass("ONPRC_EHR.data.PairingClientStore");
-
-        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/plugin/PairingObservationsCellEditing.js"));
-        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/grid/PairingObservationGridPanel.js"));
-
-
+        addClientDependency(ClientDependency.supplierFromPath("ehr/data/PairingClientStore.js"));
+        setClientStoreClass("EHR.data.PairingClientStore");
     }
 }
