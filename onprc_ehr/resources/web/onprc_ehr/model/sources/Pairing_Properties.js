@@ -14,22 +14,43 @@ EHR.model.DataModelManager.registerMetadata('Pairing_Properties', {
         'study.pairings': {
 
             outcome: {
-                allowBlank: false,
+                allowBlank: true,
+                columnConfig: {
+                    width: 160
+                },
                 lookup: {
                     filterArray: [
                         LABKEY.Filter.create('date_disabled', null, LABKEY.Filter.Types.ISBLANK)
                     ]
                 }
             },
-
-            eventtype: {
+            Id: {
                 allowBlank: false,
-                lookup: {
-                    sort: 'sort_order'
+                columnConfig: {
+                    width: 100
                 }
             },
+            infant_id: {
+                xtype: 'onprc_ehr-pairedinfantentryfield',
+                allowBlank: true,
+                columnConfig: {
+                    width: 120
+                }
+            },
+
+            eventtype: {
+                    columnConfig: {
+                    width: 200
+                }
+            },
+
+
             goal: {
-                allowBlank: false,
+                allowBlank: true,
+                header: 'Divider Goal',
+                columnConfig: {
+                    width: 170
+                },
                 lookup: {
                     filterArray: [
                         LABKEY.Filter.create('date_disabled', null, LABKEY.Filter.Types.ISBLANK)
@@ -38,8 +59,13 @@ EHR.model.DataModelManager.registerMetadata('Pairing_Properties', {
             },
 
             endeventType: {
+                columnConfig: {
+                    width: 180
+                },
                 lookup: {
-                    sort: 'sort_order'
+                    filterArray: [
+                        LABKEY.Filter.create('date_disabled', null, LABKEY.Filter.Types.ISBLANK)
+                    ]
                 }
             },
 
@@ -49,7 +75,9 @@ EHR.model.DataModelManager.registerMetadata('Pairing_Properties', {
 
             separationreason: {
                 allowBlank: true,
-
+                columnConfig: {
+                    width: 160
+                },
                 lookup: {
                     filterArray: [
                         LABKEY.Filter.create('date_disabled', null, LABKEY.Filter.Types.ISBLANK)
@@ -60,29 +88,83 @@ EHR.model.DataModelManager.registerMetadata('Pairing_Properties', {
             observation: {
                 allowBlank: true,
                 columnConfig: {
-                    width: 200
+                    width: 250
                 },
                 lookup: {
                     filterArray: [
                         LABKEY.Filter.create('date_disabled', null, LABKEY.Filter.Types.ISBLANK)
                     ]
                 }
-
             },
-
-            remark2: {
-                    xtype: 'textareafield',
-                    width: 400,
-
+            lowestcage: {
+                    xtype: 'onprc_ehr-pairedidentryfield',
+                    header:'Pair ID',
+                    columnConfig: {
+                    width: 250
+                    }
                 },
+            other_IDs: {
+                xtype: 'onprc_ehr-pairedadultsentryfield',
+                allowBlank: true,
+                header:'Other IDs',     // should display just adults, and not infants
+                columnConfig: {
+                    width: 200
+                }
+            },
+            remark2: {
+                xtype: 'textareafield',
+                columnConfig: {
+                    width: 200
+                }
+            },
             room: {
                 allowBlank: false,
+                columnConfig: {
+                    width: 130
+                }
               },
-            remark: {
-                    width: 400
+            cage: {
+                allowBlank: false,
+                columnConfig: {
+                    width: 100
+                }
+            },
+            prior_group_housing: {
+                allowBlank: true,
+                columnConfig: {
+                    width: 100
+                }
+            },
+            category: {
+                allowBlank: false,
+                editorConfig: {
+                    plugins: [Ext4.create('LDK.plugin.UserEditableCombo', {
+                        allowChooseOther: false
+                    })]
                 },
+                lookup: {
+                    columns: 'value'
+                },
+                columnConfig: {
+                    width: 200
+                }
+            },
+            other_infant: {
+                xtype: 'onprc_ehr-pairedinfantentryfield',
+                allowBlank: true,
+                header: 'Other Infant ID',     // should display the infant
+                columnConfig: {
+                    width: 160
+                }
+            },
+            remark: {
+                xtype: 'textareafield',
+                columnConfig: {
+                    width: 200
+                }
+             }
 
-            }
+          }
 
     }
 });

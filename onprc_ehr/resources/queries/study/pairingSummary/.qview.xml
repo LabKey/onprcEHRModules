@@ -8,6 +8,7 @@
         <!--<column name="room"/>-->
         <!--<column name="cage"/>-->
         <column name="eventtype"/>
+        <column name="category"/>
         <column name="remark"/>
         <column name="goal"/>
         <column name="outcome"/>

@@ -1,0 +1,18 @@
+CREATE TABLE onprc_ehr.observation_types (
+                 rowid [int] IDENTITY(100,1) NOT NULL,
+                 value nvarchar(200),
+                 category nvarchar(200),
+                 editorconfig NVARCHAR(MAX),
+                 schemaname nvarchar(200),
+                 queryname nvarchar(200),
+                 valuecolumn nvarchar(200),
+                 Created datetime,
+                 CreatedBy USERID,
+                 Modified datetime,
+                 ModifiedBy USERID,
+                 Container	entityId NOT NULL,
+
+                 CONSTRAINT PK_ONPRC_EHR_OBSERVATION_TYPES PRIMARY KEY (rowid),
+
+);
+GO

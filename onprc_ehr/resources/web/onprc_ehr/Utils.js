@@ -23,8 +23,46 @@ ONPRC.Utils = new function(){
                 success: LABKEY.Utils.getCallbackWrapper(LABKEY.Utils.getOnSuccess(config), config.scope)
             });
         },
+        getpairingStore: function(){
+            if (ONPRC_EHR._pairingStore)
+                return ONPRC_EHR._pairingStore;
 
-        preloadSession: function() {
+            var storeId = ['onprc_ehr', 'Pairingmenus', 'value', 'category'].join('||');
+
+            ONPRC_EHR._pairingStore = Ext4.StoreMgr.get(storeId) || Ext4.create('LABKEY.ext4.data.Store', {
+                type: 'labkey-store',
+                schemaName: 'onprc_ehr',
+                queryName: 'Pairingmenus',
+                columns: 'value, category',
+                filterArray: [LABKEY.Filter.create('date_disabled', null, LABKEY.Filter.Types.ISBLANK)],
+                sort: 'value',
+                storeId: storeId,
+                autoLoad: true,
+                getRecordForCode: function(value){
+                    var recIdx = this.findExact('value', value);
+                    if (recIdx != -1){
+                        return this.getAt(recIdx);
+                    }
+                }
+            });
+
+            return ONPRC_EHR._pairingStore;
+        },
+
+        getpairingObservationTypesStore: function() {
+            if (ONPRC_EHR._pairingobservationTypesStore)
+                return ONPRC_EHR._pairingobservationTypesStore;
+
+            ONPRC_EHR._pairingobservationTypesStore = Ext4.create('LABKEY.ext4.data.Store', {
+                type: 'labkey-store',
+                schemaName: 'onprc_ehr',
+                queryName: 'observation_types',
+                columns: 'value,editorconfig',
+                autoLoad: true
+            });
+        },
+
+            preloadSession: function() {
             LABKEY.Ajax.request({
                 url: LABKEY.ActionURL.buildURL('onprc_ehr', 'getSessionId'),
                 method: 'POST',
