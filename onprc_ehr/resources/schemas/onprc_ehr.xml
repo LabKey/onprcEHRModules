@@ -1454,4 +1454,21 @@
         </columns>
     </table>
 
+    <table tableName="observation_types" tableDbType="TABLE">
+        <columns>
+            <column columnName="rowid"/>
+            <column columnName="value"/>
+            <column columnName="category"/>
+            <column columnName="editorconfig"/>
+            <column columnName="schemaname"/>
+            <column columnName="queryname"/>
+            <column columnName="valuecolumn"/>
+            <column columnName="Created"/>
+            <column columnName="CreatedBy"/>
+            <column columnName="Modified"/>
+            <column columnName="ModifiedBy"/>
+            <column columnName="Container"/>
+        </columns>
+    </table>
+
 </tables>
