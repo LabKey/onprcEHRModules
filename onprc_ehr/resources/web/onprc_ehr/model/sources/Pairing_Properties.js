@@ -40,7 +40,29 @@ EHR.model.DataModelManager.registerMetadata('Pairing_Properties', {
 
             eventtype: {
                 columnConfig: {
-                    width: 200
+                    width: 250
+                },
+                editorConfig: {
+                    caseSensitive: false,
+                    anyMatch: true,
+                    listConfig: {
+                        innerTpl: '{[(values.category ? "<b>" + LABKEY.Utils.encodeHtml(values.category) + ":</b> " : "") + LABKEY.Utils.encodeHtml(values.value)]}',
+                        getInnerTpl: function () {
+                            return this.innerTpl;
+                        }
+                    }
+                },
+                lookup: {
+                    xtype: 'combobox',
+                    schemaName: 'ehr_Lookups',
+                    queryName: 'pairingeventsAll',
+                    columns: 'value,category,sort_order,date_disabled',
+                    keyColumn: 'value',
+                    displayColumn: 'value',
+                    sort: 'category,value,sort_order',
+                    filterArray: [
+                        LABKEY.Filter.create('date_disabled', null, LABKEY.Filter.Types.ISBLANK)
+                    ]
                 }
             },
 
