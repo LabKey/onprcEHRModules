@@ -22,12 +22,7 @@ EHR.model.DataModelManager.registerMetadata('Pairing_Properties', {
                 }
             },
 
-            eventtype: {
-                allowBlank: false,
-                lookup: {
-                    sort: 'sort_order'
-                }
-            },
+
             goal: {
                 allowBlank: false,
                 lookup: {
