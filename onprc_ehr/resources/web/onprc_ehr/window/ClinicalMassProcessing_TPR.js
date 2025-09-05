@@ -343,7 +343,7 @@ Ext4.define('ONPRC_EHR.window.ClinicalProcessingTPRWindow', {
 
         // N: MM-- Pink/Moist
 
-        if (row[13]){
+        if (this.safeGet(parsed, 85, 1)){
             var obj = {
                 Id: id,
                 date: this.getTime(date, times, errors, rowIdx),
@@ -360,7 +360,7 @@ Ext4.define('ONPRC_EHR.window.ClinicalProcessingTPRWindow', {
             }
         };
         //CRT
-        if (row[14]){
+        if (this.safeGet(parsed, 88, 1)){
             var obj = {
                 Id: id,
                 date: this.getTime(date, times, errors, rowIdx),
@@ -378,7 +378,7 @@ Ext4.define('ONPRC_EHR.window.ClinicalProcessingTPRWindow', {
         };
 
             //Turgor
-        if (row[15]){
+        if (this.safeGet(parsed, 91, 1)){
             var obj = {
                 Id: id,
                 date: this.getTime(date, times, errors, rowIdx),
