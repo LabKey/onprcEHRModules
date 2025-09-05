@@ -56,11 +56,11 @@
                     <column columnName="housingtype">
                         <isHidden>false</isHidden>
                         <columnTitle>Prior Group Housing</columnTitle>
-                         <fk>
-                             <fkDbSchema>ehr_lookups</fkDbSchema>
-                             <fkTable>pairingpriorgroups</fkTable>
-                             <fkColumnName>value</fkColumnName>
-                         </fk>
+                        <fk>
+                            <fkDbSchema>ehr_lookups</fkDbSchema>
+                            <fkTable>pairingpriorgroups</fkTable>
+                            <fkColumnName>value</fkColumnName>
+                        </fk>
                     </column>
 
                     <column columnName="remark">

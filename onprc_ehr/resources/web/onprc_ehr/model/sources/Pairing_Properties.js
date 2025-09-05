@@ -39,7 +39,7 @@ EHR.model.DataModelManager.registerMetadata('Pairing_Properties', {
             },
 
             eventtype: {
-                    columnConfig: {
+                columnConfig: {
                     width: 200
                 }
             },
@@ -97,12 +97,12 @@ EHR.model.DataModelManager.registerMetadata('Pairing_Properties', {
                 }
             },
             lowestcage: {
-                    xtype: 'onprc_ehr-pairedidentryfield',
-                    header:'Pair ID',
-                    columnConfig: {
+                xtype: 'onprc_ehr-pairedidentryfield',
+                header:'Pair ID',
+                columnConfig: {
                     width: 250
-                    }
-                },
+                }
+            },
             other_IDs: {
                 xtype: 'onprc_ehr-pairedadultsentryfield',
                 allowBlank: true,
@@ -122,7 +122,7 @@ EHR.model.DataModelManager.registerMetadata('Pairing_Properties', {
                 columnConfig: {
                     width: 130
                 }
-              },
+            },
             cage: {
                 allowBlank: false,
                 columnConfig: {
@@ -162,9 +162,9 @@ EHR.model.DataModelManager.registerMetadata('Pairing_Properties', {
                 columnConfig: {
                     width: 200
                 }
-             }
+            }
 
-          }
+        }
 
     }
 });
