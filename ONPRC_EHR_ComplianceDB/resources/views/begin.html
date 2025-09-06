@@ -57,6 +57,10 @@ Ext4.onReady(function(){
             }]
         },{
             header: 'Configuration of Requirements',
+            itemDefaults: {
+                linkTarget: '_blank'
+            },
+
             items: [{
                 name: 'View/Edit Requirements Tracked In System', url: '<%=contextPath%>' + container + '/query-executeQuery.view?schemaName=ehr_compliancedb&query.queryName=Requirements&query.viewName=Active'
             },{
@@ -98,6 +102,10 @@ Ext4.onReady(function(){
             }]
         },{
             header: 'Audit Reports',
+            itemDefaults: {
+                linkTarget: '_blank'
+            },
+
             items: [{
                 name: 'List of Unused Training Names',  url: ctx['SSRSServerURL'] +'%2fPrime+Reports%2fCompliance%2fCompliance_Unassigned_requirements&rs:Command=Render'
             },{
