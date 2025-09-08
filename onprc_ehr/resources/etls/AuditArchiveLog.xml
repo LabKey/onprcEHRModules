@@ -8,7 +8,7 @@
         </transform>
     </transforms>
 
-
+<!--Updatge for 2507-->
     <schedule>
         <cron expression="0 0 23 * * ?"/>
     </schedule>
