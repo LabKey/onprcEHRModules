@@ -7,7 +7,8 @@ GO
 /*
 **
 ** 	Created by
-**      Blasa  		9-5-2025               Storedprocedure to update Compliance Access contaimer values.
+**      Blasa  		9-5-2025               Storedprocedure to update Compliance Access contaimer values and update
+**                                         Completion date records
 **                             .
 **
 **
