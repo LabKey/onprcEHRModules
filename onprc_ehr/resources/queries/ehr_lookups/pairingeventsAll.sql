@@ -1,12 +1,12 @@
-select
-     value,
-     category,
-     sort_order,
-     date_disabled
-
-from ehr_lookups.pairingdividerchange
-
-union all
+-- select
+--      value,
+--      category,
+--      sort_order,
+--      date_disabled
+--
+-- from ehr_lookups.pairingdividerchange
+--
+-- union all
 
 select
     value,
