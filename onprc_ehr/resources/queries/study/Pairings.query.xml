@@ -48,7 +48,7 @@
                         <columnTitle>Start Type</columnTitle>
                         <fk>
                             <fkDbSchema>ehr_lookups</fkDbSchema>
-                            <fkTable>pairingstarttypes</fkTable>
+                            <fkTable>pairingstarttype</fkTable>
                             <fkColumnName>value</fkColumnName>
                         </fk>
                     </column>
