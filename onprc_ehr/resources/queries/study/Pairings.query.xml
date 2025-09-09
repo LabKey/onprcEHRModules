@@ -56,6 +56,7 @@
                     <column columnName="housingtype">
                         <isHidden>false</isHidden>
                         <columnTitle>Prior Group Housing</columnTitle>
+                        <displayWidth>200</displayWidth>
                         <fk>
                             <fkDbSchema>ehr_lookups</fkDbSchema>
                             <fkTable>pairingpriorgroups</fkTable>
