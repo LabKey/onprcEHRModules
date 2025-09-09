@@ -55,7 +55,7 @@ EHR.model.DataModelManager.registerMetadata('Pairing_Properties', {
                 lookup: {
                     xtype: 'combobox',
                     schemaName: 'ehr_Lookups',
-                    queryName: 'pairingeventsAll',
+                    queryName: 'pairingstarttype',
                     columns: 'value,category,sort_order,date_disabled',
                     keyColumn: 'value',
                     displayColumn: 'value',
