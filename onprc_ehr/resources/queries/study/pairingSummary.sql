@@ -36,7 +36,10 @@ SELECT
   p.taskid,
   TIMESTAMPDIFF('SQL_TSI_DAY', p.date, coalesce(p.enddate,curdate())) as duration,
   p.qcstate,
-  p.lsid
+  p.lsid,
+  p.other_IDs,
+  p.other_infant,
+  p.infant_id
 
 FROM study.pairings p
 
