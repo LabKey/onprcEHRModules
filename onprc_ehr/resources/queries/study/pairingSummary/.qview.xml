@@ -15,8 +15,6 @@
         <column name="goal"/>
         <column name="outcome"/>
         <column name="enddate"/>
-        <!--<column name="housingtype"/>-->
-        <!--<column name="observation"/>-->
         <column name="endeventType"/>
         <column name="separationreason"/>
         <column name="housingtype"/>
