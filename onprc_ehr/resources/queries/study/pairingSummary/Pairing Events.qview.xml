@@ -1,7 +1,6 @@
 <customView xmlns="http://labkey.org/data/xml/queryCustomView">
     <columns>
         <column name="Id"/>
-        <column name="sex"/>
         <column name="infant_id"/>
         <column name="lowestCage"/>
         <column name="Id/demographics/gender"/>
