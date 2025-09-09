@@ -15,6 +15,7 @@ pairingGoal	Pairing Goal	value
 pairingObservation	Pairing Observations	value
 antibioticSensitivityResult	Antibiotic Sensitivity Result	value
 pairingSeparationReason	Pairing Separation Reason	value
+pairingstarttype	Pairing Start Type	value
 tissue_preparation	Tissue Preparation	value
 tissue_condition	Tissue Condition	value
 drugReason	Drug Reason	value
