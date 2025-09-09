@@ -16,6 +16,7 @@
         <column name="enddate"/>
         <column name="endeventType"/>
         <column name="separationreason"/>
+        <column name="housingtype"/>
         <column name="observation"/>
         <column name="duration"/>
         <column name="remark2"/>
