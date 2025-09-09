@@ -12,6 +12,8 @@
                 </column>
                 <column columnName="date">
                 </column>
+                <column columnName="category">
+                </column>
                 <column columnName="eventType">
                 </column>
                 <column columnName="remark">

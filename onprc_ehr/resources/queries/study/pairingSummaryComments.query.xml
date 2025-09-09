@@ -20,6 +20,8 @@
                     </column>
                     <column columnName="remark2">
                     </column>
+                    <column columnName="category">
+                    </column>
                     <column columnName="endeventType">
                     </column>
                     <column columnName="otherIDs">

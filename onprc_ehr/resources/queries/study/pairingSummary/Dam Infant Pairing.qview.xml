@@ -4,7 +4,7 @@
         <column name="infant_id"/>
         <column name="lowestCage"/>
         <column name="Id/demographics/gender"/>
-        <column name="otherIDs"/>
+        <column name="other_IDs"/>
         <column name="other_infant"/>
         <column name="date"/>
         <column name="eventtype"/>
