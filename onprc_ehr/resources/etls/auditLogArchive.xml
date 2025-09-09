@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--This ETL triggers the audit log archiving Audit Logs
+ --Currently set to archive records older than 1 year for all audit tables
+ -->
+<!--Added By jonesga 2025/03/03 -->
+
+
+<etl xmlns="http://labkey.org/etl/xml">
+
+    <name>ArchiveAuditLogs</name>
+
+    <description>Executes a Stored Procedure that reviews all Audit tables .</description>
+
+    <transforms>
+        --[dbo].[ArchiveAuditTables]
+        <transform id="ArchiveAuditLogs" type="StoredProcedure">
+            <description>Runs a Stored Proecure</description>
+            <procedure schemaName="dbo" procedureName="ArchiveAuditTables">
+            </procedure>
+        </transform>
+
+    </transforms>
+    <!--<schedule>
+        &lt;!&ndash;4:30pm&ndash;&gt;
+        <cron expression="0 30 16 * * ?"/>
+    </schedule>-->
+
+
+</etl>
