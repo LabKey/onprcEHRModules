@@ -13,7 +13,7 @@
         <column name="goal"/>
         <column name="outcome"/>
         <column name="enddate"/>
-        <!--<column name="housingtype"/>-->
+        <column name="housingtype"/>
         <column name="endeventType"/>
         <column name="separationreason"/>
         <column name="observation"/>
