@@ -15,13 +15,13 @@
         --[dbo].[ArchiveAuditTables]
         <transform id="ArchiveAuditLogs" type="StoredProcedure">
             <description>Runs a Stored Proecure</description>
-            <procedure schemaName="dbo" procedureName="ArchiveAuditTables">
+            <procedure schemaName="dbo" procedureName="ArchiveAuditTables_1Year">
             </procedure>
         </transform>
 
     </transforms>
     <schedule>
-        &lt;!&ndash;11:00pm&ndash;&gt;
+        <!--11:00pm-->
         <cron expression="0 00 23 * * ?"/>
     </schedule>
 

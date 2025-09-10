@@ -2,7 +2,7 @@ GO
 SET QUOTED_IDENTIFIER ON;
 GO
 
-CREATE PROCEDURE [audit].[ArchiveAuditTables_7Year]
+CREATE PROCEDURE [audit].[ArchiveAuditTables_1Year]
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -10,7 +10,7 @@ BEGIN
     -- Declare variables
     DECLARE @SourceDB NVARCHAR(128) = DB_NAME(),
             @DestDB NVARCHAR(128) = 'primeaudit_sandbox',
-            @RetentionYears INT = 7,
+            @RetentionYears INT = 1,
             @SchemaName NVARCHAR(128) = 'audit';
 
     DECLARE @CutoffDate DATETIME = DATEADD(YEAR, -@RetentionYears, GETDATE());
