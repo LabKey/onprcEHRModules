@@ -154,7 +154,7 @@ EHR.model.DataModelManager.registerMetadata('Pairing_Properties', {
             housingtype: {
                 allowBlank: true,
                 columnConfig: {
-                    width: 100
+                    width: 180
                 }
             },
             category: {

@@ -16,6 +16,7 @@
 package org.labkey.onprc_ehr.dataentry;
 
 import org.labkey.api.ehr.dataentry.SimpleFormSection;
+import org.labkey.api.ehr.dataentry.SimpleGridPanel;
 import org.labkey.api.view.template.ClientDependency;
 
 import java.util.Collections;
@@ -25,11 +26,11 @@ import java.util.Collections;
  * Date: 7/7/13
  * Time: 10:36 AM
  */
-public class PairingFormSection extends SimpleFormSection
+public class PairingFormSection extends SimpleGridPanel
 {
     public PairingFormSection()
     {
-        super("study", "pairings", "Pairing Observations", "ehr-gridpanel");
+        super("study", "pairings", "Pairing Observations");
         setConfigSources(Collections.singletonList("Task"));
 
     }
