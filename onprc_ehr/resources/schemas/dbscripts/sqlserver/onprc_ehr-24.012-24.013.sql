@@ -12,7 +12,7 @@ CREATE TABLE onprc_ehr.pairing_observation_types (
                  ModifiedBy USERID,
                  Container	entityId NOT NULL,
 
-                 CONSTRAINT PK_ONPRC_EHR_OBSERVATION_TYPES PRIMARY KEY (rowid),
+                 CONSTRAINT PK_ONPRC_EHR_PAIRING_OBSERVATION_TYPES PRIMARY KEY (rowid),
 
 );
 GO
