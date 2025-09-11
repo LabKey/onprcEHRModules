@@ -2,7 +2,7 @@ GO
 SET QUOTED_IDENTIFIER ON;
 GO
 
-CREATE PROCEDURE [audit].[ArchiveAuditTables_1Year]
+CREATE PROCEDURE [audit].[ArchiveAuditTables]
 AS
 BEGIN
     SET NOCOUNT ON;
