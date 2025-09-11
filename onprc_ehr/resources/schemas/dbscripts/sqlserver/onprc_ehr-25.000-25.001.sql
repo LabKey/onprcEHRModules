@@ -384,5 +384,4 @@ DEALLOCATE TableCursor;
 
 DROP TABLE #TableList;
 END
-/*Validated with AI IN Code*/
 
