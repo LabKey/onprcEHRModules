@@ -35,15 +35,15 @@
                     <column columnName="date">
                         <columnTitle>Start Date</columnTitle>
                     </column>
-<!--                    <column columnName="category">-->
-<!--                        <isHidden>false</isHidden>-->
-<!--                        <columnTitle>Category</columnTitle>-->
-<!--                        <fk>-->
-<!--                            <fkDbSchema>onprc_ehr</fkDbSchema>-->
-<!--                            <fkTable>observation_types</fkTable>-->
-<!--                            <fkColumnName>value</fkColumnName>-->
-<!--                        </fk>-->
-<!--                    </column>-->
+                    <column columnName="category">
+                        <isHidden>false</isHidden>
+                        <columnTitle>Category</columnTitle>
+                        <fk>
+                            <fkDbSchema>onprc_ehr</fkDbSchema>
+                            <fkTable>observation_types</fkTable>
+                            <fkColumnName>value</fkColumnName>
+                        </fk>
+                    </column>
                     <column columnName="eventtype">
                         <columnTitle>Start Type</columnTitle>
                         <fk>
@@ -106,14 +106,14 @@
                             <fkColumnName>value</fkColumnName>
                         </fk>
                     </column>
-<!--                    <column columnName="observation">-->
-<!--                        <columnTitle>Observation</columnTitle>-->
-<!--                        <fk>-->
-<!--                            <fkDbSchema>ehr_lookups</fkDbSchema>-->
-<!--                            <fkTable>pairingObservation</fkTable>-->
-<!--                            <fkColumnName>value</fkColumnName>-->
-<!--                        </fk>-->
-<!--                    </column>-->
+                    <column columnName="observation">
+                        <columnTitle>Observation</columnTitle>
+                        <fk>
+                            <fkDbSchema>ehr_lookups</fkDbSchema>
+                            <fkTable>pairingObservation</fkTable>
+                            <fkColumnName>value</fkColumnName>
+                        </fk>
+                    </column>
 
                     <column columnName="remark2">
                         <columnTitle>End Remark</columnTitle>
@@ -121,6 +121,7 @@
                     </column>
 
                     <column columnName="pairid">
+                        <columnTitle>Pair ID</columnTitle>
                         <isHidden>true</isHidden>
                     </column>
 

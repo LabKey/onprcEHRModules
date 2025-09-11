@@ -107,17 +107,17 @@ EHR.model.DataModelManager.registerMetadata('Pairing_Properties', {
                 }
 
             },
-            // observation: {
-            //     allowBlank: true,
-            //     columnConfig: {
-            //         width: 250
-            //     },
-            //     lookup: {
-            //         filterArray: [
-            //             LABKEY.Filter.create('date_disabled', null, LABKEY.Filter.Types.ISBLANK)
-            //         ]
-            //     }
-            // },
+            observation: {
+                allowBlank: true,
+                columnConfig: {
+                    width: 250
+                },
+                lookup: {
+                    filterArray: [
+                        LABKEY.Filter.create('date_disabled', null, LABKEY.Filter.Types.ISBLANK)
+                    ]
+                }
+            },
             lowestcage: {
                 xtype: 'onprc_ehr-pairedidentryfield',
                 header:'Pair ID',
@@ -157,12 +157,12 @@ EHR.model.DataModelManager.registerMetadata('Pairing_Properties', {
                     width: 180
                 }
             },
-            // category: {
-            //     allowBlank: false,
-            //     columnConfig: {
-            //         width: 200
-            //     }
-            // },
+            category: {
+                allowBlank: false,
+                columnConfig: {
+                    width: 200
+                }
+            },
             other_infant: {
                 xtype: 'onprc_ehr-pairedinfantentryfield',
                 allowBlank: true,

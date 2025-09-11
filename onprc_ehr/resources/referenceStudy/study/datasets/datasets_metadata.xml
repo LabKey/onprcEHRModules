@@ -2326,9 +2326,9 @@
             <column columnName="goal">
                 <datatype>varchar</datatype>
             </column>
-<!--            <column columnName="observation">-->
-<!--                <datatype>varchar</datatype>-->
-<!--            </column>-->
+            <column columnName="observation">
+                <datatype>varchar</datatype>
+            </column>
             <column columnName="outcome">
                 <datatype>varchar</datatype>
             </column>
@@ -2347,9 +2347,9 @@
             <column columnName="infant_id">
                 <datatype>varchar</datatype>
             </column>
-<!--            <column columnName="category">-->
-<!--                <datatype>varchar</datatype>-->
-<!--            </column>-->
+            <column columnName="category">
+                <datatype>varchar</datatype>
+            </column>
             <column columnName="project">
                 <datatype>integer</datatype>
                 <propertyURI>urn:ehr.labkey.org/#Project</propertyURI>
