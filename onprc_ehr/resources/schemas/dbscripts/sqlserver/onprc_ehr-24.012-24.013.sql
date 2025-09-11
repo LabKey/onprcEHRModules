@@ -1,4 +1,4 @@
-CREATE TABLE onprc_ehr.observation_types (
+CREATE TABLE onprc_ehr.pairing_observation_types (
                  rowid [int] IDENTITY(100,1) NOT NULL,
                  value nvarchar(200),
                  category nvarchar(200),

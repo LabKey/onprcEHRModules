@@ -40,7 +40,7 @@
                         <columnTitle>Category</columnTitle>
                         <fk>
                             <fkDbSchema>onprc_ehr</fkDbSchema>
-                            <fkTable>observation_types</fkTable>
+                            <fkTable>pairing_observation_types</fkTable>
                             <fkColumnName>value</fkColumnName>
                         </fk>
                     </column>

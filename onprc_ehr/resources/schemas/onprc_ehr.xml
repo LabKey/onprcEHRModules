@@ -1454,7 +1454,7 @@
         </columns>
     </table>
 
-    <table tableName="observation_types" tableDbType="TABLE">
+    <table tableName="pairing_observation_types" tableDbType="TABLE">
         <columns>
             <column columnName="rowid"/>
             <column columnName="value"/>
