@@ -9,7 +9,7 @@ BEGIN
 
     -- Declare variables
     DECLARE @SourceDB NVARCHAR(128) = DB_NAME(),
-            @DestDB NVARCHAR(128) = 'primeaudit_sandbox',
+            @DestDB NVARCHAR(128) = 'labkey_audit',
             @RetentionYears INT = 1,
             @SchemaName NVARCHAR(128) = 'audit';
 
