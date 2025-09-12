@@ -837,6 +837,11 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
         grid.setGridCell(3, "lowestcage", "A2");
         grid.setGridCell(3, "room", ROOMS[0]);
         grid.setGridCell(3, "cage", "A2");
+        grid.setGridCell(3, "date", _df.format(new Date()));
+
+        Ext4ComboRef combo = getFieldInWindow("Category", Ext4ComboRef.class);
+        Assert.assertEquals("Divider Change", combo.getDisplayValue());
+
         sleep(100);
         Assert.assertNotEquals(grid.getFieldValue(1, "pairid"), grid.getFieldValue(3, "pairid"));
 
