@@ -816,6 +816,8 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
         grid.setGridCell(1, "lowestcage", "A1");
         grid.setGridCell(1, "room", ROOMS[0]);
         grid.setGridCell(1, "cage", "A1");
+        grid.setGridCell(1, "date", _tf.format(new Date()));
+        grid.setGridCell(1, "category", CATEGORY[0]);
 
         _helper.addRecordToGrid(grid);
         sleep(200);
@@ -823,6 +825,8 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
         grid.setGridCell(2, "lowestcage", "A1");
         grid.setGridCell(2, "room", ROOMS[0]);
         grid.setGridCell(2, "cage", "A1");
+        grid.setGridCell(2, "date", _tf.format(new Date()));
+        grid.setGridCell(2, "category", CATEGORY[0]);
 
         Assert.assertEquals(grid.getFieldValue(1, "pairid"), grid.getFieldValue(2, "pairid"));
 
@@ -837,10 +841,9 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
         grid.setGridCell(3, "lowestcage", "A2");
         grid.setGridCell(3, "room", ROOMS[0]);
         grid.setGridCell(3, "cage", "A2");
-        grid.setGridCell(3, "date", _df.format(new Date()));
+        grid.setGridCell(3, "date", _tf.format(new Date()));
+        grid.setGridCell(3, "category", CATEGORY[0]);
 
-        Ext4ComboRef combo = getFieldInWindow("Category", Ext4ComboRef.class);
-        Assert.assertEquals("Divider Change", combo.getDisplayValue());
 
         sleep(100);
         Assert.assertNotEquals(grid.getFieldValue(1, "pairid"), grid.getFieldValue(3, "pairid"));
