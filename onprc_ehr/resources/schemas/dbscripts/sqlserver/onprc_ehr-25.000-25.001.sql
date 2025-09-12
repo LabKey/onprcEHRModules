@@ -36,7 +36,7 @@ END
     BEGIN
         EXEC(''USE ' + QUOTENAME(@DestDB) + ';
         CREATE TABLE dbo.ArchiveAuditLog (
-            LogID INT IDENTITY(1,1) PRIMARY KEY,
+            LogID INT IDENTITY(1,1) NOT NULL,
             TableName NVARCHAR(128) NOT NULL,
             Operation NVARCHAR(50) NOT NULL,
             StartTime DATETIME NOT NULL,
@@ -44,7 +44,8 @@ END
             Status NVARCHAR(50) NULL,
             RecordsProcessed INT NULL,
             ErrorMessage NVARCHAR(MAX) NULL,
-            RetentionYears INT NULL
+            RetentionYears INT NULL,
+            CONSTRAINT PK_ArchiveAuditLog PRIMARY KEY (LogID)
         )'');
     END';
 EXEC sp_executesql @CreateLogTableSQL;
