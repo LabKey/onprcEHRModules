@@ -21,7 +21,7 @@ Notes:
 SELECT *
 FROM (
          SELECT d.Id,
-              CASE
+                CASE
                     WHEN d.CaseVet IS NOT NULL  THEN d.CaseVet
                     WHEN R01.UserID IS NOT NULL THEN R01.UserID.DisplayName
                     WHEN R02.UserID IS NOT NULL THEN R02.UserID.DisplayName
@@ -46,9 +46,9 @@ FROM (
                     WHEN R21.UserID IS NOT NULL THEN R21.UserID.DisplayName
                     WHEN R22.UserID IS NOT NULL THEN R22.UserID.DisplayName
                     ELSE 'Unassigned'
-              END AS AssignedVet,
-              CASE
-                    WHEN d.CaseVet IS NOT NULL 	THEN 'Open Case'
+                    END AS AssignedVet,
+                CASE
+                    WHEN d.CaseVet IS NOT NULL 	THEN ('Open Case' || ' | ' || d.ActiveMasterProblems)
                     WHEN R01.UserID IS NOT NULL THEN 'Room Priority'
                     WHEN R02.UserID IS NOT NULL THEN 'Area Priority'
                     WHEN R03.UserID IS NOT NULL THEN 'Project Room Research Priority'
@@ -72,18 +72,18 @@ FROM (
                     WHEN R21.UserID IS NOT NULL THEN 'Room'
                     WHEN R22.UserID IS NOT NULL THEN 'Area'
                     ELSE 'No Matching Rule'
-              END AS AssignmentType,
-              d.CaseVet,
-              d.CaseDate,
-              d.Project,
-              d.AssignmentType AS ProjectType,
-              d.Protocol,
-              d.ProtocolPI,
-              d.Room,
-              d.Area,
-              d.Calculated_status,
-              d.Species,
-              CASE
+                    END AS AssignmentType,
+                d.CaseVet,
+                d.CaseDate,
+                d.Project,
+                d.AssignmentType AS ProjectType,
+                d.Protocol,
+                d.ProtocolPI,
+                d.Room,
+                d.Area,
+                d.Calculated_status,
+                d.Species,
+                CASE
                     WHEN d.CaseVet IS NOT NULL  THEN 0
                     WHEN R01.UserID IS NOT NULL THEN 1
                     WHEN R02.UserID IS NOT NULL THEN 2
@@ -108,7 +108,7 @@ FROM (
                     WHEN R21.UserID IS NOT NULL THEN 21
                     WHEN R22.UserID IS NOT NULL THEN 22
                     ELSE 99
-             END AS MatchedRule
+                    END AS MatchedRule
          FROM study.vetAssignment_demographics AS d
 
 /* R01 Room Priority                  */ LEFT JOIN onprc_ehr.vet_assignment R01 ON (R01.Room = d.Room AND R01.Area IS NULL AND R01.Project IS NULL AND R01.Protocol IS NULL AND R01.Priority = true)

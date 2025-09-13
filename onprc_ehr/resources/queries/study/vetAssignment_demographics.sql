@@ -11,28 +11,33 @@ Notes:
     might not have records for an animal ID. Left joins are used for all
 	other joins to be resilient against missing data.
  */
-SELECT demographics.id,
-       CMUcases.assignedVet.displayName AS caseVet,
-       CMUcases.date AS caseDate,
-       housing.room,
-       housing.room.area,
-       assignedProject.project AS project,
-       assignedProject.Protocol AS protocol,
-       assignedProject.PI AS protocolPI,
-       assignedProject.projectType AS assignmentType,
-       demographics.calculated_status,
-       demographics.gender,
-       demographics.species,
-       demographics.history
-FROM Site.{ substitutePath moduleProperty('EHR', 'EHRStudyContainer') }.study.animal AS nhp
-LEFT JOIN Site.{ substitutePath moduleProperty('EHR', 'EHRStudyContainer') }.study.ClinicalCases_Open AS CMUcases
-    ON CMUcases.id = nhp.id
-LEFT JOIN Site.{ substitutePath moduleProperty('EHR', 'EHRStudyContainer') }.study.housing AS housing
-    ON housing.id = nhp.id
-LEFT JOIN Site.{ substitutePath moduleProperty('EHR', 'EHRStudyContainer') }.study.demographics AS demographics
-    ON demographics.id = nhp.id
-LEFT JOIN Site.{ substitutePath moduleProperty('EHR', 'EHRStudyContainer') }.study.vetAssignment_projects AS assignedProject
-    ON assignedProject.id = nhp.id
-WHERE demographics.Calculated_Status = 'Alive'
-  AND nhp.id NOT LIKE '[A-Z]%'
-  AND housing.enddate IS NULL
+
+WITH CasesData AS (
+    SELECT Id,
+           Open_CMU_Cases.AssignedVet.DisplayName AS CaseVet,
+           Open_CMU_Cases.Date AS CaseDate,
+           GROUP_CONCAT(ProblemCategories, ';') AS ActiveMasterProblems
+    FROM Study.ClinicalCases_Open AS Open_CMU_Cases
+    GROUP BY Open_CMU_Cases.AssignedVet.DisplayName, Id, Open_CMU_Cases.Date
+)
+SELECT Demographics.Id,
+       CasesData.CaseVet,
+       CasesData.CaseDate,
+       CasesData.ActiveMasterProblems,
+       Housing.Room,
+       Housing.Room.Area,
+       AssignedProject.Project AS Project,
+       AssignedProject.Protocol AS Protocol,
+       AssignedProject.PI AS ProtocolPI,
+       AssignedProject.ProjectType AS AssignmentType,
+       Demographics.Calculated_Status,
+       Demographics.Gender,
+       Demographics.Species,
+       Demographics.History
+FROM Study.Demographics AS Demographics
+         LEFT JOIN CasesData ON Demographics.Id = CasesData.Id
+         LEFT JOIN Study.Housing AS Housing ON Demographics.Id = Housing.Id
+         LEFT JOIN Study.VetAssignment_projects AS AssignedProject ON Demographics.Id = AssignedProject.Id
+WHERE Demographics.Calculated_Status = 'Alive'
+  AND Demographics.Id NOT LIKE '[A-Z]%'
+  AND Housing.Enddate IS NULL
