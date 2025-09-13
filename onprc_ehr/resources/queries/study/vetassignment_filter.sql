@@ -48,7 +48,7 @@ FROM (
                     ELSE 'Unassigned'
                     END AS AssignedVet,
                 CASE
-                    WHEN d.CaseVet IS NOT NULL 	THEN ('Open Case' || ' | ' || d.ActiveMasterProblems)
+                    WHEN d.CaseVet IS NOT NULL 	THEN 'Open Case'
                     WHEN R01.UserID IS NOT NULL THEN 'Room Priority'
                     WHEN R02.UserID IS NOT NULL THEN 'Area Priority'
                     WHEN R03.UserID IS NOT NULL THEN 'Project Room Research Priority'
@@ -72,7 +72,8 @@ FROM (
                     WHEN R21.UserID IS NOT NULL THEN 'Room'
                     WHEN R22.UserID IS NOT NULL THEN 'Area'
                     ELSE 'No Matching Rule'
-                    END AS AssignmentType,
+                END AS AssignmentType,
+                d.ActiveMasterProblems,
                 d.CaseVet,
                 d.CaseDate,
                 d.Project,

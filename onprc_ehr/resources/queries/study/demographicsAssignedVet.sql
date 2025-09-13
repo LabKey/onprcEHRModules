@@ -31,17 +31,17 @@ SELECT DISTINCT
     VAF1.Id,
     VAF1.AssignedVet,
     VAF1.AssignmentType,
-    VAF1.CaseVet,
-    VAF1.CaseDate,
-    VAF1.Project,
-    VAF1.ProjectType,
-    VAF1.Protocol,
-    VAF1.ProtocolPI,
+--    VAF1.CaseVet,
+--    VAF1.CaseDate,
+--    VAF1.Project,
+--    VAF1.ProjectType,
+--    VAF1.Protocol,
+--    VAF1.ProtocolPI,
     VAF1.Room,
     VAF1.Area,
-    VAF1.Species,
-    VAF1.Calculated_status,
-    VAF1.MatchedRule
+    VAF1.Species
+--    VAF1.Calculated_status,
+--    VAF1.MatchedRule
 
 FROM
     vetAssignment_Filter AS VAF1
