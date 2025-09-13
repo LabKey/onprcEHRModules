@@ -44,8 +44,8 @@ END
             Status NVARCHAR(50) NULL,
             RecordsProcessed INT NULL,
             ErrorMessage NVARCHAR(MAX) NULL,
-            RetentionYears INT NULL,
-            CONSTRAINT PK_ArchiveAuditLog PRIMARY KEY (LogID)
+            RetentionYears INT NULL
+
         )'');
     END';
 EXEC sp_executesql @CreateLogTableSQL;
@@ -206,7 +206,7 @@ BEGIN
 
     -- Declare variables
     DECLARE @SourceDB NVARCHAR(128) = DB_NAME(),
-            @DestDB NVARCHAR(128) = 'primeaudit_sandbox',
+            @DestDB NVARCHAR(128) = 'Labkey_Audit',
             @RetentionYears INT = 1,
             @SchemaName NVARCHAR(128) = 'audit';
 
