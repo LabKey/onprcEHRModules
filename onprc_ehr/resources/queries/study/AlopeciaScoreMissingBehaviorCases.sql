@@ -2,6 +2,9 @@
 New query created for when an animal receives an alopecia score of 4 or 5, but does not have an open behavioral case for alopecia.
 Refer to tkt # 12145.
 Show 1 year data.
+
+Modified by Kollil 09/15/2025
+Added date comparison to check only dates  and ignore time
 */
 SELECT
     mr.Id,
@@ -40,6 +43,8 @@ WHERE
       c.Id = mr.Id
       AND c.category = 'Behavior'
       AND c.allProblemCategories = 'Behavioral: Alopecia'
-      AND c.date <= mr.date
-      AND (c.enddate IS NULL OR c.enddate > mr.date)
+--       AND c.date <= mr.date
+--       AND (c.enddate IS NULL OR c.enddate > mr.date)
+      AND CAST(c.date AS DATE) <= CAST(mr.date AS DATE)
+      AND (c.enddate IS NULL OR CAST(c.enddate AS DATE) >= CAST(mr.date AS DATE))
 )
