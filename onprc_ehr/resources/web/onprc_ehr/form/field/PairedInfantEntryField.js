@@ -52,7 +52,7 @@ Ext4.define('ONPRC_EHR.form.field.PairedInfantEntryField', {
 
         LABKEY.Query.selectRows({
             schemaName: 'study',
-            queryName: 'CageMateInfant',
+            queryName: 'CageMateInfantpairings',
             columns: 'infantcagemate',
             sort:'Id',
             filterArray: [
