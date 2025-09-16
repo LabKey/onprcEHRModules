@@ -12,6 +12,8 @@
                 </column>
                 <column columnName="date">
                 </column>
+                <column columnName="category">
+                </column>
                 <column columnName="eventType">
                 </column>
                 <column columnName="remark">
@@ -22,14 +24,20 @@
                 </column>
                 <column columnName="remark2">
                 </column>
-                <column columnName="otherIds">
-                    <columnTitle>Other Ids</columnTitle>
+                <column columnName="otherIDs">
+                    <columnTitle>Other IDs</columnTitle>
                 </column>
                 <column columnName="separationreason">
+                </column>
+                <column columnName="housingtype">
                 </column>
                 <column columnName="observation">
                 </column>
                 <column columnName="outcome">
+                </column>
+                <column columnName="other_infant">
+                </column>
+                <column columnName="infant_id">
                 </column>
             </columns>
         </table>

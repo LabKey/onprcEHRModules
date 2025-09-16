@@ -1,11 +1,13 @@
 <customView xmlns="http://labkey.org/data/xml/queryCustomView">
     <columns>
         <column name="Id"/>
+        <column name="infant_id"/>
         <column name="lowestCage"/>
         <column name="Id/demographics/gender"/>
-        <column name="otherIds"/>
+        <column name="other_IDs"/>
+        <column name="other_infant"/>
         <column name="date"/>
-
+        <column name="category"/>
         <column name="eventtype"/>
         <column name="remark"/>
         <column name="goal"/>
@@ -13,6 +15,7 @@
         <column name="enddate"/>
         <column name="endeventType"/>
         <column name="separationreason"/>
+        <column name="housingtype"/>
         <column name="observation"/>
         <column name="duration"/>
         <column name="remark2"/>
