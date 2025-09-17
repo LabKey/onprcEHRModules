@@ -2338,9 +2338,6 @@
             <column columnName="remark2">
                 <datatype>varchar</datatype>
             </column>
-            <column columnName="other_IDs">
-                <datatype>varchar</datatype>
-            </column>
             <column columnName="other_infant">
                 <datatype>varchar</datatype>
             </column>
