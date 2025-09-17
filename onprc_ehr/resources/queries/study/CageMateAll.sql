@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2014 LabKey Corporation
+ * Copyright (c) 2017 LabKey Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,25 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.labkey.onprc_ehr.dataentry;
 
-import org.labkey.api.ehr.dataentry.SimpleFormSection;
-import org.labkey.api.ehr.dataentry.SimpleGridPanel;
-import org.labkey.api.view.template.ClientDependency;
+SELECT
 
-import java.util.Collections;
+    h1.Id,
+    group_concat(h2.Id, '-') as adultcagemate,
+    group_Concat(distinct h2.room) as room,
+    group_concat(distinct h1.cage) as cage
 
-/**
- * User: bimber
- * Date: 7/7/13
- * Time: 10:36 AM
- */
-public class PairingFormSection extends SimpleGridPanel
-{
-    public PairingFormSection()
-    {
-        super("study", "pairings", "Pairing Observations");
-        setConfigSources(Collections.singletonList("Task"));
+FROM study.demographicsCurrentLocation h1
+         JOIN study.demographicsCurrentLocation h2 ON (
+    h1.room = h2.room AND
+    h1.cage = h2.cage
 
-    }
-}
+    )
+
+WHERE
+    h1.room.housingType.value = 'Cage Location'
+
+
+GROUP BY h1.Id
+
+

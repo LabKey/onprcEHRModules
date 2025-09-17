@@ -55,8 +55,8 @@ public class ONPRC_EHR_ComplianceDBModule extends ExtendedSimpleModule
     @Override
     public Double getSchemaVersion()
     {
-        return 24.011;
-    }
+        return 24.012;
+    } //Modified: 9-8-025
 
     @Override
     public @NotNull Collection<String> getSchemaNames()
