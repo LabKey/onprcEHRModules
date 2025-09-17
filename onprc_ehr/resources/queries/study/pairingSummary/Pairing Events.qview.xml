@@ -3,10 +3,10 @@
         <column name="Id"/>
         <column name="infant_id"/>
         <column name="lowestCage"/>
-        <column name="Id/demographics/gender"/>
         <column name="otherIds"/>
-        <column name="pairid"/>
-          <column name="date"/>
+        <column name="Id/demographics/gender"/>
+        <column name="other_infant"/>
+        <column name="date"/>
         <column name="category"/>
         <column name="eventtype"/>
         <column name="category"/>
@@ -15,7 +15,6 @@
         <column name="outcome"/>
         <column name="enddate"/>
         <column name="endeventType"/>
-        <column name="other_infant"/>
         <column name="separationreason"/>
         <column name="housingtype"/>
         <column name="observation"/>
