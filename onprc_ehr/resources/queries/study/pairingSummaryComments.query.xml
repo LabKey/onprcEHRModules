@@ -24,7 +24,7 @@
                     </column>
                     <column columnName="endeventType">
                     </column>
-                    <column columnName="otherIDs">
+                    <column columnName="otherIds">
                         <columnTitle>Other IDs</columnTitle>
                     </column>
                     <column columnName="separationreason">

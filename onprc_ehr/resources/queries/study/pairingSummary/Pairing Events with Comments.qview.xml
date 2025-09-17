@@ -3,8 +3,9 @@
         <column name="Id"/>
         <column name="infant_id"/>
         <column name="lowestCage"/>
+        <column name="otherIds"/>
+        <column name="pairid"/>
         <column name="Id/demographics/gender"/>
-        <column name="other_IDs"/>
         <column name="other_infant"/>
         <column name="date"/>
         <column name="category"/>

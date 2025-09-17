@@ -24,10 +24,6 @@
                     <column columnName="cage">
                         <columnTitle>Cage</columnTitle>
                     </column>
-                    <column columnName="other_IDs">
-                        <isHidden>false</isHidden>
-                        <columnTitle>Other IDs</columnTitle>
-                    </column>
                     <column columnName="other_infant">
                         <isHidden>false</isHidden>
                         <columnTitle>Other Infant</columnTitle>
@@ -51,6 +47,14 @@
                             <fkTable>pairingstarttype</fkTable>
                             <fkColumnName>value</fkColumnName>
                         </fk>
+                    </column>
+                    <column columnName="other_IDs">
+                        <isHidden>false</isHidden>
+                        <columnTitle>Adult IDs</columnTitle>
+                    </column>
+                    <column columnName="other_infant">
+                        <isHidden>false</isHidden>
+                        <columnTitle>Other Infant</columnTitle>
                     </column>
 
                     <column columnName="housingtype">
@@ -121,8 +125,8 @@
                     </column>
 
                     <column columnName="pairid">
-                        <columnTitle>Pair ID</columnTitle>
-                        <isHidden>true</isHidden>
+                        <columnTitle>Pair ID Hide</columnTitle>
+                        <isHidden>false</isHidden>
                     </column>
 
                     <column columnName="performedby">

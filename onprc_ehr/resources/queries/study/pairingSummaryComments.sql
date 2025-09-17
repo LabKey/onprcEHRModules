@@ -1,6 +1,6 @@
 SELECT
   p.Id,
- (SELECT group_concat(distinct p2.Id, chr(10)) AS Ids FROM study.pairings p2 WHERE p.Id != p2.id AND p.pairId = p2.pairId) as otherIds,
+ (SELECT group_concat(distinct p2.Id, ' ') AS Ids FROM study.pairings p2 WHERE p.Id != p2.id AND p.pairId = p2.pairId order by p2.Id) as otherIds,
   p.pairid,
   p.date,
   (Select j.gender from study.demographics j where j.Id = p.Id) as sex,
@@ -22,10 +22,9 @@ SELECT
   TIMESTAMPDIFF('SQL_TSI_DAY', p.date, coalesce(p.enddate,curdate())) as duration,
   p.qcstate,
   p.lsid,
-  p.other_IDs,
   p.other_infant,
   p.infant_id,
-    p.housingtype
+  p.housingtype
 
 FROM study.pairings p
 where p.eventtype in ('General Comment', 'Pair monitor')
