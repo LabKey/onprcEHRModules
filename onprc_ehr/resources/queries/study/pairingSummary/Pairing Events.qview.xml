@@ -5,6 +5,7 @@
         <column name="lowestCage"/>
         <column name="Id/demographics/gender"/>
         <column name="otherIds"/>
+        <column name="pairid"/>
           <column name="date"/>
         <column name="category"/>
         <column name="eventtype"/>

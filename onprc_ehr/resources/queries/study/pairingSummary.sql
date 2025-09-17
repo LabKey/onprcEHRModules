@@ -15,7 +15,7 @@
  */
 SELECT
   p.Id,
- (SELECT group_concat(distinct p2.Id, ' ') AS Ids FROM study.pairings p2 WHERE p.Id != p2.id AND p.pairId = p2.pairId order by p2.Id) as otherIds,
+ (SELECT group_concat(distinct p2.Id, ' ') AS Ids FROM study.pairings p2 WHERE p.Id != p2.id AND p.pairId = p2.pairId) as otherIds,
   p.pairid,
   p.date,
   (Select j.gender from study.demographics j where j.Id = p.Id) as sex,
