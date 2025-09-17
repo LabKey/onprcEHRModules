@@ -125,7 +125,7 @@
                     </column>
 
                     <column columnName="pairid">
-                        <columnTitle>Pair ID Hide</columnTitle>
+                        <columnTitle>Pair ID Identifier</columnTitle>
                         <isHidden>true</isHidden>
                     </column>
 
