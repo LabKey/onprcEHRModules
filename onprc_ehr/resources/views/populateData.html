@@ -643,7 +643,7 @@ Ext4.onReady(function(){
             label: 'Pairing Housing Type',
             populateFn: 'populateFromFile',
             schemaName: 'ehr_lookups',
-            queryName: 'pairingHousingType',
+            queryName: 'pairingpriorgroups',
             pk: 'rowid'
         },{
             label: 'Pairing Goal',
@@ -656,6 +656,24 @@ Ext4.onReady(function(){
             populateFn: 'populateFromFile',
             schemaName: 'ehr_lookups',
             queryName: 'pairingOutcome',
+            pk: 'rowid'
+        },{
+            label: 'Pairing Category',
+            populateFn: 'populateFromFile',
+            schemaName: 'onprc_ehr',
+            queryName: 'pairing_observation_types',
+            pk: 'rowid'
+        },{
+            label: 'Pairing Start Type',
+            populateFn: 'populateFromFile',
+            schemaName: 'ehr_lookups',
+            queryName: 'pairingstarttype',
+            pk: 'rowid'
+        },{
+            label: 'Pairing End Types',
+            populateFn: 'populateFromFile',
+            schemaName: 'ehr_lookups',
+            queryName: 'pairingendtypes',
             pk: 'rowid'
         },{
             label: 'Blood Draw Services',
