@@ -268,6 +268,11 @@ EHR.reports.clinMedicationSchedule = function(panel, tab){
     EHR.reports.medicationSchedule(panel, tab, 'Clinical Medications');
 };
 
+EHR.reports.clinMedicationFASTSchedule = function(panel, tab){
+    EHR.reports.medicationSchedule(panel, tab, 'Clinical FAST Medications');
+};
+
+
 EHR.reports.dietSchedule = function(panel, tab){
     EHR.reports.medicationSchedule(panel, tab, 'Diets');
 };

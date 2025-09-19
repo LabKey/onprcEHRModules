@@ -44,6 +44,12 @@ ONPRC.Utils = new function(){
             return baseUrl + '/' + ssrsFolder + '/' + reportPath + '&' + LABKEY.ActionURL.queryString(params);
         },
 
+        getSsrsReportUrlFAST: function(reportPath, params) {
+            const baseUrl = LABKEY.getModuleProperty('ONPRC_EHR', 'SSRSServerURL');
+            const ssrsFolder = 'Prime Test/Misc Process';
+            return baseUrl + '/' + ssrsFolder + '/' + reportPath + '&' + LABKEY.ActionURL.queryString(params);
+        },
+
         /**
          * Handles the SessionID and HostName parameters.
          * @param extraParams any extra parameters to add

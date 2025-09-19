@@ -309,6 +309,92 @@
                         style: 'margin-left: 5px;',
 
                     },{
+                        html: '<hr>',
+                        style: 'padding-top: 10px;',
+                        colspan: 4
+                    },{
+
+
+                        html: '<i>Clinical NPO FAST Medications:</i>'
+                    },{
+                        style: 'padding-left: 10px;',
+                        items: [{
+                            xtype: 'datefield',
+                            fieldLabel: 'Date',
+                            itemId: 'medicationDateField',
+                            value: new Date(),
+                            allowBlank: false
+                        },{
+                            // xtype: 'ehr-timeofdayfield',
+                            // itemId: 'medicationTimeOfDayField'
+                        }]
+                    },{
+                        xtype: 'button',
+                        style: 'margin-left: 5px;',
+                        text: 'Print Version',
+                        border: true,
+                        getUrlString: function(){
+                            var panel = this.up('#sheetPanel');
+                            var params = panel.getParams(true, true, ';');
+                            if (!params)
+                                return;
+
+                            var date = panel.down('#medicationDateField').getValue();
+                            if (!date){
+                                Ext4.Msg.alert('Error', 'Must provide a date');
+                                return;
+                            }
+
+                            params['TreatmentDate'] = Ext4.Date.format(date, LABKEY.extDefaultDateFormat);
+                            params['NumDays'] = 2;
+                            // Modified: 12-12-2023   R. Blasa
+
+                            params['Category'] = 'Clinical;Clinical on behalf of Research;Clinical on behalf of Surgical';
+
+
+                            params['TimeOfDay'] = 'EXT';
+
+
+                            return ONPRC.Utils.getSsrsReportUrl('Clinical/ActiveTreatments_NPO_FAST',
+                                    ONPRC.Utils.getSsrsParams(params, true, true));
+                        },
+                        menu: [{
+                            text: 'Print',
+                            handler: function(menu){
+                                var btn = menu.up('button');
+                                var url = btn.getUrlString();
+                                if (!url)
+                                    return;
+
+                                window.open(url);
+                            }
+                        },{
+                            text: 'Print To PDF',
+                            handler: function(menu){
+                                var btn = menu.up('button');
+                                var url = btn.getUrlString();
+                                if (!url)
+                                    return;
+
+                                url += '&rs:Format=PDF';
+                                window.open(url);
+                            }
+                        }]
+                    },{
+                        xtype: 'button',
+                        style: 'margin-left: 5px;',
+                        text: 'Online Version',
+                        border: true,
+                        handler: function(btn){
+                            var url = LABKEY.ActionURL.buildURL('ehr', 'animalHistory');
+                            url += btn.up('#sheetPanel').getAnimalHistoryHash('clinMedicationFASTSchedule');
+                            window.open(url);
+                        }
+                    },{
+                        style: 'margin-left: 5px;',
+
+                    },{
+
 
                         html: '<hr>',
                         style: 'padding-top: 10px;',
