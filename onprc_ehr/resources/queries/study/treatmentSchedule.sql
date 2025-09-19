@@ -42,7 +42,7 @@ SELECT
     ELSE minute(t1.date)
   END as minutes,
   dr.date as origDate,
-  --ft.timedescription as timeOfDay,
+  ft.timedescription as stdtime,
   CASE
     WHEN (tt.time IS NULL) THEN 'Default'
     ELSE 'Custom'
