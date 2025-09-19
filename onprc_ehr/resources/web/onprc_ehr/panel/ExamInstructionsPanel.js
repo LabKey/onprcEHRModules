@@ -20,11 +20,6 @@ Ext4.define('ONPRC_EHR.panel.ExamInstructionsPanel', {
             }
         }
 
-        // var btnCfg2 = EHR.DataEntryUtils.getDataEntryFormButton('OPENCLINICALCASE');
-        // if (btnCfg2){
-        //     btnCfg2 = this.dataEntryPanel.configureButton(btnCfg2);
-        //     buttons.push(btnCfg2);
-        // }
 
         Ext4.apply(this, {
             defaults: {
