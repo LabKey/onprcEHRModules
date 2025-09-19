@@ -1,12 +1,14 @@
 SELECT
   p.Id,
- (SELECT group_concat(distinct p2.Id, chr(10)) AS Ids FROM study.pairings p2 WHERE p.Id != p2.id AND p.pairId = p2.pairId) as otherIds,
+ (SELECT group_concat(distinct p2.Id, ' ') AS Ids FROM study.pairings p2 WHERE p.Id != p2.id AND p.pairId = p2.pairId) as otherIds,
   p.pairid,
   p.date,
+  (Select j.gender from study.demographics j where j.Id = p.Id) as sex,
   p.lowestCage,
   p.room,
   p.cage,
   p.eventType,
+  p.category,
   p.goal,
   p.observation,
   p.outcome,
@@ -19,7 +21,10 @@ SELECT
   p.taskid,
   TIMESTAMPDIFF('SQL_TSI_DAY', p.date, coalesce(p.enddate,curdate())) as duration,
   p.qcstate,
-  p.lsid
+  p.lsid,
+  p.other_infant,
+  p.infant_id,
+  p.housingtype
 
 FROM study.pairings p
 where p.eventtype in ('General Comment', 'Pair monitor')
