@@ -11,11 +11,11 @@ var helper = org.labkey.ldk.query.LookupValidationHelper.create(LABKEY.Security.
 var ehrHelper = org.labkey.ehr.utils.TriggerScriptHelper.create(LABKEY.Security.currentUser.id, LABKEY.Security.currentContainer.id);
 
 function beforeDelete(row, errors){
-    if (helper.verifyNotUsed('onprc_billing', 'invoicedItems', 'chargeid', row['rowid'])){
+    if (helper.verifyNotUsed('onprc_billing', 'invoicedItems', 'chargeid', row['rowid'], 'chargeableItems')){
         addError(errors, 'name', 'Cannot delete row with ID: ' + row['rowid'] + ' because it is referenced by the table invoicedItems.  You should inactivate this item instead.');
     }
 
-    if (helper.verifyNotUsed('onprc_billing', 'miscCharges', 'chargeid', row['rowid'], ehrHelper.getEHRStudyContainerPath())){
+    if (helper.verifyNotUsed('onprc_billing', 'miscCharges', 'chargeid', row['rowid'], ehrHelper.getEHRStudyContainerPath(), 'chargeableItems')){
         addError(errors, 'name', 'Cannot delete row with ID: ' + row['rowid'] + ' because it is referenced by the table miscCharges.  You should inactivate this item instead.');
     }
 }
