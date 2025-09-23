@@ -828,6 +828,12 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
         grid.setGridCellJS(2, "date", TIME_FORMAT.format(today));
         grid.setGridCell(2, "category", CATEGORY[0]);
 
+        Assert.assertEquals(grid.getFieldValue(1, "pairid"), grid.getFieldValue(2, "pairid"));
+
+        //should update pairId
+        grid.setGridCell(2, "room", ROOMS[2]);
+        sleep(200);
+        Assert.assertNotEquals("Pair ID doesn't match, 1: " + grid.getFieldValue(1, "pairid") + ", 2: " + grid.getFieldValue(2, "pairid"), grid.getFieldValue(1, "pairid"), grid.getFieldValue(2, "pairid"));
 
         _helper.addRecordToGrid(grid);
         sleep(200);
@@ -838,7 +844,10 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
         grid.setGridCellJS(3, "date", TIME_FORMAT.format(today));
         grid.setGridCell(3, "category", CATEGORY[0]);
 
-
+        grid.setGridCell(3, "lowestcage", "A1");
+        sleep(100);
+        Assert.assertEquals(grid.getFieldValue(1, "pairid"), grid.getFieldValue(3, "pairid"));
+        sleep(200);
         _helper.discardForm();
     }
 
