@@ -19,6 +19,9 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import static org.labkey.test.util.PermissionsHelper.EDITOR_ROLE;
+import static org.labkey.test.util.PermissionsHelper.FOLDER_ADMIN_ROLE;
+
 @Category({EHR.class, ONPRC.class})
 public class ONPRC_RestrictedIssueTest extends BaseWebDriverTest implements SqlserverOnlyTest
 {
@@ -51,10 +54,10 @@ public class ONPRC_RestrictedIssueTest extends BaseWebDriverTest implements Sqls
         _containerHelper.createProject(getProjectName(), null);
 
         // Create test users
-        USER1.create(this).addPermission("Editor", getProjectName());
-        USER2.create(this).addPermission("Editor", getProjectName());
-        ISSUE_CREATOR.create(this).addPermission("Editor", getProjectName());
-        FOLDER_ADMIN.create(this).addPermission("Folder Administrator", getProjectName());
+        USER1.create(this).addPermission(EDITOR_ROLE, getProjectName());
+        USER2.create(this).addPermission(EDITOR_ROLE, getProjectName());
+        ISSUE_CREATOR.create(this).addPermission(EDITOR_ROLE, getProjectName());
+        FOLDER_ADMIN.create(this).addPermission(FOLDER_ADMIN_ROLE, getProjectName());
 
         // Add issue list definitions
         _issuesHelper.createNewIssuesList(RESTRICTED_ISSUES_LIST, _containerHelper, true, false, false);
