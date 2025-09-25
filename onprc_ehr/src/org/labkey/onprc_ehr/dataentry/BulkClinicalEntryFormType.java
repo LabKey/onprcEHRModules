@@ -18,6 +18,7 @@ package org.labkey.onprc_ehr.dataentry;
 import org.labkey.api.ehr.EHRService;
 import org.labkey.api.ehr.dataentry.DataEntryFormContext;
 import org.labkey.api.ehr.dataentry.FormSection;
+import org.labkey.api.ehr.dataentry.NonStoreFormSection;
 import org.labkey.api.ehr.dataentry.SimpleGridPanel;
 import org.labkey.api.ehr.dataentry.TaskForm;
 import org.labkey.api.ehr.dataentry.TaskFormSection;
@@ -43,6 +44,7 @@ public class BulkClinicalEntryFormType extends TaskForm
     public BulkClinicalEntryFormType(DataEntryFormContext ctx, Module owner)
     {
         super(ctx, owner, NAME, "Bulk Clinical Entry", "Clinical", Arrays.asList(
+                new NonStoreFormSection("Instructions", "Instructions", "onprc_ehr-examinstructionspanel", Arrays.asList(ClientDependency.supplierFromPath("onprc_ehr/panel/ExamInstructionsPanel.js"))),
                 new TaskFormSection(),
                 new AnimalDetailsFormSection(),
 
@@ -82,6 +84,10 @@ public class BulkClinicalEntryFormType extends TaskForm
         addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/panel/ExamCasesDataEntryPanel.js"));
         setDisplayReviewRequired(true);
         setJavascriptClass("ONPRC_EHR.panel.ExamCasesDataEntryPanel");
+
+        //Added 9-18-2025 R. Blasa
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/panel/ExamInstructionsPanel.js"));
+
     }
 
     @Override
