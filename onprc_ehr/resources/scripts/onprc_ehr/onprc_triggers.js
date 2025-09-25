@@ -719,13 +719,13 @@ exports.init = function(EHR){
                         obj.geographic_origin = data.geographic_origin;
                         hasUpdates = true;
                     }
-                    if (row.Id && !row.geographic_origin != null){
+                    else if (row.Id && !row.geographic_origin != null){
                          obj.geographic_origin = row.geogrphic_origin;
                          hasUpdates = true;
 
                     }
 
-                    if (row.dam && !obj.geographic_origin){
+                   else if (row.dam && !obj.geographic_origin){
                         var damOrigin = triggerHelper.getGeographicOriginForDam(row.dam);
                         if (damOrigin){
                             obj.geographic_origin = damOrigin;
