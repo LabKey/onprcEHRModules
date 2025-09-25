@@ -720,7 +720,7 @@ exports.init = function(EHR){
                         hasUpdates = true;
                     }
                     else if (row.Id && !row.geographic_origin != null){
-                         obj.geographic_origin = row.geogrphic_origin;
+                         obj.geographic_origin = row.geographic_origin;
                          hasUpdates = true;
 
                     }
