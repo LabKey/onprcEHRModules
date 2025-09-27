@@ -39,6 +39,8 @@
                     </column>
                     <column columnName="infant_id">
                     </column>
+                    <column columnName="priorgrouphousing">
+                    </column>
                 </columns>
             </table>
         </tables>
