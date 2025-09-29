@@ -4,7 +4,6 @@
  */
 
 SELECT DISTINCT
-    MAX(a.DateCreated) AS latestMathematicaABV_data,
-    NOW() AS currentTime
+    MAX(a.DateCreated) AS latestMathematicaABV_data
 FROM AvailableBloodVolume a
 WHERE DateCreated < TIMESTAMPADD('SQL_TSI_MINUTE', -55, NOW())
