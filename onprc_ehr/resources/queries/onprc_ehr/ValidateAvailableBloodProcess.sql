@@ -1,12 +1,10 @@
-/* Returns a single row of data where the date/hour of the Mathematica ABV calculations don't match the current date or hour.
- * If there is Mathematica data from multiple hours, there will be a row of data for each hour of Mathematica data.
- * This is not expected as Mathematica should drop the _public table each hour and the ETL'd data should match.
-* removed comma on line 9 per request
+/*
+ * Return a single line showing latest Mathematica ABV push and the current time, if the data is stale. Otherwise, blank.
+ * Used by onprc_ehr/src/org/labkey/onprc_ehr/notification/AvailableBloodVolumeNotification.java
  */
-SELECT DISTINCT CAST(a.dateCreated AS DATE) AS mmaDate,
-    hour(a.datecreated) AS mmaHour,
-    curdate() AS currentDate,
-    hour(now()) AS currentHour
-FROM ONPRC_EHR.AvailableBloodVolume AS a
-WHERE hour(a.dateCreated) != hour(now())
-   OR CAST(a.dateCreated AS DATE) != curdate()
+
+SELECT DISTINCT
+    MAX(a.DateCreated) AS latestMathematicaABV_data,
+    NOW() AS currentTime
+FROM AvailableBloodVolume a
+WHERE DateCreated < TIMESTAMPADD('SQL_TSI_MINUTE', -55, NOW())
