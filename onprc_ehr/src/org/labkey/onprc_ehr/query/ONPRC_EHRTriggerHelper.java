@@ -2677,6 +2677,16 @@ public class ONPRC_EHRTriggerHelper
         }
     }
 
+    //Added 9-30-2025
+    public String retrieveGeographic_Origin(String Id)
+
+    {
+        TableInfo ti = getTableInfo("study", "geneticAncestry");
+        TableSelector ts = new TableSelector(ti, PageFlowUtil.set("result"), new SimpleFilter(FieldKey.fromString("Id"), Id), null);
+
+        return ts.getObject(String.class);
+    }
+
     public void recalculateAllVetAssignmentRecords()
     {
         EHRDemographicsService.get().recalculateForAllIdsInCache(_container, "onprc_ehr", "vet_assignment", true);
