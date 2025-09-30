@@ -1106,7 +1106,7 @@ exports.init = function(EHR){
         }
 
         //Added by Kollil, 8/1/24
-        /*User can bypass the enddate for these two medications, as per ticket #11016
+        /* User can bypass the enddate for these two medications, as per ticket #11016
          Validation code on the Prime side to bypass the following two medications without entering the end dates.
             1. E-85760 - Medroxyprogesterone injectable (150mg/ml)
             2. E-Y7735 - Diet - Weekly Multivitamin
@@ -1114,13 +1114,29 @@ exports.init = function(EHR){
             Added these two Diets to the list by Kollil on 4/15/25. Refer to tkt #12363
             3. E-X0500 - Diet, L-Phyto (Low-phytoestrogen)
             4. E-Y9750 - Diet, 5047 High Protein, Jumbo
-
          */
         if (row.code != 'E-85760' && row.code != 'E-Y7735' && row.code != 'E-X0500' && row.code != 'E-Y9750'){
             if (!row.enddate) {
                 EHR.Server.Utils.addError(scriptErrors, 'enddate', 'Must enter enddate', 'WARN');
             }
         }
+
+        //Added by Kollil, 9/15/25
+        /* MPA validation, as per ticket #9669
+         Add validation code to ensure that MPA is ordered for the correct day:
+            Create a dataset validation that ensures MPA is ordered only for a Wednesday.
+         */
+        if (row.code == 'E-85760'){
+            if (row.date) {
+                var d= new Date(row.date);
+
+                // getDay(): 0=Sunday... 6=Saturday, so 3=Wednesday
+                if (d.getDay() !== 3) {
+                    EHR.Server.Utils.addError(scriptErrors,'date','Begin date must be on a Wednesday','WARN');
+                }
+            }
+        }
+
     });
 
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.AFTER_UPSERT, 'study', 'treatment_order', function(helper, errors, row, oldRow){
@@ -1143,8 +1159,6 @@ exports.init = function(EHR){
             }
         }
     });
-
-
 
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.ON_BECOME_PUBLIC, 'study', 'clinremarks', function(scriptErrors, helper, row, oldRow){
         if (helper.isETL() || helper.isValidateOnly()){
