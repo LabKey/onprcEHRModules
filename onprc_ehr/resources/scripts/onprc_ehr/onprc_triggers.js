@@ -1329,7 +1329,7 @@ exports.init = function(EHR){
         });
     });
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'demographics', function (helper, scriptErrors, row, oldRow) {
-        if (row.Id && row.geographic_origin  && row.geographic_origin != OldRow.geogrphic_origin)  {
+        if (row.Id && row.geographic_origin  && row.geographic_origin != OldRow.geographic_origin)  {
             //update birth records
             triggerHelper.updateBirthGeographics(row.Id, row.geographic_origin);
         }
