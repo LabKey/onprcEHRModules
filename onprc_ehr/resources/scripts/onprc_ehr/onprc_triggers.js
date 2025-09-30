@@ -732,7 +732,7 @@ exports.init = function(EHR){
 
                     }
 
-                   else if (row.dam && !obj.geographic_origin){
+                   if (row.dam && !obj.geographic_origin){
                         var damOrigin = triggerHelper.getGeographicOriginForDam(row.dam);
                         if (damOrigin){
                             obj.geographic_origin = damOrigin;
