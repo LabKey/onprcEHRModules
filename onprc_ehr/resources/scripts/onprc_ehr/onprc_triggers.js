@@ -717,7 +717,6 @@ exports.init = function(EHR){
                     //Modified: 9-18-2025  Extract the geographic origin from demographic is if it exist. otherwise use dam information
                     if (row.geographic_origin && row.geographic_origin != data.geographic_origin && data.geographic_origin != null ){
                         obj.geographic_origin = data.geographic_origin;
-                        row.geographic_origin = data.geographic_origin;
                         hasUpdates = true;
                     }
                     else if (row.Id && !row.geographic_origin != null){
@@ -1329,7 +1328,7 @@ exports.init = function(EHR){
         });
     });
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'demographics', function (helper, scriptErrors, row, oldRow) {
-        if (row.Id && row.geographic_origin  && row.geographic_origin != OldRow.geographic_origin)  {
+        if (row.Id && row.geographic_origin)  {
             //update birth records
             triggerHelper.updateBirthGeographics(row.Id, row.geographic_origin);
         }
