@@ -718,6 +718,8 @@ exports.init = function(EHR){
                     if (row.geographic_origin && row.geographic_origin != data.geographic_origin && data.geographic_origin != null ){
                         obj.geographic_origin = data.geographic_origin;
                         row.geographic_origin = data.geographic_origin;
+                        //update birth records
+                        triggerHelper.updateBirthGeographics(row.Id, data.geographic_origin);
                         hasUpdates = true;
                     }
                     else if (row.Id && !row.geographic_origin != null){
