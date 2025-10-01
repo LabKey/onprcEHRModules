@@ -1,3 +1,8 @@
+/* Added by: Kollil, 9/29/2025, Refer tkt # 13276
+Created a query that mimics the Room Utilization Report with the With PI Projects view, but with the additional feature
+that it can be run for arbitrary prior dates.
+ Lisa requested this functionality and will is useful
+ */
 PARAMETERS (SnapshotDate TIMESTAMP)
 
 SELECT
