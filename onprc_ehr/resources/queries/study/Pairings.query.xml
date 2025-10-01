@@ -55,12 +55,12 @@
                     </column>
 
                     <column columnName="housingtype">
-                        <isHidden>true</isHidden>
+                        <isHidden>false</isHidden>
                         <columnTitle>Housing Type</columnTitle>
                         <displayWidth>200</displayWidth>
                         <fk>
                             <fkDbSchema>ehr_lookups</fkDbSchema>
-                            <fkTable>pairingHousingTypes</fkTable>
+                            <fkTable>pairingHousingType</fkTable>
                             <fkColumnName>value</fkColumnName>
                         </fk>
                     </column>
