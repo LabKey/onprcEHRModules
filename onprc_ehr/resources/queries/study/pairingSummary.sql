@@ -39,7 +39,8 @@ SELECT
   p.lsid,
   p.other_infant,
   p.infant_id,
-  p.housingtype
+  p.housingtype,
+  p.priorgrouphousing
 
 FROM study.pairings p
 
