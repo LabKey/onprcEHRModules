@@ -9,7 +9,6 @@
         <column name="date"/>
         <column name="category"/>
         <column name="eventtype"/>
-        <column name="category"/>
         <column name="remark"/>
         <column name="goal"/>
         <column name="outcome"/>
