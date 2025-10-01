@@ -32,22 +32,26 @@ public class AvailableBloodVolumeNotification extends ColonyAlertsNotification
     {
         return "Available Blood Volume Alert: " + getDateTimeFormat(c).format(new Date());
     }
+    /* From Hugh Crank:
+     * Server mkt7: Runs at :55 from 4:55am to 7:55pm
+     * Server mkt8: Runs at :25 from 4:25am to 7:25pm
+     */
     @Override
     public String getCronString()
     {
-        return "0 30 7-18 * * ?";
+        return "0 15 6-19 * * ?";
     }
 
     @Override
     public String getScheduleDescription()
     {
-        return "every day at 30 minutes after the hour between 7:30AM and 6:30PM";
+        return "15 minutes after every hour between 06:15 and 19:15.";
     }
 
     @Override
     public String getDescription()
     {
-        return "The report is designed to send an alert if the hourly Available Blood Volume transfer fails.";
+        return "Sends an alert on status of Available Blood Volume data from Mathematica.";
     }
 
     @Override
@@ -71,12 +75,14 @@ public class AvailableBloodVolumeNotification extends ColonyAlertsNotification
         long count = ts.getRowCount();
         if (count > 0)
         {
-            msg.append("<b>" + count + " Available Blood Data is Stale.</b><br>\n");
-            msg.append("<p><a href='" + getExecuteQueryUrl(c, "onprc_ehr", "ValidateAvailableBloodProcess", null) + "'>Click here to view them</a><br>\n\n");
+            msg.append("<b>The available blood volume data from Mathematica is stale.</b><br>\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "onprc_ehr", "ValidateAvailableBloodProcess", null) + "'>Click here to view labkeyPublic.AvailableBloodVolume.</a><br>\n\n");
             msg.append("</p><br><hr>");
         }
         else
         {
-            msg.append("<b>Excellent: Available Blood Volume is Current !</b><br><hr>");
+            msg.append("The available blood volume data from Mathematica is current.<br><hr>");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "onprc_ehr", "ValidateAvailableBloodProcess", null) + "'>Click here to view labkeyPublic.AvailableBloodVolume.</a><br>\n\n");
+            msg.append("</p><br><hr>");
         }
     }}
