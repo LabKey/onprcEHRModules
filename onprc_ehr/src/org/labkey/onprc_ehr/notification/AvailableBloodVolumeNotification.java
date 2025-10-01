@@ -32,6 +32,10 @@ public class AvailableBloodVolumeNotification extends ColonyAlertsNotification
     {
         return "Available Blood Volume Alert: " + getDateTimeFormat(c).format(new Date());
     }
+    /* From Hugh Crank:
+     * Server mkt7: Runs at :55 from 4:55am to 7:55pm
+     * Server mkt8: Runs at :25 from 4:25am to 7:25pm
+     */
     @Override
     public String getCronString()
     {
