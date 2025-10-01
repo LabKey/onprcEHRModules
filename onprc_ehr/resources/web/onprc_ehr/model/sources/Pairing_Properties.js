@@ -118,21 +118,8 @@ EHR.model.DataModelManager.registerMetadata('Pairing_Properties', {
                     ]
                 }
             },
-            lowestcage: {
-                xtype: 'onprc_ehr-pairedidentryfield',
-                header:'Pair ID',
-                columnConfig: {
-                    width: 250
-                }
-            },
-            other_IDs: {
-                xtype: 'onprc_ehr-pairedadultsentryfield',
-                allowBlank: true,
-                header:'Other IDs',     // should display just adults, and not infants
-                columnConfig: {
-                    width: 200
-                }
-            },
+
+
             remark2: {
                 xtype: 'textareafield',
                 columnConfig: {
