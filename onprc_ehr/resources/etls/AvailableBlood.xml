@@ -4,7 +4,7 @@
     <description>Copies the Available Blood Volume calculations provided by Mathematica.</description>
     <transforms>
         <transform id="step1">
-            <description>Truncate and populate the Available Blood Volume table</description>
+            <description>Truncate and populate the Available Blood Volume table.</description>
             <source schemaName="labkeyPublic" queryName="AvailableBloodVolume"/>
             <destination schemaName="ONPRC_EHR" queryName="AvailableBloodVolume" targetOption="truncate" />
         </transform>
@@ -13,7 +13,3 @@
             <cron expression="0 1,31 5-20 ? * * *"/> <!-- :01 and :31 after the hour for hours 5am through 8pm -->
         </schedule>
 </etl>
-
-
-
-
