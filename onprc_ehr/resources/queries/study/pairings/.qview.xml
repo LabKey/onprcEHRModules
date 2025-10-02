@@ -8,6 +8,7 @@
         <column name="date"/>
         <column name="room"/>
         <column name="cage"/>
+        <column name="category"/>
         <column name="eventtype"/>
         <column name="remark"/>
         <column name="observation"/>
@@ -16,6 +17,7 @@
         <column name="endeventType"/>
         <column name="remark2"/>
         <column name="housingtype"/>
+        <column name="priorgrouphousing"/>
         <column name="separationreason"/>
         <column name="performedby"/>
         <column name="taskid"/>

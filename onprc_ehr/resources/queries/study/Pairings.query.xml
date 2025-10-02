@@ -48,16 +48,24 @@
                             <fkColumnName>value</fkColumnName>
                         </fk>
                     </column>
-                    <column columnName="other_IDs">
-                        <isHidden>false</isHidden>
-                        <columnTitle>Adult IDs</columnTitle>
-                    </column>
+
                     <column columnName="other_infant">
                         <isHidden>false</isHidden>
                         <columnTitle>Other Infant</columnTitle>
                     </column>
 
                     <column columnName="housingtype">
+                        <isHidden>false</isHidden>
+                        <columnTitle>Prior Housing Types</columnTitle>
+                        <displayWidth>200</displayWidth>
+                        <fk>
+                            <fkDbSchema>ehr_lookups</fkDbSchema>
+                            <fkTable>pairingHousingType</fkTable>
+                            <fkColumnName>value</fkColumnName>
+                        </fk>
+                    </column>
+
+                    <column columnName="priorgrouphousing">
                         <isHidden>false</isHidden>
                         <columnTitle>Prior Group Housing</columnTitle>
                         <displayWidth>200</displayWidth>
