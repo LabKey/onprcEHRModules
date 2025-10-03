@@ -15,7 +15,6 @@
         <column name="enddate"/>
         <column name="endeventType"/>
         <column name="separationreason"/>
-        <column name="housingtype"/>
         <column name="priorgrouphousing"/>
         <column name="observation"/>
         <column name="duration"/>

@@ -55,7 +55,7 @@
                     </column>
 
                     <column columnName="housingtype">
-                        <isHidden>false</isHidden>
+                        <isHidden>true</isHidden>
                         <columnTitle>Housing Type</columnTitle>
                         <displayWidth>200</displayWidth>
                         <fk>

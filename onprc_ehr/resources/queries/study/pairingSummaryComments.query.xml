@@ -29,8 +29,6 @@
                     </column>
                     <column columnName="separationreason">
                     </column>
-                    <column columnName="housingtype">
-                    </column>
                     <column columnName="observation">
                     </column>
                     <column columnName="outcome">
@@ -38,6 +36,8 @@
                     <column columnName="other_infant">
                     </column>
                     <column columnName="infant_id">
+                    </column>
+                    <column columnName="housingtype">
                     </column>
                     <column columnName="priorgrouphousing">
                     </column>

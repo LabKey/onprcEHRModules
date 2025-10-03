@@ -138,10 +138,7 @@ EHR.model.DataModelManager.registerMetadata('Pairing_Properties', {
                     width: 100
                 }
             },
-            housingtype: {
-                allowBlank: true,
-                hidden: false
-            },
+
             priorgrouphousing: {
                 allowBlank: true,
                 columnConfig: {
@@ -162,9 +159,7 @@ EHR.model.DataModelManager.registerMetadata('Pairing_Properties', {
                     width: 160
                 }
             },
-            housingtype: {
-                hidden: false
-            },
+
 
             remark: {
                 xtype: 'textareafield',
