@@ -24,10 +24,7 @@
                     <column columnName="cage">
                         <columnTitle>Cage</columnTitle>
                     </column>
-                    <column columnName="other_infant">
-                        <isHidden>false</isHidden>
-                        <columnTitle>Other Infant</columnTitle>
-                    </column>
+
                     <column columnName="date">
                         <columnTitle>Start Date</columnTitle>
                     </column>
@@ -55,7 +52,7 @@
                     </column>
 
                     <column columnName="housingtype">
-                        <isHidden>false</isHidden>
+                        <isHidden>true</isHidden>
                         <columnTitle>Prior Housing Types</columnTitle>
                         <displayWidth>200</displayWidth>
                         <fk>

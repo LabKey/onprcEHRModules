@@ -17,8 +17,8 @@
         <column name="endeventType"/>
         <column name="other_infant"/>
         <column name="separationreason"/>
-        <column name="housingtype"/>
         <column name="observation"/>
+        <column name="priorgrouphousing"/>
         <column name="duration"/>
         <column name="remark2"/>
         <column name="performedby"/>
