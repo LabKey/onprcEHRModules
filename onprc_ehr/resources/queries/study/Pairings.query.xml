@@ -16,7 +16,7 @@
                     </column>
                     <column columnName="lowestcage">
                         <columnTitle>Pair Id</columnTitle>
-                        <description>Redesigned to generate cagemates</description>
+                        <description>This is used to identify the lowest cage number of the pair.  It is used to determine which animals in the group are considered part of the pair</description>
                     </column>
                     <column columnName="room">
                         <columnTitle>Room</columnTitle>
@@ -24,7 +24,10 @@
                     <column columnName="cage">
                         <columnTitle>Cage</columnTitle>
                     </column>
-
+                    <column columnName="other_infant">
+                        <isHidden>false</isHidden>
+                        <columnTitle>Other Infant</columnTitle>
+                    </column>
                     <column columnName="date">
                         <columnTitle>Start Date</columnTitle>
                     </column>
@@ -53,7 +56,7 @@
 
                     <column columnName="housingtype">
                         <isHidden>true</isHidden>
-                        <columnTitle>Prior Housing Types</columnTitle>
+                        <columnTitle>Housing Type</columnTitle>
                         <displayWidth>200</displayWidth>
                         <fk>
                             <fkDbSchema>ehr_lookups</fkDbSchema>
@@ -61,6 +64,7 @@
                             <fkColumnName>value</fkColumnName>
                         </fk>
                     </column>
+
 
                     <column columnName="priorgrouphousing">
                         <isHidden>false</isHidden>
@@ -132,6 +136,7 @@
                     <column columnName="pairid">
                         <columnTitle>Pair ID Identifier</columnTitle>
                         <isHidden>true</isHidden>
+                        <description>This field is used to differentiate pairs.  By convention is should usually be the lowest cage number in the group; however, it does not need to match this</description>
                     </column>
 
                     <column columnName="performedby">
