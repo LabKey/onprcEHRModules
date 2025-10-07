@@ -1355,6 +1355,14 @@ exports.init = function(EHR){
         }
     });
 
+    // Added: 10-6-2025
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'chemistryResults', function (helper, scriptErrors, row, oldRow) {
+        if (row.Id && row.qualresults)  {
+            //update birth records
+            triggerHelper.sendClinpatPanicEmail(row.Id, row.qualresults, row.vet);
+        }
+    });
+
     //Added: 10-4-2022  R.Blasa
     EHR.Server.TriggerManager.registerHandler(EHR.Server.TriggerManager.Events.COMPLETE, function(event, errors, helper){
         // Send notifications when requests approved
