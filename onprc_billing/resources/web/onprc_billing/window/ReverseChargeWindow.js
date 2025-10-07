@@ -4,6 +4,9 @@
  * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
  * Modified jonesga October 30, 2024
  * **Per Finance Issue Tracker 11380 added debit Aklias add function to allow change of debit alias when no center project is associated
+ * Modified [Your Name] September 29, 2025
+ * **Added transaction number links to the header for easy reference to invoiced items
+ * **Optimized link generation to prevent script timeout on large datasets
  */
 Ext4.define('ONPRC_Billing.window.ReverseChargeWindow', {
     extend: 'Ext.window.Window',
@@ -48,8 +51,10 @@ Ext4.define('ONPRC_Billing.window.ReverseChargeWindow', {
                 labelWidth: 150
             },
             items: [{
+                itemId: 'headerPanel',
                 html: 'This helper allows you to make adjustments and reversals.  Once you select the type of adjustment, look below to see an explanation of the items it will create.<br><br>' +
-                'NOTE: You have selected ' + this.checked.length + ' items to be reversed or adjusted.  These are based on the rows you checked on the previous grid.',
+                        'NOTE: You have selected ' + this.checked.length + ' items to be reversed or adjusted.  These are based on the rows you checked on the previous grid.<br><br>' +
+                        'Loading transaction details...',
                 style: 'padding-bottom: 10px;'
             },{
                 xtype: 'radiogroup',
@@ -122,7 +127,7 @@ Ext4.define('ONPRC_Billing.window.ReverseChargeWindow', {
             filterArray: [
                 LABKEY.Filter.create('objectid', this.checked.join(';'), LABKEY.Filter.Types.IN)
             ],
-            columns: 'rowid,objectid,invoiceid,invoiceid/status,Id,date,project,creditedaccount,debitedaccount,rateId,exemptionId,quantity,investigatorId,chargeid,unitcost',
+            columns: 'rowid,transactionNumber,objectid,invoiceid,invoiceid/status,Id,date,project,creditedaccount,debitedaccount,rateId,exemptionId,quantity,investigatorId,chargeid,unitcost,transactionNumber',
             scope: this,
             failure: LDK.Utils.getErrorCallback(),
             success: this.onDataLoad
@@ -134,13 +139,56 @@ Ext4.define('ONPRC_Billing.window.ReverseChargeWindow', {
         this.selectRowsResults = results;
 
         var missingCharge = 0;
+        var transactionMap = {};
+        var maxLinksToShow = 20;
+
         if (results && results.rows && results.rows.length){
-            Ext4.Array.forEach(results.rows, function(r){
+            for (var i = 0; i < results.rows.length; i++) {
+                var r = results.rows[i];
                 var sr = new LDK.SelectRowsRow(r);
+
                 if (!sr.getValue('chargeId')){
                     missingCharge++;
                 }
-            }, this);
+
+                var transNum = sr.getValue('transactionNumber');
+                if (transNum && Object.keys(transactionMap).length < maxLinksToShow) {
+                    if (!transactionMap[transNum]) {
+                        var url = LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {
+                            schemaName: 'onprc_billing',
+                            'query.queryName': 'invoicedItems',
+                            'query.transactionNumber~eq': transNum
+                        });
+                        transactionMap[transNum] = '<a href="' + Ext4.util.Format.htmlEncode(url) +
+                                '" target="_blank">' + Ext4.util.Format.htmlEncode(transNum) + '</a>';
+                    }
+                }
+            }
+        }
+
+        var headerPanel = this.down('#headerPanel');
+        if (headerPanel) {
+            var linksHtml = '';
+            var transactionLinks = [];
+
+            for (var key in transactionMap) {
+                if (transactionMap.hasOwnProperty(key)) {
+                    transactionLinks.push(transactionMap[key]);
+                }
+            }
+
+            if (transactionLinks.length > 0) {
+                linksHtml = '<br><strong>Transaction Numbers:</strong> ' + transactionLinks.join(', ');
+                if (results.rows.length > maxLinksToShow) {
+                    linksHtml += ' <em>(showing first ' + transactionLinks.length + ' unique transactions)</em>';
+                }
+            }
+
+            headerPanel.update(
+                    'This helper allows you to make adjustments and reversals.  Once you select the type of adjustment, look below to see an explanation of the items it will create.<br><br>' +
+                    'NOTE: You have selected ' + this.checked.length + ' items to be reversed or adjusted.  These are based on the rows you checked on the previous grid.' +
+                    linksHtml
+            );
         }
 
         if (Ext4.Msg.isVisible())
@@ -192,13 +240,13 @@ Ext4.define('ONPRC_Billing.window.ReverseChargeWindow', {
 
             items.push({
                 html: 'This will reverse the original charges and create adjustments based on your selections below.  ' +
-                    '<ul>' +
-                    '<li>All transactions will use the date selected below, as opposed to the original transaction date.</li>' +
-                    '<li>The reversal will use the aliases used on the original transaction.  This does not check whether the aliases are still valid.</li>' +
-                    '<li>If you choose to change the project, the project/alias selected will be used on the adjustment.  If you leave this blank, the original project/alias will be used</li>' +
-                    '<li>If you select an alternate credit alias, this will be used on all adjustments.  Otherwise the original credit alias will be used.' +
-                    '<li>Note: you can leave any or all of these fields blank and create the adjustment.  You will have the opportunity to view the adjustment form, which allows you to independently edit any of these values there as well.</li>' +
-                    '</ul>',
+                        '<ul>' +
+                        '<li>All transactions will use the date selected below, as opposed to the original transaction date.</li>' +
+                        '<li>The reversal will use the aliases used on the original transaction.  This does not check whether the aliases are still valid.</li>' +
+                        '<li>If you choose to change the project, the project/alias selected will be used on the adjustment.  If you leave this blank, the original project/alias will be used</li>' +
+                        '<li>If you select an alternate credit alias, this will be used on all adjustments.  Otherwise the original credit alias will be used.' +
+                        '<li>Note: you can leave any or all of these fields blank and create the adjustment.  You will have the opportunity to view the adjustment form, which allows you to independently edit any of these values there as well.</li>' +
+                        '</ul>',
                 style: 'padding-bottom: 10px;'
             },{
                 xtype: 'datefield',
@@ -429,7 +477,7 @@ Ext4.define('ONPRC_Billing.window.ReverseChargeWindow', {
             }
             //added as part of Finance 11380 update by Gary
             //this issues is causing error
-           if (this.down('#doChangedebitAlias').getValue() && !this.down('#newDebitAliasField').getValue()){
+            if (this.down('#doChangedebitAlias').getValue() && !this.down('#newDebitAliasField').getValue()){
                 Ext4.Msg.alert('Error', 'You have checked that you want to alter the debit alias, but did not supply the new alias.  Either enter an alias or uncheck the field');
                 return;
             }
@@ -491,7 +539,7 @@ Ext4.define('ONPRC_Billing.window.ReverseChargeWindow', {
                     toApply.debitedaccount = Ext4.String.trim(toApply.debitedaccount);
                 }
             }
-           //Added by Gary as part of 11380 update
+            //Added by Gary as part of 11380 update
             if (this.down('#doChangedebitAlias').getValue()){
                 toApply.debitedaccount = this.down('#newDebitAliasField').getValue();
                 if (toApply.debitedaccount){
@@ -529,16 +577,16 @@ Ext4.define('ONPRC_Billing.window.ReverseChargeWindow', {
                 investigatorId: sr.getValue('investigatorId'),
                 chargeId: sr.getValue('chargeId'),
                 quantity: sr.getValue('quantity'),
-                sourceInvoicedItem: sr.getValue('objectid'),
+                sourceInvoicedItem: sr.getValue('transactionNumber'),
 
                 //these may be overridden
                 project: sr.getValue('project'),
                 debitedaccount: sr.getValue('debitedaccount'),
                 creditedaccount: sr.getValue('creditedaccount'),
-                unitcost: sr.getValue('unitcost')
+                unitcost: sr.getValue('unitcost'),
 
                 //these are deliberately ignored
-                //transactionNumber: sr.getValue('transactionNumber'),
+                transactionNumber: sr.getValue('transactionNumber')
                 //item: sr.getValue('item'),
                 //itemCode: sr.getValue('itemCode'),
                 //category: sr.getValue('category'),
