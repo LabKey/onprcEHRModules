@@ -2347,6 +2347,9 @@
             <column columnName="category">
                 <datatype>varchar</datatype>
             </column>
+            <column columnName="priorgrouphousing">
+                <datatype>varchar</datatype>
+            </column>
             <column columnName="project">
                 <datatype>integer</datatype>
                 <propertyURI>urn:ehr.labkey.org/#Project</propertyURI>
