@@ -3,7 +3,7 @@
 /*
 **
 ** 	Created by
-**      Blasa  		510/8/2025          Process to update birth record;s geogrphic origin data.  The "Genetic Ancestry"
+**      Blasa  		10/8/2025          Process to update birth record;s geogrphic origin data.  The "Genetic Ancestry"
 **                                      geographic_origin information must override the birth's geographic origin values.
 **
 
