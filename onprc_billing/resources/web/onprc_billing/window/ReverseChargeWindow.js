@@ -122,7 +122,7 @@ Ext4.define('ONPRC_Billing.window.ReverseChargeWindow', {
             filterArray: [
                 LABKEY.Filter.create('objectid', this.checked.join(';'), LABKEY.Filter.Types.IN)
             ],
-            columns: 'rowid,objectid,invoiceid,invoiceid/status,Id,date,project,creditedaccount,debitedaccount,rateId,exemptionId,quantity,investigatorId,chargeid,unitcost,transactionNumber',
+            columns: 'rowid,objectid,invoiceid,invoiceid/status,Id,date,project,creditedaccount,debitedaccount,rateId,exemptionId,quantity,investigatorId,chargeid,unitcost',
             scope: this,
             failure: LDK.Utils.getErrorCallback(),
             success: this.onDataLoad
@@ -530,7 +530,6 @@ Ext4.define('ONPRC_Billing.window.ReverseChargeWindow', {
                 chargeId: sr.getValue('chargeId'),
                 quantity: sr.getValue('quantity'),
                 sourceInvoicedItem: sr.getValue('objectid'),
-                transactionNumber: sr.getValue('transactionNumber'),
 
                 //these may be overridden
                 project: sr.getValue('project'),
@@ -538,6 +537,20 @@ Ext4.define('ONPRC_Billing.window.ReverseChargeWindow', {
                 creditedaccount: sr.getValue('creditedaccount'),
                 unitcost: sr.getValue('unitcost')
 
+                //these are deliberately ignored
+                //transactionNumber: sr.getValue('transactionNumber'),
+                //item: sr.getValue('item'),
+                //itemCode: sr.getValue('itemCode'),
+                //category: sr.getValue('category'),
+                //servicecenter: sr.getValue('servicecenter'),
+                //faid: sr.getValue('faid'),
+                //lastName: sr.getValue('lastName'),
+                //firstName: sr.getValue('firstName'),
+                //department: sr.getValue('department'),
+                //totalcost: sr.getValue('totalcost'),
+                //rateId: sr.getValue('rateId'),
+                //exemptionId: sr.getValue('exemptionId'),
+                //creditaccountid: sr.getValue('creditaccountid')
             };
             objectIds.push(sr.getValue('objectid'));
 
