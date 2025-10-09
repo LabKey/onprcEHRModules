@@ -1348,12 +1348,6 @@ exports.init = function(EHR){
             }
         });
     });
-    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'demographics', function (helper, scriptErrors, row, oldRow) {
-        if (row.Id && row.geographic_origin)  {
-            //update birth records
-            triggerHelper.updateBirthGeographics(row.Id, row.geographic_origin);
-        }
-    });
 
     //Added: 10-4-2022  R.Blasa
     EHR.Server.TriggerManager.registerHandler(EHR.Server.TriggerManager.Events.COMPLETE, function(event, errors, helper){
