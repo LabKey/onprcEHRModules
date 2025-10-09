@@ -419,10 +419,11 @@
                 <columnTitle>Source Transaction</columnTitle>
                 <isHidden>true</isHidden>
                 <fk>
+                    <fkFolderPath>/ONPRC/Admin/Finance</fkFolderPath>
                     <fkDbSchema>onprc_billing</fkDbSchema>
                     <fkTable>invoicedItems</fkTable>
                     <fkColumnName>objectid</fkColumnName>
-                    <fkDisplayColumnName>rowid</fkDisplayColumnName>
+                    <fkDisplayColumnName>transactionNumber</fkDisplayColumnName>
                 </fk>
             </column>
             <column columnName="chargeCategory">
