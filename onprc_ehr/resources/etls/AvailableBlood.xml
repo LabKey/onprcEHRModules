@@ -10,6 +10,6 @@
         </transform>
     </transforms>
     	<schedule>
-            <cron expression="0 1,31 5-20 ? * * *"/> <!-- :01 and :31 after the hour for hours 5am through 8pm -->
+            <cron expression="0 5,35 5-20 ? * * *"/> <!-- :01 and :31 after the hour for hours 5am through 8pm -->
         </schedule>
 </etl>

@@ -39,7 +39,7 @@ public class AvailableBloodVolumeNotification extends ColonyAlertsNotification
      * Server mkt8: Runs at :25 from 4:25am to 7:25pm
      *
      * ABV ETL:
-     * :01 and :31 after the hour for hours between 05:00 and 20:00
+     * :05 and :35 after the hour for hours between 05:00 and 20:00
      * 0 1,31 5-20 ? * * *
      */
     @Override
