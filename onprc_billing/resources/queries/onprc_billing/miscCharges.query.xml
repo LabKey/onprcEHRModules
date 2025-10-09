@@ -27,6 +27,17 @@
                             <fkDisplayColumnName useRawValue="true"/>
                         </fk>
                     </column>
+                    <column columnName="sourceInvoicedItem">
+                        <columnTitle>Source Transaction</columnTitle>
+                        <isHidden>false</isHidden>
+                        <fk>
+                            <fkFolderPath>/ONPRC/Admin/Finance</fkFolderPath>
+                            <fkDbSchema>onprc_billing</fkDbSchema>
+                            <fkTable>invoicedItems</fkTable>
+                            <fkColumnName>objectid</fkColumnName>
+                            <fkDisplayColumnName>transactionNumber</fkDisplayColumnName>
+                        </fk>
+                    </column>
                     <column columnName="chargecategory">
                         <fk>
                             <fkDbSchema>onprc_billing</fkDbSchema>
