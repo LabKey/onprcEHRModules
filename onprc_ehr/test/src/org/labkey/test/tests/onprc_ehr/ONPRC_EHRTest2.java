@@ -818,6 +818,7 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
         grid.setGridCell(1, "cage", "A1");
         grid.setGridCellJS(1, "date", TIME_FORMAT.format(today));
         grid.setGridCell(1, "category", CATEGORY[0]);
+        grid.setGridCell(1, "other_infant", TINFANT[0]);
 
         _helper.addRecordToGrid(grid);
         sleep(200);
@@ -827,6 +828,7 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
         grid.setGridCell(2, "cage", "A1");
         grid.setGridCellJS(2, "date", TIME_FORMAT.format(today));
         grid.setGridCell(2, "category", CATEGORY[0]);
+        grid.setGridCell(2, "other_infant", TINFANT[0]);
 
         Assert.assertEquals(grid.getFieldValue(1, "pairid"), grid.getFieldValue(2, "pairid"));
 
@@ -843,6 +845,7 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
         grid.setGridCell(3, "cage", "A2");
         grid.setGridCellJS(3, "date", TIME_FORMAT.format(today));
         grid.setGridCell(3, "category", CATEGORY[0]);
+        grid.setGridCell(3, "other_infant", TINFANT[0]);
 
         grid.setGridCell(3, "lowestcage", "A1");
         sleep(100);

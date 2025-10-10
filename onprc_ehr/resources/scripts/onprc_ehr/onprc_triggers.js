@@ -1348,12 +1348,6 @@ exports.init = function(EHR){
             }
         });
     });
-    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'demographics', function (helper, scriptErrors, row, oldRow) {
-        if (row.Id && row.geographic_origin)  {
-            //update birth records
-            triggerHelper.updateBirthGeographics(row.Id, row.geographic_origin);
-        }
-    });
 
     // Added: 10-6-2025
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'chemistryResults', function (helper, scriptErrors, row, oldRow) {
