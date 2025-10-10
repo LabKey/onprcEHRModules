@@ -2353,6 +2353,18 @@
             <column columnName="remark2">
                 <datatype>varchar</datatype>
             </column>
+            <column columnName="other_infant">
+                <datatype>varchar</datatype>
+            </column>
+            <column columnName="infant_id">
+                <datatype>varchar</datatype>
+            </column>
+            <column columnName="category">
+                <datatype>varchar</datatype>
+            </column>
+            <column columnName="priorgrouphousing">
+                <datatype>varchar</datatype>
+            </column>
             <column columnName="project">
                 <datatype>integer</datatype>
                 <propertyURI>urn:ehr.labkey.org/#Project</propertyURI>

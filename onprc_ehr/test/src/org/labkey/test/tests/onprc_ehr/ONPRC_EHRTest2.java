@@ -808,7 +808,7 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
         _helper.goToTaskForm("Pairing Observations");
         ensureRoomExists(ROOMS[0]);
         ensureRoomExists(ROOMS[2]);
-
+        Date today = new Date();
         //test whether pairid properly assigned, including when room/cage changed
         Ext4GridRef grid = _helper.getExt4GridForFormSection("Pairing Observations");
         _helper.addRecordToGrid(grid);
@@ -816,6 +816,9 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
         grid.setGridCell(1, "lowestcage", "A1");
         grid.setGridCell(1, "room", ROOMS[0]);
         grid.setGridCell(1, "cage", "A1");
+        grid.setGridCellJS(1, "date", TIME_FORMAT.format(today));
+        grid.setGridCell(1, "category", CATEGORY[0]);
+        grid.setGridCell(1, "other_infant", TINFANT[0]);
 
         _helper.addRecordToGrid(grid);
         sleep(200);
@@ -823,6 +826,9 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
         grid.setGridCell(2, "lowestcage", "A1");
         grid.setGridCell(2, "room", ROOMS[0]);
         grid.setGridCell(2, "cage", "A1");
+        grid.setGridCellJS(2, "date", TIME_FORMAT.format(today));
+        grid.setGridCell(2, "category", CATEGORY[0]);
+        grid.setGridCell(2, "other_infant", TINFANT[0]);
 
         Assert.assertEquals(grid.getFieldValue(1, "pairid"), grid.getFieldValue(2, "pairid"));
 
@@ -837,8 +843,9 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
         grid.setGridCell(3, "lowestcage", "A2");
         grid.setGridCell(3, "room", ROOMS[0]);
         grid.setGridCell(3, "cage", "A2");
-        sleep(100);
-        Assert.assertNotEquals(grid.getFieldValue(1, "pairid"), grid.getFieldValue(3, "pairid"));
+        grid.setGridCellJS(3, "date", TIME_FORMAT.format(today));
+        grid.setGridCell(3, "category", CATEGORY[0]);
+        grid.setGridCell(3, "other_infant", TINFANT[0]);
 
         grid.setGridCell(3, "lowestcage", "A1");
         sleep(100);

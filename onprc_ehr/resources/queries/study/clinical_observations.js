@@ -6,8 +6,9 @@
 
 require("ehr/triggers").initScript(this);
 
+
 function onUpsert(helper, scriptErrors, row, oldRow){
-    if (!row.observation && !row.remark && row.type != 'surgery' && ['Vet Attention', 'Vet Review'].indexOf(row.category) == -1){
+    if (row.category != 'Vomit' &&!row.observation && !row.remark && ['Vet Attention', 'Vet Review'].indexOf(row.category) == -1){
         EHR.Server.Utils.addError(scriptErrors, 'observation', 'Must enter an observation or remark', 'WARN');
         EHR.Server.Utils.addError(scriptErrors, 'remark', 'Must enter an observation or remark', 'WARN');
     }

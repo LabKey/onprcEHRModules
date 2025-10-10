@@ -4,8 +4,8 @@
             <table tableName="demographicsAssignedVet" tableDbType="NOT_IN_DB">
                 <tableTitle>Assigned Vets</tableTitle>
                 <columns>
-                    <column columnName="matchedRule">
-                        <isHidden>true</isHidden>
+                    <column columnName="AssignmentType">
+                        <url replaceMissing="blankValue">executeQuery.view?schemaName=study&amp;query.queryName=VetAssignment_Filter&amp;query.Id~contains=${Id}</url>
                     </column>
                 </columns>
             </table>
