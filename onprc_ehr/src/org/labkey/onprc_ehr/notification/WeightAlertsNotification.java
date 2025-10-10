@@ -79,13 +79,13 @@ public class WeightAlertsNotification extends AbstractEHRNotification
     @Override
     public String getCronString()
     {
-        return "0 15 9 ? * MON";
+        return "0 0 12 ? * THU";
     }
 
     @Override
     public String getScheduleDescription()
     {
-        return "every Monday, at 9:15 AM";
+        return "every Thursday, at 12pm";
     }
 
     @Override
@@ -97,7 +97,7 @@ public class WeightAlertsNotification extends AbstractEHRNotification
         Date now = new Date();
         msg.append("This email contains alerts of significant weight changes.  It was run on: " + getDateFormat(c).format(now) + " at " + _timeFormat.format(now) + ".<p>");
 
-        getLivingWithoutWeight(c, u, msg);
+        //getLivingWithoutWeight(c, u, msg);
 
         generateCombinedWeightTable(c, u, msg);
 
@@ -110,7 +110,7 @@ public class WeightAlertsNotification extends AbstractEHRNotification
 
         //first weight drops
         Set<String> dropDistinctIds = new HashSet<>();
-        processWeights(c, u, sb, 0, 30, CompareType.LTE, -10, dropDistinctIds);
+        processWeights(c, u, sb, 0, 100, CompareType.LTE, -10, dropDistinctIds);
         consecutiveWeightDrops(c, u, sb, dropDistinctIds);
 
         if (!dropDistinctIds.isEmpty())
@@ -121,7 +121,7 @@ public class WeightAlertsNotification extends AbstractEHRNotification
 
         //also weight gains
         Set<String> gainDistinctIds = new HashSet<>();
-        processWeights(c, u, sb, 0, 30, CompareType.GTE, 10, gainDistinctIds);
+        processWeights(c, u, sb, 0, 100, CompareType.GTE, 10, gainDistinctIds);
 
         if (!gainDistinctIds.isEmpty())
         {
@@ -180,7 +180,8 @@ public class WeightAlertsNotification extends AbstractEHRNotification
         final FieldKey ageKey = FieldKey.fromString("Id/age/AgeFriendly");
         final FieldKey problemKey = FieldKey.fromString("Id/openProblems/problems");
         final FieldKey investKey = FieldKey.fromString("Id/activeAssignments/investigators");
-        final FieldKey vetsKey = FieldKey.fromString("Id/activeAssignments/vets");
+        //final FieldKey vetsKey = FieldKey.fromString("Id/activeAssignments/vets");
+        final FieldKey vetsKey = FieldKey.fromString("Id/assignedVet/AssignedVet");
         final FieldKey peKey = FieldKey.fromString("Id/physicalExamHistory/daysSinceExam");
 
         List<FieldKey> colKeys = new ArrayList<>();
@@ -206,7 +207,7 @@ public class WeightAlertsNotification extends AbstractEHRNotification
         filter.addCondition(FieldKey.fromString("IntervalInDays"), max, CompareType.LTE);
 
         Calendar date = Calendar.getInstance();
-        date.add(Calendar.DATE, -30);
+        date.add(Calendar.DATE, -100); /// change to last 100 days
         filter.addCondition(FieldKey.fromString("LatestWeightDate"), getDateFormat(c).format(date.getTime()), CompareType.DATE_GTE);
 
         TableSelector ts = new TableSelector(ti, columns.values(), filter, null);
