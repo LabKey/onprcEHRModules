@@ -714,13 +714,25 @@ exports.init = function(EHR){
                             hasUpdates = true;
                         }
                     }
-
-                    if (row.geographic_origin && row.geographic_origin != data.geographic_origin){
-                        obj.geographic_origin = row.geographic_origin;
+                    //Modified: 9-18-2025  Extract the geographic origin from demographic is if it exist. otherwise use dam information
+                    if (row.geographic_origin && row.geographic_origin != data.geographic_origin && data.geographic_origin != null ) {
+                        var geographic_ancentry = triggerHelper.retrieveGeographic_Origin(row.Id);
+                        if (geographic_ancentry) {
+                             obj.geographic_origin = geographic_ancentry;
+                         }
+                        else
+                        {
+                            obj.geographic_origin = row.geographic_origin;
+                        }
                         hasUpdates = true;
                     }
+                    else if (row.geographic_origin){
+                        obj.geographic_origin = row.geographic_origin;
+                        hasUpdates = true;
 
-                    if (row.dam && !obj.geographic_origin){
+                    }
+
+                   if (row.dam && !obj.geographic_origin){
                         var damOrigin = triggerHelper.getGeographicOriginForDam(row.dam);
                         if (damOrigin){
                             obj.geographic_origin = damOrigin;

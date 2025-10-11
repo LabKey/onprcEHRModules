@@ -368,6 +368,7 @@ public class ONPRC_EHRTriggerHelper
         Map<String, Object> toCreate = new CaseInsensitiveHashMap<>();
         toCreate.putAll(oldRow);
         toCreate.remove("lsid");
+        toCreate.remove("ParticipantSequenceNum");
 
         String originalObjectId = (String) toCreate.get("objectid");
         assert originalObjectId != null;
@@ -385,12 +386,17 @@ public class ONPRC_EHRTriggerHelper
         List<Map<String, Object>> createdRows = treatmentOrders.getUpdateService().insertRows(getUser(), getContainer(), Arrays.asList(toCreate), errors, null, getExtraContext());
 
         //also update records in drugs table
-        if (!createdRows.isEmpty())
+        if (createdRows != null && !createdRows.isEmpty())
         {
             TableInfo drugAdministration = getRealTable(getTableInfo("study", "Drug Administration"));
             SQLFragment sql = new SQLFragment("UPDATE " + drugAdministration.getSelectName() + " SET treatmentid = ? WHERE treatmentid = ?", newObjectId, originalObjectId);
             SqlExecutor se = new SqlExecutor(drugAdministration.getSchema().getScope());
             se.execute(sql);
+        }
+
+        if (errors.hasErrors())
+        {
+            throw errors;
         }
 
         return now;
@@ -2625,6 +2631,18 @@ public class ONPRC_EHRTriggerHelper
             TableInfo demographics = getTableInfo("study", "birth");
             demographics.getUpdateService().updateRows(_user, _container, toUpdate, oldKeys, null, getExtraContext());
         }
+    }
+
+
+
+    //Added 9-30-2025
+    public String retrieveGeographic_Origin(String Id)
+
+    {
+        TableInfo ti = getTableInfo("study", "geneticAncestry");
+        TableSelector ts = new TableSelector(ti, PageFlowUtil.set("result"), new SimpleFilter(FieldKey.fromString("Id"), Id), null);
+
+        return ts.getObject(String.class);
     }
 
     public void recalculateAllVetAssignmentRecords()
