@@ -54,6 +54,9 @@ import org.labkey.api.query.FilteredTable;
 import org.labkey.api.query.QueryService;
 import org.labkey.api.query.QueryUpdateServiceException;
 import org.labkey.api.query.UserSchema;
+import org.labkey.api.security.Group;
+import org.labkey.api.security.MemberType;
+import org.labkey.api.security.SecurityManager;
 import org.labkey.api.security.User;
 import org.labkey.api.security.UserManager;
 import org.labkey.api.security.UserPrincipal;
@@ -2631,6 +2634,42 @@ public class ONPRC_EHRTriggerHelper
             TableInfo demographics = getTableInfo("study", "birth");
             demographics.getUpdateService().updateRows(_user, _container, toUpdate, oldKeys, null, getExtraContext());
         }
+    }
+
+    public void sendRequestStateEmail(String id, String qualresult, String panic)
+    {
+
+            final TableInfo requestTable = getTableInfo("onpc_ehr", "ChemistryNotification");
+            SimpleFilter filter = new SimpleFilter(FieldKey.fromString("qualresult"), '%' + panic + '%', CompareType.IN);
+            TableSelector ts = new TableSelector(requestTable, filter, null);
+
+            ts.forEach(rs -> {
+                String testresults = rs.getString("qualResult");
+                Integer vetname = rs.getInt("vetname");
+                Integer servicename = rs.getInt("servicerequested");
+                Integer paneltest = rs.getInt("paneltestname");
+                boolean sendemail = rs.getObject("sendemail") == null ? false : rs.getBoolean("sendemail");
+                String title = rs.getString("title");
+                String formtype = rs.getString("formtype");
+
+                if (sendemail)
+                {
+
+//                    Set<UserPrincipal> recipients = vetname;
+//                    if (recipients.isEmpty())
+//                    {
+//                        _log.warn("No recipients, unable to send EHR trigger script email");
+//                        return;
+//                    }
+
+                    StringBuilder html = new StringBuilder();
+
+//                    html.append("One or more records from the request titled " + title + " have been marked " + label.toLowerCase() + ".  ");
+
+//                    sendMessage(subject, html.toString(), vetname);
+                }
+
+        });
     }
 
 
