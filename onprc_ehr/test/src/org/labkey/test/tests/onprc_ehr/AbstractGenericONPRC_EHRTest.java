@@ -80,6 +80,7 @@ public abstract class AbstractGenericONPRC_EHRTest extends AbstractGenericEHRTes
     protected static String[] ROOMS = {"Room1", "Room2", "Room3"};
     protected static String[] CAGES = {"A1", "B2", "A3"};
     protected static String[] CATEGORY = {"Divider Change", "Event", "STP_Beh"};
+    protected static String[] TINFANT = {"35160", "24456", "36451"};
 
     @Override
     public List<String> getAssociatedModules()

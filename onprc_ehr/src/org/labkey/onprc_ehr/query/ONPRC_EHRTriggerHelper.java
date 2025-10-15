@@ -2635,54 +2635,6 @@ public class ONPRC_EHRTriggerHelper
     }
 
 
-    public void updateBirthGeographics(String id, String geographic_origin) throws Exception
-    {
-        TableInfo ti = getTableInfo("study", "birth");
-        if (ti == null)
-        {
-            return;
-        }
-
-        Set<FieldKey> keys = new HashSet<>();
-        keys.add(FieldKey.fromString("Id"));
-        keys.add(FieldKey.fromString("geographic_origin"));
-        keys.add(FieldKey.fromString("lsid"));
-        final Map<FieldKey, ColumnInfo> colMap = QueryService.get().getColumns(ti, keys);
-
-
-        final List<Map<String, Object>> toUpdate = new ArrayList<>();
-        final List<Map<String, Object>> oldKeys = new ArrayList<>();
-        TableSelector ts = new TableSelector(ti, colMap.values(), new SimpleFilter(FieldKey.fromString("Id"), id, CompareType.IN), null);
-        ts.forEach(new Selector.ForEachBlock<>()
-        {
-            @Override
-            public void exec(ResultSet object) throws SQLException
-            {
-                ResultsImpl rs = new ResultsImpl(object, colMap);
-                String animalid = rs.getString(FieldKey.fromString("Id"));
-                String origin = rs.getString(FieldKey.fromString("geographic_origin"));
-                String lsid = rs.getString(FieldKey.fromString("lsid"));
-            if (origin != geographic_origin)
-            {
-                Map<String, Object> row = new CaseInsensitiveHashMap<>();
-                row.put("lsid", lsid);
-                row.put("geographic_origin", geographic_origin);
-                Map<String, Object> keyRow = new CaseInsensitiveHashMap<>();
-                keyRow.put("lsid", lsid);
-
-                oldKeys.add(keyRow);
-                toUpdate.add(row);
-
-            }
-            }
-        });
-
-        if (!toUpdate.isEmpty())
-        {
-            TableInfo demographics = getTableInfo("study", "birth");
-            demographics.getUpdateService().updateRows(_user, _container, toUpdate, oldKeys, null, getExtraContext());
-        }
-    }
 
     //Added 9-30-2025
     public String retrieveGeographic_Origin(String Id)
