@@ -58,7 +58,6 @@ EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Even
         EHR.Server.Utils.removeTimeFromDate(row, scriptErrors, 'projectedRelease');
     }
 
-    //remove the projected release date if a true enddate is added
 
 
     //check number of allowed animals at assign/approve time
