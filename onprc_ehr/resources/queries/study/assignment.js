@@ -59,9 +59,7 @@ EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Even
     }
 
     //remove the projected release date if a true enddate is added
-    if (row.enddate && row.projectedRelease){
-        row.projectedRelease = null;
-    }
+
 
     //check number of allowed animals at assign/approve time
     if (!helper.isETL() && !helper.isQuickValidation() && helper.doStandardProtocolCountValidation() &&
