@@ -11,6 +11,7 @@ import org.labkey.api.query.FieldKey;
 import org.labkey.api.query.QueryService;
 import org.labkey.api.security.User;
 
+import java.util.Calendar;
 import java.util.Date;
 
 
@@ -32,51 +33,70 @@ public class AvailableBloodVolumeNotification extends ColonyAlertsNotification
     {
         return "Available Blood Volume Alert: " + getDateTimeFormat(c).format(new Date());
     }
+
+    /* Mathematica push:
+     * Server mkt7: Runs at :55 from 4:55am to 7:55pm
+     * Server mkt8: Runs at :25 from 4:25am to 7:25pm
+     *
+     * ABV ETL:
+     * :05 and :35 after the hour for hours between 05:00 and 20:00
+     * 0 1,31 5-20 ? * * *
+     */
     @Override
     public String getCronString()
     {
-        return "0 30 7-18 * * ?";
+        return "0 15 6-19 * * ?";
     }
 
     @Override
     public String getScheduleDescription()
     {
-        return "every day at 30 minutes after the hour between 7:30AM and 6:30PM";
+        return "15 min past every hour from 06:15 to 19:15.";
     }
 
     @Override
     public String getDescription()
     {
-        return "The report is designed to send an alert if the hourly Available Blood Volume transfer fails.";
+        return "Sends status of available blood volume data from Mathematica.";
     }
 
     @Override
     public String getMessageBodyHTML(Container c, User u)
     {
         StringBuilder msg = new StringBuilder();
-
-        AvailableBloodCheck(c, u, msg);
-
+        availableBloodCheck(c, u, msg);
         return msg.toString();
     }
-    /* jonesga 5/8/2024 labkeyPublic.labkeyPublic.ValidateAvailableBloodProcess
-     */
-    protected void AvailableBloodCheck(final Container c, User u, final StringBuilder msg)
-    {
-        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("date"), new Date(), CompareType.DATE_GTE);
-        TableInfo ti = QueryService.get().getUserSchema(u, c, "onprc_ehr").getTable("ValidateAvailableBloodProcess", ContainerFilter.Type.AllFolders.create(c, u));
-//        ((ContainerFilterable) ti).setContainerFilter(ContainerFilter.Type.AllFolders.create(u);
-        TableSelector ts = new TableSelector(ti, null, null);
 
+    protected void availableBloodCheck(final Container c, User u, final StringBuilder msg)
+    {
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.HOUR, -1);
+        Date staleTime = cal.getTime();
+
+        TableInfo ti = QueryService.get().getUserSchema(u, c, "onprc_ehr").getTable("AvailableBloodVolume", ContainerFilter.Type.AllFolders.create(c, u));
+
+        if (ti == null)
+        {
+            msg.append("<b>ERROR: Unable to access onprc_ehr.AvailableBloodVolume table.</b><br>\n");
+            return;
+        }
+
+        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("datecreated"), staleTime, CompareType.LTE);
+        TableSelector ts = new TableSelector(ti, filter, null);
         long count = ts.getRowCount();
+
         if (count > 0)
         {
-            msg.append("<b>" + count + " Available Blood Data is Stale.</b><br>\n");
-            msg.append("<p><a href='" + getExecuteQueryUrl(c, "onprc_ehr", "ValidateAvailableBloodProcess", null) + "'>Click here to view them</a><br>\n\n");
-            msg.append("</p><br><hr>");
+            msg.append("<b>WARNING: The available blood volume data from Mathematica is stale (last updated more than 1 hour ago).</b><br>\n");
+            msg.append("<p>View <a href='").append(getExecuteQueryUrl(c, "onprc_ehr", "AvailableBloodVolume", null)).append("'>onprc_ehr.AvailableBloodVolume</a>.</p>\n");
+            msg.append("<br>");
         }
         else
         {
-            msg.append("<b>Excellent: Available Blood Volume is Current !</b><br><hr>");
+            msg.append("<b>OK:</b> The available blood volume data from Mathematica is current (updated within the last hour).<br>\n");
+            msg.append("<p>View <a href='").append(getExecuteQueryUrl(c, "onprc_ehr", "AvailableBloodVolume", null)).append("'>onprc_ehr.AvailableBloodVolume</a>.</p>\n");
+            msg.append("<br>");
         }
-    }}
+    }
+}
