@@ -50,14 +50,13 @@ function onInit(event, helper){
         helper.setProperty('assignmentsInTransaction', assignmentsInTransaction);
     });
 }
-EHR.Server.TriggerManager.unregisterAllHandlersForQueryNameAndEvent('study', 'assignment', EHR.Server.TriggerManager.Events.BEFORE_UPSERT);
+
 EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'assignment', function(helper, scriptErrors, row, oldRow){
     if (!helper.isETL()){
         //note: the the date field is handled above by removeTimeFromDate
         EHR.Server.Utils.removeTimeFromDate(row, scriptErrors, 'enddate');
         EHR.Server.Utils.removeTimeFromDate(row, scriptErrors, 'projectedRelease');
     }
-
 
 
     //check number of allowed animals at assign/approve time
