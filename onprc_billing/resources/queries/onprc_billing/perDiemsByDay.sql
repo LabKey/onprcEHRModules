@@ -61,10 +61,13 @@ SELECT
     count(*) as totalAssignmentRecords,
     group_concat(DISTINCT a2.project.displayName) as overlappingProjects,
     count(DISTINCT a2.project) as totalOverlappingProjects,
-    sum(CASE WHEN a2.project.use_Category = 'Research' THEN 1 ELSE 0 END) as totalOverlappingResearchProjects,
+        count(DISTINCT CASE
+        WHEN a2.project.use_Category = 'Research' AND a2.project != a.project
+        THEN a2.project
+    END) as totalOverlappingResearchProjects,
     group_concat(DISTINCT a2.project.use_category) as overlappingProjectsCategory,
     group_concat(DISTINCT a2.project.protocol) as overlappingProtocols,
-    count(h3.room) as totalHousingRecords,
+    count(DISTINCT h3.room) as totalHousingRecords,
     group_concat(DISTINCT h3.room) as rooms,
     group_concat(DISTINCT h3.cage) as cages,
     group_concat(DISTINCT h3.objectid) as housingRecords,
@@ -76,7 +79,7 @@ SELECT
     count(t1.code) AS bottleFedRecordCount,
     count(a3.project) AS researchRecordCount,
     count(CASE WHEN pdf.canChargeInfants = true THEN 1 ELSE null END) AS pdfChargeInfantCount,
-     max(pdf.chargeId) AS maxPdfChargeId,
+    max(pdf.chargeId) AS maxPdfChargeId,
     (SELECT count(*) AS c FROM study.flags q WHERE q.Id = i2.Id AND q.flag.value LIKE '%Quarantine%' AND q.dateOnly <= i2.dateOnly AND q.enddateCoalesced >= i2.dateOnly) AS quarantineFlagCount,
     max(i2.startDate) as startDate @hidden,
     count(tmb.Id) as tmbAssignments,
