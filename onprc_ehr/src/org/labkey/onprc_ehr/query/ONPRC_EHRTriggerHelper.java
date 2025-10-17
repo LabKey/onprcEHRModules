@@ -2636,43 +2636,67 @@ public class ONPRC_EHRTriggerHelper
         }
     }
 
-    public void sendRequestStateEmail(String id, String qualresult, String panic)
+    public void sendClinpatPanicEmail(String id, String objectid, Integer vetname)
     {
 
             final TableInfo requestTable = getTableInfo("onpc_ehr", "ChemistryNotification");
-            SimpleFilter filter = new SimpleFilter(FieldKey.fromString("qualresult"), '%' + panic + '%', CompareType.IN);
+            SimpleFilter filter = new SimpleFilter(FieldKey.fromString("objectid"), objectid, CompareType.IN);
             TableSelector ts = new TableSelector(requestTable, filter, null);
 
             ts.forEach(rs -> {
                 String testresults = rs.getString("qualResult");
-                Integer vetname = rs.getInt("vetname");
                 Integer servicename = rs.getInt("servicerequested");
-                Integer paneltest = rs.getInt("paneltestname");
-                boolean sendemail = rs.getObject("sendemail") == null ? false : rs.getBoolean("sendemail");
-                String title = rs.getString("title");
-                String formtype = rs.getString("formtype");
+                String paneltest = rs.getString("testid");
+                Date clndate = rs.getDate("date");
+                String subject = "Clinpath Chemistry Panic Values";
+                StringBuilder html = new StringBuilder();
 
-                if (sendemail)
-                {
 
-//                    Set<UserPrincipal> recipients = vetname;
-//                    if (recipients.isEmpty())
-//                    {
-//                        _log.warn("No recipients, unable to send EHR trigger script email");
-//                        return;
-//                    }
+                    Set<UserPrincipal> recipients = getRecipients(vetname);
+                    if (recipients.isEmpty())
+                    {
+                        _log.warn("No recipients, unable to send EHR trigger script email");
+                        return;
+                    }
 
-                    StringBuilder html = new StringBuilder();
 
-//                    html.append("One or more records from the request titled " + title + " have been marked " + label.toLowerCase() + ".  ");
+                    html.append("Chemistry Results with Panic values");
 
-//                    sendMessage(subject, html.toString(), vetname);
-                }
 
-        });
+                    sendMessage(subject, html.toString(), recipients);
+
+            });
+//        });
     }
 
+    private Set<UserPrincipal> getRecipients(Integer... userIds)
+    {
+        Set<UserPrincipal> recipients = new HashSet<>();
+        for (Integer userId : userIds)
+        {
+            if (userId > 0)
+            {
+                UserPrincipal up = SecurityManager.getPrincipal(userId);
+                if (up != null)
+                {
+                    if (up instanceof  User)
+                    {
+                        recipients.add(up);
+                    }
+                    else
+                    {
+                        for (UserPrincipal u : SecurityManager.getAllGroupMembers((Group)up, MemberType.ACTIVE_USERS))
+                        {
+                            if (u.isActive())
+                                recipients.add(u);
+                        }
+                    }
+                }
+            }
+        }
 
+        return recipients;
+    }
 
     //Added 9-30-2025
     public String retrieveGeographic_Origin(String Id)

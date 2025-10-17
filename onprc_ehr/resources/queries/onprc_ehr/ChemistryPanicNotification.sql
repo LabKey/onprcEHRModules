@@ -4,7 +4,8 @@ select a.Id,
        b.testid,
        b.qualResult,
        a.vet,
-       a.created
+       a.created,
+       b.objectid
 
 from study.ClinpathRuns a, study.chemistryResults b
 Where  a.objectid = b.runid
