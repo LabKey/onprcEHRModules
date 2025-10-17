@@ -112,8 +112,7 @@ import java.util.Collections;
 
 /**
  * User: jonesga
- * Date: 6/26/2018
- * Change of ONPRC Module Number
+ * Change of ONPRC Module Number 20250911
  */
 public class ONPRC_EHRModule extends ExtendedSimpleModule
 {
@@ -129,7 +128,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
     @Override
     public @Nullable Double getSchemaVersion()
     {
-        return 24.014;
+        return 25.001;
     }
 
     @Override

@@ -54,8 +54,9 @@ EHR.model.DataModelManager.registerMetadata('ASB_Services', {
                     schemaName: 'onprc_ehr',
                     queryName: 'ASB_SpecialInstructions',
                     displayColumn: 'value',
-                    // columns: 'value'
-                    keyColumn: 'value'
+                    keyColumn: 'value',
+                    filterArray: [
+                        LABKEY.Filter.create('dateDisabled', null, LABKEY.Filter.Types.ISBLANK)]
                 },
                 columnConfig: {
                     width: 300
