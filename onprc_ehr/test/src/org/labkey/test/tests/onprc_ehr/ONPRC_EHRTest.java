@@ -166,7 +166,7 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         String[][] CONDITION_FLAGS = new String[][]{
                 {"Nonrestricted", "201"},
                 {"Protocol Restricted", "202"},
-                {"Surgically Restricted", "203"}
+                {"Surgically Restricted", "204"}
         };
 
         final Map<String, String> flagMap = new HashMap<>();
@@ -241,7 +241,7 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
                 put("date", prepareDate(new Date(), -10, 0));
                 put("objectid", generateGUID());
                 put("assignCondition", 202); //Protocol Restricted
-                put("projectedReleaseCondition", 203); //Surgically Restricted
+                put("projectedReleaseCondition", 204); //Surgically Restricted
                 put("project", projectId);
             }
         });
@@ -277,7 +277,7 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
             {
                 put("lsid", assignmentLsid1);
                 put("enddate", prepareDate(new Date(), -5, 0));
-                put("releaseCondition", 203); //Surgically Restricted
+                put("releaseCondition", 204); //Surgically Restricted
             }
         });
         assignmentUpdateCommand.execute(getApiHelper().getConnection(), getContainerPath());
