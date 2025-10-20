@@ -92,6 +92,8 @@ Ext4.onReady(function(){
                 name: 'List of Unused Training Names',  url: ctx['SSRSServerURL'] +'%2fPrime+Reports%2fCompliance%2fCompliance_Unassigned_requirements&rs:Command=Render'
             },{
                 name:  'List of Duplicate Completion Dates',  url: ctx['SSRSServerURL'] +'%2fPrime+Reports%2fCompliance%2fCompliance_Duplicate_CompletedDates&rs:Command=Render'
+            },{
+                name:  'Category/Unit Comparison',  url:  '<%=contextPath%>' + container + '/query-executeQuery.view?schemaName=ehr_compliancedb&query.queryName=EmployeeList_Unit_Category'
             }]
         },{
 
