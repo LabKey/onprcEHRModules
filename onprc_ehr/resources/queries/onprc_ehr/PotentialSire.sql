@@ -6,6 +6,7 @@ ULTRA-OPTIMIZED LABKEY VERSION
 ✅ Avoids LabKey-incompatible functions
 ✅ Ready to run directly in LabKey Query Editor
 QUery Validated and ran in Dev Instance
+Reload  after bad Name
 */
 
 WITH RecentBirths AS (
