@@ -15,7 +15,6 @@
  */
 package org.labkey.onprc_billing.pipeline;
 
-import au.com.bytecode.opencsv.CSVWriter;
 import org.apache.commons.lang3.time.DateUtils;
 import org.jetbrains.annotations.NotNull;
 import org.labkey.api.collections.CaseInsensitiveHashMap;
@@ -28,7 +27,6 @@ import org.labkey.api.data.Results;
 import org.labkey.api.data.ResultsImpl;
 import org.labkey.api.data.RuntimeSQLException;
 import org.labkey.api.data.SQLFragment;
-import org.labkey.api.data.Selector;
 import org.labkey.api.data.SimpleFilter;
 import org.labkey.api.data.SqlSelector;
 import org.labkey.api.data.Table;
@@ -49,11 +47,6 @@ import org.labkey.api.util.FileType;
 import org.labkey.api.util.GUID;
 import org.labkey.onprc_billing.ONPRC_BillingSchema;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -105,11 +98,9 @@ public class BillingTask extends PipelineJob.Task<BillingTask.Factory>
         }
 
         @Override
-        public PipelineJob.Task createTask(PipelineJob job)
+        public BillingTask createTask(PipelineJob job)
         {
-            BillingTask task = new BillingTask(this, job);
-
-            return task;
+            return new BillingTask(this, job);
         }
 
         @Override
@@ -196,43 +187,6 @@ public class BillingTask extends PipelineJob.Task<BillingTask.Factory>
     private BillingPipelineJobSupport getSupport()
     {
         return (BillingPipelineJobSupport)getJob();
-    }
-
-    private void writeToTsv(String fileName, List<Map<String, Object>> rows, String[] headers, String[] colNames) throws PipelineJobException
-    {
-        File csvFile = new File(getSupport().getAnalysisDir(), fileName + ".txt");
-        if (csvFile.exists())
-            throw new PipelineJobException("There is already a file with path: " + csvFile.getPath());
-
-        try
-        {
-            csvFile.createNewFile();
-
-            try (CSVWriter csv = new CSVWriter(new FileWriter(csvFile), '\t'))
-            {
-                csv.writeNext(headers);
-
-                if (!rows.isEmpty())
-                {
-                    for (Map<String, Object> row : rows)
-                    {
-                        String[] toWrite = new String[colNames.length];
-                        int i = 0;
-                        for (String colName: colNames)
-                        {
-                            toWrite[i] = getString(row.get(colName));
-                            i++;
-                        }
-
-                        csv.writeNext(toWrite);
-                    }
-                }
-            }
-        }
-        catch (IOException e)
-        {
-            throw new PipelineJobException(e);
-        }
     }
 
     private String _invoiceId = null;
@@ -323,7 +277,7 @@ public class BillingTask extends PipelineJob.Task<BillingTask.Factory>
             TableInfo invoicedItems = ONPRC_BillingSchema.getInstance().getSchema().getTable(ONPRC_BillingSchema.TABLE_INVOICED_ITEMS);
             for (Map<String, Object> row : rows)
             {
-                CaseInsensitiveHashMap toInsert = new CaseInsensitiveHashMap();
+                CaseInsensitiveHashMap<Object> toInsert = new CaseInsensitiveHashMap<>();
                 toInsert.put("container", getJob().getContainer().getId());
                 toInsert.put("createdby", getJob().getUser().getUserId());
                 toInsert.put("created", new Date());
@@ -371,24 +325,6 @@ public class BillingTask extends PipelineJob.Task<BillingTask.Factory>
         {
             throw new PipelineJobException(e);
         }
-    }
-
-    private String getString(Object val)
-    {
-        if (val == null)
-        {
-            return "";
-        }
-        else if (val instanceof Date)
-        {
-            return _dateFormat.format(val);
-        }
-        else if (val instanceof Number)
-        {
-            return val.toString();
-        }
-
-        return val.toString();
     }
 
     private void leaseFeeProcessing(Container ehrContainer) throws PipelineJobException
@@ -467,19 +403,14 @@ public class BillingTask extends PipelineJob.Task<BillingTask.Factory>
         ts.setNamedParameters(params);
 
         final List<Map<String, Object>> rows = new ArrayList<>();
-        ts.forEach(new Selector.ForEachBlock<>()
-        {
-            @Override
-            public void exec(ResultSet object) throws SQLException
+        ts.forEach(object -> {
+            Results rs = new ResultsImpl(object, colKeys);
+            Map<String, Object> ret = new HashMap<>();
+            for (FieldKey fk : colKeys.keySet())
             {
-                Results rs = new ResultsImpl(object, colKeys);
-                Map<String, Object> ret = new HashMap<>();
-                for (FieldKey fk : colKeys.keySet())
-                {
-                    ret.put(fk.toString(), rs.getObject(fk));
-                }
-                rows.add(ret);
+                ret.put(fk.toString(), rs.getObject(fk));
             }
+            rows.add(ret);
         });
 
         return rows;
