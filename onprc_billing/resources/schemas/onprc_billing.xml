@@ -1153,11 +1153,11 @@
             </column>
             <column columnName="grantNumber">
                 <columnTitle>OGA Grant Number</columnTitle>
-               
+
             </column>
             <column columnName="agencyAwardNumber">
                 <columnTitle>Agency Award Number</columnTitle>
-               
+
             </column>
             <column columnName="investigatorId">
                 <columnTitle>Investigator</columnTitle>

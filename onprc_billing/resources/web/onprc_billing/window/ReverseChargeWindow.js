@@ -7,6 +7,7 @@
  * Modified [Your Name] September 29, 2025
  * **Added transaction number links to the header for easy reference to invoiced items
  * **Optimized link generation to prevent script timeout on large datasets
+ * Updated By Raymond to add Transacation Number to fields
  */
 Ext4.define('ONPRC_Billing.window.ReverseChargeWindow', {
     extend: 'Ext.window.Window',

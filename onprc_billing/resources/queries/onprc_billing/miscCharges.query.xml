@@ -16,7 +16,7 @@
                             <fkDbSchema>core</fkDbSchema>
                             <fkTable>qcstate</fkTable>
                             <fkColumnName>rowid</fkColumnName>
-                        </fk>                        
+                        </fk>
                     </column>
                     <column columnName="chargetype">
                         <columnTitle>Charge Unit</columnTitle>
