@@ -282,6 +282,14 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         });
         assignmentUpdateCommand.execute(getApiHelper().getConnection(), getContainerPath());
 
+        //make sure other flag terminated on correct date
+        SelectRowsCommand conditionSelect3 = new SelectRowsCommand("study", "flags");
+        conditionSelect3.addFilter(new Filter("Id", SUBJECTS[1]));
+        conditionSelect3.addFilter(new Filter("flag", flagMap.get("Protocol Restricted")));
+        conditionSelect3.addFilter(new Filter("enddate", prepareDate(new Date(), -5, 0), Filter.Operator.DATE_EQUAL));
+        SelectRowsResponse conditionResponse3 = conditionSelect3.execute(getApiHelper().getConnection(), getContainerPath());
+        assertEquals(1, conditionResponse3.getRowCount().intValue());
+
         SelectRowsCommand conditionSelect2 = new SelectRowsCommand("study", "flags");
         conditionSelect2.addFilter(new Filter("Id", SUBJECTS[1]));
         conditionSelect2.addFilter(new Filter("flag/category", "Condition"));
@@ -290,13 +298,6 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         assertEquals(1, conditionResponse2.getRowCount().intValue());
         assertEquals("Surgically Restricted", conditionResponse2.getRows().get(0).get("flag/value"));
 
-        //make sure other flag terminated on correct date
-        SelectRowsCommand conditionSelect3 = new SelectRowsCommand("study", "flags");
-        conditionSelect3.addFilter(new Filter("Id", SUBJECTS[1]));
-        conditionSelect3.addFilter(new Filter("flag", flagMap.get("Protocol Restricted")));
-        conditionSelect3.addFilter(new Filter("enddate", prepareDate(new Date(), -5, 0), Filter.Operator.DATE_EQUAL));
-        SelectRowsResponse conditionResponse3 = conditionSelect3.execute(getApiHelper().getConnection(), getContainerPath());
-        assertEquals(1, conditionResponse3.getRowCount().intValue());
 
         //setting of enddatefinalized, datefinalized
         SelectRowsCommand assignmentSelect2 = new SelectRowsCommand("study", "assignment");
