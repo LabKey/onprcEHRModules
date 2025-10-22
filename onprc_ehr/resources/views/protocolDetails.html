@@ -173,7 +173,7 @@ Ext4.onReady(function (){
     LDK.Utils.getReadOnlyQWP({
         title: 'Direct Connect to eIACUC Site',
         schemaName: 'onprc_ehr',
-        queryName: 'eIACUC2Data2',
+        queryName: 'eIACUC2Data',
         columns: 'Protocol_ID, BaseProtocol, RevisionNumber, Protocol_Title, PI_Last_Name, Protocol_State',
         filters: [LABKEY.Filter.create('protocol', protocol, LABKEY.Filter.Types.EQUAL)],
         sort: '-approval_date',
