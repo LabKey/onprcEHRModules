@@ -568,35 +568,6 @@ exports.init = function(EHR){
         }
     });
 
-    //     Added 10-17-2025  R. Blasa
-    EHR.Server.TriggerManager.unregisterAllHandlersForQueryNameAndEvent('study', 'assignment', EHR.Server.TriggerManager.Events.BEFORE_UPSERT);
-    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'assignment', function(helper, scriptErrors, row, oldRow){
-        if (!helper.isETL()){
-            //note: the the date field is handled above by removeTimeFromDate
-            EHR.Server.Utils.removeTimeFromDate(row, scriptErrors, 'enddate');
-            EHR.Server.Utils.removeTimeFromDate(row, scriptErrors, 'projectedRelease');
-        }
-
-
-        //check number of allowed animals at assign/approve time
-        if (!helper.isETL() && !helper.isQuickValidation() && helper.doStandardProtocolCountValidation() &&
-                //this is designed to always perform the check on imports, but also updates where the Id was changed
-                !(oldRow && oldRow.Id && oldRow.Id==row.Id) &&
-                row.Id && row.project && row.date
-        ){
-            var assignmentsInTransaction = helper.getProperty('assignmentsInTransaction');
-            assignmentsInTransaction = assignmentsInTransaction || [];
-
-            var msgs = helper.getJavaHelper().verifyProtocolCounts(row.Id, row.project, assignmentsInTransaction);
-            if (msgs){
-                msgs = msgs.split("<>");
-                for (var i=0;i<msgs.length;i++){
-                    EHR.Server.Utils.addError(scriptErrors, 'project', msgs[i], 'WARN');
-                }
-            }
-        }
-    });
-
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'assignment', function(helper, scriptErrors, row, oldRow){
         // note: if this is automatically generated from death/departure, allow an incomplete record
         // alerts will flag these
@@ -1336,7 +1307,6 @@ exports.init = function(EHR){
                 }
             }
         });
-
 
         //Added 10-5-2022  R.Blasa
         EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'matings', function (helper, scriptErrors, row, oldRow) {
