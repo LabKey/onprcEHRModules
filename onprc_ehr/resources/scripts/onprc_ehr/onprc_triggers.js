@@ -568,7 +568,40 @@ exports.init = function(EHR){
         }
     });
 
+    //unregister the default EHR validation code
+    EHR.Server.TriggerManager.unregisterHandlerForQueryNameAndEvent('study', 'assignment', EHR.Server.TriggerManager.Events.BEFORE_UPSERT);
+    //register the new validation code
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'assignment', function(helper, scriptErrors, row, oldRow){
+        // re-add the desired validation code from assignment.js, omitting the code that removes projected release date
+        if (!helper.isETL()){
+            //note: the the date field is handled above by removeTimeFromDate
+            EHR.Server.Utils.removeTimeFromDate(row, scriptErrors, 'enddate');
+            EHR.Server.Utils.removeTimeFromDate(row, scriptErrors, 'projectedRelease');
+        }
+
+        //remove the projected release date if a true enddate is added
+        //if (row.enddate && row.projectedRelease){
+        //    row.projectedRelease = null;
+        //}
+
+        //check number of allowed animals at assign/approve time
+        if (!helper.isETL() && !helper.isQuickValidation() && helper.doStandardProtocolCountValidation() &&
+                //this is designed to always perform the check on imports, but also updates where the Id was changed
+                !(oldRow && oldRow.Id && oldRow.Id==row.Id) &&
+                row.Id && row.project && row.date
+        ){
+            var assignmentsInTransaction = helper.getProperty('assignmentsInTransaction');
+            assignmentsInTransaction = assignmentsInTransaction || [];
+
+            var msgs = helper.getJavaHelper().verifyProtocolCounts(row.Id, row.project, assignmentsInTransaction);
+            if (msgs){
+                msgs = msgs.split("<>");
+                for (var i=0;i<msgs.length;i++){
+                    EHR.Server.Utils.addError(scriptErrors, 'project', msgs[i], 'WARN');
+                }
+            }
+        }
+
         // note: if this is automatically generated from death/departure, allow an incomplete record
         // alerts will flag these
         if (row.enddate && !row.releaseCondition && !helper.isGeneratedByServer()){
