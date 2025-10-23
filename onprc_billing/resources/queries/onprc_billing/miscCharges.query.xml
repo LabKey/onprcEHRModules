@@ -27,8 +27,8 @@
                             <fkDisplayColumnName useRawValue="true"/>
                         </fk>
                     </column>
-                    <column columnName="sourceInvoicedItem">
-                        <columnTitle>Source Transaction</columnTitle>
+                    <!--This was to allow transcationNumber to Appeer-->
+                    <column columnName="sourceInvoicedItem"><columnTitle>Source Transaction</columnTitle>
                         <isHidden>false</isHidden>
                         <fk>
                             <fkFolderPath>/ONPRC/Admin/Finance</fkFolderPath>
