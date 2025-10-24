@@ -6,19 +6,19 @@ This query runs daily at 6:30Pm to capture the snapshot of the cage inventory
 -->
 
 <etl xmlns="http://labkey.org/etl/xml">
-    <name>RunCageUtilizationSnapshot</name>
+    <name>CageAuditLog</name>
     <description>Executes onprc_ehr.p_CageAuditHistoryProcess daily (no load)</description>
     <transforms>
         <!-- Calls a DB stored procedure that simply executes the query -->
-        <transform id="RunSnapshot" type="StoredProcedure">
+        <transform id="RunCageAuditLog" type="StoredProcedure">
             <description>Run CageUtilizationSnapshot</description>
             <procedure schemaName="onprc_ehr" procedureName="p_CageAuditHistoryProcess" useTransaction="false"/>
         </transform>
     </transforms>
 
     <schedule>
-        <!--Runs daily 6:30pm-->
-        <cron expression="0 30 18 * * ?"/>
+        <!--Runs daily 8:30pm-->
+        <cron expression="0 30 20 * * ?"/>
     </schedule>
 
 </etl>
