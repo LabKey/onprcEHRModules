@@ -166,7 +166,7 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         String[][] CONDITION_FLAGS = new String[][]{
                 {"Nonrestricted", "201"},
                 {"Protocol Restricted", "202"},
-                {"Surgically Restricted", "204"}
+                {"Surgically Restricted", "203"}
         };
 
         final Map<String, String> flagMap = new HashMap<>();
@@ -241,7 +241,7 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
                 put("date", prepareDate(new Date(), -10, 0));
                 put("objectid", generateGUID());
                 put("assignCondition", 202); //Protocol Restricted
-                put("projectedReleaseCondition", 204); //Surgically Restricted
+                put("projectedReleaseCondition", 203); //Surgically Restricted
                 put("project", projectId);
             }
         });
@@ -277,17 +277,14 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
             {
                 put("lsid", assignmentLsid1);
                 put("enddate", prepareDate(new Date(), -5, 0));
-                put("releaseCondition", 204); //Surgically Restricted
+                put("releaseCondition", 203); //Surgically Restricted
             }
         });
         assignmentUpdateCommand.execute(getApiHelper().getConnection(), getContainerPath());
 
-
-
         SelectRowsCommand conditionSelect2 = new SelectRowsCommand("study", "flags");
         conditionSelect2.addFilter(new Filter("Id", SUBJECTS[1]));
         conditionSelect2.addFilter(new Filter("flag/category", "Condition"));
-        conditionSelect2.addFilter(new Filter("flag/value", flagMap.get("Surgically Restricted")));
         conditionSelect2.addFilter(new Filter("isActive", true));
         SelectRowsResponse conditionResponse2 = conditionSelect2.execute(getApiHelper().getConnection(), getContainerPath());
         assertEquals(1, conditionResponse2.getRowCount().intValue());
@@ -296,11 +293,10 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         //make sure other flag terminated on correct date
         SelectRowsCommand conditionSelect3 = new SelectRowsCommand("study", "flags");
         conditionSelect3.addFilter(new Filter("Id", SUBJECTS[1]));
-        conditionSelect3.addFilter(new Filter("flag/value", flagMap.get("Protocol Restricted")));
+        conditionSelect3.addFilter(new Filter("flag", flagMap.get("Protocol Restricted")));
         conditionSelect3.addFilter(new Filter("enddate", prepareDate(new Date(), -5, 0), Filter.Operator.DATE_EQUAL));
         SelectRowsResponse conditionResponse3 = conditionSelect3.execute(getApiHelper().getConnection(), getContainerPath());
         assertEquals(1, conditionResponse3.getRowCount().intValue());
-
 
         //setting of enddatefinalized, datefinalized
         SelectRowsCommand assignmentSelect2 = new SelectRowsCommand("study", "assignment");
