@@ -572,7 +572,7 @@ exports.init = function(EHR){
     EHR.Server.TriggerManager.unregisterHandlerForQueryNameAndEvent('study', 'assignment', EHR.Server.TriggerManager.Events.BEFORE_UPSERT);
     //register the new validation code
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'assignment', function(helper, scriptErrors, row, oldRow){
-        // re-add the desired validation code from assignment.js, omitting the code that removes projected release date
+        // re-add the desired validation code from ehr core's assignment.js, omitting the code that removes projectedRelease
         if (!helper.isETL()){
             //note: the the date field is handled above by removeTimeFromDate
             EHR.Server.Utils.removeTimeFromDate(row, scriptErrors, 'enddate');
@@ -601,6 +601,7 @@ exports.init = function(EHR){
                 }
             }
         }
+        // end of validation code from ehr core's assignment.js
 
         // note: if this is automatically generated from death/departure, allow an incomplete record
         // alerts will flag these
