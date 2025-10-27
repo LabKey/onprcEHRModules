@@ -41,7 +41,7 @@ FROM ehr_lookups.rooms r
                        AND h.date <= p.SnapDate
                        AND (h.enddate IS NULL OR h.enddate > p.SnapDate)
 
-         LEFT JOIN ehr_lookups.availableCagesByRoom cbr
+         LEFT JOIN ehr_lookups.availableCagesByRoomByDate cbr
                    ON cbr.room = r.room
 WHERE r.datedisabled IS NULL
 GROUP BY r.room, p.SnapDate

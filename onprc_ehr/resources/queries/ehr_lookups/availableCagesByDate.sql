@@ -17,7 +17,7 @@ SELECT
         WHEN c.cage_type = 'No Cage' THEN FALSE
         WHEN COALESCE(lc.divider.countAsSeparate, TRUE) = FALSE THEN FALSE
         ELSE TRUE
-        END AS isAvailableStructure,
+        END AS isAvailable,
     CASE WHEN c.status IS NOT NULL AND c.status = 'Unavailable' THEN 1 ELSE 0 END AS isMarkedUnavailable,
     -- Example: occupancy "as of" SnapshotDate from study.housing
     CASE WHEN h.Id IS NOT NULL THEN 1 ELSE 0 END AS isOccupiedAsOf,
