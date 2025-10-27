@@ -61,13 +61,10 @@ FROM (
         count(*) AS totalAssignmentRecords,
         group_concat(DISTINCT a2.project.displayName) AS overlappingProjects,
         count(DISTINCT a2.project) AS totalOverlappingProjects,
-        count(DISTINCT CASE
-            WHEN a2.project.use_Category = 'Research' AND a2.project != a.project
-                THEN a2.project
-            END) AS totalOverlappingResearchProjects,
+        sum(CASE WHEN a2.project.use_Category = 'Research' THEN 1 ELSE 0 END) as totalOverlappingResearchProjects,
         group_concat(DISTINCT a2.project.use_category) AS overlappingProjectsCategory,
         group_concat(DISTINCT a2.project.protocol) AS overlappingProtocols,
-        count(DISTINCT h3.room) AS totalHousingRecords,
+        count(h3.room) AS totalHousingRecords,
         group_concat(DISTINCT h3.room) AS rooms,
         group_concat(DISTINCT h3.cage) AS cages,
         group_concat(DISTINCT h3.objectid) AS housingRecords,
@@ -76,8 +73,8 @@ FROM (
         group_concat(DISTINCT h3.room.housingType.value) AS housingTypes,
         max(timestampdiff('SQL_TSI_DAY', d.birth, i2.dateOnly)) AS perDiemAge,
         count(DISTINCT pdf.chargeId) AS perDiemFeeCount,
-        count(t1.code) AS bottleFedRecordCount,
-        count(a3.project) AS researchRecordCount,
+        i2.researchRecordCount,
+        i2.bottleFedRecordCount,
         count(CASE WHEN pdf.canChargeInfants = TRUE THEN 1 ELSE NULL END) AS pdfChargeInfantCount,
         max(pdf.chargeId) AS maxPdfChargeId,
         (SELECT count(*) AS c
@@ -95,19 +92,19 @@ FROM (
             h.Id,
             i.dateOnly,
             max(h.date) AS lastHousingStart,
-            min(i.startDate) AS startDate @hidden
+            min(i.startDate) AS startDate @hidden,
+            count(a3.project) as researchRecordCount,
+            count(t1.code) as bottleFedRecordCount
         FROM ldk.dateRange i
         JOIN study.housing h ON (h.dateOnly <= i.dateOnly AND h.enddateCoalesced >= i.dateOnly AND h.qcstate.publicdata = TRUE)
+        LEFT JOIN study.assignment a3 ON a3.id = h.id AND a3.date <= i.dateOnly AND a3.endDateCoalesced > i.dateOnly AND a3.project.Use_Category LIKE '%Research%'
+        LEFT JOIN study.treatment_Order t1 ON t1.id = h.id AND t1.code.meaning LIKE '%Bottle%' AND t1.date <= i.dateOnly
         GROUP BY h.Id, i.dateOnly
     ) i2
 
     JOIN study.demographics d ON (
         i2.Id = d.Id
     )
-
-    LEFT JOIN study.treatment_Order t1 ON t1.id = i2.id AND t1.code.meaning LIKE '%Bottle%' AND t1.date <=i2.dateOnly
-
-    LEFT JOIN study.assignment a3 ON a3.id = i2.id AND a3.date <= i2.dateOnly AND a3.endDateCoalesced > i2.dateOnly AND a3.project.Use_Category LIKE '%Research%'
 
     -- Housing is a little tricky.  Using the query above, we want to find the max start date, on or before this day.
     -- The housingType from this location is used.
@@ -187,6 +184,6 @@ FROM (
         ) = pdf.tier
     )
 
-    GROUP BY i2.dateOnly, I2.Id, a.project, a.project.use_Category
+    GROUP BY i2.dateOnly, I2.Id, a.project, a.project.use_Category, i2.researchRecordCount, i2.bottleFedRecordCount
 
 ) t
