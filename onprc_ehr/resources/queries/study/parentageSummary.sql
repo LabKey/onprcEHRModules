@@ -1,48 +1,62 @@
-/*
- * Copyright (c) 2013-2017 LabKey Corporation
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 SELECT
-  p.Id,
-  p.date,
-  p.parent,
-  p.relationship,
-  p.method
+    p.Id,
+    p.date,
+    Case when p.parent is not null then p.parent
+         when t.dam is not null then t.dam
+         when t2.sire is not null then t2.sire
+        end as parent,
+    case when p.parent is not null then  p.relationship
+         when t.dam is not null then 'dam'
+         when t2.sire is not null then 'sire'
+        end as relationship,
+    case when p.parent is not null then p.method
+         when t.dam is not null then 'observed'
+         when t2.sire is not null then 'observed'
+        end as method
 
-FROM study.parentage p
-WHERE p.qcstate.publicdata = true and p.enddateCoalesced <= now()
+FROM (
 
-UNION ALL
+         select
+             p.Id,
+             p.date,
+             p.parent,
+             p.relationship,
+             p.method
 
-SELECT
-  b.Id,
+         from study.parentage p
+         WHERE (p.qcstate.publicdata = true and p.enddateCoalesced <= now() )
+
+             LEFT JOIN
+   
+  ( select 
+   b.Id,
   b.date,
   b.dam,
   'Dam' as relationship,
   'Observed' as method
 
-FROM study.birth b
-WHERE b.dam is not null and b.qcstate.publicdata = true
 
-UNION ALL
+  from study.birth b
+ where  b.dam is not null and b.qcstate.publicdata = true
 
-SELECT
-    b.Id,
-    b.date,
-    b.sire,
-    'Sire' as relationship,
-    'Observed' as method
+) t on (p.Id = t.Id )
 
-FROM study.birth b
-WHERE b.sire is not null and b.qcstate.publicdata = true
+             LEFT JOIN
+
+             (  SELECT
+             a.Id,
+             a.date,
+             a.sire,
+             'Sire' as relationship,
+             'Observed' as method
+
+             FROM study.birth a
+             where  a.sire is not null and a.qcstate.publicdata = true
+
+             )  t2 on ( p.Id = t2.Id )
+
+         ------ where  p.id = '43187'
+
+
+         group by p.Id
+
