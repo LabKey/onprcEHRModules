@@ -61,7 +61,7 @@ from study.demographics d
 
      )t2 on (t2.Id =d.Id)
 
-WHERE d.calculated_status = 'Alive'
+
 
 
 
