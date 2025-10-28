@@ -2004,7 +2004,7 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         // Identify two notifications by extracting their keys from the Run Report links
         beginAt(WebTestHelper.getBaseURL() + "/ldk/" + getContainerPath() + "/notificationAdmin.view");
         List<WebElement> runLinks = Locator.tagContainingText("a", "Run Report In Browser").findElements(getDriver());
-        Assert.assertTrue("Expected at least two notifications to be available", runLinks.size() >= 2);
+        waitFor(() -> runLinks.size() >= 2, "Expected at least two notifications to be available", WAIT_FOR_PAGE);
 
         List<String> notifKeys = new ArrayList<>();
         for (int i = 0; i < Math.min(2, runLinks.size()); i++)
