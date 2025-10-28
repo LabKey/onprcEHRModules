@@ -15,9 +15,7 @@ SELECT
         end as method
 
 from study.demographics d
-
-         LEFT JOIN
-
+ LEFT JOIN
      (select
           p.Id,
           p.date,
@@ -26,13 +24,9 @@ from study.demographics d
           p.method
 
       from study.parentage p
-
       WHERE p.qcstate.publicdata = true and p.enddateCoalesced <= now()
-
-     )k on (d.Id = k.Id)
-
-         LEFT JOIN
-
+     ) k on (d.Id = k.Id)
+LEFT JOIN
      ( select
            b.Id,
            b.date,
@@ -40,15 +34,10 @@ from study.demographics d
            'Dam' as relationship,
            'Observed' as method
 
-
        from study.birth b
        where  b.dam is not null and b.qcstate.publicdata = true
-
-
-     )t on (t.Id = d.Id)
-
-         LEFT JOIN
-
+     ) t on (t.Id = d.Id)
+ LEFT JOIN
      (  SELECT
             a.Id,
             a.date,
@@ -58,8 +47,7 @@ from study.demographics d
 
         FROM study.birth a
         where  a.sire is not null and a.qcstate.publicdata = true
-
-     )t2 on (t2.Id =d.Id)
+     ) t2 on (t2.Id =d.Id)
 
 
 
