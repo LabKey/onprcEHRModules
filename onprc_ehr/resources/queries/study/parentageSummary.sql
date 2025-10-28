@@ -50,6 +50,6 @@ from study.parentage p
 
      )t2 on (t2.Id =p.Id)
 
-
+WHERE p.qcstate.publicdata = true and p.enddateCoalesced <= now()
 
 
