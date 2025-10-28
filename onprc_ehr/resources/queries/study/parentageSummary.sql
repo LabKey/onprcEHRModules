@@ -14,49 +14,42 @@ SELECT
          when t2.sire is not null then 'observed'
         end as method
 
-FROM (
-
-         select
-             p.Id,
-             p.date,
-             p.parent,
-             p.relationship,
-             p.method
-
-         from study.parentage p
-         WHERE (p.qcstate.publicdata = true and p.enddateCoalesced <= now() )
-
-             LEFT JOIN
-   
-  ( select 
-   b.Id,
-  b.date,
-  b.dam,
-  'Dam' as relationship,
-  'Observed' as method
 
 
-  from study.birth b
- where  b.dam is not null and b.qcstate.publicdata = true
-
-) t on (p.Id = t.Id )
-
-             LEFT JOIN
-
-             (  SELECT
-             a.Id,
-             a.date,
-             a.sire,
-             'Sire' as relationship,
-             'Observed' as method
-
-             FROM study.birth a
-             where  a.sire is not null and a.qcstate.publicdata = true
-
-             )  t2 on ( p.Id = t2.Id )
-
-         ------ where  p.id = '43187'
+from study.parentage p
 
 
-         group by p.Id
+         LEFT JOIN
+
+     ( select
+           b.Id,
+           b.date,
+           b.dam,
+           'Dam' as relationship,
+           'Observed' as method
+
+
+       from study.birth b
+       where  b.dam is not null and b.qcstate.publicdata = true
+
+
+     )t on (t.Id = p.Id)
+
+         LEFT JOIN
+
+     (  SELECT
+            a.Id,
+            a.date,
+            a.sire,
+            'Sire' as relationship,
+            'Observed' as method
+
+        FROM study.birth a
+        where  a.sire is not null and a.qcstate.publicdata = true
+
+
+     )t2 on (t2.Id =p.Id)
+
+
+
 
