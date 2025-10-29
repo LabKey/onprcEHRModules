@@ -1,55 +1,49 @@
+/*
+ * Copyright (c) 2013-2016 LabKey Corporation
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 SELECT
-    d.Id,
-    d.date,
-    Case when k.parent is not null then k.parent
-         when t.dam is not null then t.dam
-         when t2.sire is not null then t2.sire
-        end as parent,
-    case when k.parent is not null then  k.relationship
-         when t.dam is not null then 'dam'
-         when t2.sire is not null then 'sire'
-        end as relationship,
-    case when k.parent is not null then k.method
-         when t.dam is not null then 'observed'
-         when t2.sire is not null then 'observed'
-        end as method
+  p.Id,
+  p.date,
+  p.parent,
+  p.relationship,
+  p.method
 
-from study.demographics d
- LEFT JOIN
-     (select
-          p.Id,
-          p.date,
-          p.parent,
-          p.relationship,
-          p.method
+FROM study.parentage p
+WHERE p.qcstate.publicdata = true and p.enddateCoalesced <= now()
 
-      from study.parentage p
-      WHERE p.qcstate.publicdata = true and p.enddateCoalesced <= now()
-     ) k on (d.Id = k.Id)
-LEFT JOIN
-     ( select
-           b.Id,
-           b.date,
-           b.dam,
-           'Dam' as relationship,
-           'Observed' as method
+UNION
 
-       from study.birth b
-       where  b.dam is not null and b.qcstate.publicdata = true
-     ) t on (t.Id = d.Id)
- LEFT JOIN
-     (  SELECT
-            a.Id,
-            a.date,
-            a.sire,
-            'Sire' as relationship,
-            'Observed' as method
+SELECT
+  b.Id,
+  b.date,
+  b.dam,
+  'Dam' as relationship,
+  'Observed' as method
 
-        FROM study.birth a
-        where  a.sire is not null and a.qcstate.publicdata = true
-     ) t2 on (t2.Id =d.Id)
+FROM study.birth b
+WHERE b.dam is not null and b.qcstate.publicdata = true
+---And b.dam not in (select k.parent from study.parentage k where k.Id = b.Id and k.relationship = 'dam')
+UNION
 
+SELECT
+    a.Id,
+    a.date,
+    a.sire,
+    'Sire' as relationship,
+    'Observed' as method
 
-
-
-
+FROM study.birth a
+WHERE a.sire is not null and a.qcstate.publicdata = true
+ --- And a.sire not in (select k.parent from study.parentage k where k.Id = a.Id and k.relationship = 'sire')
