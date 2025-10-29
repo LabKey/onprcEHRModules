@@ -2,7 +2,7 @@
 <!--
 Created by: Kollil, 10/16/2025
 Created a new ETL process for the cage audit log data.
-This query runs daily at 6:30Pm to capture the snapshot of the cage inventory
+This query runs daily at 8:30Pm to capture the snapshot of the cage inventory
 -->
 
 <etl xmlns="http://labkey.org/etl/xml">
@@ -11,7 +11,7 @@ This query runs daily at 6:30Pm to capture the snapshot of the cage inventory
     <transforms>
         <!-- Calls a DB stored procedure that simply executes the query -->
         <transform id="RunCageAuditLog" type="StoredProcedure">
-            <description>Run CageUtilizationSnapshot</description>
+            <description>Run stored proc p_CageAuditHistoryProcess</description>
             <procedure schemaName="onprc_ehr" procedureName="p_CageAuditHistoryProcess" useTransaction="false"/>
         </transform>
     </transforms>
