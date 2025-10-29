@@ -110,10 +110,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 
-/**
- * User: jonesga
- * Change of ONPRC Module Number 20250911
- */
 public class ONPRC_EHRModule extends ExtendedSimpleModule
 {
     public static final String NAME = "ONPRC_EHR";
@@ -128,7 +124,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
     @Override
     public @Nullable Double getSchemaVersion()
     {
-        return 25.001;
+        return 25.002;
     }
 
     @Override
