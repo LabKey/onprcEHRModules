@@ -21,7 +21,7 @@ SELECT
   p.method
 
 FROM study.parentage p
-WHERE p.qcstate.publicdata = true and p.enddateCoalesced <= now()
+WHERE p.qcstate.publicdata = true and p.enddate is null
 
 UNION
 
@@ -34,7 +34,7 @@ SELECT
 
 FROM study.birth b
 WHERE b.dam is not null and b.qcstate.publicdata = true
----And b.dam not in (select k.parent from study.parentage k where k.Id = b.Id and k.relationship = 'dam')
+And b.dam not in (select k.parent from study.parentage k where k.Id = b.Id and k.relationship = 'dam' and k.enddate is null)
 UNION
 
 SELECT
@@ -46,4 +46,4 @@ SELECT
 
 FROM study.birth a
 WHERE a.sire is not null and a.qcstate.publicdata = true
- --- And a.sire not in (select k.parent from study.parentage k where k.Id = a.Id and k.relationship = 'sire')
+ And a.sire not in (select k.parent from study.parentage k where k.Id = a.Id and k.relationship = 'sire'and k.enddate is null)
