@@ -2334,6 +2334,33 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
     }
 
     /**
+     *  Created by Kollil, 10/25
+     *  Get a list of tasks daily on a rolling 7 day window to review for QC.
+     *  This will allow techs to see what new IDs were created by whom, and review for accuracy,
+     *  housing history, group ids and flags.
+     *  Refer tkt # 13504
+     */
+    protected void newBirthTasks(Container c, User u, final StringBuilder msg)
+    {
+        if (QueryService.get().getUserSchema(u, c, "onprc_ehr") == null) {
+            msg.append("<b>Warning: The onprc_ehr schema has not been enabled in this folder, so the alert cannot run!<p><hr>");
+            return;
+        }
+
+        //Get birth tasks
+        TableInfo ti = QueryService.get().getUserSchema(u, c, "onprc_ehr").getTable("NewBirthTasks", ContainerFilter.Type.AllFolders.create(c, u));
+        TableSelector ts = new TableSelector(ti);
+        long count = ts.getRowCount();
+
+        if (count > 0)
+        {
+            msg.append("<b>WARNING: There are " + count + " new birth(s) found in last 7 days.</b><br>");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "onprc_ehr", "NewBirthTasks", null) + "'>Click here to view them</a><br>\n");
+            msg.append("<hr>\n");
+        }
+    }
+
+    /**
      *  Created by Kollil, 9/6/23
      *  Get the new animals found with the flag, "NHPR NOTE: BCG Vaccinated".
      */
