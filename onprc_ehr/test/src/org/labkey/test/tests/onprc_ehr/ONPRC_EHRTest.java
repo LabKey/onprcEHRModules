@@ -43,6 +43,7 @@ import org.labkey.test.categories.ONPRC;
 import org.labkey.test.components.BodyWebPart;
 import org.labkey.test.pages.ehr.AnimalHistoryPage;
 import org.labkey.test.pages.ehr.EnterDataPage;
+import org.labkey.test.pages.ehr.NotificationAdminPage;
 import org.labkey.test.util.DataRegionTable;
 import org.labkey.test.util.Ext4Helper;
 import org.labkey.test.util.LogMethod;
@@ -71,6 +72,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -1975,5 +1977,104 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
     {
         return ANIMAL_HISTORY_URL;
     }
-}
 
+    @Test
+    public void testNotificationAdminAudits() throws Exception
+    {
+        // Ensure notification service is configured
+        setupNotificationService();
+
+        // Navigate to Notification Admin page
+        goToEHRFolder();
+        waitAndClickAndWait(Locators.bodyPanel().append(Locator.tagContainingText("a", "EHR Admin Page")));
+        waitAndClickAndWait(Locator.tagContainingText("a", "Notification Admin"));
+
+        // Record start time for audit filtering
+        LocalDateTime start = LocalDateTime.now().minusMinutes(5);
+
+        // Change Notification User and Reply Email, then save
+        NotificationAdminPage.beginAt(this);
+        String replyEmail = "ehr-notify@labkey.test";
+        Ext4FieldRef.getForLabel(this, "Notification User").setValue(PasswordUtil.getUsername());
+        Ext4FieldRef.getForLabel(this, "Reply Email").setValue(replyEmail);
+        click(Ext4Helper.Locators.ext4Button("Save"));
+        waitForElement(Ext4Helper.Locators.window("Success"));
+        waitAndClickAndWait(Ext4Helper.Locators.ext4Button("OK"));
+
+        // Identify two notifications by extracting their keys from the Run Report links
+        beginAt(WebTestHelper.getBaseURL() + "/ldk/" + getContainerPath() + "/notificationAdmin.view");
+        Locator links = Locator.tagContainingText("a", "Run Report In Browser");
+        waitFor(() -> links.findElements(getDriver()).size() >= 2, "Expected at least two notifications to be available", WAIT_FOR_PAGE);
+        List<WebElement> runLinks = links.findElements(getDriver());
+
+        List<String> notifKeys = new ArrayList<>();
+        for (int i = 0; i < Math.min(2, runLinks.size()); i++)
+        {
+            String href = runLinks.get(i).getAttribute("href");
+            int idx = href.indexOf("key=");
+            Assert.assertTrue("Could not locate notification key in href: " + href, idx > -1);
+            String key = href.substring(idx + 4);
+            notifKeys.add(key);
+        }
+
+        // Disable the two notifications and save
+        for (String key : notifKeys)
+        {
+            _ext4Helper.selectComboBoxItem(Ext4Helper.Locators.formItemWithInputNamed("status_" + key), Ext4Helper.TextMatchTechnique.EXACT, "Disabled");
+        }
+        click(Ext4Helper.Locators.ext4Button("Save"));
+        waitForElement(Ext4Helper.Locators.window("Success"));
+        waitAndClickAndWait(Ext4Helper.Locators.ext4Button("OK"));
+
+        // Re-enable the two notifications and save
+        for (String key : notifKeys)
+        {
+            _ext4Helper.selectComboBoxItem(Ext4Helper.Locators.formItemWithInputNamed("status_" + key), Ext4Helper.TextMatchTechnique.EXACT, "Enabled");
+        }
+        click(Ext4Helper.Locators.ext4Button("Save"));
+        waitForElement(Ext4Helper.Locators.window("Success"));
+        waitAndClickAndWait(Ext4Helper.Locators.ext4Button("OK"));
+
+        // Manage subscribed users on the first notification: add two users then remove one
+        Locator manageLink = Locator.tagContainingText("a", "Manage Subscribed Users/Groups").index(0);
+        waitAndClick(manageLink);
+        waitForElement(Ext4Helper.Locators.window("Manage Subscribed Users"));
+        Ext4ComboRef combo = Ext4ComboRef.getForLabel(this, "Add User Or Group");
+        combo.waitForStoreLoad();
+        _ext4Helper.selectComboBoxItem(Locator.id(combo.getId()), Ext4Helper.TextMatchTechnique.CONTAINS, DATA_ADMIN.getEmail());
+        Ext4FieldRef.waitForComponent(this, "field[fieldLabel^='Add User Or Group']");
+        combo = Ext4ComboRef.getForLabel(this, "Add User Or Group");
+        _ext4Helper.selectComboBoxItem(Locator.id(combo.getId()), Ext4Helper.TextMatchTechnique.CONTAINS, BASIC_SUBMITTER.getEmail());
+        waitAndClick(Ext4Helper.Locators.ext4Button("Close"));
+
+        // Re-open and remove one user
+        waitAndClick(manageLink);
+        waitForElement(Ext4Helper.Locators.window("Manage Subscribed Users"));
+        assertElementPresent(Ext4Helper.Locators.ext4Button("Remove"));
+        waitAndClick(Ext4Helper.Locators.ext4Button("Remove").index(0));
+        waitAndClick(Ext4Helper.Locators.ext4Button("Close"));
+
+        // Verify audit log entries in audit.SiteSettings for this container
+        sleep(1000);
+
+        Function<String, Integer> countAudit = (commentSubstring) -> {
+            try
+            {
+                SelectRowsCommand cmd = new SelectRowsCommand("auditLog", "AppPropsEvent");
+                cmd.addFilter(new Filter("Created", Date.from(start.atZone(ZoneId.systemDefault()).toInstant()), Filter.Operator.DATE_GTE));
+                cmd.addFilter(new Filter("Comment", commentSubstring, Filter.Operator.CONTAINS));
+                SelectRowsResponse resp = cmd.execute(getApiHelper().getConnection(), getContainerPath());
+                return resp.getRowCount().intValue();
+            }
+            catch (Exception e)
+            {
+                throw new RuntimeException(e);
+            }
+        };
+
+        Assert.assertTrue("Expected audit entry for reply-to email update", countAudit.apply("Notification reply-to email updated.") > 0);
+        Assert.assertTrue("Expected audit entry for service user update", countAudit.apply("Notification service user updated.") > 0);
+        Assert.assertTrue("Expected audit entry for notification enabled", countAudit.apply("has been enabled.") > 0);
+        Assert.assertTrue("Expected audit entry for subscription updates", countAudit.apply("Updated notification subscriptions for") > 0);
+    }
+}
