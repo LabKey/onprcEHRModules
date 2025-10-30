@@ -2638,36 +2638,88 @@ public class ONPRC_EHRTriggerHelper
 
     public void sendClinpatPanicEmail(String id, String objectid, Integer vetname)
     {
+        String subject = "Chemistry Results with Panic values";
 
-            final TableInfo requestTable = getTableInfo("onpc_ehr", "ChemistryNotification");
-            SimpleFilter filter = new SimpleFilter(FieldKey.fromString("objectid"), objectid, CompareType.IN);
-            TableSelector ts = new TableSelector(requestTable, filter, null);
-
-            ts.forEach(rs -> {
-                String testresults = rs.getString("qualResult");
-                Integer servicename = rs.getInt("servicerequested");
-                String paneltest = rs.getString("testid");
-                Date clndate = rs.getDate("date");
-                String subject = "Clinpath Chemistry Panic Values";
-                StringBuilder html = new StringBuilder();
+        Set<UserPrincipal> recipients = getRecipients(vetname);
+        if (recipients.isEmpty())
+        {
+            _log.warn("No recipients, unable to send EHR trigger script email");
+            return;
+        }
 
 
-                    Set<UserPrincipal> recipients = getRecipients(vetname);
-                    if (recipients.isEmpty())
-                    {
-                        _log.warn("No recipients, unable to send EHR trigger script email");
-                        return;
-                    }
+        final TableInfo ti = getTableInfo("onpc_ehr", "ChemistryNotification");
+        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("objectid"), objectid, CompareType.IN);
+
+        List<FieldKey> names= new ArrayList<>();
+        FieldKey clinpathFieldKey = FieldKey.fromString("objectid");
+        names.add(clinpathFieldKey);
+        names.add(FieldKey.fromString("qualResult"));
+        names.add(FieldKey.fromString("servicerequested"));
+        names.add(FieldKey.fromString("testid"));
+        names.add(FieldKey.fromString("date"));
+        names.add(FieldKey.fromString("Id"));
 
 
-                    html.append("Chemistry Results with Panic values");
+        final Map<FieldKey, ColumnInfo> colKeys = QueryService.get().getColumns(ti, names);
+        final ColumnInfo clinpathColumn = colKeys.get(clinpathFieldKey);
+        TableSelector ts = new TableSelector(ti, colKeys.values(), filter, null);
 
+        final StringBuilder html = new StringBuilder();
 
-                    sendMessage(subject, html.toString(), recipients);
+        if (ts.getRowCount() == 0)
+        {
+            html.append("There are Chemistry Panlc Values to display");
 
-            });
-//        });
+            return;
+        }
+        else
+        {
+            //Create header information on the report
+
+            html.append("<table border=1 style='border-collapse: collapse;'>");
+            html.append("<tr style='font-weight: bold;'><td>Animal ID</td><td>Date</td><td>Service Requested</td><td> Panel Test Name</td><td> Qual Results</td><td> Vet/PI Name</td></tr>\n");
+            ts.forEach(new Selector.ForEachBlock<ResultSet>()
+               {
+
+                   @Override
+                   public void exec(ResultSet rs) throws SQLException
+                   {
+
+                       TableInfo ti2 = getTableInfo("onprc_ehr", "Labwork_Requestor_Vets");
+                       SimpleFilter filter2 = new SimpleFilter(FieldKey.fromString("userid"), rs.getString("vetname"));
+                       filter2.addCondition(FieldKey.fromString("DisableDate"), true, CompareType.ISBLANK);
+
+                       TableSelector ts2 = new TableSelector(ti2, PageFlowUtil.set("LastName", "FirstName") , filter2, null);
+                       List<String> ret2 = ts2.getArrayList(String.class);
+                       if (!ret2.isEmpty())
+                       {
+                           for (String Vetname : ret2)
+                           {
+                               html.append("<tr><td>" + PageFlowUtil.filter(rs.getString("Id"))  +
+                                       "</td><td>" + PageFlowUtil.filter(rs.getString("date"))  +
+                                       "</td><td>" + PageFlowUtil.filter(rs.getString("servicerequested"))  +
+                                       " </td><td>" +  PageFlowUtil.filter(rs.getString("testid")) +
+                                       " </td><td>" +  PageFlowUtil.filter(rs.getString("qualResult")) +
+                                       "</td><td>" +  PageFlowUtil.filter(rs.getString("Vetname")) + "</td></tr>\n");
+                               break;
+
+                           }
+                       }
+                   }
+
+               }
+
+            );
+
+        }
+
+        html.append("</table>\n");
+
+        sendMessage(subject, html.toString(), recipients);
+
     }
+
 
     private Set<UserPrincipal> getRecipients(Integer... userIds)
     {
