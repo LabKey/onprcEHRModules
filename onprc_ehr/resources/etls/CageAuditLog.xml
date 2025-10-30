@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Created by: Kollil, 10/16/2025
+Created a new ETL process for the cage audit log data.
+This query runs daily at 8:30Pm to capture the snapshot of the cage inventory
+-->
+
+<etl xmlns="http://labkey.org/etl/xml">
+    <name>CageAuditLog</name>
+    <description>Executes onprc_ehr.p_CageAuditHistoryProcess daily (no load)</description>
+    <transforms>
+        <!-- Calls a DB stored procedure that simply executes the query -->
+        <transform id="RunCageAuditLog" type="StoredProcedure">
+            <description>Run stored proc p_CageAuditHistoryProcess</description>
+            <procedure schemaName="onprc_ehr" procedureName="p_CageAuditHistoryProcess" useTransaction="false"/>
+        </transform>
+    </transforms>
+
+    <schedule>
+        <!--Runs daily 8:30pm-->
+        <cron expression="0 30 20 * * ?"/>
+    </schedule>
+
+</etl>
