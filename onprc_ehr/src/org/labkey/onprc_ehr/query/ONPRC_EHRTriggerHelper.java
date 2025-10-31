@@ -2640,7 +2640,11 @@ public class ONPRC_EHRTriggerHelper
     {
         String subject = "Chemistry Results with Panic values";
 
-        Set<UserPrincipal> recipients = getRecipients(vetname);
+
+        Integer testname = 1007; //Raymond   Vamdy 1014
+
+        Set<UserPrincipal> recipients = getRecipients(testname);
+//        Set<UserPrincipal> recipients = getRecipients(vetname);
         if (recipients.isEmpty())
         {
             _log.warn("No recipients, unable to send EHR trigger script email");
