@@ -15,7 +15,7 @@ SELECT
     t.created,
     t.qcstate as Status
 FROM ehr.tasks t
-WHERE t.created >= TIMESTAMPADD('day', -7Added new , NOW())
+WHERE t.created >= TIMESTAMPADD('day', -7, NOW())
 And t.formtype = 'birth'
 
 

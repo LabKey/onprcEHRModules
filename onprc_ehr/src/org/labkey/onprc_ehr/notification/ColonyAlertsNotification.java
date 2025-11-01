@@ -1551,7 +1551,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
     protected void LongTermMedsAlert(final Container c, User u, final StringBuilder msg)
     {
         if (QueryService.get().getUserSchema(u, c, "onprc_ehr") == null) {
-            msg.append("<b>Warning: The study schema has not been enabled in this folder, so the alert cannot run!<p><hr>");
+            msg.append("<b>Warning: The onprc_ehr schema has not been enabled in this folder, so the alert cannot run!<p><hr>");
             return;
         }
 
@@ -2340,7 +2340,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
      *  housing history, group ids and flags.
      *  Refer tkt # 13504
      */
-    protected void newBirthTasks(Container c, User u, final StringBuilder msg)
+    protected void newBirthTasks(final Container c, User u, final StringBuilder msg)
     {
         if (QueryService.get().getUserSchema(u, c, "onprc_ehr") == null) {
             msg.append("<b>Warning: The onprc_ehr schema has not been enabled in this folder, so the alert cannot run!<p><hr>");
@@ -2349,15 +2349,15 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
 
         //Get birth tasks
         TableInfo ti = QueryService.get().getUserSchema(u, c, "onprc_ehr").getTable("NewBirthTasks", ContainerFilter.Type.AllFolders.create(c, u));
-        TableSelector ts = new TableSelector(ti);
+        TableSelector ts = new TableSelector(ti, null, null);
         long count = ts.getRowCount();
 
-        if (count > 0)
-        {
-            msg.append("<b>WARNING: There are " + count + " new birth(s) found in last 7 days.</b><br>");
-            msg.append("<p><a href='" + getExecuteQueryUrl(c, "onprc_ehr", "NewBirthTasks", null) + "'>Click here to view them</a><br>\n");
-            msg.append("<hr>\n");
+        if (count > 0) {
+            msg.append("<br><b>WARNING: There are \" + count + \" new birth(s) found in last 7 days.</b><br><br>");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "onprc_ehr", "NewBirthTasks", null) + "'>Click here to view them</a></p>\n");
+            msg.append("<hr>");
         }
+
     }
 
     /**
