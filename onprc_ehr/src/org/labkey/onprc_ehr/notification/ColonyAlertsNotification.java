@@ -2353,7 +2353,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         long count = ts.getRowCount();
 
         if (count > 0) {
-            msg.append("<br><b>WARNING: There are \" + count + \" new birth(s) found in last 7 days.</b><br><br>");
+            msg.append("<b>WARNING: There are " + count + " new birth(s) found in last 7 days.</b><br>");
             msg.append("<p><a href='" + getExecuteQueryUrl(c, "onprc_ehr", "NewBirthTasks", null) + "'>Click here to view them</a></p>\n");
             msg.append("<hr>");
         }
