@@ -1377,10 +1377,10 @@ exports.init = function(EHR){
     });
 
     // Added: 10-6-2025
-    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'chemistryResults', function (helper, scriptErrors, row, oldRow) {
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.AFTER_UPSERT, 'study', 'chemistryResults', function (helper, scriptErrors, row, oldRow) {
         if (row.Id && row.qualresults == 'panic%')  {
             //update birth records
-            triggerHelper.sendClinpatPanicEmail(row.Id, row.objectid);
+            triggerHelper.sendClinpatPanicEmail(row.Id, row.objectid,row.vet);
         }
     });
 
