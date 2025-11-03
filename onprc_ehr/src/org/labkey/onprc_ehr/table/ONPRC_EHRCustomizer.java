@@ -2309,7 +2309,7 @@ private void appendFlagsAlertActiveCol(final UserSchema ehrSchema, AbstractTable
                         "FROM \"" + schemaName + "\".\"" + queryName + "\" sd\n" +
                         "JOIN \"" + ehrPath + "\".onprc_ehr.NHP_Training h\n" +
                         "  ON (sd.id = h.id  AND (h.training_type in ('Procedure Cage','Tower')) AND h.qcstate.publicdata = true)\n" +
-                        "group by sd." + pkCol.getColumnName());
+                        "group by sd. order by h.date" + pkCol.getColumnName());
 
                 qd.setIsTemporary(true);
 
