@@ -2305,11 +2305,11 @@ private void appendFlagsAlertActiveCol(final UserSchema ehrSchema, AbstractTable
                         "sd." + pkCol.getColumnName() + ",\n" +
                         "group_concat(DISTINCT h.training_type, chr(10)) as nhptrainingtype,\n" +
                         "group_concat(DISTINCT h.training_results, chr(10)) as nhptrainingresults,\n" +
-                        "group_concat(DISTINCT h.remark, chr(10)) as nhptrainingremarks,\n" +
+                        "group_concat(DISTINCT h.training_type + ': ' + h.remark, chr(10)) as nhptrainingremarks,\n" +
                         "FROM \"" + schemaName + "\".\"" + queryName + "\" sd\n" +
                         "JOIN \"" + ehrPath + "\".onprc_ehr.NHP_Training h\n" +
                         "  ON (sd.id = h.id  AND (h.training_type in ('Procedure Cage','Tower')) AND h.qcstate.publicdata = true)\n" +
-                        "group by sd. order by h.date" + pkCol.getColumnName());
+                        "group by sd." + pkCol.getColumnName());
 
                 qd.setIsTemporary(true);
 
