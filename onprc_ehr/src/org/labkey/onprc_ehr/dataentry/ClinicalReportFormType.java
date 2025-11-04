@@ -50,7 +50,7 @@ public class ClinicalReportFormType extends TaskForm
     public ClinicalReportFormType(DataEntryFormContext ctx, Module owner)
     {
         super(ctx, owner, NAME, LABEL, "Clinical", Arrays.<FormSection>asList(
-                new NonStoreFormSection("Instructions", "Instructions", "onprc_ehr-examinstructionspanel", Arrays.asList(ClientDependency.supplierFromPath("ehr/panel/ExamInstructionsPanel.js"))),
+                new NonStoreFormSection("Instructions", "Instructions", "ehr-examinstructionspanel", Arrays.asList(ClientDependency.supplierFromPath("ehr/panel/ExamInstructionsPanel.js"))),
                 new TaskFormSection(),
                 new ExtendedAnimalDetailsFormSection(),
                 new SimpleFormPanelSection("study", "Clinical Remarks", "SOAP", false, EHRService.FORM_SECTION_LOCATION.Tabs),
@@ -95,12 +95,6 @@ public class ClinicalReportFormType extends TaskForm
 
         //  Modified: 10-5-2017  R.Blasa  reinstalled 2-12-21
         addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/model/sources/ClinicalReport.js"));
-
-        //Added 11-4-2025 R. Blasa
-        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/panel/ExamInstructionsPanel.js"));
-
-        //Added 11-4-2025 R. Blasa
-        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/window/FormTemplateWindow.js"));
 
 
         //  Added: 7-22-2025  R.Blasa
