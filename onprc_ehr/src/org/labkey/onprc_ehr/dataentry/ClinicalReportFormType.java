@@ -96,6 +96,12 @@ public class ClinicalReportFormType extends TaskForm
         //  Modified: 10-5-2017  R.Blasa  reinstalled 2-12-21
         addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/model/sources/ClinicalReport.js"));
 
+        //Added 11-4-2025 R. Blasa
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/panel/ExamInstructionsPanel.js"));
+
+        //Added 11-4-2025 R. Blasa
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/window/FormTemplateWindow.js"));
+
 
         //  Added: 7-22-2025  R.Blasa
         addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/panel/ExamCasesHousingDataEntryPanel.js"));
