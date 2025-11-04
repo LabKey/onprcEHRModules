@@ -282,10 +282,7 @@ Ext4.define('ONPRC_EHR.window.FormTemplateWindow', {
     getRecordDefaults: function(){
         if (this.idSelectionMode == 'none' || this.idSelectionMode == 'multi'){
             var date = this.down('#dateField').getValue();
-            // var idField = this.down('#idField');
             var subjectArray = LDK.Utils.splitIds(this.down('#idField').getValue(), true);
-
-            // var subjectArray = LDK.Utils.splitIds(idField ? idField.getValue() : '');
 
             if (subjectArray.length == 0){
                 subjectArray = [null];
