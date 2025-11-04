@@ -43,10 +43,7 @@
                     <column columnName="training_results">
                         <columnTitle>Training Result</columnTitle>
                     </column>
-                    <column columnName="remark">
-                        <columnTitle>Training Result</columnTitle>
-                        <displayWidth>150</displayWidth>
-                    </column>
+                    <column columnName="remark"/>
                     <column columnName="qcstate">
                         <fk>
                             <fkDbSchema>study</fkDbSchema>
