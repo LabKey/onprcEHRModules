@@ -50,7 +50,7 @@ public class ClinicalReportFormType extends TaskForm
     public ClinicalReportFormType(DataEntryFormContext ctx, Module owner)
     {
         super(ctx, owner, NAME, LABEL, "Clinical", Arrays.<FormSection>asList(
-                new NonStoreFormSection("Instructions", "Instructions", "ehr-examinstructionspanel", Arrays.asList(ClientDependency.supplierFromPath("ehr/panel/ExamInstructionsPanel.js"))),
+                new NonStoreFormSection("Instructions", "Instructions", "onprc_ehr-examinstructionspanel", Arrays.asList(ClientDependency.supplierFromPath("ehr/panel/ExamInstructionsPanel.js"))),
                 new TaskFormSection(),
                 new ExtendedAnimalDetailsFormSection(),
                 new SimpleFormPanelSection("study", "Clinical Remarks", "SOAP", false, EHRService.FORM_SECTION_LOCATION.Tabs),
