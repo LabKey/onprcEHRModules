@@ -2331,6 +2331,7 @@ private void appendFlagsAlertActiveCol(final UserSchema ehrSchema, AbstractTable
                 ((MutableColumnInfo)ti.getColumn("nhptrainingtype")).setLabel("NHP Training Type");
                 ((MutableColumnInfo)ti.getColumn("nhptrainingresults")).setLabel("NHP Training Results");
                 ((MutableColumnInfo)ti.getColumn("nhptrainingremarks")).setLabel("NHP Training Remarks");
+                ((MutableColumnInfo)ti.getColumn("nhptrainingremarks")).setDisplayWidth("300");
 
                 return ti;
             }
