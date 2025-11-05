@@ -22,6 +22,21 @@
                 </alternateKeys>
             </destination>
         </transform>
+
+        <transform id="rc" type="TaskrefTransformStep">
+            <taskref ref="org.labkey.primeseq.etl.VerifyRowCount">
+                <settings>
+                    <setting name="sourceRemoteSource" value="PRIMESEQ_MHC"/>
+                    <setting name="sourceSchema" value="geneticscore"/>
+                    <setting name="sourceQuery" value="mhc_data"/>
+                    <setting name="sourceColumn" value="objectId"/>
+
+                    <setting name="destSchema" value="geneticscore"/>
+                    <setting name="destQuery" value="mhc_data"/>
+                    <setting name="destColumn" value="objectId"/>
+                </settings>
+            </taskref>
+        </transform>
     </transforms>
 
     <incrementalFilter className="ModifiedSinceFilterStrategy" timestampColumnName="modified">
