@@ -5,7 +5,9 @@ select a.Id,
        b.qualResult,
        a.vet,
        a.created,
-       b.objectid
+       a.objectid,
+       a.taskid,
+
 
 from study.ClinpathRuns a, study.chemistryResults b
 Where  a.objectid = b.runid
