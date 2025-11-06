@@ -2640,7 +2640,6 @@ public class ONPRC_EHRTriggerHelper
     {
         String subject = "Chemistry Results with Panic values";
 
-
         Integer testname = 1007; //Raymond   Vamdy 1014
 
         Set<UserPrincipal> recipients = getRecipients(testname);
@@ -2673,7 +2672,7 @@ public class ONPRC_EHRTriggerHelper
 
         if (ts.getRowCount() == 0)
         {
-            html.append("There are Chemistry Panlc Values to display");
+            html.append("There are no Chemistry Panlc Values to display");
 
             return;
         }
