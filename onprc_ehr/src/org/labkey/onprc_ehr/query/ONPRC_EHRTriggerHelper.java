@@ -2653,7 +2653,7 @@ public class ONPRC_EHRTriggerHelper
 
 
         final TableInfo ti = getTableInfo("onpc_ehr", "ChemistryNotification");
-        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("objectid"), objectid, CompareType.IN);
+        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("vet"), vetname, CompareType.EQUAL);
 
         List<FieldKey> names= new ArrayList<>();
         FieldKey clinpathFieldKey = FieldKey.fromString("objectid");
