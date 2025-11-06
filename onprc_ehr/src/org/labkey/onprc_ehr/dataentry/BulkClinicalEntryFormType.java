@@ -88,6 +88,11 @@ public class BulkClinicalEntryFormType extends TaskForm
         //Added 9-18-2025 R. Blasa
         addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/panel/ExamInstructionsPanel.js"));
 
+        //Added 11-4-2025 R. Blasa
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/window/FormTemplateWindow.js"));
+
+
+
     }
 
     @Override
