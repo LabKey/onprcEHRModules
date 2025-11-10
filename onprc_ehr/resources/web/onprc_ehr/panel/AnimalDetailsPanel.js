@@ -137,6 +137,21 @@ Ext4.define('ONPRC_EHR.panel.AnimalDetailsPanel', {
                     fieldLabel: 'Weight',
                     name: 'weights'
                 },{
+                    fieldLabel: 'Parent Information',
+                    name: 'parents'
+                },{
+                    fieldLabel: 'Pairing Type',
+                    name: 'pairingType'
+                },{
+                    fieldLabel: 'Cagemates',
+                    name: 'cagemates'
+                },{
+                    fieldLabel: 'Cagemate Infant(Under 1yr)',
+                    name: 'cagemateinfant'
+                },{
+                    fieldLabel: 'Foster Infant',
+                    name: 'fosterinfants'
+                },{
                     xtype: 'ldk-linkbutton',
                     style: 'margin-top: 10px;',
                     scope: this,
@@ -240,6 +255,80 @@ Ext4.define('ONPRC_EHR.panel.AnimalDetailsPanel', {
         }
 
         toSet['weights'] = text;
+    },
+
+
+
+    getExtendedItems: function(){
+        return [{
+            xtype: 'container',
+            name: 'additionalInformation',
+            style: 'padding-bottom: 10px;',
+            border: false,
+            defaults: {
+                border: false
+            },
+            items: [{
+                xtype: 'container',
+                html: '<b>Additional Information</b><hr>'
+            },{
+                layout: 'column',
+                defaults: {
+                    labelWidth: this.defaultLabelWidth
+                },
+                items: [{
+                    xtype: 'container',
+                    columnWidth: 0.5,
+                    border: false,
+                    defaults: {
+                        labelWidth: this.defaultLabelWidth,
+                        border: false,
+                        style: 'margin-right: 20px;'
+                    },
+                    items: [{
+                        xtype: 'displayfield',
+                        width: 350,
+                        fieldLabel: 'Geographic Origin',
+                        name: 'geographic_origin'
+                    },{
+                        xtype: 'displayfield',
+                        fieldLabel: 'Birth',
+                        name: 'birth'
+                    },{
+                        xtype: 'displayfield',
+                        fieldLabel: 'Death',
+                        name: 'death'
+                    }]
+                },{
+                    xtype: 'container',
+                    columnWidth: 0.5,
+                    defaults: {
+                        labelWidth: this.defaultLabelWidth
+                    },
+                    items: [{
+                        xtype: 'displayfield',
+                        fieldLabel: 'Parent Information',
+                        name: 'parents'
+                    },{
+                        xtype: 'displayfield',
+                        fieldLabel: 'Pairing Type',
+                        name: 'pairingType'
+                    },{
+                        xtype: 'displayfield',
+                        fieldLabel: 'Cagemates',
+                        name: 'cagemates'
+                    },{
+                        xtype: 'displayfield',
+                        fieldLabel: 'Cagemate Infant(Under 1yr)',
+                        name: 'cagemateinfant'
+                    },{
+                        xtype: 'displayfield',
+                        fieldLabel: 'Foster Infant',
+                        name: 'fosterinfants'
+                    }]
+                }]
+            }]
+        }];
     },
 
     appendAssignmentsAndGroups: function(toSet, record){
