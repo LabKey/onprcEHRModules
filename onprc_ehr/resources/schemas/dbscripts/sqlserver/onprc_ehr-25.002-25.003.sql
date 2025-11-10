@@ -15,7 +15,7 @@ BEGIN
             @SchemaName NVARCHAR(128) = 'audit';
 
     SET @RetentionYears = CASE WHEN @RetentionYears - 1 > 1 THEN @RetentionYears - 1 ELSE 1 END;
-    PRINT 'Archiving audit logs older than ' + @RetentionYears + ' years old'
+    PRINT N'Archiving audit logs older than ' + CAST(@RetentionYears AS NVARCHAR(3)) + N' years old'
 
     DECLARE @CutoffDate DATETIME = DATEADD(YEAR, -@RetentionYears, GETDATE());
 
