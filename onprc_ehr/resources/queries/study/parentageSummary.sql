@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2017 LabKey Corporation
+ * Copyright (c) 2013-2016 LabKey Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,9 +21,9 @@ SELECT
   p.method
 
 FROM study.parentage p
-WHERE p.qcstate.publicdata = true and p.enddateCoalesced <= now()
+WHERE p.qcstate.publicdata = true and p.enddate is null
 
-UNION ALL
+UNION
 
 SELECT
   b.Id,
@@ -34,15 +34,16 @@ SELECT
 
 FROM study.birth b
 WHERE b.dam is not null and b.qcstate.publicdata = true
-
-UNION ALL
+And 'dam' not in (select k.relationship from study.parentage k where k.Id = b.Id and k.enddate is null)
+UNION
 
 SELECT
-    b.Id,
-    b.date,
-    b.sire,
+    a.Id,
+    a.date,
+    a.sire,
     'Sire' as relationship,
     'Observed' as method
 
-FROM study.birth b
-WHERE b.sire is not null and b.qcstate.publicdata = true
+FROM study.birth a
+WHERE a.sire is not null and a.qcstate.publicdata = true
+ And 'sire' not in (select k.relationship from study.parentage k where k.Id = a.Id and k.enddate is null)
