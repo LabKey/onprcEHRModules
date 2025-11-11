@@ -307,7 +307,7 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                                                 scope: this,
                                                 afterrender: function(cmp){
                                                     cmp.getEl().on('click', function(el){
-                                                        EHR.window.ClinicalHistoryWindow.showClinicalHistory(null, cmp.animal, null);
+                                                        ONPRC_EHR.window.ClinicalHistoryWindow.showClinicalHistory(null, cmp.animal, null);
                                                     }, this);
                                                 }
                                             }
