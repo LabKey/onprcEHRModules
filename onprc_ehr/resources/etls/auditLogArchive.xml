@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--This ETL triggers a stored procedure that archives audit log entries older than one year.
+<!--
+  This ETL triggers a stored procedure that archives audit log entries older than one year. During an initial two-week
+  transition period, this ETL archives one year's worth of audit log entries each night.
  -->
 
 <etl xmlns="http://labkey.org/etl/xml">
@@ -18,7 +20,7 @@
 
     </transforms>
     <schedule>
-        <cron expression="0 0 23 ? * *"/>
+        <cron expression="0 5 23 ? * *"/>
     </schedule>
 
 </etl>
