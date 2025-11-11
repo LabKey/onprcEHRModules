@@ -76,7 +76,7 @@ Ext4.define('ONPRC_EHR.window.ClinicalHistoryWindow', {
 
     getItems: function(){
         return [{
-            xtype: EHR.reports.clinicalHistoryPanelXtype || 'onprc_ehr-smallformsnapshotpanel',
+            xtype: EHR.reports.onprclinicalHistoryPanelXtype || 'onprc_ehr-smallformsnapshotpanel',
             showActionsButton: false,
             subjectId: this.subjectId,
             hideHeader: true,
