@@ -3,7 +3,7 @@ SET QUOTED_IDENTIFIER ON;
 GO
 
 ALTER PROCEDURE [audit].[ArchiveAuditTables] (
-    @RetentionYears INT OUTPUT
+    @RetentionMonths INT OUTPUT
 )
 AS
 BEGIN
@@ -14,10 +14,10 @@ BEGIN
             @DestDB NVARCHAR(128) = 'labkey_audit',
             @SchemaName NVARCHAR(128) = 'audit';
 
-    SET @RetentionYears = CASE WHEN @RetentionYears - 1 > 1 THEN @RetentionYears - 1 ELSE 1 END;
-    PRINT N'Archiving audit logs older than ' + CAST(@RetentionYears AS NVARCHAR(3)) + N' years old'
+    SET @RetentionMonths = CASE WHEN @RetentionMonths - 6 > 12 THEN @RetentionMonths - 6 ELSE 12 END;
+    PRINT N'Archiving audit logs older than ' + CAST(@RetentionMonths AS NVARCHAR(3)) + N' months old'
 
-    DECLARE @CutoffDate DATETIME = DATEADD(YEAR, -@RetentionYears, GETDATE());
+    DECLARE @CutoffDate DATETIME = DATEADD(YEAR, -@RetentionMonths, GETDATE());
 
 
     -- Validate if source database exists
@@ -49,7 +49,7 @@ BEGIN
                 Status NVARCHAR(50) NULL,
                 RecordsProcessed INT NULL,
                 ErrorMessage NVARCHAR(MAX) NULL,
-                RetentionYears INT NULL,
+                RetentionMonths INT NULL,
                 CONSTRAINT PK_ArchiveAuditLog PRIMARY KEY (LogID)
             )'');
         END';
@@ -100,8 +100,8 @@ BEGIN
         DECLARE @InsertLogSQL NVARCHAR(MAX) = '
             USE ' + QUOTENAME(@DestDB) + ';
             INSERT INTO dbo.ArchiveAuditLog
-                (TableName, Operation, StartTime, Status, RetentionYears)
-            VALUES (''' + @CurrentTable + ''', ''Archive'', GETDATE(), ''Started'', ' + CAST(@RetentionYears AS NVARCHAR(10)) + ');
+                (TableName, Operation, StartTime, Status, RetentionMonths)
+            VALUES (''' + @CurrentTable + ''', ''Archive'', GETDATE(), ''Started'', ' + CAST(@RetentionMonths AS NVARCHAR(10)) + ');
             SELECT @LogIDOUT = SCOPE_IDENTITY();';
 
         EXEC sp_executesql @InsertLogSQL, N'@LogIDOUT INT OUTPUT', @LogIDOUT = @LogID OUTPUT;
