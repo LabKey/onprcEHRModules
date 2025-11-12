@@ -3,6 +3,7 @@ SET QUOTED_IDENTIFIER ON;
 GO
 
 ALTER PROCEDURE [audit].[ArchiveAuditTables] (
+    @RetentionYears INT,
     @RetentionMonths INT OUTPUT
 )
 AS
@@ -17,7 +18,7 @@ BEGIN
     SET @RetentionMonths = CASE WHEN @RetentionMonths - 6 > 12 THEN @RetentionMonths - 6 ELSE 12 END;
     PRINT N'Archiving audit logs older than ' + CAST(@RetentionMonths AS NVARCHAR(3)) + N' months old'
 
-    DECLARE @CutoffDate DATETIME = DATEADD(YEAR, -@RetentionMonths, GETDATE());
+    DECLARE @CutoffDate DATETIME = DATEADD(MONTH, -@RetentionMonths, GETDATE());
 
 
     -- Validate if source database exists

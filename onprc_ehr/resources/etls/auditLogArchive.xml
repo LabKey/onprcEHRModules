@@ -14,6 +14,7 @@
         <transform id="ArchiveAuditLogs" type="StoredProcedure">
             <description>Archive audit log entries older than @RetentionYears</description>
             <procedure schemaName="audit" procedureName="ArchiveAuditTables">
+                <parameter name="@RetentionYears" value="15"/>
                 <parameter name="@RetentionMonths" value="144" scope="global" override="false"/>
             </procedure>
         </transform>
