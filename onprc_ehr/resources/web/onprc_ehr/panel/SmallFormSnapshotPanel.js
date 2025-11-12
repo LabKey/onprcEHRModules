@@ -8,6 +8,7 @@ Ext4.define('onprc_ehr.panel.SmallFormSnapshotPanel', {
     extend: 'onprc_ehr.panel.SnapshotPanel',            //Modiied 8-24-2016 R.Blasa
     alias: 'widget.onprc_ehr-smallformsnapshotpanel',
 
+    showExtendedInformation: true,
     showLocationDuration: false,
     showActionsButton: false,
 
@@ -19,6 +20,11 @@ Ext4.define('onprc_ehr.panel.SmallFormSnapshotPanel', {
 
     getItems: function(){
         var items = this.getBaseItems();
+
+        if (this.showExtendedInformation){
+            items[0].items = items[0].items.concat(this.getExtendedItems());
+        }
+
 
         if (!this.redacted){
             items[0].items.push({

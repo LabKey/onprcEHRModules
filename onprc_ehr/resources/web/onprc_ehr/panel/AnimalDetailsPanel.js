@@ -10,7 +10,7 @@ Ext4.define('ONPRC_EHR.panel.AnimalDetailsPanel', {
     alias: 'widget.onprc_ehr-animaldetailspanels',
 
     border: true,
-    showExtendedInformation: false,
+    showExtendedInformation: true,
     showActionsButton: false,
     doSuspendLayouts: false,
     showDisableButton: true,
@@ -136,6 +136,21 @@ Ext4.define('ONPRC_EHR.panel.AnimalDetailsPanel', {
                 },{
                     fieldLabel: 'Weight',
                     name: 'weights'
+                },{
+                    fieldLabel: 'Parent Information',
+                    name: 'parents'
+                },{
+                    fieldLabel: 'Pairing Type',
+                    name: 'pairingType'
+                },{
+                    fieldLabel: 'Cagemates',
+                    name: 'cagemates'
+                },{
+                    fieldLabel: 'Cagemate Infant(Under 1yr)',
+                    name: 'cagemateinfant'
+                },{
+                    fieldLabel: 'Foster Infant',
+                    name: 'fosterinfants'
                 },{
                     xtype: 'ldk-linkbutton',
                     style: 'margin-top: 10px;',
