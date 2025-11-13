@@ -2,8 +2,8 @@
     <columns>
         <column name="Id"/>
         <column name="date"/>
-        <column name="'Id.curLocation.room"/>
-        <column name="'Id.curLocation.cage"/>
+        <column name="Id.curLocation.room"/>
+        <column name="Id.curLocation.cage"/>
         <column name="label"/>
         <column name="comment"/>
     </columns>
