@@ -2,13 +2,12 @@
     <columns>
         <column name="Id"/>
         <column name="date"/>
-        <column name="Id.curLocation.room"/>
-        <column name="Id.curLocation.cage"/>
+        <column name="Id/curLocation/room"/>
+        <column name="Id/curLocation/cage"/>
         <column name="label"/>
         <column name="comment"/>
     </columns>
     <sorts>
-        <sort column="Id.curLocation.room" />
-        <sort column="Id.curLocation.cage" />
+        <sort column="Id" />
     </sorts>
 </customView>
