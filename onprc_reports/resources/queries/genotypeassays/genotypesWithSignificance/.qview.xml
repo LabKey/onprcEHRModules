@@ -1,0 +1,14 @@
+<customView xmlns="http://labkey.org/data/xml/queryCustomView" label="All Projects">
+    <columns>
+        <column name="Id"/>
+        <column name="date"/>
+        <column name="'Id.curLocation.room"/>
+        <column name="'Id.curLocation.cage"/>
+        <column name="label"/>
+        <column name="comment"/>
+    </columns>
+    <sorts>
+        <sort column="Id.curLocation.room" />
+        <sort column="Id.curLocation.cage" />
+    </sorts>
+</customView>
