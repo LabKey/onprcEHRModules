@@ -34,7 +34,29 @@ BEGIN
         RETURN;
     END
 
-    -- Create RetentionMonths column in ArchiveAuditLog table if it doesn't exist
+    -- Create ArchiveAuditLog table if not exists (useful for testing)
+    DECLARE @CreateLogTableSQL NVARCHAR(MAX) = '
+    IF NOT EXISTS (SELECT 1 FROM ' + QUOTENAME(@DestDB) + '.INFORMATION_SCHEMA.TABLES
+                   WHERE TABLE_SCHEMA = ''dbo'' AND TABLE_NAME = ''ArchiveAuditLog'')
+    BEGIN
+        EXEC(''USE ' + QUOTENAME(@DestDB) + ';
+        CREATE TABLE dbo.ArchiveAuditLog (
+            LogID INT IDENTITY(1,1) NOT NULL,
+            TableName NVARCHAR(128) NOT NULL,
+            Operation NVARCHAR(50) NOT NULL,
+            StartTime DATETIME NOT NULL,
+            EndTime DATETIME NULL,
+            Status NVARCHAR(50) NULL,
+            RecordsProcessed INT NULL,
+            ErrorMessage NVARCHAR(MAX) NULL,
+            RetentionMonths INT NULL,
+            CONSTRAINT PK_ArchiveAuditLog PRIMARY KEY (LogID)
+        )'');
+    END';
+
+    EXEC sp_executesql @CreateLogTableSQL;
+
+    -- Create RetentionMonths column in ArchiveAuditLog table if not exist
     DECLARE @CreateRetentionColumnSQL NVARCHAR(MAX) = '
     IF NOT EXISTS (SELECT 1 FROM ' + QUOTENAME(@DestDB) + '.INFORMATION_SCHEMA.COLUMNS
                WHERE TABLE_SCHEMA = ''dbo''
