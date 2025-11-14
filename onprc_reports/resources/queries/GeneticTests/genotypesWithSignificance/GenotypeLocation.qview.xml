@@ -1,4 +1,4 @@
-<customView xmlns="http://labkey.org/data/xml/queryCustomView" label="Genetic Testing">
+<customView xmlns="http://labkey.org/data/xml/queryCustomView" label="Genetic Testing w/ Location">
     <columns>
         <column name="Id"/>
         <column name="date"/>
