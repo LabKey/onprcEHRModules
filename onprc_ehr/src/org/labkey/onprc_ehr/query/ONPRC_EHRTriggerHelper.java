@@ -66,6 +66,7 @@ import org.labkey.api.util.GUID;
 import org.labkey.api.util.MailHelper;
 import org.labkey.api.util.PageFlowUtil;
 import org.labkey.api.util.Pair;
+import org.labkey.api.util.logging.LogHelper;
 import org.labkey.onprc_ehr.ONPRC_EHRManager;
 import org.labkey.onprc_ehr.ONPRC_EHRModule;
 import org.labkey.onprc_ehr.ONPRC_EHRSchema;
@@ -102,7 +103,7 @@ import java.util.TreeMap;
  */
 public class ONPRC_EHRTriggerHelper
 {
-    private static final Logger _log = LogManager.getLogger(ONPRC_EHRTriggerHelper.class);
+    private static final Logger _log = LogHelper.getLogger(ONPRC_EHRTriggerHelper.class, "Fill in description");
     private static final String NONRESTRICTED = "Nonrestricted";
     private static final String EXPERIMENTAL_EUTHANASIA = "EUTHANASIA, EXPERIMENTAL";
     private static final String NON_EXPERIMENTAL_EUTHANASIA = "EUTHANASIA, NONEXPERIMENTAL";
@@ -2636,7 +2637,7 @@ public class ONPRC_EHRTriggerHelper
         }
     }
 
-    public void sendClinpatPanicEmail(String id, String objectid, Integer vetname)
+    public void sendClinpathPanicEmail(String id, String objectid, Integer vetname)
     {
         String subject = "Chemistry Results with Panic values";
 
