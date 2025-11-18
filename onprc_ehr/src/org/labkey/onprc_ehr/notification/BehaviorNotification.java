@@ -107,6 +107,10 @@ public class BehaviorNotification extends ColonyAlertsNotification
         NHPTraining_BehaviorAlert(c, u , msg);
         AlopeciaScoreAlert(c, u , msg);
         dcmNotesAlert(c, u , msg);
+         //Added by Kollil, Nov 2025
+        //Refer to tkt # 13618
+        assignmentsCreatedInPast1Day(c,u,msg);
+        assignmentsReleasedInPast1Day(c,u,msg);
 
         notesEndingToday(c, u, msg, Arrays.asList("BSU Notes"), null);
         saveValues(c, toSave);
@@ -114,6 +118,58 @@ public class BehaviorNotification extends ColonyAlertsNotification
         return msg.toString();
     }
 
+    /* Added by Kollil Nov, 2025
+     List of assignment records created by R&L in past 24hrs (this is the most important grid)
+           a.    Replaces current grid “Assignments Modified in Past 1 Day” which captures any modifications to records in the last 24hrs
+           b.    To clarify, not the same as records with the “assign date” within the past day
+           c.    Include Day Leases
+    Refer to tkt # 13618
+    */
+    private void assignmentsCreatedInPast1Day(final Container c, User u, final StringBuilder msg)
+    {
+        TableInfo ti = getStudySchema(c, u).getTable("AssignmentsCreatedInPast1Day");
+
+        TableSelector ts = new TableSelector(ti, null, null);
+        long total = ts.getRowCount();
+
+        if (total > 0)
+        {
+            msg.append("<b>List of assignment records created by R&L in past 24hrs:</b><p>");
+            msg.append("There are " + total + " entries found. ");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "assignmentsCreatedInPast1Day", null)  + "'>Click here to view them</a></p>\n");
+            msg.append("<hr>\n\n");
+        }
+        else
+        {
+            msg.append("<b>WARNING: No assignment records created by R&L in past 24hrs!</b><br><hr>\n");
+        }
+
+    }
+
+    /* Added by Kollil Nov, 2025
+    Grid 2: List of records with new “Release date” added within the last 24hrs
+           a. Omit Day Leases
+    Refer to tkt # 13618
+    */
+    private void assignmentsReleasedInPast1Day(final Container c, User u, final StringBuilder msg)
+    {
+        TableInfo ti = getStudySchema(c, u).getTable("AssignmentsReleasedInPast1Day");
+
+        TableSelector ts = new TableSelector(ti, null, null);
+        long total = ts.getRowCount();
+
+        if (total > 0)
+        {
+            msg.append("<b>List of records with new \"Release date\" added within the last 24hrs:</b><p>");
+            msg.append("There are " + total + " entries found. ");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "AssignmentsReleasedInPast1Day", null)  + "'>Click here to view them</a></p>\n");
+            msg.append("<hr>\n\n");
+        }
+        else
+        {
+            msg.append("<b>WARNING: No records with new \"Release date\" added within the last 24hrs!</b><br><hr>\n");
+        }
+    }
 
     /* Added by Kollil 08/22/2025
     New alert/notification for when an animal receives an alopecia score of 4 or 5, but does not have an open behavioral case for alopecia.

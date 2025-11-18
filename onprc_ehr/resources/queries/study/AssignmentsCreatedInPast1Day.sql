@@ -1,0 +1,3 @@
+SELECT *
+FROM Assignment
+WHERE Created >= TIMESTAMPADD('SQL_TSI_DAY', -1, NOW())
