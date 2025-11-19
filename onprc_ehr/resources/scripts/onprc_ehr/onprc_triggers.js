@@ -1380,8 +1380,8 @@ exports.init = function(EHR){
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.AFTER_UPSERT, 'study', 'chemistryResults', function (helper, scriptErrors, row, oldRow) {
         // ['panic','Panic'].indexOf(row.qualresult) !== -1
         if (row.Id && row.qualresult.toLowerCase().indexOf('panic') !== -1)  {
-               console.log("panic values:  " + row.qualresult)
-            triggerHelper.sendClinpathPanicEmail(row.Id, row.objectid,row.vet);
+               console.log("panic values:  " + row.qualresult);
+            triggerHelper.sendClinpathPanicEmail(row.Id, row.objectid);
         }
     });
 
