@@ -1,0 +1,23 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="roomUtilizationHistorical" tableDbType="NOT_IN_DB">
+                <tableTitle>Historic Room Utilization</tableTitle>
+                <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+                <columns>
+                    <column columnName="ReportDate">
+                        <columnTitle>Report Date</columnTitle>
+                        <formatString>MM-dd-yyyy</formatString>
+                    </column>
+                    <column columnName="perDiemsEquiv">
+                        <formatString>0.00</formatString>
+                    </column>
+                    <column columnName="percentUsed">
+                        <columnTitle>% Used</columnTitle>
+                        <formatString>0.00%</formatString>
+                    </column>
+                </columns>
+            </table>
+        </tables>
+    </metadata>
+</query>

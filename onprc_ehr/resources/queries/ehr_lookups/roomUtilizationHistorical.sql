@@ -27,6 +27,7 @@ AnimalHousingData AS (
         AND coalesce(REPORTDATE, now()) >= coalesce(h.date, now())
     GROUP BY h.room
 ),
+/* A modified version of ldk.dateRange with a single date parameter ReportDate */
 dateRange AS (
     SELECT
         i.date,
@@ -45,13 +46,11 @@ dateRange AS (
     ) i
     WHERE i.date <= REPORTDATE
 ),
-/* The following CTE is onprc_billing.perDiemsByDay modified to use CTE dateRange, which uses only a single data parameter: ReportDate */
-PerDiemsEquivByDayData AS (
+PerDiemsEquivByDayData AS ( -- PerDiemsEquivByDayData is onprc_billing.perDiemsByDay modified to use CTE dateRange, which uses only a single data parameter: ReportDate
     SELECT
         t.*,
         CASE
-            WHEN t.overlappingProjects IS NULL THEN 1
-            -- NOTE: An assignment overlapping with TMB is not charged per diems.  If TMB is single-assigned, it pays per diem and will be caught above.
+            WHEN t.overlappingProjects IS NULL THEN 1 -- An assignment overlapping with TMB is not charged per diems.
             WHEN t.tmbAssignments > 0 then 0
             WHEN t.assignedProject IS NULL AND t.overlappingProjects IS NOT NULL THEN 0
             WHEN t.ProjectType != 'Research' AND t.overlappingProjectsCategory LIKE '%Research%' THEN 0
@@ -73,29 +72,20 @@ PerDiemsEquivByDayData AS (
             ELSE 'Unknown'
         END as category,
         CASE
-            -- Catch duplicate chargeIds
-            WHEN (t.perDiemFeeCount > 1) THEN NULL
-            -- Use the treatmentOrder to look for BottleFed
-            WHEN (t.bottleFedRecordCount > 0 AND t.researchRecordCount > 0) THEN maxPdfChargeId
-            -- If this item supports infants, charge that
-            WHEN (pdfChargeInfantCount > 0 AND maxPdfChargeId IS NOT NULL) THEN maxPdfChargeId
-            -- Otherwise, infants are a special rate
-            WHEN (perDiemAge < CAST(javaConstant('org.labkey.onprc_ehr.ONPRC_EHRManager.INFANT_PER_DIEM_AGE') AS INTEGER))
+            WHEN (t.perDiemFeeCount > 1) THEN NULL -- Catch duplicate chargeIds
+            WHEN (t.bottleFedRecordCount > 0 AND t.researchRecordCount > 0) THEN maxPdfChargeId -- Use the treatmentOrder to look for BottleFed
+            WHEN (pdfChargeInfantCount > 0 AND maxPdfChargeId IS NOT NULL) THEN maxPdfChargeId -- If this item supports infants, charge that
+            WHEN (perDiemAge < CAST(javaConstant('org.labkey.onprc_ehr.ONPRC_EHRManager.INFANT_PER_DIEM_AGE') AS INTEGER)) -- Otherwise, infants are a special rate
                 THEN (SELECT ci.rowid FROM onprc_billing_public.chargeableItems ci WHERE ci.name = javaConstant('org.labkey.onprc_ehr.ONPRC_EHRManager.INFANT_PER_DIEM'))
-            -- Add quarantine flags, which trump housing type
-            WHEN (quarantineFlagCount > 0)
+            WHEN (quarantineFlagCount > 0) -- Add quarantine flags, which trump housing type
                 THEN (SELECT ci.rowid FROM onprc_billing_public.chargeableItems ci WHERE ci.name = javaConstant('org.labkey.onprc_ehr.ONPRC_EHRManager.QUARANTINE_PER_DIEM'))
-            -- Finally, defer to housing condition
-            ELSE maxPdfChargeId
+            ELSE maxPdfChargeId -- Finally, defer to housing condition
         END as chargeId,
-        -- Find overlapping tier flags on that day
-        coalesce((
+        coalesce(( -- Find overlapping tier flags on that day
             SELECT group_concat(DISTINCT f.flag.value) AS tier
             FROM study.flags f
-            -- NOTE: allow flags that ended on this date
-            WHERE f.Id = t.Id AND f.enddateCoalesced >= t.dateOnly AND f.dateOnly <= t.dateOnly AND f.flag.category = 'Housing Tier'
+            WHERE f.Id = t.Id AND f.enddateCoalesced >= t.dateOnly AND f.dateOnly <= t.dateOnly AND f.flag.category = 'Housing Tier' -- NOTE: allow flags that ended on this date
         ), 'Tier 2') AS tier
-
     FROM (
         SELECT
             i2.Id,
@@ -132,10 +122,7 @@ PerDiemsEquivByDayData AS (
             max(i2.ReportDate) AS ReportDate @hidden,
             count(tmb.Id) AS tmbAssignments,
             SUM(CASE WHEN a.projectName = javaConstant('org.labkey.onprc_ehr.ONPRC_EHRManager.TMB_PROJECT') THEN 1 ELSE 0 END) AS isTMBProject
-
-        FROM (
-            -- Find all distinct animals housed at the Center each day.
-            -- This is the first dataset to include all animals here, not just assigned animals.
+        FROM ( -- Find all distinct animals housed at the Center each day. This query is first to include all animals, not just assigned animals.
             SELECT
                 h.Id,
                 i.dateOnly,
@@ -149,17 +136,11 @@ PerDiemsEquivByDayData AS (
             LEFT JOIN study.treatment_Order t1 ON t1.id = h.id AND t1.code.meaning LIKE '%Bottle%' AND t1.date <= i.dateOnly
             GROUP BY h.Id, i.dateOnly
         ) i2
-
         JOIN study.demographics d ON (
             i2.Id = d.Id
         )
-
-        -- Housing is a little tricky.  Using the query above, we want to find the max start date, on or before this day.
-        -- The housingType from this location is used.
         JOIN study.housing h3 ON (h3.Id = i2.Id AND i2.lastHousingStart = h3.date AND h3.qcstate.publicdata = TRUE)
-
-        -- Then join to any assignment record overlapping each day
-        LEFT JOIN (
+        LEFT JOIN ( -- Then join to any assignment record overlapping each day
             SELECT
                 a.lsid,
                 a.id,
@@ -176,18 +157,14 @@ PerDiemsEquivByDayData AS (
                 a.objectid
             FROM study.assignment a
             WHERE a.qcstate.publicdata = TRUE
-            -- NOTE: We don't exclude 1-day assignments or treat them differently.
-            -- AND a.duration > 0
-        ) a ON (
+        ) a ON ( -- NOTE: We don't exclude 1-day assignments or treat them differently.
             i2.Id = a.id
             AND a.dateOnly <= i2.dateOnly
             -- Assignments end at midnight, so an assignment doesn't count on the current date if it ends on it.
             -- However, we also include 1-day assignments, which *can* have the end date match the start date.
             AND (a.enddate IS NULL OR a.enddateCoalesced > i2.dateOnly OR (a.dateOnly = i2.dateOnly AND a.enddateCoalesced = i2.dateOnly))
         )
-
-        LEFT JOIN (
-            -- For each assignment, find the co-assigned projects on that day.
+        LEFT JOIN ( -- For each assignment, find the co-assigned projects on that day.
             SELECT
                 a2.lsid,
                 a2.date,
@@ -209,16 +186,13 @@ PerDiemsEquivByDayData AS (
             AND (a2.enddate IS NULL OR a2.enddateCoalesced > i2.dateOnly OR (a2.dateOnly = i2.dateOnly AND a2.enddateCoalesced = i2.dateOnly))
             AND a.lsid != a2.lsid
         )
-
-        -- Find overlapping TMB on this date, which overrides the per diem.
-        LEFT JOIN study.assignment tmb ON (
+        LEFT JOIN study.assignment tmb ON ( -- Find overlapping TMB on this date, which overrides the per diem.
             a.id = tmb.id
             AND tmb.dateOnly <= i2.dateOnly
             AND tmb.project != a.project
             AND tmb.endDateCoalesced >= i2.dateOnly
             AND tmb.project.name = javaConstant('org.labkey.onprc_ehr.ONPRC_EHRManager.TMB_PROJECT')
         )
-
         LEFT JOIN onprc_billing.perDiemFeeDefinition pdf ON (
             pdf.housingType = h3.room.housingType
             AND pdf.housingDefinition = h3.room.housingCondition
@@ -231,20 +205,19 @@ PerDiemsEquivByDayData AS (
                 'Tier 2'
             ) = pdf.tier
         )
-
         GROUP BY i2.dateOnly, i2.Id, a.project, a.project.use_Category, i2.researchRecordCount, i2.bottleFedRecordCount
     ) t
 )
 
 SELECT
-    REPORTDATE @title='Report Date',
+    REPORTDATE,
     r.area,
     r.room,
     r.housingType,
     coalesce(cld.cageSpots, 0) AS totalCageSpaces,
     coalesce(ahd.totalAnimals, 0) AS totalAnimals,
     coalesce(pd.perDiemsEquiv, 0) AS perDiemsEquiv,
-    coalesce(coalesce(pd.perDiemsEquiv, 0) / NULLIF(coalesce(cld.cageSpots, 0), 0), 0) AS percentUsed @title='% Used'
+    coalesce(coalesce(pd.perDiemsEquiv, 0) / NULLIF(coalesce(cld.cageSpots, 0), 0), 0) AS percentUsed
 FROM ehr_lookups.rooms r
      JOIN RoomStartData rsd ON rsd.room = r.room
      LEFT JOIN AnimalHousingData ahd ON ahd.room = r.room
