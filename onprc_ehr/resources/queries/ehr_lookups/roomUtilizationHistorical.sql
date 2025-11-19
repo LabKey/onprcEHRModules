@@ -31,17 +31,15 @@ AnimalHousingData AS (
 dateRange AS (
     SELECT
         i.date,
-        CAST(i.date as date) as dateOnly,
+        CAST(i.date as DATE) as dateOnly,
         CAST(dayofyear(i.date) as INTEGER) as DayOfYear,
         CAST(dayofmonth(i.date) as INTEGER) as DayOfMonth,
         CAST(dayofweek(i.date) as INTEGER) as DayOfWeek,
         ceiling(CAST(dayofmonth(i.date) as FLOAT) / 7.0) as WeekOfMonth,
         CAST(week(i.date) as INTEGER) as WeekOfYear,
         CAST(REPORTDATE AS TIMESTAMP) as ReportDate
-
     FROM (
-        SELECT
-            timestampadd('SQL_TSI_DAY', i.value, CAST(coalesce(REPORTDATE, curdate()) AS TIMESTAMP)) as date
+        SELECT timestampadd('SQL_TSI_DAY', i.value, CAST(coalesce(REPORTDATE, curdate()) AS TIMESTAMP)) as date
         FROM ldk.integers i
     ) i
     WHERE i.date <= REPORTDATE
@@ -136,9 +134,7 @@ PerDiemsEquivByDayData AS ( -- PerDiemsEquivByDayData is onprc_billing.perDiemsB
             LEFT JOIN study.treatment_Order t1 ON t1.id = h.id AND t1.code.meaning LIKE '%Bottle%' AND t1.date <= i.dateOnly
             GROUP BY h.Id, i.dateOnly
         ) i2
-        JOIN study.demographics d ON (
-            i2.Id = d.Id
-        )
+        JOIN study.demographics d ON i2.Id = d.Id
         JOIN study.housing h3 ON (h3.Id = i2.Id AND i2.lastHousingStart = h3.date AND h3.qcstate.publicdata = TRUE)
         LEFT JOIN ( -- Then join to any assignment record overlapping each day
             SELECT
@@ -175,8 +171,6 @@ PerDiemsEquivByDayData AS ( -- PerDiemsEquivByDayData is onprc_billing.perDiemsB
                 a2.enddateCoalesced
             FROM study.assignment a2
             WHERE a2.qcstate.publicdata = TRUE
-                -- NOTE: We don't exclude 1-day assignments or treat them differently.
-                -- AND a2.duration > 1
         ) a2 ON (
             i2.id = a2.id
             AND a2.dateOnly <= i2.dateOnly
@@ -196,8 +190,7 @@ PerDiemsEquivByDayData AS ( -- PerDiemsEquivByDayData is onprc_billing.perDiemsB
         LEFT JOIN onprc_billing.perDiemFeeDefinition pdf ON (
             pdf.housingType = h3.room.housingType
             AND pdf.housingDefinition = h3.room.housingCondition
-            -- Find overlapping tier flags on that day
-            AND coalesce(
+            AND coalesce( -- Find overlapping tier flags on that day
                 (SELECT group_concat(DISTINCT f.flag.value) as tier
                     FROM study.flags f
                     --NOTE: allow flags that ended on this date
@@ -219,16 +212,16 @@ SELECT
     coalesce(pd.perDiemsEquiv, 0) AS perDiemsEquiv,
     coalesce(coalesce(pd.perDiemsEquiv, 0) / NULLIF(coalesce(cld.cageSpots, 0), 0), 0) AS percentUsed
 FROM ehr_lookups.rooms r
-     JOIN RoomStartData rsd ON rsd.room = r.room
-     LEFT JOIN AnimalHousingData ahd ON ahd.room = r.room
-     LEFT JOIN (
+    JOIN RoomStartData rsd ON rsd.room = r.room
+    LEFT JOIN AnimalHousingData ahd ON ahd.room = r.room
+    LEFT JOIN (
         SELECT
             pd.rooms,
             sum(pd.effectiveDays) AS perDiemsEquiv
         FROM PerDiemsEquivByDayData pd
         GROUP BY pd.rooms
     ) pd ON pd.rooms = r.room
-     LEFT JOIN CageLocationData cld ON cld.room = r.room
+    LEFT JOIN CageLocationData cld ON cld.room = r.room
 WHERE r.housingType = 205 -- Cage Location
     AND r.housingCondition != 490 -- Exclude none|NECROPSY
     AND REPORTDATE <= coalesce(r.dateDisabled, now())
