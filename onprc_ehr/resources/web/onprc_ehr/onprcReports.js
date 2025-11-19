@@ -931,6 +931,7 @@ EHR.reports.onprcSnapshot = function(panel, tab){
     }
 
 };
+EHR.reports.onprclinicalHistoryPanelXtype = 'onprc_ehr-smallformsnapshotpanel';
 
 EHR.reports.onprcFullClinicalHistory = function(panel, tab){
     EHR.reports.clinicalHistory(panel, tab, true, true);
