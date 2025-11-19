@@ -2637,9 +2637,10 @@ public class ONPRC_EHRTriggerHelper
         }
     }
 
-    public void sendClinpathPanicEmail(String id, String objectid, Integer vetname)
+    public void sendClinpathPanicEmail(String id, String objectid)
     {
-        String subject = "Chemistry Results with Panic values";
+        String subject = "Chemistry Result" +
+                "s with Panic values";
 
         Integer testname = 1007; //Raymond   Vamdy 1014
 
@@ -2652,8 +2653,10 @@ public class ONPRC_EHRTriggerHelper
         }
 
 
-        final TableInfo ti = getTableInfo("onpc_ehr", "ChemistryNotification");
-        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("vet"), vetname, CompareType.EQUAL);
+        final TableInfo ti = getTableInfo("onprc_ehr", "ChemistryPanicNotification");
+        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("Id"), id, CompareType.EQUAL);
+        filter.addCondition(FieldKey.fromString("objectid"), "objectid");
+
 
         List<FieldKey> names= new ArrayList<>();
         FieldKey clinpathFieldKey = FieldKey.fromString("objectid");
@@ -2663,6 +2666,7 @@ public class ONPRC_EHRTriggerHelper
         names.add(FieldKey.fromString("testid"));
         names.add(FieldKey.fromString("date"));
         names.add(FieldKey.fromString("Id"));
+        names.add(FieldKey.fromString("vet"));
 
 
         final Map<FieldKey, ColumnInfo> colKeys = QueryService.get().getColumns(ti, names);
@@ -2691,7 +2695,7 @@ public class ONPRC_EHRTriggerHelper
                    {
 
                        TableInfo ti2 = getTableInfo("onprc_ehr", "Labwork_Requestor_Vets");
-                       SimpleFilter filter2 = new SimpleFilter(FieldKey.fromString("userid"), rs.getString("vetname"));
+                       SimpleFilter filter2 = new SimpleFilter(FieldKey.fromString("userid"), rs.getString("vet"));
                        filter2.addCondition(FieldKey.fromString("DisableDate"), true, CompareType.ISBLANK);
 
                        TableSelector ts2 = new TableSelector(ti2, PageFlowUtil.set("LastName", "FirstName") , filter2, null);
@@ -2705,7 +2709,7 @@ public class ONPRC_EHRTriggerHelper
                                        "</td><td>" + PageFlowUtil.filter(rs.getString("servicerequested"))  +
                                        " </td><td>" +  PageFlowUtil.filter(rs.getString("testid")) +
                                        " </td><td>" +  PageFlowUtil.filter(rs.getString("qualResult")) +
-                                       "</td><td>" +  PageFlowUtil.filter(rs.getString("Vetname")) + "</td></tr>\n");
+                                       "</td><td>" +  PageFlowUtil.filter(rs.getString("LastName")) + "</td></tr>\n");
                                break;
 
                            }
