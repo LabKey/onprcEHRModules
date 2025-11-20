@@ -1,34 +1,30 @@
 PARAMETERS(ReportDate TIMESTAMP)
 
-/* Get starting date for each room */
-WITH RoomStartData AS (
+WITH RoomFirstUseData AS ( -- Include a room for report dates after a room's first use
     SELECT
         room,
         min(date) AS startingDate
     FROM study.housing
     GROUP BY room
 ),
-/* Get total cage locations in each room */
-CageLocationData AS (
+CageCountData AS ( -- Count *current* cage locations in each room
     SELECT
         c.room,
         count(c.cage) AS cageSpots
     FROM ehr_lookups.cages c
     GROUP BY c.room
 ),
-/* Get total animals housed in each room on the report date */
-AnimalHousingData AS (
+AnimalCountData AS ( -- Count animals in each room on the report date
     SELECT
         h.room,
         count(h.id) AS totalAnimals
     FROM study.housing h
     WHERE
-        coalesce( REPORTDATE , CAST('1900-01-01 00:00:00.0' as timestamp)) < coalesce(h.enddate, now())
+        coalesce(REPORTDATE, CAST('1900-01-01 00:00:00.0' as timestamp)) < coalesce(h.enddate, now())
         AND coalesce(REPORTDATE, now()) >= coalesce(h.date, now())
     GROUP BY h.room
 ),
-/* A modified version of ldk.dateRange with a single date parameter ReportDate */
-dateRange AS (
+dateRange AS ( -- A modified version of ldk.dateRange that uses a single date parameter: REPORTDATE
     SELECT
         i.date,
         CAST(i.date as DATE) as dateOnly,
@@ -44,11 +40,11 @@ dateRange AS (
     ) i
     WHERE i.date <= REPORTDATE
 ),
-PerDiemsEquivByDayData AS ( -- PerDiemsEquivByDayData is onprc_billing.perDiemsByDay modified to use CTE dateRange, which uses only a single data parameter: ReportDate
+PerDiemsEquivData AS ( -- A modified version of onprc_billing.perDiemsByDay that uses CTE dateRange and a single date parameter: REPORTDATE
     SELECT
         t.*,
         CASE
-            WHEN t.overlappingProjects IS NULL THEN 1 -- An assignment overlapping with TMB is not charged per diems.
+            WHEN t.overlappingProjects IS NULL THEN 1 -- An assignment overlapping with TMB is not charged per diems
             WHEN t.tmbAssignments > 0 then 0
             WHEN t.assignedProject IS NULL AND t.overlappingProjects IS NOT NULL THEN 0
             WHEN t.ProjectType != 'Research' AND t.overlappingProjectsCategory LIKE '%Research%' THEN 0
@@ -153,7 +149,7 @@ PerDiemsEquivByDayData AS ( -- PerDiemsEquivByDayData is onprc_billing.perDiemsB
                 a.objectid
             FROM study.assignment a
             WHERE a.qcstate.publicdata = TRUE
-        ) a ON ( -- NOTE: We don't exclude 1-day assignments or treat them differently.
+        ) a ON (
             i2.Id = a.id
             AND a.dateOnly <= i2.dateOnly
             -- Assignments end at midnight, so an assignment doesn't count on the current date if it ends on it.
@@ -208,21 +204,20 @@ SELECT
     r.room,
     r.housingType,
     coalesce(cld.cageSpots, 0) AS totalCageSpaces,
-    coalesce(ahd.totalAnimals, 0) AS totalAnimals,
+    coalesce(acd.totalAnimals, 0) AS totalAnimals,
     coalesce(pd.perDiemsEquiv, 0) AS perDiemsEquiv,
     coalesce(coalesce(pd.perDiemsEquiv, 0) / NULLIF(coalesce(cld.cageSpots, 0), 0), 0) AS percentUsed
 FROM ehr_lookups.rooms r
-    JOIN RoomStartData rsd ON rsd.room = r.room
-    LEFT JOIN AnimalHousingData ahd ON ahd.room = r.room
-    LEFT JOIN (
-        SELECT
-            pd.rooms,
-            sum(pd.effectiveDays) AS perDiemsEquiv
-        FROM PerDiemsEquivByDayData pd
-        GROUP BY pd.rooms
-    ) pd ON pd.rooms = r.room
-    LEFT JOIN CageLocationData cld ON cld.room = r.room
-WHERE r.housingType = 205 -- Cage Location
-    AND r.housingCondition != 490 -- Exclude none|NECROPSY
-    AND REPORTDATE <= coalesce(r.dateDisabled, now())
-    AND (coalesce(rsd.startingDate, now()) <= REPORTDATE OR rsd.startingDate IS NULL)
+
+JOIN RoomFirstUseData rfud ON rfud.room = r.room -- rooms without a first use won't be included
+LEFT JOIN AnimalCountData acd ON acd.room = r.room
+LEFT JOIN (
+    SELECT
+        pd.rooms,
+        sum(pd.effectiveDays) AS perDiemsEquiv
+    FROM PerDiemsEquivData pd
+    GROUP BY pd.rooms
+) pd ON pd.rooms = r.room
+LEFT JOIN CageCountData cld ON cld.room = r.room
+WHERE REPORTDATE <= coalesce(r.dateDisabled, now())
+    AND rfud.startingDate <= REPORTDATE
