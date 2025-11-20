@@ -2642,14 +2642,6 @@ public class ONPRC_EHRTriggerHelper
 
         Integer testname = 1007; //Raymond   Vamdy 1014
 
-        Set<UserPrincipal> recipients = getRecipients(testname);
-//        Set<UserPrincipal> recipients = getRecipients(vetname);
-        if (recipients.isEmpty())
-        {
-            _log.warn("No recipients, unable to send EHR trigger script email");
-            return;
-        }
-        _log.info("Success Panic value 1");
 
         final TableInfo ti = getTableInfo("onprc_ehr", "ChemistryPanicNotification");
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("Id"), id, CompareType.EQUAL);
@@ -2698,6 +2690,8 @@ public class ONPRC_EHRTriggerHelper
                        SimpleFilter filter2 = new SimpleFilter(FieldKey.fromString("userid"), rs.getString("vet"));
                        filter2.addCondition(FieldKey.fromString("DisableDate"), true, CompareType.ISBLANK);
 
+                       Integer testname = Integer.valueOf(rs.getString("vet"));
+
                        TableSelector ts2 = new TableSelector(ti2, PageFlowUtil.set("LastName") , filter2, null);
                        List<String> ret2 = ts2.getArrayList(String.class);
                        if (!ret2.isEmpty())
@@ -2721,6 +2715,14 @@ public class ONPRC_EHRTriggerHelper
             );
 
         }
+        Set<UserPrincipal> recipients = getRecipients(testname);
+//        Set<UserPrincipal> recipients = getRecipients(vetname);
+        if (recipients.isEmpty())
+        {
+            _log.warn("No recipients, unable to send EHR trigger script email");
+            return;
+        }
+        _log.info("Success Panic value 1");
 
         html.append("</table>\n");
 
