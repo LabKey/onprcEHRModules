@@ -2604,7 +2604,6 @@ public class ONPRC_EHRTriggerHelper
         keys.add(FieldKey.fromString("lsid"));
         final Map<FieldKey, ColumnInfo> colMap = QueryService.get().getColumns(ti, keys);
 
-
         final List<Map<String, Object>> toUpdate = new ArrayList<>();
         final List<Map<String, Object>> oldKeys = new ArrayList<>();
         TableSelector ts = new TableSelector(ti, colMap.values(), new SimpleFilter(FieldKey.fromString("Id"), id, CompareType.IN), null);
@@ -2651,11 +2650,11 @@ public class ONPRC_EHRTriggerHelper
             _log.warn("No recipients, unable to send EHR trigger script email");
             return;
         }
-
+        _log.info("Success Panic value 1");
 
         final TableInfo ti = getTableInfo("onprc_ehr", "ChemistryPanicNotification");
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("Id"), id, CompareType.EQUAL);
-        filter.addCondition(FieldKey.fromString("objectid"), "objectid");
+        filter.addCondition(FieldKey.fromString("objectid"), objectid, CompareType.EQUAL);
 
 
         List<FieldKey> names= new ArrayList<>();
@@ -2684,6 +2683,7 @@ public class ONPRC_EHRTriggerHelper
         else
         {
             //Create header information on the report
+            _log.info("Success Panic value 2");
 
             html.append("<table border=1 style='border-collapse: collapse;'>");
             html.append("<tr style='font-weight: bold;'><td>Animal ID</td><td>Date</td><td>Service Requested</td><td> Panel Test Name</td><td> Qual Results</td><td> Vet/PI Name</td></tr>\n");
