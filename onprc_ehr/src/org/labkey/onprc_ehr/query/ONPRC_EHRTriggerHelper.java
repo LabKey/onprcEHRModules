@@ -2638,8 +2638,7 @@ public class ONPRC_EHRTriggerHelper
 
     public void sendClinpathPanicEmail(String id, String objectid)
     {
-        String subject = "Chemistry Result" +
-                "s with Panic values";
+        String subject = "Chemistry Results with Panic values";
 
         Integer testname = 1007; //Raymond   Vamdy 1014
 
@@ -2654,7 +2653,7 @@ public class ONPRC_EHRTriggerHelper
 
         final TableInfo ti = getTableInfo("onprc_ehr", "ChemistryPanicNotification");
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("Id"), id, CompareType.EQUAL);
-        filter.addCondition(FieldKey.fromString("objectid"), objectid, CompareType.EQUAL);
+//        filter.addCondition(FieldKey.fromString("objectid"), objectid, CompareType.EQUAL);
 
 
         List<FieldKey> names= new ArrayList<>();
@@ -2667,6 +2666,7 @@ public class ONPRC_EHRTriggerHelper
         names.add(FieldKey.fromString("Id"));
         names.add(FieldKey.fromString("vet"));
 
+        _log.info("Success Panic value 2");
 
         final Map<FieldKey, ColumnInfo> colKeys = QueryService.get().getColumns(ti, names);
         final ColumnInfo clinpathColumn = colKeys.get(clinpathFieldKey);
@@ -2683,7 +2683,7 @@ public class ONPRC_EHRTriggerHelper
         else
         {
             //Create header information on the report
-            _log.info("Success Panic value 2");
+            _log.info("Success Panic value 3");
 
             html.append("<table border=1 style='border-collapse: collapse;'>");
             html.append("<tr style='font-weight: bold;'><td>Animal ID</td><td>Date</td><td>Service Requested</td><td> Panel Test Name</td><td> Qual Results</td><td> Vet/PI Name</td></tr>\n");
@@ -2698,7 +2698,7 @@ public class ONPRC_EHRTriggerHelper
                        SimpleFilter filter2 = new SimpleFilter(FieldKey.fromString("userid"), rs.getString("vet"));
                        filter2.addCondition(FieldKey.fromString("DisableDate"), true, CompareType.ISBLANK);
 
-                       TableSelector ts2 = new TableSelector(ti2, PageFlowUtil.set("LastName", "FirstName") , filter2, null);
+                       TableSelector ts2 = new TableSelector(ti2, PageFlowUtil.set("LastName") , filter2, null);
                        List<String> ret2 = ts2.getArrayList(String.class);
                        if (!ret2.isEmpty())
                        {
@@ -2709,7 +2709,7 @@ public class ONPRC_EHRTriggerHelper
                                        "</td><td>" + PageFlowUtil.filter(rs.getString("servicerequested"))  +
                                        " </td><td>" +  PageFlowUtil.filter(rs.getString("testid")) +
                                        " </td><td>" +  PageFlowUtil.filter(rs.getString("qualResult")) +
-                                       "</td><td>" +  PageFlowUtil.filter(rs.getString("LastName")) + "</td></tr>\n");
+                                       "</td><td>" +  PageFlowUtil.filter(Vetname) + "</td></tr>\n");
                                break;
 
                            }
