@@ -58,7 +58,7 @@ public class NHPTrainingFormType extends TaskForm
     @Override
     public boolean isVisible()
     {
-        Group g = GroupManager.getGroup(getCtx().getContainer(), "Pairing Observations SF", GroupEnumType.SITE);
+        Group g = GroupManager.getGroup(getCtx().getContainer(), "DCM CMU", GroupEnumType.SITE);
         if (g != null && getCtx().getUser().isInGroup(g.getUserId()) && !getCtx().getContainer().hasPermission(getCtx().getUser(), AdminPermission.class))
         {
             return false;
