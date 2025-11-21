@@ -15,3 +15,4 @@ b.year8,
 b.PostedDate
 FROM NIHRateCalc_base b
 join chargeableItems c on b.item = c.rowid
+where c.enddate > Now()
