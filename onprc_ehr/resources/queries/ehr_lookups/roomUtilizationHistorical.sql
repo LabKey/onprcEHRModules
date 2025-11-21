@@ -1,20 +1,20 @@
 PARAMETERS(ReportDate TIMESTAMP)
 
-WITH RoomFirstUseData AS ( -- Include a room for report dates after a room's first use
+WITH RoomFirstUseData AS ( -- Find first use of each room
     SELECT
         room,
-        min(date) AS startingDate
+        min(date) AS firstUseDate
     FROM study.housing
     GROUP BY room
 ),
-CageCountData AS ( -- Count *current* cage locations in each room
+CageSpaceCountData AS ( -- Count *current* cage spaces in each room
     SELECT
         c.room,
-        count(c.cage) AS cageSpots
+        count(c.cage) AS cageSpaces
     FROM ehr_lookups.cages c
     GROUP BY c.room
 ),
-AnimalCountData AS ( -- Count animals in each room on the report date
+AnimalCountData AS ( -- A modified version of study.HousingOverlapsReports that uses a single date parameter
     SELECT
         h.room,
         count(h.id) AS totalAnimals
@@ -24,7 +24,7 @@ AnimalCountData AS ( -- Count animals in each room on the report date
         AND coalesce(REPORTDATE, now()) >= coalesce(h.date, now())
     GROUP BY h.room
 ),
-dateRange AS ( -- A modified version of ldk.dateRange that uses a single date parameter: REPORTDATE
+dateRange AS ( -- A modified version of ldk.dateRange that uses a single date parameter
     SELECT
         i.date,
         CAST(i.date as DATE) as dateOnly,
@@ -40,7 +40,7 @@ dateRange AS ( -- A modified version of ldk.dateRange that uses a single date pa
     ) i
     WHERE i.date <= REPORTDATE
 ),
-PerDiemsEquivData AS ( -- A modified version of onprc_billing.perDiemsByDay that uses CTE dateRange and a single date parameter: REPORTDATE
+PerDiemsEquivData AS ( -- A modified version of onprc_billing.perDiemsByDay that uses CTE dateRange and a single date parameter
     SELECT
         t.*,
         CASE
@@ -203,13 +203,13 @@ SELECT
     r.area,
     r.room,
     r.housingType,
-    coalesce(cld.cageSpots, 0) AS totalCageSpaces,
+    coalesce(csc.cageSpaces, 0) AS totalCageSpaces,
     coalesce(acd.totalAnimals, 0) AS totalAnimals,
     coalesce(pd.perDiemsEquiv, 0) AS perDiemsEquiv,
-    coalesce(coalesce(pd.perDiemsEquiv, 0) / NULLIF(coalesce(cld.cageSpots, 0), 0), 0) AS percentUsed
+    coalesce(coalesce(pd.perDiemsEquiv, 0) / NULLIF(coalesce(csc.cageSpaces, 0), 0), 0) AS percentUsed
 FROM ehr_lookups.rooms r
 
-JOIN RoomFirstUseData rfud ON rfud.room = r.room -- rooms without a first use won't be included
+JOIN RoomFirstUseData rfu ON rfu.room = r.room -- rooms without a first use won't be included
 LEFT JOIN AnimalCountData acd ON acd.room = r.room
 LEFT JOIN (
     SELECT
@@ -218,6 +218,6 @@ LEFT JOIN (
     FROM PerDiemsEquivData pd
     GROUP BY pd.rooms
 ) pd ON pd.rooms = r.room
-LEFT JOIN CageCountData cld ON cld.room = r.room
+LEFT JOIN CageSpaceCountData csc ON csc.room = r.room
 WHERE REPORTDATE <= coalesce(r.dateDisabled, now())
-    AND rfud.startingDate <= REPORTDATE
+    AND rfu.firstUseDate <= REPORTDATE
