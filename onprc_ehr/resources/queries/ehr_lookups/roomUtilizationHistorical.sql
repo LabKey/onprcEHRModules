@@ -200,6 +200,7 @@ PerDiemsEquivData AS ( -- A modified version of onprc_billing.perDiemsByDay that
 
 SELECT
     REPORTDATE,
+    r.building,
     r.area,
     r.room,
     r.housingType,
@@ -216,6 +217,7 @@ LEFT JOIN (
         pd.rooms,
         sum(pd.effectiveDays) AS perDiemsEquiv
     FROM PerDiemsEquivData pd
+    WHERE pd.
     GROUP BY pd.rooms
 ) pd ON pd.rooms = r.room
 LEFT JOIN CageSpaceCountData csc ON csc.room = r.room
