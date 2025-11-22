@@ -3,6 +3,7 @@ PARAMETERS (StartDate TIMESTAMP, EndDate TIMESTAMP
 -- This is the QUery using CTES that was AI Generated for revised lease fees
 -- Date:  2025-11-22
 -- Step 1 Assignments has bene modified to use LabkeySQL structure.
+-- THis was moved to the onprc_billing query section
 -- =========================================================
 WITH
 -- =========================================================
