@@ -7,7 +7,9 @@
         <column name="action" />
         <column name="test_results"/>
         <column name="pass_fail"/>
+        <column name="retest"/>
         <column name="performedby"/>
+        <column name="remarks"/>
         <column name="qcstate"/>
         <column name="taskid"/>
 

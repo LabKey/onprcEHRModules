@@ -16,8 +16,8 @@
 package org.labkey.onprc_ehr.table;
 
 import org.apache.commons.beanutils.ConversionException;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.labkey.api.data.AbstractTableInfo;
 import org.labkey.api.data.BaseColumnInfo;
 import org.labkey.api.data.ColumnInfo;
@@ -59,24 +59,24 @@ import org.labkey.api.study.Dataset;
 import org.labkey.api.study.DatasetTable;
 import org.labkey.api.study.Study;
 import org.labkey.api.study.StudyService;
-import org.labkey.api.util.PageFlowUtil;
+import org.labkey.api.util.LinkBuilder;
 import org.labkey.api.view.HttpView;
+import org.labkey.api.writer.HtmlWriter;
 import org.labkey.onprc_ehr.ONPRC_EHRManager;
 import org.labkey.onprc_ehr.ONPRC_EHRModule;
 
-import java.io.IOException;
-import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
-/**
- * User: bimber
- * Date: 12/7/12
- * Time: 2:22 PM
- */
+import static org.labkey.api.util.DOM.Attribute.style;
+import static org.labkey.api.util.DOM.SPAN;
+import static org.labkey.api.util.DOM.at;
+
 public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
 {
     private static final Logger _log = LogManager.getLogger(ONPRC_EHRCustomizer.class);
@@ -1111,7 +1111,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         ColumnInfo existing = ti.getColumn(name);
         if (null == existing && null != ti.getColumn("meaning"))
         {
-            SQLFragment sql = new SQLFragment("(SELECT " + ti.getSqlDialect().getGroupConcat(new SQLFragment("REPLICATE('0', 4 - LEN(t.hourofday))  + cast(t.hourofday as varchar(4))"), true, true, "','").getSqlCharSequence() +
+            SQLFragment sql = new SQLFragment("(SELECT " + ti.getSqlDialect().getGroupConcat(new SQLFragment("REPLICATE('0', 4 - LEN(t.hourofday))  + cast(t.hourofday as varchar(4))"), true, true, ",").getSqlCharSequence() +
                     "FROM ehr_lookups.treatment_frequency_times t " +
                     " WHERE t.frequency = " + ExprColumn.STR_TABLE_ALIAS + ".meaning " +
                     " GROUP BY t.frequency " +
@@ -1810,11 +1810,15 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
                     return new DataColumn(colInfo){
 
                         @Override
-                        public void renderGridCellContents(RenderContext ctx, Writer out) throws IOException
+                        public void renderGridCellContents(RenderContext ctx, HtmlWriter out)
                         {
                             String runId = (String)ctx.get(new FieldKey(getBoundColumn().getFieldKey().getParent(), "runIdPLT"));
                             String id = (String)ctx.get(new FieldKey(getBoundColumn().getFieldKey().getParent(), "Id"));
-                            out.write("<span style=\"white-space:nowrap\"><a class=\"labkey-text-link srg-chk-lst\" data-runid=\"" + PageFlowUtil.filter(runId) + "\" data-id=\"" + PageFlowUtil.filter(id) + "\">" + getFormattedHtml(ctx) + "</a></span>");
+
+                            SPAN(
+                                at(style, "white-space:nowrap"),
+                                LinkBuilder.simpleLink(getFormattedHtml(ctx)).addClass("labkey-text-link srg-chk-lst").attributes(Map.of("data-runid", Optional.ofNullable(runId).orElse(""), "data-id", id))
+                            ).appendTo(out);
                             if (!_surgeryChecklistClickHandlerAdded)
                             {
                                 HttpView.currentPageConfig().addHandlerForQuerySelector("a.srg-chk-lst", "click", "EHR.panel.LabworkSummaryPanel.showRunSummary(this.attributes.getNamedItem('data-runid').value, this.attributes.getNamedItem('data-id').value, this);");
@@ -1846,11 +1850,16 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
                     {
 
                         @Override
-                        public void renderGridCellContents(RenderContext ctx, Writer out) throws IOException
+                        public void renderGridCellContents(RenderContext ctx, HtmlWriter out)
                         {
                             String runId = (String) ctx.get(new FieldKey(getBoundColumn().getFieldKey().getParent(), "runIdHCT"));
                             String id = (String) ctx.get(new FieldKey(getBoundColumn().getFieldKey().getParent(), "Id"));
-                            out.write("<span style=\"white-space:nowrap\"><a class=\"labkey-text-link hct-row\" data-runid=\"" + PageFlowUtil.filter(runId) + "\" data-id=\"" + PageFlowUtil.filter(id) + "\">" + getFormattedHtml(ctx) + "</a></span>");
+
+                            SPAN(
+                                at(style, "white-space:nowrap"),
+                                LinkBuilder.simpleLink(getFormattedHtml(ctx)).addClass("labkey-text-link hct-row").attributes(Map.of("data-runid", Optional.ofNullable(runId).orElse(""), "data-id", id))
+                            ).appendTo(out);
+
                             if (!_hctRowClickHandlerAdded)
                             {
                                 HttpView.currentPageConfig().addHandlerForQuerySelector("a.hct-row", "click", "EHR.panel.LabworkSummaryPanel.showRunSummary(this.attributes.getNamedItem('data-runid').value, this.attributes.getNamedItem('data-id').value, this);");
@@ -1926,7 +1935,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
             {
                 sb.append(d.getName() + ", ");
             }
-            _log.info("datasets present: " + sb.toString());
+            _log.info("datasets present: " + sb);
 
             return null;
         }
@@ -1971,12 +1980,16 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
                 return new DataColumn(colInfo){
 
                     @Override
-                    public void renderGridCellContents(RenderContext ctx, Writer out) throws IOException
+                    public void renderGridCellContents(RenderContext ctx, HtmlWriter out)
                     {
                         String objectid = (String)ctx.get("objectid");
                         String id = (String)ctx.get("Id");
 
-                        out.write("<span style=\"white-space:nowrap\"><a class=\"labkey-text-link cs-h-row\" data-objectid=\"" + PageFlowUtil.filter(objectid) + "\" data-id=\"" + PageFlowUtil.filter(id) + "\">[Show Case Hx]</a></span>");
+                        SPAN(
+                            at(style, "white-space:nowrap"),
+                            LinkBuilder.simpleLink("[Show Case Hx]").addClass("labkey-text-link cs-h-row").attributes(Map.of("data-objectid", objectid, "data-id", id))
+                        ).appendTo(out);
+
                         if (!_caseHistoryClickHandlerAdded)
                         {
                             HttpView.currentPageConfig().addHandlerForQuerySelector("a.cs-h-row", "click", "EHR.window.CaseHistoryWindow.showCaseHistory(this.attributes.getNamedItem('data-objectid').value, this.attributes.getNamedItem('data-id').value, this);");
@@ -2167,7 +2180,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
 
                 List<QueryException> errors = new ArrayList<>();
                 TableInfo ti = qd.getTable(errors, true);
-                if (errors.size() > 0)
+                if (!errors.isEmpty())
                 {
                     _log.error("Error creating lookup table for: " + schemaName + "." + queryName + " in container: " + targetSchema.getContainer().getPath());
                     for (QueryException error : errors)
@@ -2217,6 +2230,7 @@ private void appendFlagsAlertActiveCol(final UserSchema ehrSchema, AbstractTable
     col.setIsUnselectable(true);
     col.setUserEditable(false);
     col.setFk(new LookupForeignKey(){
+        @Override
         public TableInfo getLookupTableInfo()
         {
             String name = tableName + "_flagsAtTime";
@@ -2232,7 +2246,7 @@ private void appendFlagsAlertActiveCol(final UserSchema ehrSchema, AbstractTable
 
             List<QueryException> errors = new ArrayList<>();
             TableInfo ti = qd.getTable(errors, true);
-            if (errors.size() > 0)
+            if (!errors.isEmpty())
             {
                 _log.error("Error creating lookup table for: " + schemaName + "." + queryName + " in container: " + targetSchema.getContainer().getPath());
                 for (QueryException error : errors)
@@ -2282,6 +2296,7 @@ private void appendFlagsAlertActiveCol(final UserSchema ehrSchema, AbstractTable
         col.setIsUnselectable(true);
         col.setUserEditable(false);
         col.setFk(new LookupForeignKey(){
+            @Override
             public TableInfo getLookupTableInfo()
             {
                 String name = tableName + "_nhpHistory";
@@ -2290,6 +2305,7 @@ private void appendFlagsAlertActiveCol(final UserSchema ehrSchema, AbstractTable
                         "sd." + pkCol.getColumnName() + ",\n" +
                         "group_concat(DISTINCT h.training_type, chr(10)) as nhptrainingtype,\n" +
                         "group_concat(DISTINCT h.training_results, chr(10)) as nhptrainingresults,\n" +
+                        "group_concat(DISTINCT h.training_type + ': ' + h.remark + '-  ' + h.training_results, chr(10)) as nhptrainingremarks,\n" +
                         "FROM \"" + schemaName + "\".\"" + queryName + "\" sd\n" +
                         "JOIN \"" + ehrPath + "\".onprc_ehr.NHP_Training h\n" +
                         "  ON (sd.id = h.id  AND (h.training_type in ('Procedure Cage','Tower')) AND h.qcstate.publicdata = true)\n" +
@@ -2299,7 +2315,7 @@ private void appendFlagsAlertActiveCol(final UserSchema ehrSchema, AbstractTable
 
                 List<QueryException> errors = new ArrayList<>();
                 TableInfo ti = qd.getTable(errors, true);
-                if (errors.size() > 0)
+                if (!errors.isEmpty())
                 {
                     _log.error("Error creating lookup table for: " + schemaName + "." + queryName + " in container: " + targetSchema.getContainer().getPath());
                     for (QueryException error : errors)
@@ -2314,6 +2330,8 @@ private void appendFlagsAlertActiveCol(final UserSchema ehrSchema, AbstractTable
 
                 ((MutableColumnInfo)ti.getColumn("nhptrainingtype")).setLabel("NHP Training Type");
                 ((MutableColumnInfo)ti.getColumn("nhptrainingresults")).setLabel("NHP Training Results");
+                ((MutableColumnInfo)ti.getColumn("nhptrainingremarks")).setLabel("NHP Training Remarks");
+                ((MutableColumnInfo)ti.getColumn("nhptrainingremarks")).setDisplayWidth("300");
 
                 return ti;
             }
@@ -2365,7 +2383,7 @@ private void appendFlagsAlertActiveCol(final UserSchema ehrSchema, AbstractTable
 
                 List<QueryException> errors = new ArrayList<>();
                 TableInfo ti = qd.getTable(errors, true);
-                if (errors.size() > 0)
+                if (!errors.isEmpty())
                 {
                     _log.error("Error creating lookup table for: " + schemaName + "." + queryName + " in container: " + targetSchema.getContainer().getPath());
                     for (QueryException error : errors)
@@ -2431,7 +2449,7 @@ private void appendFlagsAlertActiveCol(final UserSchema ehrSchema, AbstractTable
 
                 List<QueryException> errors = new ArrayList<>();
                 TableInfo ti = qd.getTable(errors, true);
-                if (errors.size() > 0)
+                if (!errors.isEmpty())
                 {
                     _log.error("Error creating lookup table for: " + schemaName + "." + queryName + " in container: " + targetSchema.getContainer().getPath());
                     for (QueryException error : errors)

@@ -43,6 +43,7 @@ public class BCSScoreWeightsDemographicsProvider extends AbstractListDemographic
         return keys;
     }
 
+    @Override
     protected Collection<FieldKey> getFieldKeys()
     {
         Set<FieldKey> keys = new HashSet<>();

@@ -90,7 +90,7 @@ public class BillingAuditProvider extends AbstractAuditTypeProvider implements A
 
     public static void addAuditEntry(Container container, User user, String tableName, String objectId, String comment)
     {
-        BillingAuditProvider.BillingAuditEvent event = new BillingAuditProvider.BillingAuditEvent(container.getId(), comment);
+        BillingAuditProvider.BillingAuditEvent event = new BillingAuditProvider.BillingAuditEvent(container, comment);
 
         event.setTableName(tableName);
         event.setObjectId(objectId);
@@ -108,7 +108,7 @@ public class BillingAuditProvider extends AbstractAuditTypeProvider implements A
             super();
         }
 
-        public BillingAuditEvent(String container, String comment)
+        public BillingAuditEvent(Container container, String comment)
         {
             super(AUDIT_EVENT_TYPE, container, comment);
         }

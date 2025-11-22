@@ -15,14 +15,12 @@
  */
 package org.labkey.onprc_ehr.history;
 
-import org.apache.commons.lang3.StringUtils;
 import org.labkey.api.data.Container;
 import org.labkey.api.data.Results;
 import org.labkey.api.module.Module;
 import org.labkey.api.query.FieldKey;
 import org.labkey.api.util.DateUtil;
 import org.labkey.api.util.PageFlowUtil;
-import org.labkey.onprc_ehr.ONPRC_EHRModule;
 
 import java.sql.Date;
 import java.sql.SQLException;

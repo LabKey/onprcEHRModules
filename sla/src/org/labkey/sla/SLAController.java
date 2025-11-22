@@ -91,7 +91,7 @@ public class SLAController extends SpringActionController
     }
 
     @RequiresPermission(AdminPermission.class)
-    public class RunEtlAction extends MutatingApiAction<Object>
+    public static class RunEtlAction extends MutatingApiAction<Object>
     {
         @Override
         public ApiResponse execute(Object form, BindException errors)
@@ -102,7 +102,7 @@ public class SLAController extends SpringActionController
     }
 
     @RequiresPermission(AdminOperationsPermission.class)
-    public class ValidateEtlAction extends ConfirmAction<ValidateEtlSyncForm>
+    public static class ValidateEtlAction extends ConfirmAction<ValidateEtlSyncForm>
     {
         @Override
         public boolean handlePost(ValidateEtlSyncForm form, BindException errors) throws Exception
@@ -158,7 +158,7 @@ public class SLAController extends SpringActionController
     }
 
     @RequiresPermission(AdminPermission.class)
-    public class SetEtlDetailsAction extends MutatingApiAction<EtlAdminForm>
+    public static class SetEtlDetailsAction extends MutatingApiAction<EtlAdminForm>
     {
         @Override
         public ApiResponse execute(EtlAdminForm form, BindException errors)
@@ -358,7 +358,7 @@ public class SLAController extends SpringActionController
     }
 
     @RequiresPermission(AdminPermission.class)
-    public class GetEtlDetailsAction extends ReadOnlyApiAction<Object>
+    public static class GetEtlDetailsAction extends ReadOnlyApiAction<Object>
     {
         @Override
         public ApiResponse execute(Object form, BindException errors)
@@ -388,7 +388,7 @@ public class SLAController extends SpringActionController
     }
 
     @RequiresPermission(InsertPermission.class)
-    public class SendPurchaseOrderNotificationAction extends MutatingApiAction<PurchaseOrderEmailForm>
+    public static class SendPurchaseOrderNotificationAction extends MutatingApiAction<PurchaseOrderEmailForm>
     {
         @Override
         public Object execute(PurchaseOrderEmailForm form, BindException errors) throws Exception
@@ -561,7 +561,7 @@ public class SLAController extends SpringActionController
     }
 
     @RequiresPermission(InsertPermission.class)
-    public class InsertPurchaseOrderAction extends MutatingApiAction<PurchaseForm>
+    public static class InsertPurchaseOrderAction extends MutatingApiAction<PurchaseForm>
     {
         private Container _adminContainer;
 
@@ -604,7 +604,7 @@ public class SLAController extends SpringActionController
     }
 
     @RequiresPermission(ReadPermission.class)
-    public class GetPurchaseOrderDraftAction extends ReadOnlyApiAction<PurchaseDraftForm>
+    public static class GetPurchaseOrderDraftAction extends ReadOnlyApiAction<PurchaseDraftForm>
     {
         private Container _adminContainer;
         private PurchaseDraftForm _draft;
@@ -639,7 +639,7 @@ public class SLAController extends SpringActionController
     }
 
     @RequiresPermission(InsertPermission.class)
-    public class SavePurchaseOrderDraftAction extends MutatingApiAction<PurchaseDraftForm>
+    public static class SavePurchaseOrderDraftAction extends MutatingApiAction<PurchaseDraftForm>
     {
         private Container _adminContainer;
 

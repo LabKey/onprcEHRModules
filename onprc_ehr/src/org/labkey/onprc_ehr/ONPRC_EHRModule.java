@@ -110,11 +110,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 
-/**
- * User: jonesga
- * Date: 6/26/2018
- * Change of ONPRC Module Number
- */
 public class ONPRC_EHRModule extends ExtendedSimpleModule
 {
     public static final String NAME = "ONPRC_EHR";
@@ -129,7 +124,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
     @Override
     public @Nullable Double getSchemaVersion()
     {
-        return 24.008;
+        return 25.003;
     }
 
     @Override
@@ -401,7 +396,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         }
         catch (URISyntaxException e)
         {
-            throw new UnexpectedException(e);
+            throw UnexpectedException.wrap(e);
         }
 
         //Modified 9-9-2019 R.Blasa  Show Full Exposure report instead of Basic Expsoure
@@ -420,7 +415,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         }
         catch (URISyntaxException e)
         {
-            throw new UnexpectedException(e);
+            throw UnexpectedException.wrap(e);
         }
 
 
@@ -441,7 +436,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         }
         catch (URISyntaxException e)
         {
-            throw new UnexpectedException(e);
+            throw UnexpectedException.wrap(e);
         }
 
         //Modified: 9-7-2023  R.Blasa
@@ -461,7 +456,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         }
         catch (URISyntaxException e)
         {
-            throw new UnexpectedException(e);
+            throw UnexpectedException.wrap(e);
         }
 
 

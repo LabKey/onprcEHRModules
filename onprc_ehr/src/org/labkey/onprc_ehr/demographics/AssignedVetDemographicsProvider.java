@@ -15,8 +15,6 @@
  */
 package org.labkey.onprc_ehr.demographics;
 
-import org.labkey.api.data.CompareType;
-import org.labkey.api.data.SimpleFilter;
 import org.labkey.api.ehr.demographics.AbstractListDemographicsProvider;
 import org.labkey.api.module.Module;
 import org.labkey.api.query.FieldKey;
@@ -41,7 +39,7 @@ public class AssignedVetDemographicsProvider extends AbstractListDemographicsPro
     @Override
     protected Set<FieldKey> getFieldKeys()
     {
-        Set<FieldKey> keys = new HashSet<FieldKey>();
+        Set<FieldKey> keys = new HashSet<>();
         keys.add(FieldKey.fromString("Id"));
         keys.add(FieldKey.fromString("assignedVet"));
         keys.add(FieldKey.fromString("assignedVetId"));

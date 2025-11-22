@@ -3,7 +3,6 @@ package org.labkey.extscheduler.query;
 import org.jetbrains.annotations.NotNull;
 import org.labkey.api.data.AbstractTableInfo;
 import org.labkey.api.data.ContainerFilter;
-import org.labkey.api.data.DatabaseTableType;
 import org.labkey.api.data.TableInfo;
 import org.labkey.api.query.DefaultQueryUpdateService;
 import org.labkey.api.query.FilteredTable;

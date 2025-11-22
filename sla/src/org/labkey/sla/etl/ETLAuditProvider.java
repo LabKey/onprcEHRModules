@@ -103,7 +103,7 @@ public class ETLAuditProvider extends AbstractAuditTypeProvider implements Audit
 
     public static void addAuditEntry(Container container, User user, String type, String comment, int slaErrors)
     {
-        ETLAuditProvider.ETLAuditEvent event = new ETLAuditProvider.ETLAuditEvent(container.getId(), comment);
+        ETLAuditProvider.ETLAuditEvent event = new ETLAuditProvider.ETLAuditEvent(container, comment);
 
         event.setType(type);
         event.setEhrErrors(slaErrors);
@@ -123,7 +123,7 @@ public class ETLAuditProvider extends AbstractAuditTypeProvider implements Audit
             super();
         }
 
-        public ETLAuditEvent(String container, String comment)
+        public ETLAuditEvent(Container container, String comment)
         {
             super(AUDIT_EVENT_TYPE, container, comment);
         }

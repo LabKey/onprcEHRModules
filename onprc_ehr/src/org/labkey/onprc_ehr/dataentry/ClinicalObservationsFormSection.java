@@ -28,7 +28,7 @@ import java.util.List;
  */
 public class ClinicalObservationsFormSection extends SimpleFormSection
 {
-    private boolean _allowAdd = true;
+    private boolean _allowAdd;
 
     public ClinicalObservationsFormSection()
     {

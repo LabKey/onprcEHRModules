@@ -125,7 +125,7 @@ public class RocheE411ImportMethod extends DefaultImportMethod
         return true;
     }
 
-    private class Parser extends HormoneAssayParser
+    private static class Parser extends HormoneAssayParser
     {
         private Map<Integer, Map<String, Object>> _testsById = null;
         private Map<String, Map<String, Object>> _testsByName = null;
@@ -140,7 +140,7 @@ public class RocheE411ImportMethod extends DefaultImportMethod
         @Override
         public Pair<ExpExperiment, ExpRun> saveBatch(JSONObject json, File file, String fileName, ViewContext ctx) throws BatchValidationException
         {
-            Integer templateId = json.getInt("TemplateId");
+            int templateId = json.getInt("TemplateId");
 
             Pair<ExpExperiment, ExpRun> result = super.saveBatch(json, file, fileName, ctx);
 
@@ -182,7 +182,7 @@ public class RocheE411ImportMethod extends DefaultImportMethod
                 headerRow.add("qcflag");
                 headerRow.add("dilution");
                 headerRow.add("category");
-                out.writeNext(headerRow.toArray(new String[headerRow.size()]));
+                out.writeNext(headerRow.toArray(new String[0]));
 
                 int idx = 0;
                 for (List<String> cells : getFileLines(context.getFile()))
@@ -225,7 +225,7 @@ public class RocheE411ImportMethod extends DefaultImportMethod
                     {
                         //find the type of sample
                         String category = "";
-                        Integer type = Integer.parseInt(cells.get(0));
+                        int type = Integer.parseInt(cells.get(0));
                         if (type == 3)
                         {
                             category = "Pos Control";
@@ -276,7 +276,7 @@ public class RocheE411ImportMethod extends DefaultImportMethod
                             //category
                             toAdd.add(category);
 
-                            out.writeNext(toAdd.toArray(new String[toAdd.size()]));
+                            out.writeNext(toAdd.toArray(new String[0]));
                         }
                     }
                 }
@@ -307,8 +307,8 @@ public class RocheE411ImportMethod extends DefaultImportMethod
             TableInfo ti = HormoneAssaySchema.getInstance().getSchema().getTable(HormoneAssaySchema.TABLE_ROCHETESTS);
             TableSelector ts = new TableSelector(ti);
             Map<String, Object>[] rows = ts.getMapArray();
-            _testsById = new HashMap<Integer, Map<String, Object>>();
-            _testsByName = new HashMap<String, Map<String, Object>>();
+            _testsById = new HashMap<>();
+            _testsByName = new HashMap<>();
 
             for (Map<String, Object> map : rows)
             {
@@ -331,7 +331,7 @@ public class RocheE411ImportMethod extends DefaultImportMethod
         {
             _blankMap = new HashMap<>();
 
-            List<Map<String, Object>> newRows = new ArrayList<Map<String, Object>>();
+            List<Map<String, Object>> newRows = new ArrayList<>();
             ParserErrors errors = context.getErrors();
 
             String keyProperty = "well";
@@ -347,7 +347,7 @@ public class RocheE411ImportMethod extends DefaultImportMethod
                     rowIdx++;
 
                     Map<String, Object> row = rowsIter.next();
-                    Map<String, Object> map = new CaseInsensitiveHashMap<Object>(row);
+                    Map<String, Object> map = new CaseInsensitiveHashMap<>(row);
                     appendPromotedResultFields(map, context);
 
                     if (!map.containsKey(keyProperty) || map.get(keyProperty) == null)
@@ -381,7 +381,7 @@ public class RocheE411ImportMethod extends DefaultImportMethod
 
                         List<Map<String, Object>> list = _blankMap.get(map.get(DILUENT_FIELD));
                         if (list == null)
-                            list = new ArrayList<Map<String, Object>>();
+                            list = new ArrayList<>();
 
                         list.add(map);
                         _blankMap.put((String)map.get(DILUENT_FIELD), list);
@@ -417,7 +417,7 @@ public class RocheE411ImportMethod extends DefaultImportMethod
 
         private void subtractBlanks(List<Map<String, Object>> rows, ImportContext context)
         {
-            Map<String, Double> blanks = new HashMap<String, Double>();
+            Map<String, Double> blanks = new HashMap<>();
 
             for (String diluent : _blankMap.keySet())
             {

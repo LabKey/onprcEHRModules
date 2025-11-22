@@ -50,7 +50,7 @@ public class ChargesAdvancedFormType extends TaskForm
     @Override
     protected List<String> getButtonConfigs()
     {
-        List<String> defaultButtons = new ArrayList<String>();
+        List<String> defaultButtons = new ArrayList<>();
         defaultButtons.add("FINANCESUBMIT");
 
         return defaultButtons;

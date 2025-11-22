@@ -22,8 +22,6 @@ import org.labkey.api.module.Module;
 import org.labkey.api.security.User;
 import org.labkey.api.util.DateUtil;
 
-import java.util.Date;
-
 //Added 3-6-2019  R.Blasa
 
 public class ProjectAlertsNotification extends AbstractEHRNotification

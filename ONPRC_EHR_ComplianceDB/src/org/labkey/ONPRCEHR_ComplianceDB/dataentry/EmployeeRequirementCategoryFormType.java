@@ -59,7 +59,7 @@ public class EmployeeRequirementCategoryFormType extends  TaskForm
             ret.add("EMPLOYEECLOSE");
 
         return ret;
-    };
+    }
 
     @Override
     protected boolean canInsert()

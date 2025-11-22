@@ -142,15 +142,18 @@ public class TreatmentAlertsMPANotification extends AbstractEHRNotification
             totals.put(incomplete, 0);
 
             final Map<String, Integer> totalByArea = new TreeMap<>();
-            ts.forEach(new Selector.ForEachBlock<ResultSet>()
+            ts.forEach(new Selector.ForEachBlock<>()
             {
                 @Override
-                public void exec(ResultSet object) throws SQLException {
+                public void exec(ResultSet object) throws SQLException
+                {
                     Results rs = new ResultsImpl(object, colMap);
-                    if ("Completed".equals(rs.getString(FieldKey.fromString("treatmentStatus")))) {
+                    if ("Completed".equals(rs.getString(FieldKey.fromString("treatmentStatus"))))
+                    {
                         totals.put(completed, totals.get(completed) + 1);
                     }
-                    else {
+                    else
+                    {
                         totals.put(incomplete, totals.get(incomplete) + 1);
 
                         String area = rs.getString(FieldKey.fromString("Id/curLocation/area"));
@@ -209,17 +212,19 @@ public class TreatmentAlertsMPANotification extends AbstractEHRNotification
                 msg.append("<table border=1 style='border-collapse: collapse;'>");
                 msg.append("<tr style='font-weight: bold;'><td>Id</td><td>Status</td><td>Treatment Status</td><td>Room</td><td>Cage</td><td>Treatment Date</td><td>Treatment Start Date</td><td>Treatment End Date</td><td>Days Elapsed</td><td>Category</td><td>Treatment</td><td>Volume</td><td>Volume Units</td><td>Drug Conc</td><td>Conc Units</td><td>Amount</td><td>Amount And Volume</td><td>Dosage</td><td>Dosage Units</td><td>Frequency</td><td>Route</td><td>Reason</td><td>Remark</td><td>Ordered By</td></tr>");
 
-                ts1.forEach(new Selector.ForEachBlock<ResultSet>()
+                ts1.forEach(new Selector.ForEachBlock<>()
                 {
                     @Override
                     public void exec(ResultSet object) throws SQLException
                     {
                         Results rs = new ResultsImpl(object, colMap1);
                         String status = rs.getString("TreatmentStatus");
-                        if  ("completed".equalsIgnoreCase(status)) {
+                        if ("completed".equalsIgnoreCase(status))
+                        {
                             msg.append("<tr>");
                         }
-                        else {
+                        else
+                        {
                             //If not "completed", highlight the record with yellow color
                             msg.append("<tr bgcolor = " + '"' + "#FFFF00" + '"' + ">");
                         }

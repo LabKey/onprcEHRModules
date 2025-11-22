@@ -190,7 +190,7 @@ public class GeneticsCoreNotification implements Notification
             ActionURL url = QueryService.get().urlFor(u, c, QueryAction.executeQuery, "study", "processingGeneticsBloodDraws");
             url.addParameter("query.flags~contains", flag);
 
-            msg.append("<b>WARNING: There are " + count + " animals actively flagged as '" + flag + "', which have been flagged for more than " + interval + " days.  If these animals have been drawn, this flag should be removed to avoid confusion.</b><p>  <a href='" + AppProps.getInstance().getBaseServerUrl() + url.toString() + "'>Click here to view all animals with this flag</a><hr>");
+            msg.append("<b>WARNING: There are " + count + " animals actively flagged as '" + flag + "', which have been flagged for more than " + interval + " days.  If these animals have been drawn, this flag should be removed to avoid confusion.</b><p>  <a href='" + AppProps.getInstance().getBaseServerUrl() + url + "'>Click here to view all animals with this flag</a><hr>");
         }
     }
 
@@ -217,7 +217,7 @@ public class GeneticsCoreNotification implements Notification
             url.addParameter("query.drawnFlagDateAdded~datelte", "-90d");
             url.addParameter("query.hasMHCData~eq", false);
 
-            msg.append("<b>WARNING: There are " + count + " animals that have been flagged as drawn for MHC typing more than 90 days ago that lack MHC data.</b><p>  <a href='" + AppProps.getInstance().getBaseServerUrl() + url.toString() + "'>Click here to view these animals</a><hr>");
+            msg.append("<b>WARNING: There are " + count + " animals that have been flagged as drawn for MHC typing more than 90 days ago that lack MHC data.</b><p>  <a href='" + AppProps.getInstance().getBaseServerUrl() + url + "'>Click here to view these animals</a><hr>");
         }
     }
 
@@ -252,7 +252,7 @@ public class GeneticsCoreNotification implements Notification
             url.addParameter("query.flags~contains", flag1);
             url.addParameter("query.flags~contains", flag2);
 
-            msg.append("<b>WARNING: There are " + count + " animals that have been flagged as drawn for " + noun + " and needing blood draw for " + noun + ".  One of these conflicting flags should be removed</b><p>  <a href='" + AppProps.getInstance().getBaseServerUrl() + url.toString() + "'>Click here to view these animals</a><hr>");
+            msg.append("<b>WARNING: There are " + count + " animals that have been flagged as drawn for " + noun + " and needing blood draw for " + noun + ".  One of these conflicting flags should be removed</b><p>  <a href='" + AppProps.getInstance().getBaseServerUrl() + url + "'>Click here to view these animals</a><hr>");
         }
     }
 
@@ -279,7 +279,7 @@ public class GeneticsCoreNotification implements Notification
             url.addParameter("query.drawnFlagDateAdded~datelte", "-180d");
             url.addParameter("query.hasSample~eq", false);
 
-            msg.append("<b>WARNING: There are " + count + " animals that have been flagged as drawn for DNA Bank more than 6 months ago that lack an appropriate sample in the freezer.</b><p>  <a href='" + AppProps.getInstance().getBaseServerUrl() + url.toString() + "'>Click here to view these animals</a><hr>");
+            msg.append("<b>WARNING: There are " + count + " animals that have been flagged as drawn for DNA Bank more than 6 months ago that lack an appropriate sample in the freezer.</b><p>  <a href='" + AppProps.getInstance().getBaseServerUrl() + url + "'>Click here to view these animals</a><hr>");
         }
     }
 
@@ -306,7 +306,7 @@ public class GeneticsCoreNotification implements Notification
             url.addParameter("query.drawnFlagDateAdded~datelte", "-180d");
             url.addParameter("query.hasParentageData~eq", false);
 
-            msg.append("<b>WARNING: There are " + count + " animals that have been flagged as drawn for Parentage more than 6 months ago that lack Parentage data.</b><p>  <a href='" + AppProps.getInstance().getBaseServerUrl() + url.toString() + "'>Click here to view these animals</a><hr>");
+            msg.append("<b>WARNING: There are " + count + " animals that have been flagged as drawn for Parentage more than 6 months ago that lack Parentage data.</b><p>  <a href='" + AppProps.getInstance().getBaseServerUrl() + url + "'>Click here to view these animals</a><hr>");
         }
     }
 }

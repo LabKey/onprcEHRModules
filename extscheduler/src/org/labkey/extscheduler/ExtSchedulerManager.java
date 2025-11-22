@@ -11,7 +11,7 @@ import java.util.Map;
 
 public class ExtSchedulerManager
 {
-    private static ExtSchedulerManager _instance = new ExtSchedulerManager();
+    private static final ExtSchedulerManager _instance = new ExtSchedulerManager();
 
     private ExtSchedulerManager()
     {

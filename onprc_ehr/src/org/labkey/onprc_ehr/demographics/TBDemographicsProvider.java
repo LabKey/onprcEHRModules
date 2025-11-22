@@ -21,7 +21,6 @@ import org.labkey.api.module.Module;
 import org.labkey.api.query.FieldKey;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 

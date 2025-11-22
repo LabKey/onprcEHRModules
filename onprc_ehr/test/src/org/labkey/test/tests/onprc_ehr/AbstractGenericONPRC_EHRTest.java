@@ -65,7 +65,9 @@ public abstract class AbstractGenericONPRC_EHRTest extends AbstractGenericEHRTes
     protected static final String REFERENCE_STUDY_PATH = "/resources/referenceStudy";
     protected static final String GENETICS_PIPELINE_LOG_PATH = REFERENCE_STUDY_PATH + "/kinship/EHR Kinship Calculation/kinship.txt.log";
     protected static final String ID_PREFIX = "9999";
-    private boolean _hasCreatedBirthRecords = false;
+    protected static final String CORE_FACILITIES = "Core Facilities";
+    protected static final String GENETICS_CORE = "Genetics Core";
+    protected static final String DNA_BANK = "DNA Bank";
 
     //NOTE: use 0-23H to be compatible w/ client-side Ext4 fields
     protected static final SimpleDateFormat _tf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
@@ -77,18 +79,13 @@ public abstract class AbstractGenericONPRC_EHRTest extends AbstractGenericEHRTes
     protected static String[] SUBJECTS = {"12345", "23456", "34567", "45678", "56789"};
     protected static String[] ROOMS = {"Room1", "Room2", "Room3"};
     protected static String[] CAGES = {"A1", "B2", "A3"};
-    protected static Integer[] PROJECTS = {12345, 123456, 1234567};
+    protected static String[] CATEGORY = {"Divider Change", "Event", "STP_Beh"};
+    protected static String[] TINFANT = {"35160", "24456", "36451"};
 
     @Override
     public List<String> getAssociatedModules()
     {
         return Arrays.asList("ehr", "onprc_ehr");
-    }
-
-    @Override
-    public String getContainerPath()
-    {
-        return getProjectName();
     }
 
     @Override
@@ -105,12 +102,18 @@ public abstract class AbstractGenericONPRC_EHRTest extends AbstractGenericEHRTes
         super._containerHelper.enableModule("ONPRC_Billing");
         super._containerHelper.enableModule("ONPRC_BillingPublic");
         super._containerHelper.enableModule("SLA");
+        goToEHRFolder();
+        super._containerHelper.enableModules(List.of("ONPRC_Billing", "ONPRC_BillingPublic", "SLA"));
         super.setEHRModuleProperties(
                 new ModulePropertyValue("ONPRC_Billing", "/" + getProjectName(), "BillingContainer", "/" + getContainerPath()),
                 new ModulePropertyValue("ONPRC_Billing", "/" + getProjectName(), "BillingContainer_Public", "/" + getContainerPath()),
                 new ModulePropertyValue("SLA", "/" + getProjectName(), "SLAContainer", "/" + getContainerPath()),
                 new ModulePropertyValue("ONPRC_EHR", "/" + getProjectName(), "DCM_NHP_Resources_Container", "/" + getContainerPath()),
-                new ModulePropertyValue("ONPRC_EHR", "/" + getProjectName(), "MHC_Container", "/" + getContainerPath())
+                new ModulePropertyValue("ONPRC_EHR", "/" + getProjectName(), "MHC_Container", "/" + getContainerPath()),
+                // Set values for rudimentary validation of SSRS reporting links
+                new ModulePropertyValue("ONPRC_EHR", "/" + getProjectName(), "SSRSReportFolder", "DummySSRSFolder"),
+                // Treat the LabKey instance as the SSRS target. It'll give a 404 but it'll be enough for testing that we generate links
+                new ModulePropertyValue("ONPRC_EHR", "/" + getProjectName(), "SSRSServerURL", WebTestHelper.getBaseURL())
         );
     }
 
@@ -132,7 +135,7 @@ public abstract class AbstractGenericONPRC_EHRTest extends AbstractGenericEHRTes
         log("creating birth records");
 
         //note: these should cascade insert into demographics
-        EHRClientAPIHelper apiHelper = new EHRClientAPIHelper(this, getProjectName());
+        EHRClientAPIHelper apiHelper = new EHRClientAPIHelper(this, getContainerPath());
         String schema = "study";
         String query = "birth";
         String parentageQuery = "parentage";
@@ -178,19 +181,17 @@ public abstract class AbstractGenericONPRC_EHRTest extends AbstractGenericEHRTes
 
         //force caching of demographics on new IDs.
         cacheIds(createdIds);
-
-        _hasCreatedBirthRecords = true;
     }
     @Override
     protected void doExtraPreStudyImportSetup() throws IOException, CommandException
     {
         //create onprc_billing_public linked schema
-        beginAt(getProjectName());
+        goToEHRFolder();
         SchemaHelper schemaHelper = new SchemaHelper(this);
-        schemaHelper.createLinkedSchema(this.getProjectName(), "onprc_billing_public", "/" + this.getContainerPath(), "onprc_billing_public", null, null, null);
+        schemaHelper.createLinkedSchema(getContainerPath(), "onprc_billing_public", "/" + getContainerPath(), "onprc_billing_public", null, null, null);
 
         //create Labfee_NoChargeProjects
-        beginAt(getProjectName());
+        goToEHRFolder();
 
         ListDefinition listDef = new IntListDefinition("Labfee_NoChargeProjects", "key");
         listDef.addField(new FieldDefinition("project", FieldDefinition.ColumnType.Integer));
@@ -198,7 +199,7 @@ public abstract class AbstractGenericONPRC_EHRTest extends AbstractGenericEHRTes
         listDef.addField(new FieldDefinition("dateDisabled", FieldDefinition.ColumnType.DateAndTime));
         listDef.addField(new FieldDefinition("Createdb", FieldDefinition.ColumnType.Integer));
         listDef.addField(new FieldDefinition("Notes", FieldDefinition.ColumnType.String));
-        listDef.getCreateCommand().execute(createDefaultConnection(), getProjectName());
+        listDef.getCreateCommand().execute(createDefaultConnection(), getContainerPath());
 
         ListDefinition listDef2 = new VarListDefinition("GeneticValue");
         listDef2.setKeyName("Id");
@@ -212,12 +213,12 @@ public abstract class AbstractGenericONPRC_EHRTest extends AbstractGenericEHRTes
         listDef2.addField(new FieldDefinition("import", FieldDefinition.ColumnType.String));
         listDef2.addField(new FieldDefinition("value", FieldDefinition.ColumnType.String));
         listDef2.addField(new FieldDefinition("rank", FieldDefinition.ColumnType.Integer));
-        listDef2.getCreateCommand().execute(createDefaultConnection(), getProjectName());
+        listDef2.getCreateCommand().execute(createDefaultConnection(), getContainerPath());
 
         ListDefinition listDef3 = new IntListDefinition("Special_Aliases", "Key");
         listDef3.addField(new FieldDefinition("Category", FieldDefinition.ColumnType.String));
         listDef3.addField(new FieldDefinition("Alias", FieldDefinition.ColumnType.String));
-        listDef3.getCreateCommand().execute(createDefaultConnection(), getProjectName());
+        listDef3.getCreateCommand().execute(createDefaultConnection(), getContainerPath());
 
         ListDefinition listDef4 = new IntListDefinition("Rpt_ChargesProjection", "RowId");
         listDef4.addField(new FieldDefinition("ChargeId", FieldDefinition.ColumnType.Integer));
@@ -240,7 +241,7 @@ public abstract class AbstractGenericONPRC_EHRTest extends AbstractGenericEHRTes
         listDef4.addField(new FieldDefinition("Aprate8", FieldDefinition.ColumnType.Decimal));
         listDef4.addField(new FieldDefinition("Aprate9", FieldDefinition.ColumnType.Decimal));
         listDef4.addField(new FieldDefinition("PostedDate", FieldDefinition.ColumnType.DateAndTime));
-        listDef4.getCreateCommand().execute(createDefaultConnection(), getProjectName());
+        listDef4.getCreateCommand().execute(createDefaultConnection(), getContainerPath());
 
         // Mock up a table in the MHC_Data schema instead of needing to mock up all of its dependencies too
         ListDefinition listDef5 = new IntListDefinition("MHC_Data_Unified", "RowId");
@@ -255,17 +256,26 @@ public abstract class AbstractGenericONPRC_EHRTest extends AbstractGenericEHRTes
         listDef5.addField(new FieldDefinition("datatype", FieldDefinition.ColumnType.String));
         listDef5.addField(new FieldDefinition("result", FieldDefinition.ColumnType.String));
         listDef5.addField(new FieldDefinition("type", FieldDefinition.ColumnType.String));
-        listDef5.getCreateCommand().execute(createDefaultConnection(), getProjectName());
+        listDef5.getCreateCommand().execute(createDefaultConnection(), getContainerPath());
 
-        schemaHelper.createLinkedSchema(this.getProjectName(), "dbo", "/" + this.getContainerPath(), null, "lists", null, null);
-        schemaHelper.createLinkedSchema(this.getProjectName(), "MHC_Data", "/" + this.getContainerPath(), null, "lists", null, null);
-        schemaHelper.createLinkedSchema(this.getProjectName(), "ehrSLA", "/" + this.getContainerPath(), "ehrSLA", "sla", null, null);
-        schemaHelper.createLinkedSchema(this.getProjectName(), "financepublic", "/" + this.getContainerPath(), "financepublic", "onprc_billing", null, null);
-        schemaHelper.createLinkedSchema(this.getProjectName(), "publicehr", "/" + this.getContainerPath(), null, "ehr", null, null);
-        schemaHelper.createLinkedSchema(this.getProjectName(), "onprc_ehrSLA", "/" + this.getContainerPath(), null, "onprc_ehr", null, null);
-        schemaHelper.createLinkedSchema(this.getProjectName(), "pf_onprcehrPublic", "/" + this.getContainerPath(), "pf_onprcehrPublic", null, null, null);
-        schemaHelper.createLinkedSchema(this.getProjectName(), "pf_publicEHR", "/" + this.getContainerPath(), "pf_publicEHR", null, null, null);
-        schemaHelper.createLinkedSchema(this.getProjectName(), "pf_publicFinance", "/" + this.getContainerPath(), "pf_publicFinance", null, null, null);
+        schemaHelper.createLinkedSchema(getContainerPath(), "dbo", "/" + getContainerPath(), null, "lists", null, null);
+        schemaHelper.createLinkedSchema(getContainerPath(), "MHC_Data", "/" + getContainerPath(), null, "lists", null, null);
+        schemaHelper.createLinkedSchema(getContainerPath(), "ehrSLA", "/" + getContainerPath(), "ehrSLA", "sla", null, null);
+        schemaHelper.createLinkedSchema(getContainerPath(), "financepublic", "/" + getContainerPath(), "financepublic", "onprc_billing", null, null);
+        schemaHelper.createLinkedSchema(getContainerPath(), "publicehr", "/" + getContainerPath(), null, "ehr", null, null);
+        schemaHelper.createLinkedSchema(getContainerPath(), "onprc_ehrSLA", "/" + getContainerPath(), null, "onprc_ehr", null, null);
+        schemaHelper.createLinkedSchema(getContainerPath(), "pf_onprcehrPublic", "/" + getContainerPath(), "pf_onprcehrPublic", null, null, null);
+        schemaHelper.createLinkedSchema(getContainerPath(), "pf_publicEHR", "/" + getContainerPath(), "pf_publicEHR", null, null, null);
+        schemaHelper.createLinkedSchema(getContainerPath(), "pf_publicFinance", "/" + getContainerPath(), "pf_publicFinance", null, null, null);
+
+        goToProjectHome();
+        super._containerHelper.createSubfolder(getProjectName(), CORE_FACILITIES, "Collaboration");
+        super._containerHelper.createSubfolder(getProjectName() + "/" + CORE_FACILITIES, GENETICS_CORE, "Collaboration");
+        super._containerHelper.createSubfolder(getProjectName() + "/" + CORE_FACILITIES + "/" + GENETICS_CORE, DNA_BANK, "Laboratory Folder");
+        super._containerHelper.enableModules(List.of("ONPRC_EHR", "ONPRC_Reports"));
+
+        goToEHRFolder();
+        schemaHelper.createLinkedSchema(getContainerPath(), "DNA_Bank", getProjectName() + "/" + CORE_FACILITIES + "/" + GENETICS_CORE + "/" + DNA_BANK, "DNABank", null, null, null);
     }
 
     @Override
@@ -384,6 +394,7 @@ public abstract class AbstractGenericONPRC_EHRTest extends AbstractGenericEHRTes
         SelectRowsCommand select1 = new SelectRowsCommand("ehr_lookups", "flag_values");
         select1.addFilter(new Filter("category", category, Filter.Operator.EQUAL));
         select1.addFilter(new Filter("value", name, Filter.Operator.EQUAL));
+        select1.addFilter(new Filter("datedisabled", null, Filter.Operator.ISBLANK));
         SelectRowsResponse resp = select1.execute(getApiHelper().getConnection(), getContainerPath());
 
         String objectid = resp.getRowCount().intValue() == 0 ? null : (String)resp.getRows().get(0).get("objectid");
@@ -417,7 +428,8 @@ public abstract class AbstractGenericONPRC_EHRTest extends AbstractGenericEHRTes
         {
             log("creating room: " + room);
             InsertRowsCommand insertRowsCommand = new InsertRowsCommand("ehr_lookups", "rooms");
-            insertRowsCommand.addRow(new HashMap<String, Object>(){
+            insertRowsCommand.addRow(new HashMap<>()
+            {
                 {
                     put("room", room);
                     put("housingType", 1);
@@ -466,7 +478,8 @@ public abstract class AbstractGenericONPRC_EHRTest extends AbstractGenericEHRTes
         if (resp.getRowCount().intValue() == 0)
         {
             InsertRowsCommand insertRowsCommand = new InsertRowsCommand("study", "animal_group_members");
-            insertRowsCommand.addRow(new HashMap<String, Object>(){
+            insertRowsCommand.addRow(new HashMap<>()
+            {
                 {
                     put("Id", animalId);
                     put("date", prepareDate(new Date(), -2, 0));
@@ -489,7 +502,8 @@ public abstract class AbstractGenericONPRC_EHRTest extends AbstractGenericEHRTes
         if (objectid == null)
         {
             InsertRowsCommand insertRowsCommand = new InsertRowsCommand("ehr_lookups", "flag_values");
-            insertRowsCommand.addRow(new HashMap<String, Object>(){
+            insertRowsCommand.addRow(new HashMap<>()
+            {
                 {
                     put("category", "SPF");
                     put("value", name);

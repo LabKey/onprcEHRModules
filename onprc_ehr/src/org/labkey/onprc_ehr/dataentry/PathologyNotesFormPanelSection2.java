@@ -17,7 +17,6 @@ package org.labkey.onprc_ehr.dataentry;
 
 import org.labkey.api.ehr.EHRService;
 import org.labkey.api.ehr.dataentry.SimpleFormPanelSection;
-import org.labkey.api.view.template.ClientDependency;
 
 //Modified 5-24-2016 R.Blasa
 

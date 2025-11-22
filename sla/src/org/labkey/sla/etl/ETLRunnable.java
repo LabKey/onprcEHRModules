@@ -441,7 +441,7 @@ public class ETLRunnable implements Runnable
                         // are constructed from the original objectid plus a suffix. If one of those original records gets deleted we only know the
                         // original objectid. So we need to find the child ones with a LIKE objectid% query. Which is really complicated.
                         SQLFragment like = new SQLFragment("SELECT ");
-                        like.append(filterColumn.getSelectName());
+                        like.appendIdentifier(filterColumn.getSelectIdentifier());
                         like.append(" FROM ");
                         like.append(targetTable.getFromSQL("t"));
                         if (!joins.isEmpty())
@@ -480,7 +480,7 @@ public class ETLRunnable implements Runnable
                                 //log.info(StringUtils.join(likeWithIds.getParams(), ", "));
 
                                 SimpleFilter filter = new SimpleFilter();
-                                filter.addWhereClause("" + filterColumn.getSelectName() + " IN (" + likeWithIds.getSQL() + ")", likeWithIds.getParamsArray(), filterColumn.getFieldKey());
+                                filter.addWhereClause("" + filterColumn.getSelectIdentifier() + " IN (" + likeWithIds.getSQL() + ")", likeWithIds.getParamsArray(), filterColumn.getFieldKey());
                                 deleted += Table.delete(realTable, filter);
 
                                 // Reset the count and SQL
@@ -495,7 +495,7 @@ public class ETLRunnable implements Runnable
                             log.info(StringUtils.join(likeWithIds.getParams(), ", "));
 
                             SimpleFilter filter = new SimpleFilter();
-                            filter.addWhereClause("" + filterColumn.getSelectName() + " IN (" + likeWithIds.getSQL() + ")", likeWithIds.getParamsArray(), filterColumn.getFieldKey());
+                            filter.addWhereClause("" + filterColumn.getSelectIdentifier() + " IN (" + likeWithIds.getSQL() + ")", likeWithIds.getParamsArray(), filterColumn.getFieldKey());
                             deleted += Table.delete(realTable, filter);
                         }
                         else
@@ -562,7 +562,7 @@ public class ETLRunnable implements Runnable
                         //once complete, then we do an insert
                         if (sourceRows.size() == UPSERT_BATCH_SIZE || isDone)
                         {
-                            if (!isTargetEmpty && searchParams.size() > 0) {
+                            if (!isTargetEmpty && !searchParams.isEmpty()) {
                                 long start = new Date().getTime();
 
                                 //use objectId to obtain LSIDs
@@ -722,9 +722,6 @@ public class ETLRunnable implements Runnable
      *
      * @param tableName for which to get deletes
      * @param fromVersion return deletes performed after this version
-     * @return
-     * @throws java.sql.SQLException
-     * @throws BadConfigException
      */
     Set<String> getDeletes(Connection originConnection, String tableName, byte[] fromVersion) throws SQLException, BadConfigException
     {
@@ -827,7 +824,7 @@ public class ETLRunnable implements Runnable
      */
     private void setLastTimestamp(String tableName, Long ts)
     {
-        log.info(String.format("setting new baseline timestamp of %s on collection %s", new Date(ts.longValue()).toString(), tableName));
+        log.info(String.format("setting new baseline timestamp of %s on collection %s", new Date(ts.longValue()), tableName));
         WritablePropertyMap pm = PropertyManager.getWritableProperties(TIMESTAMP_PROPERTY_DOMAIN, true);
         pm.put(tableName, ts.toString());
         pm.save();
@@ -1061,11 +1058,7 @@ public class ETLRunnable implements Runnable
 
             return sb.toString();
         }
-        catch (Exception e)
-        {
-            log.error(e.getMessage());
-        }
-        catch (BadConfigException e)
+        catch (Exception | BadConfigException e)
         {
             log.error(e.getMessage());
         }
@@ -1073,14 +1066,14 @@ public class ETLRunnable implements Runnable
         return null;
     }
 
-    public final static Set<String> CANNOT_TRUNCATE = new HashSet<String>()
+    public final static Set<String> CANNOT_TRUNCATE = new HashSet<>()
     {
         {
 
         }
     };
 
-    private final Map<String, String[]> LK_TO_IRIS = new HashMap<String, String[]>()
+    private final Map<String, String[]> LK_TO_IRIS = new HashMap<>()
     {
         {
             put("allowableAnimals", new String[]{"IACUC_SLAYearly", "IACUC_SLAAnimals", "Ref_ProjectsIACUC"});
@@ -1093,7 +1086,7 @@ public class ETLRunnable implements Runnable
         }
     };
 
-    private String[] TABLES_WITH_LK_ADDITIONS = new String[]{};
+    private final String[] TABLES_WITH_LK_ADDITIONS = new String[]{};
 
     private String validateEtlScript(Map<String, String> queries, UserSchema schema, boolean attemptRepair) throws BadConfigException, BatchValidationException
     {
@@ -1103,7 +1096,7 @@ public class ETLRunnable implements Runnable
         boolean hasErrors = false;
 
         Connection originConnection = null;
-        String targetTableName = null;
+        String targetTableName;
         PreparedStatement ps = null;
         PreparedStatement ps2 = null;
         PreparedStatement ps3 = null;
@@ -1152,11 +1145,11 @@ public class ETLRunnable implements Runnable
                     }
 
                     sql = kv.getValue();
-                    sql = "SELECT t." + filterCol.getSelectName() + " AS col1, t.objectid as objectid, t2." + filterCol.getSelectName() + " AS col2  " +
+                    sql = "SELECT t." + filterCol.getSelectIdentifier() + " AS col1, t.objectid as objectid, t2." + filterCol.getSelectIdentifier() + " AS col2  " +
                             "FROM (" + sql + "\n) t \n" +
                             "FULL JOIN " + scope.getDatabaseName() + "." + realTable.getSelectName() + " t2 \n" +
-                            "ON (t." + filterCol.getSelectName() + " = t2." + filterCol.getSelectName() + ") \n" +
-                            "WHERE (t." + filterCol.getSelectName() + " IS NULL OR t2." + filterCol.getSelectName() + " IS NULL)" +
+                            "ON (t." + filterCol.getSelectIdentifier() + " = t2." + filterCol.getSelectIdentifier() + ") \n" +
+                            "WHERE (t." + filterCol.getSelectIdentifier() + " IS NULL OR t2." + filterCol.getSelectIdentifier() + " IS NULL)" +
                                 (realTable.getColumn("taskid") == null ? "" : " AND t2.taskid IS NULL") +
                                 (realTable.getColumn("container") == null ? "" : " AND (t2.container = '" + targetTable.getUserSchema().getContainer().getId() + "' or t2.container is null)");
 
@@ -1186,10 +1179,10 @@ public class ETLRunnable implements Runnable
                     rs.close();
 
                     boolean hasLKInserts = Arrays.asList(TABLES_WITH_LK_ADDITIONS).contains(targetTableName);
-                    if ((missingFromLK.size()) > 0 || (toDeleteFromLK.size() > 0 && !hasLKInserts))
+                    if (!missingFromLK.isEmpty() || (!toDeleteFromLK.isEmpty() && !hasLKInserts))
                     {
                         sb.append("table: " + targetTableName + (realTable == null ? "" : " (" + realTable.getSelectName() + ") ") + " has " + missingFromLK.size() + " records missing and " + toDeleteFromLK.size() + " to delete<br>");
-                        if (missingFromLK.size() > 0)
+                        if (!missingFromLK.isEmpty())
                         {
                             sb.append("records missing:<br>");
                             List<String> toShow = new ArrayList<>();
@@ -1225,7 +1218,7 @@ public class ETLRunnable implements Runnable
                             }
                         }
 
-                        if (toDeleteFromLK.size() > 0 && !hasLKInserts)
+                        if (!toDeleteFromLK.isEmpty() && !hasLKInserts)
                         {
                             sb.append("to delete from LabKey:<br>");
                             List<String> toShow = new ArrayList<>();
@@ -1288,7 +1281,7 @@ public class ETLRunnable implements Runnable
         return null;
     }
 
-    public class BadConfigException extends Throwable
+    public static class BadConfigException extends Throwable
     {
         public BadConfigException(String s)
         {

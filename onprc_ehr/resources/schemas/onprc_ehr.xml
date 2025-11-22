@@ -1398,5 +1398,77 @@
             <column columnName="remark"/>
         </columns>
     </table>
+    <table tableName="Rpt_AnimalIDTissues" tableDbType="TABLE">
+        <columns>
+            <column columnName="Searchkey"/>
+            <column columnName="animalID"/>
+            <column columnName="date"/>
+          </columns>
+    </table>
+
+    <table tableName="Rpt_AnimalIDTissues_Master" tableDbType="TABLE">
+        <columns>
+            <column columnName="rowid"/>
+            <column columnName="SearchID"/>
+            <column columnName="animalID"/>
+            <column columnName="date"/>
+            <column columnName="actual_Created"/>
+            <column columnName="remarks"/>
+        </columns>
+    </table>
+
+    <table tableName="CenterProjectsTemp" tableDbType="TABLE">
+        <columns>
+            <column columnName="Searchid"/>
+            <column columnName="project"/>
+            <column columnName="protocol"/>
+            <column columnName="account"/>
+            <column columnName="title"/>
+            <column columnName="research"/>
+            <column columnName="createdby"/>
+            <column columnName="created"/>
+            <column columnName="modified"/>
+            <column columnName="modifiedby"/>
+            <column columnName="startdate"/>
+            <column columnName="enddate"/>
+            <column columnName="investigatorid"/>
+            <column columnName="displayname"/>
+            <column columnName="use_category"/>
+            <column columnName="projecttype"/>
+            <column columnName="objectid"/>
+            <column columnName="date_posted"/>
+
+        </columns>
+    </table>
+
+    <table tableName="snomed_counter" tableDbType="TABLE">
+        <columns>
+            <column columnName="subset"/>
+            <column columnName="count"/>
+            <column columnName="prefix"/>
+            <column columnName="container"/>
+            <column columnName="createdby"/>
+            <column columnName="created"/>
+            <column columnName="modifiedby"/>
+            <column columnName="modified"/>
+        </columns>
+    </table>
+
+    <table tableName="pairing_observation_types" tableDbType="TABLE">
+        <columns>
+            <column columnName="rowid"/>
+            <column columnName="value"/>
+            <column columnName="category"/>
+            <column columnName="editorconfig"/>
+            <column columnName="schemaname"/>
+            <column columnName="queryname"/>
+            <column columnName="valuecolumn"/>
+            <column columnName="Created"/>
+            <column columnName="CreatedBy"/>
+            <column columnName="Modified"/>
+            <column columnName="ModifiedBy"/>
+            <column columnName="Container"/>
+        </columns>
+    </table>
 
 </tables>

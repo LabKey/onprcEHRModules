@@ -15,6 +15,7 @@
  */
 package org.labkey.onprc_ehr.table;
 
+import org.jetbrains.annotations.NotNull;
 import org.labkey.api.data.ColumnInfo;
 import org.labkey.api.data.DataColumn;
 import org.labkey.api.data.RenderContext;
@@ -29,7 +30,7 @@ public class ObservationDisplayColumn extends DataColumn
     }
 
     @Override
-    public HtmlString getFormattedHtml(RenderContext ctx)
+    public @NotNull HtmlString getFormattedHtml(RenderContext ctx)
     {
         String result = super.getFormattedHtml(ctx).toString();
         return HtmlString.unsafe(result.replace("Vet Attention", "<span style=\"background-color: yellow;\">Vet Attention</span>"));

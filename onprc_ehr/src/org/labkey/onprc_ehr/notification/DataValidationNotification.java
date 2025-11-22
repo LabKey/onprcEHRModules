@@ -114,7 +114,7 @@ public class DataValidationNotification extends ColonyAlertsNotification
         duplicateFlags(c, u, msg);
 
         //only send if there are alerts
-        if (msg.length() > 0)
+        if (!msg.isEmpty())
         {
             msg.insert(0, "This email contains a series of automatic alerts designed to identify problems in the EHR data.  It was run on: " + getDateFormat(c).format(now) + " at " + _timeFormat.format(now) + ".<p>");
         }
