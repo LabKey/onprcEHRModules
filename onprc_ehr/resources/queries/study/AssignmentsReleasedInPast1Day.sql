@@ -12,9 +12,9 @@ SELECT
     enddate as ReleaseDate,
     projectedrelease as ProjectedReleaseDate,
     assignmentType,
-    assignCondition,
-    projectedReleaseCondition,
-    releaseCondition as ConditionAtRelease
+    assignCondition.meaning as AssignCondition,
+    projectedReleaseCondition.meaning as ProjectedReleaseCondition,
+    releaseCondition.meaning as ConditionAtRelease
 
 FROM Assignment
 WHERE enddate >= TIMESTAMPADD('SQL_TSI_DAY', -1, NOW())

@@ -254,7 +254,7 @@ public class BehaviorNotification extends ColonyAlertsNotification
                 msg.append("<td>" + PageFlowUtil.filter(rs.getString("ConditionAtRelease")) + "</td>");
                 msg.append("</tr>");
             });
-            msg.append("</table>");
+            msg.append("</table><br>");
         }
 
         else {
@@ -285,7 +285,7 @@ public class BehaviorNotification extends ColonyAlertsNotification
             msg.append("<b>List of assignments with new \"Release date\" added within the last 24hrs:</b><p>");
             msg.append("There are " + count + " entries found. ");
             msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "AssignmentsReleasedInPast1Day", null)  + "'>Click here to view them</a></p>\n");
-            msg.append("<hr>\n\n");
+            msg.append("\n\n");
 
         //Display the daily report in the email
             Set<FieldKey> columns = new HashSet<>();
@@ -337,7 +337,7 @@ public class BehaviorNotification extends ColonyAlertsNotification
                 msg.append("<td>" + PageFlowUtil.filter(rs.getString("ConditionAtRelease")) + "</td>");
                 msg.append("</tr>");
             });
-            msg.append("</table>");
+            msg.append("</table><br>");
         }
         else {
             msg.append("<b>WARNING: No assignments released in past 24hrs!</b><br><hr>\n");
