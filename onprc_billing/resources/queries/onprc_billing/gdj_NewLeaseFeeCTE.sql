@@ -1,14 +1,16 @@
-PARAMETERS (StartDate TIMESTAMP, EndDate TIMESTAMP
+PARAMETERS (StartDate TIMESTAMP, EndDate TIMESTAMP)
 -- ========================================================
 -- This is the QUery using CTES that was AI Generated for revised lease fees
 -- Date:  2025-11-22
 -- Step 1 Assignments has bene modified to use LabkeySQL structure.
 -- THis was moved to the onprc_billing query section
+-- Working thru each CTE for code updates -  Works as Designed in Dev
 -- =========================================================
 WITH
 -- =========================================================
 -- 1) Base assignments in date range
 --This was modified to use LabkeySQL structure.
+-- 2025-11-24 Validation of this CTE
 -- =========================================================
 assignments AS (
     SELECT
@@ -22,14 +24,14 @@ assignments AS (
         (Select r.project from study.resourceAssigned r where r.id = a.id) as resourceCode,
         a.assignCondition,
         a.releaseCondition,
-        a.projectedReleaseDate,
+        a.projectedRelease,
         --Create a looklup for is a research project
         Case when a.id in (Select ra.id from study.researchAssigned ra where ra.id = a.id) then 1
            Else 0
            End as isResearchAssignment,
        -- a.isResearchAssignment,   -- 1 = research, 0 = resource (or derive later)
         (Select b.dam from study.birth b where b.id = a.id) as damId,                  -- dam of infant, if applicable
-        a.sex,
+        a.id.dataset.Demographics.gender as sex,
         -- Using the release code assign a value for is terminal
         Case when a.projectedReleaseCondition in (206,207) then 1
         Else 0
@@ -38,14 +40,14 @@ assignments AS (
     FROM study.assignment a
     WHERE a.date >= StartDate
       AND a.date <  EndDate
-)
---           Select * from assignments
-          ,
+),
+--Select * from assignment,
 
 -- =========================================================
 -- 2) Animal age / infant vs adult
 --    (You may already have an ageAtTime dataset; this is illustrative)
 -- change this to age in years
+-- 2025-11-24 Starting Validation Review
 -- =========================================================
 age_at_assignment AS (
     SELECT
@@ -56,7 +58,7 @@ age_at_assignment AS (
         aa.resourceCode,
         aa.assignCondition,
         aa.releaseCondition,
-        aa.proposedReleaseDate,
+        aa.projectedRelease,
         aa.damId,
         aa.sex,
         aa.isTerminalAssignment,
@@ -72,7 +74,10 @@ age_at_assignment AS (
     FROM assignments aa
     LEFT JOIN study.demographics d
         ON d.Id = aa.Id
-),
+)
+Select * from age_at_assignment
+
+/*,
 
 -- =========================================================
 -- 3) PI purchase flag (for research assignments)
@@ -339,4 +344,4 @@ final AS (
 
 SELECT *
 FROM final
-ORDER BY assignmentDate, Id, assignmentId;
+ORDER BY assignmentDate, Id, assignmentId;*/
