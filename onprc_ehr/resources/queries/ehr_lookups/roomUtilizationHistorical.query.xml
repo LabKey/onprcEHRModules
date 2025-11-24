@@ -16,6 +16,11 @@
                         <columnTitle>% Used</columnTitle>
                         <formatString>0.00%</formatString>
                     </column>
+                    <column columnName="projects">
+                        <columnTitle>Project IDs</columnTitle>
+                        <url>/query/ONPRC/EHR/executeQuery.view?schemaName=ehr&query.queryName=project&query.columns=project%2Cname%2Cprotocol%2Ctitle%2CinvestigatorId%2Cprotocol%2FinvestigatorId%2Caccount%2Caccount%2FfiscalAuthority%2Caccount%2FprojectNumber%2Cstartdate%2Cenddate%2Cuse_category%2Caccount%2FaliasType%2CactiveAssignments%2FactiveAssignments&query.sort=name&query.project~in=${projects}</url>
+                        <urlTarget>_blank</urlTarget>
+                    </column>
                 </columns>
             </table>
         </tables>

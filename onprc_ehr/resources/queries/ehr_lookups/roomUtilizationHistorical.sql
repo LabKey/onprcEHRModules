@@ -207,19 +207,21 @@ SELECT
     coalesce(csc.cageSpaces, 0) AS totalCageSpaces,
     coalesce(acd.totalAnimals, 0) AS totalAnimals,
     coalesce(pd.perDiemsEquiv, 0) AS perDiemsEquiv,
-    coalesce(coalesce(pd.perDiemsEquiv, 0) / NULLIF(coalesce(csc.cageSpaces, 0), 0), 0) AS percentUsed
+    coalesce(coalesce(pd.perDiemsEquiv, 0) / NULLIF(coalesce(csc.cageSpaces, 0), 0), 0) AS percentUsed,
+    pd.projects
 FROM ehr_lookups.rooms r
 
-JOIN RoomFirstUseData rfu ON rfu.room = r.room -- rooms without a first use won't be included
-LEFT JOIN AnimalCountData acd ON acd.room = r.room
-LEFT JOIN (
+     JOIN RoomFirstUseData rfu ON rfu.room = r.room -- rooms without a first use won't be included
+     LEFT JOIN AnimalCountData acd ON acd.room = r.room
+     LEFT JOIN (
     SELECT
         pd.rooms,
-        sum(pd.effectiveDays) AS perDiemsEquiv
+        sum(pd.effectiveDays) AS perDiemsEquiv,
+        group_concat(DISTINCT pd.project, ';') as projects
     FROM PerDiemsEquivData pd
-    WHERE pd.
+    WHERE pd.project NOT IN (625, 1106, 2270) -- Exclude projectID for 0492, 0492-02, 0492-45
     GROUP BY pd.rooms
 ) pd ON pd.rooms = r.room
-LEFT JOIN CageSpaceCountData csc ON csc.room = r.room
+     LEFT JOIN CageSpaceCountData csc ON csc.room = r.room
 WHERE REPORTDATE <= coalesce(r.dateDisabled, now())
-    AND rfu.firstUseDate <= REPORTDATE
+  AND rfu.firstUseDate <= REPORTDATE
