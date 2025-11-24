@@ -21,7 +21,7 @@ assignments AS (
         a.enddate         AS assignmentEndDate,
         a.project,
         --Create a sub query for resource ID
-        (Select r.project from study.resourceAssigned r where r.id = a.id) as resourceCode,
+        (Select r.project.displayName from study.resourceAssigned r where r.id = a.id) as resourceCode,
         a.assignCondition,
         a.releaseCondition,
         a.projectedRelease,
@@ -54,6 +54,7 @@ age_at_assignment AS (
         aa.Id,
         aa.assignmentId,
         aa.assignmentDate,
+        aa.assignmentEndDate,
         aa.project,
         aa.resourceCode,
         aa.assignCondition,
@@ -75,9 +76,9 @@ age_at_assignment AS (
     LEFT JOIN study.demographics d
         ON d.Id = aa.Id
 )
-Select * from age_at_assignment
+--Select * from age_at_assignment
 
-/*,
+,
 
 -- =========================================================
 -- 3) PI purchase flag (for research assignments)
@@ -85,28 +86,34 @@ Select * from age_at_assignment
 pi_purchase AS (
     SELECT DISTINCT
         f.Id,
+        f.value,
         1 AS hasPIPurchase
     FROM study.flags f
-    WHERE f.value = 'PI Purchased NHP'
+   WHERE f.flag.value = 'PI Purchased NHP'
      --AND f.isActive = true
 ),
 
 assign_with_pi AS (
     SELECT
         a.*,
+        p.value,
         COALESCE(p.hasPIPurchase, 0) AS hasPIPurchase
     FROM age_at_assignment a
     LEFT JOIN pi_purchase p
         ON a.Id = p.Id
-),
+)
+--select * from pi_purchase
+           ,
 
 -- =========================================================
 -- 4) Assignment length & condition change
+           --This is returening total days assigned to the project
 -- =========================================================
 assignment_length AS (
     SELECT
         a.*,
-        DATEDIFF('day', a.assignmentDate, COALESCE(a.proposedReleaseDate, a.assignmentEndDate)) AS assignmentDays,
+    TIMESTAMPDIFF('SQL_TSI_day', a.assignmentDate, COALESCE(a.projectedRelease, a.assignmentenddate)) AS assignmentDays,
+        --DATEDIFF('day', a.assignmentDate, COALESCE(a.proposedReleaseDate, a.assignmentEndDate)) AS assignmentDays,
         CASE
             WHEN a.assignCondition = a.releaseCondition
                 OR a.releaseCondition IS NULL
@@ -114,7 +121,10 @@ assignment_length AS (
             ELSE 1
         END AS hasConditionChange
     FROM assign_with_pi a
-),
+)
+-- select * from assignment_length
+
+           ,
 
 -- =========================================================
 -- 5) Resource type classification
@@ -134,7 +144,10 @@ resource_type AS (
             ELSE 'OTHER'
         END AS resourceGroup
     FROM assignment_length a
-),
+)
+ -- select * from resource_type
+
+           ,
 
 -- =========================================================
 -- 6) Dam/resource match (for infant/resource rules)
@@ -163,8 +176,10 @@ with_dam_match AS (
     LEFT JOIN dam_resource dr
         ON dr.Id = a.damId
        AND dr.assignmentId = a.assignmentId  -- or appropriate key
-),
+)
+--   Select * from with_dam_match
 
+,
 -- =========================================================
 -- 7) Determine lease type (core rule engine)
 -- =========================================================
@@ -260,8 +275,10 @@ lease_type AS (
                 END
         END AS leaseType
     FROM with_dam_match a
-),
-
+)
+  --select * from lease_type
+          ,
+-- ++++++++ 2025-11-24 All CTEs above return results as expected
 -- =========================================================
 -- 8) Map leaseType to itemCodes & credit aliases
 -- =========================================================
