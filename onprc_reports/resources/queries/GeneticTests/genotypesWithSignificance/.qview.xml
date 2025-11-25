@@ -1,0 +1,11 @@
+<customView xmlns="http://labkey.org/data/xml/queryCustomView" label="Genetic Testing w/ Location">
+    <columns>
+        <column name="Id"/>
+        <column name="date"/>
+        <column name="label"/>
+        <column name="comment"/>
+    </columns>
+    <sorts>
+        <sort column="Id" />
+    </sorts>
+</customView>
