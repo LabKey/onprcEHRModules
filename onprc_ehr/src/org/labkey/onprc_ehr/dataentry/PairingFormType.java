@@ -67,10 +67,6 @@ public class PairingFormType extends TaskForm
 
 
 
-
-
-
-
     }
 
     @Override

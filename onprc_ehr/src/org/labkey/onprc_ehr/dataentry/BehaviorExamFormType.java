@@ -26,7 +26,11 @@ import org.labkey.api.ehr.dataentry.TaskFormSection;
 import org.labkey.api.ehr.security.EHRBehaviorEntryPermission;
 import org.labkey.api.module.Module;
 import org.labkey.api.query.Queryable;
+import org.labkey.api.security.Group;
+import org.labkey.api.security.GroupManager;
+import org.labkey.api.security.permissions.AdminPermission;
 import org.labkey.api.view.template.ClientDependency;
+import org.labkey.security.xml.GroupEnumType;
 
 import java.util.Arrays;
 import java.util.List;
@@ -101,6 +105,16 @@ public class BehaviorExamFormType extends TaskForm
         ret.add("OPENBEHAVIORCASE");
 
         return ret;
+    }
+    @Override
+    public boolean isVisible()
+    {
+        Group g = GroupManager.getGroup(getCtx().getContainer(), "DCM CMU", GroupEnumType.SITE);
+        if (g != null && getCtx().getUser().isInGroup(g.getUserId()) && !getCtx().getContainer().hasPermission(getCtx().getUser(), AdminPermission.class))
+        {
+            return false;
+        }
+        return super.isVisible();
     }
 
     @Override
