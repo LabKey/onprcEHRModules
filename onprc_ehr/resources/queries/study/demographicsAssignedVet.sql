@@ -2,34 +2,29 @@
 study.demographicsAssignedVet
 
 * Returns one or more assigned vets per animal ID
-* Note to future self: don't be tempted to add more fields to this view. It will likely
-  result in additional rows per animal as they won't be distinct.
-
+* Note to future self: be very careful when adding more fields to this view. It can easily
+  result in additional rows per animal if they're distinct.
  */
 
 -- Step 1: Find the minimum matchedRule for each ID
-WITH MinMatchedRules AS (
-    SELECT
-        VAF2.Id,
-        MIN(VAF2.matchedRule) AS MinRule
-    FROM
-        vetAssignment_Filter AS VAF2
-    GROUP BY
-        VAF2.Id
-)
+WITH MinMatchedRules AS (SELECT Id,
+                                min(matchedRule) AS rule
+                            FROM vetAssignment_Filter
+                            GROUP BY Id)
 
 -- Step 2: Join the original table with the filtered minimum matched rules
-SELECT DISTINCT
-    VAF1.Id,
-    VAF1.AssignedVet,
-    VAF1.AssignmentType,
-    VAF1.Room,
-    VAF1.Area,
-    VAF1.Species
+SELECT DISTINCT f.Id,
+    f.AssignedVet,
+    f.AssignmentType,
+    p.MasterProblems,
+    f.Area,
+    f.Room
 
-FROM
-    vetAssignment_Filter AS VAF1
-        INNER JOIN
-    MinMatchedRules AS MMR
-    ON VAF1.Id = MMR.Id
-        AND VAF1.matchedRule = MMR.MinRule
+FROM vetAssignment_Filter f
+     JOIN MinMatchedRules r ON f.Id = r.Id AND f.matchedRule = r.rule
+     LEFT JOIN (SELECT Id,
+                    AssignedVet,
+                    GROUP_CONCAT(ActiveMasterProblems, ',') AS MasterProblems
+                FROM vetAssignment_filter
+                WHERE matchedRule = 0
+                GROUP BY Id, AssignedVet) p ON p.Id = f.Id AND p.AssignedVet = f.AssignedVet
