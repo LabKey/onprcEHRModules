@@ -100,8 +100,8 @@ import org.labkey.onprc_ehr.security.ONPRC_EHRCustomerEditRole;
 import org.labkey.onprc_ehr.security.ONPRC_EHRCMUMedicationEntryRole;
 import org.labkey.onprc_ehr.security.ONPRC_EHRCMUMedicationAdministrationRole;
 import org.labkey.onprc_ehr.security.ONPRC_EHRCMUMedicationAdministrationPermission;
+import org.labkey.onprc_ehr.security.ONPRC_EHRNHPTrainingRole;
 import org.labkey.onprc_ehr.security.ONPRC_EHREnvironmentalRole;
-//import org.labkey.onprc_ehr.security.ONPRC_EHRPMICEditRole;
 import org.labkey.onprc_ehr.security.ONPRC_EHRTransferRequestRole;
 import org.labkey.onprc_ehr.table.ONPRC_EHRCustomizer;
 
@@ -142,6 +142,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         RoleManager.registerRole(new ONPRC_EHRCustomerEditRole());
         RoleManager.registerRole(new ONPRC_EHRCMUAdministrationRole());
         RoleManager.registerRole(new ONPRC_EHRTransferRequestRole());
+        RoleManager.registerRole(new ONPRC_EHRNHPTrainingRole());
 
 //        Added: 12-5-2019
 //        RoleManager.registerRole(new ONPRC_EHRPMICEditRole());

@@ -22,11 +22,7 @@ import org.labkey.api.ehr.dataentry.TaskForm;
 import org.labkey.api.ehr.dataentry.TaskFormSection;
 import org.labkey.api.ehr.security.EHRBehaviorEntryPermission;
 import org.labkey.api.module.Module;
-import org.labkey.api.security.Group;
-import org.labkey.api.security.GroupManager;
-import org.labkey.api.security.permissions.AdminPermission;
 import org.labkey.api.view.template.ClientDependency;
-import org.labkey.security.xml.GroupEnumType;
 
 import java.util.Arrays;
 import java.util.List;
@@ -60,7 +56,6 @@ public class BehaviorRoundsFormType extends TaskForm
         addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/model/sources/BehaviorRounds.js"));
         addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/window/BehaviorCasesWindow.js"));
     }
-
 
     @Override
     protected boolean canInsert()

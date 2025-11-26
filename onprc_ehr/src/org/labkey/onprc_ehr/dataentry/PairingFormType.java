@@ -67,7 +67,17 @@ public class PairingFormType extends TaskForm
 
 
 
+
+
+
     }
 
+    @Override
+    protected boolean canInsert()
+    {
+        if (!getCtx().getContainer().hasPermission(getCtx().getUser(), EHRBehaviorEntryPermission.class))
+            return false;
 
+        return super.canInsert();
+    }
 }

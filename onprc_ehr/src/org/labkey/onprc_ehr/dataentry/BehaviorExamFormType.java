@@ -26,11 +26,7 @@ import org.labkey.api.ehr.dataentry.TaskFormSection;
 import org.labkey.api.ehr.security.EHRBehaviorEntryPermission;
 import org.labkey.api.module.Module;
 import org.labkey.api.query.Queryable;
-import org.labkey.api.security.Group;
-import org.labkey.api.security.GroupManager;
-import org.labkey.api.security.permissions.AdminPermission;
 import org.labkey.api.view.template.ClientDependency;
-import org.labkey.security.xml.GroupEnumType;
 
 import java.util.Arrays;
 import java.util.List;
@@ -106,7 +102,6 @@ public class BehaviorExamFormType extends TaskForm
 
         return ret;
     }
-
 
     @Override
     protected boolean canInsert()
