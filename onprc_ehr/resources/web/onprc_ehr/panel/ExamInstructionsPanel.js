@@ -10,7 +10,7 @@ Ext4.define('ONPRC_EHR.panel.ExamInstructionsPanel', {
     initComponent: function(){
         var buttons = [];
         LDK.Assert.assertNotEmpty('No data entry panel', this.dataEntryPanel);
-        var btnCfg = EHR.DataEntryUtils.getDataEntryFormButton('APPLYFORMTEMPLATE');
+        var btnCfg = EHR.DataEntryUtils.getDataEntryFormButton('APPLYFORMTEMPLATEREV');
         if (btnCfg){
             btnCfg = this.dataEntryPanel.configureButton(btnCfg);
             if (btnCfg){
