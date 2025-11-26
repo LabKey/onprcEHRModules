@@ -106,16 +106,7 @@ public class BehaviorExamFormType extends TaskForm
 
         return ret;
     }
-    @Override
-    public boolean isVisible()
-    {
-        Group g = GroupManager.getGroup(getCtx().getContainer(), "DCM CMU", GroupEnumType.SITE);
-        if (g != null && getCtx().getUser().isInGroup(g.getUserId()) && !getCtx().getContainer().hasPermission(getCtx().getUser(), AdminPermission.class))
-        {
-            return false;
-        }
-        return super.isVisible();
-    }
+
 
     @Override
     protected boolean canInsert()
