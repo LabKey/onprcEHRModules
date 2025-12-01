@@ -45,7 +45,6 @@
                         <columnTitle>Status</columnTitle>
                         <isHidden>false</isHidden>
                         <shownInDetailsView>true</shownInDetailsView>
-                        <columnTitle>Status</columnTitle>
                         <displayWidth>50</displayWidth>
                     </column>
                 </columns>
