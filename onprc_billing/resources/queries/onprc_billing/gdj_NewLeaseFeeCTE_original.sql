@@ -328,8 +328,8 @@ lease_mapping AS (
         END AS creditAlias
     FROM lease_type l
 )
-Select * from lease_mapping
-/*,
+--Select * from lease_mapping
+,
 -- =========================================================
 -- 9) Final output
 -- =========================================================
@@ -354,11 +354,11 @@ final AS (
         CASE
             WHEN f.leaseType = 'NONE'
                 THEN 'No lease per business rules'
-            ELSE 'Lease generated per leaseType=' + f.leaseType
+            ELSE ('Lease generated per leaseType=' || f.leaseType)
         END AS leaseNote
     FROM lease_mapping f
 )
 
 SELECT *
 FROM final
-ORDER BY assignmentDate, Id, assignmentId;*/
+ORDER BY assignmentDate, Id, assignmentId;
