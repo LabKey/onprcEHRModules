@@ -2,5 +2,7 @@
     <dependencies>
         <dependency path="ehr.context" />
         <dependency path="onprc_ehr/panel/RoomLayoutPanel.js"/>
+        <dependency path="onprc_ehr/window/ClinicalHistoryWindow.js"/>
+        <dependency path="onprc_ehr/onprcReports.js"/>
     </dependencies>
 </view>

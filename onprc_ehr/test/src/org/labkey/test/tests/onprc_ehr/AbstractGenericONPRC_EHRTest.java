@@ -394,6 +394,7 @@ public abstract class AbstractGenericONPRC_EHRTest extends AbstractGenericEHRTes
         SelectRowsCommand select1 = new SelectRowsCommand("ehr_lookups", "flag_values");
         select1.addFilter(new Filter("category", category, Filter.Operator.EQUAL));
         select1.addFilter(new Filter("value", name, Filter.Operator.EQUAL));
+        select1.addFilter(new Filter("datedisabled", null, Filter.Operator.ISBLANK));
         SelectRowsResponse resp = select1.execute(getApiHelper().getConnection(), getContainerPath());
 
         String objectid = resp.getRowCount().intValue() == 0 ? null : (String)resp.getRows().get(0).get("objectid");
