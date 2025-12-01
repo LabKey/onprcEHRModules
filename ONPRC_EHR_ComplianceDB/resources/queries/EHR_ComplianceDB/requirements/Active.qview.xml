@@ -1,4 +1,4 @@
-<customView xmlns="http://labkey.org/data/xml/queryCustomView" hidden = "true" >
+<customView xmlns="http://labkey.org/data/xml/queryCustomView" hidden = "false" >
     <sorts>
         <sort column="requirementname" descending="false"/>
     </sorts>
