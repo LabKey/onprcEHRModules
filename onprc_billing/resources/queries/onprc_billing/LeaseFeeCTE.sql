@@ -3,6 +3,7 @@ PARAMETERS (StartDate TIMESTAMP, EndDate TIMESTAMP)
 -- ========================================================
 -- Revised Lease Fee CTE Query - LabKey SQL Compatible
 -- Date: 2025-11-24 (reviewed/cleaned)
+-- 2025-12-01 Final testing complete deploying to test instance for review
 -- ========================================================
 WITH
 -- ========================================================
