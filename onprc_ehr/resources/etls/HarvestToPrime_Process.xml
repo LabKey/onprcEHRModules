@@ -71,7 +71,7 @@
 
     <schedule>
 
-        <cron expression="0 0/10 * * * ?"/>
+        <cron expression="0 0/10 1-22 * * ?"/>
 
     </schedule>
 
