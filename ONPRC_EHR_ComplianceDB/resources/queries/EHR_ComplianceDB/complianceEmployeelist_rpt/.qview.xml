@@ -3,23 +3,16 @@
         <column name="employeeid"/>
         <column name="lastName"/>
         <column name="firstName"/>
-        <column name="middleName"/>
         <column name="email"/>
-        <column name="personid"/>
         <column name="type"/>
         <column name="majorudds"/>
         <column name="title"/>
         <column name="unit"/>
         <column name="category"/>
         <column name="supervisor"/>
-        <column name="emergencycontact" />
-        <column name="emergencycontactdaytimephone" />
-        <column name="emergencycontactnighttimephone" />
-
         <column name="location"/>
         <column name="startdate"/>
         <column name="enddate"/>
-        <column name="notes"/>
     </columns>
     <sorts>
         <sort column="lastName" descending="false"/>
