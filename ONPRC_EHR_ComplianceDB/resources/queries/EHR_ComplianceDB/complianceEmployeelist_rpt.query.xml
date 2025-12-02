@@ -2,7 +2,7 @@
     <metadata>
         <tables xmlns="http://labkey.org/data/xml">
             <table tableName="complianceEmployeelist_rpt" tableDbType="TABLE">
-                <tableTitle>Employee List Unit/Category Exception Report</tableTitle>
+                <tableTitle>Category/Unit Comparison</tableTitle>
                 <columns>
 
                 </columns>
