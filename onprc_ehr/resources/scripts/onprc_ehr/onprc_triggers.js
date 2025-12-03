@@ -1053,7 +1053,7 @@ exports.init = function(EHR){
         }
 
         //Added by Kollil, 8/1/24
-        /* User can bypass the enddate for these two medications, as per ticket #11016
+        /* User can bypass the enddate for the following meddications, as per ticket #11016
          Validation code on the Prime side to bypass the following two medications without entering the end dates.
             1. E-85760 - Medroxyprogesterone injectable (150mg/ml)
             2. E-Y7735 - Diet - Weekly Multivitamin
@@ -1066,12 +1066,15 @@ exports.init = function(EHR){
             5. E-X1380 - Diet Daily (Non-standard), 5LOP (TAD)
 
          */
-        if (row.code != 'E-85760' && row.code != 'E-Y7735' && row.code != 'E-X0500' && row.code != 'E-Y9750' && row.code != 'E-X1380'){
-            if (!row.enddate) {
-                //Changed by Kollil on 5/28/25 - Changed the 'WARN' to 'ERROR' to tighten the end date validation.
-                //This will prevent the user to submit the med/diet data without passing the validation. The "Force Submit" button WILL NOT WORK with this setting.
-                EHR.Server.Utils.addError(scriptErrors, 'enddate', 'Must enter enddate', 'WARN');
-            }
+        // if (row.code != 'E-85760' && row.code != 'E-Y7735' && row.code != 'E-X0500' && row.code != 'E-Y9750' && row.code != 'E-X1380'){
+        //     if (!row.enddate) {
+        //         EHR.Server.Utils.addError(scriptErrors, 'enddate', 'Must enter enddate', 'WARN');
+        //     }
+        // }
+        var exemptMeds = ['E-85760', 'E-Y7735', 'E-X0500', 'E-Y9750', 'E-X1380'];
+
+        if (!exemptMeds.includes(row.code) && !row.enddate) {
+            EHR.Server.Utils.addError(scriptErrors, 'enddate', 'Must enter enddate', 'WARN');
         }
 
         //Added by Kollil, 9/15/25
