@@ -1070,7 +1070,7 @@ exports.init = function(EHR){
             if (!row.enddate) {
                 //Changed by Kollil on 5/28/25 - Changed the 'WARN' to 'ERROR' to tighten the end date validation.
                 //This will prevent the user to submit the med/diet data without passing the validation. The "Force Submit" button WILL NOT WORK with this setting.
-                EHR.Server.Utils.addError(scriptErrors, 'enddate', 'Must enter enddate', 'ERROR');
+                EHR.Server.Utils.addError(scriptErrors, 'enddate', 'Must enter enddate', 'WARN');
             }
         }
 
