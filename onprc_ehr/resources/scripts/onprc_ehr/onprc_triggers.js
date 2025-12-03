@@ -1066,11 +1066,6 @@ exports.init = function(EHR){
             5. E-X1380 - Diet Daily (Non-standard), 5LOP (TAD)
 
          */
-        // if (row.code != 'E-85760' && row.code != 'E-Y7735' && row.code != 'E-X0500' && row.code != 'E-Y9750' && row.code != 'E-X1380'){
-        //     if (!row.enddate) {
-        //         EHR.Server.Utils.addError(scriptErrors, 'enddate', 'Must enter enddate', 'WARN');
-        //     }
-        // }
         var exemptMeds = ['E-85760', 'E-Y7735', 'E-X0500', 'E-Y9750', 'E-X1380'];
 
         if (!exemptMeds.includes(row.code) && !row.enddate) {
