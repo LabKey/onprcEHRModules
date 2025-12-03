@@ -2,34 +2,24 @@
 study.demographicsAssignedVet
 
 * Returns one or more assigned vets per animal ID
-* Note to future self: don't be tempted to add more fields to this view. It will likely
-  result in additional rows per animal as they won't be distinct.
-
+* Note to future self: be very careful when adding more fields to this view. It can easily
+  result in additional rows per animal if they're distinct.
  */
 
--- Step 1: Find the minimum matchedRule for each ID
-WITH MinMatchedRules AS (
-    SELECT
-        VAF2.Id,
-        MIN(VAF2.matchedRule) AS MinRule
-    FROM
-        vetAssignment_Filter AS VAF2
-    GROUP BY
-        VAF2.Id
+SELECT
+    f.Id,
+    f.AssignedVet,
+    f.AssignmentType,
+    GROUP_CONCAT(
+            CASE WHEN f.matchedRule = 0 THEN f.ActiveMasterProblems ELSE NULL END,
+            ', '
+    ) AS MasterProblems,
+    f.Area,
+    f.Room
+FROM vetAssignment_filter f
+WHERE f.matchedRule = (
+    SELECT min(matchedRule)
+    FROM vetAssignment_filter sub
+    WHERE sub.Id = f.Id
 )
-
--- Step 2: Join the original table with the filtered minimum matched rules
-SELECT DISTINCT
-    VAF1.Id,
-    VAF1.AssignedVet,
-    VAF1.AssignmentType,
-    VAF1.Room,
-    VAF1.Area,
-    VAF1.Species
-
-FROM
-    vetAssignment_Filter AS VAF1
-        INNER JOIN
-    MinMatchedRules AS MMR
-    ON VAF1.Id = MMR.Id
-        AND VAF1.matchedRule = MMR.MinRule
+GROUP BY f.Id, f.AssignedVet, f.AssignmentType, f.Area, f.Room
