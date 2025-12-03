@@ -32,6 +32,4 @@ public interface BillingPipelineJobSupport
     String getComment();
 
     String getName();
-
-    File getAnalysisDir();
 }
