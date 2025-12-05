@@ -149,7 +149,7 @@ public class BehaviorNotification extends ColonyAlertsNotification
         }
         else
         {
-            msg.append("<b>WARNING: No Assignments starting in the next 1-14 days!</b><br><hr>\n");
+            msg.append("<b>WARNING: No assignments starting in the next 1-14 days!</b><br><hr>\n");
         }
 
     }
@@ -199,7 +199,7 @@ public class BehaviorNotification extends ColonyAlertsNotification
 
         //Get num of rows
         if (count > 0) {
-            msg.append("<b>List of assignments created in past 24hrs:</b><p>");
+            msg.append("<b>List of assignments created in the past 24hrs:</b><p>");
             msg.append("There are " + count + " entries found. ");
             msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "assignmentsCreatedInPast1Day", null)  + "'>Click here to view them</a></p>\n");
             msg.append("<hr>\n\n");
@@ -282,7 +282,7 @@ public class BehaviorNotification extends ColonyAlertsNotification
 
         //Get num of rows
         if (count > 0) {
-            msg.append("<b>List of assignments with new \"Release date\" added within the last 24hrs:</b><p>");
+            msg.append("<b>List of assignments with new \"Release date\" added in the last 24hrs:</b><p>");
             msg.append("There are " + count + " entries found. ");
             msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "AssignmentsReleasedInPast1Day", null)  + "'>Click here to view them</a></p>\n");
             msg.append("\n\n");
