@@ -1,7 +1,8 @@
 PARAMETERS (StartDate TIMESTAMP, EndDate TIMESTAMP)
 
 -- ========================================================
--- Lease Fee Logic – Production Version (no debug columns)
+-- Lease Fee Logic – PRODUCTION VERSION
+-- Returns full output + chargeID (string)
 -- ========================================================
 
 WITH
@@ -16,14 +17,17 @@ assignments AS (
         a.enddate AS assignmentEndDate,
         a.project,
 
-        -- Most recent active resource assignment (prevents multi-row errors)
+        -- Most recent resource assignment (LabKey-safe version)
         (
             SELECT r.project.displayName
             FROM study.resourceAssigned r
             WHERE r.id = a.id
               AND (r.project.enddate IS NULL OR r.project.enddate >= a.date)
-            ORDER BY r.date DESC
-            LIMIT 1
+              AND r.date = (
+                    SELECT MAX(r2.date)
+                    FROM study.resourceAssigned r2
+                    WHERE r2.id = a.id
+              )
         ) AS resourceCode,
 
         a.assignCondition,
@@ -35,13 +39,15 @@ assignments AS (
             SELECT 1 FROM study.researchAssigned ra WHERE ra.id = a.id
         ) THEN 1 ELSE 0 END AS isResearchAssignment,
 
-        -- Birth/dam (single most recent row)
         (
             SELECT b.dam
             FROM study.birth b
             WHERE b.id = a.id
-            ORDER BY b.date DESC
-            LIMIT 1
+              AND b.date = (
+                    SELECT MAX(b2.date)
+                    FROM study.birth b2
+                    WHERE b2.id = a.id
+              )
         ) AS damId,
 
         a.container
@@ -51,7 +57,7 @@ assignments AS (
 ),
 
 -- ========================================================
--- 2) Age and demographic information
+-- 2) Age, infant status, demographics
 -- ========================================================
 age_at_assignment AS (
     SELECT
@@ -72,7 +78,7 @@ age_at_assignment AS (
 ),
 
 -- ========================================================
--- 3) PI Purchase flag
+-- 3) PI purchase flags
 -- ========================================================
 pi_purchase AS (
     SELECT
@@ -93,7 +99,7 @@ assign_with_pi AS (
 ),
 
 -- ========================================================
--- 4) Assignment length
+-- 4) Assignment length + Condition change
 -- ========================================================
 assignment_length AS (
     SELECT
@@ -112,7 +118,7 @@ assignment_length AS (
 ),
 
 -- ========================================================
--- 5) Resource Type classification
+-- 5) Resource type classification
 -- ========================================================
 resource_type AS (
     SELECT
@@ -132,7 +138,7 @@ resource_type AS (
 ),
 
 -- ========================================================
--- 6) Infant same-resource/dam matching
+-- 6) Infant / dam / same-resource matching
 -- ========================================================
 dam_resource AS (
     SELECT DISTINCT
@@ -154,7 +160,7 @@ with_dam_match AS (
 ),
 
 -- ========================================================
--- 7) Determine leaseType (Business Rules)
+-- 7) Determine leaseType
 -- ========================================================
 lease_type AS (
     SELECT
@@ -162,19 +168,15 @@ lease_type AS (
         CASE
             WHEN a.isResearchAssignment = 0 THEN
                 CASE
-                    -- Resource assignment, infant, same dam & resource → no lease
                     WHEN a.isInfant = 1 AND a.infantSameDamResource = 1
                         THEN 'NONE'
 
-                    -- TMB
                     WHEN a.resourceGroup = 'TMB'
                         THEN 'TMB_LEASE'
 
-                    -- Aging
                     WHEN a.resourceGroup = 'AGING'
                         THEN 'NONE'
 
-                    -- Obese rules
                     WHEN a.resourceGroup = 'OBESE'
                         THEN CASE
                                 WHEN a.assignmentDays BETWEEN 1 AND 14
@@ -185,28 +187,22 @@ lease_type AS (
                                 ELSE 'OBESE_ADULT'
                              END
 
-                    -- SPF9
                     WHEN a.resourceGroup = 'SPF9'
                         THEN 'SPF9_EXPANDED'
 
-                    -- AMR
                     WHEN a.resourceGroup = 'AMR'
                         THEN 'NONE'
 
-                    -- All other resource assignments → full lease matrix
                     ELSE 'FULL_LEASE'
                 END
 
-            ELSE  -- Research assignments
+            ELSE  -- RESEARCH assignments
                 CASE
                     WHEN a.hasPIPurchase = 1 THEN 'NONE'
-
                     WHEN a.assignmentDays BETWEEN 1 AND 14 THEN
                         CASE WHEN a.hasConditionChange = 0 THEN 'DAY_LEASE'
                              ELSE 'FULL_LEASE' END
-
                     WHEN a.assignmentDays > 14 THEN 'FULL_LEASE'
-
                     ELSE 'NONE'
                 END
         END AS leaseType
@@ -214,48 +210,48 @@ lease_type AS (
 ),
 
 -- ========================================================
--- 8) FULL LEASE MATRIX (age bucket + condition from → to)
+-- 8) Full Lease Matrix (ChargeIDs = itemCodes)
 -- ========================================================
 full_lease_matrix AS (
-    SELECT 'LT1'  AS matrixKey, '<1'  AS ageBucket, '201' AS assignCond, '201' AS releaseCond, 1533 AS chargeRowId
-    UNION ALL SELECT 'LT2' , '<1' , '201','202',1534
-    UNION ALL SELECT 'LT3' , '<1' , '201','204',1535
-    UNION ALL SELECT 'LT4' , '<1' , '201','206',1537
-    UNION ALL SELECT 'LT5' , '<1' , '202','202',1538
-    UNION ALL SELECT 'LT6' , '<1' , '202','204',1539
-    UNION ALL SELECT 'LT7' , '<1' , '202','206',1541
-    UNION ALL SELECT 'LT8' , '<1' , '204','204',1546
-    UNION ALL SELECT 'LT9' , '<1' , '204','206',1548
-    UNION ALL SELECT 'LT10', '<1' , '207','206',5250
-    UNION ALL SELECT 'LT11', '<1' , '207','207',1551
+    SELECT 'LT1','<1','201','201','1533'
+    UNION ALL SELECT 'LT2','<1','201','202','1534'
+    UNION ALL SELECT 'LT3','<1','201','204','1535'
+    UNION ALL SELECT 'LT4','<1','201','206','1537'
+    UNION ALL SELECT 'LT5','<1','202','202','1538'
+    UNION ALL SELECT 'LT6','<1','202','204','1539'
+    UNION ALL SELECT 'LT7','<1','202','206','1541'
+    UNION ALL SELECT 'LT8','<1','204','204','1546'
+    UNION ALL SELECT 'LT9','<1','204','206','1548'
+    UNION ALL SELECT 'LT10','<1','207','206','5250'
+    UNION ALL SELECT 'LT11','<1','207','207','1551'
 
-    UNION ALL SELECT 'LT20','1-4','201','201',1495
-    UNION ALL SELECT 'LT21','1-4','201','202',1496
-    UNION ALL SELECT 'LT22','1-4','201','204',1497
-    UNION ALL SELECT 'LT23','1-4','201','206',1499
-    UNION ALL SELECT 'LT24','1-4','202','202',1500
-    UNION ALL SELECT 'LT25','1-4','202','204',1501
-    UNION ALL SELECT 'LT26','1-4','202','206',1503
-    UNION ALL SELECT 'LT27','1-4','204','204',1508
-    UNION ALL SELECT 'LT28','1-4','204','206',1510
-    UNION ALL SELECT 'LT29','1-4','207','206',5253
-    UNION ALL SELECT 'LT30','1-4','207','207',1513
+    UNION ALL SELECT 'LT20','1-4','201','201','1495'
+    UNION ALL SELECT 'LT21','1-4','201','202','1496'
+    UNION ALL SELECT 'LT22','1-4','201','204','1497'
+    UNION ALL SELECT 'LT23','1-4','201','206','1499'
+    UNION ALL SELECT 'LT24','1-4','202','202','1500'
+    UNION ALL SELECT 'LT25','1-4','202','204','1501'
+    UNION ALL SELECT 'LT26','1-4','202','206','1503'
+    UNION ALL SELECT 'LT27','1-4','204','204','1508'
+    UNION ALL SELECT 'LT28','1-4','204','206','1510'
+    UNION ALL SELECT 'LT29','1-4','207','206','5253'
+    UNION ALL SELECT 'LT30','1-4','207','207','1513'
 
-    UNION ALL SELECT 'LT40','4+','201','201',5315
-    UNION ALL SELECT 'LT41','4+','201','202',5316
-    UNION ALL SELECT 'LT42','4+','201','204',5317
-    UNION ALL SELECT 'LT43','4+','201','206',5318
-    UNION ALL SELECT 'LT44','4+','202','202',5319
-    UNION ALL SELECT 'LT45','4+','202','204',5320
-    UNION ALL SELECT 'LT46','4+','202','206',5321
-    UNION ALL SELECT 'LT47','4+','204','204',5322
-    UNION ALL SELECT 'LT48','4+','204','206',5323
-    UNION ALL SELECT 'LT49','4+','207','206',5324
-    UNION ALL SELECT 'LT50','4+','207','207',5325
+    UNION ALL SELECT 'LT40','4+','201','201','5315'
+    UNION ALL SELECT 'LT41','4+','201','202','5316'
+    UNION ALL SELECT 'LT42','4+','201','204','5317'
+    UNION ALL SELECT 'LT43','4+','201','206','5318'
+    UNION ALL SELECT 'LT44','4+','202','202','5319'
+    UNION ALL SELECT 'LT45','4+','202','204','5320'
+    UNION ALL SELECT 'LT46','4+','202','206','5321'
+    UNION ALL SELECT 'LT47','4+','204','204','5322'
+    UNION ALL SELECT 'LT48','4+','204','206','5323'
+    UNION ALL SELECT 'LT49','4+','207','206','5324'
+    UNION ALL SELECT 'LT50','4+','207','207','5325'
 ),
 
 -- ========================================================
--- 9) Match FULL_LEASE rows to the matrix
+-- 9) Match FULL_LEASE to matrix
 -- ========================================================
 full_lease_match AS (
     SELECT
@@ -264,7 +260,6 @@ full_lease_match AS (
         lt.ageYears,
         lt.assignCondition,
         lt.projectedReleaseCondition,
-
         m.matrixKey,
         m.ageBucket,
         m.assignCond,
@@ -277,50 +272,44 @@ full_lease_match AS (
             (m.ageBucket = '1-4' AND lt.ageYears >= 1 AND lt.ageYears < 4) OR
             (m.ageBucket = '4+'  AND lt.ageYears >= 4)
          )
-     AND m.assignCond = CAST(lt.assignCondition AS VARCHAR)
-     AND m.releaseCond = CAST(lt.projectedReleaseCondition AS VARCHAR)
+     AND m.assignCond = CAST(lt.assignCondition AS VARCHAR(5))
+     AND m.releaseCond = CAST(lt.projectedReleaseCondition AS VARCHAR(5))
     WHERE lt.leaseType = 'FULL_LEASE'
 ),
 
 -- ========================================================
--- 10) Chargeable items (rowid → itemCode, rate, etc.)
--- ========================================================
-ci AS (
-    SELECT
-        rowid,
-        itemCode,
-        description,
-        unitCost
-    FROM Site.{substitutePath moduleProperty('onprc_billing','BillingContainer')}
-         .onprc_billing.chargeableItems
-),
-
--- ========================================================
--- 11) Map leaseType to charge item & credit alias
+-- 10) Map leaseType → ChargeID (string)
 -- ========================================================
 lease_mapping AS (
     SELECT
         lt.*,
 
-        -- Charge itemCode derived by leaseType
         CASE
             WHEN lt.leaseType = 'FULL_LEASE'
-                THEN ci.itemCode
-            WHEN lt.leaseType = 'DAY_LEASE'
-                THEN '90'      -- One Day Lease
-            WHEN lt.leaseType = 'OBESE_DAY'
-                THEN '5367'    -- OBESE Day Lease
-            WHEN lt.leaseType = 'OBESE_ADULT'
-                THEN '5368'    -- OBESE Adult Lease
-            WHEN lt.leaseType = 'OBESE_ADULT_TERM'
-                THEN '5369'    -- OBESE Adult Terminal Lease
-            WHEN lt.leaseType = 'TMB_LEASE'
-                THEN '1552'    -- TMB Lease
-            WHEN lt.leaseType = 'SPF9_EXPANDED'
-                THEN '5348'    -- U42 Expanded SPF Lease
-            ELSE NULL
-        END AS leaseItemCode,
+                THEN fm.chargeRowId
 
+            WHEN lt.leaseType = 'DAY_LEASE'
+                THEN '90'
+
+            WHEN lt.leaseType = 'OBESE_DAY'
+                THEN '5367'
+
+            WHEN lt.leaseType = 'OBESE_ADULT'
+                THEN '5368'
+
+            WHEN lt.leaseType = 'OBESE_ADULT_TERM'
+                THEN '5369'
+
+            WHEN lt.leaseType = 'TMB_LEASE'
+                THEN '1552'
+
+            WHEN lt.leaseType = 'SPF9_EXPANDED'
+                THEN '5348'
+
+            ELSE NULL
+        END AS chargeID,
+
+        -- Credit alias unchanged from your original rules
         CASE
             WHEN lt.leaseType = 'NONE' THEN NULL
             WHEN lt.resourceGroup = 'AGING'  THEN 'COLONY_ALIAS'
@@ -333,15 +322,13 @@ lease_mapping AS (
             WHEN lt.resourceGroup = 'JMR'    THEN 'JMR_ALIAS'
             ELSE 'ORIGIN_RESOURCE_ALIAS'
         END AS creditAlias
+
     FROM lease_type lt
-    LEFT JOIN full_lease_match fm
-           ON fm.assignmentId = lt.assignmentId
-    LEFT JOIN ci
-           ON ci.rowid = fm.chargeRowId
+    LEFT JOIN full_lease_match fm ON fm.assignmentId = lt.assignmentId
 ),
 
 -- ========================================================
--- 12) Final Output
+-- 11) Final Output
 -- ========================================================
 final AS (
     SELECT
@@ -349,7 +336,7 @@ final AS (
         CASE
             WHEN f.leaseType = 'NONE'
                 THEN 'No lease per business rules'
-            ELSE 'Lease generated per leaseType=' || f.leaseType
+            ELSE 'Lease generated per leaseType=' || CAST(f.leaseType AS VARCHAR(20))
         END AS leaseNote
     FROM lease_mapping f
 )
