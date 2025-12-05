@@ -66,18 +66,7 @@ public class PairingFormType extends TaskForm
         addClientDependency(ClientDependency.supplierFromPath("/onprc_ehr/form/field/PairedAdultsEntryField.js"));
 
 
-
-
-
-
     }
 
-    @Override
-    protected boolean canInsert()
-    {
-        if (!getCtx().getContainer().hasPermission(getCtx().getUser(), EHRBehaviorEntryPermission.class))
-            return false;
 
-        return super.canInsert();
-    }
 }
