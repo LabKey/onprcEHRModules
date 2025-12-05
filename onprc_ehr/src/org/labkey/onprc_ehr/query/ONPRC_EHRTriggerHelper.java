@@ -2636,11 +2636,9 @@ public class ONPRC_EHRTriggerHelper
         }
     }
 
-    public void sendClinpathPanicEmail(String id, String objectid)
+    public void sendClinpathPanicEmail(String id, String runid)
     {
         String subject = "Chemistry Results with Panic values";
-
-        Integer testname = 1007; //Raymond   Vamdy 1014
 
 
         final TableInfo ti = getTableInfo("onprc_ehr", "ChemistryPanicNotification");
@@ -2658,13 +2656,13 @@ public class ONPRC_EHRTriggerHelper
         names.add(FieldKey.fromString("Id"));
         names.add(FieldKey.fromString("vet"));
 
-        _log.info("Success Panic value 2");
 
         final Map<FieldKey, ColumnInfo> colKeys = QueryService.get().getColumns(ti, names);
         final ColumnInfo clinpathColumn = colKeys.get(clinpathFieldKey);
         TableSelector ts = new TableSelector(ti, colKeys.values(), filter, null);
 
         final StringBuilder html = new StringBuilder();
+
 
         if (ts.getRowCount() == 0)
         {
@@ -2674,8 +2672,6 @@ public class ONPRC_EHRTriggerHelper
         }
         else
         {
-            //Create header information on the report
-            _log.info("Success Panic value 3");
 
             html.append("<table border=1 style='border-collapse: collapse;'>");
             html.append("<tr style='font-weight: bold;'><td>Animal ID</td><td>Date</td><td>Service Requested</td><td> Panel Test Name</td><td> Qual Results</td><td> Vet/PI Name</td></tr>\n");
@@ -2690,24 +2686,24 @@ public class ONPRC_EHRTriggerHelper
                        SimpleFilter filter2 = new SimpleFilter(FieldKey.fromString("userid"), rs.getString("vet"));
                        filter2.addCondition(FieldKey.fromString("DisableDate"), true, CompareType.ISBLANK);
 
-                       Integer testname = Integer.valueOf(rs.getString("vet"));
 
-                       TableSelector ts2 = new TableSelector(ti2, PageFlowUtil.set("LastName") , filter2, null);
+                       TableSelector ts2 = new TableSelector(ti2, PageFlowUtil.set("LastName"), filter2, null);
                        List<String> ret2 = ts2.getArrayList(String.class);
                        if (!ret2.isEmpty())
                        {
                            for (String Vetname : ret2)
                            {
-                               html.append("<tr><td>" + PageFlowUtil.filter(rs.getString("Id"))  +
-                                       "</td><td>" + PageFlowUtil.filter(rs.getString("date"))  +
-                                       "</td><td>" + PageFlowUtil.filter(rs.getString("servicerequested"))  +
-                                       " </td><td>" +  PageFlowUtil.filter(rs.getString("testid")) +
-                                       " </td><td>" +  PageFlowUtil.filter(rs.getString("qualResult")) +
-                                       "</td><td>" +  PageFlowUtil.filter(Vetname) + "</td></tr>\n");
+                               html.append("<tr><td>" + PageFlowUtil.filter(rs.getString("Id")) +
+                                       "</td><td>" + PageFlowUtil.filter(rs.getString("date")) +
+                                       "</td><td>" + PageFlowUtil.filter(rs.getString("servicerequested")) +
+                                       " </td><td>" + PageFlowUtil.filter(rs.getString("testid")) +
+                                       " </td><td>" + PageFlowUtil.filter(rs.getString("qualResult")) +
+                                       "</td><td>" + PageFlowUtil.filter(Vetname) + "</td></tr>\n");
                                break;
 
                            }
                        }
+
                    }
 
                }
@@ -2715,49 +2711,78 @@ public class ONPRC_EHRTriggerHelper
             );
 
         }
-        Set<UserPrincipal> recipients = getRecipients(testname);
-//        Set<UserPrincipal> recipients = getRecipients(vetname);
-        if (recipients.isEmpty())
+//testname = Integer.valueOf(rs.getString("vet"));
+
+        final TableInfo tt = getTableInfo("study", "clinpathRuns");
+        SimpleFilter filtert = new SimpleFilter(FieldKey.fromString("objectid"), runid, CompareType.EQUAL);
+        filter.addCondition(FieldKey.fromString("id"), id, CompareType.EQUAL);
+
+        List<FieldKey> vetnames= new ArrayList<>();
+        FieldKey vetFieldKey = FieldKey.fromString("objectid");
+        vetnames.add(vetFieldKey);
+        vetnames.add(FieldKey.fromString("vet"));
+
+        final Map<FieldKey, ColumnInfo> colKeyss = QueryService.get().getColumns(tt, vetnames);
+        final ColumnInfo vetColumn = colKeyss.get(vetFieldKey);
+        TableSelector tst = new TableSelector(ti, colKeys.values(), filtert, null);
+
+        if (tst.getRowCount() == 0)
         {
-            _log.warn("No recipients, unable to send EHR trigger script email");
+            html.append("There are no Chemistry Panlc Values to display");
+
             return;
         }
-        _log.info("Success Panic value 1");
+        else
+        {
 
-        html.append("</table>\n");
+//        tst.forEach(new Selector.ForEachBlock<ResultSet>()
+        }
 
-        sendMessage(subject, html.toString(), recipients);
+        {
+//
+//        final recipients = getRecipients(testname);
+//        if (recipients.isEmpty())
+//        {
+//            _log.warn("No recipients, unable to send EHR trigger script email");
+//            return;
+//        }
+//        html.append("</table>\n");
+//        sendMessage(subject, html.toString(), recipients);
+//
+//        html.append("</table>\n");
+//
+//        sendMessage(subject, html.toString(), recipients);
 
     }
 
-
-    private Set<UserPrincipal> getRecipients(Integer... userIds)
-    {
-        Set<UserPrincipal> recipients = new HashSet<>();
-        for (Integer userId : userIds)
-        {
-            if (userId > 0)
-            {
-                UserPrincipal up = SecurityManager.getPrincipal(userId);
-                if (up != null)
-                {
-                    if (up instanceof  User)
-                    {
-                        recipients.add(up);
-                    }
-                    else
-                    {
-                        for (UserPrincipal u : SecurityManager.getAllGroupMembers((Group)up, MemberType.ACTIVE_USERS))
-                        {
-                            if (u.isActive())
-                                recipients.add(u);
-                        }
-                    }
-                }
-            }
-        }
-
-        return recipients;
+//
+//    private Set<UserPrincipal> getRecipients(Integer... userIds)
+//    {
+//        Set<UserPrincipal> recipients = new HashSet<>();
+//        for (Integer userId : userIds)
+//        {
+//            if (userId > 0)
+//            {
+//                UserPrincipal up = SecurityManager.getPrincipal(userId);
+//                if (up != null)
+//                {
+//                    if (up instanceof  User)
+//                    {
+//                        recipients.add(up);
+//                    }
+//                    else
+//                    {
+//                        for (UserPrincipal u : SecurityManager.getAllGroupMembers((Group)up, MemberType.ACTIVE_USERS))
+//                        {
+//                            if (u.isActive())
+//                                recipients.add(u);
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//
+//        return recipients;
     }
 
     //Added 9-30-2025
