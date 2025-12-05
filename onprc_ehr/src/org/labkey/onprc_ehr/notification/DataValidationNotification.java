@@ -112,6 +112,9 @@ public class DataValidationNotification extends ColonyAlertsNotification
         birthRecordsNotMatchingHousing(c, u, msg);
         duplicateGroupMembership(c, u, msg);
         duplicateFlags(c, u, msg);
+        //Added by Kolli, Oct 2025
+        //Tasks list alert for the new animal births, Refer to # 13504
+        newBirthTasks(c, u, msg);
 
         //only send if there are alerts
         if (!msg.isEmpty())

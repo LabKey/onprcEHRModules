@@ -1073,7 +1073,6 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         Assert.assertEquals("mg/kg", ordersGrid.getFieldValue(3, "dosage_units"));
 
         //note: amount calculation testing handled in surgery test
-
         //blood draws
         waitAndClick(Ext4Helper.Locators.ext4Tab("Blood Draws"));
         Ext4GridRef bloodGrid = _helper.getExt4GridForFormSection("Blood Draws");
