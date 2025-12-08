@@ -4,4 +4,7 @@
         <sort column="project/displayname"/>
         <sort column="investigatorid/lastname"/>
     </sorts>
+    <filters>
+        <filter column="userid/displayName" operator="isnonblank"/>
+    </filters>
 </customView>
