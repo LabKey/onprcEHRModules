@@ -3,6 +3,7 @@
         <sort column="name"/>
     </sorts>
     <filters>
-        <filter column="active" operator="eq" value="true"/>
+        <filter column="enddateCoalesced" operator="dategte" value="-0d"/>
+        <!--&#45;&#45;<filter column="active" operator="eq" value="true"/>-->
     </filters>
 </customView>
