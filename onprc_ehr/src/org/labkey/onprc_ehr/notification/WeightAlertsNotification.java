@@ -80,7 +80,7 @@ public class WeightAlertsNotification extends AbstractEHRNotification
     public String getCronString()
     {
         return "0 0 12 ? * THU";
-    }
+    } //Made changes to the alert by Kollil, Refer to tkt # 13461
 
     @Override
     public String getScheduleDescription()
