@@ -6,6 +6,9 @@
    Added these two Diets to the list by Kollil on 4/15/25. Refer to tkt #12363
 3. E-X0500 - Diet, L-Phyto (Low-phytoestrogen)
 4. E-Y9750 - Diet, 5047 High Protein, Jumbo
+
+    Added Diet to the list by Kollil on 5/14/25. Refer to tkt #12506
+5. E-X1380 - Diet Daily (Non-standard), 5LOP (TAD)
 */
 SELECT
     Id,
@@ -27,5 +30,5 @@ SELECT
     category,
     taskid.rowid as TaskId
 FROM study.treatment_order
-WHERE code NOT IN ('E-85760', 'E-Y7735', 'E-X0500', 'E-Y9750')
+WHERE code NOT IN ('E-85760', 'E-Y7735', 'E-X0500', 'E-Y9750', 'E-X1380')
   AND enddate is null
