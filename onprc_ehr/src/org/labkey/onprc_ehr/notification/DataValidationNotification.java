@@ -48,19 +48,19 @@ public class DataValidationNotification extends ColonyAlertsNotification
     @Override
     public String getCronString()
     {
-        return "0 25 6 * * ?";
+        return "0 25 6/13 * * ?";
     }
 
     @Override
     public String getScheduleDescription()
     {
-        return "every day at 6:25AM";
+        return "every day at 6:25AM and 3:50PM";
     }
 
     @Override
     public String getDescription()
     {
-        return "The report is designed to identify potential problems with the EHR data.  It is similar to Colony Alerts, except it is limited to alerts that indicate a true problem in the data itself.";
+        return "The report identifies potential problems with the EHR data. Although similar to Colony Alerts, it is limited to problems in the data itself.";
     }
 
     @Override
