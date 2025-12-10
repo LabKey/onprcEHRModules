@@ -4,7 +4,7 @@
         <column name="date"/>
         <column name="area"/>
         <column name="room"/>
-        \<column name="cage"/>
+        <column name="cage"/>
         <column name="label"/>
         <column name="comment"/>
         <column name="LiveStatus"/>
