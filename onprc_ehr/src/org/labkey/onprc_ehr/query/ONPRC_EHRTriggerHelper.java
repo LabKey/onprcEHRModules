@@ -2711,7 +2711,7 @@ public class ONPRC_EHRTriggerHelper
             );
 
         }
-//testname = Integer.valueOf(rs.getString("vet"));
+
 
         final TableInfo tt = getTableInfo("study", "clinpathRuns");
         SimpleFilter filtert = new SimpleFilter(FieldKey.fromString("objectid"), runid, CompareType.EQUAL);
