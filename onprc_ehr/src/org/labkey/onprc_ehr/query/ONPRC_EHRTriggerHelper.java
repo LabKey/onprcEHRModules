@@ -2717,72 +2717,63 @@ public class ONPRC_EHRTriggerHelper
         SimpleFilter filtert = new SimpleFilter(FieldKey.fromString("objectid"), runid, CompareType.EQUAL);
         filter.addCondition(FieldKey.fromString("id"), id, CompareType.EQUAL);
 
-        List<FieldKey> vetnames= new ArrayList<>();
-        FieldKey vetFieldKey = FieldKey.fromString("objectid");
-        vetnames.add(vetFieldKey);
-        vetnames.add(FieldKey.fromString("vet"));
-
-        final Map<FieldKey, ColumnInfo> colKeyss = QueryService.get().getColumns(tt, vetnames);
-        final ColumnInfo vetColumn = colKeyss.get(vetFieldKey);
-        TableSelector tst = new TableSelector(ti, colKeys.values(), filtert, null);
-
-        if (tst.getRowCount() == 0)
+        TableSelector tst = new TableSelector(ti, PageFlowUtil.set("vet"), filter, null);
+        tst.forEach(new Selector.ForEachBlock<>()
         {
-            html.append("There are no Chemistry Panlc Values to display");
+            @Override
+            public void exec(ResultSet rs) throws SQLException
+            {
+                Integer vetId = rs.getInt("vet");
+                Set<UserPrincipal> recipients = getRecipients(vetId);
+                if (recipients.isEmpty())
+                {
+                    _log.warn("No recipients, unable to send EHR trigger script email");
+                    return;
+                }
+                else
+                {
+                    html.append("</table>\n");
 
-            return;
-        }
-        else
-        {
+                    sendMessage(subject, html.toString(), recipients);
 
-//        tst.forEach(new Selector.ForEachBlock<ResultSet>()
-        }
+                }
 
-        {
-//
-//        final recipients = getRecipients(testname);
-//        if (recipients.isEmpty())
-//        {
-//            _log.warn("No recipients, unable to send EHR trigger script email");
-//            return;
-//        }
-//        html.append("</table>\n");
-//        sendMessage(subject, html.toString(), recipients);
-//
-//        html.append("</table>\n");
-//
-//        sendMessage(subject, html.toString(), recipients);
+            }
+
+
+        });
+
 
     }
 
-//
-//    private Set<UserPrincipal> getRecipients(Integer... userIds)
-//    {
-//        Set<UserPrincipal> recipients = new HashSet<>();
-//        for (Integer userId : userIds)
-//        {
-//            if (userId > 0)
-//            {
-//                UserPrincipal up = SecurityManager.getPrincipal(userId);
-//                if (up != null)
-//                {
-//                    if (up instanceof  User)
-//                    {
-//                        recipients.add(up);
-//                    }
-//                    else
-//                    {
-//                        for (UserPrincipal u : SecurityManager.getAllGroupMembers((Group)up, MemberType.ACTIVE_USERS))
-//                        {
-//                            if (u.isActive())
-//                                recipients.add(u);
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//
-//        return recipients;
+
+    private Set<UserPrincipal> getRecipients(Integer... userIds)
+    {
+        Set<UserPrincipal> recipients = new HashSet<>();
+        for (Integer userId : userIds)
+        {
+            if (userId > 0)
+            {
+                UserPrincipal up = SecurityManager.getPrincipal(userId);
+                if (up != null)
+                {
+                    if (up instanceof  User)
+                    {
+                        recipients.add(up);
+                    }
+                    else
+                    {
+                        for (UserPrincipal u : SecurityManager.getAllGroupMembers((Group)up, MemberType.ACTIVE_USERS))
+                        {
+                            if (u.isActive())
+                                recipients.add(u);
+                        }
+                    }
+                }
+            }
+        }
+
+        return recipients;
     }
 
     //Added 9-30-2025
