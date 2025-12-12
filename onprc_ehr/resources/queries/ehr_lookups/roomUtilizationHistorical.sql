@@ -3,7 +3,7 @@ PARAMETERS(ReportDate TIMESTAMP)
 WITH RoomFirstUseData AS ( -- Find first use of each room
     SELECT
         room,
-        min(date) AS firstUseDate
+        MIN(date) AS firstUseDate
     FROM study.housing
     GROUP BY room
 ),
@@ -17,25 +17,25 @@ CageSpaceCountData AS ( -- Count *current* cage spaces in each room
 AnimalCountData AS ( -- A modified version of study.HousingOverlapsReports that uses a single date parameter
     SELECT
         h.room,
-        count(h.id) AS totalAnimals
+        COUNT(h.id) AS totalAnimals
     FROM study.housing h
     WHERE
-        coalesce(REPORTDATE, CAST('1900-01-01 00:00:00.0' as timestamp)) < coalesce(h.enddate, now())
-        AND coalesce(REPORTDATE, now()) >= coalesce(h.date, now())
+        COALESCE(REPORTDATE, CAST('1900-01-01 00:00:00.0' AS timestamp)) < COALESCE(h.enddate, now())
+        AND COALESCE(REPORTDATE, now()) >= COALESCE(h.date, now())
     GROUP BY h.room
 ),
 dateRange AS ( -- A modified version of ldk.dateRange that uses a single date parameter
     SELECT
         i.date,
-        CAST(i.date as DATE) as dateOnly,
-        CAST(dayofyear(i.date) as INTEGER) as DayOfYear,
-        CAST(dayofmonth(i.date) as INTEGER) as DayOfMonth,
-        CAST(dayofweek(i.date) as INTEGER) as DayOfWeek,
-        ceiling(CAST(dayofmonth(i.date) as FLOAT) / 7.0) as WeekOfMonth,
-        CAST(week(i.date) as INTEGER) as WeekOfYear,
-        CAST(REPORTDATE AS TIMESTAMP) as ReportDate
+        CAST(i.date AS DATE) AS dateOnly,
+        CAST(dayofyear(i.date) AS INTEGER) AS DayOfYear,
+        CAST(dayofmonth(i.date) AS INTEGER) AS DayOfMonth,
+        CAST(dayofweek(i.date) AS INTEGER) AS DayOfWeek,
+        ceiling(CAST(dayofmonth(i.date) AS FLOAT) / 7.0) AS WeekOfMonth,
+        CAST(week(i.date) AS INTEGER) AS WeekOfYear,
+        CAST(REPORTDATE AS TIMESTAMP) AS ReportDate
     FROM (
-        SELECT timestampadd('SQL_TSI_DAY', i.value, CAST(coalesce(REPORTDATE, curdate()) AS TIMESTAMP)) as date
+        SELECT timestampadd('SQL_TSI_DAY', i.value, CAST(COALESCE(REPORTDATE, curdate()) AS TIMESTAMP)) AS date
         FROM ldk.integers i
     ) i
     WHERE i.date <= REPORTDATE
@@ -44,8 +44,8 @@ PerDiemsEquivData AS ( -- A modified version of onprc_billing.perDiemsByDay that
     SELECT
         t.*,
         CASE
-            WHEN t.overlappingProjects IS NULL THEN 1 -- An assignment overlapping with TMB is not charged per diems
-            WHEN t.tmbAssignments > 0 then 0
+            WHEN t.overlappingProjects IS NULL THEN 1
+            WHEN t.tmbAssignments > 0 then 0 -- An assignment overlapping with TMB is not charged per diems
             WHEN t.assignedProject IS NULL AND t.overlappingProjects IS NOT NULL THEN 0
             WHEN t.ProjectType != 'Research' AND t.overlappingProjectsCategory LIKE '%Research%' THEN 0
             WHEN t.ProjectType != 'Research' AND t.overlappingProjectsCategory NOT LIKE '%Research%' THEN (1.0 / NULLIF((t.totalOverlappingProjects + 1), 0))
@@ -75,7 +75,7 @@ PerDiemsEquivData AS ( -- A modified version of onprc_billing.perDiemsByDay that
                 THEN (SELECT ci.rowid FROM onprc_billing_public.chargeableItems ci WHERE ci.name = javaConstant('org.labkey.onprc_ehr.ONPRC_EHRManager.QUARANTINE_PER_DIEM'))
             ELSE maxPdfChargeId -- Finally, defer to housing condition
         END as chargeId,
-        coalesce(( -- Find overlapping tier flags on that day
+        COALESCE(( -- Find overlapping tier flags on that day
             SELECT group_concat(DISTINCT f.flag.value) AS tier
             FROM study.flags f
             WHERE f.Id = t.Id AND f.enddateCoalesced >= t.dateOnly AND f.dateOnly <= t.dateOnly AND f.flag.category = 'Housing Tier' -- NOTE: allow flags that ended on this date
@@ -85,7 +85,7 @@ PerDiemsEquivData AS ( -- A modified version of onprc_billing.perDiemsByDay that
             i2.Id,
             CAST(CAST(i2.dateOnly AS DATE) AS TIMESTAMP) AS DATE,
             i2.dateOnly @hidden,
-            coalesce(a.project, (SELECT p.project FROM ehr.project p WHERE p.name = javaConstant('org.labkey.onprc_ehr.ONPRC_EHRManager.BASE_GRANT_PROJECT'))) AS project,
+            COALESCE(a.project, (SELECT p.project FROM ehr.project p WHERE p.name = javaConstant('org.labkey.onprc_ehr.ONPRC_EHRManager.BASE_GRANT_PROJECT'))) AS project,
             a.project AS assignedProject,
             max(a.duration) AS duration,  -- should only have 1 value, no so need to include in grouping
             max(timestampdiff('SQL_TSI_DAY', d.birth, i2.dateOnly)) AS ageAtTime,
@@ -93,7 +93,7 @@ PerDiemsEquivData AS ( -- A modified version of onprc_billing.perDiemsByDay that
             count(*) AS totalAssignmentRecords,
             group_concat(DISTINCT a2.project.displayName) AS overlappingProjects,
             count(DISTINCT a2.project) AS totalOverlappingProjects,
-            sum(CASE WHEN a2.project.use_Category = 'Research' THEN 1 ELSE 0 END) as totalOverlappingResearchProjects,
+            sum(CASE WHEN a2.project.use_Category = 'Research' THEN 1 ELSE 0 END) AS totalOverlappingResearchProjects,
             group_concat(DISTINCT a2.project.use_category) AS overlappingProjectsCategory,
             group_concat(DISTINCT a2.project.protocol) AS overlappingProtocols,
             count(h3.room) AS totalHousingRecords,
@@ -122,8 +122,8 @@ PerDiemsEquivData AS ( -- A modified version of onprc_billing.perDiemsByDay that
                 i.dateOnly,
                 max(h.date) AS lastHousingStart,
                 min(i.ReportDate) AS ReportDate @hidden,
-                count(a3.project) as researchRecordCount,
-                count(t1.code) as bottleFedRecordCount
+                count(a3.project) AS researchRecordCount,
+                count(t1.code) AS bottleFedRecordCount
             FROM dateRange i
             JOIN study.housing h ON (h.dateOnly <= i.dateOnly AND h.enddateCoalesced >= i.dateOnly AND h.qcstate.publicdata = TRUE)
             LEFT JOIN study.assignment a3 ON a3.id = h.id AND a3.date <= i.dateOnly AND a3.endDateCoalesced > i.dateOnly AND a3.project.Use_Category LIKE '%Research%'
@@ -186,7 +186,7 @@ PerDiemsEquivData AS ( -- A modified version of onprc_billing.perDiemsByDay that
         LEFT JOIN onprc_billing.perDiemFeeDefinition pdf ON (
             pdf.housingType = h3.room.housingType
             AND pdf.housingDefinition = h3.room.housingCondition
-            AND coalesce( -- Find overlapping tier flags on that day
+            AND COALESCE( -- Find overlapping tier flags on that day
                 (SELECT group_concat(DISTINCT f.flag.value) as tier
                     FROM study.flags f
                     --NOTE: allow flags that ended on this date
@@ -204,24 +204,30 @@ SELECT
     r.area,
     r.room,
     r.housingType,
-    coalesce(csc.cageSpaces, 0) AS totalCageSpaces,
-    coalesce(acd.totalAnimals, 0) AS totalAnimals,
-    coalesce(pd.perDiemsEquiv, 0) AS perDiemsEquiv,
-    coalesce(coalesce(pd.perDiemsEquiv, 0) / NULLIF(coalesce(csc.cageSpaces, 0), 0), 0) AS percentUsed,
+    COALESCE(csc.cageSpaces, 0) AS totalCageSpaces,
+    COALESCE(acd.totalAnimals, 0) AS totalAnimals,
+    COALESCE(pd.perDiemsEquiv, 0) AS perDiemsEquiv,
+    COALESCE(COALESCE(pd.perDiemsEquiv, 0) / NULLIF(COALESCE(csc.cageSpaces, 0), 0), 0) AS percentUsed,
     pd.projects
 FROM ehr_lookups.rooms r
 
-     JOIN RoomFirstUseData rfu ON rfu.room = r.room -- rooms without a first use won't be included
-     LEFT JOIN AnimalCountData acd ON acd.room = r.room
-     LEFT JOIN (
+JOIN RoomFirstUseData rfu ON rfu.room = r.room -- rooms without a first use won't be included
+LEFT JOIN AnimalCountData acd ON acd.room = r.room
+LEFT JOIN (
     SELECT
         pd.rooms,
         sum(pd.effectiveDays) AS perDiemsEquiv,
         group_concat(DISTINCT pd.project, ';') as projects
     FROM PerDiemsEquivData pd
-    WHERE pd.project NOT IN (625, 1106, 2270) -- Exclude projectID for 0492, 0492-02, 0492-45
+--    WHERE pd.project NOT IN (625, 1106, 2270) -- Exclude projectID for 0492, 0492-02, 0492-45
+    WHERE pd.project NOT IN (
+        SELECT
+            p.project
+        FROM ehr.project p
+        JOIN lists.roomUtilizationHistoricalExcludedProjects ep ON ep.name = p.name
+    )
     GROUP BY pd.rooms
 ) pd ON pd.rooms = r.room
      LEFT JOIN CageSpaceCountData csc ON csc.room = r.room
-WHERE REPORTDATE <= coalesce(r.dateDisabled, now())
+WHERE REPORTDATE <= COALESCE(r.dateDisabled, now())
   AND rfu.firstUseDate <= REPORTDATE
