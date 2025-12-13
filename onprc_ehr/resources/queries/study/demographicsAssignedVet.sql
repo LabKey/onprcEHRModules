@@ -12,7 +12,7 @@ SELECT
     f.AssignmentType,
     GROUP_CONCAT(
             CASE WHEN f.matchedRule = 0 THEN f.ActiveMasterProblems ELSE NULL END,
-            ', '
+            '; '
     ) AS MasterProblems,
     f.Area,
     f.Room
