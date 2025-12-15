@@ -4,6 +4,7 @@ PARAMETERS (StartDate TIMESTAMP, EndDate TIMESTAMP)
 -- Lease Fee Logic – Production Version (Revised)
 --2025-12-15 jonesga Latest update changes in lease type
 --test as Deploy Looks to have issues
+--Cop0mpared to Staging lease fees and provided correct number of rows
 -- ========================================================
 
 WITH
