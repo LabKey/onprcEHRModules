@@ -2,6 +2,7 @@ PARAMETERS (StartDate TIMESTAMP, EndDate TIMESTAMP)
 
 -- ========================================================
 -- Lease Fee Logic – Production Version (Revised)
+--2025-12-15 jonesga Latest update changes in lease type
 -- ========================================================
 
 WITH
