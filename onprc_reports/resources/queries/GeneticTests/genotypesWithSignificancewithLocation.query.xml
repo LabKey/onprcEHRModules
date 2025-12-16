@@ -9,7 +9,7 @@
                         <columnTitle>Id</columnTitle>
                     </column>
                     <column columnName="date">
-                        <columnTitle>Date</columnTitle>
+                        <columnTitle>Sample Date</columnTitle>
                     </column>
                     <column columnName="Id/curLocation/area">
                         <columnTitle>Area</columnTitle>
