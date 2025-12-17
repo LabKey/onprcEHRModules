@@ -137,7 +137,7 @@ public class BehaviorNotification extends ColonyAlertsNotification
     {
         TableInfo ti = getStudySchema(c, u).getTable("AssignmentsStartingNext1to14Days");
 
-        TableSelector ts = new TableSelector(ti, null, null);
+        TableSelector ts = new TableSelector(ti, null, new Sort("Id"));
         long total = ts.getRowCount();
 
         if (total > 0)
@@ -162,7 +162,7 @@ public class BehaviorNotification extends ColonyAlertsNotification
     {
         TableInfo ti = getStudySchema(c, u).getTable("AssignmentsStartedPast1to7Days");
 
-        TableSelector ts = new TableSelector(ti, null, null);
+        TableSelector ts = new TableSelector(ti, null, new Sort("Id"));
         long total = ts.getRowCount();
 
         if (total > 0)
@@ -193,7 +193,7 @@ public class BehaviorNotification extends ColonyAlertsNotification
         }
         //assignments query
         TableInfo ti = QueryService.get().getUserSchema(u, c, "study").getTable("AssignmentsCreatedInPast1Day", ContainerFilter.Type.AllFolders.create(c, u));
-        TableSelector ts = new TableSelector(ti, null, null);
+        TableSelector ts = new TableSelector(ti, null, new Sort("Id"));
         long count = ts.getRowCount();
 
         //Get num of rows
@@ -222,7 +222,7 @@ public class BehaviorNotification extends ColonyAlertsNotification
             columns.add(FieldKey.fromString("ConditionAtRelease"));
 
             final Map<FieldKey, ColumnInfo> colMap = QueryService.get().getColumns(ti, columns);
-            TableSelector ts2 = new TableSelector(ti, colMap.values(), null, null);
+            TableSelector ts2 = new TableSelector(ti, colMap.values(), null, new Sort("Id"));
 
 //            msg.append("<hr><b>Assignments created in past 24hrs:</b><br><br>\n");
             msg.append("<table border=1 style='border-collapse: collapse;'>");
@@ -272,7 +272,7 @@ public class BehaviorNotification extends ColonyAlertsNotification
 
         //assignments query
         TableInfo ti = QueryService.get().getUserSchema(u, c, "study").getTable("AssignmentsReleasedInPast1Day", ContainerFilter.Type.AllFolders.create(c, u));
-        TableSelector ts = new TableSelector(ti, null, null);
+        TableSelector ts = new TableSelector(ti, null, new Sort("Id"));
         long count = ts.getRowCount();
 
         //Get num of rows
@@ -301,7 +301,7 @@ public class BehaviorNotification extends ColonyAlertsNotification
             columns.add(FieldKey.fromString("ConditionAtRelease"));
 
             final Map<FieldKey, ColumnInfo> colMap = QueryService.get().getColumns(ti, columns);
-            TableSelector ts2 = new TableSelector(ti, colMap.values(), null, null);
+            TableSelector ts2 = new TableSelector(ti, colMap.values(), null, new Sort("Id"));
 
 //            msg.append("<hr><b>Assignments with new \"Release date\" added within the last 24hrs:</b><br><br>\n");
             msg.append("<table border=1 style='border-collapse: collapse;'>");
