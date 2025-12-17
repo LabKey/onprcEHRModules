@@ -142,16 +142,15 @@ public class BehaviorNotification extends ColonyAlertsNotification
 
         if (total > 0)
         {
-            msg.append("<b>List of Assignments starting in the next 1-14 days :</b><p>");
-            msg.append("There are " + total + " entries found. ");
-            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "AssignmentsStartingNext1to14Days", null)  + "'>Click here to view them</a></p>\n");
+            msg.append("<b>Assignments starting in the next 1-14 days:</b><p>");
+            msg.append( total + " entries found. ");
+            msg.append("<a href='" + getExecuteQueryUrl(c, "study", "AssignmentsStartingNext1to14Days", null)  + "'>Click here to view them</a>\n");
             msg.append("<hr>\n\n");
         }
         else
         {
             msg.append("<b>WARNING: No assignments starting in the next 1-14 days!</b><br><hr>\n");
         }
-
     }
 
     /* Added by Kollil Nov, 2025
@@ -168,9 +167,9 @@ public class BehaviorNotification extends ColonyAlertsNotification
 
         if (total > 0)
         {
-            msg.append("<b>List of assignments started in the past 1-7 days:</b><p>");
-            msg.append("There are " + total + " entries found. ");
-            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "AssignmentsStartedPast1to7Days", null)  + "'>Click here to view them</a></p>\n");
+            msg.append("<b>Assignments started in the past 1-7 days:</b><p>");
+            msg.append( total + " entries found. ");
+            msg.append("<a href='" + getExecuteQueryUrl(c, "study", "AssignmentsStartedPast1to7Days", null)  + "'>Click here to view them</a>\n");
             msg.append("<hr>\n\n");
         }
         else
@@ -199,9 +198,9 @@ public class BehaviorNotification extends ColonyAlertsNotification
 
         //Get num of rows
         if (count > 0) {
-            msg.append("<b>List of assignments created in the past 24hrs:</b><p>");
-            msg.append("There are " + count + " entries found. ");
-            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "assignmentsCreatedInPast1Day", null)  + "'>Click here to view them</a></p>\n");
+            msg.append("<b>Assignments created in the past 24hrs:</b><p>");
+            msg.append( count + " entries found. ");
+            msg.append("<a href='" + getExecuteQueryUrl(c, "study", "AssignmentsCreatedInPast1Day", null)  + "'>Click here to view them in a separate window</a>\n");
             msg.append("<hr>\n\n");
 
             //Display the daily report in the email
@@ -213,7 +212,6 @@ public class BehaviorNotification extends ColonyAlertsNotification
             columns.add(FieldKey.fromString("project"));
             columns.add(FieldKey.fromString("Protocol"));
             columns.add(FieldKey.fromString("Title"));
-            columns.add(FieldKey.fromString("ProjectContact"));
             columns.add(FieldKey.fromString("ProjectInvestigator"));
             columns.add(FieldKey.fromString("AssignDate"));
             columns.add(FieldKey.fromString("ReleaseDate"));
@@ -226,10 +224,10 @@ public class BehaviorNotification extends ColonyAlertsNotification
             final Map<FieldKey, ColumnInfo> colMap = QueryService.get().getColumns(ti, columns);
             TableSelector ts2 = new TableSelector(ti, colMap.values(), null, null);
 
-            msg.append("<hr><b>Assignments created in past 24hrs:</b><br><br>\n");
+//            msg.append("<hr><b>Assignments created in past 24hrs:</b><br><br>\n");
             msg.append("<table border=1 style='border-collapse: collapse;'>");
             msg.append("<tr bgcolor = " + '"' + "#FFD700" + '"' + "style='font-weight: bold;'>");
-            msg.append("<td>Id </td><td>Sex </td><td>Room </td><td>Cage </td><td>Project </td><td>Protocol </td><td>Title </td><td>Project Contact </td><td>Project Investigator </td><td>Assign Date </td><td>Release Date </td><td>Projected Release Date </td><td>Assignment Type </td><td>Assign Condition </td><td>Projected Release Condition </td><td>Condition At Release </td></tr>");
+            msg.append("<td>Id </td><td>Sex </td><td>Room </td><td>Cage </td><td>Project </td><td>Protocol </td><td>Title </td><td>Project Investigator </td><td>Assign Date </td><td>Release Date </td><td>Projected Release Date </td><td>Assignment Type </td><td>Assign Condition </td><td>Projected Release Condition </td><td>Condition At Release </td></tr>");
 
             ts2.forEach(object -> {
                 Results rs = new ResultsImpl(object, colMap);
@@ -243,7 +241,6 @@ public class BehaviorNotification extends ColonyAlertsNotification
                 msg.append("<td>" + PageFlowUtil.filter(rs.getString("project")) + "</td>");
                 msg.append("<td>" + PageFlowUtil.filter(rs.getString("Protocol")) + "</td>");
                 msg.append("<td>" + PageFlowUtil.filter(rs.getString("Title")) + "</td>");
-                msg.append("<td>" + PageFlowUtil.filter(rs.getString("ProjectContact")) + "</td>");
                 msg.append("<td>" + PageFlowUtil.filter(rs.getString("ProjectInvestigator")) + "</td>");
                 msg.append("<td>" + PageFlowUtil.filter(rs.getString("AssignDate")) + "</td>");
                 msg.append("<td>" + PageFlowUtil.filter(rs.getString("ReleaseDate")) + "</td>");
@@ -256,11 +253,9 @@ public class BehaviorNotification extends ColonyAlertsNotification
             });
             msg.append("</table><br>");
         }
-
         else {
             msg.append("<b>WARNING: No assignments created in past 24hrs!</b><br><hr>\n");
         }
-
     }
 
     /* Added by Kollil Nov, 2025
@@ -282,9 +277,9 @@ public class BehaviorNotification extends ColonyAlertsNotification
 
         //Get num of rows
         if (count > 0) {
-            msg.append("<b>List of assignments with new \"Release date\" added in the last 24hrs:</b><p>");
-            msg.append("There are " + count + " entries found. ");
-            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "AssignmentsReleasedInPast1Day", null)  + "'>Click here to view them</a></p>\n");
+            msg.append("<b>Assignments with new \"Release date\" added in the last 24hrs:</b><p>");
+            msg.append( count + " entries found. ");
+            msg.append("<a href='" + getExecuteQueryUrl(c, "study", "AssignmentsReleasedInPast1Day", null)  + "'>Click here to view them in a separate window</a>\n");
             msg.append("\n\n");
 
         //Display the daily report in the email
@@ -296,7 +291,6 @@ public class BehaviorNotification extends ColonyAlertsNotification
             columns.add(FieldKey.fromString("project"));
             columns.add(FieldKey.fromString("Protocol"));
             columns.add(FieldKey.fromString("Title"));
-            columns.add(FieldKey.fromString("ProjectContact"));
             columns.add(FieldKey.fromString("ProjectInvestigator"));
             columns.add(FieldKey.fromString("AssignDate"));
             columns.add(FieldKey.fromString("ReleaseDate"));
@@ -309,10 +303,10 @@ public class BehaviorNotification extends ColonyAlertsNotification
             final Map<FieldKey, ColumnInfo> colMap = QueryService.get().getColumns(ti, columns);
             TableSelector ts2 = new TableSelector(ti, colMap.values(), null, null);
 
-            msg.append("<hr><b>Assignments with new \"Release date\" added within the last 24hrs::</b><br><br>\n");
+//            msg.append("<hr><b>Assignments with new \"Release date\" added within the last 24hrs:</b><br><br>\n");
             msg.append("<table border=1 style='border-collapse: collapse;'>");
             msg.append("<tr bgcolor = " + '"' + "#FFD700" + '"' + "style='font-weight: bold;'>");
-            msg.append("<td>Id </td><td>Sex </td><td>Room </td><td>Cage </td><td>Project </td><td>Protocol </td><td>Title </td><td>Project Contact </td><td>Project Investigator </td><td>Assign Date </td><td>Release Date </td><td>Projected Release Date </td><td>Assignment Type </td><td>Assign Condition </td><td>Projected Release Condition </td><td>Condition At Release </td></tr>");
+            msg.append("<td>Id </td><td>Sex </td><td>Room </td><td>Cage </td><td>Project </td><td>Protocol </td><td>Title </td><td>Project Investigator </td><td>Assign Date </td><td>Release Date </td><td>Projected Release Date </td><td>Assignment Type </td><td>Assign Condition </td><td>Projected Release Condition </td><td>Condition At Release </td></tr>");
 
             ts2.forEach(object -> {
                 Results rs = new ResultsImpl(object, colMap);
@@ -326,7 +320,6 @@ public class BehaviorNotification extends ColonyAlertsNotification
                 msg.append("<td>" + PageFlowUtil.filter(rs.getString("project")) + "</td>");
                 msg.append("<td>" + PageFlowUtil.filter(rs.getString("Protocol")) + "</td>");
                 msg.append("<td>" + PageFlowUtil.filter(rs.getString("Title")) + "</td>");
-                msg.append("<td>" + PageFlowUtil.filter(rs.getString("ProjectContact")) + "</td>");
                 msg.append("<td>" + PageFlowUtil.filter(rs.getString("ProjectInvestigator")) + "</td>");
                 msg.append("<td>" + PageFlowUtil.filter(rs.getString("AssignDate")) + "</td>");
                 msg.append("<td>" + PageFlowUtil.filter(rs.getString("ReleaseDate")) + "</td>");
@@ -342,7 +335,6 @@ public class BehaviorNotification extends ColonyAlertsNotification
         else {
             msg.append("<b>WARNING: No assignments released in past 24hrs!</b><br><hr>\n");
         }
-
     }
 
     /* Added by Kollil 08/22/2025
@@ -358,16 +350,15 @@ public class BehaviorNotification extends ColonyAlertsNotification
         msg.append("<b>Animals with alopecia score of 4 or 5, but does not have an open behavioral case for alopecia:</b><p>");
         if (total > 0)
         {
-            msg.append("There are " + total + " entries found. ");
-            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "AlopeciaScoreMissingBehaviorCases", null)  + "'>Click here to view them</a></p>\n");
+            msg.append( total + " entries found. ");
+            msg.append("<a href='" + getExecuteQueryUrl(c, "study", "AlopeciaScoreMissingBehaviorCases", null)  + "'>Click here to view them</a>\n");
             msg.append("<hr>\n\n");
         }
         else
         {
             msg.append("<b>WARNING: No animals found with alopecia score of 4 or 5, but does not have an open behavioral case for alopecia!</b><br><hr>\n");
         }
-
-    }
+   }
 
     // Added by Kollil 11/04/2020
     private void NHPTraining_BehaviorAlert(final Container c, User u, final StringBuilder msg)
@@ -385,14 +376,13 @@ public class BehaviorNotification extends ColonyAlertsNotification
         if (total > 0)
         {
             msg.append("There are " + total + " entries found. ");
-            msg.append("<p><a href='" + getExecuteQueryUrl(c, "onprc_ehr", "NHP_Training_BehaviorAlert", null)  + "'>Click here to view them</a></p>\n");
+            msg.append("<a href='" + getExecuteQueryUrl(c, "onprc_ehr", "NHP_Training_BehaviorAlert", null)  + "'>Click here to view them</a>\n");
             msg.append("<hr>\n\n");
         }
         else
         {
             msg.append("<b>WARNING: There are no NHP_Training entries where \"Training Result = In Progress\" for over 60 days!</b><br><hr>\n");
         }
-
     }
 
     /*
@@ -414,9 +404,9 @@ public class BehaviorNotification extends ColonyAlertsNotification
         long count = ts.getRowCount();
         if (count > 0)
         {
-            msg.append("<b>WARNING: There are " + count + " DCM action items.</b><br>\n");
-            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Notes_WithLocation", null) + "&query.actiondate~dateeq="+ getDateFormat(c).format(new Date()) + "&query.category~eq=Notes Pertaining to DAR'>Click here to view them</a><br>\n\n");
-            msg.append("</p><br><hr>");
+            msg.append("<b>WARNING: There are " + count + " DCM action items. </b><br>\n");
+            msg.append("<a href='" + getExecuteQueryUrl(c, "study", "Notes_WithLocation", null) + "&query.actiondate~dateeq="+ getDateFormat(c).format(new Date()) + "&query.category~eq=Notes Pertaining to DAR'>Click here to view them</a><br>\n\n");
+            msg.append("<br><hr>");
         }
         else
         {
@@ -439,8 +429,8 @@ public class BehaviorNotification extends ColonyAlertsNotification
         msg.append("<b>DCM Alerts:</b><br><hr>");
         if (count1 > 0) {
             msg.append("<b>" + count1 + " DCM notes entries added yesterday where \"Category = Notes pertaining to DAR\". </b><br>\n");
-            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Notes_WithLocation", null) + "&query.date~dateeq="+ formatted + "&query.category~eq=Notes Pertaining to DAR'>Click here to view them</a><br>\n\n");
-            msg.append("</p><br><hr>\n\n");
+            msg.append("<a href='" + getExecuteQueryUrl(c, "study", "Notes_WithLocation", null) + "&query.date~dateeq="+ formatted + "&query.category~eq=Notes Pertaining to DAR'>Click here to view them</a><br>\n\n");
+            msg.append("<br><hr>\n\n");
         }
         else
         {
@@ -458,8 +448,8 @@ public class BehaviorNotification extends ColonyAlertsNotification
 
         if (count4 > 0) {
             msg.append("<b>" + count4 + " DCM notes entries removed yesterday where \"Category = Notes pertaining to DAR\". </b><br>\n");
-            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Notes_WithLocation", null) + "&query.enddate~dateeq="+ formatted + "&query.category~eq=Notes Pertaining to DAR'>Click here to view them</a><br>\n\n");
-            msg.append("</p><br><hr>\n\n");
+            msg.append("<a href='" + getExecuteQueryUrl(c, "study", "Notes_WithLocation", null) + "&query.enddate~dateeq="+ formatted + "&query.category~eq=Notes Pertaining to DAR'>Click here to view them</a><br>\n\n");
+            msg.append("<br><hr>\n\n");
         }
         else {
             msg.append("<b>WARNING: No DCM notes ended yesterday where \"Category = Notes pertaining to DAR\"!</b><br><hr>");
@@ -473,8 +463,8 @@ public class BehaviorNotification extends ColonyAlertsNotification
         if (count2 > 0)
         {
             msg.append("<b>There are " + count2 + " flag(s) added yesterday. </b><br>\n");
-            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Flags_WithLocation", null) + "&query.date~dateeq="+ formatted + "'>Click here to view them</a><br>\n\n");
-            msg.append("</p><hr>");
+            msg.append("<a href='" + getExecuteQueryUrl(c, "study", "Flags_WithLocation", null) + "&query.date~dateeq="+ formatted + "'>Click here to view them</a><br>\n\n");
+            msg.append("<hr>");
         }
         else
         {
@@ -488,8 +478,8 @@ public class BehaviorNotification extends ColonyAlertsNotification
         long count3 = ts3.getRowCount();
         if (count3 > 0) {
             msg.append("<b>" + count3 + " flag(s) removed yesterday. </b><br>\n");
-            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Flags_WithLocation", null) + "&query.enddate~dateeq="+ formatted + "'>Click here to view them</a><br>\n\n");
-            msg.append("</p><hr>");
+            msg.append("<a href='" + getExecuteQueryUrl(c, "study", "Flags_WithLocation", null) + "&query.enddate~dateeq="+ formatted + "'>Click here to view them</a><br>\n\n");
+            msg.append("<hr>");
         }
         else {
             msg.append("<b>WARNING: There are no flags removed yesterday!</b><br><hr>");
