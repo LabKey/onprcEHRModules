@@ -2,9 +2,9 @@
     <columns>
         <column name="Id"/>
         <column name="date"/>
-        <column name="area"/>
-        <column name="room"/>
-        <column name="cage"/>
+        <column name="Id/curLocation/area"/>
+        <column name="Id/curLocation/room"/>
+        <column name="Id/curLocation/cage"/>
         <column name="label"/>
         <column name="comment"/>
         <column name="LiveStatus"/>
