@@ -254,7 +254,7 @@ public class BehaviorNotification extends ColonyAlertsNotification
             msg.append("</table><br>");
         }
         else {
-            msg.append("<b>WARNING: No assignments created in past 24hrs!</b><br><hr>\n");
+            msg.append("<b>WARNING: No assignments created in the past 24hrs!</b><br><hr>\n");
         }
     }
 
@@ -333,7 +333,7 @@ public class BehaviorNotification extends ColonyAlertsNotification
             msg.append("</table><br>");
         }
         else {
-            msg.append("<b>WARNING: No assignments released in past 24hrs!</b><br><hr>\n");
+            msg.append("<b>WARNING: No assignments released in the past 24hrs!</b><br><hr>\n");
         }
     }
 
