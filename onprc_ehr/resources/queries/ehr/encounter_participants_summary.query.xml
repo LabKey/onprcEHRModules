@@ -17,7 +17,7 @@
                     </column>
                     <column columnName="participants">
                         <columnTitle>Participants</columnTitle>
-                        <displayWidth>300</displayWidth>
+                        <displayWidth>350</displayWidth>
                         <facetingBehavior>ALWAYS_OFF</facetingBehavior>
                     </column>
 
