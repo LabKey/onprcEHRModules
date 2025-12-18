@@ -16,6 +16,7 @@
 package org.labkey.onprc_ehr.dataentry;
 
 import org.labkey.api.ehr.EHRService;
+import org.labkey.api.ehr.dataentry.SimpleFormSection;
 import org.labkey.api.view.template.ClientDependency;
 
 import java.util.Collections;
@@ -26,23 +27,24 @@ import java.util.List;
  * Date: 7/7/13
  * Time: 10:36 AM
  */
-public class SurgicalAmendedRemarksFormSection extends RoundsRemarksFormSection
+public class SurgicalAmendedRemarksFormSection extends SimpleFormSection
 {
-    public SurgicalAmendedRemarksFormSection()
+    public SurgicalAmendedRemarksFormSection(String label, EHRService.FORM_SECTION_LOCATION location)
     {
-        this(EHRService.FORM_SECTION_LOCATION.Body);
-    }
+        super("study", "Clinical Remarks", label, "onprc_ehr-surgroundsremarksgridpanel", location);
+        addClientDependency(ClientDependency.supplierFromPath("ehr/plugin/ClinicalObservationsCellEditing.js"));    //No changes here.  Not important
+        addClientDependency(ClientDependency.supplierFromPath("ehr/panel/ClinicalRemarkPanel.js"));
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/grid/SurgicalRoundsRemarksGridPanel.js"));  //points to ONPRC_EHR.plugin.SurgicalRemarksRowEditor
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/grid/ObservationsRowEditorGridPanel.js"));  //Modified //Modified  from ehr to onprc_ehr added new clinical observation columns
+//        MOdified: 8-1-2024 so that contents reset as ehr control types
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/plugin/SurgicalRemarksRowEditor.js"));  //edited //edited  points to onprc_ehr.ObservationRowEditorGridPanel.js
 
-    public SurgicalAmendedRemarksFormSection(EHRService.FORM_SECTION_LOCATION location)
-    {
-        super("Remarks", location);
-        setConfigSources(Collections.singletonList("Task"));
 
-        addClientDependency(ClientDependency.supplierFromPath("ehr/window/AddClinicalCasesWindow.js"));
-        addClientDependency(ClientDependency.supplierFromPath("ehr/window/AddSurgicalCasesWindow.js"));
-        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/window/BulkChangeCasesWindow.js"));
+        addClientDependency(ClientDependency.supplierFromPath("ehr/data/ClinicalObservationsClientStore.js"));
+        addClientDependency(ClientDependency.supplierFromPath("ehr/buttons/roundsButtons.js"));
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/form/field/SurgeryEntryField.js"));
 
-        _showLocation = true;
+        setTemplateMode(TEMPLATE_MODE.NONE);
     }
 
     @Override
