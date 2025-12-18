@@ -251,7 +251,7 @@ public class BehaviorNotification extends ColonyAlertsNotification
                 msg.append("<td>" + PageFlowUtil.filter(rs.getString("ConditionAtRelease")) + "</td>");
                 msg.append("</tr>");
             });
-            msg.append("</table><br>");
+            msg.append("</table><br><hr>");
         }
         else {
             msg.append("<b>WARNING: No assignments created in the past 24hrs!</b><br><hr>\n");
@@ -330,7 +330,7 @@ public class BehaviorNotification extends ColonyAlertsNotification
                 msg.append("<td>" + PageFlowUtil.filter(rs.getString("ConditionAtRelease")) + "</td>");
                 msg.append("</tr>");
             });
-            msg.append("</table><br>");
+            msg.append("</table><br><hr>");
         }
         else {
             msg.append("<b>WARNING: No assignments released in the past 24hrs!</b><br><hr>\n");
