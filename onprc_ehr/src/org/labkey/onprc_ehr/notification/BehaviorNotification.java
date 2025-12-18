@@ -201,7 +201,7 @@ public class BehaviorNotification extends ColonyAlertsNotification
             msg.append("<b>Assignments created in the past 24hrs:</b><p>");
             msg.append( count + " entries found. ");
             msg.append("<a href='" + getExecuteQueryUrl(c, "study", "AssignmentsCreatedInPast1Day", null)  + "'>Click here to view them in a separate window</a>\n");
-            msg.append("<hr>\n\n");
+            msg.append("\n\n");
 
             //Display the daily report in the email
             Set<FieldKey> columns = new HashSet<>();
