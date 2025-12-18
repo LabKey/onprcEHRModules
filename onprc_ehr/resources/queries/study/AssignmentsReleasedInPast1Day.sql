@@ -16,4 +16,4 @@ SELECT
     releaseCondition.meaning as ConditionAtRelease
 
 FROM Assignment
-WHERE enddate >= TIMESTAMPADD('SQL_TSI_DAY', -1, NOW())
+WHERE CAST(enddate AS DATE) >= TIMESTAMPADD('SQL_TSI_DAY', -1, NOW())

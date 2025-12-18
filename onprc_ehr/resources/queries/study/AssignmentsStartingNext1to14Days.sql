@@ -16,5 +16,5 @@ SELECT
     releaseCondition.meaning as ConditionAtRelease
 
 FROM Assignment
-WHERE date >= TIMESTAMPADD('SQL_TSI_DAY', 1, NOW())
-  AND date <  TIMESTAMPADD('SQL_TSI_DAY', 14, NOW())
+WHERE CAST(date AS DATE) >= TIMESTAMPADD('SQL_TSI_DAY', 1, NOW())
+  AND CAST(date AS DATE) <  TIMESTAMPADD('SQL_TSI_DAY', 14, NOW())
