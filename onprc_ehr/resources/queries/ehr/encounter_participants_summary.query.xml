@@ -20,11 +20,7 @@
                         <displayWidth>300</displayWidth>
                         <facetingBehavior>ALWAYS_OFF</facetingBehavior>
                     </column>
-                    <column columnName="comment">
-                        <columnTitle>Participant Remarks</columnTitle>
-                        <displayWidth>300</displayWidth>
-                        <facetingBehavior>ALWAYS_OFF</facetingBehavior>
-                    </column>
+
                 </columns>
             </table>
         </tables>

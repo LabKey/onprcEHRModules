@@ -9,7 +9,6 @@
         <column name="procedureid/major"/>
 
         <column name="participants/participants" />
-        <column name="participants/comment" />
         <column name="summaries/summary" />
         <column name="history" />
         <column name="qcstate" />
