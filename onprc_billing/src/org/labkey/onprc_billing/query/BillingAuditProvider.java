@@ -66,16 +66,6 @@ public class BillingAuditProvider extends AbstractAuditTypeProvider implements A
     }
     
     @Override
-    public Map<FieldKey, String> legacyNameMap()
-    {
-        Map<FieldKey, String> legacyNames = super.legacyNameMap();
-        legacyNames.put(FieldKey.fromParts("key1"), COLUMN_NAME_TABLE_NAME);
-        legacyNames.put(FieldKey.fromParts("key2"), COLUMN_NAME_OBJECTID);
-
-        return legacyNames;
-    }
-
-    @Override
     public List<FieldKey> getDefaultVisibleColumns()
     {
         return defaultVisibleColumns;

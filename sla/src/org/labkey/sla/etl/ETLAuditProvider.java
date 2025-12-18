@@ -80,15 +80,6 @@ public class ETLAuditProvider extends AbstractAuditTypeProvider implements Audit
     }
 
     @Override
-    public Map<FieldKey, String> legacyNameMap()
-    {
-        Map<FieldKey, String> legacyNames = super.legacyNameMap();
-        legacyNames.put(FieldKey.fromParts("key1"), COLUMN_NAME_TYPE);
-        legacyNames.put(FieldKey.fromParts("intKey1"), COLUMN_NAME_SLA_ERRORS);
-        return legacyNames;
-    }
-
-    @Override
     public List<FieldKey> getDefaultVisibleColumns()
     {
         return defaultVisibleColumns;
