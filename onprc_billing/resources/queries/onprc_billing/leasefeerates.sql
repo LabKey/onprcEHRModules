@@ -130,7 +130,7 @@ rate_context AS (
 ),
 
 -- =====================================================================================
--- 4) Unit Cost Calculation (Parser-Safe)
+-- 4) Unit Cost Calculation
 -- =====================================================================================
 calculated_costs AS (
     SELECT
@@ -287,7 +287,7 @@ misc_charges AS (
 )
 
 -- =====================================================================================
--- FINAL BILLING-REVIEW OUTPUT
+-- FINAL BILLING-REVIEW OUTPUT Missing 8 Fields needded for Daily Notification
 -- =====================================================================================
 SELECT * FROM lease_final
 UNION ALL
