@@ -86,6 +86,7 @@ PerDiemsEquivData AS ( -- A modified version of onprc_billing.perDiemsByDay that
             CAST(CAST(i2.dateOnly AS DATE) AS TIMESTAMP) AS DATE,
             i2.dateOnly @hidden,
             COALESCE(a.project, (SELECT p.project FROM ehr.project p WHERE p.name = javaConstant('org.labkey.onprc_ehr.ONPRC_EHRManager.BASE_GRANT_PROJECT'))) AS project,
+            a.projectName,
             a.project AS assignedProject,
             max(a.duration) AS duration,  -- should only have 1 value, no so need to include in grouping
             max(timestampdiff('SQL_TSI_DAY', d.birth, i2.dateOnly)) AS ageAtTime,
@@ -194,7 +195,7 @@ PerDiemsEquivData AS ( -- A modified version of onprc_billing.perDiemsByDay that
                 'Tier 2'
             ) = pdf.tier
         )
-        GROUP BY i2.dateOnly, i2.Id, a.project, a.project.use_Category, i2.researchRecordCount, i2.bottleFedRecordCount
+        GROUP BY i2.dateOnly, i2.Id, a.project, a.projectName, a.project.use_Category, i2.researchRecordCount, i2.bottleFedRecordCount
     ) t
 )
 
@@ -207,8 +208,9 @@ SELECT
     COALESCE(csc.cageSpaces, 0) AS totalCageSpaces,
     COALESCE(acd.totalAnimals, 0) AS totalAnimals,
     COALESCE(pd.perDiemsEquiv, 0) AS perDiemsEquiv,
-    COALESCE(COALESCE(pd.perDiemsEquiv, 0) / NULLIF(COALESCE(csc.cageSpaces, 0), 0), 0) AS percentUsed,
-    pd.projects
+    COALESCE(COALESCE(pd.perDiemsEquiv, 0) / NULLIF(COALESCE(csc.cageSpaces*0.85, 0), 0), 0) AS percentUsed, -- 15% flex
+    pd.projects,
+    pd.projectNames
 FROM ehr_lookups.rooms r
 
 JOIN RoomFirstUseData rfu ON rfu.room = r.room -- rooms without a first use won't be included
@@ -217,7 +219,8 @@ LEFT JOIN (
     SELECT
         pd.rooms,
         sum(pd.effectiveDays) AS perDiemsEquiv,
-        group_concat(DISTINCT pd.project, ';') as projects
+        group_concat(DISTINCT pd.project, ';') as projects,
+        group_concat(DISTINCT pd.projectName, ', ') as projectNames
     FROM PerDiemsEquivData pd
 --    WHERE pd.project NOT IN (625, 1106, 2270) -- Exclude projectID for 0492, 0492-02, 0492-45
     WHERE pd.project NOT IN (

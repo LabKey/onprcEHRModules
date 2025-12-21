@@ -16,8 +16,8 @@
                         <columnTitle>% Used</columnTitle>
                         <formatString>0.00%</formatString>
                     </column>
-                    <column columnName="projects">
-                        <columnTitle>Project IDs</columnTitle>
+                    <column columnName="projectName">
+                        <columnTitle>Center Project</columnTitle>
                         <url>/query/ONPRC/EHR/executeQuery.view?schemaName=ehr&amp;query.queryName=project&amp;query.columns=project%2Cname%2Cprotocol%2Ctitle%2CinvestigatorId%2Cprotocol%2FinvestigatorId%2Caccount%2Caccount%2FfiscalAuthority%2Caccount%2FprojectNumber%2Cstartdate%2Cenddate%2Cuse_category%2Caccount%2FaliasType%2CactiveAssignments%2FactiveAssignments&amp;query.sort=name&amp;query.project~in=${projects}</url>
                         <urlTarget>_blank</urlTarget>
                     </column>
