@@ -28,8 +28,7 @@ base_lease AS (
         p.datefinalized,
         p.enddatefinalized
     FROM onprc_billing.leaseFees p
-    WHERE CAST(p.date AS DATE)
-          BETWEEN CAST(StartDate AS DATE) AND CAST(EndDate AS DATE)
+    WHERE CAST(p.date AS DATE) BETWEEN CAST(StartDate AS DATE) AND CAST(EndDate AS DATE)
       AND p.category = 'Lease Fees'
 ),
 
@@ -50,8 +49,7 @@ alias_context AS (
         a.budgetStartDate                     AS budgetStartDate,
         a.budgetEndDate                       AS budgetEndDate,
         a.projectStatus                       AS projectStatus,
-        COALESCE(a.investigatorId,
-                 bl.project.investigatorId)   AS investigatorId
+        COALESCE(a.investigatorId, bl.project.investigatorId) AS investigatorId
     FROM base_lease bl
     LEFT JOIN onprc_billing_public.projectAccountHistory pah
            ON pah.project = bl.project
@@ -68,23 +66,23 @@ rate_context AS (
     SELECT
         ac.*,
 
-        cr.unitCost   AS nihRate1,
-        cr.subsidy    AS subsidy1,
-        e.unitCost    AS exemptRate1,
-        e.rowid       AS exemptionId1,
+        cr.unitCost      AS nihRate1,
+        cr.subsidy       AS subsidy1,
+        e.unitCost       AS exemptRate1,
+        e.rowid          AS exemptionId1,
 
-        cr2.unitCost  AS nihRate2,
-        cr2.subsidy   AS subsidy2,
-        e2.unitCost   AS exemptRate2,
-        e2.rowid      AS exemptionId2,
+        cr2.unitCost     AS nihRate2,
+        cr2.subsidy      AS subsidy2,
+        e2.unitCost      AS exemptRate2,
+        e2.rowid         AS exemptionId2,
 
-        cr3.unitCost  AS nihRate3,
-        cr3.subsidy   AS subsidy3,
-        e3.unitCost   AS exemptRate3,
-        e3.rowid      AS exemptionId3,
+        cr3.unitCost     AS nihRate3,
+        cr3.subsidy      AS subsidy3,
+        e3.unitCost      AS exemptRate3,
+        e3.rowid         AS exemptionId3,
 
-        pm.multiplier AS multiplier,
-        ir.indirectRate AS indirectRate
+        pm.multiplier    AS multiplier,
+        ir.indirectRate  AS indirectRate
     FROM alias_context ac
 
     LEFT JOIN onprc_billing_public.chargeRates cr
@@ -135,7 +133,6 @@ rate_context AS (
 calculated_costs AS (
     SELECT
         rc.*,
-
         CAST(
             CASE
                 WHEN exemptRate1 IS NOT NULL THEN exemptRate1
@@ -196,31 +193,39 @@ calculated_costs AS (
 ),
 
 -- =====================================================================================
--- 5) Final Lease Charges (Billing Review)
+-- 5) Final Lease Charges
 -- =====================================================================================
 lease_final AS (
     SELECT
         id,
-        date                      AS assignmentStartDate,
-        enddate                   AS assignmentEndDate,
-        datefinalized             AS dateFinalized,
+        date,
+        enddate,
+        datefinalized              AS dateFinalized,
+
         project,
         account,
+
         projectedReleaseCondition,
         releaseCondition,
         assignCondition,
         releaseType,
         ageAtTime,
+
         category,
         chargeId,
-        chargeId.departmentCode   AS serviceCenter,
-        chargeId.name             AS item,
-        leaseCharge1.name as InitialLEaseType,
-        leaseCharge2.name as FinalLEaseType,
+        chargeId.departmentCode    AS serviceCenter,
+        chargeId.name              AS item,
+
+        leaseCharge1,
+        leaseCharge2,
+        leaseCharge1.name          AS InitialLeaseType,
+        leaseCharge2.name          AS FinalLeaseType,
+
         sourceRecord,
         chargeCategory,
 
         unitCost,
+        nihRate1                   AS nihRate,
         quantity,
 
         CASE
@@ -228,67 +233,158 @@ lease_final AS (
                 THEN ROUND(CAST(unitCost AS DOUBLE), 2)
             ELSE
                 ROUND(
-                    CAST(unitCost AS DOUBLE)
-                    * COALESCE(CAST(quantity AS DOUBLE), 1),
+                    CAST(unitCost AS DOUBLE) * COALESCE(CAST(quantity AS DOUBLE), 1),
                     2
                 )
         END AS totalCost,
 
         investigatorId,
 
-        NULL AS isMiscCharge,
+        CAST(NULL AS VARCHAR(200))   AS creditAccount,
+        CAST(NULL AS VARCHAR(200))   AS creditAccountType,
+        CAST(NULL AS VARCHAR(4000))  AS comment,
+        CAST(NULL AS INTEGER)        AS creditAccountId,
+
+        CAST(NULL AS INTEGER)        AS rateId,
+        exemptionId1                 AS exemptionId,
+
+        CAST(NULL AS VARCHAR(1))     AS isMiscCharge,
         isAdjustment
     FROM calculated_costs
-    WHERE id.demographics.species NOT IN ('Rabbit','Guinea Pig')
+    WHERE id.demographics.species NOT IN ('Rabbit', 'Guinea Pig')
 ),
 
 -- =====================================================================================
--- 6) Misc Charges (Billing Review)
+-- 6) Misc Charges (Lease Fees category)
 -- =====================================================================================
 misc_charges AS (
     SELECT
         mc.id,
-        mc.billingDate            AS assignmentStartDate,
-        NULL                      AS assignmentEndDate,
-        NULL                      AS dateFinalized,
+        mc.billingDate             AS date,
+        CAST(NULL AS TIMESTAMP)    AS enddate,
+        CAST(NULL AS TIMESTAMP)    AS dateFinalized,
+
         mc.project,
         mc.account,
-        NULL AS projectedReleaseCondition,
-        NULL AS releaseCondition,
-        NULL AS assignCondition,
-        NULL AS releaseType,
-        NULL AS ageAtTime,
+
+        CAST(NULL AS VARCHAR(200)) AS projectedReleaseCondition,
+        CAST(NULL AS VARCHAR(200)) AS releaseCondition,
+        CAST(NULL AS VARCHAR(200)) AS assignCondition,
+        CAST(NULL AS VARCHAR(200)) AS releaseType,
+        CAST(NULL AS DOUBLE)       AS ageAtTime,
+
         mc.category,
         mc.chargeId,
         mc.serviceCenter,
         mc.item,
-        NULL AS leaseCharge1,
-        NULL AS leaseCharge2,
+
+        CAST(NULL AS INTEGER)      AS leaseCharge1,
+        CAST(NULL AS INTEGER)      AS leaseCharge2,
+        CAST(NULL AS VARCHAR(200)) AS InitialLeaseType,
+        CAST(NULL AS VARCHAR(200)) AS FinalLeaseType,
+
         mc.sourceRecord,
         mc.chargeCategory,
 
         mc.unitCost,
+        mc.nihRate                 AS nihRate,
         mc.quantity,
 
         ROUND(
-            CAST(mc.unitCost AS DOUBLE)
-            * COALESCE(CAST(mc.quantity AS DOUBLE), 1),
+            CAST(mc.unitCost AS DOUBLE) * COALESCE(CAST(mc.quantity AS DOUBLE), 1),
             2
         ) AS totalCost,
 
         mc.investigatorId,
 
-        'Y' AS isMiscCharge,
-        mc.isAdjustment
+        mc.creditAccount           AS creditAccount,
+        mc.creditAccountType       AS creditAccountType,
+        mc.comment                 AS comment,
+        mc.creditAccountId         AS creditAccountId,
+
+        mc.rateId                  AS rateId,
+        mc.exemptionId             AS exemptionId,
+
+        'Y'                        AS isMiscCharge,
+        mc.isAdjustment            AS isAdjustment
     FROM onprc_billing.miscChargesFeeRateData mc
-    WHERE CAST(mc.billingDate AS DATE)
-          BETWEEN CAST(StartDate AS DATE) AND CAST(EndDate AS DATE)
+    WHERE CAST(mc.billingDate AS DATE) BETWEEN CAST(StartDate AS DATE) AND CAST(EndDate AS DATE)
       AND mc.category = 'Lease Fees'
 )
 
 -- =====================================================================================
--- FINAL BILLING-REVIEW OUTPUT Missing 8 Fields needded for Daily Notification
+-- FINAL OUTPUT (explicit column list; no SELECT *)
 -- =====================================================================================
-SELECT * FROM lease_final
+SELECT
+    id,
+    date,
+    enddate,
+    dateFinalized,
+    project,
+    account,
+    projectedReleaseCondition,
+    releaseCondition,
+    assignCondition,
+    releaseType,
+    ageAtTime,
+    category,
+    chargeId,
+    serviceCenter,
+    item,
+    leaseCharge1,
+    leaseCharge2,
+    InitialLeaseType,
+    FinalLeaseType,
+    sourceRecord,
+    chargeCategory,
+    unitCost,
+    nihRate,
+    quantity,
+    totalCost,
+    investigatorId,
+    creditAccount,
+    creditAccountType,
+    comment,
+    creditAccountId,
+    rateId,
+    exemptionId,
+    isMiscCharge,
+    isAdjustment
+FROM lease_final
 UNION ALL
-SELECT * FROM misc_charges;
+SELECT
+    id,
+    date,
+    enddate,
+    dateFinalized,
+    project,
+    account,
+    projectedReleaseCondition,
+    releaseCondition,
+    assignCondition,
+    releaseType,
+    ageAtTime,
+    category,
+    chargeId,
+    serviceCenter,
+    item,
+    leaseCharge1,
+    leaseCharge2,
+    InitialLeaseType,
+    FinalLeaseType,
+    sourceRecord,
+    chargeCategory,
+    unitCost,
+    nihRate,
+    quantity,
+    totalCost,
+    investigatorId,
+    creditAccount,
+    creditAccountType,
+    comment,
+    creditAccountId,
+    rateId,
+    exemptionId,
+    isMiscCharge,
+    isAdjustment
+FROM misc_charges;
