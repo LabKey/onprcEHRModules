@@ -147,8 +147,7 @@ public class BehaviorNotification extends ColonyAlertsNotification
             msg.append("<a href='" + getExecuteQueryUrl(c, "study", "AssignmentsStartingNext1to14Days", null)  + "'>Click here to view them</a>\n");
             msg.append("<hr>\n\n");
         }
-        else
-        {
+        else {
             msg.append("<b>WARNING: No assignments starting in the next 1-14 days!</b><br><hr>\n");
         }
     }
@@ -172,8 +171,7 @@ public class BehaviorNotification extends ColonyAlertsNotification
             msg.append("<a href='" + getExecuteQueryUrl(c, "study", "AssignmentsStartedPast1to7Days", null)  + "'>Click here to view them</a>\n");
             msg.append("<hr>\n\n");
         }
-        else
-        {
+        else {
             msg.append("<b>WARNING: No assignments started in the past 1-7 days!</b><br><hr>\n");
         }
     }
