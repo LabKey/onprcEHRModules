@@ -20,4 +20,4 @@ SELECT
     releaseCondition.meaning as ConditionAtRelease
 
 FROM Assignment
-WHERE CAST(created AS DATE) >= TIMESTAMPADD('SQL_TSI_DAY', -1, NOW())
+WHERE CAST(created AS DATE) >= TIMESTAMPADD('SQL_TSI_DAY', -1, CAST(NOW() AS DATE))

@@ -21,4 +21,9 @@ SELECT
     releaseCondition.meaning as ConditionAtRelease
 
 FROM Assignment
-WHERE CAST(enddate AS DATE) >= TIMESTAMPADD('SQL_TSI_DAY', -1, NOW())
+/* this condition: >= TIMESTAMPADD('SQL_TSI_DAY', -1, NOW()) → not older than 24 hours
+and this one: <= NOW() → not in the future
+Together, they produce exactly the last 24 hours, nothing more.
+ */
+WHERE CAST(enddate AS DATE) = TIMESTAMPADD('SQL_TSI_DAY', -1, CAST(NOW() AS DATE))
+  AND CAST(enddate AS DATE) <= CAST(NOW() AS DATE)
