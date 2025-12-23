@@ -2643,7 +2643,7 @@ public class ONPRC_EHRTriggerHelper
 
         final TableInfo ti = getTableInfo("onprc_ehr", "ChemistryPanicNotification");
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("Id"), id, CompareType.EQUAL);
-//        filter.addCondition(FieldKey.fromString("objectid"), objectid, CompareType.EQUAL);
+        filter.addCondition(FieldKey.fromString("objectid"), runid, CompareType.EQUAL);
 
 
         List<FieldKey> names= new ArrayList<>();
@@ -2655,6 +2655,7 @@ public class ONPRC_EHRTriggerHelper
         names.add(FieldKey.fromString("date"));
         names.add(FieldKey.fromString("Id"));
         names.add(FieldKey.fromString("vet"));
+        names.add(FieldKey.fromString("taskid"));
 
 
         final Map<FieldKey, ColumnInfo> colKeys = QueryService.get().getColumns(ti, names);
@@ -2674,7 +2675,7 @@ public class ONPRC_EHRTriggerHelper
         {
 
             html.append("<table border=1 style='border-collapse: collapse;'>");
-            html.append("<tr style='font-weight: bold;'><td>Animal ID</td><td>Date</td><td>Service Requested</td><td> Panel Test Name</td><td> Qual Results</td><td> Vet/PI Name</td></tr>\n");
+            html.append("<tr style='font-weight: bold;'><td>Animal ID</td><td>Date</td><td>Service Requested</td><td> Panel Test Name</td><td> Qual Results</td><td>Task ID </td><td> Vet/PI Name</td></tr>\n");
             ts.forEach(new Selector.ForEachBlock<ResultSet>()
                {
 
@@ -2698,6 +2699,7 @@ public class ONPRC_EHRTriggerHelper
                                        "</td><td>" + PageFlowUtil.filter(rs.getString("servicerequested")) +
                                        " </td><td>" + PageFlowUtil.filter(rs.getString("testid")) +
                                        " </td><td>" + PageFlowUtil.filter(rs.getString("qualResult")) +
+                                       " </td><td>" + PageFlowUtil.filter(rs.getString("taskid")) +
                                        "</td><td>" + PageFlowUtil.filter(Vetname) + "</td></tr>\n");
                                break;
 
