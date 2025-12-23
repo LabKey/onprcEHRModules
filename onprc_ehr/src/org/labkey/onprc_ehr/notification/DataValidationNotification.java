@@ -48,19 +48,19 @@ public class DataValidationNotification extends ColonyAlertsNotification
     @Override
     public String getCronString()
     {
-        return "0 25 6 * * ?";
+        return "0 50 6,15 * * ?";
     }
 
     @Override
     public String getScheduleDescription()
     {
-        return "every day at 6:25AM";
+        return "every day at 6:50AM and 3:50PM";
     }
 
     @Override
     public String getDescription()
     {
-        return "The report is designed to identify potential problems with the EHR data.  It is similar to Colony Alerts, except it is limited to alerts that indicate a true problem in the data itself.";
+        return "The report identifies potential problems with the EHR data. Although similar to Colony Alerts, it is limited to problems in the data itself.";
     }
 
     @Override
@@ -119,7 +119,7 @@ public class DataValidationNotification extends ColonyAlertsNotification
         //only send if there are alerts
         if (!msg.isEmpty())
         {
-            msg.insert(0, "This email contains a series of automatic alerts designed to identify problems in the EHR data.  It was run on: " + getDateFormat(c).format(now) + " at " + _timeFormat.format(now) + ".<p>");
+            msg.insert(0, "This email contains a series of automatic alerts identifying problems in the EHR data.  It was run on: " + getDateFormat(c).format(now) + " at " + _timeFormat.format(now) + ".<p>");
         }
 
         return msg.toString();
