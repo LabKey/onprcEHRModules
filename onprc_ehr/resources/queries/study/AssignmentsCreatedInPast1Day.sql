@@ -1,3 +1,7 @@
+/* Created by Kollil, Dec, 2025
+   Tkt # 13618
+   Priority 1: Add Grid 1 ("Assignments Created in the Past Day ") to daily Behavior Alerts email - display full grid in email
+ */
 SELECT
     Id,
     Id.demographics.gender as Sex,
@@ -16,4 +20,4 @@ SELECT
     releaseCondition.meaning as ConditionAtRelease
 
 FROM Assignment
-WHERE CAST(date AS DATE) >= TIMESTAMPADD('SQL_TSI_DAY', -1, NOW())
+WHERE CAST(created AS DATE) >= TIMESTAMPADD('SQL_TSI_DAY', -1, NOW())
