@@ -17,10 +17,14 @@ package org.labkey.onprc_ehr.notification;
 
 import org.apache.commons.lang3.time.DateUtils;
 import org.json.JSONObject;
+import org.labkey.api.data.ColumnInfo;
 import org.labkey.api.data.CompareType;
 import org.labkey.api.data.Container;
 import org.labkey.api.data.ContainerFilter;
+import org.labkey.api.data.Results;
+import org.labkey.api.data.ResultsImpl;
 import org.labkey.api.data.SQLFragment;
+import org.labkey.api.data.Selector;
 import org.labkey.api.data.SimpleFilter;
 import org.labkey.api.data.Sort;
 import org.labkey.api.data.SqlSelector;
@@ -35,14 +39,18 @@ import org.labkey.api.query.UserSchema;
 import org.labkey.api.security.User;
 import org.labkey.api.util.PageFlowUtil;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * User: bimber
@@ -107,6 +115,12 @@ public class BehaviorNotification extends ColonyAlertsNotification
         NHPTraining_BehaviorAlert(c, u , msg);
         AlopeciaScoreAlert(c, u , msg);
         dcmNotesAlert(c, u , msg);
+         //Added by Kollil, Nov 2025
+        //Refer to tkt # 13618
+        assignmentsCreatedInPast1Day(c,u,msg);
+        assignmentsReleasedInPast1Day(c,u,msg);
+        assignmentsStartingNext1to14Days(c,u,msg);
+        assignmentsStartedPast1to7Days(c,u,msg);
 
         notesEndingToday(c, u, msg, Arrays.asList("BSU Notes"), null);
         saveValues(c, toSave);
@@ -114,6 +128,212 @@ public class BehaviorNotification extends ColonyAlertsNotification
         return msg.toString();
     }
 
+    /* Added by Kollil Nov, 2025
+    Priority 4: Add links to grids 3 and 4 in daily Behavior Alerts email (do not need to display full grid in email)
+                     - for grid 3 - "There are __ assignments starting in the Next 1-14 days" with a link
+    Refer to tkt # 13618
+    */
+    private void assignmentsStartingNext1to14Days(final Container c, User u, final StringBuilder msg)
+    {
+        TableInfo ti = getStudySchema(c, u).getTable("AssignmentsStartingNext1to14Days");
+
+        TableSelector ts = new TableSelector(ti, null, new Sort("Id"));
+        long total = ts.getRowCount();
+
+        if (total > 0)
+        {
+            msg.append("<b>Assignments starting in the next 1-14 days:</b><p>");
+            msg.append( total + " entries found. ");
+            msg.append("<a href='" + getExecuteQueryUrl(c, "study", "AssignmentsStartingNext1to14Days", null)  + "'>Click here to view them</a>\n");
+            msg.append("<hr>\n\n");
+        }
+        else {
+            msg.append("<b>WARNING: No assignments starting in the next 1-14 days!</b><br><hr>\n");
+        }
+    }
+
+    /* Added by Kollil Nov, 2025
+        Priority 4: Add links to grids 3 and 4 in daily Behavior Alerts email (do not need to display full grid in email)
+                     - for grid 4 - "There were __ assignments started in the past 1-7 days" with a link
+    Refer to tkt # 13618
+    */
+    private void assignmentsStartedPast1to7Days(final Container c, User u, final StringBuilder msg)
+    {
+        TableInfo ti = getStudySchema(c, u).getTable("AssignmentsStartedPast1to7Days");
+
+        TableSelector ts = new TableSelector(ti, null, new Sort("Id"));
+        long total = ts.getRowCount();
+
+        if (total > 0)
+        {
+            msg.append("<b>Assignments started in the past 1-7 days:</b><p>");
+            msg.append( total + " entries found. ");
+            msg.append("<a href='" + getExecuteQueryUrl(c, "study", "AssignmentsStartedPast1to7Days", null)  + "'>Click here to view them</a>\n");
+            msg.append("<hr>\n\n");
+        }
+        else {
+            msg.append("<b>WARNING: No assignments started in the past 1-7 days!</b><br><hr>\n");
+        }
+    }
+
+    /* Added by Kollil Nov, 2025
+     List of assignment records created by R&L in past 24hrs (this is the most important grid)
+           a.    Replaces current grid “Assignments Modified in Past 1 Day” which captures any modifications to records in the last 24hrs
+           b.    To clarify, not the same as records with the “assign date” within the past day
+           c.    Include Day Leases
+    Refer to tkt # 13618
+    */
+    private void assignmentsCreatedInPast1Day(final Container c, User u, final StringBuilder msg)
+    {
+        if (QueryService.get().getUserSchema(u, c, "study") == null) {
+            msg.append("<b>Warning: The study schema has not been enabled in this folder, so the alert cannot run!<p><hr>");
+            return;
+        }
+        //assignments query
+        TableInfo ti = QueryService.get().getUserSchema(u, c, "study").getTable("AssignmentsCreatedInPast1Day", ContainerFilter.Type.AllFolders.create(c, u));
+        TableSelector ts = new TableSelector(ti, null, new Sort("Id"));
+        long count = ts.getRowCount();
+
+        //Get num of rows
+        if (count > 0) {
+            msg.append("<b>Assignments created in the past 24hrs:</b><p>");
+            msg.append( count + " entries found. ");
+            msg.append("<a href='" + getExecuteQueryUrl(c, "study", "AssignmentsCreatedInPast1Day", null)  + "'>Click here to view them in a separate window</a>\n");
+            msg.append("\n\n");
+
+            //Display the daily report in the email
+            Set<FieldKey> columns = new HashSet<>();
+            columns.add(FieldKey.fromString("Id"));
+            columns.add(FieldKey.fromString("Sex"));
+            columns.add(FieldKey.fromString("Room"));
+            columns.add(FieldKey.fromString("Cage"));
+            columns.add(FieldKey.fromString("project"));
+            columns.add(FieldKey.fromString("Protocol"));
+            columns.add(FieldKey.fromString("Title"));
+            columns.add(FieldKey.fromString("ProjectInvestigator"));
+            columns.add(FieldKey.fromString("AssignDate"));
+            columns.add(FieldKey.fromString("ReleaseDate"));
+            columns.add(FieldKey.fromString("ProjectedReleaseDate"));
+            columns.add(FieldKey.fromString("assignmentType"));
+            columns.add(FieldKey.fromString("assignCondition"));
+            columns.add(FieldKey.fromString("projectedReleaseCondition"));
+            columns.add(FieldKey.fromString("ConditionAtRelease"));
+
+            final Map<FieldKey, ColumnInfo> colMap = QueryService.get().getColumns(ti, columns);
+            TableSelector ts2 = new TableSelector(ti, colMap.values(), null, new Sort("Id"));
+
+//            msg.append("<hr><b>Assignments created in past 24hrs:</b><br><br>\n");
+            msg.append("<table border=1 style='border-collapse: collapse;'>");
+            msg.append("<tr bgcolor = " + '"' + "#FFD700" + '"' + "style='font-weight: bold;'>");
+            msg.append("<td>Id </td><td>Sex </td><td>Room </td><td>Cage </td><td>Project </td><td>Protocol </td><td>Title </td><td>Project Investigator </td><td>Assign Date </td><td>Release Date </td><td>Projected Release Date </td><td>Assignment Type </td><td>Assign Condition </td><td>Projected Release Condition </td><td>Condition At Release </td></tr>");
+
+            ts2.forEach(object -> {
+                Results rs = new ResultsImpl(object, colMap);
+                String url = getParticipantURL(c, rs.getString("Id"));
+
+                msg.append("<tr bgcolor = " + '"' + "#FFFACD" + '"' + ">");
+                msg.append("<td><b> <a href='" + url + "'>" + PageFlowUtil.filter(rs.getString("Id")) + "</a> </b></td>\n");
+                msg.append("<td>" + PageFlowUtil.filter(rs.getString("Sex")) + "</td>");
+                msg.append("<td>" + PageFlowUtil.filter(rs.getString("Room")) + "</td>");
+                msg.append("<td>" + PageFlowUtil.filter(rs.getString("Cage")) + "</td>");
+                msg.append("<td>" + PageFlowUtil.filter(rs.getString("project")) + "</td>");
+                msg.append("<td>" + PageFlowUtil.filter(rs.getString("Protocol")) + "</td>");
+                msg.append("<td>" + PageFlowUtil.filter(rs.getString("Title")) + "</td>");
+                msg.append("<td>" + PageFlowUtil.filter(rs.getString("ProjectInvestigator")) + "</td>");
+                msg.append("<td>" + PageFlowUtil.filter(rs.getString("AssignDate")) + "</td>");
+                msg.append("<td>" + PageFlowUtil.filter(rs.getString("ReleaseDate")) + "</td>");
+                msg.append("<td>" + PageFlowUtil.filter(rs.getString("ProjectedReleaseDate")) + "</td>");
+                msg.append("<td>" + PageFlowUtil.filter(rs.getString("assignmentType")) + "</td>");
+                msg.append("<td>" + PageFlowUtil.filter(rs.getString("assignCondition")) + "</td>");
+                msg.append("<td>" + PageFlowUtil.filter(rs.getString("projectedReleaseCondition")) + "</td>");
+                msg.append("<td>" + PageFlowUtil.filter(rs.getString("ConditionAtRelease")) + "</td>");
+                msg.append("</tr>");
+            });
+            msg.append("</table><br><hr>");
+        }
+        else {
+            msg.append("<b>WARNING: No assignments created in the past 24hrs!</b><br><hr>\n");
+        }
+    }
+
+    /* Added by Kollil Nov, 2025
+    Grid 2: List of records with new “Release date” added within the last 24hrs
+           a. Omit Day Leases
+    Refer to tkt # 13618
+    */
+    private void assignmentsReleasedInPast1Day(final Container c, User u, final StringBuilder msg)
+    {
+        if (QueryService.get().getUserSchema(u, c, "study") == null) {
+            msg.append("<b>Warning: The study schema has not been enabled in this folder, so the alert cannot run!<p><hr>");
+            return;
+        }
+
+        //assignments query
+        TableInfo ti = QueryService.get().getUserSchema(u, c, "study").getTable("AssignmentsReleasedInPast1Day", ContainerFilter.Type.AllFolders.create(c, u));
+        TableSelector ts = new TableSelector(ti, null, new Sort("Id"));
+        long count = ts.getRowCount();
+
+        //Get num of rows
+        if (count > 0) {
+            msg.append("<b>Assignments with new \"Release date\" added in the last 24hrs:</b><p>");
+            msg.append( count + " entries found. ");
+            msg.append("<a href='" + getExecuteQueryUrl(c, "study", "AssignmentsReleasedInPast1Day", null)  + "'>Click here to view them in a separate window</a>\n");
+            msg.append("\n\n");
+
+        //Display the daily report in the email
+            Set<FieldKey> columns = new HashSet<>();
+            columns.add(FieldKey.fromString("Id"));
+            columns.add(FieldKey.fromString("Sex"));
+            columns.add(FieldKey.fromString("Room"));
+            columns.add(FieldKey.fromString("Cage"));
+            columns.add(FieldKey.fromString("project"));
+            columns.add(FieldKey.fromString("Protocol"));
+            columns.add(FieldKey.fromString("Title"));
+            columns.add(FieldKey.fromString("ProjectInvestigator"));
+            columns.add(FieldKey.fromString("AssignDate"));
+            columns.add(FieldKey.fromString("ReleaseDate"));
+            columns.add(FieldKey.fromString("ProjectedReleaseDate"));
+            columns.add(FieldKey.fromString("assignmentType"));
+            columns.add(FieldKey.fromString("assignCondition"));
+            columns.add(FieldKey.fromString("projectedReleaseCondition"));
+            columns.add(FieldKey.fromString("ConditionAtRelease"));
+
+            final Map<FieldKey, ColumnInfo> colMap = QueryService.get().getColumns(ti, columns);
+            TableSelector ts2 = new TableSelector(ti, colMap.values(), null, new Sort("Id"));
+
+//            msg.append("<hr><b>Assignments with new \"Release date\" added within the last 24hrs:</b><br><br>\n");
+            msg.append("<table border=1 style='border-collapse: collapse;'>");
+            msg.append("<tr bgcolor = " + '"' + "#FFD700" + '"' + "style='font-weight: bold;'>");
+            msg.append("<td>Id </td><td>Sex </td><td>Room </td><td>Cage </td><td>Project </td><td>Protocol </td><td>Title </td><td>Project Investigator </td><td>Assign Date </td><td>Release Date </td><td>Projected Release Date </td><td>Assignment Type </td><td>Assign Condition </td><td>Projected Release Condition </td><td>Condition At Release </td></tr>");
+
+            ts2.forEach(object -> {
+                Results rs = new ResultsImpl(object, colMap);
+                String url = getParticipantURL(c, rs.getString("Id"));
+
+                msg.append("<tr bgcolor = " + '"' + "#FFFACD" + '"' + ">");
+                msg.append("<td><b> <a href='" + url + "'>" + PageFlowUtil.filter(rs.getString("Id")) + "</a> </b></td>\n");
+                msg.append("<td>" + PageFlowUtil.filter(rs.getString("Sex")) + "</td>");
+                msg.append("<td>" + PageFlowUtil.filter(rs.getString("Room")) + "</td>");
+                msg.append("<td>" + PageFlowUtil.filter(rs.getString("Cage")) + "</td>");
+                msg.append("<td>" + PageFlowUtil.filter(rs.getString("project")) + "</td>");
+                msg.append("<td>" + PageFlowUtil.filter(rs.getString("Protocol")) + "</td>");
+                msg.append("<td>" + PageFlowUtil.filter(rs.getString("Title")) + "</td>");
+                msg.append("<td>" + PageFlowUtil.filter(rs.getString("ProjectInvestigator")) + "</td>");
+                msg.append("<td>" + PageFlowUtil.filter(rs.getString("AssignDate")) + "</td>");
+                msg.append("<td>" + PageFlowUtil.filter(rs.getString("ReleaseDate")) + "</td>");
+                msg.append("<td>" + PageFlowUtil.filter(rs.getString("ProjectedReleaseDate")) + "</td>");
+                msg.append("<td>" + PageFlowUtil.filter(rs.getString("assignmentType")) + "</td>");
+                msg.append("<td>" + PageFlowUtil.filter(rs.getString("assignCondition")) + "</td>");
+                msg.append("<td>" + PageFlowUtil.filter(rs.getString("projectedReleaseCondition")) + "</td>");
+                msg.append("<td>" + PageFlowUtil.filter(rs.getString("ConditionAtRelease")) + "</td>");
+                msg.append("</tr>");
+            });
+            msg.append("</table><br><hr>");
+        }
+        else {
+            msg.append("<b>WARNING: No assignments released in the past 24hrs!</b><br><hr>\n");
+        }
+    }
 
     /* Added by Kollil 08/22/2025
     New alert/notification for when an animal receives an alopecia score of 4 or 5, but does not have an open behavioral case for alopecia.
@@ -128,16 +348,15 @@ public class BehaviorNotification extends ColonyAlertsNotification
         msg.append("<b>Animals with alopecia score of 4 or 5, but does not have an open behavioral case for alopecia:</b><p>");
         if (total > 0)
         {
-            msg.append("There are " + total + " entries found. ");
-            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "AlopeciaScoreMissingBehaviorCases", null)  + "'>Click here to view them</a></p>\n");
+            msg.append( total + " entries found. ");
+            msg.append("<a href='" + getExecuteQueryUrl(c, "study", "AlopeciaScoreMissingBehaviorCases", null)  + "'>Click here to view them</a>\n");
             msg.append("<hr>\n\n");
         }
         else
         {
             msg.append("<b>WARNING: No animals found with alopecia score of 4 or 5, but does not have an open behavioral case for alopecia!</b><br><hr>\n");
         }
-
-    }
+   }
 
     // Added by Kollil 11/04/2020
     private void NHPTraining_BehaviorAlert(final Container c, User u, final StringBuilder msg)
@@ -155,14 +374,13 @@ public class BehaviorNotification extends ColonyAlertsNotification
         if (total > 0)
         {
             msg.append("There are " + total + " entries found. ");
-            msg.append("<p><a href='" + getExecuteQueryUrl(c, "onprc_ehr", "NHP_Training_BehaviorAlert", null)  + "'>Click here to view them</a></p>\n");
+            msg.append("<a href='" + getExecuteQueryUrl(c, "onprc_ehr", "NHP_Training_BehaviorAlert", null)  + "'>Click here to view them</a>\n");
             msg.append("<hr>\n\n");
         }
         else
         {
             msg.append("<b>WARNING: There are no NHP_Training entries where \"Training Result = In Progress\" for over 60 days!</b><br><hr>\n");
         }
-
     }
 
     /*
@@ -184,9 +402,9 @@ public class BehaviorNotification extends ColonyAlertsNotification
         long count = ts.getRowCount();
         if (count > 0)
         {
-            msg.append("<b>WARNING: There are " + count + " DCM action items.</b><br>\n");
-            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Notes_WithLocation", null) + "&query.actiondate~dateeq="+ getDateFormat(c).format(new Date()) + "&query.category~eq=Notes Pertaining to DAR'>Click here to view them</a><br>\n\n");
-            msg.append("</p><br><hr>");
+            msg.append("<b>WARNING: There are " + count + " DCM action items. </b><br>\n");
+            msg.append("<a href='" + getExecuteQueryUrl(c, "study", "Notes_WithLocation", null) + "&query.actiondate~dateeq="+ getDateFormat(c).format(new Date()) + "&query.category~eq=Notes Pertaining to DAR'>Click here to view them</a><br>\n\n");
+            msg.append("<br><hr>");
         }
         else
         {
@@ -209,8 +427,8 @@ public class BehaviorNotification extends ColonyAlertsNotification
         msg.append("<b>DCM Alerts:</b><br><hr>");
         if (count1 > 0) {
             msg.append("<b>" + count1 + " DCM notes entries added yesterday where \"Category = Notes pertaining to DAR\". </b><br>\n");
-            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Notes_WithLocation", null) + "&query.date~dateeq="+ formatted + "&query.category~eq=Notes Pertaining to DAR'>Click here to view them</a><br>\n\n");
-            msg.append("</p><br><hr>\n\n");
+            msg.append("<a href='" + getExecuteQueryUrl(c, "study", "Notes_WithLocation", null) + "&query.date~dateeq="+ formatted + "&query.category~eq=Notes Pertaining to DAR'>Click here to view them</a><br>\n\n");
+            msg.append("<br><hr>\n\n");
         }
         else
         {
@@ -228,8 +446,8 @@ public class BehaviorNotification extends ColonyAlertsNotification
 
         if (count4 > 0) {
             msg.append("<b>" + count4 + " DCM notes entries removed yesterday where \"Category = Notes pertaining to DAR\". </b><br>\n");
-            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Notes_WithLocation", null) + "&query.enddate~dateeq="+ formatted + "&query.category~eq=Notes Pertaining to DAR'>Click here to view them</a><br>\n\n");
-            msg.append("</p><br><hr>\n\n");
+            msg.append("<a href='" + getExecuteQueryUrl(c, "study", "Notes_WithLocation", null) + "&query.enddate~dateeq="+ formatted + "&query.category~eq=Notes Pertaining to DAR'>Click here to view them</a><br>\n\n");
+            msg.append("<br><hr>\n\n");
         }
         else {
             msg.append("<b>WARNING: No DCM notes ended yesterday where \"Category = Notes pertaining to DAR\"!</b><br><hr>");
@@ -243,8 +461,8 @@ public class BehaviorNotification extends ColonyAlertsNotification
         if (count2 > 0)
         {
             msg.append("<b>There are " + count2 + " flag(s) added yesterday. </b><br>\n");
-            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Flags_WithLocation", null) + "&query.date~dateeq="+ formatted + "'>Click here to view them</a><br>\n\n");
-            msg.append("</p><hr>");
+            msg.append("<a href='" + getExecuteQueryUrl(c, "study", "Flags_WithLocation", null) + "&query.date~dateeq="+ formatted + "'>Click here to view them</a><br>\n\n");
+            msg.append("<hr>");
         }
         else
         {
@@ -258,8 +476,8 @@ public class BehaviorNotification extends ColonyAlertsNotification
         long count3 = ts3.getRowCount();
         if (count3 > 0) {
             msg.append("<b>" + count3 + " flag(s) removed yesterday. </b><br>\n");
-            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Flags_WithLocation", null) + "&query.enddate~dateeq="+ formatted + "'>Click here to view them</a><br>\n\n");
-            msg.append("</p><hr>");
+            msg.append("<a href='" + getExecuteQueryUrl(c, "study", "Flags_WithLocation", null) + "&query.enddate~dateeq="+ formatted + "'>Click here to view them</a><br>\n\n");
+            msg.append("<hr>");
         }
         else {
             msg.append("<b>WARNING: There are no flags removed yesterday!</b><br><hr>");

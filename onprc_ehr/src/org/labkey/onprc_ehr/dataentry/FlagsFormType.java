@@ -26,6 +26,7 @@ import org.labkey.api.security.Group;
 import org.labkey.api.security.GroupManager;
 import org.labkey.api.security.permissions.AdminPermission;
 import org.labkey.api.security.permissions.Permission;
+import org.labkey.api.view.template.ClientDependency;
 import org.labkey.security.xml.GroupEnumType;
 
 import java.util.ArrayList;
@@ -49,6 +50,12 @@ public class FlagsFormType extends UnsaveableTask
                 new SimpleGridPanel("study", "flags", "Flags")
         ));
 
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/model/sources/Flag_settings.js"));
+
+        for  (FormSection s : getFormSections())
+        {
+            s.addConfigSource("Flag_Settings");
+        }
 
     }
 
