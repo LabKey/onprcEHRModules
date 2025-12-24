@@ -3,7 +3,7 @@
     <metadata>
         <tables xmlns="http://labkey.org/data/xml">
             <table tableName="AssignmentsStartedPast1to7Days" tableDbType="TABLE">
-                <tableTitle>Assignments started in past 1-7 days</tableTitle>
+                <tableTitle>Assignments started in the past 1-7 days</tableTitle>
             </table>
         </tables>
     </metadata>
