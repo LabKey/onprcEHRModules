@@ -1,0 +1,10 @@
+<!--Report title-->
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="AssignmentsStartingNext1to14Days" tableDbType="TABLE">
+                <tableTitle>Assignments starting in the next 1 to 14 days</tableTitle>
+            </table>
+        </tables>
+    </metadata>
+</query>
