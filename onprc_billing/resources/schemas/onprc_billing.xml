@@ -1655,9 +1655,6 @@
             <column columnName="StartDate"/>
             <column columnName="EndDate"/>
             <column columnName="comment"/>
-            <column columnName="createdBy"/>
-            <column columnName="created"/>
-            <column columnName="modifiedBy"/>
             <column columnName="modified"/>
 
 
