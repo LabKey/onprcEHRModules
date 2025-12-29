@@ -35,11 +35,13 @@ base_lease AS (
 
 -- =====================================================================================
 -- 2) Alias / Account Context
+
 -- =====================================================================================
 alias_context AS (
     SELECT
         bl.*,
         da.DualProjectCategory,
+        da.project1 as InitialProject,
         a.alias                               AS account,
         a.category                            AS aliasCategory,
         a.faRate                              AS faRate,
@@ -54,6 +56,7 @@ alias_context AS (
         COALESCE(a.investigatorId,
                  bl.project.investigatorId)   AS investigatorId
     FROM base_lease bl
+
     LEFT JOIN onprc_billing_public.projectAccountHistory pah
            ON pah.project = bl.project
           AND pah.startDate <= CAST(bl.date AS DATE)
@@ -64,17 +67,21 @@ alias_context AS (
         on bl.id = da.id
         AND da.dualendDate >= CAST(bl.date AS DATE)
            AND da.dualstartDate <= CAST(bl.date AS DATE)
-        and da.DualProjectCategory in ('U42','JMAC Colony(P51)')
 
 
+--Select * from alias_context
 ),
-
 -- =====================================================================================
+--   2a lookup to determine credit to for each lease fee
+--   when an assignment creates a dual assignment and the original assignment is an
+
 -- 3) Rates / Exemptions / Multipliers / Indirect Rate
 -- =====================================================================================
+
 rate_context AS (
     SELECT
         ac.*,
+        LI.project as CreditTo,
 
         cr.unitCost   AS nihRate1,
         cr.subsidy    AS subsidy1,
@@ -135,9 +142,12 @@ rate_context AS (
 
     LEFT JOIN onprc_billing.ogaSynchIR ir
            ON ir.alias = ac.account
+    Left Join onprc_Billing.ProjectLeaseIncomeEligibility Li
+           on ac.InitialProject = Li.Project
 ),
 
--- =====================================================================================
+
+           -- =====================================================================================
 -- 4) Unit Cost Calculation (Parser-Safe)
 -- =====================================================================================
 calculated_costs AS (
@@ -202,11 +212,11 @@ calculated_costs AS (
         AS DOUBLE) AS unitCost
     FROM rate_context rc
 ),
-
+--Select * from calculated_costs
 -- =====================================================================================
 -- 5) Final Lease Charges (Billing Review)
 -- =====================================================================================
--- ... existing code ...
+
 
 lease_final AS (
     SELECT
@@ -229,8 +239,9 @@ lease_final AS (
         leaseCharge2.name as FinalLEaseType,
         sourceRecord,
         chargeCategory,
-
-        CAST(NULL AS VARCHAR)     AS creditAccount,
+--  Add the action to get the correct alias for the credit account
+--  This is based on whether there is a value in Credit to field
+        CAST(creditto as varchar)     AS creditAccount,
         CAST(NULL AS INTEGER)     AS creditAccountId,
 
         unitCost,
