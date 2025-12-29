@@ -1641,7 +1641,7 @@
 
         </columns>
     </table>
-    <table tableName="ProjectLeaseIncomeEligibility" tableDbType="TABLE">
+    <table tableName="ProjectLeaseIncomeEligibility" tableDbType="TABLE"> <!--Removed Credited and Modified fields-->
         <columns>
             <column columnName="rowid"/>
             <column columnName="project">
@@ -1655,9 +1655,6 @@
             <column columnName="StartDate"/>
             <column columnName="EndDate"/>
             <column columnName="comment"/>
-
-
-
         </columns>
     </table>
 
