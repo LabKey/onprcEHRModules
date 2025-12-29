@@ -1655,7 +1655,7 @@
             <column columnName="StartDate"/>
             <column columnName="EndDate"/>
             <column columnName="comment"/>
-            <column columnName="modified"/>
+
 
 
         </columns>
