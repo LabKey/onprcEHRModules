@@ -1,0 +1,31 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="tissueDistributionSummaryByAnimalIDFiscalYr" tableDbType="TABLE">
+                <tableTitle>Tissue Distribution Summary By Animal ID Per Fiscal Year</tableTitle>
+                <columns>
+                    <column columnName="totalSamples">
+                        <columnTitle>Total Samples</columnTitle>
+                        <url>/query/executeQuery.view?
+                            schemaName=study&amp;
+                            query.queryName=Tissue Distributions&amp;
+                            query.fiscalYear~eq=${fiscalYear}&amp;
+                            query.id~eq=${id}&amp;
+                            query.QCState/Label~in=Completed;Request: Pending&amp;
+                        </url>
+                    </column>
+                    <column columnName="distinctAnimals">
+                        <columnTitle>Distinct Animal IDs</columnTitle>
+                        <url>/query/executeQuery.view?
+                            schemaName=study&amp&amp;
+                            query.queryName=Tissue Distributions&amp;
+                            query.fiscalYear~eq=${fiscaYear}&amp;
+                            query.id~eq=${id}&amp;
+                            query.QCState/Label~in=Completed;Request: Pending&amp;
+                        </url>
+                    </column>
+                </columns>
+            </table>
+        </tables>
+    </metadata>
+</query>
