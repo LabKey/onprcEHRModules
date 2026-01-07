@@ -27,3 +27,4 @@ Together, they produce exactly the last 24 hours, nothing more.
  */
 WHERE CAST(enddate AS DATE) = TIMESTAMPADD('SQL_TSI_DAY', -1, CAST(NOW() AS DATE))
   AND CAST(enddate AS DATE) <= CAST(NOW() AS DATE)
+  AND Id.demographics.calculated_status = 'Alive'
