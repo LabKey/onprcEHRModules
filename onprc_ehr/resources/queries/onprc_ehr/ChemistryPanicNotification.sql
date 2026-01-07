@@ -6,7 +6,8 @@ select a.Id,
        a.vet,
        a.created,
        a.objectid,
-      (select j.rowid from ehr.tasks j where j.taskid = a.taskid) as taskid
+      (select j.rowid from ehr.tasks j where j.taskid = a.taskid) as taskid,
+      a.type
 
 
 from study.ClinpathRuns a, study.chemistryResults b
