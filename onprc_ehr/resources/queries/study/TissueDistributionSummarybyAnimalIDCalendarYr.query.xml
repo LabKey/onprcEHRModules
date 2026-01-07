@@ -7,7 +7,7 @@
                     <column columnName="totalSamples">
                         <columnTitle>Total Samples</columnTitle>
                         <url>/query/executeQuery.view?
-                            schemaName=study&amp&amp;
+                            schemaName=study&amp;
                             query.queryName=Tissue Distributions&amp;
                             query.calendarYear~eq=${calendarYear}&amp;
                             query.id~eq=${id}&amp;
