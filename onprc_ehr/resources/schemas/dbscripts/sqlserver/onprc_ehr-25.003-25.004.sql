@@ -58,7 +58,7 @@ Update ss
 set ss.RequirementName = '' + trim(jj.aftername) + ' ' + trim(jj.filename) + ''
 
     from ehr_Compliancedb.Requirements ss, onprc_ehr.requirementname_Convert jj where ss.RequirementName like  '' + trim(@code) + '%'
-                                                                        And jj.PreviousDesignation like '' + trim(@code) + '%'
+    And jj.PreviousDesignation like '' + trim(@code) + '%'
 
     If @@Error <> 0
     GoTo Err_Proc
@@ -69,7 +69,7 @@ Update ss
 set ss.RequirementName = '' + trim(jj.aftername) + ' ' + trim(jj.filename) + ''
 
     from ehr_Compliancedb.CompletionDates ss, onprc_ehr.requirementname_Convert jj where ss.RequirementName like  '' + trim(@code) + '%'
-                                                                                  And jj.PreviousDesignation like '' + trim(@code) + '%'
+    And jj.PreviousDesignation like '' + trim(@code) + '%'
 
     If @@Error <> 0
     GoTo Err_Proc
@@ -80,7 +80,7 @@ Update ss
 set ss.RequirementName = '' + trim(jj.aftername) + ' ' + trim(jj.filename) + ''
 
     from ehr_Compliancedb.RequirementsPerEmployee ss, onprc_ehr.requirementname_Convert jj where ss.RequirementName like  '' + trim(@code) + '%'
-                                                                                     And jj.PreviousDesignation like '' + trim(@code) + '%'
+    And jj.PreviousDesignation like '' + trim(@code) + '%'
 
     If @@Error <> 0
     GoTo Err_Proc
@@ -91,7 +91,7 @@ Update ss
 set ss.RequirementName = '' + trim(jj.aftername) + ' ' + trim(jj.filename) + ''
 
     from ehr_Compliancedb.RequirementsPerCategory ss, onprc_ehr.requirementname_Convert jj where ss.RequirementName like  '' + trim(@code) + '%'
-                                                                                             And jj.PreviousDesignation like '' + trim(@code) + '%'
+    And jj.PreviousDesignation like '' + trim(@code) + '%'
 
     If @@Error <> 0
     GoTo Err_Proc
@@ -102,7 +102,7 @@ Update ss
 set ss.RequirementName = '' + trim(jj.aftername) + ' ' + trim(jj.filename) + ''
 
     from ehr_Compliancedb.EmployeeRequirementExemptions ss, onprc_ehr.requirementname_Convert jj where ss.RequirementName like  '' + trim(@code) + '%'
-                                                                                             And jj.PreviousDesignation like '' + trim(@code) + '%'
+     And jj.PreviousDesignation like '' + trim(@code) + '%'
 
     If @@Error <> 0
     GoTo Err_Proc
