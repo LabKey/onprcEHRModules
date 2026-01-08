@@ -74,7 +74,7 @@ set ss.RequirementName = '' + trim(jj.aftername) + ' ' + trim(jj.filename) + ''
     If @@Error <> 0
     GoTo Err_Proc
 
-------Process Requirements for Employees
+------Process Requirements per Employees
 
 Update ss
 set ss.RequirementName = '' + trim(jj.aftername) + ' ' + trim(jj.filename) + ''
