@@ -1471,4 +1471,13 @@
         </columns>
     </table>
 
+    <table tableName="RequirementName_Convert" tableDbType="TABLE">
+        <columns>
+            <column columnName="searchid"/>
+            <column columnName="PreviousDesignation"/>
+            <column columnName="afterName"/>
+            <column columnName="FileName"/>
+        </columns>
+    </table>
+
 </tables>
