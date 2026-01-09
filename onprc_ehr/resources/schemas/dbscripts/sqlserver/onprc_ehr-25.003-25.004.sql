@@ -17,7 +17,7 @@ CREATE TABLE onprc_ehr.RequirementName_Convert(
 */
 
 
-CREATE Procedure 	sp_Compliance_requirementname_Update_Process
+CREATE Procedure 	onprc_ehr.sp_Compliance_requirementname_Update_Process
 
 
 
