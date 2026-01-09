@@ -1379,12 +1379,11 @@ exports.init = function(EHR){
     });
 
     // Added: 10-6-2025
-    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.AFTER_UPSERT, 'study', 'clinpathRuns', function (helper, scriptErrors, row, oldRow) {
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.AFTER_UPSERT, 'study', 'chemistryResults', function (helper, scriptErrors, row, oldRow) {
 
-        if  (row.Id && row.type && row.type == 'Biochemistry') {
-            console.log("panic values:  " + row.type);
-            triggerHelper.sendClinpathPanicEmail(row.Id, row.objectid, row.vet);
-
+        if (row.Id && row.qualresult && row.qualresult.indexOf('panic') !== -1)  {
+               console.log("panic values:  " + row.qualresult);
+            triggerHelper.sendClinpathPanicEmail(row.Id, row.runid);
         }
     });
 

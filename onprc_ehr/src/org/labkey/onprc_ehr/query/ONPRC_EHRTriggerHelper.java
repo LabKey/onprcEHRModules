@@ -2636,9 +2636,10 @@ public class ONPRC_EHRTriggerHelper
         }
     }
 
-    public void sendClinpathPanicEmail(String id, String runid, Integer vetid)
+    public void sendClinpathPanicEmail(String id, String runid)
     {
         String subject = "Chemistry Results with Panic values";
+
 
         final TableInfo ti = getTableInfo("onprc_ehr", "ChemistryPanicNotification");
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("Id"), id, CompareType.EQUAL);
@@ -2646,8 +2647,8 @@ public class ONPRC_EHRTriggerHelper
 
 
         List<FieldKey> names= new ArrayList<>();
-//        FieldKey clinpathFieldKey = FieldKey.fromString("objectid");
-//        names.add(clinpathFieldKey);
+        FieldKey clinpathFieldKey = FieldKey.fromString("objectid");
+        names.add(clinpathFieldKey);
         names.add(FieldKey.fromString("qualResult"));
         names.add(FieldKey.fromString("servicerequested"));
         names.add(FieldKey.fromString("testid"));
@@ -2658,60 +2659,91 @@ public class ONPRC_EHRTriggerHelper
 
 
         final Map<FieldKey, ColumnInfo> colKeys = QueryService.get().getColumns(ti, names);
-//        final ColumnInfo clinpathColumn = colKeys.get(clinpathFieldKey);
+        final ColumnInfo clinpathColumn = colKeys.get(clinpathFieldKey);
         TableSelector ts = new TableSelector(ti, colKeys.values(), filter, null);
 
         final StringBuilder html = new StringBuilder();
 
+
         if (ts.getRowCount() == 0)
         {
             html.append("There are no Chemistry Panlc Values to display");
-            _log.warn("Print 2");
+
             return;
         }
         else
         {
-            _log.warn("Print 3");
+
             html.append("<table border=1 style='border-collapse: collapse;'>");
             html.append("<tr style='font-weight: bold;'><td>Animal ID</td><td>Date</td><td>Service Requested</td><td> Panel Test Name</td><td> Qual Results</td><td>Task ID </td><td> Vet/PI Name</td></tr>\n");
             ts.forEach(new Selector.ForEachBlock<ResultSet>()
-            {
+               {
 
-                @Override
-                public void exec(ResultSet rs) throws SQLException
-                {
+                   @Override
+                   public void exec(ResultSet rs) throws SQLException
+                   {
 
-                    TableInfo ti2 = getTableInfo("onprc_ehr", "Labwork_Requestor_Vets");
-                    SimpleFilter filter2 = new SimpleFilter(FieldKey.fromString("userid"), rs.getString("vet"));
-                    filter2.addCondition(FieldKey.fromString("DisableDate"), true, CompareType.ISBLANK);
+                       TableInfo ti2 = getTableInfo("onprc_ehr", "Labwork_Requestor_Vets");
+                       SimpleFilter filter2 = new SimpleFilter(FieldKey.fromString("userid"), rs.getString("vet"));
+                       filter2.addCondition(FieldKey.fromString("DisableDate"), true, CompareType.ISBLANK);
 
 
-                    TableSelector ts2 = new TableSelector(ti2, PageFlowUtil.set("LastName"), filter2, null);
-                    List<String> ret2 = ts2.getArrayList(String.class);
-                    if (!ret2.isEmpty())
-                    {
-                        for (String Vetname : ret2)
-                        {
-                            html.append("<tr><td>" + PageFlowUtil.filter(rs.getString("Id")) +
-                                    "</td><td>" + PageFlowUtil.filter(rs.getString("date")) +
-                                    "</td><td>" + PageFlowUtil.filter(rs.getString("servicerequested")) +
-                                    " </td><td>" + PageFlowUtil.filter(rs.getString("testid")) +
-                                    " </td><td>" + PageFlowUtil.filter(rs.getString("qualResult")) +
-                                    " </td><td>" + PageFlowUtil.filter(rs.getString("taskid")) +
-                                    "</td><td>" + PageFlowUtil.filter(Vetname) + "</td></tr>\n");
-                            break;
+                       TableSelector ts2 = new TableSelector(ti2, PageFlowUtil.set("LastName"), filter2, null);
+                       List<String> ret2 = ts2.getArrayList(String.class);
+                       if (!ret2.isEmpty())
+                       {
+                           for (String Vetname : ret2)
+                           {
+                               html.append("<tr><td>" + PageFlowUtil.filter(rs.getString("Id")) +
+                                       "</td><td>" + PageFlowUtil.filter(rs.getString("date")) +
+                                       "</td><td>" + PageFlowUtil.filter(rs.getString("servicerequested")) +
+                                       " </td><td>" + PageFlowUtil.filter(rs.getString("testid")) +
+                                       " </td><td>" + PageFlowUtil.filter(rs.getString("qualResult")) +
+                                       " </td><td>" + PageFlowUtil.filter(rs.getString("taskid")) +
+                                       "</td><td>" + PageFlowUtil.filter(Vetname) + "</td></tr>\n");
+                               break;
 
-                        }
-                    }
-                }
-            });
+                           }
+                       }
+
+                   }
+
+               }
+
+            );
+
         }
-            Set<UserPrincipal> recipients = getRecipients(vetid);
+
+
+        final TableInfo tt = getTableInfo("study", "clinpathRuns");
+        SimpleFilter filtert = new SimpleFilter(FieldKey.fromString("objectid"), runid, CompareType.EQUAL);
+        filter.addCondition(FieldKey.fromString("id"), id, CompareType.EQUAL);
+
+        TableSelector tst = new TableSelector(ti, PageFlowUtil.set("vet"), filter, null);
+        tst.forEach(new Selector.ForEachBlock<>()
+        {
+            @Override
+            public void exec(ResultSet rs) throws SQLException
+            {
+                Integer vetId = rs.getInt("vet");
+                Set<UserPrincipal> recipients = getRecipients(vetId);
+                if (recipients.isEmpty())
+                {
+                    _log.warn("No recipients, unable to send EHR trigger script email");
+                    return;
+                }
+                else
+                {
                     html.append("</table>\n");
 
-            sendMessage(subject, html.toString(), recipients);
-            _log.warn("Print 5");
+                    sendMessage(subject, html.toString(), recipients);
 
+                }
+
+            }
+
+
+        });
 
 
     }
