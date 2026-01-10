@@ -25,7 +25,12 @@ Select
     d.Id.viral_status.viralStatus,
     d.history
 From Demographics d
-Where d.Id Not In (
+WHERE d.Id.curlocation.area NOT IN ('Shelters', 'Corral', 'Hospital') -- Exclude animals from these locations
+    AND NOT ( -- Exclude females under 5yrs, males under 7yrs
+        (d.gender.code = 'f' AND d.Id.age.ageInYears < 5)
+        OR (d.gender.code = 'm' AND d.Id.age.ageInYears < 7)
+    )
+    AND d.Id Not In (
     SELECT DISTINCT t.Id
     FROM study.WeightManagementMMAData t
     WHERE NOT EXISTS (
@@ -35,13 +40,12 @@ Where d.Id Not In (
         WHERE b.Id = t.Id
           AND b.code = 'P-YY961'
           AND b.date = (SELECT MAX(b2.date)
-                        FROM study.WeightManagementMMAData b2
-                        WHERE b2.Id = t.Id
-                          AND b2.code = 'P-YY961')
+                    FROM study.WeightManagementMMAData b2
+                    WHERE b2.Id = t.Id
+                      AND b2.code = 'P-YY961')
           AND NOT EXISTS (SELECT 1
-                          FROM study.WeightManagementMMAData r
-                          WHERE r.Id = t.Id
-                            AND r.code = 'P-YY960'
-                            AND r.date > b.date))
+                      FROM study.WeightManagementMMAData r
+                      WHERE r.Id = t.Id
+                        AND r.code = 'P-YY960'
+                        AND r.date > b.date))
 )
-  AND d.Id.curlocation.area NOT IN ('Shelters', 'Corral', 'Hospital')-- Exclude animals from these locations

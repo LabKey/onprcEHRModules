@@ -31,9 +31,13 @@ SELECT
              null
         END  AS AbsPctChange,
     w.qcstate
-
 FROM study.weight w
 WHERE w.qcstate.publicdata = true
+  AND d.Id.curlocation.area NOT IN ('Shelters', 'Corral', 'Hospital')-- Exclude animals from these locations
+  AND NOT ( --exclude females under 5yrs, males under 7yrs
+    (d.gender.code = 'f' AND d.Id.age.ageInYears < 5)
+    OR (d.gender.code = 'm' AND d.Id.age.ageInYears < 7)
+    )
   AND w.Id NOT IN
       (SELECT DISTINCT t.Id
        FROM study.WeightManagementMMAData t
@@ -55,5 +59,3 @@ WHERE w.qcstate.publicdata = true
                                          AND r.date > b.date)
                  )
       )
-  -- Exclude animals from these locations
-  AND w.Id.curlocation.area NOT IN ('Shelters', 'Corral', 'Hospital')
