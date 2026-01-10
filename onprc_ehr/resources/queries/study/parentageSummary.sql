@@ -34,7 +34,7 @@ SELECT
 
 FROM study.birth b
 WHERE b.dam is not null and b.qcstate.publicdata = true
-And b.dam not in (select k.parent from study.parentage k where k.Id = b.Id and k.enddate is null and k.relationship = 'Dam' and k.method = 'Observed')
+
 UNION
 
 SELECT
@@ -46,4 +46,3 @@ SELECT
 
 FROM study.birth a
 WHERE a.sire is not null and a.qcstate.publicdata = true
- And a.sire not in (select k.parent from study.parentage k where k.Id = a.Id and k.enddate is null and k.relationship = 'Sire' and k.method = 'Observed')
