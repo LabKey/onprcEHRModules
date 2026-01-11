@@ -51,6 +51,10 @@ import java.util.TreeMap;
  * User: bbimber
  * Date: 7/23/12
  * Time: 7:41 PM
+ *
+ * Modified by Kollil as per ticket # 13461
+ * Date: Jan 2026
+ *
  */
 public class WeightAlertsNotification extends AbstractEHRNotification
 {
@@ -144,8 +148,8 @@ public class WeightAlertsNotification extends AbstractEHRNotification
     private void processWeights(Container c, User u, final StringBuilder msg, int min, int max, CompareType ct, double pct, @Nullable Set<String> distinctIds)
     {
         //Daily transfers query
-        TableInfo ti = QueryService.get().getUserSchema(u, c, "study").getTable("weightRelChange_NotInMMA", ContainerFilter.Type.AllFolders.create(c, u));
-//        TableInfo ti = getStudySchema(c, u).getTable("weightRelChange_NotInMMA");
+//        TableInfo ti = QueryService.get().getUserSchema(u, c, "study").getTable("weightRelChange_NotInMMA", ContainerFilter.Type.AllFolders.create(c, u));
+        TableInfo ti = getStudySchema(c, u).getTable("weightRelChange");
         assert ti != null;
 
         final FieldKey areaKey = FieldKey.fromString("Id/curLocation/Area");

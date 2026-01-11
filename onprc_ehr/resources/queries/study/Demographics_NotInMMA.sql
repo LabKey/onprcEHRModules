@@ -8,15 +8,16 @@
     Release from active weight management regimen (P-YY960)
  2. Remove Shelters, Corral and Hospital locations from the lists
   */
-Select
-    d.Id.curlocation.area as Area,
-    d.Id.curlocation.room as Room,
-    d.Id.curlocation.cage as Cage,
+
+SELECT
+    d.Id.curlocation.area AS Area,
+    d.Id.curlocation.room AS Room,
+    d.Id.curlocation.cage AS Cage,
     d.Id,
-    d.Id.utilization.use as ProjectsAndGroups,
+    d.Id.utilization.use AS ProjectsAndGroups,
     d.species,
     d.geographic_origin,
-    d.gender as Sex,
+    d.gender AS Sex,
     d.calculated_status,
     d.birth,
     d.Id.Age.YearAndDays,
@@ -24,28 +25,30 @@ Select
     d.Id.MostRecentWeight.MostRecentWeightDate,
     d.Id.viral_status.viralStatus,
     d.history
-From Demographics d
-WHERE d.Id.curlocation.area NOT IN ('Shelters', 'Corral', 'Hospital') -- Exclude animals from these locations
-    AND NOT ( -- Exclude females under 5yrs, males under 7yrs
-        (d.gender.code = 'f' AND d.Id.age.ageInYears < 5)
-        OR (d.gender.code = 'm' AND d.Id.age.ageInYears < 7)
+FROM Demographics d
+WHERE d.Id.curlocation.area NOT IN ('Shelters', 'Corral', 'Hospital')-- Exclude animals from these locations
+  AND NOT (-- Exclude females under 5yrs, males under 7yrs
+    (d.gender.code = 'f' AND d.Id.age.ageInYears < 5)
+    OR (d.gender.code = 'm' AND d.Id.age.ageInYears < 7)
     )
-    AND d.Id Not In (
-    SELECT DISTINCT t.Id
-    FROM study.WeightManagementMMAData t
-    WHERE NOT EXISTS (
-        -- Find animals whose latest 'Weight MMA BEGIN' has no later 'Weight MMA RELEASE'
+  AND NOT EXISTS (
+    -- -- Find animals whose latest 'Weight MMA BEGIN' has no later 'Weight MMA RELEASE'
+    SELECT 1
+    FROM study.WeightManagementMMAData b
+    WHERE b.Id = d.Id
+      AND b.code = 'P-YY961'
+      AND b.date = (
+        SELECT MAX(b2.date)
+        FROM study.WeightManagementMMAData b2
+        WHERE b2.Id = d.Id
+          AND b2.code = 'P-YY961'
+    )
+      AND NOT EXISTS (
         SELECT 1
-        FROM study.WeightManagementMMAData b
-        WHERE b.Id = t.Id
-          AND b.code = 'P-YY961'
-          AND b.date = (SELECT MAX(b2.date)
-                    FROM study.WeightManagementMMAData b2
-                    WHERE b2.Id = t.Id
-                      AND b2.code = 'P-YY961')
-          AND NOT EXISTS (SELECT 1
-                      FROM study.WeightManagementMMAData r
-                      WHERE r.Id = t.Id
-                        AND r.code = 'P-YY960'
-                        AND r.date > b.date))
+        FROM study.WeightManagementMMAData r
+        WHERE r.Id = d.Id
+          AND r.code = 'P-YY960'
+          AND r.date > b.date
+    )
 )
+
