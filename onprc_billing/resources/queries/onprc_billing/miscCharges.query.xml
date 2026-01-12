@@ -16,7 +16,7 @@
                             <fkDbSchema>core</fkDbSchema>
                             <fkTable>qcstate</fkTable>
                             <fkColumnName>rowid</fkColumnName>
-                        </fk>                        
+                        </fk>
                     </column>
                     <column columnName="chargetype">
                         <columnTitle>Charge Unit</columnTitle>
@@ -25,6 +25,17 @@
                             <fkTable>chargeUnits</fkTable>
                             <fkColumnName>chargetype</fkColumnName>
                             <fkDisplayColumnName useRawValue="true"/>
+                        </fk>
+                    </column>
+                    <column columnName="sourceInvoicedItem">
+                        <columnTitle>Source Transaction</columnTitle>
+                        <isHidden>false</isHidden>
+                        <fk>
+                            <fkFolderPath>/ONPRC/Admin/Finance</fkFolderPath>
+                            <fkDbSchema>onprc_billing</fkDbSchema>
+                            <fkTable>invoicedItems</fkTable>
+                            <fkColumnName>objectid</fkColumnName>
+                            <fkDisplayColumnName>transactionNumber</fkDisplayColumnName>
                         </fk>
                     </column>
                     <column columnName="chargecategory">

@@ -423,7 +423,7 @@
                     <fkDbSchema>onprc_billing</fkDbSchema>
                     <fkTable>invoicedItems</fkTable>
                     <fkColumnName>objectid</fkColumnName>
-                    <fkDisplayColumnName>transactionNumber</fkDisplayColumnName>
+                    <fkDisplayColumnName>transactionNumber</fkDisplayColumnName> <!--Changed to allow Transaction number to display-->
                 </fk>
             </column>
             <column columnName="chargeCategory">

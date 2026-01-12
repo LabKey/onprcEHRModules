@@ -49,7 +49,7 @@ Ext4.define('ONPRC_Billing.window.ReverseChargeWindow', {
             },
             items: [{
                 html: 'This helper allows you to make adjustments and reversals.  Once you select the type of adjustment, look below to see an explanation of the items it will create.<br><br>' +
-                        'NOTE: You have selected ' + this.checked.length + ' items to be reversed or adjusted.  These are based on the rows you checked on the previous grid.',
+                'NOTE: You have selected ' + this.checked.length + ' items to be reversed or adjusted.  These are based on the rows you checked on the previous grid.',
                 style: 'padding-bottom: 10px;'
             },{
                 xtype: 'radiogroup',
@@ -192,13 +192,13 @@ Ext4.define('ONPRC_Billing.window.ReverseChargeWindow', {
 
             items.push({
                 html: 'This will reverse the original charges and create adjustments based on your selections below.  ' +
-                        '<ul>' +
-                        '<li>All transactions will use the date selected below, as opposed to the original transaction date.</li>' +
-                        '<li>The reversal will use the aliases used on the original transaction.  This does not check whether the aliases are still valid.</li>' +
-                        '<li>If you choose to change the project, the project/alias selected will be used on the adjustment.  If you leave this blank, the original project/alias will be used</li>' +
-                        '<li>If you select an alternate credit alias, this will be used on all adjustments.  Otherwise the original credit alias will be used.' +
-                        '<li>Note: you can leave any or all of these fields blank and create the adjustment.  You will have the opportunity to view the adjustment form, which allows you to independently edit any of these values there as well.</li>' +
-                        '</ul>',
+                    '<ul>' +
+                    '<li>All transactions will use the date selected below, as opposed to the original transaction date.</li>' +
+                    '<li>The reversal will use the aliases used on the original transaction.  This does not check whether the aliases are still valid.</li>' +
+                    '<li>If you choose to change the project, the project/alias selected will be used on the adjustment.  If you leave this blank, the original project/alias will be used</li>' +
+                    '<li>If you select an alternate credit alias, this will be used on all adjustments.  Otherwise the original credit alias will be used.' +
+                    '<li>Note: you can leave any or all of these fields blank and create the adjustment.  You will have the opportunity to view the adjustment form, which allows you to independently edit any of these values there as well.</li>' +
+                    '</ul>',
                 style: 'padding-bottom: 10px;'
             },{
                 xtype: 'datefield',
@@ -429,7 +429,7 @@ Ext4.define('ONPRC_Billing.window.ReverseChargeWindow', {
             }
             //added as part of Finance 11380 update by Gary
             //this issues is causing error
-            if (this.down('#doChangedebitAlias').getValue() && !this.down('#newDebitAliasField').getValue()){
+           if (this.down('#doChangedebitAlias').getValue() && !this.down('#newDebitAliasField').getValue()){
                 Ext4.Msg.alert('Error', 'You have checked that you want to alter the debit alias, but did not supply the new alias.  Either enter an alias or uncheck the field');
                 return;
             }
@@ -491,7 +491,7 @@ Ext4.define('ONPRC_Billing.window.ReverseChargeWindow', {
                     toApply.debitedaccount = Ext4.String.trim(toApply.debitedaccount);
                 }
             }
-            //Added by Gary as part of 11380 update
+           //Added by Gary as part of 11380 update
             if (this.down('#doChangedebitAlias').getValue()){
                 toApply.debitedaccount = this.down('#newDebitAliasField').getValue();
                 if (toApply.debitedaccount){
