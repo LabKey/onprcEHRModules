@@ -15,7 +15,6 @@
  */
 SELECT
   p.Id,
-  p.date,
   p.parent,
   p.relationship,
   p.method
@@ -27,7 +26,6 @@ UNION
 
 SELECT
   b.Id,
-  b.date,
   b.dam,
   'Dam' as relationship,
   'Observed' as method
@@ -39,7 +37,6 @@ UNION
 
 SELECT
     a.Id,
-    a.date,
     a.sire,
     'Sire' as relationship,
     'Observed' as method
