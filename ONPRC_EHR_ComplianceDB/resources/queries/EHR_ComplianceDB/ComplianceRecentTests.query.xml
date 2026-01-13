@@ -19,7 +19,6 @@
                     </column>
                     <column columnName="requirementname">
                         <columnTitle>Requirement Name</columnTitle>
-                        <displayWidth>90</displayWidth>
                         <fk>
                             <fkDbSchema>ehr_compliancedb</fkDbSchema>
                             <fkTable>requirements</fkTable>
@@ -29,7 +28,6 @@
                     </column>
                     <column columnName="times_completed">
                         <columnTitle>Times Completed</columnTitle>
-                        <displayWidth>50</displayWidth>
                         <url>/query/executeQuery.view?schemaName=ehr_compliancedb&amp;
                             query.queryName=CompletionDates&amp;
                             query.EmployeeId~eq=${employeeId}&amp;
@@ -38,66 +36,51 @@
                     </column>
                     <column columnName="expired_period">
                         <columnTitle>Expire Period (Months)</columnTitle>
-                        <displayWidth>70</displayWidth>
                     </column>
                     <column columnName="new_expired_period">
                         <columnTitle>New Expire Period (Months)</columnTitle>
-                        <displayWidth>70</displayWidth>
                     </column>
 
                     <column columnName="email">
                         <columnTitle>Email</columnTitle>
-                        <displayWidth>70</displayWidth>
                     </column>
-
                     <column columnName="lastname">
                         <columnTitle>Last Name</columnTitle>
-                        <displayWidth>110</displayWidth>
                     </column>
 
                     <column columnName="firstname">
                         <columnTitle>First Name</columnTitle>
-                        <displayWidth>110</displayWidth>
                     </column>
 
                     <column columnName="host">
                         <columnTitle>Host</columnTitle>
-                        <displayWidth>110</displayWidth>
                     </column>
                     <column columnName="supervisor">
                         <columnTitle>Supervisor</columnTitle>
-                        <displayWidth>150</displayWidth>
                     </column>
 
                     <column columnName="unit">
                         <columnTitle>Unit</columnTitle>
-                        <displayWidth>210</displayWidth>
                     </column>
                     <column columnName="mostrecentcompleted_date">
                         <columnTitle>Most Recent Date</columnTitle>
                         <formatString>yyyy-MM-dd</formatString>
-                        <displayWidth>70</displayWidth>
                     </column>
                     <column columnName="comment">
                         <columnTitle>Comments</columnTitle>
-                        <displayWidth>70</displayWidth>
                     </column>
                     <column columnName="category">
                         <columnTitle>Category</columnTitle>
-                        <displayWidth>70</displayWidth>
                     </column>
 
                     <column columnName="trainee_type">
                         <columnTitle>Trainee Type</columnTitle>
-                        <displayWidth>70</displayWidth>
                     </column>
                     <column columnName="requirement_name_type">
                         <columnTitle>Requirement Name Type</columnTitle>
-                        <displayWidth>180</displayWidth>
                     </column>
                     <column columnName="months_until_renewal">
                         <columnTitle>Months Until Renewal</columnTitle>
-                        <displayWidth>60</displayWidth>
                         <conditionalFormats>
                             <conditionalFormat>
                                 <filters>
@@ -110,12 +93,10 @@
 
                     <column columnName="trackingflag">
                         <columnTitle>Essential</columnTitle>
-                        <displayWidth>60</displayWidth>
                         <facetingBehavior>ALWAYS_OFF</facetingBehavior>
                     </column>
                     <column columnName="snooze_date">
                         <columnTitle>Snooze Until</columnTitle>
-                        <displayWidth>60</displayWidth>
                         <facetingBehavior>ALWAYS_OFF</facetingBehavior>
                     </column>
 

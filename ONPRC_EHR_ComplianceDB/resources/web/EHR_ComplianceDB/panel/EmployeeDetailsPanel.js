@@ -29,7 +29,7 @@ Ext4.define('EHR_ComplianceDB.panel.EmployeeDetailsPanel', {
                 },
                 showBackBtn: false,
                 title: 'Employee Details'
-            },{
+            }, {
                 xtype: 'ldk-querypanel',
                 queryConfig: {
                     title: 'Training / Requirement Summary',
