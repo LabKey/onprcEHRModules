@@ -9,7 +9,7 @@
  */
 Ext4.define('EHR_ComplianceDB.panel.EmployeeDetailsPanel', {
     extend: 'Ext.panel.Panel',
-    schemaName: 'ehr_compliancedb',
+    schemaName: 'ehr_complianceDB',
 
     initComponent: function(){
         var filterArray = [LABKEY.Filter.create('employeeid', this.employeeId, LABKEY.Filter.Types.EQUAL)];
