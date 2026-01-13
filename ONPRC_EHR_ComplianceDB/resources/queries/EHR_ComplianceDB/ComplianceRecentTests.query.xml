@@ -97,6 +97,7 @@
                     </column>
                     <column columnName="snooze_date">
                         <columnTitle>Snooze Until</columnTitle>
+                        <formatString>yyyy-MM-dd</formatString>
                         <facetingBehavior>ALWAYS_OFF</facetingBehavior>
                     </column>
 
