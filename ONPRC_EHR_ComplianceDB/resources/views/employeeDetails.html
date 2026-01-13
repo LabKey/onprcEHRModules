@@ -7,7 +7,7 @@
         }
 
         var webpart = <%=webpartContext%>;
-        Ext4.create('ONPRC_EHR_ComplianceDB.panel.EmployeeDetailsPanel', {
+        Ext4.create('EHR_ComplianceDB.panel.EmployeeDetailsPanel', {
             employeeId: LABKEY.ActionURL.getParameter('employeeid')
         }).render(webpart.wrapperDivId);
     });

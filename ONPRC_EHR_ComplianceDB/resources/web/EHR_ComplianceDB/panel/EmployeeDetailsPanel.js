@@ -7,9 +7,9 @@
  * @cfg employeeId
  * @cfg schemaName
  */
-Ext4.define('ONPRC_EHR_ComplianceDB.panel.EmployeeDetailsPanel', {
+Ext4.define('EHR_ComplianceDB.panel.EmployeeDetailsPanel', {
     extend: 'Ext.panel.Panel',
-    schemaName: 'onprc_ehr_compliancedb',
+    schemaName: 'ehr_compliancedb',
 
     initComponent: function(){
         var filterArray = [LABKEY.Filter.create('employeeid', this.employeeId, LABKEY.Filter.Types.EQUAL)];

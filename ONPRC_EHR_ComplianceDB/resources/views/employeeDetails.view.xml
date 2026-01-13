@@ -2,6 +2,7 @@
     <dependencies>
         <dependency path="Ext4"/>
         <dependency path="LDK/LDKApi"/>
-        <dependency path="onprc_ehr_compliancedb/panel/EmployeeDetailsPanel.js"/>
+        <dependency path="ehr_complianceDB\panel\EmployeeDetailsPanel.js"/>
+
     </dependencies>
 </view>
