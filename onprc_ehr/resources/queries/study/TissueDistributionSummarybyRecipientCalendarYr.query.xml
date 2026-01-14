@@ -2,7 +2,7 @@
     <metadata>
         <tables xmlns="http://labkey.org/data/xml">
             <table tableName="tissueDistributionSummaryByRecipient" tableDbType="TABLE">
-                <tableTitle>Tissue Distribution Summary By Recipient</tableTitle>
+                <tableTitle>Tissue Distribution Summary By Recipient By Calendar Year</tableTitle>
                 <columns>
                     <column columnName="totalSamples">
                         <columnTitle>Total Samples</columnTitle>
