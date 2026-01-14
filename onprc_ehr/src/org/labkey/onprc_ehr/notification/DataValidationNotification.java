@@ -48,7 +48,7 @@ public class DataValidationNotification extends ColonyAlertsNotification
     @Override
     public String getCronString()
     {
-        return "0 50 6/15 * * ?";
+        return "0 50 6,15 * * ?";
     }
 
     @Override
