@@ -3,7 +3,7 @@
     <metadata>
         <tables xmlns="http://labkey.org/data/xml">
             <table tableName="AssignmentsCreatedInPast1Day" tableDbType="TABLE">
-                <tableTitle>Assignments created in past 24 hrs</tableTitle>
+                <tableTitle>Assignments created in the past 24 hrs</tableTitle>
             </table>
         </tables>
     </metadata>
