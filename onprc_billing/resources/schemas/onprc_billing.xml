@@ -1641,21 +1641,7 @@
 
         </columns>
     </table>
-    <table tableName="ProjectLeaseIncomeEligibility" tableDbType="TABLE"> <!--Removed Credited and Modified fields-->
-        <columns>
-            <column columnName="rowid"/>
-            <column columnName="project">
-                <fk>
-                    <fkDbSchema>ehr</fkDbSchema>
-                    <fkTable>project</fkTable>
-                    <fkColumnName>project_id</fkColumnName>
-                    <fkDisplayColumnName>display_name</fkDisplayColumnName>
-                </fk>
-            </column>
-            <column columnName="StartDate"/>
-            <column columnName="EndDate"/>
-            <column columnName="comment"/>
-        </columns>
-    </table>
+
+
 
 </tables>
