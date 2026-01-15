@@ -39,7 +39,7 @@ WHERE w.Id.curlocation.area NOT IN ('Shelters', 'Corral', 'Hospital')-- Exclude 
         OR (w.Id.demographics.gender.code = 'm' AND w.Id.age.ageInYears < 7)
     )
   AND w.qcstate.publicdata = true
-  AND w.Id = '26520'
+--   AND w.Id = '26520'
   AND NOT EXISTS (
     -- -- Find animals whose latest 'Weight MMA BEGIN' has no later 'Weight MMA RELEASE'
     SELECT 1
