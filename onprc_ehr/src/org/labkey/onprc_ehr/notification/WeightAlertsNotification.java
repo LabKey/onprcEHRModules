@@ -124,7 +124,7 @@ public class WeightAlertsNotification extends AbstractEHRNotification
          Changed by Kollil: 1/2026
          Disabling this section as per ticket #13461
         */
-        //consecutiveWeightDrops(c, u, sb, dropDistinctIds);
+//        consecutiveWeightDrops(c, u, sb, dropDistinctIds);
 
         if (!dropDistinctIds.isEmpty())
         {
@@ -147,9 +147,8 @@ public class WeightAlertsNotification extends AbstractEHRNotification
 
     private void processWeights(Container c, User u, final StringBuilder msg, int min, int max, CompareType ct, double pct, @Nullable Set<String> distinctIds)
     {
-        //Daily transfers query
-//        TableInfo ti = QueryService.get().getUserSchema(u, c, "study").getTable("weightRelChange_NotInMMA", ContainerFilter.Type.AllFolders.create(c, u));
-        TableInfo ti = getStudySchema(c, u).getTable("weightRelChange");
+        TableInfo ti = QueryService.get().getUserSchema(u, c, "study").getTable("weightRelChange_NotInMMA", ContainerFilter.Type.AllFolders.create(c, u));
+//        TableInfo ti = getStudySchema(c, u).getTable("weightRelChange");
         assert ti != null;
 
         final FieldKey areaKey = FieldKey.fromString("Id/curLocation/Area");
@@ -158,7 +157,6 @@ public class WeightAlertsNotification extends AbstractEHRNotification
         final FieldKey ageKey = FieldKey.fromString("Id/age/AgeFriendly");
         final FieldKey problemKey = FieldKey.fromString("Id/openProblems/problems");
         final FieldKey investKey = FieldKey.fromString("Id/activeAssignments/investigators");
-        //final FieldKey vetsKey = FieldKey.fromString("Id/activeAssignments/vets");
         final FieldKey vetsKey = FieldKey.fromString("Id/assignedVet/AssignedVet");
         final FieldKey peKey = FieldKey.fromString("Id/physicalExamHistory/daysSinceExam");
 
@@ -283,113 +281,113 @@ public class WeightAlertsNotification extends AbstractEHRNotification
             msg.append("</table><p>\n");
             msg.append("<hr>");
         }
-        else
-        {
+        else {
             msg.append("There are no changes during this period.<hr>");
         }
+
         if (distinctIds != null && !distinctAnimals.isEmpty())
             distinctIds.addAll(distinctAnimals);
     }
 
 
-//    protected void consecutiveWeightDrops(final Container c, User u, final StringBuilder msg, @Nullable Set<String> distinctIds)
-//    {
-//        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("Id/dataset/demographics/calculated_status"), "Alive");
-//        Calendar date = Calendar.getInstance();
-//        date.add(Calendar.DATE, -10);
-//
-//        filter.addCondition(FieldKey.fromString("date"), date.getTime(), CompareType.DATE_GTE);
-//        Sort sort = new Sort();
-//        sort.appendSortColumn(new Sort.SortField(FieldKey.fromString("Id/curLocation/area"), Sort.SortDirection.ASC));
-//        sort.appendSortColumn(new Sort.SortField(FieldKey.fromString("Id/curLocation/room"), Sort.SortDirection.ASC));
-//        sort.appendSortColumn(new Sort.SortField(FieldKey.fromString("Id/curLocation/cage"), Sort.SortDirection.ASC));
-//
-//        TableInfo ti = getStudySchema(c, u).getTable("weightConsecutiveDrops");
-//        assert ti != null;
-//
-//        List<FieldKey> colKeys = new ArrayList<>();
-//        colKeys.add(FieldKey.fromString("Id/curLocation/area"));
-//        colKeys.add(FieldKey.fromString("Id/curLocation/room"));
-//        colKeys.add(FieldKey.fromString("Id/curLocation/cage"));
-//        colKeys.add(FieldKey.fromString("Id/activeAssignments/investigators"));
-//        colKeys.add(FieldKey.fromString("Id/activeAssignments/vets"));
-//        colKeys.add(FieldKey.fromString("Id/physicalExamHistory/daysSinceExam"));
-//        colKeys.add(FieldKey.fromString("Id/openProblems/problems"));
-//
-//        final Map<FieldKey, ColumnInfo> columns = QueryService.get().getColumns(ti, colKeys);
-//        for (ColumnInfo col : ti.getColumns())
-//        {
-//            columns.put(col.getFieldKey(), col);
-//        }
-//
-//        TableSelector ts = new TableSelector(ti, columns.values(), filter, sort);
-//        if (ts.exists())
-//        {
-//            final Set<String> animalIds = new HashSet<>();
-//
-//            msg.append("<b>WARNING: The following animals have a weight entered since " + getDateFormat(c).format(date.getTime()) + " representing 3 consecutive weight drops with a total drop of more than 3%:</b><br><br>\n");
-//
-//            final StringBuilder tableMsg = new StringBuilder();
-//            tableMsg.append("<table border=1><tr><td>Room</td><td>Cage</td><td>Id</td><td>Investigator(s)</td><td>Responsible Vet</td><td>Open Problems</td><td>Days Since Last PE</td><td>Weight Date</td><td>Interval (days)</td><td>Weight (kg)</td><td>% Change</td></tr>");
-//            ts.forEach(new TableSelector.ForEachBlock<>()
-//            {
-//                @Override
-//                public void exec(ResultSet rs) throws SQLException
-//                {
-//                    Results results = new ResultsImpl(rs, columns);
-//
-//                    tableMsg.append("<tr>");
-//                    tableMsg.append("<td>").append(getValue(results, "Id/curLocation/room")).append("</td>");
-//                    tableMsg.append("<td>").append(getValue(results, "Id/curLocation/cage")).append("</td>");
-//                    String subj = getValue(results, getStudy(c).getSubjectColumnName());
-//                    tableMsg.append("<td><a href='" + AppProps.getInstance().getBaseServerUrl() + AppProps.getInstance().getContextPath() + "/ehr" + c.getPath());
-//                    tableMsg.append("/animalHistory.view?#inputType:singleSubject&showReport:1&subjects:" + subj + "'>");
-//                    tableMsg.append(subj).append("</a></td>");
-//
-//                    tableMsg.append("<td>").append(getValue(results, "Id/activeAssignments/investigators")).append("</td>");
-//                    tableMsg.append("<td>").append(getValue(results, "Id/activeAssignments/vets")).append("</td>");
-//                    tableMsg.append("<td>").append(getValue(results, "Id/openProblems/problems")).append("</td>");
-//                    tableMsg.append("<td>").append(getValue(results, "Id/physicalExamHistory/daysSinceExam")).append("</td>");
-//
-//                    tableMsg.append("<td>").append(getDateValue(c, results, "date")).append("<br>");
-//                    tableMsg.append(getDateValue(c, results, "prevDate1")).append("<br>");
-//                    tableMsg.append(getDateValue(c, results, "prevDate2"));
-//                    tableMsg.append("</td>");
-//
-//                    tableMsg.append("<td>");
-//                    tableMsg.append(getNumericValue(results, "interval1")).append("<br>");
-//                    tableMsg.append(getNumericValue(results, "interval2")).append("<br>");
-//                    tableMsg.append("<br>");
-//                    tableMsg.append("</td>");
-//
-//                    tableMsg.append("<td>").append(getValue(results, "curWeight")).append("<br>");
-//                    tableMsg.append(getValue(results, "prevWeight1")).append("<br>");
-//                    tableMsg.append(getValue(results, "prevWeight2"));
-//                    tableMsg.append("</td>");
-//
-//                    tableMsg.append("<td>").append(getNumericValue(results, "pctChange1")).append("<br>");
-//                    tableMsg.append(getNumericValue(results, "pctChange2")).append("<br>");
-//                    tableMsg.append("<br>");
-//                    tableMsg.append("</td>");
-//
-//                    tableMsg.append("</tr>");
-//
-//                    String id = getValue(results, getStudy(c).getSubjectColumnName());
-//                    if (id != null)
-//                        animalIds.add(id);
-//                }
-//            });
-//
-//            tableMsg.append("</table>\n");
-//
-//            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Demographics", "By Location For Weight") + "&query.calculated_status~eq=Alive&query.Id~in=" + (StringUtils.join(new ArrayList(animalIds), ";"))+ "'>Click here to view these " + animalIds.size() + " animals</a></p>\n");
-//            msg.append(tableMsg);
-//            msg.append("<hr>\n");
-//
-//            if (distinctIds != null && !animalIds.isEmpty())
-//                distinctIds.addAll(animalIds);
-//        }
-//    }
+    protected void consecutiveWeightDrops(final Container c, User u, final StringBuilder msg, @Nullable Set<String> distinctIds)
+    {
+        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("Id/dataset/demographics/calculated_status"), "Alive");
+        Calendar date = Calendar.getInstance();
+        date.add(Calendar.DATE, -10);
+
+        filter.addCondition(FieldKey.fromString("date"), date.getTime(), CompareType.DATE_GTE);
+        Sort sort = new Sort();
+        sort.appendSortColumn(new Sort.SortField(FieldKey.fromString("Id/curLocation/area"), Sort.SortDirection.ASC));
+        sort.appendSortColumn(new Sort.SortField(FieldKey.fromString("Id/curLocation/room"), Sort.SortDirection.ASC));
+        sort.appendSortColumn(new Sort.SortField(FieldKey.fromString("Id/curLocation/cage"), Sort.SortDirection.ASC));
+
+        TableInfo ti = getStudySchema(c, u).getTable("weightConsecutiveDrops_NotInMMA");
+        assert ti != null;
+
+        List<FieldKey> colKeys = new ArrayList<>();
+        colKeys.add(FieldKey.fromString("Id/curLocation/area"));
+        colKeys.add(FieldKey.fromString("Id/curLocation/room"));
+        colKeys.add(FieldKey.fromString("Id/curLocation/cage"));
+        colKeys.add(FieldKey.fromString("Id/activeAssignments/investigators"));
+        colKeys.add(FieldKey.fromString("Id/activeAssignments/vets"));
+        colKeys.add(FieldKey.fromString("Id/physicalExamHistory/daysSinceExam"));
+        colKeys.add(FieldKey.fromString("Id/openProblems/problems"));
+
+        final Map<FieldKey, ColumnInfo> columns = QueryService.get().getColumns(ti, colKeys);
+        for (ColumnInfo col : ti.getColumns())
+        {
+            columns.put(col.getFieldKey(), col);
+        }
+
+        TableSelector ts = new TableSelector(ti, columns.values(), filter, sort);
+        if (ts.exists())
+        {
+            final Set<String> animalIds = new HashSet<>();
+
+            msg.append("<b>WARNING: The following animals have a weight entered since " + getDateFormat(c).format(date.getTime()) + " representing 3 consecutive weight drops with a total drop of more than 3%:</b><br><br>\n");
+
+            final StringBuilder tableMsg = new StringBuilder();
+            tableMsg.append("<table border=1><tr><td>Room</td><td>Cage</td><td>Id</td><td>Investigator(s)</td><td>Responsible Vet</td><td>Open Problems</td><td>Days Since Last PE</td><td>Weight Date</td><td>Interval (days)</td><td>Weight (kg)</td><td>% Change</td></tr>");
+            ts.forEach(new TableSelector.ForEachBlock<>()
+            {
+                @Override
+                public void exec(ResultSet rs) throws SQLException
+                {
+                    Results results = new ResultsImpl(rs, columns);
+
+                    tableMsg.append("<tr>");
+                    tableMsg.append("<td>").append(getValue(results, "Id/curLocation/room")).append("</td>");
+                    tableMsg.append("<td>").append(getValue(results, "Id/curLocation/cage")).append("</td>");
+                    String subj = getValue(results, getStudy(c).getSubjectColumnName());
+                    tableMsg.append("<td><a href='" + AppProps.getInstance().getBaseServerUrl() + AppProps.getInstance().getContextPath() + "/ehr" + c.getPath());
+                    tableMsg.append("/animalHistory.view?#inputType:singleSubject&showReport:1&subjects:" + subj + "'>");
+                    tableMsg.append(subj).append("</a></td>");
+
+                    tableMsg.append("<td>").append(getValue(results, "Id/activeAssignments/investigators")).append("</td>");
+                    tableMsg.append("<td>").append(getValue(results, "Id/activeAssignments/vets")).append("</td>");
+                    tableMsg.append("<td>").append(getValue(results, "Id/openProblems/problems")).append("</td>");
+                    tableMsg.append("<td>").append(getValue(results, "Id/physicalExamHistory/daysSinceExam")).append("</td>");
+
+                    tableMsg.append("<td>").append(getDateValue(c, results, "date")).append("<br>");
+                    tableMsg.append(getDateValue(c, results, "prevDate1")).append("<br>");
+                    tableMsg.append(getDateValue(c, results, "prevDate2"));
+                    tableMsg.append("</td>");
+
+                    tableMsg.append("<td>");
+                    tableMsg.append(getNumericValue(results, "interval1")).append("<br>");
+                    tableMsg.append(getNumericValue(results, "interval2")).append("<br>");
+                    tableMsg.append("<br>");
+                    tableMsg.append("</td>");
+
+                    tableMsg.append("<td>").append(getValue(results, "curWeight")).append("<br>");
+                    tableMsg.append(getValue(results, "prevWeight1")).append("<br>");
+                    tableMsg.append(getValue(results, "prevWeight2"));
+                    tableMsg.append("</td>");
+
+                    tableMsg.append("<td>").append(getNumericValue(results, "pctChange1")).append("<br>");
+                    tableMsg.append(getNumericValue(results, "pctChange2")).append("<br>");
+                    tableMsg.append("<br>");
+                    tableMsg.append("</td>");
+
+                    tableMsg.append("</tr>");
+
+                    String id = getValue(results, getStudy(c).getSubjectColumnName());
+                    if (id != null)
+                        animalIds.add(id);
+                }
+            });
+
+            tableMsg.append("</table>\n");
+
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "Demographics_NotInMMA", null) + "&query.calculated_status~eq=Alive&query.Id~in=" + (StringUtils.join(new ArrayList(animalIds), ";"))+ "'>Click here to view these " + animalIds.size() + " animals</a></p>\n");
+            msg.append(tableMsg);
+            msg.append("<hr>\n");
+
+            if (distinctIds != null && !animalIds.isEmpty())
+                distinctIds.addAll(animalIds);
+        }
+    }
 
     //    private void getLivingWithoutWeight(final Container c, User u, final StringBuilder msg)
 //    {
