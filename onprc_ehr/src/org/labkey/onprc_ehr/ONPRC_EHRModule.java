@@ -110,11 +110,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 
-/**
- * User: jonesga
- * Date: 6/26/2018
- * Change of ONPRC Module Number
- */
 public class ONPRC_EHRModule extends ExtendedSimpleModule
 {
     public static final String NAME = "ONPRC_EHR";
@@ -129,7 +124,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
     @Override
     public @Nullable Double getSchemaVersion()
     {
-        return 24.012;
+        return 25.003;
     }
 
     @Override
@@ -503,7 +498,14 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
 //        Added 1-2-2018  R.Blasa
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "View Tissue Distribution Summary, By Recipient(Calendar Year)", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=tissueDistributionSummaryByRecipientCalendarYr"), "Pathology");
 
-         //Added: 12-7-2017   R.Blasa
+       // Added 1-7-2026  R.Blasa
+        EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "View Tissue Distribution Summary, By Animal ID(Calendar Year)", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=tissueDistributionSummaryByAnimalIDCalendarYr"), "Pathology");
+
+        // Added 1-7-2026  R.Blasa
+        EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "View Tissue Distribution Summary, By Animal ID(Fiscal Year)", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=tissueDistributionSummaryByAnimalIDFiscalYr"), "Pathology");
+
+
+        //Added: 12-7-2017   R.Blasa
      //   EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "Animal Census on a Given Date Range", this, DetailsURL.fromString("/onprc_ehr/CensusGivenDateRange.view"), "Colony Management");
 
 //     Added: 2-2-2021 R.Blasa

@@ -20,16 +20,26 @@
                     </column>
                     <column columnName="remark2">
                     </column>
+                    <column columnName="category">
+                    </column>
                     <column columnName="endeventType">
                     </column>
                     <column columnName="otherIds">
-                        <columnTitle>Other Ids</columnTitle>
+                        <columnTitle>Other IDs</columnTitle>
                     </column>
                     <column columnName="separationreason">
                     </column>
                     <column columnName="observation">
                     </column>
                     <column columnName="outcome">
+                    </column>
+                    <column columnName="other_infant">
+                    </column>
+                    <column columnName="infant_id">
+                    </column>
+                    <column columnName="housingtype">
+                    </column>
+                    <column columnName="priorgrouphousing">
                     </column>
                 </columns>
             </table>

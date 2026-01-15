@@ -50,14 +50,23 @@ public class PairingFormType extends TaskForm
 
         //Added 6-7-2016 R.Blasa
         addClientDependency(ClientDependency.supplierFromPath("/onprc_ehr/model/sources/Pairing_Properties.js"));
+
+
+        //Added 6-25-2025 R.Blasa
+        addClientDependency(ClientDependency.supplierFromPath("/onprc_ehr/form/field/PairedInfantEntryField.js"));
+
+
+        //Added 6-25-2025 R.Blasa
+        addClientDependency(ClientDependency.supplierFromPath("/onprc_ehr/form/field/DurationEntryField.js"));
+
+        //Added 7-1-2025 R.Blasa
+        addClientDependency(ClientDependency.supplierFromPath("/onprc_ehr/form/field/PairedIDEntryField.js"));
+
+        //Added 8-29-2025 R.Blasa
+        addClientDependency(ClientDependency.supplierFromPath("/onprc_ehr/form/field/PairedAdultsEntryField.js"));
+
+
     }
 
-    @Override
-    protected boolean canInsert()
-    {
-        if (!getCtx().getContainer().hasPermission(getCtx().getUser(), EHRBehaviorEntryPermission.class))
-            return false;
 
-        return super.canInsert();
-    }
 }

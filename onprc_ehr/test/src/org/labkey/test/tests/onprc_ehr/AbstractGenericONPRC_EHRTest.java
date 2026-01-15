@@ -65,6 +65,9 @@ public abstract class AbstractGenericONPRC_EHRTest extends AbstractGenericEHRTes
     protected static final String REFERENCE_STUDY_PATH = "/resources/referenceStudy";
     protected static final String GENETICS_PIPELINE_LOG_PATH = REFERENCE_STUDY_PATH + "/kinship/EHR Kinship Calculation/kinship.txt.log";
     protected static final String ID_PREFIX = "9999";
+    protected static final String CORE_FACILITIES = "Core Facilities";
+    protected static final String GENETICS_CORE = "Genetics Core";
+    protected static final String DNA_BANK = "DNA Bank";
 
     //NOTE: use 0-23H to be compatible w/ client-side Ext4 fields
     protected static final SimpleDateFormat _tf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
@@ -76,6 +79,8 @@ public abstract class AbstractGenericONPRC_EHRTest extends AbstractGenericEHRTes
     protected static String[] SUBJECTS = {"12345", "23456", "34567", "45678", "56789"};
     protected static String[] ROOMS = {"Room1", "Room2", "Room3"};
     protected static String[] CAGES = {"A1", "B2", "A3"};
+    protected static String[] CATEGORY = {"Divider Change", "Event", "STP_Beh"};
+    protected static String[] TINFANT = {"35160", "24456", "36451"};
 
     @Override
     public List<String> getAssociatedModules()
@@ -262,6 +267,15 @@ public abstract class AbstractGenericONPRC_EHRTest extends AbstractGenericEHRTes
         schemaHelper.createLinkedSchema(getContainerPath(), "pf_onprcehrPublic", "/" + getContainerPath(), "pf_onprcehrPublic", null, null, null);
         schemaHelper.createLinkedSchema(getContainerPath(), "pf_publicEHR", "/" + getContainerPath(), "pf_publicEHR", null, null, null);
         schemaHelper.createLinkedSchema(getContainerPath(), "pf_publicFinance", "/" + getContainerPath(), "pf_publicFinance", null, null, null);
+
+        goToProjectHome();
+        super._containerHelper.createSubfolder(getProjectName(), CORE_FACILITIES, "Collaboration");
+        super._containerHelper.createSubfolder(getProjectName() + "/" + CORE_FACILITIES, GENETICS_CORE, "Collaboration");
+        super._containerHelper.createSubfolder(getProjectName() + "/" + CORE_FACILITIES + "/" + GENETICS_CORE, DNA_BANK, "Laboratory Folder");
+        super._containerHelper.enableModules(List.of("ONPRC_EHR", "ONPRC_Reports"));
+
+        goToEHRFolder();
+        schemaHelper.createLinkedSchema(getContainerPath(), "DNA_Bank", getProjectName() + "/" + CORE_FACILITIES + "/" + GENETICS_CORE + "/" + DNA_BANK, "DNABank", null, null, null);
     }
 
     @Override
@@ -380,6 +394,7 @@ public abstract class AbstractGenericONPRC_EHRTest extends AbstractGenericEHRTes
         SelectRowsCommand select1 = new SelectRowsCommand("ehr_lookups", "flag_values");
         select1.addFilter(new Filter("category", category, Filter.Operator.EQUAL));
         select1.addFilter(new Filter("value", name, Filter.Operator.EQUAL));
+        select1.addFilter(new Filter("datedisabled", null, Filter.Operator.ISBLANK));
         SelectRowsResponse resp = select1.execute(getApiHelper().getConnection(), getContainerPath());
 
         String objectid = resp.getRowCount().intValue() == 0 ? null : (String)resp.getRows().get(0).get("objectid");

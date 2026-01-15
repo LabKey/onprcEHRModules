@@ -18,6 +18,7 @@ package org.labkey.onprc_ehr.dataentry;
 import org.labkey.api.ehr.EHRService;
 import org.labkey.api.ehr.dataentry.DataEntryFormContext;
 import org.labkey.api.ehr.dataentry.FormSection;
+import org.labkey.api.ehr.dataentry.NonStoreFormSection;
 import org.labkey.api.ehr.dataentry.SimpleGridPanel;
 import org.labkey.api.ehr.dataentry.TaskForm;
 import org.labkey.api.ehr.dataentry.TaskFormSection;
@@ -43,6 +44,7 @@ public class BulkClinicalEntryFormType extends TaskForm
     public BulkClinicalEntryFormType(DataEntryFormContext ctx, Module owner)
     {
         super(ctx, owner, NAME, "Bulk Clinical Entry", "Clinical", Arrays.asList(
+                new NonStoreFormSection("Instructions", "Instructions", "onprc_ehr-examinstructionspanel", Arrays.asList(ClientDependency.supplierFromPath("onprc_ehr/panel/ExamInstructionsPanel.js"))),
                 new TaskFormSection(),
                 new AnimalDetailsFormSection(),
 
@@ -74,10 +76,23 @@ public class BulkClinicalEntryFormType extends TaskForm
         //Added 5-26-2021 R. Blasa
         addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/window/ClinicalMassProcessing.js"));
 
+
+        //Added 8-12-2025 R. Blasa
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/window/ClinicalMassProcessing_TPR.js"));
+
         //        Added: 2-4-2021  R.Blasa
         addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/panel/ExamCasesDataEntryPanel.js"));
         setDisplayReviewRequired(true);
         setJavascriptClass("ONPRC_EHR.panel.ExamCasesDataEntryPanel");
+
+        //Added 9-18-2025 R. Blasa
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/panel/ExamInstructionsPanel.js"));
+
+        //Added 11-4-2025 R. Blasa
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/window/FormTemplateWindow.js"));
+
+
+
     }
 
     @Override
@@ -99,8 +114,12 @@ public class BulkClinicalEntryFormType extends TaskForm
 //        Added: 5-26-2021  R.Blasa
         defaultButtons.add("CLINICPROC_IMPORT");
 
+        //        Added: 8-12-2025 R.Blasa
+        defaultButtons.add("CLINICPROC_TPR_IMPORT");
+
         // Added 1-6-2015 Blasa
         defaultButtons.add("STROKE_ROUNDS")  ;
+
 
         return defaultButtons;
     }

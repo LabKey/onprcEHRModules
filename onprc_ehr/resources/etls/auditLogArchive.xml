@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  This ETL triggers a stored procedure that archives audit log entries older than one year. During an initial four-week
+  transition period, this ETL archives six months of audit log entries each night.
+ -->
+
+<etl xmlns="http://labkey.org/etl/xml">
+
+    <name>ArchiveAuditLogs</name>
+
+    <description>Archives audit log entries older than @RetentionYears</description>
+
+    <transforms>
+        <transform id="ArchiveAuditLogs" type="StoredProcedure">
+            <description>Archive audit log entries older than @RetentionYears</description>
+            <procedure schemaName="audit" procedureName="ArchiveAuditTables">
+                <parameter name="@RetentionMonths" value="144" scope="global" override="false"/>
+            </procedure>
+        </transform>
+
+    </transforms>
+    <schedule>
+        <cron expression="0 5 23 ? * *"/>
+    </schedule>
+
+</etl>

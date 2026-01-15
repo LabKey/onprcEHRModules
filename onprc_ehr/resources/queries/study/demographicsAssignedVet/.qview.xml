@@ -4,11 +4,9 @@
         <column name="Id"/>
         <column name="AssignedVet"/>
         <column name="AssignmentType"/>
-        <column name="area"/>
-        <column name="room"/>
-        <column name="project"/>
-        <column name="protocol"/>
-        <column name="protocolPI"/>
+        <column name="MasterProblems"/>
+        <column name="Area"/>
+        <column name="Room"/>
         <column name="Id/demographics/history"/>
     </columns>
 

@@ -10,9 +10,13 @@
                 <columns>
                     <column columnName="Id">
                     </column>
+                    <column columnName="infant_id">
+                        <isHidden>false</isHidden>
+                        <columnTitle>Infant ID</columnTitle>
+                    </column>
                     <column columnName="lowestcage">
                         <columnTitle>Pair Id</columnTitle>
-                        <description>This is used to identify the lowest cage number of the pair.  It is used to determine which animals in the group are considered part of the pair.</description>
+                        <description>This is used to identify the lowest cage number of the pair.  It is used to determine which animals in the group are considered part of the pair</description>
                     </column>
                     <column columnName="room">
                         <columnTitle>Room</columnTitle>
@@ -20,18 +24,59 @@
                     <column columnName="cage">
                         <columnTitle>Cage</columnTitle>
                     </column>
+                    <column columnName="other_infant">
+                        <isHidden>false</isHidden>
+                        <columnTitle>Other Infant</columnTitle>
+                    </column>
                     <column columnName="date">
                         <columnTitle>Start Date</columnTitle>
+                    </column>
+                    <column columnName="category">
+                        <isHidden>false</isHidden>
+                        <columnTitle>Category</columnTitle>
+                        <fk>
+                            <fkDbSchema>onprc_ehr</fkDbSchema>
+                            <fkTable>pairing_observation_types</fkTable>
+                            <fkColumnName>value</fkColumnName>
+                        </fk>
                     </column>
                     <column columnName="eventtype">
                         <columnTitle>Start Type</columnTitle>
                         <fk>
-                            <fkDbSchema>onprc_ehr</fkDbSchema>
-                            <fkTable>PairingStartType</fkTable>
+                            <fkDbSchema>ehr_lookups</fkDbSchema>
+                            <fkTable>pairingstarttype</fkTable>
                             <fkColumnName>value</fkColumnName>
-
                         </fk>
                     </column>
+
+                    <column columnName="other_infant">
+                        <isHidden>false</isHidden>
+                        <columnTitle>Other Infant</columnTitle>
+                    </column>
+
+                    <column columnName="housingtype">
+                        <isHidden>true</isHidden>
+                        <columnTitle>Housing Type</columnTitle>
+                        <displayWidth>200</displayWidth>
+                        <fk>
+                            <fkDbSchema>ehr_lookups</fkDbSchema>
+                            <fkTable>pairingHousingType</fkTable>
+                            <fkColumnName>value</fkColumnName>
+                        </fk>
+                    </column>
+
+
+                    <column columnName="priorgrouphousing">
+                        <isHidden>false</isHidden>
+                        <columnTitle>Prior Group Housing</columnTitle>
+                        <displayWidth>200</displayWidth>
+                        <fk>
+                            <fkDbSchema>ehr_lookups</fkDbSchema>
+                            <fkTable>pairingpriorgroups</fkTable>
+                            <fkColumnName>value</fkColumnName>
+                        </fk>
+                    </column>
+
                     <column columnName="remark">
                         <columnTitle>Start Remark</columnTitle>
                         <displayWidth>300</displayWidth>
@@ -60,8 +105,8 @@
                     <column columnName="endeventType">
                         <columnTitle>End Type</columnTitle>
                         <fk>
-                            <fkDbSchema>onprc_ehr</fkDbSchema>
-                            <fkTable>PairingEndType</fkTable>
+                            <fkDbSchema>ehr_lookups</fkDbSchema>
+                            <fkTable>pairingendtypes</fkTable>
                             <fkColumnName>value</fkColumnName>
                         </fk>
                     </column>
@@ -74,7 +119,6 @@
                             <fkColumnName>value</fkColumnName>
                         </fk>
                     </column>
-
                     <column columnName="observation">
                         <columnTitle>Observation</columnTitle>
                         <fk>
@@ -89,26 +133,19 @@
                         <displayWidth>300</displayWidth>
                     </column>
 
-                    <column columnName="housingtype">
-                        <isHidden>true</isHidden>
-                        <columnTitle>Housing Type</columnTitle>
-                        <fk>
-                            <fkDbSchema>ehr_lookups</fkDbSchema>
-                            <fkTable>pairingHousingType</fkTable>
-                            <fkColumnName>value</fkColumnName>
-                        </fk>
-                    </column>
                     <column columnName="pairid">
-                        <columnTitle>Pair ID</columnTitle>
+                        <columnTitle>Pair ID Identifier</columnTitle>
                         <isHidden>true</isHidden>
                         <description>This field is used to differentiate pairs.  By convention is should usually be the lowest cage number in the group; however, it does not need to match this</description>
                     </column>
+
                     <column columnName="performedby">
                         <columnTitle>Performed By</columnTitle>
                     </column>
                     <column columnName="project">
                         <isHidden>true</isHidden>
                     </column>
+
                 </columns>
             </table>
         </tables>
