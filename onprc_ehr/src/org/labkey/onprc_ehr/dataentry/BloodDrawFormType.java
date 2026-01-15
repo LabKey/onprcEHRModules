@@ -73,7 +73,7 @@ public class BloodDrawFormType extends TaskForm
     {
         return ClientDependency.supplierFromPath("ehr/window/AddScheduledTreatmentWindow.js");
     }
-    //Added: 7-26-2018  R.Blasa
+    //Added: 1-15-2026  R.Blasa
     @Override
     public boolean isVisible()
     {
