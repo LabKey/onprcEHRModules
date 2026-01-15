@@ -77,12 +77,12 @@ public class ClinicalRoundsFormType extends TaskForm
 
     }
 
-    @Override
-    protected boolean canInsert()
-    {
-        if (!getCtx().getContainer().hasPermission(getCtx().getUser(), EHRClinicalEntryPermission.class))
-            return false;
-
-        return super.canInsert();
-    }
+//    @Override
+//    protected boolean canInsert()
+//    {
+//        if (!getCtx().getContainer().hasPermission(getCtx().getUser(), EHRClinicalEntryPermission.class))
+//            return false;
+//
+//        return super.canInsert();
+//    }
 }
