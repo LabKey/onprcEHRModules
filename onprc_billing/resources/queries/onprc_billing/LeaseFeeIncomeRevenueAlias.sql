@@ -7,3 +7,4 @@ i.comment,
 p.account
 from projectLeaseIncomeEligibility i
     left join projectAccountHistory p on i.project = p.project
+where p.isActive = true
