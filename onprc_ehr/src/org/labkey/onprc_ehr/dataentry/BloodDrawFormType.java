@@ -25,6 +25,10 @@ import org.labkey.api.ehr.dataentry.TaskFormSection;
 import org.labkey.api.ehr.dataentry.WeightFormSection;
 import org.labkey.api.module.Module;
 import org.labkey.api.view.template.ClientDependency;
+import org.labkey.security.xml.GroupEnumType;
+import org.labkey.api.security.GroupManager;
+import org.labkey.api.security.Group;
+import org.labkey.api.security.permissions.AdminPermission;
 
 import java.util.Arrays;
 import java.util.List;
@@ -68,5 +72,16 @@ public class BloodDrawFormType extends TaskForm
     public Supplier<ClientDependency> getAddScheduledTreatmentWindowDependency()
     {
         return ClientDependency.supplierFromPath("ehr/window/AddScheduledTreatmentWindow.js");
+    }
+    //Added: 1-15-2026  R.Blasa
+    @Override
+    public boolean isVisible()
+    {
+        Group g = GroupManager.getGroup(getCtx().getContainer(), "Form Clinical Rounds SF", GroupEnumType.SITE);
+        if (g != null && getCtx().getUser().isInGroup(g.getUserId()) && !getCtx().getContainer().hasPermission(getCtx().getUser(), AdminPermission.class))
+        {
+            return false;
+        }
+        return super.isVisible();
     }
 }
