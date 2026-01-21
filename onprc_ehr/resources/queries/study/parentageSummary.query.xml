@@ -24,6 +24,9 @@
                     <column columnName="method">
                         <columnTitle>Method</columnTitle>
                     </column>
+                    <column columnName="remark">
+                        <columnTitle>Comments</columnTitle>
+                    </column>
                     <column columnName="source">
                         <columnTitle>Data Source</columnTitle>
                     </column>

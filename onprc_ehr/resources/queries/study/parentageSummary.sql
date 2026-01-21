@@ -19,6 +19,7 @@ SELECT
   p.parent,
   p.relationship,
   p.method,
+  p.remark,
   'Parentage' as source
 
 FROM study.parentage p
@@ -34,6 +35,7 @@ SELECT
   b.dam,
   'Dam' as relationship,
   'Observed' as method,
+  null as remark,
   'Birth' as source
 
 FROM study.birth b
@@ -47,6 +49,7 @@ SELECT
     a.sire,
     'Sire' as relationship,
     'Observed' as method,
+     null as remark,
     'Birth' as source
 
 FROM study.birth a
