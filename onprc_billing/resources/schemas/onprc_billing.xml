@@ -419,10 +419,11 @@
                 <columnTitle>Source Transaction</columnTitle>
                 <isHidden>true</isHidden>
                 <fk>
+                    <fkFolderPath>/ONPRC/Admin/Finance</fkFolderPath>
                     <fkDbSchema>onprc_billing</fkDbSchema>
                     <fkTable>invoicedItems</fkTable>
                     <fkColumnName>objectid</fkColumnName>
-                    <fkDisplayColumnName>rowid</fkDisplayColumnName>
+                    <fkDisplayColumnName>transactionNumber</fkDisplayColumnName> <!--Changed to allow Transaction number to display-->
                 </fk>
             </column>
             <column columnName="chargeCategory">
@@ -1152,11 +1153,11 @@
             </column>
             <column columnName="grantNumber">
                 <columnTitle>OGA Grant Number</columnTitle>
-               
+
             </column>
             <column columnName="agencyAwardNumber">
                 <columnTitle>Agency Award Number</columnTitle>
-               
+
             </column>
             <column columnName="investigatorId">
                 <columnTitle>Investigator</columnTitle>
