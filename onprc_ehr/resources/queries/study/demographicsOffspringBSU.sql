@@ -26,7 +26,7 @@ FROM study.Demographics d
 
 INNER JOIN study.demographicsParentsBSU d2
 
-  ON ((d2.sire = d.id OR d2.geneticdam = d.id  OR d2.fosterMom = d.id OR d2.surrogateMom = d.id OR d2.observeddam = d.id) AND d.id != d2.id)
+  ON ((d2.sire = d.id OR d2.geneticdam = d.id  OR d2.fosterMom = d.id  OR d2.observeddam = d.id) AND d.id != d2.id)
 
 
 

@@ -39,12 +39,18 @@ SELECT
     ELSE null
   END as sireType,
 
-  p3.parent as fosterMom,
-  p3.method as fosterType,
 
+  coalesce(p3.parent, '') as fosterMom,
+  CASE
+      WHEN p3.parent IS NOT NULL THEN p3.method
+      ELSE null
+      END as fosterType,
 
-p4.parent as surrogateMom,
-p4.method as surrogateType,
+  coalesce(p4.parent, '') as surrogateMom,
+  CASE
+      WHEN p4.parent IS NOT NULL THEN p4.method
+      ELSE null
+      END as surrogateType,
 
   (CASE WHEN p4.parent IS NOT NULL THEN 1 ELSE 0 END +
    CASE WHEN p3.parent IS NOT NULL THEN 1 ELSE 0 END +
