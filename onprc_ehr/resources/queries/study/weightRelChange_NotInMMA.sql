@@ -9,7 +9,7 @@
  2. Remove Shelters, Corral and Hospital locations from the lists
   */
 
-SELECT
+SELECT DISTINCT
     l.lsid,
     l.Id,
 
