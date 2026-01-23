@@ -5,7 +5,8 @@ select a.Id,
        b.qualresult,
        a.vet,
        a.created,
-       a.objectid,
+       b.objectid,
+       b.runid,
       (select j.rowid from ehr.tasks j where j.taskid = a.taskid) as taskid,
       a.type
 

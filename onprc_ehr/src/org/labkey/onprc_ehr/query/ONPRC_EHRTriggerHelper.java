@@ -2636,18 +2636,19 @@ public class ONPRC_EHRTriggerHelper
         }
     }
 
-    public void sendClinpathPanicEmail(String id, String runid)
+    public void sendClinpathPanicEmail(String id, String runid, String objectid)
     {
         String subject = "Chemistry Results with Panic values";
 
 
         final TableInfo ti = getTableInfo("onprc_ehr", "ChemistryPanicNotification");
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("Id"), id, CompareType.EQUAL);
-        filter.addCondition(FieldKey.fromString("objectid"), runid, CompareType.EQUAL);
+        filter.addCondition(FieldKey.fromString("runid"), runid, CompareType.EQUAL);
+        filter.addCondition(FieldKey.fromString("objectid"), objectid, CompareType.EQUAL);
 
 
         List<FieldKey> names= new ArrayList<>();
-        FieldKey clinpathFieldKey = FieldKey.fromString("objectid");
+        FieldKey clinpathFieldKey = FieldKey.fromString("runid");
         names.add(clinpathFieldKey);
         names.add(FieldKey.fromString("qualResult"));
         names.add(FieldKey.fromString("servicerequested"));

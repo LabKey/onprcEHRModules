@@ -1383,7 +1383,7 @@ exports.init = function(EHR){
 
         if (row.Id && row.qualresult && row.qualresult.indexOf('panic') !== -1)  {
                console.log("panic values:  " + row.qualresult);
-            triggerHelper.sendClinpathPanicEmail(row.Id, row.runid);
+            triggerHelper.sendClinpathPanicEmail(row.Id, row.runid, row.objectid);
         }
     });
 
