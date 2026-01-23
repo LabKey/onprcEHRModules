@@ -6,6 +6,7 @@
         <column name="sire"/>
         <column name="sireType"/>
         <column name="fostermom"/>
+        <column name="surrogateMom"/>
         <column name="fosterType"/>
         <column name="numParents"/>
     </columns>

@@ -483,8 +483,8 @@ exports.init = function(EHR){
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.INIT, 'study', 'flags', function(event, helper){
         helper.setScriptOptions({
             allowFutureDates: true,
-            removeTimeFromDate: true,
-            removeTimeFromEndDate: true
+            removeTimeFromDate: false,
+            removeTimeFromEndDate: false
         });
 
         EHR.Server.TriggerManager.unregisterAllHandlersForQueryNameAndEvent('study', 'flags', EHR.Server.TriggerManager.Events.AFTER_INSERT);
@@ -1053,7 +1053,7 @@ exports.init = function(EHR){
         }
 
         //Added by Kollil, 8/1/24
-        /* User can bypass the enddate for these two medications, as per ticket #11016
+        /* User can bypass the enddate for the following meddications, as per ticket #11016
          Validation code on the Prime side to bypass the following two medications without entering the end dates.
             1. E-85760 - Medroxyprogesterone injectable (150mg/ml)
             2. E-Y7735 - Diet - Weekly Multivitamin
@@ -1061,11 +1061,13 @@ exports.init = function(EHR){
             Added these two Diets to the list by Kollil on 4/15/25. Refer to tkt #12363
             3. E-X0500 - Diet, L-Phyto (Low-phytoestrogen)
             4. E-Y9750 - Diet, 5047 High Protein, Jumbo
+
+            Added Diet to the list by Kollil on 5/14/25. Refer to tkt #12506
+            5. E-X1380 - Diet Daily (Non-standard), 5LOP (TAD)
          */
-        if (row.code != 'E-85760' && row.code != 'E-Y7735' && row.code != 'E-X0500' && row.code != 'E-Y9750'){
-            if (!row.enddate) {
-                EHR.Server.Utils.addError(scriptErrors, 'enddate', 'Must enter enddate', 'WARN');
-            }
+        if (row.code != 'E-85760' && row.code != 'E-Y7735' && row.code != 'E-X0500' &&
+                row.code != 'E-Y9750' && row.code != 'E-X1380' && !row.enddate) {
+            EHR.Server.Utils.addError(scriptErrors, 'enddate', 'Must enter enddate', 'WARN');
         }
 
         //Added by Kollil, 9/15/25

@@ -72,11 +72,11 @@ public class MedSignoffFormType extends TaskForm
         return super.canInsert();
     }
 
-    //Modified: 12-5-2019  R.Blasa
+    //Modified: 12-11-2025  R.Blasa
     @Override
     public boolean isVisible()
     {
-        Group g = GroupManager.getGroup(getCtx().getContainer(), "ASB Support", GroupEnumType.SITE);
+        Group g = GroupManager.getGroup(getCtx().getContainer(), "Clinical Entry", GroupEnumType.SITE);
         if (g != null && getCtx().getUser().isInGroup(g.getUserId()) && !getCtx().getContainer().hasPermission(getCtx().getUser(), AdminPermission.class))
         {
             return false;

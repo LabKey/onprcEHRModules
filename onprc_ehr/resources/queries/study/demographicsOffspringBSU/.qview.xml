@@ -15,6 +15,7 @@
         <column name="geneticdam"/>
         <column name="observeddam"/>
         <column name="fosterMom"/>
+        <column name="surrogateMom"/>
         <column name="sire"/>
         <column name="sireType"/>
 

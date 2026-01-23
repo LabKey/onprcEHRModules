@@ -18,10 +18,14 @@ SELECT
   p.date,
   p.parent,
   p.relationship,
-  p.method
+  p.method,
+  p.remark,
+  'Parentage' as source
 
 FROM study.parentage p
 WHERE p.qcstate.publicdata = true and p.enddate is null
+And  p.date in (select max(t.date) from study.parentage t where p.Id = t.Id And p.parent = t.parent
+And p.relationship =t.relationship And p.method = t.method And t.enddate is null and p.enddate is null and t.qcstate.publicdata = true)
 
 UNION
 
@@ -30,20 +34,23 @@ SELECT
   b.date,
   b.dam,
   'Dam' as relationship,
-  'Observed' as method
+  'Observed' as method,
+  null as remark,
+  'Birth' as source
 
 FROM study.birth b
 WHERE b.dam is not null and b.qcstate.publicdata = true
-And 'dam' not in (select k.relationship from study.parentage k where k.Id = b.Id and k.enddate is null)
+
 UNION
 
 SELECT
     a.Id,
-    a.date,
+     a.date,
     a.sire,
     'Sire' as relationship,
-    'Observed' as method
+    'Observed' as method,
+     null as remark,
+    'Birth' as source
 
 FROM study.birth a
 WHERE a.sire is not null and a.qcstate.publicdata = true
- And 'sire' not in (select k.relationship from study.parentage k where k.Id = a.Id and k.enddate is null)

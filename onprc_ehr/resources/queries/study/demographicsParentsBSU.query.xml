@@ -48,6 +48,14 @@
                             <fkColumnName>id</fkColumnName>
                         </fk>
                     </column>
+                    <column columnName="surrogateMom">
+                        <columnTitle>Surrogate Dam</columnTitle>
+                        <fk>
+                            <fkDbSchema>study</fkDbSchema>
+                            <fkTable>animal</fkTable>
+                            <fkColumnName>id</fkColumnName>
+                        </fk>
+                    </column>
 
                     <column columnName="numParents">
                         <columnTitle>Number of Parents Known</columnTitle>
