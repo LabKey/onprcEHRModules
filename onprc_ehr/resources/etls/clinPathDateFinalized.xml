@@ -17,9 +17,10 @@
 
     </transforms>
 
-    <!--
+    <schedule>
 
-        <schedule><cron expression="0 0 0 * * ?" /></schedule>-->
+        <!--4:50AM-->
+        <cron expression="0 50 04 * * ?"/>
 
-
+    </schedule>
 </etl>
