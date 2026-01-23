@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--update of procedure to production for daily run-->
+<etl xmlns="http://labkey.org/etl/xml">
+
+    <name>clinPathRunDateFinalized</name>
+
+    <description>for Clin Path Runs insure that QCState Completed generated Date Finalized </description>
+
+
+    <transforms>
+        <transform id="clnPathRunEndDate" type="StoredProcedure">
+            <description>Code to enddate or remove Aliases not Assocatied with ONPRC.</description>
+            <procedure schemaName="onprc_billing" procedureName="UpdateClinPathEndDate">
+            </procedure>
+        </transform>
+
+
+    </transforms>
+
+    <!--
+
+        <schedule><cron expression="0 0 0 * * ?" /></schedule>-->
+
+
+</etl>
