@@ -2684,6 +2684,10 @@ public class ONPRC_EHRTriggerHelper
                    public void exec(ResultSet rs) throws SQLException
                    {
 
+                       Date recDate = rs.getDate("date");
+                       recDate = DateUtils.truncate(recDate, Calendar.DATE);
+
+
                        TableInfo ti2 = getTableInfo("onprc_ehr", "Labwork_Requestor_Vets");
                        SimpleFilter filter2 = new SimpleFilter(FieldKey.fromString("userid"), rs.getString("vet"));
                        filter2.addCondition(FieldKey.fromString("DisableDate"), true, CompareType.ISBLANK);
@@ -2696,7 +2700,7 @@ public class ONPRC_EHRTriggerHelper
                            for (String Vetname : ret2)
                            {
                                html.append("<tr><td>" + PageFlowUtil.filter(rs.getString("Id")) +
-                                       "</td><td>" + PageFlowUtil.filter(rs.getString("date")) +
+                                       "</td><td>" + PageFlowUtil.filter(recDate) +
                                        "</td><td>" + PageFlowUtil.filter(rs.getString("servicerequested")) +
                                        " </td><td>" + PageFlowUtil.filter(rs.getString("testid")) +
                                        " </td><td>" + PageFlowUtil.filter(rs.getString("qualResult")) +
