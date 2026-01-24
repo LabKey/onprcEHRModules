@@ -74,6 +74,7 @@ import org.labkey.onprc_ehr.notification.CullListNotification;
 import org.labkey.onprc_ehr.notification.MensesTMBNotification;
 import org.labkey.onprc_ehr.notification.ProjectAlertsNotification;
 import org.labkey.onprc_ehr.notification.ProtocolAlertsNotification;
+import org.labkey.api.util.DateUtil;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -2639,6 +2640,7 @@ public class ONPRC_EHRTriggerHelper
     public void sendClinpathPanicEmail(String id, String runid, String objectid)
     {
         String subject = "Chemistry Results with Panic values";
+        Container c = getContainer();
 
 
         final TableInfo ti = getTableInfo("onprc_ehr", "ChemistryPanicNotification");
@@ -2684,9 +2686,7 @@ public class ONPRC_EHRTriggerHelper
                    public void exec(ResultSet rs) throws SQLException
                    {
 
-                       Date recDate = rs.getDate("date");
-                       recDate = DateUtils.truncate(recDate, Calendar.DATE);
-
+                       String recDate = DateUtil.formatDate(c, rs.getDate("date"));
 
                        TableInfo ti2 = getTableInfo("onprc_ehr", "Labwork_Requestor_Vets");
                        SimpleFilter filter2 = new SimpleFilter(FieldKey.fromString("userid"), rs.getString("vet"));
@@ -2699,6 +2699,7 @@ public class ONPRC_EHRTriggerHelper
                        {
                            for (String Vetname : ret2)
                            {
+
                                html.append("<tr><td>" + PageFlowUtil.filter(rs.getString("Id")) +
                                        "</td><td>" + PageFlowUtil.filter(recDate) +
                                        "</td><td>" + PageFlowUtil.filter(rs.getString("servicerequested")) +
