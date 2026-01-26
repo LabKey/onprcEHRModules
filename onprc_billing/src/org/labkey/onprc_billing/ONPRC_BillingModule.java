@@ -14,6 +14,7 @@
  * limitations under the License.
  *  New Build with Module Number Change 8/16/2023 new FB
  * Update to Add additional SQL Script
+ * Adding new Billing Table to Billing
  * */
 
 package org.labkey.onprc_billing;
