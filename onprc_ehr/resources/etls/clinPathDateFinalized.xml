@@ -4,7 +4,7 @@
 
     <name>clinPathRunDateFinalized</name>
 
-    <description>Clin Path Runs insure that QCState Completed generated the Date Finalized </description>
+    <description>Clin Path Runs ensure that QCState Completed generated the Date Finalized </description>
     <transforms>
         <transform id="clnPathRunEndDate" type="StoredProcedure">
             <description>Runs Stored Procedure that checks if the Date Finalized in present for finalized Charges</description>
