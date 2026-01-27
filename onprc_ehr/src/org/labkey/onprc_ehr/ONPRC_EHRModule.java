@@ -124,7 +124,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
     @Override
     public @Nullable Double getSchemaVersion()
     {
-        return 25.004;
+        return 25.007;
     }
 
     @Override
@@ -498,14 +498,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
 //        Added 1-2-2018  R.Blasa
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "View Tissue Distribution Summary, By Recipient(Calendar Year)", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=tissueDistributionSummaryByRecipientCalendarYr"), "Pathology");
 
-       // Added 1-7-2026  R.Blasa
-        EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "View Tissue Distribution Summary, By Animal ID(Calendar Year)", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=tissueDistributionSummaryByAnimalIDCalendarYr"), "Pathology");
-
-        // Added 1-7-2026  R.Blasa
-        EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "View Tissue Distribution Summary, By Animal ID(Fiscal Year)", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=tissueDistributionSummaryByAnimalIDFiscalYr"), "Pathology");
-
-
-        //Added: 12-7-2017   R.Blasa
+         //Added: 12-7-2017   R.Blasa
      //   EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.moreReports, "Animal Census on a Given Date Range", this, DetailsURL.fromString("/onprc_ehr/CensusGivenDateRange.view"), "Colony Management");
 
 //     Added: 2-2-2021 R.Blasa
