@@ -1,0 +1,38 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="complianceEmployeelist_rpt" tableDbType="NOT_IN_DB">
+                <tableTitle>Category/Unit Comparison</tableTitle>
+                <columns>
+
+                    <column columnName="employeeid">
+                    </column>
+                    <column columnName="lastName">
+                    </column>
+                    <column columnName="firstName">
+                    </column>
+                    <column columnName="email">
+                    </column>
+                    <column columnName="type">
+                    </column>
+                    <column columnName="majorudds">
+                    </column>
+                    <column columnName="title">
+                    </column>
+                    <column columnName="unit">
+                    </column>
+                    <column columnName="category">
+                    </column>
+                    <column columnName="supervisor">
+                    </column>
+                    <column columnName="location">
+                    </column>
+                    <column columnName="startdate">
+                    </column>
+                    <column columnName="enddate">
+                    </column>
+                  </columns>
+            </table>
+        </tables>
+    </metadata>
+</query>

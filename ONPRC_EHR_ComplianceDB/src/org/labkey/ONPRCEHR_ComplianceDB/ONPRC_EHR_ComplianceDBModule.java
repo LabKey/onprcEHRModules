@@ -55,7 +55,7 @@ public class ONPRC_EHR_ComplianceDBModule extends ExtendedSimpleModule
     @Override
     public Double getSchemaVersion()
     {
-        return 24.012;
+        return 25.001;
     } //Modified: 9-8-025
 
     @Override
@@ -110,7 +110,8 @@ public class ONPRC_EHR_ComplianceDBModule extends ExtendedSimpleModule
 //               Added: 10-24-2022  R.Blasa
         EHRService.get().registerMoreActionsButton(new ShowEditUIButton(this, "ehr_compliancedb", "completiondates", ONPRC_ComplianceDBEntryPermission.class), "ehr_compliancedb", "completiondates");
 
-
+      // Added 1-8-2026
+        EHRService.get().registerActionOverride("employeeDetails", this, "employeeDetails.html");
 
 
     }

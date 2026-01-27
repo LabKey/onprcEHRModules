@@ -24,6 +24,6 @@ public class ONPRC_EHREnvironmentalPermission extends AbstractPermission
 {
     public ONPRC_EHREnvironmentalPermission()
     {
-        super("ONPRC_EHREnvironmentalPermission", "This is the base permission used to control editing of the Envioenmental Assessment");
+        super("ONPRC_EHREnvironmentalPermission", "This is the base permission used to control editing of the Environmental Assessment");
     }
 }

@@ -1,0 +1,36 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="" tableDbType="NOT_IN_DB">
+                <tableTitle>Genetic Testing w/ Location</tableTitle>
+                <columns>
+
+                    <column columnName="Id">
+                        <columnTitle>Id</columnTitle>
+                    </column>
+                    <column columnName="date">
+                        <columnTitle>Sample Date</columnTitle>
+                    </column>
+                    <column columnName="Id/curLocation/area">
+                        <columnTitle>Area</columnTitle>
+                    </column>
+                    <column columnName="Id/curLocation/room">
+                        <columnTitle>Room</columnTitle>
+                    </column>
+                    <column columnName="Id/curLocation/cage">
+                        <columnTitle>Room</columnTitle>
+                    </column>
+                    <column columnName="label">
+                        <columnTitle>Label</columnTitle>
+                    </column>
+                    <column columnName="comment">
+                        <columnTitle>Comments</columnTitle>
+                    </column>
+                    <column columnName="LiveStatus">
+                        <columnTitle>Status</columnTitle>
+                    </column>
+                </columns>
+            </table>
+        </tables>
+    </metadata>
+</query>
