@@ -4,21 +4,16 @@
 
     <name>clinPathRunDateFinalized</name>
 
-    <description>for Clin Path Runs insure that QCState Completed generated Date Finalized </description>
-
-
+    <description>Clin Path Runs insure that QCState Completed generated the Date Finalized </description>
     <transforms>
         <transform id="clnPathRunEndDate" type="StoredProcedure">
-            <description>Code to enddate or remove Aliases not Assocatied with ONPRC.</description>
+            <description>Runs Stored Procedure that checks if the Date Finalized in present for finalized Charges</description>
             <procedure schemaName="onprc_billing" procedureName="UpdateClinPathEndDate">
             </procedure>
         </transform>
-
-
     </transforms>
 
     <schedule>
-
         <!--4:50AM-->
         <cron expression="0 50 04 * * ?"/>
 
