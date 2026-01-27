@@ -15,7 +15,7 @@
 
     <schedule>
         <!--4:50AM-->
-        <cron expression="0 50 04 * * ?"/>
+        <cron expression="0 50 4 * * ?"/>
 
     </schedule>
 </etl>
