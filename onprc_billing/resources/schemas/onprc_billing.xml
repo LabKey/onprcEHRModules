@@ -1641,6 +1641,23 @@
 
         </columns>
     </table>
+    <table tableName="leaseincomeforproject" tableDbType="TABLE">
+        <columns>
+            <column columnName="rowid"/>
+            <column columnName="project">
+            <fk>
+                <fkDbSchema>ehr</fkDbSchema>
+                <fkTable>project_active</fkTable>
+                <fkColumnName>project</fkColumnName>
+                <fkFolderPath>/ONPRC/EHR</fkFolderPath>
+            </fk>
+            </column>
+            <column columnName="StartDate"/>
+            <column columnName="EndDate"/>
+            <column columnName="comment"/>
+        </columns>
+    </table>
+
 
 
 
