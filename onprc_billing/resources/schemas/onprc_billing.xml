@@ -1641,7 +1641,7 @@
 
         </columns>
     </table>
-    <table tableName="leaseincomeforproject" tableDbType="TABLE">
+    <table tableName="leaseincomeforproject" tableDbType="TABLE"> <!--Create to hold Projects that can receive lease Revenue-->
         <columns>
             <column columnName="rowid"/>
             <column columnName="project">

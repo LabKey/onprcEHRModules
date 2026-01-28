@@ -1,9 +1,10 @@
 -- Contents of onprc_billing25.001-25.002.sql
 
---cREATED 4/7/2025
+--cREATED 1/27/2026
 --gjones
---NEW Data Set to Select Correct Subsidy for Unit Cost Calculations
---changes name to Indirect
+--New Dataset to hold Projects that can receive LEase Fee Revenue
+--changes name to Lease Income For Project
+-- permissions restricted to ISE and Sally
 --
 
 CREATE TABLE onprc_billing.LeaseIncomeforProject(
