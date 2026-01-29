@@ -124,7 +124,8 @@ public class BehaviorNotification extends ColonyAlertsNotification
 
         //Added by Kollil, Jan 2026
         //Refer to tkt # 14056
-        assignmentsUnderTheAge(c,u,msg);
+        activeAssignmentsUnderTheAge(c,u,msg);
+        assignmentPoolUnderTheAge(c,u,msg);
 
         notesEndingToday(c, u, msg, Arrays.asList("BSU Notes"), null);
         saveValues(c, toSave);
@@ -138,7 +139,7 @@ public class BehaviorNotification extends ColonyAlertsNotification
     - Animals under the age of 2.5 with an active assignment. Exclude the U42 and U42E colony maintenance assignments, I believe the center projects for these are 0492-02 and 0492-03.
     - Animals under the age of 2.5 with an "Assignment pool" note in PRIMe (under general>notes)
     */
-    private void assignmentsUnderTheAge(final Container c, User u, final StringBuilder msg)
+    private void activeAssignmentsUnderTheAge(final Container c, User u, final StringBuilder msg)
     {
         TableInfo ti = getStudySchema(c, u).getTable("AssignmentsUnderTheAge");
 
@@ -154,6 +155,25 @@ public class BehaviorNotification extends ColonyAlertsNotification
         }
         else {
             msg.append("<b>WARNING: No animals under the age of 2.5 with an active assignment, and with an \"Assignment pool\" notes!</b><br><hr>\n");
+        }
+    }
+
+    private void assignmentPoolUnderTheAge(final Container c, User u, final StringBuilder msg)
+    {
+        TableInfo ti = getStudySchema(c, u).getTable("AssignmentPoolUnderTheAge");
+
+        TableSelector ts = new TableSelector(ti, null, new Sort("Id"));
+        long total = ts.getRowCount();
+
+        if (total > 0)
+        {
+            msg.append("<b>Animals under the age of 2.5 with \"Assignment pool\" notes:</b><p>");
+            msg.append( total + " entries found. ");
+            msg.append("<a href='" + getExecuteQueryUrl(c, "study", "AssignmentsUnderTheAge", null)  + "'>Click here to view them</a>\n");
+            msg.append("<hr>\n\n");
+        }
+        else {
+            msg.append("<b>WARNING: No animals under the age of 2.5 with an \"Assignment pool\" notes!</b><br><hr>\n");
         }
     }
 

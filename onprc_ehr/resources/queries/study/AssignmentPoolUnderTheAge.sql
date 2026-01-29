@@ -14,8 +14,19 @@ SELECT
     a.assignmentType,
     a.projectedReleaseCondition.meaning AS ProjectedReleaseCondition,
     a.releaseCondition.meaning AS ConditionAtRelease,
+
+    /* Display the (active) Notes Pertaining to DAR note text */
+    (
+        SELECT MAX(n.value)
+        FROM study.Notes n
+        WHERE n.Id = a.Id
+          AND n.category = 'Notes Pertaining to DAR'
+          AND n.endDate IS NULL
+    ) AS Notes_Pertaining_to_DAR,
+
     h.roommateId AS Cagemate,
     d.use AS Cagemate_Assignment
+
 FROM Assignment a
     LEFT JOIN housingRoommatesDivider h
         ON h.Id = a.Id
@@ -25,7 +36,14 @@ FROM Assignment a
         ON d.Id = h.roommateId
 WHERE
     a.Id.Age.ageinyears <= 2.5
-    AND a.Id.demographics.species = 'Rhesus Macaque'
-    AND a.enddate IS NULL
-    AND a.isActive = 1
     AND a.project.displayname NOT IN ('0492-02', '0492-03')
+    AND a.Id.demographics.species = 'Rhesus Macaque'
+    AND EXISTS (
+        SELECT 1
+        FROM study.Notes n
+        WHERE n.Id = a.Id
+          AND n.value LIKE '%Assignment pool%'
+          AND n.endDate IS NULL
+    )
+
+
