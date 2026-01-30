@@ -222,12 +222,12 @@ LEFT JOIN (
         group_concat(DISTINCT pd.project, ';') as projects,
         group_concat(DISTINCT pd.projectName, ', ') as projectNames
     FROM PerDiemsEquivData pd
---    WHERE pd.project NOT IN (625, 1106, 2270) -- Exclude projectID for 0492, 0492-02, 0492-45
     WHERE pd.project NOT IN (
         SELECT
             p.project
         FROM ehr.project p
-        JOIN lists.roomUtilizationHistoricalExcludedProjects ep ON ep.name = p.name
+        JOIN onprc_billing_public.aliases a ON a.alias = p.account
+        WHERE a.aliasType LIKE 'PC Core%'
     )
     GROUP BY pd.rooms
 ) pd ON pd.rooms = r.room
