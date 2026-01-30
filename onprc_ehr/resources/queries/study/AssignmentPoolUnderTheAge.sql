@@ -1,3 +1,8 @@
+/* Added by Kollil, Jan 2026
+   Refer to tkt # 14056
+   - Extract animals under the age of 2.5 with an "Assignment pool" note in PRIMe (under general>notes)
+   */
+
 SELECT
     a.Id,
     a.Id.demographics.gender AS Sex,
@@ -23,13 +28,14 @@ SELECT
     ) AS Cagemates,
     /* Concatenate all active projects & groups into one cell */
     (
-        SELECT GROUP_CONCAT(DISTINCT CAST(d.use AS VARCHAR), ', ')
+        SELECT GROUP_CONCAT(DISTINCT CAST('[' + d.project.protocol.investigatorId.lastname + ']' + d.project.displayname + '' AS VARCHAR), ', ')
         FROM housingRoommatesDivider h
-                 LEFT JOIN study.demographicsUtilization d ON d.Id = h.roommateId
+        LEFT JOIN study.assignment d ON d.Id = h.roommateId
         WHERE h.Id = a.Id
           AND h.removalDate IS NULL
           AND h.roommateEnd IS NULL
           AND h.roommateId IS NOT NULL
+          AND d.enddate IS NULL
     ) AS Cagemate_Assignments
 
 FROM Assignment a

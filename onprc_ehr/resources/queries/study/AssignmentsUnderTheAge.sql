@@ -1,4 +1,8 @@
-SELECT
+/* Added by Kollil, Jan 2026
+   Refer to tkt # 14056
+   - Extract animals under the age of 2.5 with an active assignment. Exclude the U42 and U42E colony maintenance assignments, i.e, center projects for these are 0492-02 and 0492-03.
+   */
+   SELECT
     a.Id,
     a.Id.demographics.gender AS Sex,
     a.Id.Age.ageinyears,
@@ -19,19 +23,21 @@ SELECT
         SELECT GROUP_CONCAT(DISTINCT CAST(h.roommateId AS VARCHAR), ', ')
         FROM housingRoommatesDivider h
         WHERE h.Id = a.Id
-          AND h.removalDate IS NULL
-          AND h.roommateEnd IS NULL
-          AND h.roommateId IS NOT NULL
+            AND h.removalDate IS NULL
+            AND h.roommateEnd IS NULL
+            AND h.roommateId IS NOT NULL
     ) AS Cagemates,
     /* Concatenate all active projects & groups into one cell */
     (
-        SELECT GROUP_CONCAT(DISTINCT CAST(d.use AS VARCHAR), ', ')
+        SELECT GROUP_CONCAT(DISTINCT CAST('[' + d.project.protocol.investigatorId.lastname + ']' + d.project.displayname + '' AS VARCHAR), ', ')
         FROM housingRoommatesDivider h
-        LEFT JOIN study.demographicsUtilization d ON d.Id = h.roommateId
+        LEFT JOIN study.assignment d ON d.Id = h.roommateId
         WHERE h.Id = a.Id
-          AND h.removalDate IS NULL
-          AND h.roommateEnd IS NULL
-          AND h.roommateId IS NOT NULL
+            AND h.removalDate IS NULL
+            AND h.roommateEnd IS NULL
+            AND h.roommateId IS NOT NULL
+            AND d.enddate IS NULL
+            AND d.isActive = 1
     ) AS Cagemate_Assignments
 
 FROM Assignment a
