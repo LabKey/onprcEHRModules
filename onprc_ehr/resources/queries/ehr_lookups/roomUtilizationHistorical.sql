@@ -209,8 +209,8 @@ SELECT
     COALESCE(acd.totalAnimals, 0) AS totalAnimals,
     COALESCE(pd.perDiemsEquiv, 0) AS perDiemsEquiv,
     COALESCE(COALESCE(pd.perDiemsEquiv, 0) / NULLIF(COALESCE(csc.cageSpaces*0.85, 0), 0), 0) AS percentUsed, -- 15% flex
-    pd.projects,
-    pd.projectNames
+    pd.projects AS projectIDs,
+    pd.projectNames AS centerProjects
 FROM ehr_lookups.rooms r
 
 JOIN RoomFirstUseData rfu ON rfu.room = r.room -- rooms without a first use won't be included
