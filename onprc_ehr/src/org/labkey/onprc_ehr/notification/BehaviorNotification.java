@@ -148,13 +148,13 @@ public class BehaviorNotification extends ColonyAlertsNotification
 
         if (total > 0)
         {
-            msg.append("<b>Animals under the age of 2.5 with an active assignment excluding the U42 and U42E assignments, and animals with an \"Assignment pool\" notes:</b><p>");
+            msg.append("<b>Animals under the age of 2.5 with an active assignment excluding the U42 & U42E assignments:</b><p>");
             msg.append( total + " entries found. ");
             msg.append("<a href='" + getExecuteQueryUrl(c, "study", "AssignmentsUnderTheAge", null)  + "'>Click here to view them</a>\n");
             msg.append("<hr>\n\n");
         }
         else {
-            msg.append("<b>WARNING: No animals under the age of 2.5 with an active assignment, and with an \"Assignment pool\" notes!</b><br><hr>\n");
+            msg.append("<b>WARNING: No animals under the age of 2.5 with an active assignment!</b><br><hr>\n");
         }
     }
 
