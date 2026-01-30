@@ -26,7 +26,7 @@ SELECT
           AND h.roommateEnd IS NULL
           AND h.roommateId IS NOT NULL
     ) AS Cagemates,
-    /* Concatenate all active projects & groups into one cell */
+    /* Concatenate all active projects & investigator into one cell */
     (
         SELECT GROUP_CONCAT(DISTINCT CAST('[' + d.project.protocol.investigatorId.lastname + ']' + d.project.displayname + '' AS VARCHAR), ', ')
         FROM housingRoommatesDivider h
