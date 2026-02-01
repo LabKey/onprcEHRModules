@@ -43,6 +43,14 @@
                     <column columnName="fosterMom">
                         <columnTitle>Foster Dam</columnTitle>
                     </column>
+                    <column columnName="surrogateMom">
+                        <columnTitle>Surrogate Dam</columnTitle>
+                        <fk>
+                            <fkDbSchema>study</fkDbSchema>
+                            <fkTable>animal</fkTable>
+                            <fkColumnName>id</fkColumnName>
+                        </fk>
+                    </column>
 
                     <column columnName="sire">
                         <columnTitle>Sire</columnTitle>
