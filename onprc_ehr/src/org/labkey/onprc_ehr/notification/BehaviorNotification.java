@@ -169,7 +169,7 @@ public class BehaviorNotification extends ColonyAlertsNotification
         {
             msg.append("<b>Animals under the age of 2.5 with \"Assignment pool\" notes:</b><p>");
             msg.append( total + " entries found. ");
-            msg.append("<a href='" + getExecuteQueryUrl(c, "study", "AssignmentsUnderTheAge", null)  + "'>Click here to view them</a>\n");
+            msg.append("<a href='" + getExecuteQueryUrl(c, "study", "AssignmentPoolUnderTheAge", null)  + "'>Click here to view them</a>\n");
             msg.append("<hr>\n\n");
         }
         else {
