@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--update of procedure to production for daily run-->
+<etl xmlns="http://labkey.org/etl/xml">
+
+    <name>clinPathRunDateFinalized</name>
+
+    <description>Clin Path Runs ensure that QCState Completed generated the Date Finalized </description>
+    <transforms>
+        <transform id="clnPathRunEndDate" type="StoredProcedure">
+            <description>Runs Stored Procedure that checks if the Date Finalized in present for finalized Charges</description>
+            <procedure schemaName="onprc_billing" procedureName="UpdateClinPathEndDate">
+            </procedure>
+        </transform>
+    </transforms>
+
+    <schedule>
+        <!--4:50AM-->
+        <cron expression="0 50 4 * * ?"/>
+
+    </schedule>
+</etl>
