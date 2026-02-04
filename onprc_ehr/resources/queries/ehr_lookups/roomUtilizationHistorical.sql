@@ -227,7 +227,7 @@ LEFT JOIN (
             p.project
         FROM ehr.project p
         JOIN onprc_billing_public.aliases a ON a.alias = p.account
-        WHERE a.aliasType LIKE 'PC Core%'
+        WHERE a.aliasType LIKE 'PC Core A' OR a.aliasType LIKE 'PC Core B' OR a.aliasType LIKE 'PC Core C' OR a.aliasType LIKE 'PC Core D'
     )
     GROUP BY pd.rooms
 ) pd ON pd.rooms = r.room
