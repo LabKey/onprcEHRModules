@@ -3,7 +3,7 @@
     <metadata>
         <tables xmlns="http://labkey.org/data/xml">
             <table tableName="AssignmentsUnderTheAge" tableDbType="TABLE">
-                <tableTitle>Animals under the age of 2.5 with an active assignment</tableTitle>
+                <tableTitle>Animals under the age of 3 with an active assignment</tableTitle>
             </table>
         </tables>
     </metadata>
