@@ -1,0 +1,10 @@
+<!--Report title-->
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="AssignmentPoolUnderTheAge" tableDbType="TABLE">
+                <tableTitle>Animals under the age of 2.5 with an assignment pool note</tableTitle>
+            </table>
+        </tables>
+    </metadata>
+</query>
