@@ -43,7 +43,7 @@
 
 FROM Assignment a
 WHERE
-  a.Id.Age.ageinyears <= 2.5
+  a.Id.Age.ageinyears <= 3
   AND a.Id.demographics.species = 'Rhesus Macaque'
   AND a.enddate IS NULL
   AND a.isActive = 1
