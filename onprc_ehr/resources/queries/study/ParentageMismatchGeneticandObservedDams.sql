@@ -2,7 +2,7 @@
  Added by Kolli, Feb 2026
  Refer tkt# 14114
  Get data where genetic and observed dam do not match, AND foster dam ISBLANK AND Observed Dam IS NOT BLANK
- */
+*/
 
 SELECT
     d.Id,
@@ -41,7 +41,10 @@ WHERE d.calculated_status.code IN ('Alive', 'Dead') AND d.qcstate = 18
     /* exclude blank observed dam */
     AND COALESCE(RTRIM(LTRIM(CAST(b.dam AS VARCHAR(50)))), '') <> ''
 
-    /* mismatch observed vs genetic (normalize NULL/blank + trim) */
+    /* exclude blank genetic dam */
+    AND COALESCE(RTRIM(LTRIM(CAST(p2.parent AS VARCHAR(50)))), '') <> ''
+
+    /* mismatch observed vs genetic */
     AND COALESCE(RTRIM(LTRIM(CAST(b.dam AS VARCHAR(50)))), '') <>
       COALESCE(RTRIM(LTRIM(CAST(p2.parent AS VARCHAR(50)))), '')
 
