@@ -19,6 +19,7 @@ LEFT JOIN (
     FROM study.parentage p2
     WHERE (p2.method = 'Genetic' OR p2.method = 'Provisional Genetic')
       AND p2.relationship = 'Dam'
+      AND p2.enddate IS NULL
     GROUP BY p2.Id
 ) p2 ON d.Id = p2.Id
 
@@ -28,6 +29,7 @@ LEFT JOIN (
         MAX(p3.parent) AS parent
     FROM study.parentage p3
     WHERE p3.relationship = 'Foster Dam'
+      AND p3.enddate IS NULL
     GROUP BY p3.Id
 ) p3 ON d.Id = p3.Id
 
@@ -49,24 +51,3 @@ WHERE d.calculated_status.code IN ('Alive', 'Dead') AND d.qcstate = 18
       COALESCE(RTRIM(LTRIM(CAST(p2.parent AS VARCHAR(50)))), '')
 
 
--- SELECT
---     Id,
---     Area,
---     geneticdam,
---     observeddam
--- FROM ParentageCompleted
--- WHERE
---     /* treat NULL or blank foster dam as "no foster dam" */
---     (
---         fosterdam IS NULL
---         OR RTRIM(LTRIM(CAST(fosterdam AS VARCHAR))) = ''
---     )
---
---     /* exclude blank observed dam */
---      AND COALESCE(RTRIM(LTRIM(CAST(observeddam AS VARCHAR(50)))), '') <> ''
---   AND
---     /* mismatch, treating NULL as empty and trimming whitespace */
---     RTRIM(LTRIM(COALESCE(CAST(observeddam AS VARCHAR), '')))
---         <>
---     RTRIM(LTRIM(COALESCE(CAST(geneticdam AS VARCHAR), '')))
---
