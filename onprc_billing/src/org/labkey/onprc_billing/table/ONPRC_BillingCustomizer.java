@@ -180,8 +180,17 @@ public class ONPRC_BillingCustomizer extends AbstractTableCustomizer
 
         if (ti.getColumn("totalCost") == null && unitCost != null && ti.getColumn("quantity") != null)
         {
-            SQLFragment sql = new SQLFragment("(" + ExprColumn.STR_TABLE_ALIAS + ".unitCost * " + ExprColumn.STR_TABLE_ALIAS + ".quantity)");
-            ExprColumn totalCost = new ExprColumn(ti, "totalCost", sql, JdbcType.DOUBLE, ti.getColumn("unitCost"), ti.getColumn("quantity"));
+            SQLFragment sql = new SQLFragment(
+                    "CAST(ROUND((" + ExprColumn.STR_TABLE_ALIAS + ".unitCost * " +
+                            ExprColumn.STR_TABLE_ALIAS + ".quantity), 2) AS DECIMAL(18,2))");
+            ExprColumn totalCost = new ExprColumn(
+                    ti,
+                    "totalCost",
+                    sql,
+                    JdbcType.DECIMAL,
+                    ti.getColumn("unitCost"),
+                    ti.getColumn("quantity")
+            );
             totalCost.setLabel("Total Cost");
             totalCost.setFormat("$###,##0.00");
             ti.addColumn(totalCost);
