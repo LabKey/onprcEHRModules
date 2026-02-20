@@ -142,7 +142,7 @@ rate_context AS (
 
     LEFT JOIN onprc_billing.ogaSynchIR ir
            ON ir.alias = ac.account
-    Left Join onprc_Billing.ProjectLeaseIncomeEligibility Li
+    Left Join onprc_Billing.LeaseIncomeforProject Li
            on ac.InitialProject = Li.Project
 ),
 

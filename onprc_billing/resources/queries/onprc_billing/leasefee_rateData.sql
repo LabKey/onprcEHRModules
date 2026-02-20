@@ -21,7 +21,6 @@ Case
 	When (l.leaseType = 'Day Lease Research Assignment P51 NHP NC' ) then 90
 	When (l.leaseType = 'DualAssignedESPF' and l.daylease <> 'yes' and l.leasetype = lf.chargeID.name) then null
     when (l.leasetype  = 'Animal Lease Fee - TMB') and l.daylease <> 'yes' then 1552
-
 	When (l.leaseType = 'TMB Adult Day Lease'  and l.leasetype = lf.chargeID.name) then 90
 	When (l.leaseType = 'TMB No Charge'  and l.leasetype = lf.chargeID.name) then Null
 	When (l.leaseType = 'TMB Full P 51 Rate Lease'  and l.leasetype = lf.chargeID.name) then
