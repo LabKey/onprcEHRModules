@@ -1,0 +1,20 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="leaseIncomeforProject" tableDbType="TABLE">
+                <tableTitle>Lease Fees In Invoiced Items, but Not Expected</tableTitle>
+                <columns>
+                    <column columnName="project">
+                        <measure>false</measure>
+                        <fk>
+                            <fkDbSchema>ehr</fkDbSchema>
+                            <fkTable>project_active</fkTable>
+                            <fkColumnName>project</fkColumnName>
+                        </fk>
+                    </column>
+
+                </columns>
+            </table>
+        </tables>
+    </metadata>
+</query>
