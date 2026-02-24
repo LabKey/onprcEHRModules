@@ -327,7 +327,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
             return;
         }
         //Fasts query
-        TableInfo ti = QueryService.get().getUserSchema(u, c, "study").getTable("MismatchedObservedandGeneticDams", ContainerFilter.Type.AllFolders.create(c, u));
+        TableInfo ti = QueryService.get().getUserSchema(u, c, "study").getTable("ParentageMismatchObservedandGeneticDams", ContainerFilter.Type.AllFolders.create(c, u));
         TableSelector ts = new TableSelector(ti, null, null);
         long count = ts.getRowCount();
 
