@@ -338,7 +338,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
             msg.append("<hr>");
         }
         else {
-            msg.append("<b> There are NO mismatches of observed and genetic dam data! </b>");
+            msg.append("<b> There are NO mismatches of observed and genetic dam data. </b>");
             msg.append("<hr>");
         }
 
