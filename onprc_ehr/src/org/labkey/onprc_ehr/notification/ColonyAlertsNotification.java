@@ -326,7 +326,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
             msg.append("<b>Warning: The study schema has not been enabled in this folder, so the alert cannot run!<p><hr>");
             return;
         }
-        //Fasts query
+        //query
         TableInfo ti = QueryService.get().getUserSchema(u, c, "study").getTable("ParentageMismatchObservedandGeneticDams", ContainerFilter.Type.AllFolders.create(c, u));
         TableSelector ts = new TableSelector(ti, null, null);
         long count = ts.getRowCount();
