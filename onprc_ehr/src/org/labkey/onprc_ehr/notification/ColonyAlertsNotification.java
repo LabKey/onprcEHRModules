@@ -334,7 +334,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         //Get num of rows
         if (count > 0) {
             msg.append("<b> WARNING: There are " + count + " mismatches of observed and genetic dam data requiring review</b>");
-            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "ParentageMismatchObservedandGeneticDams", null) + "&query.containerFilterName=AllFolders'>Click here to view the fast treatments in PRIME</a></p>\n");
+            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "ParentageMismatchObservedandGeneticDams", null) + "&query.containerFilterName=AllFolders'>Click here to view the parentage data</a></p>\n");
             msg.append("<hr>");
         }
         else {
