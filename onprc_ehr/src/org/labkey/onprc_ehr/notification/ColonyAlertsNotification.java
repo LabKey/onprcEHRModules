@@ -323,7 +323,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
     protected void mismatchedObservedAndGeneticDam(final Container c, User u, final StringBuilder msg)
     {
         if (QueryService.get().getUserSchema(u, c, "study") == null) {
-            msg.append("<b>Warning: The study schema has not been enabled in this folder, so the alert cannot run!<p><hr>");
+            msg.append("<b>Warning: The study schema has not been enabled in this folder, so the alert cannot run.<p><hr>");
             return;
         }
         //query
