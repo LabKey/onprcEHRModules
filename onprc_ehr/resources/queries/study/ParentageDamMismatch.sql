@@ -1,7 +1,16 @@
 /*
  Added by Kolli, Feb 2026
- Refer tkt# 14114
- Get data where genetic and observed dam do not match, AND foster dam ISBLANK AND Observed Dam IS NOT BLANK
+ Refer tkt# 14114 for details
+ Display 4 columns: Animal Id, Area, Genetic dam, Observed dam
+
+ Get genetic and observed dam mismatch data.
+ Use the following criteria,
+ * 1. One genetic dam per animal
+ * 2. Included Alive + Dead animals
+ * 3. Excludes animals that have a foster dam
+ * 4. Excludes rows where observedDam or geneticDam IS BLANK
+ * 5. Keeps only mismatches between observed and genetic dams
+ * 6. Excludes old parentage entries, enddate IS BLANK
 */
 
 SELECT
@@ -9,10 +18,9 @@ SELECT
     d.Id.curLocation.area AS Area,
     coalesce(p2.parent, '') as geneticDam,
     coalesce(b.dam, '') as observedDam
-
 FROM study.demographics d
 
-         LEFT JOIN (
+    LEFT JOIN (
     SELECT
         p2.Id,
         MAX(p2.parent) AS parent
@@ -23,7 +31,7 @@ FROM study.demographics d
     GROUP BY p2.Id
 ) p2 ON d.Id = p2.Id
 
-         LEFT JOIN (
+    LEFT JOIN (
     SELECT
         p3.Id,
         MAX(p3.parent) AS parent
@@ -33,8 +41,8 @@ FROM study.demographics d
     GROUP BY p3.Id
 ) p3 ON d.Id = p3.Id
 
-         LEFT JOIN study.birth b
-                   ON b.Id = d.Id
+    LEFT JOIN study.birth b
+        ON b.Id = d.Id
 
 WHERE d.calculated_status.code IN ('Alive', 'Dead') AND d.qcstate = 18
     /* exclude foster-dam cases (NULL or blank only) */

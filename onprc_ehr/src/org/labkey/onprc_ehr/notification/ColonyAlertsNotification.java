@@ -314,11 +314,17 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
 
     /**
      * Kollil, Jan, 2026 :
+     * Refer tkt# 14114 for more details
      * Alert title: WARNING: There are [x total] mismatches of observed and genetic dam data requiring review
      * Format: Table
-     * 5 columns: animal ID, area, genetic dam, observed dam
-     * Alert criteria: genetic and observed dam do not match, AND foster dam ISBLANK.
-     * Refer Tkt# 10897 for more details
+     * 4 columns: Animal Id, Area, Genetic dam, Observed dam
+     * Alert criteria:
+     * 1. One genetic dam per animal
+     * 2. Included Alive + Dead animals
+     * 3. Excludes animals that have a foster dam
+     * 4. Excludes rows where observedDam or geneticDam IS BLANK
+     * 5. Keeps only mismatches between observed and genetic dams
+     * 6. Excludes old parentage entries, enddate IS BLANK
      */
     protected void mismatchedObservedAndGeneticDam(final Container c, User u, final StringBuilder msg)
     {
@@ -337,7 +343,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
             msg.append("<b> WARNING: There are " + count + " mismatches of observed and genetic dam data requiring review.</b>");
             msg.append("<a href='" + getExecuteQueryUrl(c, "study", "ParentageDamMismatch", null) + "&query.containerFilterName=AllFolders'> Click here to view them in a grid</a>\n");
 
-            //Display the daily report in the email
+            //Display the report in the email
             Set<FieldKey> columns = new HashSet<>();
             columns.add(FieldKey.fromString("Id"));
             columns.add(FieldKey.fromString("area"));
@@ -355,7 +361,6 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
             ts2.forEach(object -> {
                 Results rs = new ResultsImpl(object, colMap);
                 String url = getParticipantURL(c, rs.getString("Id"));
-
                 msg.append("<tr><td><b> <a href='" + url + "'>" + PageFlowUtil.filter(rs.getString("Id")) + "</a> </b></td>\n");
                 msg.append("<td>" + PageFlowUtil.filter(rs.getString("area")) + "</td>");
                 msg.append("<td>" + PageFlowUtil.filter(rs.getString("geneticdam")) + "</td>");
@@ -366,7 +371,6 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         else {
             msg.append("<b> There are NO mismatches of observed and genetic dam data. </b>");
         }
-
         msg.append("</table>");
         msg.append("<hr>\n");
     }

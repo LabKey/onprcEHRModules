@@ -77,7 +77,7 @@ public class ColonyMgmtNotification extends ColonyAlertsNotification
          /*Added by kollil, Jan, 2026
         Refer to tkt # 14114
         */
-        mismatchedObservedAndGeneticDam(c,u,msg);
+        mismatchedObservedAndGeneticDam(c, u, msg);
         livingAnimalsWithoutWeight(c, u, msg);
         hospitalAnimalsWithoutCase(c, u, msg);
 
