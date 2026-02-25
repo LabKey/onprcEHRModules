@@ -313,6 +313,70 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
     }
 
     /**
+     * Kollil, Jan, 2026 :
+     * Refer tkt# 14114 for more details
+     * Alert title: WARNING: There are [x total] mismatches of observed and genetic dam data requiring review
+     * Format: Table
+     * 4 columns: Animal Id, Area, Genetic dam, Observed dam
+     * Alert criteria:
+     * 1. One genetic dam per animal
+     * 2. Included Alive + Dead animals
+     * 3. Excludes animals that have a foster dam
+     * 4. Excludes rows where observedDam or geneticDam IS BLANK
+     * 5. Keeps only mismatches between observed and genetic dams
+     * 6. Excludes old parentage entries, enddate IS BLANK
+     */
+    protected void mismatchedObservedAndGeneticDam(final Container c, User u, final StringBuilder msg)
+    {
+        if (QueryService.get().getUserSchema(u, c, "study") == null) {
+            msg.append("<b>Warning: The study schema has not been enabled in this folder, so the alert cannot run.<p><hr>");
+            return;
+        }
+
+        //Dam mismatch query
+        TableInfo ti = QueryService.get().getUserSchema(u, c, "study").getTable("ParentageDamMismatch", ContainerFilter.Type.AllFolders.create(c, u));
+        TableSelector ts = new TableSelector(ti, null, null);
+        long count = ts.getRowCount();
+
+        //Get num of rows
+        if (count > 0) {
+            msg.append("<b> WARNING: There are " + count + " mismatches of observed and genetic dam data requiring review.</b>");
+            msg.append("<a href='" + getExecuteQueryUrl(c, "study", "ParentageDamMismatch", null) + "&query.containerFilterName=AllFolders'> Click here to view them in a grid</a>\n");
+
+            //Display the report in the email
+            Set<FieldKey> columns = new HashSet<>();
+            columns.add(FieldKey.fromString("Id"));
+            columns.add(FieldKey.fromString("area"));
+            columns.add(FieldKey.fromString("geneticdam"));
+            columns.add(FieldKey.fromString("observeddam"));
+
+            final Map<FieldKey, ColumnInfo> colMap = QueryService.get().getColumns(ti, columns);
+            TableSelector ts2 = new TableSelector(ti, colMap.values(), null, null);
+
+            msg.append("<br><br>\n");
+            msg.append("<table border=1 style='border-collapse: collapse;'>");
+            msg.append("<tr bgcolor = " + '"' + "#FFFACD" + '"' + "style='font-weight: bold;'>");
+            msg.append("<td>Id </td><td>Area </td><td>Genetic Dam </td><td>Observed Dam </td></tr>");
+
+            ts2.forEach(object -> {
+                Results rs = new ResultsImpl(object, colMap);
+                String url = getParticipantURL(c, rs.getString("Id"));
+                msg.append("<tr><td><b> <a href='" + url + "'>" + PageFlowUtil.filter(rs.getString("Id")) + "</a> </b></td>\n");
+                msg.append("<td>" + PageFlowUtil.filter(rs.getString("area")) + "</td>");
+                msg.append("<td>" + PageFlowUtil.filter(rs.getString("geneticdam")) + "</td>");
+                msg.append("<td>" + PageFlowUtil.filter(rs.getString("observeddam")) + "</td>");
+                msg.append("</tr>");
+            });
+        }
+        else {
+            msg.append("<b> There are NO mismatches of observed and genetic dam data. </b>");
+        }
+        msg.append("</table>");
+        msg.append("<hr>\n");
+    }
+    //End of Dam mismatch report
+
+    /**
      * Finds all rooms with animals of mixed viral status
      * Modified by Kollil, 2/17/2023
      */
