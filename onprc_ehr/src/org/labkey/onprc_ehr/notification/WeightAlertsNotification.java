@@ -247,18 +247,34 @@ public class WeightAlertsNotification extends AbstractEHRNotification
         date.add(Calendar.DATE, -100); /// change to last 100 days
         filter.addCondition(FieldKey.fromString("LatestWeightDate"), getDateFormat(c).format(date.getTime()), CompareType.DATE_GTE);
 
-        TableSelector ts = new TableSelector(ti, columns.values(), filter, null);
+//        TableSelector ts = new TableSelector(ti, columns.values(), filter, null);
+        //Added by Kollill to avoid the duplicate rows
+        Sort sort = new Sort();
+        sort.appendSortColumn(FieldKey.fromString("Id"), Sort.SortDirection.ASC, false);
+        sort.appendSortColumn(FieldKey.fromString("LatestWeightDate"), Sort.SortDirection.DESC, false);
+        sort.appendSortColumn(FieldKey.fromString("date"), Sort.SortDirection.DESC, false);
+
+        TableSelector ts = new TableSelector(ti, columns.values(), filter, sort);
 
         msg.append("<b>Weights since " + getDateFormat(c).format(date.getTime()) + " representing changes of " + (pct > 0 ? "+" : "") + pct + "% in the past " + max + " days:</b><p>");
         final Set<String> distinctAnimals = new HashSet<>();
 
         final Map<String, Map<String, List<Map<String, Object>>>> summary = new TreeMap<>();
+        final Set<String> seenIds = new HashSet<>(); ///Added by Kollil to avoid duplicates
         ts.forEach(new Selector.ForEachBlock<>()
         {
             @Override
             public void exec(ResultSet object) throws SQLException
             {
                 Results rs = new ResultsImpl(object, columns);
+                String id = rs.getString("Id"); //Added by Kollil
+                if (id == null)
+                    return;
+
+                // keep only the first (most recent) row per Id because of the sort above
+                if (!seenIds.add(id))
+                    return;
+
                 String area = rs.getString(areaKey) == null ? "" : rs.getString(areaKey);
                 Map<String, List<Map<String, Object>>> areaMap = summary.get(area);
                 if (areaMap == null)
@@ -294,7 +310,8 @@ public class WeightAlertsNotification extends AbstractEHRNotification
 
                 roomList.add(rowMap);
 
-                distinctAnimals.add(rs.getString("Id"));
+                //distinctAnimals.add(rs.getString("Id"));
+                distinctAnimals.add(id);
             }
         });
 
@@ -334,7 +351,15 @@ public class WeightAlertsNotification extends AbstractEHRNotification
                         msg.append("<td>").append(map.get("LatestWeight")).append("<br>");
                         msg.append(map.get("weight")).append("</td>");
 
-                        msg.append("<td>").append(map.get("PctChange")).append("</td>");
+                        double pct_ch = ((Number) map.get("PctChange")).doubleValue();
+                        if (pct_ch >= 15.0) {
+                            msg.append("<td style= " + "'" + "background-color:#FFFF00" + "'" + ">")
+                                    .append(map.get("PctChange"))
+                                    .append("</td>");
+                        }
+                        else {
+                            msg.append("<td>").append(map.get("PctChange")).append("</td>");
+                        }
                         msg.append("</tr>");
                     }
                 }

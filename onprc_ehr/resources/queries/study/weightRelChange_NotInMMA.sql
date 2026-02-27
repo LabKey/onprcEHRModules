@@ -56,7 +56,7 @@ FROM
                             AND w2.date >= timestampadd('SQL_TSI_DAY', -100, lw.LatestDate)
                       )
 
-WHERE l.Id.curlocation.area NOT IN ('Shelters', 'Corral', 'Hospital')-- Exclude animals from these locations
+WHERE l.Id.curlocation.area NOT IN ('Shelters', 'Corral', 'Hospital', 'Catch Area')-- Exclude animals from these locations
   AND NOT (-- Exclude females under 5yrs, males under 7yrs
     (l.Id.demographics.gender.code = 'f' AND l.Id.age.ageInYears < 5)
         OR (l.Id.demographics.gender.code = 'm' AND l.Id.age.ageInYears < 7)

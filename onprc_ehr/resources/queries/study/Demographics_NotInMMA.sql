@@ -26,7 +26,7 @@ SELECT
     d.Id.viral_status.viralStatus,
     d.history
 FROM Demographics d
-WHERE d.Id.curlocation.area NOT IN ('Shelters', 'Corral', 'Hospital')-- Exclude animals from these locations
+WHERE d.Id.curlocation.area NOT IN ('Shelters', 'Corral', 'Hospital', 'Catch Area')-- Exclude animals from these locations
   AND NOT (-- Exclude females under 5yrs, males under 7yrs
     (d.gender.code = 'f' AND d.Id.age.ageInYears < 5)
     OR (d.gender.code = 'm' AND d.Id.age.ageInYears < 7)
