@@ -310,7 +310,7 @@ public class WeightAlertsNotification extends AbstractEHRNotification
 
                 roomList.add(rowMap);
 
-                //distinctAnimals.add(rs.getString("Id"));
+                //distinctAnimals.add(rs.getString("Id")); //deleted by Kollil
                 distinctAnimals.add(id);
             }
         });
@@ -352,10 +352,9 @@ public class WeightAlertsNotification extends AbstractEHRNotification
                         msg.append(map.get("weight")).append("</td>");
 
                         double pct_ch = ((Number) map.get("PctChange")).doubleValue();
-                        if (pct_ch >= 15.0) {
-                            msg.append("<td style= " + "'" + "background-color:#FFFF00" + "'" + ">")
-                                    .append(map.get("PctChange"))
-                                    .append("</td>");
+                        if (Math.abs(pct_ch) >= 15.0) {   // highlight in yellow if <= -15 OR >= +15
+                            msg.append("<td bgcolor=" + "'" + "#FFFF00" + "'" + "style= " + "'" + "background-color:#FFFF00" + "'" + ">")
+                                    .append(map.get("PctChange")).append("</td>");
                         }
                         else {
                             msg.append("<td>").append(map.get("PctChange")).append("</td>");
