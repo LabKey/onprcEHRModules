@@ -74,6 +74,10 @@ public class ColonyMgmtNotification extends ColonyAlertsNotification
         doHousingChecks(c, u, msg);
         transfersYesterday(c, u, msg);
         roomsWithMixedViralStatus(c, u, msg);
+         /*Added by kollil, Jan, 2026
+        Refer to tkt # 14114
+        */
+        mismatchedObservedAndGeneticDam(c, u, msg);
         livingAnimalsWithoutWeight(c, u, msg);
         hospitalAnimalsWithoutCase(c, u, msg);
 
