@@ -1,0 +1,9 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="ParentageDamMismatch" tableDbType="TABLE">
+                <tableTitle>Mismatched Genetic and Observed Dams</tableTitle>
+            </table>
+        </tables>
+    </metadata>
+</query>
