@@ -27,6 +27,10 @@ EHR.model.DataModelManager.registerMetadata('ASB_Services', {
     },
     byQuery: {
         'study.encounters': {
+            chargetype: {
+                defaultValue: 'DCM: ASB Services',
+                hidden: false
+            },
             date: {
                 xtype: 'xdatetime',
                 extFormat: 'Y-m-d H:i',
@@ -83,6 +87,10 @@ EHR.model.DataModelManager.registerMetadata('ASB_Services', {
         },
 
         'study.blood': {
+            chargetype: {
+                defaultValue: 'DCM: ASB Services',
+                hidden: false
+            },
             performedby: {
                 //defaultValue: LABKEY.Security.currentUser.displayName,
                 hidden: false,
@@ -95,6 +103,10 @@ EHR.model.DataModelManager.registerMetadata('ASB_Services', {
             }
         },
         'study.drug': {
+            chargetype: {
+                defaultValue: 'DCM: ASB Services',
+                hidden: false
+            },
             date: {
                 xtype: 'xdatetime',
                 extFormat: 'Y-m-d H:i',
