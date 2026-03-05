@@ -58,7 +58,7 @@ public class SurgicalRoundsFormType extends TaskForm
             }
         }
 
-        addClientDependency(ClientDependency.supplierFromPath("ehr/model/sources/SurgicalRounds.js"));
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/model/sources/SurgicalRounds.js"));
         setDisplayReviewRequired(true);
     }
 
