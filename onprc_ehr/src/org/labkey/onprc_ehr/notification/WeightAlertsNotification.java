@@ -110,68 +110,8 @@ public class WeightAlertsNotification extends AbstractEHRNotification
        //getLivingWithoutWeight(c, u, msg);
 
         generateCombinedWeightTable(c, u, msg);
-        //test_WeightsMMA(c,u,msg);
 
         return msg.toString();
-    }
-
-    protected void test_WeightsMMA(final Container c, User u, final StringBuilder msg)
-    {
-        //procedures query
-        TableInfo ti = QueryService.get().getUserSchema(u, c, "study").getTable("weightRelChange_NotInMMA", ContainerFilter.Type.AllFolders.create(c, u));
-        TableSelector ts = new TableSelector(ti, null, null);
-        long count = ts.getRowCount();
-
-        if (count > 0) {//procedures count
-            msg.append("<br><b>Data found:</b><br><br>");
-            msg.append("<b>" + count + " found:</b>");
-            msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "weightRelChange_NotInMMA", null) + "'>Click here to view in PRIME</a></p>\n");
-            msg.append("<hr>");
-        }
-
-        //Display the daily report in the email
-
-        Set<FieldKey> columns = new HashSet<>();
-        columns.add(FieldKey.fromString("Id"));
-        columns.add(FieldKey.fromString("LatestWeightDate"));
-        columns.add(FieldKey.fromString("LatestWeight"));
-        columns.add(FieldKey.fromString("date"));
-        columns.add(FieldKey.fromString("weight"));
-        columns.add(FieldKey.fromString("IntervalInDays"));
-        columns.add(FieldKey.fromString("IntervalInMonths"));
-        columns.add(FieldKey.fromString("PctChange"));
-        columns.add(FieldKey.fromString("AbsPctChange"));
-
-        final Map<FieldKey, ColumnInfo> colMap = QueryService.get().getColumns(ti, columns);
-        TableSelector ts2 = new TableSelector(ti, colMap.values(), null, null);
-
-        // Table header
-        msg.append("<table border=1 style='border-collapse: collapse;'>");
-        msg.append("<tr bgcolor = " + '"' + "#00FF7F" + '"' + "style='font-weight: bold;'>");
-        msg.append("<td> Id </td><td> Latest Weight Date </td><td> Latest Weight </td><td> Date </td><td> weight </td><td> Interval In Days </td><td> Interval In Months </td><td> Pct Change </td><td> Abs Pct Change </td></tr>");
-
-        ts2.forEach(new Selector.ForEachBlock<>()
-        {
-            @Override
-            public void exec(ResultSet object) throws SQLException
-            {
-                Results rs = new ResultsImpl(object, colMap);
-
-                msg.append("<tr>");
-                msg.append("<td>" + PageFlowUtil.filter(rs.getString("Id")) + "</td>");
-                msg.append("<td>" + PageFlowUtil.filter(rs.getString("LatestWeightDate")) + "</td>");
-                msg.append("<td>" + PageFlowUtil.filter(rs.getString("LatestWeight")) + "</td>");
-                msg.append("<td>" + PageFlowUtil.filter(rs.getString("date")) + "</td>");
-                msg.append("<td>" + PageFlowUtil.filter(rs.getString("weight")) + "</td>");
-                msg.append("<td>" + PageFlowUtil.filter(rs.getString("IntervalInDays")) + "</td>");
-                msg.append("<td>" + PageFlowUtil.filter(rs.getString("IntervalInMonths")) + "</td>");
-                msg.append("<td>" + PageFlowUtil.filter(rs.getString("PctChange")) + "</td>");
-                msg.append("<td>" + PageFlowUtil.filter(rs.getString("AbsPctChange")) + "</td>");
-                msg.append("</tr>");
-            }
-        });
-        msg.append("</table><br>");
-
     }
 
     private void generateCombinedWeightTable(final Container c, User u, final StringBuilder msg)
