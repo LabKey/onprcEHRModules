@@ -30,7 +30,6 @@
                     <column columnName="AbsPctChange">
                         <columnTitle>Abs Pct Change</columnTitle>
                     </column>
-
                 </columns>
             </table>
         </tables>
