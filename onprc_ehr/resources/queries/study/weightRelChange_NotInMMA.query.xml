@@ -26,42 +26,12 @@
                     </column>
                     <column columnName="PctChange">
                         <columnTitle>% Change Relative To Current</columnTitle>
-                        <conditionalFormats>
-                            <conditionalFormat>
-                                <filters>
-                                    <filter operator="lte" value="-10"/>
-                                </filters>
-                                <bold>true</bold>
-                                <backgroundColor>FF0000</backgroundColor>
-                            </conditionalFormat>
-                            <conditionalFormat>
-                                <filters>
-                                    <filter operator="gte" value="10"/>
-                                </filters>
-                                <bold>true</bold>
-                                <backgroundColor>458B00</backgroundColor>
-                            </conditionalFormat>
-                        </conditionalFormats>
                     </column>
-                    <column columnName="IntervalInDays">
-                        <columnTitle>Days Since Weight</columnTitle>
+                    <column columnName="AbsPctChange">
+                        <columnTitle>Abs Pct Change</columnTitle>
                     </column>
-                    <column columnName="IntervalInMonths">
-                        <columnTitle>Months Since Weight</columnTitle>
-                    </column>
-                    <column columnName="LatestWeight">
-                        <columnTitle>Latest Weight (kg)</columnTitle>
-                        <url>/query/executeQuery.view?schemaName=study&amp;
-                            query.queryName=weight&amp;
-                            query.date~eq=${LatestWeightDate}&amp;
-                            query.sort=-date
-                        </url>
-                    </column>
-                    <column columnName="LatestWeightDate">
-                        <columnTitle>Latest Weight Date</columnTitle>
-                    </column>
+
                 </columns>
-                <titleColumn>PctChange</titleColumn>
             </table>
         </tables>
     </metadata>
