@@ -36,6 +36,11 @@ SELECT
     ELSE 0
   END as PCRbloodVol,
 
+  CASE
+      WHEN  (t.isESPFRequired = true AND t.isESPFCurrent = false AND )  THEN 4
+      ELSE 0
+      END as ESPFbloodVol,
+
 
 FROM (
 
@@ -66,6 +71,18 @@ SELECT
     ELSE false
     END as isPCRRequired
 
+    espf.lastDate as lastESPF,
+    timestampdiff('SQL_TSI_DAY', espf.lastDate, now()) as daysSinceESPF,
+  CASE
+      WHEN (year(now()) = year(espf.lastDate) AND daysSinceESPF < 180) THEN true
+      ELSE false
+      END as isESPFCurrent,
+
+  CASE
+      WHEN (d.Id.age.ageInDays > 180 )  THEN true
+      ELSE false
+      END as isESPFRequired
+
 FROM study.demographics d
 
 LEFT JOIN (
@@ -77,6 +94,16 @@ LEFT JOIN (
   GROUP BY s.id
 
 ) srv ON (srv.id = d.id)
+
+LEFT JOIN (
+    SELECT
+        k.id,
+        max(k.date) as lastDate
+    FROM study.blood k
+    WHERE (k.additionalservices = 'ESPF Surveillance - Semiannual')
+    GROUP BY k.id
+
+) espf ON (espf.id = d.id)
 
 LEFT JOIN (
     SELECT

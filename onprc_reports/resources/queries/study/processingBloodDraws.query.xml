@@ -28,6 +28,9 @@
                     <column columnName="serologyBloodVol">
                         <columnTitle>Serology RTT (mL)</columnTitle>
                     </column>
+                    <column columnName="serologyBloodVol">
+                        <columnTitle>Serology RTT (mL)</columnTitle>
+                    </column>
                     <column columnName="geneticsBloodVol">
                         <columnTitle>Genetics Blood Vol (mL)</columnTitle>
                     </column>
