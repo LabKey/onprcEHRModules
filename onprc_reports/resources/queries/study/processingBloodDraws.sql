@@ -12,7 +12,7 @@ SELECT
   Case when (a.Id IS NOT NULL)  And (s.ESPFBloodVol > 0 ) then 2
        ELSE
            0
-      End as PCRBloodVolume,
+      End as ESPFloodVolume,
 
   s.srvBloodVol as serologyBloodVol,
   g.parentageBloodDrawVol,
