@@ -41,7 +41,6 @@ SELECT
       ELSE 0
       END as ESPFbloodVol,
 
-
 FROM (
 
 SELECT
@@ -74,7 +73,7 @@ SELECT
     espf.lastDate as lastESPF,
     timestampdiff('SQL_TSI_DAY', espf.lastDate, now()) as daysSinceESPF,
   CASE
-      WHEN (year(now()) = year(espf.lastDate) AND daysSinceESPF < 180) THEN true
+      WHEN (year(now()) = year(espf.lastDate) AND daysSinceESPF > 180) THEN true
       ELSE false
       END as isESPFCurrent,
 
@@ -82,6 +81,18 @@ SELECT
       WHEN (d.Id.age.ageInDays > 180 )  THEN true
       ELSE false
       END as isESPFRequired
+
+    cbc.lastDate as lastESPF,
+        timestampdiff('SQL_TSI_DAY', cbc.lastDate, now()) as daysSincCBC,
+  CASE
+      WHEN (year(now()) = year(cbc.lastDate) AND daysSinceCBC > 165) THEN true
+      ELSE false
+      END as isCBCCurrent,
+
+  CASE
+      WHEN (d.Id.age.ageInDays > 180 )  THEN true
+      ELSE false
+      END as isCBCRequired
 
 FROM study.demographics d
 
@@ -114,6 +125,36 @@ LEFT JOIN (
     GROUP BY b.id
 
 ) pcr ON (pcr.id = d.id)
+
+LEFT JOIN (
+    SELECT
+        j.id,
+        max(j.date) as lastDate
+    FROM study.blood j
+    WHERE j.additionalservices like  'CBC with automated differential'
+    GROUP BY j.id
+
+) cbc ON (cbc.id = d.id)
+
+LEFT JOIN (
+    SELECT
+        m.id,
+        max(m.date) as lastDate
+    FROM study.blood m
+    WHERE j.additionalservices like  'Comprehensive Chemistry panel in-house'
+    GROUP BY m.id
+
+) chem ON (chem.id = d.id)
+
+LEFT JOIN (
+    SELECT
+        n.id,
+        max(n.date) as lastDate
+    FROM study.flags n
+    WHERE n.category ='Behavior Flag' And n.value = 'Socially important'
+    GROUP BY n.id
+
+) flg ON (flg.id = d.id)
 
 
 WHERE d.calculated_status = 'Alive'
