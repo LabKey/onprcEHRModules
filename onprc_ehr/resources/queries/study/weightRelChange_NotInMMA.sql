@@ -65,18 +65,18 @@ WHERE l.Id.curlocation.area NOT IN ('Shelters', 'Corral', 'Hospital', 'Catch Are
   AND NOT EXISTS (
     -- -- Find animals whose latest 'Weight MMA BEGIN' has no later 'Weight MMA RELEASE'
     SELECT 1
-    FROM study.WeightManagementMMAData b
+    FROM study.WeightMMA b
     WHERE b.Id = l.Id
       AND b.code = 'P-YY961'
       AND b.date = (
         SELECT MAX(b2.date)
-        FROM study.WeightManagementMMAData b2
+        FROM study.WeightMMA b2
         WHERE b2.Id = l.Id
           AND b2.code = 'P-YY961'
     )
       AND NOT EXISTS (
         SELECT 1
-        FROM study.WeightManagementMMAData r
+        FROM study.WeightMMA r
         WHERE r.Id = l.Id
           AND r.code = 'P-YY960'
           AND r.date > b.date
