@@ -34,10 +34,6 @@ EHR.model.DataModelManager.registerMetadata('SurgicalRounds', {
                 hidden: true
             },
             p2: {
-                formEditorConfig: {
-                    xtype: 'textarea'
-                },
-                height: 100,
                 hidden: false
             }
         },
