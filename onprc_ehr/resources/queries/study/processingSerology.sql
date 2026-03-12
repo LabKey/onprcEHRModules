@@ -138,7 +138,7 @@ SELECT
     cbc.lastDate as lastCBC5,,
     timestampdiff('SQL_TSI_DAY', cbc.lastDate, now()) as daysSinceCBC5,
    CASE
-      WHEN (year(now()) = year(cbc5.lastDate) AND daysSinceCBC5 > 180  AND (nts.Id is not null) )  THEN true
+      WHEN (year(now()) = year(cbc.lastDate) AND daysSinceCBC5 > 180  AND (nts.Id is not null) )  THEN true
       ELSE false
       END as isCBCCurrent5,
 
@@ -149,20 +149,50 @@ SELECT
 
 
 
-      ----- All Chemistry sections
+      ----- All Comp Chemistry sections
 
 
     cchem.lastDate as lastCChem1,
     timestampdiff('SQL_TSI_DAY', cchem.lastDate, now()) as daysSinceCChem1,
   CASE
-      WHEN (year(now()) = year(cchem.lastDate) AND daysSincCChem1 > 165  AND d.Id.curLocation.area in ('Corrals', 'Shelters', 'PENS' )   THEN true
+      WHEN ( ( (year(now()) = year(cchem.lastDate) AND daysSinceCChem1 > 165) OR cchem.lastDate is null )   AND d.Id.curLocation.area in ('Corrals', 'Shelters', 'PENS' )  ) THEN true
       ELSE false
       END as isCChemCurrent1,
 
   CASE
-      WHEN (d.Id.age.ageInDays > 180 )  THEN true
+      WHEN (d.Id.age.ageInDays > 20 )  THEN true
       ELSE false
       END as isCChemRequired1
+
+
+    cchem.lastDate as lastCChem2,
+        timestampdiff('SQL_TSI_DAY', cchem.lastDate, now()) as daysSinceCChem2,
+  CASE
+      WHEN ( ( (year(now()) = year(cchem.lastDate) AND daysSinceCChem2 > 340) OR cchem.lastDate is null )   AND d.Id.curLocation.area in ('Corrals', 'Shelters', 'PENS' ) AND (flg.Id is not null) ) THEN true
+      ELSE false
+      END as isCChemCurrent2,
+
+  CASE
+      WHEN (d.Id.age.ageInDays > 180 )  THEN true
+      ELSE false
+      END as isCChemRequired2
+
+    cchem.lastDate as lastCChem3,
+        timestampdiff('SQL_TSI_DAY', cchem.lastDate, now()) as daysSinceCChem3,
+  CASE
+      WHEN ( year(now()) = year(cchem.lastDate) AND daysSinceCChem3 > 180  AND d.Id.curLocation.area in ('Corrals', 'Shelters', 'PENS' )  ) THEN true
+      ELSE false
+      END as isCChemCurrent3,
+
+  CASE
+      WHEN (d.Id.age.ageInDays >= 18 )  THEN true
+      ELSE false
+      END as isCChemRequired3
+
+
+
+
+
 
 FROM study.demographics d
 
