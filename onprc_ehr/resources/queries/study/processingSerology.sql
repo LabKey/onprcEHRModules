@@ -26,6 +26,12 @@ SELECT
   t.isPCRRequired,
   t.isPCRCurrent,
 
+  t.lastBchem,
+  t.daysSinceBchem,
+  t.isBchemRequired,
+  t.isBchemCurrent,
+
+
   CASE
     WHEN (t.isSRVRequired = true AND t.isSRVCurrent = false) THEN 4
     ELSE 0
@@ -40,6 +46,61 @@ SELECT
       WHEN  (t.isESPFRequired = true AND t.isESPFCurrent = false AND )  THEN 4
       ELSE 0
       END as ESPFbloodVol,
+
+  -----CBC
+  CASE
+      WHEN  (t.isCBCRequired1 = true AND t.isCBCCurrent1 = false AND )  THEN 1
+      ELSE 0
+      END as CBCbloodVol1,
+
+  CASE
+      WHEN  (t.isCBCRequired2 = true AND t.isCBCCurrent2 = false AND )  THEN 1
+      ELSE 0
+      END as CBCbloodVol2,
+
+  CASE
+      WHEN  (t.isCBCRequired3 = true AND t.isCBCCurrent3 = false AND )  THEN 1
+      ELSE 0
+      END as CBCbloodVol3,
+
+  CASE
+      WHEN  (t.isCBCRequired4 = true AND t.isCBCCurrent4 = false AND )  THEN 1
+      ELSE 0
+      END as CBCbloodVol4,
+
+  CASE
+      WHEN  (t.isCBCRequired5 = true AND t.isCBCCurrent5 = false AND )  THEN 1
+      ELSE 0
+      END as CBCbloodVol5,
+
+
+
+  -----Comprehensive Chemistry
+  CASE
+      WHEN  (t.isCChemRequired1 = true AND t.isCChemCurrent1 = false AND )  THEN 2
+      ELSE 0
+      END as CChembloodVol1,
+
+  CASE
+      WHEN  (t.isCChemRequired2 = true AND t.isCChemCurrent2 = false AND )  THEN 2
+      ELSE 0
+      END as CChembloodVol2,
+
+  CASE
+      WHEN  (t.isCChemRequired3 = true AND t.isCChemCurrent3 = false AND )  THEN 2
+      ELSE 0
+      END as CChembloodVol3,
+
+  CASE
+      WHEN  (t.isCChemRequired4 = true AND t.isCChemCurrent4 = false AND )  THEN 2
+      ELSE 0
+      END as CChembloodVol4,
+
+    -----Basic Chemistry
+  CASE
+      WHEN  (t.isBChemRequired = true AND t.isBChemCurrent = false AND )  THEN 2
+      ELSE 0
+      END as BchembloodVol,
 
 FROM (
 
@@ -189,6 +250,33 @@ SELECT
       ELSE false
       END as isCChemRequired3
 
+    cchem.lastDate as lastCChem4,
+        timestampdiff('SQL_TSI_DAY', cchem.lastDate, now()) as daysSinceCChem4,
+  CASE
+      WHEN ( ( year(now()) = year(cchem.lastDate) AND daysSinceCChem4 > 180 )  AND (nts.Id is not null )  ) THEN true
+      ELSE false
+      END as isCChemCurrent4,
+
+  CASE
+      WHEN (d.Id.age.ageInDays >= 18 )  THEN true
+      ELSE false
+      END as isCChemRequired4
+
+
+    ------------- Basic Chemistry
+
+
+    bchem.lastDate as lastBChem,
+        timestampdiff('SQL_TSI_DAY', bchem.lastDate, now()) as daysSinceBChem,
+  CASE
+      WHEN ( ( year(now()) = year(bchem.lastDate) AND daysSinceBChem > 340 )  AND (d.Id.curLocation.area in ('Corrals', 'Shelters', 'PENS' ) )  ) THEN true
+      ELSE false
+      END as isBChemCurrent,
+
+  CASE
+      WHEN (d.Id.age.ageInDays >= 6 AND d.Id.age.ageInDays < 18 )  THEN true
+      ELSE false
+      END as isBChemRequired
 
 
 
