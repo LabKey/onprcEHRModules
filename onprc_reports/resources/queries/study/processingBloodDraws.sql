@@ -9,9 +9,13 @@ SELECT
     0
  End as PCRBloodVolume,
 
-
   s.srvBloodVol as serologyBloodVol,
-  s.ESPFBloodVol as ESPFBloodVol,
+
+  Case when (a.Id IS NOT NULL)  And (s.ESPFBloodVol > 0 ) then 4
+       ELSE
+           0
+      End as ESPFBloodVol,
+
 
  ( coalesce(s.CBCbloodVol1,0) +  coalesce(s.CBCbloodVol2,0) +  coalesce(s.CBCbloodVol3,0) +  coalesce(s.CBCbloodVol4,0) +  coalesce(s.CBCbloodVol5,0) ) as totalCBCVol,
  (coalesce(s.CChembloodVol1,0) + coalesce(s.CChembloodVol2,0) + coalesce(s.CChembloodVol3,0) + coalesce(s.CChembloodVol4,0) )  as totalCompChemBloodVol,
