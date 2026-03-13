@@ -43,33 +43,33 @@ SELECT
   END as PCRbloodVol,
 
   CASE
-      WHEN  (t.isESPFRequired = true AND t.isESPFCurrent = false AND )  THEN 4
+      WHEN  (t.isESPFRequired = true AND t.isESPFCurrent = false )  THEN 4
       ELSE 0
       END as ESPFbloodVol,
 
   -----CBC
   CASE
-      WHEN  (t.isCBCRequired1 = true AND t.isCBCCurrent1 = false AND )  THEN 1
+      WHEN  (t.isCBCRequired1 = true AND t.isCBCCurrent1 = false )  THEN 1
       ELSE 0
       END as CBCbloodVol1,
 
   CASE
-      WHEN  (t.isCBCRequired2 = true AND t.isCBCCurrent2 = false AND )  THEN 1
+      WHEN  (t.isCBCRequired2 = true AND t.isCBCCurrent2 = false )  THEN 1
       ELSE 0
       END as CBCbloodVol2,
 
   CASE
-      WHEN  (t.isCBCRequired3 = true AND t.isCBCCurrent3 = false AND )  THEN 1
+      WHEN  (t.isCBCRequired3 = true AND t.isCBCCurrent3 = false )  THEN 1
       ELSE 0
       END as CBCbloodVol3,
 
   CASE
-      WHEN  (t.isCBCRequired4 = true AND t.isCBCCurrent4 = false AND )  THEN 1
+      WHEN  (t.isCBCRequired4 = true AND t.isCBCCurrent4 = false )  THEN 1
       ELSE 0
       END as CBCbloodVol4,
 
   CASE
-      WHEN  (t.isCBCRequired5 = true AND t.isCBCCurrent5 = false AND )  THEN 1
+      WHEN  (t.isCBCRequired5 = true AND t.isCBCCurrent5 = false )  THEN 1
       ELSE 0
       END as CBCbloodVol5,
 
@@ -77,28 +77,28 @@ SELECT
 
   -----Comprehensive Chemistry
   CASE
-      WHEN  (t.isCChemRequired1 = true AND t.isCChemCurrent1 = false AND )  THEN 2
+      WHEN  (t.isCChemRequired1 = true AND t.isCChemCurrent1 = false )  THEN 2
       ELSE 0
       END as CChembloodVol1,
 
   CASE
-      WHEN  (t.isCChemRequired2 = true AND t.isCChemCurrent2 = false AND )  THEN 2
+      WHEN  (t.isCChemRequired2 = true AND t.isCChemCurrent2 = false )  THEN 2
       ELSE 0
       END as CChembloodVol2,
 
   CASE
-      WHEN  (t.isCChemRequired3 = true AND t.isCChemCurrent3 = false AND )  THEN 2
+      WHEN  (t.isCChemRequired3 = true AND t.isCChemCurrent3 = false )  THEN 2
       ELSE 0
       END as CChembloodVol3,
 
   CASE
-      WHEN  (t.isCChemRequired4 = true AND t.isCChemCurrent4 = false AND )  THEN 2
+      WHEN  (t.isCChemRequired4 = true AND t.isCChemCurrent4 = false )  THEN 2
       ELSE 0
       END as CChembloodVol4,
 
     -----Basic Chemistry
   CASE
-      WHEN  (t.isBChemRequired = true AND t.isBChemCurrent = false AND )  THEN 2
+      WHEN  (t.isBChemRequired = true AND t.isBChemCurrent = false )  THEN 2
       ELSE 0
       END as BchembloodVol,
 
