@@ -49,14 +49,10 @@ SELECT
 
   -----CBC
   CASE
-      WHEN  (t.isCBCRequired1 = true AND t.isCBCCurrent1 = false )  THEN 1
+      WHEN  (t.isCBCRequired1 = true AND t.isCBCCurrent1 = false ) OR  (t.isCBCRequired2 = true AND t.isCBCCurrent2 = false ) THEN 1
       ELSE 0
       END as CBCbloodVol1,
 
-  CASE
-      WHEN  (t.isCBCRequired2 = true AND t.isCBCCurrent2 = false )  THEN 1
-      ELSE 0
-      END as CBCbloodVol2,
 
   CASE
       WHEN  (t.isCBCRequired3 = true AND t.isCBCCurrent3 = false )  THEN 1
@@ -186,7 +182,7 @@ SELECT
     cbc.lastDate as lastCBC4,
     timestampdiff('SQL_TSI_DAY', cbc.lastDate, now()) as daysSinceCBC4,
    CASE
-      WHEN (year(cbc.lastDate) is null AND d.Id.curLocation.area in ('Corrals', 'Shelters', 'PENS' )  ) THEN true
+      WHEN ( cbc.lastDate is null AND d.Id.curLocation.area in ('Corrals', 'Shelters', 'PENS' )  ) THEN true
       ELSE false
       END as isCBCCurrent4,
 
@@ -258,7 +254,7 @@ SELECT
       END as isCChemCurrent4,
 
   CASE
-      WHEN (d.Id.age.ageInDays >= 18 )  THEN true
+      WHEN (d.Id.age.ageInDays > 180 )  THEN true
       ELSE false
       END as isCChemRequired4,
 
