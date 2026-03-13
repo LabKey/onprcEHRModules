@@ -28,8 +28,14 @@
                     <column columnName="serologyBloodVol">
                         <columnTitle>Serology RTT (mL)</columnTitle>
                     </column>
-                    <column columnName="serologyBloodVol">
-                        <columnTitle>Serology RTT (mL)</columnTitle>
+                    <column columnName="totalCBCVol">
+                        <columnTitle>CBC PTT (mL)</columnTitle>
+                    </column>
+                    <column columnName="totalCompChemBloodVol">
+                        <columnTitle>COMP Chem RTT (mL)</columnTitle>
+                    </column>
+                    <column columnName="BasicChemBloodVol">
+                        <columnTitle>BASIC Chem RTT (mL)</columnTitle>
                     </column>
                     <column columnName="geneticsBloodVol">
                         <columnTitle>Genetics Blood Vol (mL)</columnTitle>
