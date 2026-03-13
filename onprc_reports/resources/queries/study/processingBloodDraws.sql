@@ -29,7 +29,11 @@ SELECT
   coalesce(s.srvBloodVol, 0) +  Case when (a.Id IS NOT NULL)   And (s.pcrbloodVol > 0 )  then 2
    ELSE
      0
-   End + coalesce(g.totalBloodDrawVol, 0) as totalBloodDrawVol,
+   End +    coalesce(s.ESPFBloodVol, 0) +
+  coalesce(s.CBCbloodVol1,0) +  coalesce(s.CBCbloodVol2,0) +  coalesce(s.CBCbloodVol3,0) +  coalesce(s.CBCbloodVol4,0) +  coalesce(s.CBCbloodVol5,0) +
+  coalesce(s.CChembloodVol1,0) + coalesce(s.CChembloodVol2,0) + coalesce(s.CChembloodVol3,0) + coalesce(s.CChembloodVol4,0) +
+  coalesce(s.BChembloodVol,0) +
+  coalesce(g.totalBloodDrawVol, 0) as totalBloodDrawVol,
 
     (select k.room  from study.housing k where k.Id =d.Id And k.enddate is null) as currentlocationroom,
     (select coalesce(k.cage, ' ') from study.housing k where k.Id =d.Id And k.enddate is null) as currentlocationcage,
