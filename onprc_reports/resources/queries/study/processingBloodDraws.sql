@@ -28,7 +28,7 @@ SELECT
 
   Case when (nts.Id is not null) then 0
     ELSE
-        g.totalBloodDrawVol
+        coalesce(g.totalBloodDrawVol,0)
     END as as geneticsBloodVol,
 
   coalesce(s.srvBloodVol, 0) +
