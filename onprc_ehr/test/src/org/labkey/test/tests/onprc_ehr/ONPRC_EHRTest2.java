@@ -30,7 +30,7 @@ import org.labkey.remoteapi.SimplePostCommand;
 import org.labkey.remoteapi.query.ExecuteSqlCommand;
 import org.labkey.remoteapi.query.Filter;
 import org.labkey.remoteapi.query.InsertRowsCommand;
-import org.labkey.remoteapi.query.SaveRowsResponse;
+import org.labkey.remoteapi.query.RowsResponse;
 import org.labkey.remoteapi.query.SelectRowsCommand;
 import org.labkey.remoteapi.query.SelectRowsResponse;
 import org.labkey.test.BaseWebDriverTest;
@@ -250,7 +250,7 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
         insertRowsCommand1.addRow(getApiHelper().createHashMap(birthFields, new Object[]{offspringId7, birthDate, "Live Birth", null, null, "f", room1, cage1, damId1, null, weight, birthDate, "In Progress"}));
         insertRowsCommand1.addRow(getApiHelper().createHashMap(birthFields, new Object[]{offspringId8, birthDate, "Live Birth", null, null, "f", room1, cage1, damId1, null, weight, birthDate, "Completed"}));
         insertRowsCommand1.setTimeout(0);
-        SaveRowsResponse insertRowsResp = insertRowsCommand1.execute(getApiHelper().getConnection(), getContainerPath());
+        RowsResponse insertRowsResp = insertRowsCommand1.execute(getApiHelper().getConnection(), getContainerPath());
 
         final Map<String, String> lsidMap = new HashMap<>();
         for (Map<String, Object> row : insertRowsResp.getRows())
@@ -757,7 +757,7 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
         String U24_PROJECT = "0492-03";
         InsertRowsCommand projectCommand = new InsertRowsCommand("ehr", "project");
         projectCommand.addRow(Maps.of("project", null, "name", U24_PROJECT, "protocol", DUMMY_PROTOCOL));
-        SaveRowsResponse saveRowsResponse = projectCommand.execute(getApiHelper().getConnection(), getContainerPath());
+        RowsResponse saveRowsResponse = projectCommand.execute(getApiHelper().getConnection(), getContainerPath());
         Integer projectId = (Integer)saveRowsResponse.getRows().get(0).get("project");
 
         // Insert dam project assignment into assignment via API

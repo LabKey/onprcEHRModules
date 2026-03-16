@@ -29,6 +29,7 @@ CREATE TABLE mergesync.mergetolkmapping (
   CONSTRAINT PK_mergetolkmapping PRIMARY KEY (mergetestname)
 );
 
+-- @SkipOnEmptySchemasBegin
 INSERT INTO mergesync.testnamemapping (servicename, mergetestname, automaticresults) VALUES ('Albumin', 'ALB', true);
 INSERT INTO mergesync.testnamemapping (servicename, mergetestname, automaticresults) VALUES ('Amylase', 'AMYL', true);
 INSERT INTO mergesync.testnamemapping (servicename, mergetestname, automaticresults) VALUES ('Anaerobic Culture', 'ANCULT', false);
@@ -77,7 +78,6 @@ INSERT INTO mergesync.testnamemapping (servicename, mergetestname, automaticresu
 INSERT INTO mergesync.testnamemapping (servicename, mergetestname, automaticresults) VALUES ('Urinalysis', 'URINE', false);
 INSERT INTO mergesync.testnamemapping (servicename, mergetestname, automaticresults) VALUES ('Yersinia culture', 'YERSNA', false);
 
-TRUNCATE TABLE mergesync.mergetolkmapping;
 INSERT INTO mergesync.mergetolkmapping (mergetestname, servicename) VALUES ('ALB', 'Albumin');
 INSERT INTO mergesync.mergetolkmapping (mergetestname, servicename) VALUES ('AMYL', 'Amylase');
 INSERT INTO mergesync.mergetolkmapping (mergetestname, servicename) VALUES ('ANCULT', 'Anaerobic Culture');
@@ -118,3 +118,4 @@ INSERT INTO mergesync.mergetolkmapping (mergetestname, servicename) VALUES ('SEN
 INSERT INTO mergesync.mergetolkmapping (mergetestname, servicename) VALUES ('SENSI', 'Antibiotic Sensitivity');
 INSERT INTO mergesync.mergetolkmapping (mergetestname, servicename) VALUES ('URINE', 'Urinalysis');
 INSERT INTO mergesync.mergetolkmapping (mergetestname, servicename) VALUES ('YERSNA', 'Yersinia culture');
+-- @SkipOnEmptySchemasEnd

@@ -42,10 +42,9 @@ public class BillingAuditProvider extends AbstractAuditTypeProvider implements A
         defaultVisibleColumns.add(FieldKey.fromParts(COLUMN_NAME_COMMENT));
     }
 
-    @Override
-    protected AbstractAuditDomainKind getDomainKind()
+    public BillingAuditProvider()
     {
-        return new BillingAuditDomainKind();
+        super(new BillingAuditDomainKind());
     }
 
     @Override

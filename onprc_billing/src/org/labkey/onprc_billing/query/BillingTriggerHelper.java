@@ -3,6 +3,7 @@ package org.labkey.onprc_billing.query;
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.labkey.api.collections.IntHashMap;
 import org.labkey.api.data.Aggregate;
 import org.labkey.api.data.CompareType;
 import org.labkey.api.data.Container;
@@ -138,7 +139,7 @@ public class BillingTriggerHelper
         return false; //unknown charge, assume false
     }
 
-    private final Map<Integer, Map<String, Object>> _cachedCharges = new HashMap<>();
+    private final Map<Integer, Map<String, Object>> _cachedCharges = new IntHashMap<>();
 
     private Map<String, Object> getCharge(Integer chargeId)
     {

@@ -1,5 +1,7 @@
+-- @SkipOnEmptySchemasBegin
 DELETE FROM hormoneassay.instruments WHERE instrument = 'Roche E411';
 INSERT INTO hormoneassay.instruments (instrument) VALUES ('Roche E411');
+-- @SkipOnEmptySchemasEnd
 
 CREATE TABLE hormoneassay.assay_tests (
   test varchar(100),
@@ -9,6 +11,7 @@ CREATE TABLE hormoneassay.assay_tests (
   constraint PK_assay_tests PRIMARY KEY (test)
 );
 
+-- @SkipOnEmptySchemasBegin
 INSERT INTO hormoneassay.assay_tests (test, code, units) VALUES ('ACTH', null, 'pg/ml');
 INSERT INTO hormoneassay.assay_tests (test, code, units) VALUES ('Cortisol', null, 'ug/dl');
 INSERT INTO hormoneassay.assay_tests (test, code, units) VALUES ('C-Peptide', null, 'ng/ml');
@@ -29,7 +32,7 @@ INSERT INTO hormoneassay.assay_tests (test, code, units) VALUES ('Free T4', null
 INSERT INTO hormoneassay.assay_tests (test, code, units) VALUES ('Total T4', null, 'ug/dl');
 INSERT INTO hormoneassay.assay_tests (test, code, units) VALUES ('Testosterone', 'TESTO', 'ng/ml');
 INSERT INTO hormoneassay.assay_tests (test, code, units) VALUES ('TSH', null, 'uIU/ml');
-
+-- @SkipOnEmptySchemasEnd
 
 CREATE TABLE hormoneassay.diluents (
   diluent varchar(100),
@@ -37,8 +40,8 @@ CREATE TABLE hormoneassay.diluents (
   constraint PK_diluents PRIMARY KEY (diluent)
 );
 
+-- @SkipOnEmptySchemasBegin
 INSERT INTO hormoneassay.diluents (diluent) VALUES ('DU');
 INSERT INTO hormoneassay.diluents (diluent) VALUES ('MA');
 INSERT INTO hormoneassay.diluents (diluent) VALUES ('MD1');
-
-
+-- @SkipOnEmptySchemasEnd
