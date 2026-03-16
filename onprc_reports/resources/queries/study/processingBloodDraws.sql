@@ -24,7 +24,12 @@ SELECT
   g.parentageBloodDrawVol,
   g.mhcBloodDrawVol,
   g.dnaBloodDrawVol,
-  g.totalBloodDrawVol as geneticsBloodVol,
+ ---- g.totalBloodDrawVol as geneticsBloodVol,
+
+  Case when (nts.Id is not null) then 0
+    ELSE
+        g.totalBloodDrawVol
+    END as as geneticsBloodVol,
 
   coalesce(s.srvBloodVol, 0) +
   Case when (a.Id IS NOT NULL)   And (s.pcrbloodVol > 0 )  then 2
@@ -54,3 +59,14 @@ FROM study.assignment a
 WHERE a.isActive = true and a.project.name = javaConstant('org.labkey.onprc_ehr.ONPRC_EHRManager.U42_PROJECT')
 GROUP BY a.Id
     ) a ON (a.Id = d.Id)
+
+LEFT JOIN (
+    SELECT
+        p.id,
+        max(p.date) as lastDate
+    FROM study.flags p
+    WHERE p.category ='Genetics' And p.value = 'DNA Bank Blood Draw Not Needed'
+      And p.enddate is null
+    GROUP BY p.id
+
+) nts ON (nts.id = d.id)
