@@ -1,5 +1,6 @@
 package org.labkey.test.tests.onprc_ehr;
 
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -11,13 +12,18 @@ import org.labkey.test.categories.ONPRC;
 import org.labkey.test.pages.issues.DetailsPage;
 import org.labkey.test.pages.issues.InsertPage;
 import org.labkey.test.pages.issues.UpdatePage;
+import org.labkey.test.pages.search.SearchResultsPage;
 import org.labkey.test.util.IssuesHelper;
+import org.labkey.test.util.SearchHelper;
 import org.labkey.test.util.SqlserverOnlyTest;
 import org.labkey.test.util.TestUser;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
+import static org.labkey.test.util.PermissionsHelper.EDITOR_ROLE;
+import static org.labkey.test.util.PermissionsHelper.FOLDER_ADMIN_ROLE;
 
 @Category({EHR.class, ONPRC.class})
 public class ONPRC_RestrictedIssueTest extends BaseWebDriverTest implements SqlserverOnlyTest
@@ -51,10 +57,10 @@ public class ONPRC_RestrictedIssueTest extends BaseWebDriverTest implements Sqls
         _containerHelper.createProject(getProjectName(), null);
 
         // Create test users
-        USER1.create(this).addPermission("Editor", getProjectName());
-        USER2.create(this).addPermission("Editor", getProjectName());
-        ISSUE_CREATOR.create(this).addPermission("Editor", getProjectName());
-        FOLDER_ADMIN.create(this).addPermission("Folder Administrator", getProjectName());
+        USER1.create(this).addPermission(EDITOR_ROLE, getProjectName());
+        USER2.create(this).addPermission(EDITOR_ROLE, getProjectName());
+        ISSUE_CREATOR.create(this).addPermission(EDITOR_ROLE, getProjectName());
+        FOLDER_ADMIN.create(this).addPermission(FOLDER_ADMIN_ROLE, getProjectName());
 
         // Add issue list definitions
         _issuesHelper.createNewIssuesList(RESTRICTED_ISSUES_LIST, _containerHelper, true, false, false);
@@ -264,5 +270,38 @@ public class ONPRC_RestrictedIssueTest extends BaseWebDriverTest implements Sqls
     private Locator getIssueLinkLocator(String issueID)
     {
         return Locator.tagWithAttributeContaining("a", "href", String.format("issues-details.view?issueId=%s", issueID));
+    }
+
+    @Test
+    public void restrictedIssueSearchTest()
+    {
+        goToProjectHome();
+
+        // create a few issues in the restricted list
+        clickAndWait(Locator.linkContainingText(RESTRICTED_ISSUES_LIST));
+        DetailsPage detailsPage = _issuesHelper.addIssue("Restricted issue search test #1", USER1.getUserDisplayName());
+        final String ISSUE_1 = detailsPage.getIssueId();
+        InsertPage insertPage = detailsPage.clickCreateNewIssue();
+        insertPage.title().set("Restricted issue search test #2");
+        insertPage.assignedTo().set(USER2.getUserDisplayName());
+        detailsPage = insertPage.save();
+        final String ISSUE_2 = detailsPage.getIssueId();
+
+        SearchHelper searchHelper = new SearchHelper(this);
+        SearchResultsPage resultsPage = searchHelper.searchFor("\"Restricted issue search test\"");
+
+        // verify that we can return links even if the user doesn't have permission to view a restricted issue
+        Assert.assertTrue("Number of search results not expected", resultsPage.getResults().size() == 2);
+
+        // verify assigned to users will see both results but shouldn't be able to see details of issues not assigned to them
+        impersonate(USER1.getEmail());
+        verifyIssueAccess(ISSUE_1, true);
+        verifyIssueAccess(ISSUE_2, false);
+        stopImpersonating(false);
+
+        impersonate(USER2.getEmail());
+        verifyIssueAccess(ISSUE_1, false);
+        verifyIssueAccess(ISSUE_2, true);
+        stopImpersonating();
     }
 }

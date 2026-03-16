@@ -46,8 +46,8 @@ public class ETLAuditProvider extends AbstractAuditTypeProvider implements Audit
 
     static final List<FieldKey> defaultVisibleColumns = new ArrayList<>();
 
-    static {
-
+    static
+    {
         defaultVisibleColumns.add(FieldKey.fromParts(COLUMN_NAME_CREATED));
         defaultVisibleColumns.add(FieldKey.fromParts(COLUMN_NAME_CREATED_BY));
         defaultVisibleColumns.add(FieldKey.fromParts(COLUMN_NAME_IMPERSONATED_BY));
@@ -56,10 +56,9 @@ public class ETLAuditProvider extends AbstractAuditTypeProvider implements Audit
         defaultVisibleColumns.add(FieldKey.fromParts(COLUMN_NAME_COMMENT));
     }
 
-    @Override
-    protected AbstractAuditDomainKind getDomainKind()
+    public ETLAuditProvider()
     {
-        return new ETLAuditDomainKind();
+        super(new ETLAuditDomainKind());
     }
 
     @Override

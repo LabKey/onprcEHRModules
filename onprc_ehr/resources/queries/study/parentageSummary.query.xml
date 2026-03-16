@@ -4,6 +4,12 @@
             <table tableName="parentageSummary" tableDbType="TABLE">
                 <tableTitle>Parentage Summary</tableTitle>
                 <columns>
+                    <column columnName="Id">
+                        <columnTitle>Id</columnTitle>
+                    </column>
+                    <column columnName="date">
+                        <columnTitle>Date</columnTitle>
+                    </column>
                     <column columnName="parent">
                         <columnTitle>Parent</columnTitle>
                         <fk>
@@ -17,6 +23,12 @@
                     </column>
                     <column columnName="method">
                         <columnTitle>Method</columnTitle>
+                    </column>
+                    <column columnName="remark">
+                        <columnTitle>Comments</columnTitle>
+                    </column>
+                    <column columnName="source">
+                        <columnTitle>Data Source</columnTitle>
                     </column>
                 </columns>
             </table>

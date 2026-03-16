@@ -23,7 +23,7 @@ import org.labkey.remoteapi.Connection;
 import org.labkey.remoteapi.SimplePostCommand;
 import org.labkey.remoteapi.query.Filter;
 import org.labkey.remoteapi.query.InsertRowsCommand;
-import org.labkey.remoteapi.query.SaveRowsResponse;
+import org.labkey.remoteapi.query.RowsResponse;
 import org.labkey.remoteapi.query.SelectRowsCommand;
 import org.labkey.remoteapi.query.SelectRowsResponse;
 import org.labkey.test.Locator;
@@ -411,7 +411,7 @@ public abstract class AbstractGenericONPRC_EHRTest extends AbstractGenericEHRTes
                 }
             });
 
-            SaveRowsResponse saveRowsResponse = insertRowsCommand.execute(getApiHelper().getConnection(), getContainerPath());
+            RowsResponse saveRowsResponse = insertRowsCommand.execute(getApiHelper().getConnection(), getContainerPath());
             objectid = (String)saveRowsResponse.getRows().get(0).get("objectid");
         }
 
@@ -461,7 +461,7 @@ public abstract class AbstractGenericONPRC_EHRTest extends AbstractGenericEHRTes
                 }
             });
 
-            SaveRowsResponse saveRowsResponse = insertRowsCommand.execute(getApiHelper().getConnection(), getContainerPath());
+            RowsResponse saveRowsResponse = insertRowsCommand.execute(getApiHelper().getConnection(), getContainerPath());
             groupId = (Integer)saveRowsResponse.getRows().get(0).get("rowid");
         }
 
@@ -511,7 +511,7 @@ public abstract class AbstractGenericONPRC_EHRTest extends AbstractGenericEHRTes
                 }
             });
 
-            SaveRowsResponse saveRowsResponse = insertRowsCommand.execute(getApiHelper().getConnection(), getContainerPath());
+            RowsResponse saveRowsResponse = insertRowsCommand.execute(getApiHelper().getConnection(), getContainerPath());
             objectid = (String)saveRowsResponse.getRows().get(0).get("objectid");
         }
 

@@ -63,6 +63,7 @@ public class GeneticsCoreExpListener implements ExperimentListener
         {
             return;
         }
+
         TableSelector ts = new TableSelector(data, PageFlowUtil.set("RowId", "SubjectId"), new SimpleFilter(FieldKey.fromString("Run"), run.getRowId()), null);
         List<Map<String, Object>> resultRows = new ArrayList<>();
         ts.forEachResults(rs -> {

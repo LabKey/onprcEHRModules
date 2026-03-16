@@ -178,8 +178,8 @@ public class OGASyncRunner implements Job
     public void updateStats(DbSchema targetSchema) throws SQLException
     {
         TableInfo aliases = DbSchema.get("onprc_billing").getTable("aliases");
-        String analyze = targetSchema.getSqlDialect().getAnalyzeCommandForTable(aliases.getSelectName());
-        new SqlExecutor(aliases.getSchema()).execute(new SQLFragment(analyze));
+        SQLFragment analyze = targetSchema.getSqlDialect().getAnalyzeCommandForTable(aliases.getSelectName());
+        new SqlExecutor(aliases.getSchema()).execute(analyze);
     }
 
     public void doMergeOtherAccounts(User u, Container c, TableInfo sourceTable, DbSchema targetSchema) throws SQLException
