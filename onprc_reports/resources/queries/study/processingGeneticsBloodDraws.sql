@@ -10,18 +10,8 @@ SELECT
   t.flags,
   t.parentageBloodDrawVol,
   t.mhcBloodDrawVol,
- --- t.dnaBloodDrawVol,
-  Case when (nts.Id is not null) AND coalesce(t.dnaBloodDrawVol,0) then 0
-       ELSE
-           coalesce(t.dnaBloodDrawVol,0)
-      END as dnaBloodDrawVol,
-
-  (t.parentageBloodDrawVol + t.mhcBloodDrawVol +
-   Case when (nts.Id is not null) AND coalesce(t.dnaBloodDrawVol,0) then 0
-        ELSE
-            coalesce(t.dnaBloodDrawVol,0)
-       END +
-      t.dnaBloodDrawVol) as totalBloodDrawVol,
+  t.dnaBloodDrawVol,
+  (t.parentageBloodDrawVol + t.mhcBloodDrawVol + t.dnaBloodDrawVol) as totalBloodDrawVol,
   'EDTA' as tube_type
 
 FROM (
@@ -61,13 +51,14 @@ SELECT
     ELSE 0
   END as mhcBloodDrawVol,
   CASE
+    WHEN (nts.Id is not null)  THEN 0
     WHEN (f.flags LIKE '%DNA Bank Blood Draw Needed%') THEN 6
     WHEN (f.flags LIKE '%DNA Bank Not Needed%') THEN 0
     WHEN (f.flags LIKE '%DNA Bank Blood Draw Collected%') THEN 0
     WHEN (s.subjectId IS NULL) THEN 6  --timestampdiff('SQL_TSI_DAY', curdate(), d.birth) > 365 AND
     ELSE 0
   END as dnaBloodDrawVol
-  
+
 FROM study.Demographics d
 
 --determine if animal has raw STR data performed by UC Davis
