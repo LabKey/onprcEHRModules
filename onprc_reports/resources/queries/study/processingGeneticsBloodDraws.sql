@@ -10,8 +10,18 @@ SELECT
   t.flags,
   t.parentageBloodDrawVol,
   t.mhcBloodDrawVol,
-  t.dnaBloodDrawVol,
-  (t.parentageBloodDrawVol + t.mhcBloodDrawVol + t.dnaBloodDrawVol) as totalBloodDrawVol,
+ --- t.dnaBloodDrawVol,
+  Case when (nts.Id is not null) AND coalesce(t.dnaBloodDrawVol,0) then 0
+       ELSE
+           coalesce(t.dnaBloodDrawVol,0)
+      END as dnaBloodDrawVol,
+
+  (t.parentageBloodDrawVol + t.mhcBloodDrawVol +
+   Case when (nts.Id is not null) AND coalesce(t.dnaBloodDrawVol,0) then 0
+        ELSE
+            coalesce(t.dnaBloodDrawVol,0)
+       END +
+      t.dnaBloodDrawVol) as totalBloodDrawVol,
   'EDTA' as tube_type
 
 FROM (
@@ -149,6 +159,17 @@ LEFT JOIN (
   WHERE u.isActive = true and u.project.name = javaConstant('org.labkey.onprc_ehr.ONPRC_EHRManager.U24_PROJECT')
   GROUP BY u.Id
 ) u ON (u.Id = d.Id)
+
+LEFT JOIN (
+    SELECT
+        p.id,
+        max(p.date) as lastDate
+    FROM study.flags p
+    WHERE p.category ='Genetics' And p.value = 'DNA Bank Blood Draw Not Needed'
+      And p.enddate is null
+    GROUP BY p.id
+
+) nts ON (nts.id = d.id)
 
 
 WHERE d.calculated_status = 'Alive'
