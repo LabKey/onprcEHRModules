@@ -156,8 +156,8 @@ LEFT JOIN (
         p.id,
         max(p.date) as lastDate
     FROM study.flags p
-    WHERE p.category ='Genetics' And p.value = 'DNA Bank Blood Draw Not Needed'
-      And p.enddate is null
+    WHERE p.flag.category ='Genetics' And p.flag.value = 'DNA Bank Blood Draw Not Needed'
+    And p.enddate is null
     GROUP BY p.id
 
 ) nts ON (nts.id = d.id)
