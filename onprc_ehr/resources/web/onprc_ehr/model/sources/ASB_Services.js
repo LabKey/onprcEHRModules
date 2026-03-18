@@ -29,7 +29,7 @@ EHR.model.DataModelManager.registerMetadata('ASB_Services', {
         'study.encounters': {
             chargetype: {
                 defaultValue: 'DCM: ASB Services',
-                hidden: true
+                hidden: false
             },
             date: {
                 xtype: 'xdatetime',
@@ -89,7 +89,7 @@ EHR.model.DataModelManager.registerMetadata('ASB_Services', {
         'study.blood': {
             chargetype: {
                 defaultValue: 'DCM: ASB Services',
-                hidden: true
+                hidden: false
             },
             performedby: {
                 //defaultValue: LABKEY.Security.currentUser.displayName,
@@ -105,7 +105,7 @@ EHR.model.DataModelManager.registerMetadata('ASB_Services', {
         'study.drug': {
             chargetype: {
                 defaultValue: 'DCM: ASB Services',
-                hidden: true
+                hidden: false
             },
             date: {
                 xtype: 'xdatetime',
@@ -147,33 +147,6 @@ EHR.model.DataModelManager.registerMetadata('ASB_Services', {
             }
 
         }
-        // Modified: 7-27-2017  R.Blasa  not needed for this version
-        //'study.treatment_order': {
-        //    chargetype: {
-        //        defaultValue: 'DCM: ASB Services',
-        //        hidden: true
-        //    },
-        //    date: {
-        //        defaultValue: new Date()
-        //    },
-        //    Billable: {
-        //        defaultValue: 'Yes',
-        //        hidden: true
-        //    },
-        //    code: {
-        //        header: 'Agent',
-        //        editorConfig: {
-        //            defaultSubset: 'Research'
-        //        }
-        //    },
-        //    category: {
-        //        defaultValue: 'Research',
-        //        hidden: true
-        //    },
-        //    remark: {
-        //        header: 'Special Instructions',
-        //        hidden: false
-        //    }
-        //}
+
     }
 });
