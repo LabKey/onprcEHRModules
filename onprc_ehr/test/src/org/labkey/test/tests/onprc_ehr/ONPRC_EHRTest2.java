@@ -37,7 +37,6 @@ import org.labkey.test.BaseWebDriverTest;
 import org.labkey.test.Locator;
 import org.labkey.test.TestProperties;
 import org.labkey.test.WebDriverWrapper;
-import org.labkey.test.categories.CustomModules;
 import org.labkey.test.categories.EHR;
 import org.labkey.test.categories.ONPRC;
 import org.labkey.test.pages.ehr.AnimalHistoryPage;
@@ -75,7 +74,7 @@ import static org.junit.Assert.assertTrue;
 import static org.labkey.test.util.Ext4Helper.Locators.ext4Button;
 import static org.labkey.test.util.Ext4Helper.elementIfEnabled;
 
-@Category({CustomModules.class, EHR.class, ONPRC.class})
+@Category({EHR.class, ONPRC.class})
 @BaseWebDriverTest.ClassTimeout(minutes = 18)
 public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
 {
