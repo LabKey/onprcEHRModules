@@ -90,8 +90,10 @@ Ext4.define('ONPRC_EHR.window.AddBehaviorCasesWindow', {
             Ext4.Array.forEach(this.obsResults.rows, function(sr){
                 //reset variable
                 var newobservation = '';
+                var newremark = '';
                 var row = new LDK.SelectRowsRow(sr);
                 newobservation = row.getValue('category');
+                newremark = row.getValue('remark');
 
                 //note: this has been changed to ensure 1 row per case
                 var key = row.getValue('caseid');
@@ -110,7 +112,7 @@ Ext4.define('ONPRC_EHR.window.AddBehaviorCasesWindow', {
                     //observation: row.getValue('observation'),
                     remark: row.getValue('remark')
                 });
-                if (newobservation == "Alopecia Score") {
+                if (newobservation == "Alopecia Score" && newremark == null) {
                     previousObsMap[key].push({
                         Id: row.getValue('Id'),
                         date: this.recordData.date,
@@ -118,10 +120,10 @@ Ext4.define('ONPRC_EHR.window.AddBehaviorCasesWindow', {
                         caseid: row.getValue('caseid'),
                         category: 'Alopecia Regrowth',
                         area: row.getValue('area'),
-                        allProblemCategories:row.getValue('allProblemCategories'),
+                        allProblemCategories:row.getValue('allProblemCategories')
                         //dont copy value
                         //observation: row.getValue('observation'),
-                        remark: row.getValue('remark')
+                        //remark: row.getValue('remark')
                     });
 
                 }
