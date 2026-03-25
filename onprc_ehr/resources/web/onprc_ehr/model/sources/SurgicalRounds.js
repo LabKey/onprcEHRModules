@@ -34,6 +34,8 @@ EHR.model.DataModelManager.registerMetadata('SurgicalRounds', {
                 hidden: true
             },
             p2: {
+                xtype: 'onprc_ehr-Surg_plantextarea',
+                header: 'S2',
                 hidden: false
             }
         },
