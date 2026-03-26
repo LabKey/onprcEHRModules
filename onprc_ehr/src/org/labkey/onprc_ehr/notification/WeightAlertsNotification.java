@@ -91,7 +91,7 @@ public class WeightAlertsNotification extends AbstractEHRNotification
     @Override
     public String getScheduleDescription()
     {
-        return "every Thursday, at 12pm";
+        return "every Tuesday, at 12pm";
     }
 
     @Override
