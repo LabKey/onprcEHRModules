@@ -86,10 +86,36 @@ public class VetReviewNotification extends ColonyAlertsNotification
         StringBuilder msg = new StringBuilder();
 
        /* remarksWithoutAssignedVet(c, u, msg);*/
+        DVMAlopeciaAlert(c,u,msg); //Added by Kolli, March 2026
         vetRecordsUnderReview(c, u, msg);
         animalsWithoutAssignedVet(c, u, msg);
 
         return msg.toString();
+    }
+
+    /* Added by Kollil 09/22/2025
+    When BSU creates a case AND scores the alopecia at either 4 or 5 (only those scores)
+    THEN the vet assigned to that animal should receive an alert. Show open cases in last 7 days
+    Refer to tkt # 12523
+    */
+    private void DVMAlopeciaAlert(final Container c, User u, final StringBuilder msg)
+    {
+        TableInfo ti = getStudySchema(c, u).getTable("DVMAlertforAlopeciaCases");
+
+        TableSelector ts = new TableSelector(ti, null, null);
+        long total = ts.getRowCount();
+
+        if (total > 0)
+        {
+            msg.append("<b>ALERT: Animals with alopecia score of 4 or 5 with open behavioral case for alopecia in last 7 days:</b><p>");
+            msg.append("There are " + total + " entries found. ");
+            msg.append("<a href='" + getExecuteQueryUrl(c, "study", "DVMAlertforAlopeciaCases", null)  + "'>Click here to view them</a>\n");
+            msg.append("<hr>\n\n");
+        }
+        else
+        {
+            msg.append("<b>WARNING: No animals found with alopecia score of 4 or 5 with open behavioral case for alopecia in last 7 days!</b><br><hr>\n");
+        }
     }
 
     public void vetRecordsUnderReview(Container c, User u, final StringBuilder msg)
