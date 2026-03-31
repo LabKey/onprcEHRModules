@@ -1,0 +1,9 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="Demographics_NotInMMA" tableDbType="NOT_IN_DB">
+                <tableTitle>Demographics (Excluding animals in Weight MMA regimen)</tableTitle>
+            </table>
+        </tables>
+    </metadata>
+</query>
