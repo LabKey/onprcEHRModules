@@ -65,7 +65,7 @@ LEFT JOIN (SELECT
                b.Id
 
            FROM study.assignment b
-           WHERE b.isActive = true and a.project.name = javaConstant('org.labkey.onprc_ehr.ONPRC_EHRManager.U24_PROJECT')
+           WHERE b.isActive = true and b.project.name = javaConstant('org.labkey.onprc_ehr.ONPRC_EHRManager.U24_PROJECT')
            GROUP BY b.Id
 ) b ON (b.Id = d.Id)
 
