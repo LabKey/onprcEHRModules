@@ -96,7 +96,7 @@ SELECT
   CASE
       WHEN  (t.isBChemRequired = true AND t.isBChemCurrent = false )  THEN 2
       ELSE 0
-      END as BchembloodVol,
+      END as BchembloodVol
 
 FROM (
 
@@ -212,7 +212,7 @@ SELECT
     cchem.lastDate as lastCChem1,
     timestampdiff('SQL_TSI_DAY', cchem.lastDate, now()) as daysSinceCChem1,
   CASE
-      WHEN ( (  (timestampdiff('SQL_TSI_DAY', cchem.lastDate, now()) > 165)) OR cchem.lastDate is null )   AND d.Id.curLocation.area in ('Corrals', 'Shelters', 'PENS' )  ) THEN false
+      WHEN  ( ( (timestampdiff('SQL_TSI_DAY', cchem.lastDate, now()) > 165) OR cchem.lastDate is null )   AND d.Id.curLocation.area in ('Corrals', 'Shelters', 'PENS' )  ) THEN false
       ELSE true
       END as isCChemCurrent1,
 
