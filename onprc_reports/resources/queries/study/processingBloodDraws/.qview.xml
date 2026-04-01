@@ -5,6 +5,7 @@
     <column name="currentlocationroom"/>
     <column name="currentlocationcage"/>
     <column name="isU42"/>
+    <column name="isU24"/>
     <column name="spfStatus"/>
     <column name="PCRBloodVolume"/>
     <column name="serologyBloodVol"/>

@@ -4,6 +4,10 @@ SELECT
       WHEN (a.Id IS NULL) THEN 'N'
       ELSE 'Y'
       END as isU42,
+  CASE
+      WHEN (b.Id IS NULL) THEN 'N'
+      ELSE 'Y'
+      END as isU24,
  Case when (a.Id IS NOT NULL)  And (s.PCRbloodVol > 0 ) then 2
    ELSE
     0
@@ -11,10 +15,10 @@ SELECT
 
   s.srvBloodVol as serologyBloodVol,
 
-  Case when (a.Id IS NOT NULL)  And (s.ESPFBloodVol > 0 ) then 4
+  Case when ( (a.Id IS NOT NULL) OR (b.Id IS NOT NULL) )  And (s.ESPFBloodVol > 0 ) then 4
        ELSE
            0
-      End as ESPFBloodVol,
+  End as ESPFBloodVol,
 
 
  ( coalesce(s.CBCbloodVol1,0) +   coalesce(s.CBCbloodVol3,0) +  coalesce(s.CBCbloodVol4,0) +  coalesce(s.CBCbloodVol5,0) ) as totalCBCVol,
@@ -56,5 +60,13 @@ FROM study.assignment a
 WHERE a.isActive = true and a.project.name = javaConstant('org.labkey.onprc_ehr.ONPRC_EHRManager.U42_PROJECT')
 GROUP BY a.Id
     ) a ON (a.Id = d.Id)
+
+LEFT JOIN (SELECT
+               b.Id
+
+           FROM study.assignment b
+           WHERE b.isActive = true and a.project.name = javaConstant('org.labkey.onprc_ehr.ONPRC_EHRManager.U24_PROJECT')
+           GROUP BY b.Id
+) b ON (b.Id = d.Id)
 
 
