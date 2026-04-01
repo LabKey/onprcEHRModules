@@ -1801,14 +1801,16 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         insertRowsCommand.addRow(row);
         insertRowsCommand.execute(getApiHelper().getConnection(), getContainerPath());
 
-        row.put("Id", SUBJECTS[0]);
-        row.put("category", "Alopecia Regrowth");
-        row.put("date", prepareDate(new Date(), -4, 0));
-        row.put("caseid", caseId);
-        row.put("observation", "Yes");
-        row.put("objectid", generateGUID());
-        row.put("taskid", generateGUID());  //required for latestObservationsForCase.sql to work
-        insertRowsCommand.addRow(row);
+        Map<String, Object> row2 = new HashMap<>();
+
+        row2.put("Id", SUBJECTS[0]);
+        row2.put("category", "Alopecia Regrowth");
+        row2.put("date", prepareDate(new Date(), -4, 0));
+        row2.put("caseid", caseId);
+        row2.put("observation", "Yes");
+        row2.put("objectid", generateGUID());
+        row2.put("taskid", generateGUID());  //required for latestObservationsForCase.sql to work
+        insertRowsCommand.addRow(row2);
         insertRowsCommand.execute(getApiHelper().getConnection(), getContainerPath());
 
         Ext4GridRef obsGrid = _helper.getExt4GridForFormSection("Observations");
