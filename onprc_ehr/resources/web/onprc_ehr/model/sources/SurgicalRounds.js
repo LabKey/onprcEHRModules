@@ -33,7 +33,10 @@ EHR.model.DataModelManager.registerMetadata('SurgicalRounds', {
             p: {
                 hidden: true
             },
-            p2: {
+            CEG_Plan: {
+                hidden: true
+            },
+            P2: {
                 formEditorConfig: {
                     xtype: 'onprc_ehr-Surg_plantextarea',
                 },
