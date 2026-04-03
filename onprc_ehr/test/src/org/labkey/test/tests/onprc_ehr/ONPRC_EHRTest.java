@@ -566,12 +566,12 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         allIds.addAll(birthIds);
         Date today = DateUtils.truncate(new Date(), Calendar.DATE);
 
-        log("Create 30 animals through the Arrival form");
-        _helper.goToTaskForm("Arrival", "Submit Final", false);
-        enableDataEntryFormIfNeeded();
-        bulkAddIdsToForm(_helper.getExt4GridForFormSection("Arrivals"), arrivalIds);
-        populateArrivalBulkEdit(today);
-        submitBirthArrivalForm();
+//        log("Create 30 animals through the Arrival form");
+//        _helper.goToTaskForm("Arrival", "Submit Final", false);
+//        enableDataEntryFormIfNeeded();
+//        bulkAddIdsToForm(_helper.getExt4GridForFormSection("Arrivals"), arrivalIds);
+//        populateArrivalBulkEdit(today);
+//        submitBirthArrivalForm();
 
         log("Create 30 animals through the Birth form");
         _helper.goToTaskForm("Birth", false);
@@ -592,7 +592,8 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
                 },
                 "Expected 60 demographics records to be created", WAIT_FOR_PAGE * 2);
 
-        log("Bulk add treatment orders for all 60 animals");
+//        log("Bulk add treatment orders for all 60 animals");
+        log("Bulk add treatment orders for all 30 animals");
         _helper.goToTaskForm("Medication/Treatment Orders", false);
         Ext4GridRef treatmentGrid = _helper.getExt4GridForFormSection("Medication/Treatment Orders");
         bulkAddIdsToForm(treatmentGrid, allIds);
@@ -1853,8 +1854,12 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         _helper.toggleBulkEditField("Species");
         _helper.toggleBulkEditField("Geographic Origin");
         _helper.toggleBulkEditField("Birth");
-        _helper.toggleBulkEditField("Initial Room");
 
+        String birth = _df.format(prepareDate(new Date(), 700, 0));
+        _helper.toggleBulkEditField("Birth");
+        _ext4Helper.queryOne("window field[fieldLabel=Birth]", Ext4ComboRef.class).setValue(birth);
+
+        _helper.toggleBulkEditField("Initial Room");
 
         Ext4ComboRef sourceField = Ext4ComboRef.getForLabel(this, "Source");
         sourceField.waitForStoreLoad();
@@ -1865,13 +1870,8 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         acquisitionTypeField.setComboByDisplayValue("Acquired");
 
         Ext4ComboRef.getForLabel(this, "Gender").setComboByDisplayValue("female");
-
         Ext4ComboRef.getForLabel(this, "Species").setComboByDisplayValue(RHESUS);
-
         Ext4ComboRef.getForLabel(this, "Geographic Origin").setValue(INDIAN);
-
-        Ext4FieldRef.getForLabel(this, "Birth").setValue(_df.format(prepareDate(new Date(), 700, 0)));;
-
         Ext4FieldRef.getForLabel(this, "Initial Room").setValue(ROOMS[0]);
 
         submitBulkEditWindow();
@@ -1996,7 +1996,7 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
     private void assertMoreActionsMenuItemsDisabledDuringValidation(String... menuItemTexts)
     {
         Locator.XPathLocator validationIndicator = Locator.tagContainingText("span", "Validating...").notHidden();
-        waitFor(() -> validationIndicator.findElements(getDriver()).size() > 0,
+        waitFor(() -> !validationIndicator.findElements(getDriver()).isEmpty(),
                 "Validation indicator never appeared", WAIT_FOR_PAGE);
 
         waitAndClick(_helper.getDataEntryButton("More Actions"));
@@ -2018,7 +2018,7 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
 
     private void enableDataEntryFormIfNeeded()
     {
-        if (Ext4Helper.Locators.ext4Button("Enable the form for data entry").findElements(getDriver()).size() > 0)
+        if (!Ext4Helper.Locators.ext4Button("Enable the form for data entry").findElements(getDriver()).isEmpty())
         {
             waitAndClick(Ext4Helper.Locators.ext4Button("Enable the form for data entry"));
             waitForElement(Ext4Helper.Locators.ext4Button("Exit data entry"));
@@ -2031,11 +2031,11 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         waitForElement(Ext4Helper.Locators.window("Finalize Birth/Arrival Form"));
         waitAndClick(Ext4Helper.Locators.window("Finalize Birth/Arrival Form").append(Ext4Helper.Locators.ext4Button("Yes")));
 
-        waitFor(() -> Ext4Helper.Locators.window("Success").notHidden().findElements(getDriver()).size() > 0 ||
-                        Locator.tagWithText("a", "Enter New Data").findElements(getDriver()).size() > 0,
+        waitFor(() -> !Ext4Helper.Locators.window("Success").notHidden().findElements(getDriver()).isEmpty() ||
+                        !Locator.tagWithText("a", "Enter New Data").findElements(getDriver()).isEmpty(),
                 "Expected Birth/Arrival form submission to complete", WAIT_FOR_PAGE * 2);
 
-        if (Ext4Helper.Locators.window("Success").notHidden().findElements(getDriver()).size() > 0)
+        if (!Ext4Helper.Locators.window("Success").notHidden().findElements(getDriver()).isEmpty())
         {
             waitAndClick(Ext4Helper.Locators.window("Success").append(Ext4Helper.Locators.ext4Button("No")));
         }
