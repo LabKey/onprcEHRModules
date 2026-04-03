@@ -1847,16 +1847,16 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
 
     private void populateArrivalBulkEdit(Date today)
     {
-        _helper.toggleBulkEditField("Arrival Date");
+        _helper.toggleBulkEditField("Date");
         _helper.toggleBulkEditField("Source");
         _helper.toggleBulkEditField("Acquisition Type");
         _helper.toggleBulkEditField("Gender");
         _helper.toggleBulkEditField("Species");
         _helper.toggleBulkEditField("Geographic Origin");
         _helper.toggleBulkEditField("Birth");
-        _helper.toggleBulkEditField("Room");
+        _helper.toggleBulkEditField("Initial Room");
 
-        Ext4FieldRef.getForLabel(this, "Arrival Date").setValue(_df.format(prepareDate(new Date(), 2, 0)));
+        Ext4FieldRef.getForLabel(this, "Date").setValue(_df.format(today));
 
         Ext4ComboRef sourceField = Ext4ComboRef.getForLabel(this, "Source");
         sourceField.waitForStoreLoad();
@@ -1874,14 +1874,14 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
 
         Ext4FieldRef.getForLabel(this, "Birth").setValue(_df.format(prepareDate(new Date(), 700, 0)));;
 
-        Ext4FieldRef.getForLabel(this, "Room").setValue(ROOMS[0]);
+        Ext4FieldRef.getForLabel(this, "Initial Room").setValue(ROOMS[0]);
 
         submitBulkEditWindow();
     }
 
     private void populateBirthBulkEdit(Date today)
     {
-        _helper.toggleBulkEditField("Birth Date");
+        _helper.toggleBulkEditField("Date");
         _helper.toggleBulkEditField("Birth Condition");
         _helper.toggleBulkEditField("Room");
         _helper.toggleBulkEditField("Gender");
@@ -1889,7 +1889,7 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         _helper.toggleBulkEditField("Species");
         _helper.toggleBulkEditField("Geographic Origin");
 
-        Ext4FieldRef.getForLabel(this, "Birth Date").setValue(_df.format(today));
+        Ext4FieldRef.getForLabel(this, "Date").setValue(_df.format(today));
         Ext4ComboRef.getForLabel(this, "Birth Condition").setComboByDisplayValue("Live Birth");
         Ext4FieldRef.getForLabel(this, "Room").setValue(ROOM_ID2);
         Ext4ComboRef.getForLabel(this, "Gender").setComboByDisplayValue("female");
