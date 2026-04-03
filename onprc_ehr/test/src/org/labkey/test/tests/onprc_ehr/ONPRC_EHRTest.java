@@ -1848,31 +1848,32 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
     private void populateArrivalBulkEdit(Date today)
     {
         _helper.toggleBulkEditField("Arrival Date");
-        Ext4FieldRef.getForLabel(this, "Arrival Date").setValue(_df.format(today));
-
         _helper.toggleBulkEditField("Source");
+        _helper.toggleBulkEditField("Acquisition Type");
+        _helper.toggleBulkEditField("Gender");
+        _helper.toggleBulkEditField("Species");
+        _helper.toggleBulkEditField("Geographic Origin");
+        _helper.toggleBulkEditField("Birth");
+        _helper.toggleBulkEditField("Room");
+
+        Ext4FieldRef.getForLabel(this, "Arrival Date").setValue(_df.format(prepareDate(new Date(), 2, 0)));
+
         Ext4ComboRef sourceField = Ext4ComboRef.getForLabel(this, "Source");
         sourceField.waitForStoreLoad();
         sourceField.setComboByDisplayValue("Boston");
 
-        _helper.toggleBulkEditField("Acquisition Type");
         Ext4ComboRef acquisitionTypeField = Ext4ComboRef.getForLabel(this, "Acquisition Type");
         acquisitionTypeField.waitForStoreLoad();
         acquisitionTypeField.setComboByDisplayValue("Acquired");
 
-        _helper.toggleBulkEditField("Gender");
         Ext4ComboRef.getForLabel(this, "Gender").setComboByDisplayValue("female");
 
-        _helper.toggleBulkEditField("Species");
         Ext4ComboRef.getForLabel(this, "Species").setComboByDisplayValue(RHESUS);
 
-        _helper.toggleBulkEditField("Geographic Origin");
         Ext4ComboRef.getForLabel(this, "Geographic Origin").setValue(INDIAN);
 
-        _helper.toggleBulkEditField("Birth");
-        Ext4FieldRef.getForLabel(this, "Birth").setValue(_df.format(today));
+        Ext4FieldRef.getForLabel(this, "Birth").setValue(_df.format(prepareDate(new Date(), 700, 0)));;
 
-        _helper.toggleBulkEditField("Room");
         Ext4FieldRef.getForLabel(this, "Room").setValue(ROOMS[0]);
 
         submitBulkEditWindow();
@@ -1881,24 +1882,19 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
     private void populateBirthBulkEdit(Date today)
     {
         _helper.toggleBulkEditField("Birth Date");
-        Ext4FieldRef.getForLabel(this, "Birth Date").setValue(_df.format(today));
-
         _helper.toggleBulkEditField("Birth Condition");
-        Ext4ComboRef.getForLabel(this, "Birth Condition").setComboByDisplayValue("Live Birth");
-
         _helper.toggleBulkEditField("Room");
-        Ext4FieldRef.getForLabel(this, "Room").setValue(ROOM_ID2);
-
         _helper.toggleBulkEditField("Gender");
-        Ext4ComboRef.getForLabel(this, "Gender").setComboByDisplayValue("female");
-
         _helper.toggleBulkEditField("Birth Type");
-        Ext4ComboRef.getForLabel(this, "Birth Type").setComboByDisplayValue("Vaginal");
-
         _helper.toggleBulkEditField("Species");
-        Ext4ComboRef.getForLabel(this, "Species").setComboByDisplayValue(RHESUS);
-
         _helper.toggleBulkEditField("Geographic Origin");
+
+        Ext4FieldRef.getForLabel(this, "Birth Date").setValue(_df.format(today));
+        Ext4ComboRef.getForLabel(this, "Birth Condition").setComboByDisplayValue("Live Birth");
+        Ext4FieldRef.getForLabel(this, "Room").setValue(ROOM_ID2);
+        Ext4ComboRef.getForLabel(this, "Gender").setComboByDisplayValue("female");
+        Ext4ComboRef.getForLabel(this, "Birth Type").setComboByDisplayValue("Vaginal");
+        Ext4ComboRef.getForLabel(this, "Species").setComboByDisplayValue(RHESUS);
         Ext4ComboRef.getForLabel(this, "Geographic Origin").setValue(INDIAN);
 
         submitBulkEditWindow();
@@ -1910,29 +1906,28 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         LocalDateTime endDate = beginDate.plusDays(2).withHour(23).withMinute(59);
 
         _helper.toggleBulkEditField("Begin Date");
-        Ext4FieldRef.getForLabel(this, "Begin Date").setValue(_tf.format(Date.from(beginDate.atZone(ZoneId.systemDefault()).toInstant())));
-
         _helper.toggleBulkEditField("End Date");
-        Ext4FieldRef.getForLabel(this, "End Date").setValue(_tf.format(Date.from(endDate.atZone(ZoneId.systemDefault()).toInstant())));
-
         _helper.toggleBulkEditField("Charge To");
+        _helper.toggleBulkEditField("Treatment");
+        _helper.toggleBulkEditField("Frequency");
+        _helper.toggleBulkEditField("Route");
+        _helper.toggleBulkEditField("Amount");
+        _helper.toggleBulkEditField("Amount Units");
+
+        Ext4FieldRef.getForLabel(this, "Begin Date").setValue(_tf.format(Date.from(beginDate.atZone(ZoneId.systemDefault()).toInstant())));
+        Ext4FieldRef.getForLabel(this, "End Date").setValue(_tf.format(Date.from(endDate.atZone(ZoneId.systemDefault()).toInstant())));
         setBulkEditProject(PROJECT_ID);
 
-        _helper.toggleBulkEditField("Treatment");
         Ext4ComboRef treatmentField = Ext4ComboRef.getForLabel(this, "Treatment");
         treatmentField.waitForStoreLoad();
         treatmentField.setComboByDisplayValue("ACETAMINOPHEN (80mg) (E-77510)");
 
-        _helper.toggleBulkEditField("Frequency");
         Ext4ComboRef.getForLabel(this, "Frequency").setComboByDisplayValue("BID - AM/Night");
 
-        _helper.toggleBulkEditField("Route");
         Ext4ComboRef.getForLabel(this, "Route").setComboByDisplayValue("PO");
 
-        _helper.toggleBulkEditField("Amount");
         Ext4FieldRef.getForLabel(this, "Amount").setValue(10);
 
-        _helper.toggleBulkEditField("Amount Units");
         Ext4ComboRef.getForLabel(this, "Amount Units").setComboByDisplayValue("mg");
 
         submitBulkEditWindow();
