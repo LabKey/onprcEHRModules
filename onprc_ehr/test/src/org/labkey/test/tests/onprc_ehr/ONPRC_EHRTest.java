@@ -1847,7 +1847,6 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
 
     private void populateArrivalBulkEdit(Date today)
     {
-        _helper.toggleBulkEditField("Date");
         _helper.toggleBulkEditField("Source");
         _helper.toggleBulkEditField("Acquisition Type");
         _helper.toggleBulkEditField("Gender");
@@ -1856,7 +1855,6 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         _helper.toggleBulkEditField("Birth");
         _helper.toggleBulkEditField("Initial Room");
 
-        Ext4FieldRef.getForLabel(this, "Date").setValue(_df.format(today));
 
         Ext4ComboRef sourceField = Ext4ComboRef.getForLabel(this, "Source");
         sourceField.waitForStoreLoad();
@@ -1881,7 +1879,6 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
 
     private void populateBirthBulkEdit(Date today)
     {
-        _helper.toggleBulkEditField("Date");
         _helper.toggleBulkEditField("Birth Condition");
         _helper.toggleBulkEditField("Room");
         _helper.toggleBulkEditField("Gender");
@@ -1889,7 +1886,6 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         _helper.toggleBulkEditField("Species");
         _helper.toggleBulkEditField("Geographic Origin");
 
-        Ext4FieldRef.getForLabel(this, "Date").setValue(_df.format(today));
         Ext4ComboRef.getForLabel(this, "Birth Condition").setComboByDisplayValue("Live Birth");
         Ext4FieldRef.getForLabel(this, "Room").setValue(ROOM_ID2);
         Ext4ComboRef.getForLabel(this, "Gender").setComboByDisplayValue("female");
