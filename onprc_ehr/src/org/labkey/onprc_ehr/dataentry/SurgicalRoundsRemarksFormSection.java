@@ -26,7 +26,7 @@ import java.util.List;
  * Date: 7/7/13
  * Time: 10:36 AM
  */
-public class SurgicalRoundsRemarksFormSection extends RoundsRemarksFormSection
+public class SurgicalRoundsRemarksFormSection extends SurgeryRoundsRemarksFormSection
 {
     public SurgicalRoundsRemarksFormSection()
     {

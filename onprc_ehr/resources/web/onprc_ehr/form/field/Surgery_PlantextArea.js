@@ -27,7 +27,7 @@ Ext4.define('ONPRC_EHR.form.field.Surg_PlanTextArea', {
         this.linkEl = this.linkDiv.createChild({
             tag: 'a',
             cls: 'labkey-text-link',
-            html: (this.getValue() ? 'Copy Latest P2' : 'Edit P2')
+            html: (this.getValue() ? 'Copy Latest S2' : 'Edit S2')
         });
 
         var panel = this.up('ehr-formpanel');
@@ -50,7 +50,7 @@ Ext4.define('ONPRC_EHR.form.field.Surg_PlanTextArea', {
             })
         }
 
-        this.linkEl.on('click', this.copyMostRecentP2, this);
+        this.linkEl.on('click', this.copyMostRecentS2, this);
         this.setupMask();
     },
 
@@ -86,7 +86,7 @@ Ext4.define('ONPRC_EHR.form.field.Surg_PlanTextArea', {
         }
 
         if (this.linkEl){
-            this.linkEl.update('Copy Latest P2');
+            this.linkEl.update('Copy Latest S2');
         }
 
         if (this.inputEl)
@@ -100,17 +100,17 @@ Ext4.define('ONPRC_EHR.form.field.Surg_PlanTextArea', {
 
         var rec = EHR.DataEntryUtils.getBoundRecord(this);
         if (rec && rec.get('Id')){
-            this.getMostRecentP2(rec, function(ret, Id){
+            this.getMostRecentS2(rec, function(ret, Id){
                 if (!ret || !this.displayEl){
-                    this.displayEl.update('Either no active case or no P2 for ' + (Id || rec.get('Id')));
+                    this.displayEl.update('Either no active case or no S2 for ' + (Id || rec.get('Id')));
                     return;
                 }
 
-                if (ret.mostRecentP2 && ret.isActive){
-                    this.displayEl.update(ret.mostRecentP2);
+                if (ret.mostRecentS2 && ret.isActive){
+                    this.displayEl.update(ret.mostRecentS2);
                 }
                 else {
-                    this.displayEl.update('Either no active case or no P2 for ' + (Id || rec.get('Id')));
+                    this.displayEl.update('Either no active case or no S2 for ' + (Id || rec.get('Id')));
                 }
             });
         }
@@ -129,24 +129,24 @@ Ext4.define('ONPRC_EHR.form.field.Surg_PlanTextArea', {
         Ext4.Msg.wait('Loading...');
         this.showTextArea();
 
-        this.getMostRecentP2(rec, function(ret){
+        this.getMostRecentS2(rec, function(ret){
             Ext4.Msg.hide();
 
-            if (ret && ret.mostRecentP2){
-                this.setValue(ret.mostRecentP2);
-                this.linkEl.update('Refresh P2');
+            if (ret && ret.mostRecentS2){
+                this.setValue(ret.mostRecentS2);
+                this.linkEl.update('Refresh S2');
             }
         }, true);
     },
 
-    getMostRecentP2: function(rec, cb, alwaysUseCallback){
+    getMostRecentS2: function(rec, cb, alwaysUseCallback){
         var date = rec.get('date') || new Date();
         var id = rec.get('Id');
         this.pendingIdRequest = id;
 
         LABKEY.Query.executeSql({
             schemaName: 'study',
-            sql: 'SELECT c.Id, c.p2 as mostRecentP2, c.caseid,  as caseCategory, c.caseid.isActive as isActive FROM study.clinRemarks c WHERE (c.category != \'Replaced SOAP\' OR c.category IS NULL) AND c.caseid.category= \'Surgery\' AND c.p2 IS NOT NULL AND c.Id = \'' + rec.get('Id') + '\' ORDER BY c.date DESC LIMIT 1',
+            sql: 'SELECT c.Id, c.p2 as mostRecentS2, c.caseid,  c.caseid.category as caseCategory, c.caseid.isActive as isActive FROM study.clinRemarks c WHERE (c.category != \'Replaced SOAP\' OR c.category IS NULL) AND c.caseid.category= \'Surgery\' AND c.p2 IS NOT NULL AND c.Id = \'' + rec.get('Id') + '\' ORDER BY c.date DESC LIMIT 1',
             failure: LDK.Utils.getErrorCallback(),
             scope: this,
             success: function(results){
