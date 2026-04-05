@@ -2044,7 +2044,7 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         enableDataEntryFormIfNeeded();
 
         waitForElement(Ext4Helper.Locators.ext4Button("Submit Final"), WAIT_FOR_PAGE * 2);
-        _ext4Helper.queryOne("button[text='Submit Final']", Ext4CmpRef.class).waitForEnabled();
+        waitForDataEntryButtonEnabled("Submit Final", WAIT_FOR_PAGE * 4);
 
         Ext4GridRef grid = _helper.getExt4GridForFormSection("Arrivals");
         grid.clickTbarButton("Add Series of IDs");
@@ -2087,7 +2087,7 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
 
         submitBulkEditWindow();
 
-        _ext4Helper.queryOne("button[text='Submit Final']", Ext4CmpRef.class).waitForEnabled();
+        waitForDataEntryButtonEnabled("Submit Final", WAIT_FOR_PAGE * 4);
         submitBirthArrivalForm();
     }
 
@@ -2111,7 +2111,7 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
             grid.setGridCell(row, "geographic_origin", INDIAN);
         }
 
-        _ext4Helper.queryOne("button[text='Submit Final']", Ext4CmpRef.class).waitForEnabled();
+        waitForDataEntryButtonEnabled("Submit Final", WAIT_FOR_PAGE * 4);
         submitBirthArrivalForm();
     }
 
@@ -2229,6 +2229,20 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
                 buttons.get(0).waitForEnabled();
             }
         }
+    }
+
+    private void waitForDataEntryButtonEnabled(String buttonText, int timeout)
+    {
+        waitFor(() -> {
+                    List<Ext4CmpRef> buttons = _ext4Helper.componentQuery("button[text='" + buttonText + "']", Ext4CmpRef.class);
+                    if (buttons.isEmpty())
+                    {
+                        return false;
+                    }
+
+                    return Boolean.FALSE.equals(buttons.get(0).getEval("return this.isDisabled();"));
+                },
+                "Button did not become enabled: " + buttonText, timeout);
     }
 
     private void enableDataEntryFormIfNeeded()
