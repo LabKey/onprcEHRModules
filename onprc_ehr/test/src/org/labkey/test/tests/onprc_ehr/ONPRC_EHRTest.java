@@ -1148,8 +1148,8 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         Assert.assertEquals(remark, bloodGrid.getFieldValue(3, "remark"));
         Assert.assertEquals(remark, bloodGrid.getFieldValue(4, "remark"));
 
-        waitAndClick(_helper.getDataEntryButton("Save & Close"));
-        waitForElement(Locator.tagWithText("a", "Enter New Data"));
+        waitForDataEntryButtonEnabled("Save & Close", WAIT_FOR_PAGE * 2);
+        waitForElement(Locator.tagWithText("a", "Enter New Data"), WAIT_FOR_PAGE * 2);
     }
 
     @Test
@@ -1612,7 +1612,7 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         waitForElementToDisappear(Locator.tagContainingText("div", "Saving Changes...").notHidden());
 
         waitAndClick(_helper.getDataEntryButton("Save & Close"));
-        waitForElement(Locator.tagWithText("a", "Enter New Data"));
+        waitForElement(Locator.tagWithText("a", "Enter New Data"), WAIT_FOR_PAGE * 2);
 
         //make new necropsy, copy from previous
         _helper.goToTaskForm("Necropsy", false);
