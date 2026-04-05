@@ -560,53 +560,46 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
     @Test
     public void testSubmitButtonsDisabledDuringValidation() throws Exception
     {
-        List<String> arrivalIds = createSequentialAnimalIds("71", 30);
-        List<String> birthIds = createSequentialAnimalIds("81", 30);
+        Date today = DateUtils.truncate(new Date(), Calendar.DATE);
+        Date arrivalBirthDate = prepareDate(today, -700, 0);
+        List<String> arrivalIds = createSequentialNumericIds(72000, 30);
+        List<String> birthIds = createSequentialNumericIds(73000, 30);
         List<String> allIds = new ArrayList<>(arrivalIds);
         allIds.addAll(birthIds);
-        Date today = DateUtils.truncate(new Date(), Calendar.DATE);
 
-//        log("Create 30 animals through the Arrival form");
-//        _helper.goToTaskForm("Arrival", "Submit Final", false);
-//        enableDataEntryFormIfNeeded();
-//        bulkAddIdsToForm(_helper.getExt4GridForFormSection("Arrivals"), arrivalIds);
-//        populateArrivalBulkEdit(today);
-//        submitBirthArrivalForm();
+        log("Deleting existing records");
+        deleteAnimalRecords(allIds);
 
-        log("Create 30 animals through the Birth form");
-        _helper.goToTaskForm("Birth", false);
-        enableDataEntryFormIfNeeded();
-        bulkAddIdsToForm(_helper.getExt4GridForFormSection("Births"), birthIds);
-        populateBirthBulkEdit(today);
-        submitBirthArrivalForm();
+        log("Creating 30 animals through the Arrival form");
+        createArrivalAnimalsViaForm(arrivalIds, arrivalBirthDate);
+
+        log("Creating 30 animals through the Birth form");
+        createBirthAnimalsViaForm(birthIds, today);
 
         waitFor(() -> {
                     try
                     {
-                        return getQueryCount("study", "demographics", "Id", allIds) == allIds.size();
+                        return getCountForIds("study", "demographics", "Id", allIds) == allIds.size();
                     }
                     catch (Exception e)
                     {
                         return false;
                     }
                 },
-                "Expected 60 demographics records to be created", WAIT_FOR_PAGE * 2);
+                "Expected demographics rows were not created for all 60 animals", WAIT_FOR_PAGE * 4);
 
-//        log("Bulk add treatment orders for all 60 animals");
-        log("Bulk add treatment orders for all 30 animals");
+        log("Bulk adding treatment orders for all 60 animals");
         _helper.goToTaskForm("Medication/Treatment Orders", false);
         Ext4GridRef treatmentGrid = _helper.getExt4GridForFormSection("Medication/Treatment Orders");
-        bulkAddIdsToForm(treatmentGrid, allIds);
-        populateTreatmentOrderBulkEdit();
-        assertMoreActionsMenuItemsDisabledDuringValidation("Submit and Reload", "Force Submit");
-        assertButtonsDisabledUntilValidationComplete("Save Draft", "Save & Close", "Submit For Review", "Submit Final");
+        addBatchIdsToGrid(treatmentGrid, allIds, true);
+        populateTreatmentOrdersBulkEdit();
 
-        Assert.assertEquals("Unexpected treatment order row count", allIds.size(), treatmentGrid.getRowCount());
+        assertActionsDisabledDuringValidation(
+                Arrays.asList("Save Draft", "Save & Close", "Submit For Review", "Submit Final"),
+                Arrays.asList("Submit and Reload", "Force Submit"));
 
-        submitSingleQueryForm();
-
-        Assert.assertEquals("Expected one treatment order for each test animal", allIds.size(),
-                getQueryCount("study", "treatment_order", "Id", allIds));
+        treatmentGrid.waitForRowCount(allIds.size());
+        _helper.discardForm();
     }
 
     @Test
@@ -1822,244 +1815,6 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         expectedVals.put(fieldName, value);
     }
 
-    private List<String> createSequentialAnimalIds(String prefix, int count)
-    {
-        String seed = Long.toString(System.currentTimeMillis());
-        seed = seed.substring(Math.max(0, seed.length() - 5));
-
-        List<String> ids = new ArrayList<>();
-        for (int i = 1; i <= count; i++)
-        {
-            ids.add(prefix + seed + String.format("%02d", i));
-        }
-
-        return ids;
-    }
-
-    private void bulkAddIdsToForm(Ext4GridRef grid, List<String> ids)
-    {
-        grid.clickTbarButton("Add Batch");
-        waitForElement(Ext4Helper.Locators.window("Choose Animals"));
-        Ext4FieldRef.getForLabel(this, "Id(s)").setValue(StringUtils.join(ids, ";"));
-        Ext4FieldRef.getForLabel(this, "Bulk Edit Before Applying").setChecked(true);
-        waitAndClick(Ext4Helper.Locators.window("Choose Animals").append(Ext4Helper.Locators.ext4Button("Submit")));
-        waitForElement(Ext4Helper.Locators.window("Bulk Edit"));
-    }
-
-    private void populateArrivalBulkEdit(Date today)
-    {
-        _helper.toggleBulkEditField("Source");
-        _helper.toggleBulkEditField("Acquisition Type");
-        _helper.toggleBulkEditField("Gender");
-        _helper.toggleBulkEditField("Species");
-        _helper.toggleBulkEditField("Geographic Origin");
-        _helper.toggleBulkEditField("Birth");
-
-        String birth = _df.format(prepareDate(new Date(), 700, 0));
-        _helper.toggleBulkEditField("Birth");
-        _ext4Helper.queryOne("window field[fieldLabel=Birth]", Ext4ComboRef.class).setValue(birth);
-
-        _helper.toggleBulkEditField("Initial Room");
-
-        Ext4ComboRef sourceField = Ext4ComboRef.getForLabel(this, "Source");
-        sourceField.waitForStoreLoad();
-        sourceField.setComboByDisplayValue("Boston");
-
-        Ext4ComboRef acquisitionTypeField = Ext4ComboRef.getForLabel(this, "Acquisition Type");
-        acquisitionTypeField.waitForStoreLoad();
-        acquisitionTypeField.setComboByDisplayValue("Acquired");
-
-        Ext4ComboRef.getForLabel(this, "Gender").setComboByDisplayValue("female");
-        Ext4ComboRef.getForLabel(this, "Species").setComboByDisplayValue(RHESUS);
-        Ext4ComboRef.getForLabel(this, "Geographic Origin").setValue(INDIAN);
-        Ext4FieldRef.getForLabel(this, "Initial Room").setValue(ROOMS[0]);
-
-        submitBulkEditWindow();
-    }
-
-    private void populateBirthBulkEdit(Date today)
-    {
-        _helper.toggleBulkEditField("Birth Condition");
-        _helper.toggleBulkEditField("Room");
-        _helper.toggleBulkEditField("Gender");
-        _helper.toggleBulkEditField("Birth Type");
-        _helper.toggleBulkEditField("Species");
-        _helper.toggleBulkEditField("Geographic Origin");
-
-        Ext4ComboRef.getForLabel(this, "Birth Condition").setComboByDisplayValue("Live Birth");
-        Ext4FieldRef.getForLabel(this, "Room").setValue(ROOM_ID2);
-        Ext4ComboRef.getForLabel(this, "Gender").setComboByDisplayValue("female");
-        Ext4ComboRef.getForLabel(this, "Birth Type").setComboByDisplayValue("Vaginal");
-        Ext4ComboRef.getForLabel(this, "Species").setComboByDisplayValue(RHESUS);
-        Ext4ComboRef.getForLabel(this, "Geographic Origin").setValue(INDIAN);
-
-        submitBulkEditWindow();
-    }
-
-    private void populateTreatmentOrderBulkEdit()
-    {
-        LocalDateTime beginDate = LocalDateTime.now().plusDays(1).withHour(8).withMinute(0).withSecond(0).withNano(0);
-        LocalDateTime endDate = beginDate.plusDays(2).withHour(23).withMinute(59);
-
-        _helper.toggleBulkEditField("Begin Date");
-        _helper.toggleBulkEditField("End Date");
-        _helper.toggleBulkEditField("Charge To");
-        _helper.toggleBulkEditField("Treatment");
-        _helper.toggleBulkEditField("Frequency");
-        _helper.toggleBulkEditField("Route");
-        _helper.toggleBulkEditField("Amount");
-        _helper.toggleBulkEditField("Amount Units");
-
-        Ext4FieldRef.getForLabel(this, "Begin Date").setValue(_tf.format(Date.from(beginDate.atZone(ZoneId.systemDefault()).toInstant())));
-        Ext4FieldRef.getForLabel(this, "End Date").setValue(_tf.format(Date.from(endDate.atZone(ZoneId.systemDefault()).toInstant())));
-        setBulkEditProject(PROJECT_ID);
-
-        Ext4ComboRef treatmentField = Ext4ComboRef.getForLabel(this, "Treatment");
-        treatmentField.waitForStoreLoad();
-        treatmentField.setComboByDisplayValue("ACETAMINOPHEN (80mg) (E-77510)");
-
-        Ext4ComboRef.getForLabel(this, "Frequency").setComboByDisplayValue("BID - AM/Night");
-
-        Ext4ComboRef.getForLabel(this, "Route").setComboByDisplayValue("PO");
-
-        Ext4FieldRef.getForLabel(this, "Amount").setValue(10);
-
-        Ext4ComboRef.getForLabel(this, "Amount Units").setComboByDisplayValue("mg");
-
-        submitBulkEditWindow();
-    }
-
-    private void setBulkEditProject(String project)
-    {
-        Ext4FieldRef projectField = Ext4FieldRef.getForLabel(this, "Charge To");
-        projectField.getEval("expand()");
-        if (Locator.tag("li").append(Locator.tagContainingText("span", "Other")).findElements(getDriver()).isEmpty())
-        {
-            projectField.getEval("expand()");
-        }
-        waitAndClick(Locator.tag("li").append(Locator.tagContainingText("span", "Other")));
-        waitForElement(Ext4Helper.Locators.window("Choose Project"));
-        _ext4Helper.queryOne("window[title=Choose Project] [fieldLabel='Project']", Ext4ComboRef.class).setComboByDisplayValue(project);
-        waitAndClick(Ext4Helper.Locators.window("Choose Project").append(Ext4Helper.Locators.ext4ButtonEnabled("Submit")));
-    }
-
-    private void submitBulkEditWindow()
-    {
-        waitAndClick(Ext4Helper.Locators.window("Bulk Edit").append(Ext4Helper.Locators.ext4Button("Submit")));
-
-        waitFor(() -> Ext4Helper.Locators.window("Set Values").notHidden().findElements(getDriver()).size() > 0 ||
-                        Ext4Helper.Locators.window("Bulk Edit").notHidden().findElements(getDriver()).isEmpty(),
-                "Bulk edit submit did not complete", WAIT_FOR_PAGE);
-
-        if (Ext4Helper.Locators.window("Set Values").notHidden().findElements(getDriver()).size() > 0)
-        {
-            waitAndClick(Ext4Helper.Locators.window("Set Values").append(Ext4Helper.Locators.ext4Button("Yes")));
-        }
-
-        waitForElementToDisappear(Ext4Helper.Locators.window("Bulk Edit"));
-    }
-
-    private void assertButtonsDisabledUntilValidationComplete(String... buttonTexts)
-    {
-        Locator.XPathLocator validationIndicator = Locator.tagContainingText("span", "Validating...").notHidden();
-
-        waitFor(() -> validationIndicator.findElements(getDriver()).size() > 0,
-                "Validation indicator never appeared", WAIT_FOR_PAGE);
-
-        for (String buttonText : buttonTexts)
-        {
-            List<Ext4CmpRef> buttons = _ext4Helper.componentQuery("button[text='" + buttonText + "']", Ext4CmpRef.class);
-            if (buttons.isEmpty())
-            {
-                continue;
-            }
-
-            Ext4CmpRef button = buttons.get(0);
-            waitFor(() -> (Boolean)button.getFnEval("return this.isDisabled();"),
-                    "Button should be disabled while validation is running: " + buttonText, WAIT_FOR_PAGE);
-        }
-
-        waitForElementToDisappear(validationIndicator, WAIT_FOR_PAGE * 2);
-
-        for (String buttonText : buttonTexts)
-        {
-            List<Ext4CmpRef> buttons = _ext4Helper.componentQuery("button[text='" + buttonText + "']", Ext4CmpRef.class);
-            if (buttons.isEmpty())
-            {
-                continue;
-            }
-
-            buttons.get(0).waitForEnabled();
-        }
-    }
-
-    private void assertMoreActionsMenuItemsDisabledDuringValidation(String... menuItemTexts)
-    {
-        Locator.XPathLocator validationIndicator = Locator.tagContainingText("span", "Validating...").notHidden();
-        waitFor(() -> !validationIndicator.findElements(getDriver()).isEmpty(),
-                "Validation indicator never appeared", WAIT_FOR_PAGE);
-
-        waitAndClick(_helper.getDataEntryButton("More Actions"));
-        waitForElement(Ext4Helper.Locators.menu().notHidden());
-
-        for (String menuItemText : menuItemTexts)
-        {
-            if (Ext4Helper.Locators.menuItem(menuItemText).notHidden().findElements(getDriver()).isEmpty())
-            {
-                continue;
-            }
-
-            waitForElement(Ext4Helper.Locators.menuItemDisabled(menuItemText).notHidden());
-        }
-
-        waitAndClick(_helper.getDataEntryButton("More Actions"));
-        waitForElementToDisappear(Ext4Helper.Locators.menu().notHidden());
-    }
-
-    private void enableDataEntryFormIfNeeded()
-    {
-        if (!Ext4Helper.Locators.ext4Button("Enable the form for data entry").findElements(getDriver()).isEmpty())
-        {
-            waitAndClick(Ext4Helper.Locators.ext4Button("Enable the form for data entry"));
-            waitForElement(Ext4Helper.Locators.ext4Button("Exit data entry"));
-        }
-    }
-
-    private void submitBirthArrivalForm()
-    {
-        waitAndClick(_helper.getDataEntryButton("Submit Final"));
-        waitForElement(Ext4Helper.Locators.window("Finalize Birth/Arrival Form"));
-        waitAndClick(Ext4Helper.Locators.window("Finalize Birth/Arrival Form").append(Ext4Helper.Locators.ext4Button("Yes")));
-
-        waitFor(() -> !Ext4Helper.Locators.window("Success").notHidden().findElements(getDriver()).isEmpty() ||
-                        !Locator.tagWithText("a", "Enter New Data").findElements(getDriver()).isEmpty(),
-                "Expected Birth/Arrival form submission to complete", WAIT_FOR_PAGE * 2);
-
-        if (!Ext4Helper.Locators.window("Success").notHidden().findElements(getDriver()).isEmpty())
-        {
-            waitAndClick(Ext4Helper.Locators.window("Success").append(Ext4Helper.Locators.ext4Button("No")));
-        }
-
-        waitForElement(Locator.tagWithText("a", "Enter New Data"));
-    }
-
-    private void submitSingleQueryForm()
-    {
-        waitAndClick(_helper.getDataEntryButton("Submit Final"));
-        waitForElement(Ext4Helper.Locators.window("Finalize Form"));
-        waitAndClick(Ext4Helper.Locators.window("Finalize Form").append(Ext4Helper.Locators.ext4Button("Yes")));
-        waitForElement(Locator.tagWithText("a", "Enter New Data"));
-    }
-
-    private int getQueryCount(String schemaName, String queryName, String columnName, List<String> ids) throws Exception
-    {
-        SelectRowsCommand command = new SelectRowsCommand(schemaName, queryName);
-        command.setColumns(List.of(columnName));
-        command.addFilter(new Filter(columnName, StringUtils.join(ids, ";"), Filter.Operator.IN));
-
-        return command.execute(getApiHelper().getConnection(), getContainerPath()).getRowCount().intValue();
-    }
-
     @Test
     public void testBehaviorRounds() throws Exception
     {
@@ -2259,6 +2014,253 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         waitForElement(loc);
         setFormElement(loc, value);
         assertEquals(value, getFormElement(loc));
+    }
+
+    private List<String> createSequentialNumericIds(int startingId, int count)
+    {
+        List<String> ids = new ArrayList<>();
+        for (int i = 0; i < count; i++)
+        {
+            ids.add(Integer.toString(startingId + i));
+        }
+
+        return ids;
+    }
+
+    private void deleteAnimalRecords(List<String> ids) throws Exception
+    {
+        String joinedIds = StringUtils.join(ids, ";");
+
+        for (String queryName : Arrays.asList("drug", "treatment_order", "housing", "flags", "birth", "arrival", "demographics"))
+        {
+            getApiHelper().deleteAllRecords("study", queryName, new Filter("Id", joinedIds, Filter.Operator.IN));
+        }
+    }
+
+    private void createArrivalAnimalsViaForm(List<String> ids, Date birthDate)
+    {
+        _helper.goToTaskForm("Arrival", "Submit Final", false);
+        enableDataEntryFormIfNeeded();
+
+        waitForElement(Ext4Helper.Locators.ext4Button("Submit Final"), WAIT_FOR_PAGE * 2);
+        _ext4Helper.queryOne("button[text='Submit Final']", Ext4CmpRef.class).waitForEnabled();
+
+        Ext4GridRef grid = _helper.getExt4GridForFormSection("Arrivals");
+        grid.clickTbarButton("Add Series of IDs");
+        waitForElement(Ext4Helper.Locators.window("Enter Series of IDs"));
+        Ext4FieldRef.getForLabel(this, "Starting Number").setValue(ids.get(0));
+        Ext4FieldRef.getForLabel(this, "Total IDs").setValue(Integer.toString(ids.size()));
+        waitAndClick(Ext4Helper.Locators.windowButton("Enter Series of IDs", "Submit"));
+        grid.waitForRowCount(ids.size());
+        grid.clickTbarButton("Select All");
+        grid.waitForSelected(ids.size());
+
+        grid.clickTbarButton("More Actions");
+        click(Ext4Helper.Locators.menuItem("Bulk Edit"));
+        waitForElement(Ext4Helper.Locators.window("Bulk Edit"));
+
+        _helper.toggleBulkEditField("Source");
+        Ext4ComboRef sourceField = _ext4Helper.queryOne("window field[fieldLabel=Source]", Ext4ComboRef.class);
+        sourceField.waitForStoreLoad();
+        sourceField.setComboByDisplayValue("Boston");
+
+        _helper.toggleBulkEditField("Acquisition Type");
+        Ext4ComboRef acquisitionTypeField = _ext4Helper.queryOne("window field[fieldLabel='Acquisition Type']", Ext4ComboRef.class);
+        acquisitionTypeField.waitForStoreLoad();
+        acquisitionTypeField.setComboByDisplayValue("Acquired");
+
+        _helper.toggleBulkEditField("Gender");
+        _ext4Helper.queryOne("window field[fieldLabel=Gender]", Ext4ComboRef.class).setComboByDisplayValue("female");
+
+        _helper.toggleBulkEditField("Species");
+        _ext4Helper.queryOne("window field[fieldLabel=Species]", Ext4ComboRef.class).setComboByDisplayValue(RHESUS);
+
+        _helper.toggleBulkEditField("Geographic Origin");
+        _ext4Helper.queryOne("window field[fieldLabel='Geographic Origin']", Ext4ComboRef.class).setValue(INDIAN);
+
+        _helper.toggleBulkEditField("Birth");
+        _ext4Helper.queryOne("window field[fieldLabel=Birth]", Ext4ComboRef.class).setValue(_df.format(birthDate));
+
+        _helper.toggleBulkEditField("Room");
+        _ext4Helper.queryOne("window field[fieldLabel=Room]", Ext4ComboRef.class).setValue(ROOMS[0]);
+
+        submitBulkEditWindow();
+
+        _ext4Helper.queryOne("button[text='Submit Final']", Ext4CmpRef.class).waitForEnabled();
+        submitBirthArrivalForm();
+    }
+
+    private void createBirthAnimalsViaForm(List<String> ids, Date birthDate)
+    {
+        _helper.goToTaskForm("Birth", false);
+        enableDataEntryFormIfNeeded();
+
+        Ext4GridRef grid = _helper.getExt4GridForFormSection("Births");
+        addBatchIdsToGrid(grid, ids, false);
+
+        String birthDateTime = _tf.format(birthDate);
+        for (int row = 1; row <= ids.size(); row++)
+        {
+            grid.setGridCellJS(row, "date", birthDateTime);
+            grid.setGridCell(row, "birth_condition", "Live Birth");
+            grid.setGridCell(row, "room", ROOM_ID2);
+            grid.setGridCell(row, "gender", "female");
+            grid.setGridCell(row, "type", "Vaginal");
+            grid.setGridCell(row, "species", RHESUS);
+            grid.setGridCell(row, "geographic_origin", INDIAN);
+        }
+
+        _ext4Helper.queryOne("button[text='Submit Final']", Ext4CmpRef.class).waitForEnabled();
+        submitBirthArrivalForm();
+    }
+
+    private void addBatchIdsToGrid(Ext4GridRef grid, List<String> ids, boolean bulkEditBeforeApplying)
+    {
+        grid.clickTbarButton("Add Batch");
+        waitForElement(Ext4Helper.Locators.window("Choose Animals"));
+        Ext4FieldRef.getForLabel(this, "Id(s)").setValue(StringUtils.join(ids, ";"));
+
+        if (bulkEditBeforeApplying)
+        {
+            Ext4FieldRef.getForLabel(this, "Bulk Edit Before Applying").setChecked(true);
+        }
+
+        waitAndClick(Ext4Helper.Locators.window("Choose Animals").append(Ext4Helper.Locators.ext4Button("Submit")));
+
+        if (bulkEditBeforeApplying)
+        {
+            waitForElement(Ext4Helper.Locators.window("Bulk Edit"));
+        }
+        else
+        {
+            grid.waitForRowCount(ids.size());
+        }
+    }
+
+    private void populateTreatmentOrdersBulkEdit()
+    {
+        LocalDateTime beginDate = LocalDateTime.now().plusDays(1).withHour(8).withMinute(0).withSecond(0).withNano(0);
+        LocalDateTime endDate = beginDate.plusDays(2).withHour(20).withMinute(0);
+
+        _helper.toggleBulkEditField("Begin Date");
+        _helper.toggleBulkEditField("End Date");
+        _helper.toggleBulkEditField("Charge To");
+        _helper.toggleBulkEditField("Treatment");
+        _helper.toggleBulkEditField("Frequency");
+        _helper.toggleBulkEditField("Route");
+        _helper.toggleBulkEditField("Amount");
+        _helper.toggleBulkEditField("Amount Units");
+
+        _ext4Helper.queryOne("window field[fieldLabel='Begin Date']", Ext4FieldRef.class)
+                .setValue(_tf.format(Date.from(beginDate.atZone(ZoneId.systemDefault()).toInstant())));
+        _ext4Helper.queryOne("window field[fieldLabel='End Date']", Ext4FieldRef.class)
+                .setValue(_tf.format(Date.from(endDate.atZone(ZoneId.systemDefault()).toInstant())));
+
+        Ext4FieldRef chargeToField = _ext4Helper.queryOne("window field[fieldLabel='Charge To']", Ext4FieldRef.class);
+        chargeToField.getEval("expand()");
+        waitAndClick(Locator.tag("li").append(Locator.tagContainingText("span", "Other")).notHidden());
+        waitForElement(Ext4Helper.Locators.window("Choose Project"));
+        _ext4Helper.queryOne("window[title=Choose Project] [fieldLabel='Project']", Ext4ComboRef.class).setComboByDisplayValue(PROJECT_ID);
+        waitAndClick(Ext4Helper.Locators.window("Choose Project").append(Ext4Helper.Locators.ext4ButtonEnabled("Submit")));
+
+        Ext4ComboRef treatmentField = _ext4Helper.queryOne("window field[fieldLabel='Treatment']", Ext4ComboRef.class);
+        treatmentField.waitForStoreLoad();
+        treatmentField.setComboByDisplayValue("ACETAMINOPHEN (80mg) (E-77510)");
+
+        _ext4Helper.queryOne("window field[fieldLabel='Frequency']", Ext4ComboRef.class).setComboByDisplayValue("BID - AM/Night");
+        _ext4Helper.queryOne("window field[fieldLabel='Route']", Ext4ComboRef.class).setComboByDisplayValue("PO");
+        _ext4Helper.queryOne("window field[fieldLabel='Amount']", Ext4FieldRef.class).setValue("10");
+        _ext4Helper.queryOne("window field[fieldLabel='Amount Units']", Ext4ComboRef.class).setComboByDisplayValue("mg");
+
+        submitBulkEditWindow();
+    }
+
+    private void submitBulkEditWindow()
+    {
+        waitAndClick(Ext4Helper.Locators.window("Bulk Edit").append(Ext4Helper.Locators.ext4Button("Submit")));
+
+        Locator.XPathLocator setValuesWindow = Ext4Helper.Locators.window("Set Values");
+        waitFor(() -> !setValuesWindow.findElements(getDriver()).isEmpty() ||
+                        Ext4Helper.Locators.window("Bulk Edit").findElements(getDriver()).isEmpty(),
+                "Bulk Edit submit did not complete", WAIT_FOR_PAGE);
+
+        if (!setValuesWindow.findElements(getDriver()).isEmpty())
+        {
+            waitAndClick(setValuesWindow.append(Ext4Helper.Locators.ext4Button("Yes")));
+        }
+
+        waitForElementToDisappear(Ext4Helper.Locators.window("Bulk Edit"));
+    }
+
+    private void assertActionsDisabledDuringValidation(List<String> buttonTexts, List<String> menuItemTexts)
+    {
+        Locator.XPathLocator validationIndicator = Locator.tagContainingText("span", "Validating...").notHidden();
+        waitFor(() -> !validationIndicator.findElements(getDriver()).isEmpty(),
+                "Validation indicator never appeared", WAIT_FOR_PAGE);
+
+        for (String buttonText : buttonTexts)
+        {
+            List<Ext4CmpRef> buttons = _ext4Helper.componentQuery("button[text='" + buttonText + "']", Ext4CmpRef.class);
+            if (!buttons.isEmpty())
+            {
+                waitFor(() -> Boolean.TRUE.equals(buttons.get(0).getEval("return this.isDisabled();")),
+                        buttonText + " did not become disabled during validation", WAIT_FOR_PAGE);
+            }
+        }
+
+        waitAndClick(_helper.getDataEntryButton("More Actions"));
+        waitForElement(Ext4Helper.Locators.menu().notHidden());
+        for (String menuItemText : menuItemTexts)
+        {
+            waitForElement(Ext4Helper.Locators.menuItemDisabled(menuItemText).notHidden());
+        }
+        waitAndClick(_helper.getDataEntryButton("More Actions"));
+        waitForElementToDisappear(Ext4Helper.Locators.menu().notHidden());
+
+        waitFor(() -> validationIndicator.findElements(getDriver()).isEmpty(),
+                "Validation indicator did not disappear", WAIT_FOR_PAGE * 2);
+
+        for (String buttonText : buttonTexts)
+        {
+            List<Ext4CmpRef> buttons = _ext4Helper.componentQuery("button[text='" + buttonText + "']", Ext4CmpRef.class);
+            if (!buttons.isEmpty())
+            {
+                buttons.get(0).waitForEnabled();
+            }
+        }
+    }
+
+    private void enableDataEntryFormIfNeeded()
+    {
+        if (!Ext4Helper.Locators.ext4Button("Enable the form for data entry").findElements(getDriver()).isEmpty())
+        {
+            waitAndClick(Ext4Helper.Locators.ext4Button("Enable the form for data entry"));
+            waitForElement(Ext4Helper.Locators.ext4Button("Exit data entry"));
+        }
+    }
+
+    private void submitBirthArrivalForm()
+    {
+        _helper.submitFinalTaskForm();
+
+        Locator.XPathLocator successWindow = Ext4Helper.Locators.window("Success");
+        Locator enterNewDataLink = Locator.tagWithText("a", "Enter New Data");
+        waitFor(() -> !successWindow.findElements(getDriver()).isEmpty() || enterNewDataLink.findElementOrNull(getDriver()) != null,
+                "Birth/Arrival form submission did not complete", WAIT_FOR_PAGE * 2);
+
+        if (!successWindow.findElements(getDriver()).isEmpty())
+        {
+            waitAndClick(successWindow.append(Ext4Helper.Locators.ext4Button("No")));
+        }
+
+        waitForElement(enterNewDataLink);
+    }
+
+    private int getCountForIds(String schemaName, String queryName, String columnName, List<String> ids) throws IOException, CommandException
+    {
+        SelectRowsCommand command = new SelectRowsCommand(schemaName, queryName);
+        command.addFilter(new Filter(columnName, StringUtils.join(ids, ";"), Filter.Operator.IN));
+        return command.execute(getApiHelper().getConnection(), getContainerPath()).getRowCount().intValue();
     }
 
     @Override
