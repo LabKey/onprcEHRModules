@@ -1148,7 +1148,7 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         Assert.assertEquals(remark, bloodGrid.getFieldValue(3, "remark"));
         Assert.assertEquals(remark, bloodGrid.getFieldValue(4, "remark"));
 
-        waitAndClickAndWait(_helper.getDataEntryButton("Save & Close"));
+        waitAndClick(_helper.getDataEntryButton("Save & Close"));
         waitForElement(Locator.tagWithText("a", "Enter New Data"));
     }
 
@@ -1611,7 +1611,8 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         waitForElementToDisappear(deathWindow, 20000); //saving can take longer than default 10 seconds
         waitForElementToDisappear(Locator.tagContainingText("div", "Saving Changes...").notHidden());
 
-        waitAndClickAndWait(_helper.getDataEntryButton("Save & Close"));
+        waitAndClick(_helper.getDataEntryButton("Save & Close"));
+        waitForElement(Locator.tagWithText("a", "Enter New Data"));
 
         //make new necropsy, copy from previous
         _helper.goToTaskForm("Necropsy", false);
