@@ -1149,6 +1149,7 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         Assert.assertEquals(remark, bloodGrid.getFieldValue(4, "remark"));
 
         waitForDataEntryButtonEnabled("Save & Close", WAIT_FOR_PAGE * 2);
+        waitAndClick(_helper.getDataEntryButton("Save & Close"));
         waitForElement(Locator.tagWithText("a", "Enter New Data"), WAIT_FOR_PAGE * 2);
     }
 
@@ -1612,6 +1613,7 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         waitForElementToDisappear(Locator.tagContainingText("div", "Saving Changes...").notHidden());
 
         waitForDataEntryButtonEnabled("Save & Close", WAIT_FOR_PAGE * 2);
+        waitAndClick(_helper.getDataEntryButton("Save & Close"));
         waitForElement(Locator.tagWithText("a", "Enter New Data"), WAIT_FOR_PAGE * 2);
 
         //make new necropsy, copy from previous
@@ -2204,7 +2206,7 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
             List<Ext4CmpRef> buttons = _ext4Helper.componentQuery("button[text='" + buttonText + "']", Ext4CmpRef.class);
             if (!buttons.isEmpty())
             {
-                waitFor(() -> Boolean.TRUE.equals(buttons.get(0).getEval("return this.isDisabled();")),
+                waitFor(() -> Boolean.TRUE.equals(buttons.get(0).getEval("isDisabled() == arguments[0]", true)),
                         buttonText + " did not become disabled during validation", WAIT_FOR_PAGE);
             }
         }
@@ -2240,7 +2242,7 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
                         return false;
                     }
 
-                    return Boolean.FALSE.equals(buttons.get(0).getEval("return this.isDisabled();"));
+                    return Boolean.TRUE.equals(buttons.get(0).getEval("isDisabled() == arguments[0]", false));
                 },
                 "Button did not become enabled: " + buttonText, timeout);
     }
