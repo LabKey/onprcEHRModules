@@ -1611,7 +1611,7 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         waitForElementToDisappear(deathWindow, 20000); //saving can take longer than default 10 seconds
         waitForElementToDisappear(Locator.tagContainingText("div", "Saving Changes...").notHidden());
 
-        waitAndClick(_helper.getDataEntryButton("Save & Close"));
+        waitForDataEntryButtonEnabled("Save & Close", WAIT_FOR_PAGE * 2);
         waitForElement(Locator.tagWithText("a", "Enter New Data"), WAIT_FOR_PAGE * 2);
 
         //make new necropsy, copy from previous
