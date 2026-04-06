@@ -2093,15 +2093,8 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
 
         waitFor(() -> validationIndicator.findElements(getDriver()).isEmpty(),
                 "Validation indicator did not disappear", WAIT_FOR_PAGE * 2);
-
-        for (String buttonText : buttonTexts)
-        {
-            List<Ext4CmpRef> buttons = _ext4Helper.componentQuery("button[text='" + buttonText + "']", Ext4CmpRef.class);
-            if (!buttons.isEmpty())
-            {
-                buttons.get(0).waitForEnabled();
-            }
-        }
+        waitForText(WAIT_FOR_PAGE * 2, "WARN");
+        waitForText(WAIT_FOR_PAGE * 2, "ERROR");
     }
 
     private List<String> createTemporaryValidationAnimals(int count) throws Exception
