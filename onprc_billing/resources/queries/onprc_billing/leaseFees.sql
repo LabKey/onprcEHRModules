@@ -56,8 +56,7 @@ When   a5.id is not Null
         then (Select c.rowid from Site.{substitutePath moduleProperty('ONPRC_Billing','BillingContainer')}.onprc_billing.chargeableItems c where c.itemCode = 'ONR41')
   When   (a4.id is not null  and (TIMESTAMPDIFF('SQL_TSI_Day',a.date,a.projectedRelease)) <=14 and a.endDate is  null and a.ageAtTime.AgeAtTimeYearsRounded < 1)
         then (Select c.rowid from Site.{substitutePath moduleProperty('ONPRC_Billing','BillingContainer')}.onprc_billing.chargeableItems c where c.itemCode = 'ONR44')
-  WHEN (a.duration <= CAST(javaConstant('org.labkey.onprc_billing.ONPRC_BillingManager.DAY_LEASE_MAX_DURATION') as INTEGER) AND a.enddate IS NOT NULL AND a.assignCondition = a.releaseCondition) THEN (SELECT rowid FROM 	   onprc_billing_public.chargeableItems ci WHERE ci.active = true AND ci.name = javaConstant('org.labkey.onprc_billing.ONPRC_BillingManager.DAY_LEASE_NAME'))
-  WHEN (a.duration <= CAST(javaConstant('org.labkey.onprc_billing.ONPRC_BillingManager.DAY_LEASE_MAX_DURATION') as INTEGER) AND a.enddate IS NOT NULL AND a.assignCondition = a.releaseCondition) THEN (SELECT rowid FROM    onprc_billing_public.chargeableItems ci WHERE ci.active = true AND ci.name = javaConstant('org.labkey.onprc_billing.ONPRC_BillingManager.DAY_LEASE_NAME'))
+  WHEN (a.duration <= CAST(javaConstant('org.labkey.onprc_billing.ONPRC_BillingManager.DAY_LEASE_MAX_DURATION') as INTEGER) AND a.enddate IS NOT NULL AND a.assignCondition = a.releaseCondition) THEN (SELECT rowid FROM onprc_billing_public.chargeableItems ci WHERE ci.active = true AND ci.name = javaConstant('org.labkey.onprc_billing.ONPRC_BillingManager.DAY_LEASE_NAME'))
   WHEN a2.id IS NOT NULL THEN (SELECT rowid FROM onprc_billing_public.chargeableItems ci WHERE (ci.startDate <= a.date and ci.endDate >= a.date) AND ci.name = javaConstant('org.labkey.onprc_billing.ONPRC_BillingManager.TMB_LEASE_NAME'))
   ELSE lf.chargeId
 END as chargeId,
@@ -81,7 +80,8 @@ CASE
         where b.id = a.id and a1.project.protocol = a2.project.protocol) > 0 THEN 0
 
   WHEN (a.duration = 0 AND a.enddate IS NOT NULL AND a.assignCondition = a.releaseCondition) THEN 1
-  WHEN (fl.id Is Not Null) THEN 0
+  -- Exempt PI-purchased NHPs from lease fees
+  WHEN (fl.id IS NOT NULL) THEN 0
 --This will check for infants born to resource moms and will not charge
 
   WHEN (a.duration <= CAST(javaConstant('org.labkey.onprc_billing.ONPRC_BillingManager.DAY_LEASE_MAX_DURATION') as INTEGER) AND a.enddate IS NOT NULL AND a.assignCondition = a.releaseCondition) THEN a.duration
@@ -139,21 +139,19 @@ LEFT JOIN onprc_billing.leaseFeeDefinition lf ON (
     AND lf.active = true
 )
 
-
-
---adds the reasearch owned animal exemption
-LEFT JOIN study.flags fl on
-	(a.id = fl.id
-	and fl.flag.code = 4034
-	and (a.date >= fl.date and a.date <=COALESCE(fl.enddate,Now()) ))
-
+-- Add PI-purchased NHP flag data
+LEFT JOIN study.flags fl ON
+	a.id = fl.id
+	AND fl.flag.code = 4034
+	AND a.date BETWEEN CAST(fl.date AS DATE) AND COALESCE(fl.enddate, now())
 
 WHERE CAST(a.datefinalized AS DATE) >= CAST(STARTDATE as DATE) AND CAST(a.datefinalized AS DATE) <= CAST(ENDDATE as DATE)
 AND a.qcstate.publicdata = true --and a.participantID.demographics.species.common not in ('Rabbit','Guinea Pigs')
 
 
---add setup fees for all starts, except day leases aznd sla
+-- Add lease setup fees for all lease starts, except day leases, PI-purchased NHPs, and sla
 UNION ALL
+
 SELECT
   a.id,
   a.date,
@@ -168,7 +166,10 @@ SELECT
   ' ' as ESPFAnimal,
   'Lease Setup Fees' as category,
   (SELECT rowid FROM onprc_billing_public.chargeableItems ci WHERE ci.active = true AND ci.name = javaConstant('org.labkey.onprc_billing.ONPRC_BillingManager.LEASE_SETUP_FEES')) as chargeId,
-  1 as quantity,
+  CASE
+      WHEN (fl.id IS NOT NULL) THEN 0 -- Exempt PI-purchased NHPs from lease setup fees
+      ELSE 1
+  END AS quantity,
   cast(null as integer) as leaseCharge1,
   cast(null as integer) as leaseCharge2,
   a.objectid as sourceRecord,
@@ -179,11 +180,18 @@ SELECT
 
 FROM study.assignment a
 
+-- Add PI-purchased NHP flag data
+LEFT JOIN study.flags fl ON
+    a.id = fl.id
+    AND fl.flag.code = 4034
+    AND a.date BETWEEN CAST(fl.date AS DATE) AND COALESCE(fl.enddate, now())
+
 WHERE CAST(a.datefinalized AS DATE) >= CAST(STARTDATE as DATE) AND CAST(a.datefinalized AS DATE) <= CAST(ENDDATE as DATE)
 AND a.qcstate.publicdata = true
 --only charge setup fee for leases >24H.  note: duration assumes today as end, so exclude null enddates
 AND ((a.duration > CAST(javaConstant('org.labkey.onprc_billing.ONPRC_BillingManager.DAY_LEASE_MAX_DURATION') as INTEGER)) OR ( a.assignCondition != a.releaseCondition AND a.enddate IS NULL))
 and  a.id.demographics.species Not IN ('Rabbit','Guinea Pigs')
+AND fl.id IS NULL -- Exempt PI-purchased NHPs from lease setup fees
 
 --add released animals that need adjustments
 UNION ALL
@@ -208,9 +216,9 @@ a5.id as ESPFAnimal,
 --////This selectes the charge ID to be used
 (SELECT max(rowid) as rowid FROM onprc_billing_public.chargeableItems ci WHERE ci.name = javaConstant('org.labkey.onprc_billing.ONPRC_BillingManager.LEASE_FEE_ADJUSTMENT') and ci.active = true) as chargeId,
 CASE
-  when (fl.id Is Not Null) then 0
-  else 1
-  end as quantity,
+    WHEN (fl.id IS NOT NULL) THEN 0 -- Exempt PI-purchased NHPs from lease fees
+    ELSE 1
+END AS quantity,
 lf2.chargeId as leaseCharge1,
 lf.chargeId as leaseCharge2,
 a.objectid as sourceRecord,
@@ -248,11 +256,12 @@ LEFT join assignment_U42ESPF a5 on
     and a5.dateonly <=a.dateOnly
      AND a5.endDateCoalesced >= a.dateOnly)
 
---adds the reasearch owned animal exemption
-LEFT JOIN study.flags fl on
-	(a.id = fl.id
-	and fl.flag.code = 4034
-	and (a.date >= fl.date and a.date <=COALESCE(fl.enddate,Now()) ))
+-- Add PI-purchased NHP flag data
+LEFT JOIN study.flags fl
+  ON (a.id = fl.id
+	AND fl.flag.code = 4034
+	AND a.date BETWEEN CAST(fl.date AS DATE) AND COALESCE(fl.enddate, now())
+  )
 
 WHERE a.releaseCondition != a.projectedReleaseCondition
 and (A.id != A5.id or A5.id is Null)
