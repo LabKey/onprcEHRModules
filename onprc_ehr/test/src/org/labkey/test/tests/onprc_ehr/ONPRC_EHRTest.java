@@ -566,7 +566,7 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         try
         {
             log("Bulk adding treatment orders for temporary test animals");
-            _helper.goToTaskForm("Medication/Treatment Orders", false);
+            _helper.goToTaskForm("Medications/Diet", false);
             Ext4GridRef treatmentGrid = _helper.getExt4GridForFormSection("Medication/Treatment Orders");
             addBatchIdsToGrid(treatmentGrid, allIds, true);
             populateTreatmentOrdersBulkEdit();
