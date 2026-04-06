@@ -573,7 +573,7 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
 
             assertActionsDisabledDuringValidation(
                     Arrays.asList("Save Draft", "Save & Close", "Submit For Review", "Submit Final"),
-                    Arrays.asList("Submit and Reload", "Force Submit"));
+                    Arrays.asList("Submit And Reload", "Force Submit"));
 
             treatmentGrid.waitForRowCount(allIds.size());
             _helper.discardForm();
