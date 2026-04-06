@@ -140,10 +140,11 @@ LEFT JOIN onprc_billing.leaseFeeDefinition lf ON (
 )
 
 -- Add PI-purchased NHP flag data
-LEFT JOIN study.flags fl ON
-	a.id = fl.id
+LEFT JOIN study.flags fl
+  ON (a.id = fl.id
 	AND fl.flag.code = 4034
 	AND a.date BETWEEN CAST(fl.date AS DATE) AND COALESCE(fl.enddate, now())
+  )
 
 WHERE CAST(a.datefinalized AS DATE) >= CAST(STARTDATE as DATE) AND CAST(a.datefinalized AS DATE) <= CAST(ENDDATE as DATE)
 AND a.qcstate.publicdata = true --and a.participantID.demographics.species.common not in ('Rabbit','Guinea Pigs')
@@ -181,10 +182,11 @@ SELECT
 FROM study.assignment a
 
 -- Add PI-purchased NHP flag data
-LEFT JOIN study.flags fl ON
-    a.id = fl.id
-    AND fl.flag.code = 4034
-    AND a.date BETWEEN CAST(fl.date AS DATE) AND COALESCE(fl.enddate, now())
+LEFT JOIN study.flags fl
+  ON (a.id = fl.id
+     AND fl.flag.code = 4034
+     AND a.date BETWEEN CAST(fl.date AS DATE) AND COALESCE(fl.enddate, now())
+  )
 
 WHERE CAST(a.datefinalized AS DATE) >= CAST(STARTDATE as DATE) AND CAST(a.datefinalized AS DATE) <= CAST(ENDDATE as DATE)
 AND a.qcstate.publicdata = true
