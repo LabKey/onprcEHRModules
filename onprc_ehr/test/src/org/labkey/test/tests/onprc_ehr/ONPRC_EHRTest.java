@@ -565,15 +565,12 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
 
         try
         {
-//            log("Bulk adding treatment orders for temporary test animals");
+            log("Bulk adding animals in treatment orders for temporary test animals");
             _helper.goToTaskForm("Medications/Diet", false);
             Ext4GridRef treatmentGrid = _helper.getExt4GridForFormSection("Medication/Treatment Orders");
             addBatchIdsToGrid(treatmentGrid, allIds);
-//            populateTreatmentOrdersBulkEdit();
 
-            assertActionsDisabledDuringValidation(
-                    Arrays.asList("Save Draft", "Save & Close", "Submit For Review", "Submit Final"),
-                    Arrays.asList("Submit And Reload", "Force Submit"));
+            assertActionsDisabledDuringValidation();
 
             treatmentGrid.waitForRowCount(allIds.size());
             _helper.discardForm();
@@ -2011,44 +2008,6 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         grid.waitForRowCount(ids.size());
     }
 
-    private void populateTreatmentOrdersBulkEdit()
-    {
-        LocalDateTime beginDate = LocalDateTime.now().plusDays(1).withHour(8).withMinute(0).withSecond(0).withNano(0);
-        LocalDateTime endDate = beginDate.plusDays(2).withHour(20).withMinute(0);
-
-        _helper.toggleBulkEditField("Begin Date");
-        _helper.toggleBulkEditField("End Date");
-        _helper.toggleBulkEditField("Charge To");
-        _helper.toggleBulkEditField("Treatment");
-        _helper.toggleBulkEditField("Frequency");
-        _helper.toggleBulkEditField("Route");
-        _helper.toggleBulkEditField("Amount");
-        _helper.toggleBulkEditField("Amount Units");
-
-        _ext4Helper.queryOne("window field[fieldLabel='Begin Date']", Ext4FieldRef.class)
-                .setValue(_tf.format(Date.from(beginDate.atZone(ZoneId.systemDefault()).toInstant())));
-        _ext4Helper.queryOne("window field[fieldLabel='End Date']", Ext4FieldRef.class)
-                .setValue(_tf.format(Date.from(endDate.atZone(ZoneId.systemDefault()).toInstant())));
-
-        Ext4FieldRef chargeToField = _ext4Helper.queryOne("window field[fieldLabel='Charge To']", Ext4FieldRef.class);
-        chargeToField.getEval("expand()");
-        waitAndClick(Locator.tag("li").append(Locator.tagContainingText("span", "Other")).notHidden());
-        waitForElement(Ext4Helper.Locators.window("Choose Project"));
-        _ext4Helper.queryOne("window[title=Choose Project] [fieldLabel='Project']", Ext4ComboRef.class).setComboByDisplayValue(PROJECT_ID);
-        waitAndClick(Ext4Helper.Locators.window("Choose Project").append(Ext4Helper.Locators.ext4ButtonEnabled("Submit")));
-
-        Ext4ComboRef treatmentField = _ext4Helper.queryOne("window field[fieldLabel='Treatment']", Ext4ComboRef.class);
-        treatmentField.waitForStoreLoad();
-        treatmentField.setComboByDisplayValue("ACETAMINOPHEN (80mg) (E-77510)");
-
-        _ext4Helper.queryOne("window field[fieldLabel='Frequency']", Ext4ComboRef.class).setComboByDisplayValue("BID - AM/Night");
-        _ext4Helper.queryOne("window field[fieldLabel='Route']", Ext4ComboRef.class).setComboByDisplayValue("PO");
-        _ext4Helper.queryOne("window field[fieldLabel='Amount']", Ext4FieldRef.class).setValue("10");
-        _ext4Helper.queryOne("window field[fieldLabel='Amount Units']", Ext4ComboRef.class).setComboByDisplayValue("mg");
-
-        submitBulkEditWindow();
-    }
-
     private void submitBulkEditWindow()
     {
         waitAndClick(Ext4Helper.Locators.window("Bulk Edit").append(Ext4Helper.Locators.ext4Button("Submit")));
@@ -2066,8 +2025,10 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         waitForElementToDisappear(Ext4Helper.Locators.window("Bulk Edit"));
     }
 
-    private void assertActionsDisabledDuringValidation(List<String> buttonTexts, List<String> menuItemTexts)
+    private void assertActionsDisabledDuringValidation()
     {
+        List<String> buttonTexts = Arrays.asList("Save Draft", "Save & Close", "Submit For Review", "Submit Final");
+        List<String> menuItemTexts = Arrays.asList("Submit And Reload", "Force Submit");
         Locator.XPathLocator validationIndicator = Locator.tagContainingText("span", "Validating...").notHidden();
         waitFor(() -> !validationIndicator.findElements(getDriver()).isEmpty(),
                 "Validation indicator never appeared", WAIT_FOR_PAGE);
