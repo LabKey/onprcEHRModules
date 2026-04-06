@@ -2641,6 +2641,7 @@ public class ONPRC_EHRTriggerHelper
     public void sendClinpathPanicEmail(String id, String runid, String objectid)
     {
         String subject = "Chemistry Results with alert values";
+
         Container c = getContainer();
 
 

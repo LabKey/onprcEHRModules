@@ -51,13 +51,14 @@ SELECT
     ELSE 0
   END as mhcBloodDrawVol,
   CASE
+    WHEN (nts.Id is not null)  THEN 0
     WHEN (f.flags LIKE '%DNA Bank Blood Draw Needed%') THEN 6
     WHEN (f.flags LIKE '%DNA Bank Not Needed%') THEN 0
     WHEN (f.flags LIKE '%DNA Bank Blood Draw Collected%') THEN 0
     WHEN (s.subjectId IS NULL) THEN 6  --timestampdiff('SQL_TSI_DAY', curdate(), d.birth) > 365 AND
     ELSE 0
   END as dnaBloodDrawVol
-  
+
 FROM study.Demographics d
 
 --determine if animal has raw STR data performed by UC Davis
@@ -149,6 +150,17 @@ LEFT JOIN (
   WHERE u.isActive = true and u.project.name = javaConstant('org.labkey.onprc_ehr.ONPRC_EHRManager.U24_PROJECT')
   GROUP BY u.Id
 ) u ON (u.Id = d.Id)
+
+LEFT JOIN (
+    SELECT
+        p.id,
+        max(p.date) as lastDate
+    FROM study.flags p
+    WHERE p.flag.category ='Genetics' And p.flag.value = 'DNA Bank Blood Draw Not Needed'
+    And p.enddate is null
+    GROUP BY p.id
+
+) nts ON (nts.id = d.id)
 
 
 WHERE d.calculated_status = 'Alive'
