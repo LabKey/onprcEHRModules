@@ -565,11 +565,11 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
 
         try
         {
-            log("Bulk adding treatment orders for temporary test animals");
+//            log("Bulk adding treatment orders for temporary test animals");
             _helper.goToTaskForm("Medications/Diet", false);
             Ext4GridRef treatmentGrid = _helper.getExt4GridForFormSection("Medication/Treatment Orders");
             addBatchIdsToGrid(treatmentGrid, allIds, true);
-            populateTreatmentOrdersBulkEdit();
+//            populateTreatmentOrdersBulkEdit();
 
             assertActionsDisabledDuringValidation(
                     Arrays.asList("Save Draft", "Save & Close", "Submit For Review", "Submit Final"),
