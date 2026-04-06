@@ -146,7 +146,7 @@ Ext4.define('ONPRC_EHR.form.field.Surg_PlanTextArea', {
 
         LABKEY.Query.executeSql({
             schemaName: 'study',
-            sql: 'SELECT c.Id, c.p2 as mostRecentS2, c.caseid,  c.category as caseCategory, c.caseid.isActive as isActive FROM study.clinRemarks c WHERE (c.category = \'Surgery\' OR c.category is null)  AND c.p2 IS NOT NULL AND c.Id = \'' + rec.get('Id') + '\' ORDER BY c.date DESC LIMIT 1',
+            sql: 'SELECT c.Id, c.p2 as mostRecentS2, c.caseid,  c.category as caseCategory, c.caseid.isActive as isActive FROM study.clinRemarks c WHERE (c.category = \'Surgery\' )  AND c.p2 IS NOT NULL AND c.Id = \'' + rec.get('Id') + '\' ORDER BY c.date DESC LIMIT 1',
             failure: LDK.Utils.getErrorCallback(),
             scope: this,
             success: function(results){
