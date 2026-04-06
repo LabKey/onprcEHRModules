@@ -568,7 +568,7 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
 //            log("Bulk adding treatment orders for temporary test animals");
             _helper.goToTaskForm("Medications/Diet", false);
             Ext4GridRef treatmentGrid = _helper.getExt4GridForFormSection("Medication/Treatment Orders");
-            addBatchIdsToGrid(treatmentGrid, allIds, true);
+            addBatchIdsToGrid(treatmentGrid, allIds);
 //            populateTreatmentOrdersBulkEdit();
 
             assertActionsDisabledDuringValidation(
@@ -2001,27 +2001,14 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         assertEquals(value, getFormElement(loc));
     }
 
-    private void addBatchIdsToGrid(Ext4GridRef grid, List<String> ids, boolean bulkEditBeforeApplying)
+    private void addBatchIdsToGrid(Ext4GridRef grid, List<String> ids)
     {
         grid.clickTbarButton("Add Batch");
         waitForElement(Ext4Helper.Locators.window("Choose Animals"));
         Ext4FieldRef.getForLabel(this, "Id(s)").setValue(StringUtils.join(ids, ";"));
 
-        if (bulkEditBeforeApplying)
-        {
-            Ext4FieldRef.getForLabel(this, "Bulk Edit Before Applying").setChecked(true);
-        }
-
         waitAndClick(Ext4Helper.Locators.window("Choose Animals").append(Ext4Helper.Locators.ext4Button("Submit")));
-
-        if (bulkEditBeforeApplying)
-        {
-            waitForElement(Ext4Helper.Locators.window("Bulk Edit"));
-        }
-        else
-        {
-            grid.waitForRowCount(ids.size());
-        }
+        grid.waitForRowCount(ids.size());
     }
 
     private void populateTreatmentOrdersBulkEdit()
