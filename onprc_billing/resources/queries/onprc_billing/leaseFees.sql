@@ -167,10 +167,7 @@ SELECT
   ' ' as ESPFAnimal,
   'Lease Setup Fees' as category,
   (SELECT rowid FROM onprc_billing_public.chargeableItems ci WHERE ci.active = true AND ci.name = javaConstant('org.labkey.onprc_billing.ONPRC_BillingManager.LEASE_SETUP_FEES')) as chargeId,
-  CASE
-      WHEN (fl.id IS NOT NULL) THEN 0 -- Exempt PI-purchased NHPs from lease setup fees
-      ELSE 1
-  END AS quantity,
+  1 AS quantity,
   cast(null as integer) as leaseCharge1,
   cast(null as integer) as leaseCharge2,
   a.objectid as sourceRecord,
