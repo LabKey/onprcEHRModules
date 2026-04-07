@@ -1799,7 +1799,6 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         row.put("objectid", generateGUID());
         row.put("taskid", generateGUID());  //required for latestObservationsForCase.sql to work
         insertRowsCommand.addRow(row);
-        insertRowsCommand.execute(getApiHelper().getConnection(), getContainerPath());
 
         Map<String, Object> row2 = new HashMap<>();
         row2.put("Id", SUBJECTS[0]);
