@@ -1802,7 +1802,6 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         insertRowsCommand.execute(getApiHelper().getConnection(), getContainerPath());
 
         Map<String, Object> row2 = new HashMap<>();
-
         row2.put("Id", SUBJECTS[0]);
         row2.put("category", "Alopecia Regrowth");
         row2.put("date", prepareDate(new Date(), -4, 0));
