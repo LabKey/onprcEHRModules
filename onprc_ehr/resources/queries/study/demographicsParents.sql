@@ -31,6 +31,8 @@ SELECT
   END as sireType,
   p3.parent as fosterMom,
   p3.method as fosterType,
+  p4.parent as SurrogateMom,
+  p4.method as SurrogateType,
 
   (CASE WHEN p3.parent IS NOT NULL THEN 1 ELSE 0 END +
   CASE WHEN coalesce(p2.parent, b.dam) IS NOT NULL THEN 1 ELSE 0 END +
@@ -58,5 +60,11 @@ LEFT JOIN (
   WHERE p3.relationship = 'Foster Dam' AND p3.enddate IS NULL
   GROUP BY p3.Id
 ) p3 ON (d.Id = p3.id)
+LEFT JOIN (
+    select p4.id, min(p4.method) as method, max(p4.parent) as parent, max(p4.modified) as modified
+    FROM study.parentage p4
+    WHERE p4.relationship = 'Surrogate Dam' AND p4.enddate IS NULL
+    GROUP BY p4.Id
+) p4 ON (d.Id = p4.id)
 LEFT JOIN study.birth b ON (b.id = d.id)
 
