@@ -31,11 +31,14 @@ SELECT
   END as sireType,
   p3.parent as fosterMom,
   p3.method as fosterType,
+  p4.parent as SurrogateMom,
+  p4.method as SurrogateType,
 
   (CASE WHEN p3.parent IS NOT NULL THEN 1 ELSE 0 END +
+   CASE WHEN p4.parent IS NOT NULL THEN 1 ELSE 0 END +
   CASE WHEN coalesce(p2.parent, b.dam) IS NOT NULL THEN 1 ELSE 0 END +
   CASE WHEN coalesce(p1.parent, b.sire) IS NOT NULL THEN 1 ELSE 0 END) as numParents,
-  greatest(d.modified, p1.modified, p2.modified, p3.modified, b.modified) as modified
+  greatest(d.modified, p1.modified, p2.modified, p3.modified, p4.modified, b.modified) as modified
 FROM  study.demographics d
 
 LEFT JOIN (
