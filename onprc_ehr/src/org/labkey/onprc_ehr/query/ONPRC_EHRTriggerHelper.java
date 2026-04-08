@@ -2640,7 +2640,8 @@ public class ONPRC_EHRTriggerHelper
 
     public void sendClinpathPanicEmail(String id, String runid, String objectid)
     {
-        String subject = "Chemistry Results with Panic values";
+        String subject = "Chemistry Results with alert values";
+
         Container c = getContainer();
 
 
@@ -2671,7 +2672,7 @@ public class ONPRC_EHRTriggerHelper
 
         if (ts.getRowCount() == 0)
         {
-            html.append("There are no Chemistry Panlc Values to display");
+            html.append("There are no Chemistry Alert Values to display");
 
             return;
         }
