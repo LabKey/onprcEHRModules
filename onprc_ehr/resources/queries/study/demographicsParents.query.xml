@@ -31,6 +31,14 @@
                             <fkColumnName>id</fkColumnName>
                         </fk>
                     </column>
+                    <column columnName="surrogatedam">
+                        <columnTitle>Surrogate Dam</columnTitle>
+                        <fk>
+                            <fkDbSchema>study</fkDbSchema>
+                            <fkTable>animal</fkTable>
+                            <fkColumnName>id</fkColumnName>
+                        </fk>
+                    </column>
                     <column columnName="geneticdam">
                         <columnTitle>Genetic Dam</columnTitle>
                         <fk>

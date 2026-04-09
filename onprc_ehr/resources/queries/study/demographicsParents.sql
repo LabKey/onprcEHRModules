@@ -31,7 +31,7 @@ SELECT
   END as sireType,
   p3.parent as fosterMom,
   p3.method as fosterType,
-  p4.parent as SurrogateMom,
+  p4.parent as SurrogateDam,
   p4.method as SurrogateType,
 
   (CASE WHEN p3.parent IS NOT NULL THEN 1 ELSE 0 END +
