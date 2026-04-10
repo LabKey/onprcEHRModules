@@ -51,7 +51,7 @@ Ext4.define('ONPRC_EHR.window.AddBehaviorCasesWindow', {
             schemaName: 'study',
             queryName: 'cases',
             sort: 'Id/curLocation/location,Id,remark,allProblemCategories',
-            columns: 'Id,objectid',
+            columns: 'Id,objectid,remark,allProblemCategories',
             filterArray: casesFilterArray,
             scope: this,
             success: function(results){
@@ -79,7 +79,7 @@ Ext4.define('ONPRC_EHR.window.AddBehaviorCasesWindow', {
         var distinctCaseIds = [];
         if (caseRecords && caseRecords.length){
             Ext4.Array.forEach(caseRecords, function(cr){
-                if (distinctCaseIds.indexOf(cr.get('caseid') == -1)){
+                if (distinctCaseIds.indexOf(cr.get('caseid')) == -1){
                     distinctCaseIds.push(cr.get('caseid'));
                 }
             }, this);
@@ -112,7 +112,7 @@ Ext4.define('ONPRC_EHR.window.AddBehaviorCasesWindow', {
                     //observation: row.getValue('observation'),
                     remark: row.getValue('remark')
                 });
-                if (newobservation == "Alopecia Score" && newremark == null) {
+                if (newobservation == "Alopecia Score" && (newremark == null || newremark == "")) {
                     previousObsMap[key].push({
                         Id: row.getValue('Id'),
                         date: this.recordData.date,
