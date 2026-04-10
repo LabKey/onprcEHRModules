@@ -2008,23 +2008,6 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         grid.waitForRowCount(ids.size());
     }
 
-    private void submitBulkEditWindow()
-    {
-        waitAndClick(Ext4Helper.Locators.window("Bulk Edit").append(Ext4Helper.Locators.ext4Button("Submit")));
-
-        Locator.XPathLocator setValuesWindow = Ext4Helper.Locators.window("Set Values");
-        waitFor(() -> !setValuesWindow.findElements(getDriver()).isEmpty() ||
-                        Ext4Helper.Locators.window("Bulk Edit").findElements(getDriver()).isEmpty(),
-                "Bulk Edit submit did not complete", WAIT_FOR_PAGE);
-
-        if (!setValuesWindow.findElements(getDriver()).isEmpty())
-        {
-            waitAndClick(setValuesWindow.append(Ext4Helper.Locators.ext4Button("Yes")));
-        }
-
-        waitForElementToDisappear(Ext4Helper.Locators.window("Bulk Edit"));
-    }
-
     private void assertActionsDisabledDuringValidation()
     {
         List<String> buttonTexts = Arrays.asList("Save Draft", "Save & Close", "Submit For Review", "Submit Final");
