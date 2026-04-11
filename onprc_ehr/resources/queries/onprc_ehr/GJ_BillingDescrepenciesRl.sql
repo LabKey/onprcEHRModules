@@ -1,6 +1,6 @@
 /*
 =====================================================================
- Query Name      : GJ_BillingDescrepenciesR&L
+ Query Name      : GJ_BillingDescrepenciesRL
  Schema          : onprc_ehr
  Purpose         : To provide the R&L team with a tool to idetofy when a procedure charges will be generated
                    Point to a alias that is not associcated witht eh Aniomals assigned project
@@ -16,11 +16,8 @@
  Author          : jonesga
  Created         : 2026-04-10
  Last Modified   : 2026-04-10
-=====================================================================
-2nd Try bad Github token
+=====================================================================\
 */
-
-
 With procedureFees as (
     Select
         pfr.id,
