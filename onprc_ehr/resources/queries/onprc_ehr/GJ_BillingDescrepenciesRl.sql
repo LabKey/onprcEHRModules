@@ -15,41 +15,56 @@
  Validation Notes: Thi
  Author          : jonesga
  Created         : 2026-04-10
- Last Modified   : 2026-04-10
-=====================================================================\
+ Last Modified   : 2026-04-13
+=====================================================================
 */
-With procedureFees as (
-    Select
+WITH procedureFees AS (
+    SELECT
         pfr.id,
         pfr.date,
         pfr.project,
-    pfr.account,
-    pfr.chargetype,
-    pfr.assistingStaff,
-    pfr.procedureid,
-    pfr.chargeID,
-    pfr.serviceCenter,
-    pfr.item,
-    pfr.category,
-    pfr.sourceRecord,
-    pfr.unitcost,
-    pfr.NIHRate,
-    pfr.creditAccount,
-    pfr.matchesProject,
-    pfr.isAdjustment,
-    pfr.IsAcceptingCharges,
-    pfr.isExpiredAccount,
-    pfr.currentActiveAlias
-   from onprc_billing.procedurefeeRates pfr )
+        pfr.account,
+        pfr.chargetype AS chargeType,
+        pfr.assistingStaff,
+        pfr.procedureid,
+        pfr.chargeID,
+        pfr.serviceCenter,
+        pfr.item,
+        pfr.category,
+        pfr.sourceRecord,
+        pfr.unitcost,
+        pfr.NIHRate,
+        pfr.creditAccount,
+        pfr.matchesProject,
+        pfr.isAdjustment,
+        pfr.IsAcceptingCharges,
+        pfr.isExpiredAccount,
+        pfr.currentActiveAlias
+    FROM onprc_billing.procedurefeeRates pfr
+),
 
-Select pf.* from procedureFees pf
+     ProjectAlias AS (SELECT pa.name,
+                             pa.account
+                      FROM ehr.project pa
+                      where (pa.enddate > CurDate()
+                         or pa.enddate is null)     )
 
-/*I want to add these are parameters on a webpart after we validate the query
-
-WHERE
-    (?matchesProject IS NULL OR pfr.matchesProject = ?matchesProject)
-  AND (?isAdjustment IS NULL OR pfr.isAdjustment = ?isAdjustment)
-  AND (?isAcceptingCharges IS NULL OR pfr.isAcceptingCharges = ?isAcceptingCharges)
-  AND (?isExpiredAccount IS NULL OR pfr.isExpiredAccount = ?isExpiredAccount)
-  AND (?currentActiveAlias IS NULL OR pfr.currentActiveAlias = ?currentActiveAlias)
-*/
+SELECT
+    pf.id,
+    pf.date,
+    pf.project,
+    pf.account        AS chargeToAlias,
+    pa.account        AS projectAlias,
+    CASE    When pf.account = pa.account then 'Billing is Correct'
+        ELSE 'Billing Needs Review'
+        end as ChargeReview,
+    pf.chargeType,
+    pf.procedureID,
+    pf.chargeID,
+    pf.unitcost,
+    pf.matchesProject
+FROM procedureFees pf
+         LEFT JOIN ProjectAlias pa
+                   ON pf.project.displayName = pa.name
+/*WHERE
+    pf.account != pa.account*/
