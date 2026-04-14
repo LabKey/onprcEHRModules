@@ -14,6 +14,7 @@ select a.Id,
 from study.ClinpathRuns a, study.chemistryResults b
 Where  a.objectid = b.runid
   And a.type = 'biochemistry'
-  And b.qualresult like '%panic%'
+  And b.qualresult like '%alert%'
+
   And a.qcstate = 18
   And b.qcstate = 18
