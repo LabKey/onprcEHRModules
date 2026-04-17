@@ -1480,4 +1480,12 @@
         </columns>
     </table>
 
+    <table tableName="Rpt_TempJmacDate" tableDbType="TABLE">
+        <columns>
+            <column columnName="searchid"/>
+            <column columnName="animalID"/>
+            <column columnName="JBGActualRemovalDate"/>
+        </columns>
+    </table>
+
 </tables>
