@@ -1,0 +1,124 @@
+<metadata>
+<!--
+
+    &lt;!&ndash; =====================================================
+         Query-Level Metadata
+         ===================================================== &ndash;&gt;
+    <description>
+        Identifies procedure charges where the billed project
+        does not match the animal’s current project.
+        Intended for R&amp;L review and reconciliation.
+    </description>
+
+    <title>
+        Billing Discrepancy Review – Project Mismatch
+    </title>
+
+    <notes>
+        Created for EHR Issue 11870.
+        Uses a configurable lookback window defined by the DaysBack parameter.
+        Project comparisons are based on project.displayName for clarity.
+    </notes>
+-->
+
+
+    <!-- =====================================================
+         Parameters
+         ===================================================== -->
+    <parameters>
+        <parameter>
+            <name>DaysBack</name>
+            <label>Number of Days Back to Review</label>
+            <type>int</type>
+            <required>true</required>
+            <defaultValue>1</defaultValue>
+            <description>
+                Number of prior days to include in the review window.
+                Valid values are 1 through 30.
+                Example: 7 = review the last 7 days.
+            </description>
+        </parameter>
+    </parameters>
+
+
+    <!-- =====================================================
+         Column Metadata
+         ===================================================== -->
+    <columns>
+
+        <column>
+            <name>ProjectBilledTo</name>
+            <label>Project Billed To</label>
+            <description>
+                The project to which the procedure charge will be billed.
+            </description>
+        </column>
+
+        <column>
+            <name>CurrentProject</name>
+            <label>Current Animal Project</label>
+            <description>
+                The animal’s current active project at the time of review.
+            </description>
+        </column>
+
+        <column>
+            <name>ChargeReview</name>
+            <label>Billing Review Status</label>
+            <description>
+                Indicates whether the billed project matches the animal’s
+                current project. Records marked with a red X require review.
+            </description>
+        </column>
+
+        <column>
+            <name>DaysBackUsed</name>
+            <label>Days Back Applied</label>
+            <description>
+                The actual number of days included in this run after
+                validation and bounds enforcement.
+            </description>
+        </column>
+
+        <column>
+            <name>unitCost</name>
+            <label>Unit Cost ($)</label>
+            <format>$#,##0.00</format>
+        </column>
+
+    </columns>
+
+
+    <!-- =====================================================
+         Conditional Formatting (Optional but Powerful)
+         ===================================================== -->
+    <conditionalFormats>
+
+        <conditionalFormat>
+            <columnName>ChargeReview</columnName>
+            <operator>equals</operator>
+            <value>❌ Billing Needs Review</value>
+            <backgroundColor>#F8D7DA</backgroundColor>
+            <textColor>#721C24</textColor>
+        </conditionalFormat>
+
+        <conditionalFormat>
+            <columnName>ChargeReview</columnName>
+            <operator>equals</operator>
+            <value>✅ Billing is Correct</value>
+            <backgroundColor>#D4EDDA</backgroundColor>
+            <textColor>#155724</textColor>
+        </conditionalFormat>
+
+    </conditionalFormats>
+
+
+    <!-- =====================================================
+         Visibility / Usability Controls (Optional)
+         ===================================================== -->
+    <hiddenColumns>
+        <!-- Example: hide technical IDs if not useful to end users -->
+        <!-- <columnName>id</columnName> -->
+    </hiddenColumns>
+
+</metadata>
