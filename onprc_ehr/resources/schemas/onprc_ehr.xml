@@ -1492,7 +1492,7 @@
     <table tableName="JmacRemovalDate" tableDbType="TABLE">
         <columns>
             <column columnName="searchid"/>
-            <column columnName="animali"/>
+            <column columnName="Id"/>
             <column columnName="JBGRemovalDate"/>
             <column columnName="JBGActualRemovalDate"/>
             <column columnName="DaysDiff"/>

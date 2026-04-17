@@ -107,14 +107,6 @@ Begin
         End ------(While @tempsearchkey < @Searchkey)
 
 
-
-
-
-End ----- (While)
-
-
-
-
     Return 0
 
     Err_Proc:    Return 1
