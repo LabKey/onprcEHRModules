@@ -41,7 +41,9 @@ declare
 
     @TempSearchKey     	Int,
     @Searchkey         	Int,
-    @AnimalID			Int
+    @AnimalID			Int,
+    @OrgRemovalDate  smalldatetime,
+    @ActualRemovalDate smalldatetime
 
 
 Begin
@@ -62,8 +64,10 @@ Begin
     --- Set initial processing
 
     Insert into onprc_ehr.Rpt_TempJmacDate
-    select * from JmacRemovalDate
-    Order by ID
+    select Id, JBGRemovalDate, JBGActualRemovalDate
+    from onprc_ehr.JmacRemovalDate
+
+    Order by searchid
 
     Select top 1  @SearchKey = searchID from onprc_ehr.Rpt_TempJmacDate
     Order by searchid
@@ -74,7 +78,7 @@ Begin
 
 
 
-            select @animalid = Id, @OrgRemovalDate = JBGRemovalDate, @ActualRemovalDate = JBGActualRemovalDate
+            select @animalid = animalid, @OrgRemovalDate = JBGRemovalDate, @ActualRemovalDate = JBGActualRemovalDate
             from onprc_ehr.Rpt_TempJmacDate Where searchid = @Searchkey
 
             -------Begin updating records
@@ -91,11 +95,9 @@ Begin
                 GoTo Err_Proc
 
 
-
-
             Set @TempSearchkey = @Searchkey
 
-            Select Top 1 @SearchKey = searchid From onprc_ehr.Rpt_TempJmacDatet
+            Select Top 1 @SearchKey = searchid From onprc_ehr.Rpt_TempJmacDate
             Where @Searchkey > @Tempsearchkey
             Order by searchid
 
