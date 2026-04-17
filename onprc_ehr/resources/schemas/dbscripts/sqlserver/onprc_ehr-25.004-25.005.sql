@@ -8,6 +8,16 @@ CREATE TABLE onprc_ehr.Rpt_TempJmacDate(
     ) ON [PRIMARY]
     GO
 
+CREATE TABLE onprc_ehr.JmacRemovalDate(
+    searchid integer IDENTITY(100,1) NOT NULL,
+    Id varchar(100) NULL,
+    JBGRemovalDate smalldatetime NULL,
+    JBGActualRemovalDate smalldatetime NULL,
+    DaysDiff float NULL,
+    reason varchar(100) NULL
+) ON [PRIMARY]
+GO
+
 
 
 /*
@@ -34,19 +44,7 @@ declare
     @AnimalID			Int
 
 
-
-
-
-
-
-
-
-
-
 Begin
-
-
-
 
 
     ----- Reset the last two months only

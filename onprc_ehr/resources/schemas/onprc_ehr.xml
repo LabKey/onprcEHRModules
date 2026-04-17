@@ -1483,9 +1483,22 @@
     <table tableName="Rpt_TempJmacDate" tableDbType="TABLE">
         <columns>
             <column columnName="searchid"/>
-            <column columnName="animalID"/>
+            <column columnName="animalic"/>
+            <column columnName="JBGRemovalDate"/>
             <column columnName="JBGActualRemovalDate"/>
         </columns>
     </table>
+
+    <table tableName="JmacRemovalDate" tableDbType="TABLE">
+        <columns>
+            <column columnName="searchid"/>
+            <column columnName="animali"/>
+            <column columnName="JBGRemovalDate"/>
+            <column columnName="JBGActualRemovalDate"/>
+            <column columnName="DaysDiff"/>
+            <column columnName="reason"/>
+        </columns>
+    </table>
+
 
 </tables>
