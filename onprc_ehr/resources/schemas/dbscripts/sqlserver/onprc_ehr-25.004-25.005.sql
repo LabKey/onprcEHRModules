@@ -86,7 +86,7 @@ Begin
 
             Update JB
             Set JB.enddate = @ActualRemovalDate
-            From Study.AnimalGroups JB
+            From StudyDataset.c6d346_animal_group_members JB
             Where JB.Participantid = @Animalid
               And cast(JB.enddate as Date) = cast(@OrgRemovalDate as Date)
 
