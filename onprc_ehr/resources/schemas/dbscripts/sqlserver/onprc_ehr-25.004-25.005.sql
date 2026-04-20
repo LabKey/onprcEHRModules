@@ -41,7 +41,7 @@ declare
 
     @TempSearchKey     	Int,
     @Searchkey         	Int,
-    @AnimalID			varchar,
+    @AnimalID			varchar(100),
     @OrgRemovalDate  smalldatetime,
     @ActualRemovalDate smalldatetime
 
@@ -60,6 +60,9 @@ Begin
 
     Set @Tempsearchkey = 0
     Set @Searchkey  = 0
+    Set @Animalid = ''
+    Set @OrgRemovalDate = null
+    Set @ActualRemovalDate = null
 
     --- Set initial processing
 
@@ -76,7 +79,9 @@ Begin
     While @Tempsearchkey < @SearchKey
         Begin
 
-
+            Set @Animalid = ''
+            Set @OrgRemovalDate = null
+            Set @ActualRemovalDate = null
 
             select @animalid = animalid, @OrgRemovalDate = JBGRemovalDate, @ActualRemovalDate = JBGActualRemovalDate
             from onprc_ehr.Rpt_TempJmacDate Where searchid = @Searchkey
