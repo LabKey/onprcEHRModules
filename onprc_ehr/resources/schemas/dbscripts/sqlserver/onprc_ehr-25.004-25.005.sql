@@ -2,8 +2,8 @@
 CREATE TABLE onprc_ehr.Rpt_TempJmacDate(
     searchid integer IDENTITY(100,1) NOT NULL,
     animalid varchar(200) NULL,
-    JBGRemovalDate varchar(255) NULL,
-    JBGActualRemovalDate varchar(255) NULL
+    JBGRemovalDate smalldatetime NULL,
+    JBGActualRemovalDate smalldatetime NULL
 
     ) ON [PRIMARY]
     GO
@@ -41,7 +41,7 @@ declare
 
     @TempSearchKey     	Int,
     @Searchkey         	Int,
-    @AnimalID			Int,
+    @AnimalID			varchar,
     @OrgRemovalDate  smalldatetime,
     @ActualRemovalDate smalldatetime
 
