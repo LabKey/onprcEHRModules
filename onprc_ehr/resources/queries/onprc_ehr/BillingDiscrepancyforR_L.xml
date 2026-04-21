@@ -1,0 +1,79 @@
+<metadata>
+
+    <!-- ========================= -->
+    <!-- Parameters -->
+    <!-- ========================= -->
+    <parameters>
+        <parameter>
+            <name>DaysBack</name>
+            <label>Number of Days Back to Review</label>
+            <type>int</type>
+            <required>true</required>
+            <defaultValue>1</defaultValue>
+            <description>
+                Number of prior days to include in the review window.
+                Valid values are 1 through 30.
+            </description>
+        </parameter>
+    </parameters>
+
+    <!-- ========================= -->
+    <!-- Columns -->
+    <!-- ========================= -->
+    <columns>
+
+        <column>
+            <name>ProjectBilledTo</name>
+            <label>Project Billed To</label>
+            <description>
+                The project to which the procedure charge was billed.
+            </description>
+        </column>
+
+        <column>
+            <name>CurrentProject</name>
+            <label>Current Animal Project</label>
+            <description>
+                The animal’s current active project at the time of review.
+            </description>
+        </column>
+
+        <!-- ✅ Charge Review with Conditional Formatting -->
+        <column>
+            <name>ChargeReview</name>
+            <label>Billing Review Status</label>
+
+            <conditionalFormats>
+
+                <!-- Billing is Correct -->
+                <conditionalFormat>
+                    <operator>equals</operator>
+                    <value>Billing is Correct</value>
+                    <backgroundColor>#2E7D32</backgroundColor>  <!-- Green -->
+                    <textColor>#FFD700</textColor>              <!-- Yellow -->
+                </conditionalFormat>
+
+                <!-- Billing Needs Review -->
+                <conditionalFormat>
+                    <operator>equals</operator>
+                    <value>Billing Needs Review</value>
+                    <backgroundColor>#C62828</backgroundColor>  <!-- Red -->
+                    <textColor>#FFFFFF</textColor>              <!-- White -->
+                    <fontWeight>bold</fontWeight>
+                </conditionalFormat>
+
+            </conditionalFormats>
+
+        </column>
+
+
+
+        <column>
+            <name>unitCost</name>
+            <label>Unit Cost ($)</label>
+            <format>$#,##0.00</format>
+        </column>
+
+    </columns>
+
+</metadata>
