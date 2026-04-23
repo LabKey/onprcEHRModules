@@ -184,7 +184,7 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
 
                 var rooms = Ext4.Object.getKeys(roomMap).sort();
                 var dividerWidth = 3;
-                var height = 100;
+                var height = 75;
                 var cageWidth = 51;   //Modified: 10-15-2020
                 var hasCages = false;
 
@@ -192,7 +192,7 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                     if (roomIdx == 0 && !config.printMode){
                         toAdd.push(ONPRC.panel.RoomLayoutPanel.getButtonCfgs(config));
                         toAdd.push({
-                            style: 'margin-bottom: 20px;',
+                            style: 'margin-bottom: 5px;',
                             border: false
                         });
                     }
@@ -238,29 +238,29 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                                     border: false
                                 });
 
-                                // currentSection.push({
-                                //     html: 'Note: a solid line indicates a solid divider, dotted line indicates mesh, and dashed indicates grooming contact.',
-                                //     style: 'margin-bottom: 10px;',
-                                //     border: false
-                                // });
-                                //
-                                // //Modified: 8-19-2019  R. Blasa Added Divider Legends Not eeded at this time
-                                // currentSection.push({
-                                //
-                                //     //Modified: 4/3/2023  R.Blasa
-                                //     xtype: 'button',
-                                //     text: 'Slide Descriptions',
-                                //     scope: this,
-                                //     style: 'margin-bottom: 10px;',
-                                //     handler: function(btn){
-                                //
-                                //         var url = LABKEY.ActionURL.buildURL('onprc_ehr', 'SliderDefinition', this.containerPath);
-                                //         window.open(url);
-                                //     },
-                                //
-                                //     style: 'margin-bottom: 10px;',
-                                //     border: false
-                                // });
+                                currentSection.push({
+                                    html: 'Note: a solid line indicates a solid divider, dotted line indicates mesh, and dashed indicates grooming contact.',
+                                    style: 'margin-bottom: 10px;',
+                                    border: false
+                                });
+
+                                //Modified: 8-19-2019  R. Blasa Added Divider Legends Not eeded at this time
+                                currentSection.push({
+
+                                    //Modified: 4/3/2023  R.Blasa
+                                    xtype: 'button',
+                                    text: 'Slide Descriptions',
+                                    scope: this,
+                                    style: 'margin-bottom: 10px;',
+                                    handler: function(btn){
+
+                                        var url = LABKEY.ActionURL.buildURL('onprc_ehr', 'SliderDefinition', this.containerPath);
+                                        window.open(url);
+                                    },
+
+                                    style: 'margin-bottom: 10px;',
+                                    border: false
+                                });
                             }
 
                             table = ONPRC.panel.RoomLayoutPanel.getRowBlockCfg(maxCage);
