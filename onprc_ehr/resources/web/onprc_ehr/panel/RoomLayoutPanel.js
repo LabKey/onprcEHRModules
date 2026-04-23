@@ -185,7 +185,7 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                 var rooms = Ext4.Object.getKeys(roomMap).sort();
                 var dividerWidth = 3;
                 var height = 75;
-                var cageWidth = 90;
+                var cageWidth = 60;
                 var hasCages = false;
 
                 Ext4.each(rooms, function(room, roomIdx){
