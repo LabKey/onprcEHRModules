@@ -98,7 +98,7 @@ LEFT JOIN (
     f.id,
     min(f.flag.value) as heightExemption
   FROM study.flags f
-  WHERE f.isActive = true AND f.flag.category = 'Caging Note' and f.flag.description like '%exempt%'
+  WHERE f.isActive = true AND f.flag.category = 'Caging Note' and (f.flag.description like '%weight-exempt%' or f.flag.description like '%Medical-exempt%')
   GROUP BY f.Id
 ) f on (f.Id = h.Id)
 
@@ -108,7 +108,7 @@ LEFT JOIN (
     f.id,
     min(f.flag.value) as weightExemption
   FROM study.flags f
-  WHERE f.isActive = true AND f.flag.category = 'Caging Note' and f.flag.description like '%exempt%'
+  WHERE f.isActive = true AND f.flag.category = 'Caging Note' and (f.flag.description like '%height-exempt%' or f.flag.description like '%Medical-exempt%')
   GROUP BY f.Id
 ) wf on (wf.Id = h.Id)
 
