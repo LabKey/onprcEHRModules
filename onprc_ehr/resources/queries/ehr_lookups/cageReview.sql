@@ -9,6 +9,7 @@ PARAMETERS(RequirementSet CHAR)
 SELECT
   t2.*,
   CASE
+    WHEN (t2.heightOverride is not NULL) THEN 'TAll EXEMPTION'
     WHEN (t2.sqFtStatus LIKE '%ERROR%' OR t2.heightStatus LIKE '%ERROR%') THEN 'ERROR'
     WHEN (t2.sqFtStatus LIKE '%WARN%' OR t2.heightStatus LIKE '%WARN%') THEN 'WARNING'
     WHEN (t2.sqFtStatus LIKE '%NOTE%' OR t2.heightStatus LIKE '%NOTE%') THEN 'NOTE'
@@ -40,7 +41,8 @@ SELECT
    t.heightStatus,
   t.weightExempt,
   t.totalWeightExempt,
-  t.totalHeightExempt
+  t.totalHeightExempt,
+  t.heightOverride
 
 FROM (
 
@@ -66,7 +68,9 @@ SELECT
     group_concat(t0.heightStatus, chr(10)) as heightStatus,
     group_concat(CASE WHEN t0.weightExemption IS NULL THEN NULL ELSE t0.Id END) as weightExempt,
     sum(CASE WHEN t0.weightExemption IS NULL THEN 0 ELSE 1 END) as totalWeightExempt,
-    count(t0.heightExemption) as totalHeightExempt
+    count(t0.heightExemption) as totalHeightExempt,
+    t0.height_override_Exemption as heightOverride
+
 
 FROM (
 
@@ -86,7 +90,8 @@ SELECT
     WHEN (pc.cage_type.height < c1.height AND f.heightExemption IS NOT NULL) THEN cast(('NOTE: Height Exemption: ' || h.Id) as varchar(500))
     ELSE null
   END as heightStatus,
-  wf.weightExemption
+  wf.weightExemption,
+  hf.height_override_Exemption
 
 FROM ehr_lookups.connectedCages pc
 
@@ -101,6 +106,16 @@ LEFT JOIN (
   WHERE f.isActive = true AND f.flag.category = 'Caging Note' and (f.flag.description like '%height-exempt%' or f.flag.description like '%Medical-exempt%')
   GROUP BY f.Id
 ) f on (f.Id = h.Id)
+
+    --height flags
+LEFT JOIN (
+    SELECT
+        f.id,
+        min(f.flag.value) as height_override_Exemption
+    FROM study.flags f
+    WHERE f.isActive = true AND f.flag.category = 'Caging Note' and (f.flag.description like '%override-exempt%')
+    GROUP BY f.Id
+) hf on (hf.Id = h.Id)
 
 ---weight flags
 LEFT JOIN (
