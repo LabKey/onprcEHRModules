@@ -1812,11 +1812,14 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         waitForElementToDisappear(caseWindow);
         obsGrid.waitForRowCount(2);
         Assert.assertEquals("Alopecia Score", obsGrid.getFieldValue(1, "category"));
+        Assert.assertEquals("Alopecia Regrowth", obsGrid.getFieldValue(2, "category"));
         Assert.assertEquals("Id field should not be editable.", "on", obsGrid.getCell(1, "Id")
                 .findElement(getDriver()).findElement(By.tagName("div")).getDomAttribute("unselectable"));
         String observation = (String)obsGrid.getFieldValue(1, "observation");
+               observation = (String)obsGrid.getFieldValue(2, "observation");
         Assert.assertTrue("Expected \"Observation/Score\" to be empty (blank or null) but was \"" + observation + "\"", StringUtils.isEmpty(observation));
         Assert.assertEquals(SUBJECTS[0], obsGrid.getFieldValue(1, "Id"));
+        Assert.assertEquals(SUBJECTS[0], obsGrid.getFieldValue(2, "Id"));
 
         _ext4Helper.clickExt4Tab("Treatments Given");
         waitForElement(Locator.tagWithText("div", "No Charge"));
