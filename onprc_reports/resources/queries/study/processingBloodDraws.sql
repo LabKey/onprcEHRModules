@@ -21,8 +21,8 @@ SELECT
   End as ESPFBloodVol,
 
 
- ( coalesce(s.CBCbloodVol1,0) +   coalesce(s.CBCbloodVol3,0) +  coalesce(s.CBCbloodVol4,0) +  coalesce(s.CBCbloodVol5,0) ) as totalCBCVol,
- (coalesce(s.CChembloodVol1,0) + coalesce(s.CChembloodVol2,0) + coalesce(s.CChembloodVol3,0) + coalesce(s.CChembloodVol4,0) )  as totalCompChemBloodVol,
+ (coalesce(s.CBCbloodVol,0) as totalCBCVol,
+ (coalesce(s.CChembloodVol,0)   as totalCompChemBloodVol,
  (coalesce(s.BChembloodVol,0) )  as BasicChemBloodVol,
 
   g.parentageBloodDrawVol,
@@ -41,9 +41,8 @@ SELECT
   ELSE
       0
   End +
-  coalesce(s.CBCbloodVol1,0) +   coalesce(s.CBCbloodVol3,0) +  coalesce(s.CBCbloodVol4,0) +  coalesce(s.CBCbloodVol5,0) +
-  coalesce(s.CChembloodVol1,0) + coalesce(s.CChembloodVol2,0) + coalesce(s.CChembloodVol3,0) + coalesce(s.CChembloodVol4,0) +
-  coalesce(s.BChembloodVol,0) +
+  coalesce(s.CBCbloodVol,0)  +
+  coalesce(s.CChembloodVol,0) + coalesce(s.BChembloodVol,0) +
   coalesce(g.totalBloodDrawVol, 0) as totalBloodDrawVol,
 
     (select k.room  from study.housing k where k.Id =d.Id And k.enddate is null) as currentlocationroom,

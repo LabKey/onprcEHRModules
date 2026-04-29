@@ -49,48 +49,24 @@ SELECT
 
   -----CBC
   CASE
-      WHEN  (t.isCBCRequired1 = true AND t.isCBCCurrent1 = false ) OR  (t.isCBCRequired2 = true AND t.isCBCCurrent2 = false ) THEN 1
-      ELSE 0
-      END as CBCbloodVol1,
-
-
-  CASE
+      WHEN  (t.isCBCRequired1 = true AND t.isCBCCurrent1 = false )  THEN 1
+      WHEN   (t.isCBCRequired2 = true AND t.isCBCCurrent2 = false ) THEN 1
       WHEN  (t.isCBCRequired3 = true AND t.isCBCCurrent3 = false )  THEN 1
-      ELSE 0
-      END as CBCbloodVol3,
-
-  CASE
       WHEN  (t.isCBCRequired4 = true AND t.isCBCCurrent4 = false )  THEN 1
-      ELSE 0
-      END as CBCbloodVol4,
-
-  CASE
       WHEN  (t.isCBCRequired5 = true AND t.isCBCCurrent5 = false )  THEN 1
       ELSE 0
-      END as CBCbloodVol5,
-
+      END as CBCbloodVol,
 
 
   -----Comprehensive Chemistry
   CASE
       WHEN  (t.isCChemRequired1 = true AND t.isCChemCurrent1 = false )  THEN 2
-      ELSE 0
-      END as CChembloodVol1,
-
-  CASE
       WHEN  (t.isCChemRequired2 = true AND t.isCChemCurrent2 = false )  THEN 2
-      ELSE 0
-      END as CChembloodVol2,
-
-  CASE
       WHEN  (t.isCChemRequired3 = true AND t.isCChemCurrent3 = false )  THEN 2
-      ELSE 0
-      END as CChembloodVol3,
-
-  CASE
       WHEN  (t.isCChemRequired4 = true AND t.isCChemCurrent4 = false )  THEN 2
       ELSE 0
-      END as CChembloodVol4,
+      END as CChembloodVol,
+,
 
     -----Basic Chemistry
   CASE
