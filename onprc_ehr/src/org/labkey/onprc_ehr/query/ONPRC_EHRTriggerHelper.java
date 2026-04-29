@@ -55,6 +55,9 @@ import org.labkey.api.query.FilteredTable;
 import org.labkey.api.query.QueryService;
 import org.labkey.api.query.QueryUpdateServiceException;
 import org.labkey.api.query.UserSchema;
+import org.labkey.api.security.Group;
+import org.labkey.api.security.MemberType;
+import org.labkey.api.security.SecurityManager;
 import org.labkey.api.security.User;
 import org.labkey.api.security.UserManager;
 import org.labkey.api.security.UserPrincipal;
@@ -64,6 +67,7 @@ import org.labkey.api.util.GUID;
 import org.labkey.api.util.MailHelper;
 import org.labkey.api.util.PageFlowUtil;
 import org.labkey.api.util.Pair;
+import org.labkey.api.util.logging.LogHelper;
 import org.labkey.onprc_ehr.ONPRC_EHRManager;
 import org.labkey.onprc_ehr.ONPRC_EHRModule;
 import org.labkey.onprc_ehr.ONPRC_EHRSchema;
@@ -71,6 +75,7 @@ import org.labkey.onprc_ehr.notification.CullListNotification;
 import org.labkey.onprc_ehr.notification.MensesTMBNotification;
 import org.labkey.onprc_ehr.notification.ProjectAlertsNotification;
 import org.labkey.onprc_ehr.notification.ProtocolAlertsNotification;
+import org.labkey.api.util.DateUtil;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -100,7 +105,7 @@ import java.util.TreeMap;
  */
 public class ONPRC_EHRTriggerHelper
 {
-    private static final Logger _log = LogManager.getLogger(ONPRC_EHRTriggerHelper.class);
+    private static final Logger _log = LogHelper.getLogger(ONPRC_EHRTriggerHelper.class, "Fill in description");
     private static final String NONRESTRICTED = "Nonrestricted";
     private static final String EXPERIMENTAL_EUTHANASIA = "EUTHANASIA, EXPERIMENTAL";
     private static final String NON_EXPERIMENTAL_EUTHANASIA = "EUTHANASIA, NONEXPERIMENTAL";
@@ -2601,7 +2606,6 @@ public class ONPRC_EHRTriggerHelper
         keys.add(FieldKey.fromString("lsid"));
         final Map<FieldKey, ColumnInfo> colMap = QueryService.get().getColumns(ti, keys);
 
-
         final List<Map<String, Object>> toUpdate = new ArrayList<>();
         final List<Map<String, Object>> oldKeys = new ArrayList<>();
         TableSelector ts = new TableSelector(ti, colMap.values(), new SimpleFilter(FieldKey.fromString("Id"), id, CompareType.IN), null);
@@ -2634,7 +2638,153 @@ public class ONPRC_EHRTriggerHelper
         }
     }
 
+    public void sendClinpathPanicEmail(String id, String runid, String objectid)
+    {
+        String subject = "Chemistry Results with alert values";
 
+        Container c = getContainer();
+
+
+        final TableInfo ti = getTableInfo("onprc_ehr", "ChemistryPanicNotification");
+        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("Id"), id, CompareType.EQUAL);
+        filter.addCondition(FieldKey.fromString("runid"), runid, CompareType.EQUAL);
+        filter.addCondition(FieldKey.fromString("objectid"), objectid, CompareType.EQUAL);
+
+
+        List<FieldKey> names= new ArrayList<>();
+        FieldKey clinpathFieldKey = FieldKey.fromString("runid");
+        names.add(clinpathFieldKey);
+        names.add(FieldKey.fromString("qualResult"));
+        names.add(FieldKey.fromString("servicerequested"));
+        names.add(FieldKey.fromString("testid"));
+        names.add(FieldKey.fromString("date"));
+        names.add(FieldKey.fromString("Id"));
+        names.add(FieldKey.fromString("vet"));
+        names.add(FieldKey.fromString("taskid"));
+
+
+        final Map<FieldKey, ColumnInfo> colKeys = QueryService.get().getColumns(ti, names);
+        final ColumnInfo clinpathColumn = colKeys.get(clinpathFieldKey);
+        TableSelector ts = new TableSelector(ti, colKeys.values(), filter, null);
+
+        final StringBuilder html = new StringBuilder();
+
+
+        if (ts.getRowCount() == 0)
+        {
+            html.append("There are no Chemistry Alert Values to display");
+
+            return;
+        }
+        else
+        {
+
+            html.append("<table border=1 style='border-collapse: collapse;'>");
+            html.append("<tr style='font-weight: bold;'><td>Animal ID</td><td>Date</td><td>Service Requested</td><td> Panel Test Name</td><td> Qual Results</td><td>Task ID </td><td> Vet/PI Name</td></tr>\n");
+            ts.forEach(new Selector.ForEachBlock<ResultSet>()
+               {
+
+                   @Override
+                   public void exec(ResultSet rs) throws SQLException
+                   {
+
+                       String recDate = DateUtil.formatDate(c, rs.getDate("date"));
+
+                       TableInfo ti2 = getTableInfo("onprc_ehr", "Labwork_Requestor_Vets");
+                       SimpleFilter filter2 = new SimpleFilter(FieldKey.fromString("userid"), rs.getString("vet"));
+                       filter2.addCondition(FieldKey.fromString("DisableDate"), true, CompareType.ISBLANK);
+
+
+                       TableSelector ts2 = new TableSelector(ti2, PageFlowUtil.set("LastName"), filter2, null);
+                       List<String> ret2 = ts2.getArrayList(String.class);
+                       if (!ret2.isEmpty())
+                       {
+                           for (String Vetname : ret2)
+                           {
+
+                               html.append("<tr><td>" + PageFlowUtil.filter(rs.getString("Id")) +
+                                       "</td><td>" + PageFlowUtil.filter(recDate) +
+                                       "</td><td>" + PageFlowUtil.filter(rs.getString("servicerequested")) +
+                                       " </td><td>" + PageFlowUtil.filter(rs.getString("testid")) +
+                                       " </td><td>" + PageFlowUtil.filter(rs.getString("qualResult")) +
+                                       " </td><td>" + PageFlowUtil.filter(rs.getString("taskid")) +
+                                       "</td><td>" + PageFlowUtil.filter(Vetname) + "</td></tr>\n");
+                               break;
+
+                           }
+                       }
+
+                   }
+
+               }
+
+            );
+
+        }
+
+
+        final TableInfo tt = getTableInfo("study", "clinpathRuns");
+        SimpleFilter filtert = new SimpleFilter(FieldKey.fromString("objectid"), runid, CompareType.EQUAL);
+        filter.addCondition(FieldKey.fromString("id"), id, CompareType.EQUAL);
+
+        TableSelector tst = new TableSelector(ti, PageFlowUtil.set("vet"), filter, null);
+        tst.forEach(new Selector.ForEachBlock<>()
+        {
+            @Override
+            public void exec(ResultSet rs) throws SQLException
+            {
+                Integer vetId = rs.getInt("vet");
+                Set<UserPrincipal> recipients = getRecipients(vetId);
+                if (recipients.isEmpty())
+                {
+                    _log.warn("No recipients, unable to send EHR trigger script email");
+                    return;
+                }
+                else
+                {
+                    html.append("</table>\n");
+
+                    sendMessage(subject, html.toString(), recipients);
+
+                }
+
+            }
+
+
+        });
+
+
+    }
+
+
+    private Set<UserPrincipal> getRecipients(Integer... userIds)
+    {
+        Set<UserPrincipal> recipients = new HashSet<>();
+        for (Integer userId : userIds)
+        {
+            if (userId > 0)
+            {
+                UserPrincipal up = SecurityManager.getPrincipal(userId);
+                if (up != null)
+                {
+                    if (up instanceof  User)
+                    {
+                        recipients.add(up);
+                    }
+                    else
+                    {
+                        for (UserPrincipal u : SecurityManager.getAllGroupMembers((Group)up, MemberType.ACTIVE_USERS))
+                        {
+                            if (u.isActive())
+                                recipients.add(u);
+                        }
+                    }
+                }
+            }
+        }
+
+        return recipients;
+    }
 
     //Added 9-30-2025
     public String retrieveGeographic_Origin(String Id)
