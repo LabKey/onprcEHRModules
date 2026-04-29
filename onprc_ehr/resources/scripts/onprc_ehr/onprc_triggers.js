@@ -1378,6 +1378,17 @@ exports.init = function(EHR){
         });
     });
 
+    // Added: 10-6-2025
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.AFTER_UPSERT, 'study', 'chemistryResults', function (helper, scriptErrors, row, oldRow) {
+
+
+        if (row.Id && row.qualresult && row.qualresult.indexOf('alert') !== -1)  {
+
+               console.log("alert values:  " + row.qualresult);
+            triggerHelper.sendClinpathPanicEmail(row.Id, row.runid, row.objectid);
+        }
+    });
+
     //Added: 10-4-2022  R.Blasa
     EHR.Server.TriggerManager.registerHandler(EHR.Server.TriggerManager.Events.COMPLETE, function(event, errors, helper){
         // Send notifications when requests approved

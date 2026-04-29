@@ -184,15 +184,15 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
 
                 var rooms = Ext4.Object.getKeys(roomMap).sort();
                 var dividerWidth = 3;
-                var height = 115;
-                var cageWidth = 51;   //Modified: 10-15-2020
+                var height = 75;
+                var cageWidth = 60;
                 var hasCages = false;
 
                 Ext4.each(rooms, function(room, roomIdx){
                     if (roomIdx == 0 && !config.printMode){
                         toAdd.push(ONPRC.panel.RoomLayoutPanel.getButtonCfgs(config));
                         toAdd.push({
-                            style: 'margin-bottom: 20px;',
+                            style: 'margin-bottom: 5px;',
                             border: false
                         });
                     }
@@ -244,7 +244,7 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                                     border: false
                                 });
 
-                                //Modified: 8-19-2019  R. Blasa Added Divider Legends Not eeded at this time
+                                //Modified: 8-19-2019  R. Blasa Added Divider Legends Not needed at this time
                                 currentSection.push({
 
                                     //Modified: 4/3/2023  R.Blasa
