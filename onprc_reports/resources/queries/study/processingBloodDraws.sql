@@ -21,9 +21,9 @@ SELECT
   End as ESPFBloodVol,
 
 
- (coalesce(s.CBCbloodVol,0) as totalCBCVol,
- (coalesce(s.CChembloodVol,0)   as totalCompChemBloodVol,
- (coalesce(s.BChembloodVol,0) )  as BasicChemBloodVol,
+ coalesce(s.CBCbloodVol,0) as totalCBCVol,
+ coalesce(s.CChembloodVol,0)   as totalCompChemBloodVol,
+ coalesce(s.BChembloodVol,0)   as BasicChemBloodVol,
 
   g.parentageBloodDrawVol,
   g.mhcBloodDrawVol,
