@@ -66,7 +66,6 @@ SELECT
       WHEN  (t.isCChemRequired4 = true AND t.isCChemCurrent4 = false )  THEN 2
       ELSE 0
       END as CChembloodVol,
-,
 
     -----Basic Chemistry
   CASE
