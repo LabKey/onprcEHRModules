@@ -1513,6 +1513,9 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         //test SNOMED codes
         _ext4Helper.clickExt4Tab("Histologic Findings");
         Ext4GridRef histologyGrid = _helper.getExt4GridForFormSection("Histologic Findings");
+        // The custom "Add Record" handler returns early until the tab's grid store finishes loading.
+        waitFor(() -> (Boolean)histologyGrid.getFnEval("return !!this.store && (!this.store.hasLoaded || this.store.hasLoaded());"),
+                "Histologic Findings grid store did not finish loading", WAIT_FOR_JAVASCRIPT);
         _helper.addRecordToGrid(histologyGrid, "Add Record");
         scrollIntoView(histologyGrid.getCell(1,7), true);
         waitAndClick(histologyGrid.getCell(1, 7));
