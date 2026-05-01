@@ -1449,6 +1449,95 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
         //TODO: make sure fields turn red as expected
     }
 
+    /**
+     * Verifies the clinremarks Id field disable + tooltip behavior wired in via the
+     * `CaseMgmt` metadata source (onprc_ehr/model/sources/CaseMgmt.js). The source is
+     * registered against both ClinicalReportFormType and BehaviorExamFormType, so this
+     * test exercises both forms through a shared helper.
+     */
+    @Test
+    public void testClinremarksIdDisabledOnCaseCreated() throws Exception
+    {
+        goToEHRFolder();
+        verifyClinremarksIdLockOnCaseCreated("Exams/Cases", "Clinical");
+        verifyClinremarksIdLockOnCaseCreated("BSU Exam", "Behavior");
+    }
+
+    private void verifyClinremarksIdLockOnCaseCreated(String formLinkLabel, String caseCategory)
+    {
+        final String expectedTooltip = "Case opened for this animal, cannot change animal Id.";
+
+        log("Verifying clinremarks Id disabled on casecreated for form: " + formLinkLabel);
+        _helper.goToTaskForm(formLinkLabel, false);
+        _ext4Helper.clickExt4Tab("SOAP");
+
+        Ext4FieldRef idField = _helper.getExt4FieldForFormSection("SOAP", "Id");
+        Assert.assertNotNull("Could not locate Id field in SOAP section of form: " + formLinkLabel, idField);
+
+        idField.setValue(SUBJECTS[0]);
+
+        // Wait for the AnimalDetailsPanel to display the Id
+        Ext4FieldRef detailsId = _ext4Helper.queryOne("displayfield[name=animalId]", Ext4FieldRef.class);
+        Assert.assertNotNull("AnimalDetailsPanel not rendered (form: " + formLinkLabel + ")", detailsId);
+        waitFor(() -> SUBJECTS[0].equals(String.valueOf(detailsId.getValue())),
+                "AnimalDetailsPanel did not display Id " + SUBJECTS[0] + " (form: " + formLinkLabel + ")",
+                WAIT_FOR_JAVASCRIPT);
+
+        Assert.assertFalse("Id field should be enabled before any case is created (form: " + formLinkLabel + ")",
+                idField.isDisabled());
+        Object preQtip = idField.getEval("getEl().dom.getAttribute('data-qtip')");
+        assertEquals("Id field should have no tooltip before any case is created (form: " + formLinkLabel + ")",
+                "", preQtip == null ? "" : preQtip.toString());
+
+        // Open a real case via the in-form Manage Cases link, so ManageCasesPanel fires the real casecreated event
+        waitAndClick(Locator.linkWithText("[Manage Cases]"));
+        waitForElement(Ext4Helper.Locators.window("Manage Cases: " + SUBJECTS[0]));
+
+        waitAndClick(Ext4Helper.Locators.ext4Button("Open Case"));
+        waitAndClick(Ext4Helper.Locators.menuItem("Open " + caseCategory + " Case"));
+
+        // ManageCasesPanel asks "Open New" vs "Edit Existing" first if an active case of this category
+        // already exists for the animal (ManageCasesPanel.js: showCreateWindow). Dismiss with "Open New".
+        Locator.XPathLocator existingCaseDialog = Ext4Helper.Locators.window("Open Case");
+        if (Boolean.TRUE.equals(waitFor(() -> isElementPresent(existingCaseDialog), 2000)))
+        {
+            waitAndClick(existingCaseDialog.append(Ext4Helper.Locators.ext4ButtonEnabled("Open New")));
+            waitForElementToDisappear(existingCaseDialog);
+        }
+
+        Locator.XPathLocator openCaseWindow = Ext4Helper.Locators.window("Open Case: " + SUBJECTS[0]);
+        waitForElement(openCaseWindow);
+
+        if ("Clinical".equals(caseCategory))
+        {
+            Ext4ComboRef vetField = Ext4ComboRef.getForLabel(this, "Assigned Vet");
+            vetField.waitForStoreLoad();
+            // Pick whichever vet the store has rather than hardcoding a display name; the test only needs the field populated
+            vetField.eval("setValue(arguments[0])", vetField.getFnEval("return this.store.getAt(0).get(this.valueField)"));
+            Ext4FieldRef.getForLabel(this, "Problem").setValue("Behavioral");
+        }
+        else if ("Behavior".equals(caseCategory))
+        {
+            Ext4FieldRef.getForLabel(this, "Subcategory").setValue("Alopecia");
+        }
+
+        // Use "Open Case" (not "Open & Immediately Close") — a closed case does not lock the Id field
+        waitAndClick(openCaseWindow.append(Ext4Helper.Locators.ext4ButtonEnabled("Open Case")));
+        waitForElementToDisappear(openCaseWindow);
+
+        waitAndClick(Ext4Helper.Locators.ext4ButtonEnabled("Close"));
+        waitForElementToDisappear(Ext4Helper.Locators.window("Manage Cases: " + SUBJECTS[0]));
+
+        waitFor(idField::isDisabled,
+                "Id field did not become disabled after case was opened (form: " + formLinkLabel + ")",
+                WAIT_FOR_JAVASCRIPT);
+        Object postQtip = idField.getEval("getEl().dom.getAttribute('data-qtip')");
+        assertEquals("Id field should carry the lock tooltip after case is opened (form: " + formLinkLabel + ")",
+                expectedTooltip, postQtip == null ? "" : postQtip.toString());
+
+        _helper.discardForm();
+    }
+
     @Override
     protected String getAnimalHistoryPath()
     {
