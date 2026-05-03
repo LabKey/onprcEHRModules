@@ -1450,13 +1450,13 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
     }
 
     /**
-     * Verifies the clinremarks Id field disable + tooltip behavior wired in via the
+     * Verifies the clinremarks Id field read-only + tooltip behavior wired in via the
      * `CaseMgmt` metadata source (onprc_ehr/model/sources/CaseMgmt.js). The source is
      * registered against both ClinicalReportFormType and BehaviorExamFormType, so this
      * test exercises both forms through a shared helper.
      */
     @Test
-    public void testClinremarksIdDisabledOnCaseCreated() throws Exception
+    public void testClinremarksIdReadOnlyOnCaseCreated() throws Exception
     {
         goToEHRFolder();
 
@@ -1482,9 +1482,9 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
 
     private void verifyClinremarksIdLockOnCaseCreated(String formLinkLabel, String caseCategory, String openButtonLabel, CaseEntryPath entryPath)
     {
-        final String expectedTooltip = "Case opened for this animal, cannot change animal Id.";
+        final String expectedTooltip = "A case has been opened in this form for this animal. All records in the form will be collected toward that case. Cannot change animal Id.";
 
-        log("Verifying clinremarks Id disabled on casecreated for form: " + formLinkLabel + " via '" + openButtonLabel + "' (entry: " + entryPath + ")");
+        log("Verifying clinremarks Id read-only on casecreated for form: " + formLinkLabel + " via '" + openButtonLabel + "' (entry: " + entryPath + ")");
         _helper.goToTaskForm(formLinkLabel, false);
         _ext4Helper.clickExt4Tab("SOAP");
 
@@ -1500,8 +1500,8 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
                 "AnimalDetailsPanel did not display Id " + SUBJECTS[0] + " (form: " + formLinkLabel + ")",
                 WAIT_FOR_JAVASCRIPT);
 
-        Assert.assertFalse("Id field should be enabled before any case is created (form: " + formLinkLabel + ")",
-                idField.isDisabled());
+        Assert.assertNotEquals("Id field should be editable before any case is created (form: " + formLinkLabel + ")",
+                Boolean.TRUE, idField.getEval("readOnly"));
         Object preQtip = idField.getEval("getEl().dom.getAttribute('data-qtip')");
         assertEquals("Id field should have no tooltip before any case is created (form: " + formLinkLabel + ")",
                 "", preQtip == null ? "" : preQtip.toString());
@@ -1509,8 +1509,8 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
         // Open a real case from the data entry form so ManageCasesPanel fires the real casecreated event
         createCaseFromForm(SUBJECTS[0], caseCategory, openButtonLabel, entryPath);
 
-        waitFor(idField::isDisabled,
-                "Id field did not become disabled after case was opened (form: " + formLinkLabel + ")",
+        waitFor(() -> Boolean.TRUE.equals(idField.getEval("readOnly")),
+                "Id field did not become read-only after case was opened (form: " + formLinkLabel + ")",
                 WAIT_FOR_JAVASCRIPT);
         Object postQtip = idField.getEval("getEl().dom.getAttribute('data-qtip')");
         assertEquals("Id field should carry the lock tooltip after case is opened (form: " + formLinkLabel + ")",

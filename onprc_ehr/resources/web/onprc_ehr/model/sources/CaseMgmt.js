@@ -21,29 +21,29 @@ EHR.model.DataModelManager.registerMetadata('CaseMgmt', {
                 formEditorConfig: {
                     listeners: {
                         afterrender: function(field){
-                            var TOOLTIP = 'Case opened for this animal, cannot change animal Id.';
-                            var setTooltip = function(disabled){
+                            var TOOLTIP = 'A case has been opened in this form for this animal. All records in the form will be collected toward that case. Cannot change animal Id.';
+                            var setTooltip = function(readOnly){
                                 var el = field.getEl();
                                 if (el){
-                                    el.set({'data-qtip': disabled ? TOOLTIP : ''});
+                                    el.set({'data-qtip': readOnly ? TOOLTIP : ''});
                                 }
                             };
-                            var syncDisabled = function(){
+                            var syncReadOnly = function(){
                                 var rec = EHR.DataEntryUtils.getBoundRecord(field);
-                                var disabled = !!(rec && rec.get('caseid'));
-                                field.setDisabled(disabled);
-                                setTooltip(disabled);
+                                var readOnly = !!(rec && rec.get('caseid'));
+                                field.setReadOnly(readOnly);
+                                setTooltip(readOnly);
                             };
-                            syncDisabled();
+                            syncReadOnly();
                             var formPanel = field.up('ehr-formpanel');
                             if (formPanel){
-                                field.mon(formPanel, 'bindrecord', syncDisabled, field, {buffer: 50});
+                                field.mon(formPanel, 'bindrecord', syncReadOnly, field, {buffer: 50});
                             }
                             if (EHR.DemographicsCache){
                                 field.mon(EHR.DemographicsCache, 'casecreated', function(animalId){
                                     var rec = EHR.DataEntryUtils.getBoundRecord(field);
                                     if (rec && rec.get('Id') === animalId){
-                                        field.setDisabled(true);
+                                        field.setReadOnly(true);
                                         setTooltip(true);
                                     }
                                 }, field);
