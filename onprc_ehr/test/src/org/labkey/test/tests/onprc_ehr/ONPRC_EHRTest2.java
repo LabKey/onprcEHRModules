@@ -1482,7 +1482,7 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
 
     private void verifyClinremarksIdLockOnCaseCreated(String formLinkLabel, String caseCategory, String openButtonLabel, CaseEntryPath entryPath)
     {
-        final String expectedTooltip = "A case has been opened in this form for this animal. All records in the form will be collected toward that case. Cannot change animal Id.";
+        final String expectedTooltip = "Refresh the form to enter data for a different animal.";
 
         log("Verifying clinremarks Id read-only on casecreated for form: " + formLinkLabel + " via '" + openButtonLabel + "' (entry: " + entryPath + ")");
         _helper.goToTaskForm(formLinkLabel, false);
