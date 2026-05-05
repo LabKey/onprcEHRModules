@@ -71,6 +71,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.function.Function;
 
 import static org.junit.Assert.assertEquals;
@@ -554,6 +555,29 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         demographicsSelect.addFilter(new Filter("species", RHESUS));
         demographicsSelect.addFilter(new Filter("geographic_origin", INDIAN));
         Assert.assertEquals(1, demographicsSelect.execute(getApiHelper().getConnection(), getContainerPath()).getRowCount().intValue());
+    }
+
+    @Test
+    public void testSubmitButtonsDisabledDuringValidation() throws Exception
+    {
+        List<String> allIds = createTemporaryValidationAnimals(30);
+
+        try
+        {
+            log("Bulk adding animals in treatment orders for temporary test animals");
+            _helper.goToTaskForm("Medications/Diet", false);
+            Ext4GridRef treatmentGrid = _helper.getExt4GridForFormSection("Medication/Treatment Orders");
+            addBatchIdsToGrid(treatmentGrid, allIds);
+
+            assertActionsDisabledDuringValidation();
+
+            treatmentGrid.waitForRowCount(allIds.size());
+            _helper.discardForm();
+        }
+        finally
+        {
+            deleteTemporaryValidationAnimals(allIds);
+        }
     }
 
     @Test
@@ -1102,8 +1126,9 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         Assert.assertEquals(remark, bloodGrid.getFieldValue(3, "remark"));
         Assert.assertEquals(remark, bloodGrid.getFieldValue(4, "remark"));
 
-        waitAndClickAndWait(_helper.getDataEntryButton("Save & Close"));
-        waitForElement(Locator.tagWithText("a", "Enter New Data"));
+        waitForDataEntryButtonEnabled("Save & Close", WAIT_FOR_PAGE * 2);
+        waitAndClick(_helper.getDataEntryButton("Save & Close"));
+        waitForElement(Locator.tagWithText("a", "Enter New Data"), WAIT_FOR_PAGE * 2);
     }
 
     @Test
@@ -1487,6 +1512,9 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         //test SNOMED codes
         _ext4Helper.clickExt4Tab("Histologic Findings");
         Ext4GridRef histologyGrid = _helper.getExt4GridForFormSection("Histologic Findings");
+        // The custom "Add Record" handler returns early until the tab's grid store finishes loading.
+        waitFor(() -> (Boolean)histologyGrid.getFnEval("return !!this.store && (!this.store.hasLoaded || this.store.hasLoaded());"),
+                "Histologic Findings grid store did not finish loading", WAIT_FOR_JAVASCRIPT);
         _helper.addRecordToGrid(histologyGrid, "Add Record");
         scrollIntoView(histologyGrid.getCell(1,7), true);
         waitAndClick(histologyGrid.getCell(1, 7));
@@ -1565,7 +1593,9 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         waitForElementToDisappear(deathWindow, 20000); //saving can take longer than default 10 seconds
         waitForElementToDisappear(Locator.tagContainingText("div", "Saving Changes...").notHidden());
 
-        waitAndClickAndWait(_helper.getDataEntryButton("Save & Close"));
+        waitForDataEntryButtonEnabled("Save & Close", WAIT_FOR_PAGE * 2);
+        waitAndClick(_helper.getDataEntryButton("Save & Close"));
+        waitForElement(Locator.tagWithText("a", "Enter New Data"), WAIT_FOR_PAGE * 2);
 
         //make new necropsy, copy from previous
         _helper.goToTaskForm("Necropsy", false);
@@ -1968,6 +1998,107 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         waitForElement(loc);
         setFormElement(loc, value);
         assertEquals(value, getFormElement(loc));
+    }
+
+    private void addBatchIdsToGrid(Ext4GridRef grid, List<String> ids)
+    {
+        grid.clickTbarButton("Add Batch");
+        waitForElement(Ext4Helper.Locators.window("Choose Animals"));
+        Ext4FieldRef.getForLabel(this, "Id(s)").setValue(StringUtils.join(ids, ";"));
+
+        waitAndClick(Ext4Helper.Locators.window("Choose Animals").append(Ext4Helper.Locators.ext4Button("Submit")));
+        grid.waitForRowCount(ids.size());
+    }
+
+    private void assertActionsDisabledDuringValidation()
+    {
+        List<String> buttonTexts = Arrays.asList("Save Draft", "Save & Close", "Submit For Review", "Submit Final");
+        List<String> menuItemTexts = Arrays.asList("Submit And Reload", "Force Submit");
+        Locator.XPathLocator validationIndicator = Locator.tagContainingText("span", "Validating...").notHidden();
+        waitFor(() -> !validationIndicator.findElements(getDriver()).isEmpty(),
+                "Validation indicator never appeared", WAIT_FOR_PAGE);
+
+        for (String buttonText : buttonTexts)
+        {
+            List<Ext4CmpRef> buttons = _ext4Helper.componentQuery("button[text='" + buttonText + "']", Ext4CmpRef.class);
+            if (!buttons.isEmpty())
+            {
+                waitFor(() -> Boolean.TRUE.equals(buttons.get(0).getEval("isDisabled() == arguments[0]", true)),
+                        buttonText + " did not become disabled during validation", WAIT_FOR_PAGE);
+            }
+        }
+
+        waitAndClick(_helper.getDataEntryButton("More Actions"));
+        waitForElement(Ext4Helper.Locators.menu().notHidden());
+        for (String menuItemText : menuItemTexts)
+        {
+            waitForElement(Ext4Helper.Locators.menuItemDisabled(menuItemText).notHidden());
+        }
+        waitAndClick(_helper.getDataEntryButton("More Actions"));
+        waitForElementToDisappear(Ext4Helper.Locators.menu().notHidden());
+
+        waitFor(() -> validationIndicator.findElements(getDriver()).isEmpty(),
+                "Validation indicator did not disappear", WAIT_FOR_PAGE * 2);
+        waitForText(WAIT_FOR_PAGE * 2, "WARN");
+        waitForText(WAIT_FOR_PAGE * 2, "ERROR");
+    }
+
+    private List<String> createTemporaryValidationAnimals(int count) throws Exception
+    {
+        String seed = Long.toString(System.currentTimeMillis());
+        seed = seed.substring(Math.max(0, seed.length() - 6));
+
+        String[] species = {"Rhesus", "Cynomolgus", "Marmoset"};
+        String[] fields = {"Id", "Species", "Birth", "Gender", "date", "calculated_status", "objectid"};
+        Object[][] data = new Object[count][];
+        List<String> ids = new ArrayList<>();
+
+        for (int i = 0; i < count; i++)
+        {
+            String id = "VAL" + seed + String.format("%02d", i + 1);
+            ids.add(id);
+            data[i] = new Object[]{
+                    id,
+                    species[i % species.length],
+                    new Date().toString(),
+                    i % 2 == 0 ? getMale() : getFemale(),
+                    new Date(),
+                    "Alive",
+                    UUID.randomUUID().toString()
+            };
+        }
+
+        getApiHelper().deleteAllRecords("study", "demographics", new Filter("Id", StringUtils.join(ids, ";"), Filter.Operator.IN));
+        getApiHelper().doSaveRows(DATA_ADMIN.getEmail(),
+                getApiHelper().prepareInsertCommand("study", "demographics", "lsid", fields, data),
+                getExtraContext());
+        cacheIds(ids);
+
+        return ids;
+    }
+
+    private void deleteTemporaryValidationAnimals(List<String> ids) throws Exception
+    {
+        if (ids.isEmpty())
+        {
+            return;
+        }
+
+        getApiHelper().deleteAllRecords("study", "demographics", new Filter("Id", StringUtils.join(ids, ";"), Filter.Operator.IN));
+    }
+
+    private void waitForDataEntryButtonEnabled(String buttonText, int timeout)
+    {
+        waitFor(() -> {
+                    List<Ext4CmpRef> buttons = _ext4Helper.componentQuery("button[text='" + buttonText + "']", Ext4CmpRef.class);
+                    if (buttons.isEmpty())
+                    {
+                        return false;
+                    }
+
+                    return Boolean.TRUE.equals(buttons.get(0).getEval("isDisabled() == arguments[0]", false));
+                },
+                "Button did not become enabled: " + buttonText, timeout);
     }
 
     @Override
