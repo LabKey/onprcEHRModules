@@ -22,6 +22,16 @@ EHR.model.DataModelManager.registerMetadata('CaseMgmt', {
                     listeners: {
                         afterrender: function(field){
                             var TOOLTIP = 'A case has been opened in this form for this animal. All records in the form will be collected toward that case. Cannot change animal Id.';
+                            var syncDisabledStyle = function(readOnly){
+                                var inputEl = field.inputEl;
+                                if (inputEl){
+                                    inputEl.setStyle({
+                                        'background-color': readOnly ? '#f0f0f0' : '',
+                                        color: readOnly ? '#666666' : '',
+                                        cursor: readOnly ? 'not-allowed' : ''
+                                    });
+                                }
+                            };
                             var setTooltip = function(readOnly){
                                 var el = field.getEl();
                                 if (el){
@@ -32,6 +42,7 @@ EHR.model.DataModelManager.registerMetadata('CaseMgmt', {
                                 var rec = EHR.DataEntryUtils.getBoundRecord(field);
                                 var readOnly = !!(rec && rec.get('caseid'));
                                 field.setReadOnly(readOnly);
+                                syncDisabledStyle(readOnly);
                                 setTooltip(readOnly);
                             };
                             syncReadOnly();
@@ -44,6 +55,7 @@ EHR.model.DataModelManager.registerMetadata('CaseMgmt', {
                                     var rec = EHR.DataEntryUtils.getBoundRecord(field);
                                     if (rec && rec.get('Id') === animalId){
                                         field.setReadOnly(true);
+                                        syncDisabledStyle(true);
                                         setTooltip(true);
                                     }
                                 }, field);
