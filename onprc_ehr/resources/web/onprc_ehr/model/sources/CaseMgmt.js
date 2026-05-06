@@ -21,7 +21,7 @@ EHR.model.DataModelManager.registerMetadata('CaseMgmt', {
                 formEditorConfig: {
                     listeners: {
                         afterrender: function(field){
-                            var TOOLTIP = 'A case has been opened in this form for this animal. All records in the form will be collected toward that case. Cannot change animal Id.';
+                            var TOOLTIP = 'Refresh the form to enter data for a different animal.';
                             var syncDisabledStyle = function(readOnly){
                                 var inputEl = field.inputEl;
                                 if (inputEl){
