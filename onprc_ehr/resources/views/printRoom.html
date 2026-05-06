@@ -50,6 +50,7 @@
                     foundCages = true;
                     Ext4.create('Ext.panel.Panel', {
                         border: false,
+                        width: 1450,
                         defaults: {
                             border: false
                         },
@@ -63,7 +64,7 @@
             }
             else {
                 // Hack to improve printing in Chrome
-                if (Ext4.isChrome) { Ext4.get(webpart.wrapperDivId).setStyle({zoom: '150%'}); };
+                if (Ext4.isChrome) { Ext4.get(webpart.wrapperDivId).setStyle({zoom: '110%'}); };
             }
 
         }, this);
