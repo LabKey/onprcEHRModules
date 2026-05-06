@@ -9,7 +9,6 @@ PARAMETERS(RequirementSet CHAR)
 SELECT
   t2.*,
   CASE
-    WHEN (t2.heightOverride is not NULL) THEN 'TAll EXEMPTION'
     WHEN (t2.sqFtStatus LIKE '%ERROR%' OR t2.heightStatus LIKE '%ERROR%') THEN 'ERROR'
     WHEN (t2.sqFtStatus LIKE '%WARN%' OR t2.heightStatus LIKE '%WARN%') THEN 'WARNING'
     WHEN (t2.sqFtStatus LIKE '%NOTE%' OR t2.heightStatus LIKE '%NOTE%') THEN 'NOTE'
@@ -41,8 +40,8 @@ SELECT
    t.heightStatus,
   t.weightExempt,
   t.totalWeightExempt,
-  t.totalHeightExempt,
-  t.heightOverride
+  t.totalHeightExempt
+
 
 FROM (
 
@@ -68,8 +67,8 @@ SELECT
     group_concat(t0.heightStatus, chr(10)) as heightStatus,
     group_concat(CASE WHEN t0.weightExemption IS NULL THEN NULL ELSE t0.Id END) as weightExempt,
     sum(CASE WHEN t0.weightExemption IS NULL THEN 0 ELSE 1 END) as totalWeightExempt,
-    count(t0.heightExemption) as totalHeightExempt,
-    t0.height_override_Exemption as heightOverride
+    count(t0.heightExemption) as totalHeightExempt
+
 
 
 FROM (
@@ -86,12 +85,13 @@ SELECT
   group_concat(c1.height) as heights,
   f.heightExemption,
   CASE
+    WHEN hf.Id is not null THEN 'ERROR: According to the monkeys weight-- it needs a height step taller than required.'
     WHEN (pc.cage_type.height < c1.height AND f.heightExemption IS NULL) THEN ('ERROR: Insufficient height, ' || h.id ||' needs at least: ' || cast(c1.height AS varchar(50)))
     WHEN (pc.cage_type.height < c1.height AND f.heightExemption IS NOT NULL) THEN cast(('NOTE: Height Exemption: ' || h.Id) as varchar(500))
     ELSE null
   END as heightStatus,
   wf.weightExemption,
-  hf.height_override_Exemption
+  hf.height_error
 
 FROM ehr_lookups.connectedCages pc
 
@@ -111,9 +111,9 @@ LEFT JOIN (
 LEFT JOIN (
     SELECT
         f.id,
-        min(f.flag.value) as height_override_Exemption
+        min(f.flag.value) as height_error
     FROM study.flags f
-    WHERE f.isActive = true AND f.flag.category = 'Caging Note' and (f.flag.description like '%override-exempt%')
+    WHERE f.isActive = true AND f.flag.category = 'Caging Note' and (f.flag.description like '%height-error%')
     GROUP BY f.Id
 ) hf on (hf.Id = h.Id)
 
