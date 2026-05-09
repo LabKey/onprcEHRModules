@@ -22,7 +22,7 @@ public class CensusFormSection extends SimpleFormSection
     public List<String> getTbarButtons()
     {
         List<String> defaultButtons = super.getTbarButtons();
-        defaultButtons.add(0, "CENSUS_ADD");
+        defaultButtons.addFirst("CENSUS_ADD");
         defaultButtons.remove("ADDANIMALS");
 
         return defaultButtons;

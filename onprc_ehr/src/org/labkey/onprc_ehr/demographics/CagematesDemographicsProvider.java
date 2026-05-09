@@ -67,8 +67,8 @@ public class CagematesDemographicsProvider extends AbstractListDemographicsProvi
         List<Map<String, Object>> newList = newProps == null ? null : (List)newProps.get(_propName);
         Set<String> ret = new TreeSet<>();
 
-        List<String> oldAnimals = oldList == null || oldList.isEmpty() ? Collections.emptyList() : toList(oldList.get(0).get("animals"));
-        List<String> newAnimals = newList == null || newList.isEmpty() ? Collections.emptyList() : toList(newList.get(0).get("animals"));
+        List<String> oldAnimals = oldList == null || oldList.isEmpty() ? Collections.emptyList() : toList(oldList.getFirst().get("animals"));
+        List<String> newAnimals = newList == null || newList.isEmpty() ? Collections.emptyList() : toList(newList.getFirst().get("animals"));
 
         ret.addAll(newAnimals);
         ret.addAll(oldAnimals);
@@ -76,7 +76,7 @@ public class CagematesDemographicsProvider extends AbstractListDemographicsProvi
 
         if (!ret.isEmpty())
         {
-            _log.info(id + ": Triggered additional housing updates for " + ret.size() + " ids: " + StringUtils.join(ret, ";"));
+            _log.info("{}: Triggered additional housing updates for {} ids: {}", id, ret.size(), StringUtils.join(ret, ";"));
         }
 
         return ret;
@@ -97,7 +97,7 @@ public class CagematesDemographicsProvider extends AbstractListDemographicsProvi
         }
         else
         {
-            _log.error("Unknown type: " + input.getClass().getName() + ", " + input);
+            _log.error("Unknown type: {}, {}", input.getClass().getName(), input);
             return Collections.emptyList();
         }
     }

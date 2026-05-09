@@ -229,7 +229,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
             }
             catch (ConversionException e)
             {
-                _log.error("Invalid date for ModuleProperty: " + dateValue);
+                _log.error("Invalid date for ModuleProperty: {}", dateValue);
             }
         }
 
@@ -1929,13 +1929,13 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         if (ds == null)
         {
             // NOTE: this seems to happen during study import on TeamCity.  It does not seem to happen during normal operation
-            _log.info("A dataset was requested that does not exist: " + label + " in container: " + ehrContainer.getPath());
+            _log.info("A dataset was requested that does not exist: {} in container: {}", label, ehrContainer.getPath());
             StringBuilder sb = new StringBuilder();
             for (Dataset d : s.getDatasets())
             {
                 sb.append(d.getName() + ", ");
             }
-            _log.info("datasets present: " + sb);
+            _log.info("datasets present: {}", sb);
 
             return null;
         }
@@ -2065,7 +2065,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
     private ColumnInfo getPkCol(TableInfo ti)
     {
         List<ColumnInfo> pks = ti.getPkColumns();
-        return (pks.size() != 1) ? null : pks.get(0);
+        return (pks.size() != 1) ? null : pks.getFirst();
     }
 
     private void appendIsAssignedAtTimeCol(UserSchema ehrSchema, AbstractTableInfo ds, final String dateColName)
@@ -2182,7 +2182,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
                 TableInfo ti = qd.getTable(errors, true);
                 if (!errors.isEmpty())
                 {
-                    _log.error("Error creating lookup table for: " + schemaName + "." + queryName + " in container: " + targetSchema.getContainer().getPath());
+                    _log.error("Error creating lookup table for: {}.{} in container: {}", schemaName, queryName, targetSchema.getContainer().getPath());
                     for (QueryException error : errors)
                     {
                         _log.error(error.getMessage(), error);
@@ -2248,7 +2248,7 @@ private void appendFlagsAlertActiveCol(final UserSchema ehrSchema, AbstractTable
             TableInfo ti = qd.getTable(errors, true);
             if (!errors.isEmpty())
             {
-                _log.error("Error creating lookup table for: " + schemaName + "." + queryName + " in container: " + targetSchema.getContainer().getPath());
+                _log.error("Error creating lookup table for: {}.{} in container: {}", schemaName, queryName, targetSchema.getContainer().getPath());
                 for (QueryException error : errors)
                 {
                     _log.error(error.getMessage(), error);
@@ -2317,7 +2317,7 @@ private void appendFlagsAlertActiveCol(final UserSchema ehrSchema, AbstractTable
                 TableInfo ti = qd.getTable(errors, true);
                 if (!errors.isEmpty())
                 {
-                    _log.error("Error creating lookup table for: " + schemaName + "." + queryName + " in container: " + targetSchema.getContainer().getPath());
+                    _log.error("Error creating lookup table for: {}.{} in container: {}", schemaName, queryName, targetSchema.getContainer().getPath());
                     for (QueryException error : errors)
                     {
                         _log.error(error.getMessage(), error);
@@ -2385,7 +2385,7 @@ private void appendFlagsAlertActiveCol(final UserSchema ehrSchema, AbstractTable
                 TableInfo ti = qd.getTable(errors, true);
                 if (!errors.isEmpty())
                 {
-                    _log.error("Error creating lookup table for: " + schemaName + "." + queryName + " in container: " + targetSchema.getContainer().getPath());
+                    _log.error("Error creating lookup table for: {}.{} in container: {}", schemaName, queryName, targetSchema.getContainer().getPath());
                     for (QueryException error : errors)
                     {
                         _log.error(error.getMessage(), error);
@@ -2451,7 +2451,7 @@ private void appendFlagsAlertActiveCol(final UserSchema ehrSchema, AbstractTable
                 TableInfo ti = qd.getTable(errors, true);
                 if (!errors.isEmpty())
                 {
-                    _log.error("Error creating lookup table for: " + schemaName + "." + queryName + " in container: " + targetSchema.getContainer().getPath());
+                    _log.error("Error creating lookup table for: {}.{} in container: {}", schemaName, queryName, targetSchema.getContainer().getPath());
                     for (QueryException error : errors)
                     {
                         _log.error(error.getMessage(), error);

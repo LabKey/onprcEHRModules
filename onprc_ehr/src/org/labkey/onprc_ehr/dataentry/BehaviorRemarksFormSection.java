@@ -36,7 +36,7 @@ public class BehaviorRemarksFormSection extends SimpleGridPanel
     public List<String> getTbarButtons()
     {
         List<String> defaultButtons = super.getTbarButtons();
-        defaultButtons.add(0, "COPY_BEHAVIOR_EXAM");
+        defaultButtons.addFirst("COPY_BEHAVIOR_EXAM");
 
         return defaultButtons;
     }

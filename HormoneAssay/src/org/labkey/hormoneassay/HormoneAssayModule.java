@@ -47,12 +47,6 @@ public class HormoneAssayModule extends ExtendedSimpleModule
     }
 
     @Override
-    public boolean hasScripts()
-    {
-        return true;
-    }
-
-    @Override
     @NotNull
     protected Collection<WebPartFactory> createWebPartFactories()
     {

@@ -291,7 +291,7 @@ public class ONPRC_RestrictedIssueTest extends BaseWebDriverTest implements Sqls
         SearchResultsPage resultsPage = searchHelper.searchFor("\"Restricted issue search test\"");
 
         // verify that we can return links even if the user doesn't have permission to view a restricted issue
-        Assert.assertTrue("Number of search results not expected", resultsPage.getResults().size() == 2);
+        Assert.assertEquals("Number of search results not expected", 2, resultsPage.getResults().size());
 
         // verify assigned to users will see both results but shouldn't be able to see details of issues not assigned to them,
         // also verify that there is a warning rendered if a search result is restricted

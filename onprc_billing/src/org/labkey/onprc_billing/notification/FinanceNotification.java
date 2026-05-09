@@ -341,14 +341,14 @@ public class FinanceNotification extends AbstractNotification
                 Double quantity = rs.getDouble(FieldKey.fromString("quantity"));
                 if (unitCost != null && quantity != null)
                 {
-                    double t = totalsMap.containsKey("totalCost") ? totalsMap.get("totalCost") : 0.0;
+                    double t = totalsMap.getOrDefault("totalCost", 0.0);
                     t += (quantity * unitCost);
                     totalsMap.put("totalCost", t);
                 }
 
                 if (quantity != null)
                 {
-                    double t = totalsMap.containsKey("total") ? totalsMap.get("total") : 0.0;
+                    double t = totalsMap.getOrDefault("total", 0.0);
                     t += quantity;
                     totalsMap.put("total", t);
                 }
@@ -404,7 +404,7 @@ public class FinanceNotification extends AbstractNotification
                             values = new HashMap<>();
 
 
-                        Integer count = values.containsKey(fd.getFieldName()) ? values.get(fd.getFieldName()) : 0;
+                        Integer count = values.getOrDefault(fd.getFieldName(), 0);
                         count++;
                         values.put(fd.getFieldName(), count);
 

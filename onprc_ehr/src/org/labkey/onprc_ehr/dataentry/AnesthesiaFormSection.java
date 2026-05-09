@@ -36,7 +36,7 @@ public class AnesthesiaFormSection extends SimpleGridPanel
     public List<String> getTbarButtons()
     {
         List<String> defaultButtons = super.getTbarButtons();
-        defaultButtons.add(0, "ADD_ANESTHESIA");
+        defaultButtons.addFirst("ADD_ANESTHESIA");
 
         return defaultButtons;
     }

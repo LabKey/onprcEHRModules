@@ -128,12 +128,6 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
     }
 
     @Override
-    public boolean hasScripts()
-    {
-        return true;
-    }
-
-    @Override
     protected void init()
     {
         ONPRC_EHRService.setInstance(new ONPRC_EHRServiceImpl());

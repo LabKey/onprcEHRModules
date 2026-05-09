@@ -61,7 +61,7 @@ public class EventsQueryView extends QueryView
                         out.write(HtmlString.NBSP);
                 }
             };
-            ret.add(0, update);
+            ret.addFirst(update);
         }
     }
 }

@@ -24,7 +24,6 @@ import org.labkey.api.security.User;
 import org.labkey.api.util.PageFlowUtil;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
 
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -58,7 +57,7 @@ public class OGASyncRunner implements Job
     }
 
     @Override
-    public void execute(JobExecutionContext context) throws JobExecutionException
+    public void execute(JobExecutionContext context)
     {
         if (!OGASyncManager.get().isEnabled())
             return;
@@ -175,7 +174,7 @@ public class OGASyncRunner implements Job
         doMerge(u, c, targetTable, ts, "projectNumber", fieldMap, null, null, null, null);
     }
 
-    public void updateStats(DbSchema targetSchema) throws SQLException
+    public void updateStats(DbSchema targetSchema)
     {
         TableInfo aliases = DbSchema.get("onprc_billing").getTable("aliases");
         SQLFragment analyze = targetSchema.getSqlDialect().getAnalyzeCommandForTable(aliases.getSelectName());
@@ -325,7 +324,7 @@ public class OGASyncRunner implements Job
      */
     public void doMerge(final User u, final Container c, final TableInfo targetTable, Selector selector, final String selectionKey, final Map<String, String> fieldMap, final String category, final Collection<String> existingAliases, @Nullable final Map<String, Integer> faMap, @Nullable final Map<String, Integer> investigatorMap) throws SQLException
     {
-        _log.info("starting to merge table: " + targetTable.getName());
+        _log.info("starting to merge table: {}", targetTable.getName());
 
         try (DbScope.Transaction transaction = ExperimentService.get().ensureTransaction())
         {
@@ -347,7 +346,7 @@ public class OGASyncRunner implements Job
                     totals.put("total", totals.get("total") + 1);
                     if (totals.get("total") % 500 == 0)
                     {
-                        _log.info("processed " + totals.get("total") + " rows in " + (((new Date()).getTime() - start.getTime()) / 1000) + " seconds");
+                        _log.info("processed {} rows in {} seconds", totals.get("total"), ((new Date()).getTime() - start.getTime()) / 1000);
                         start.setTime(new Date().getTime());
                     }
 
@@ -361,7 +360,7 @@ public class OGASyncRunner implements Job
                     {
                         if (fieldMap.get(key) != null && !columnNames.contains(fieldMap.get(key)))
                         {
-                            _log.error("Unknown column: " + fieldMap.get(key));
+                            _log.error("Unknown column: {}", fieldMap.get(key));
                         }
                         else
                         {
@@ -483,7 +482,7 @@ public class OGASyncRunner implements Job
             });
 
             transaction.commit();
-            _log.info("finished merging table: " + targetTable.getName() + ".  total inserts: " + totals.get("insert") + ".  total updates: " + totals.get("update"));
+            _log.info("finished merging table: {}.  total inserts: {}.  total updates: {}", targetTable.getName(), totals.get("insert"), totals.get("update"));
         }
     }
 

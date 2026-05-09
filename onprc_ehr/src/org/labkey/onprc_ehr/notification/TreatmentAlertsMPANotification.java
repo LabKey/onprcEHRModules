@@ -157,7 +157,7 @@ public class TreatmentAlertsMPANotification extends AbstractEHRNotification
                         totals.put(incomplete, totals.get(incomplete) + 1);
 
                         String area = rs.getString(FieldKey.fromString("Id/curLocation/area"));
-                        Integer areaVal = totalByArea.containsKey(area) ? totalByArea.get(area) : 0;
+                        Integer areaVal = totalByArea.getOrDefault(area, 0);
                         areaVal++;
 
                         totalByArea.put(area, areaVal);

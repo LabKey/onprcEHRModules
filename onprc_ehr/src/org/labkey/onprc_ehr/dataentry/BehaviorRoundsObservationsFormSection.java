@@ -41,7 +41,7 @@ public class BehaviorRoundsObservationsFormSection extends ClinicalObservationsF
     public List<String> getTbarButtons()
     {
         List<String> defaultButtons = super.getTbarButtons();
-        defaultButtons.add(0, "ADDBEHAVIORCASES");
+        defaultButtons.addFirst("ADDBEHAVIORCASES");
 
         return defaultButtons;
     }

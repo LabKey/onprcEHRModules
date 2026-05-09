@@ -71,7 +71,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -156,27 +155,19 @@ public class ETLRunnable implements Runnable
                     long lastTs = getLastTimestamp(tableName);
                     byte[] lastRow = getLastVersion(tableName);
                     String version = (lastRow == DEFAULT_VERSION ? "never" : new String(Base64.encodeBase64(lastRow), "US-ASCII"));
-                    log.info(String.format("table sla.%s last synced %s", tableName, lastTs == 0 ? "never" : new Date(lastTs).toString()));
-                    log.info(String.format("table sla.%s rowversion was %s", tableName, version));
+                    log.info("table sla.{} last synced {}", tableName, lastTs == 0 ? "never" : new Date(lastTs).toString());
+                    log.info("table sla.{} rowversion was {}", tableName, version);
                 }
 
                 UserSchema slaSchema = QueryService.get().getUserSchema(user, container, "sla");
 
-                try
-                {
-                    int slaErrors = merge(user, container, slaQueries, slaSchema);
+                int slaErrors = merge(user, container, slaQueries, slaSchema);
 
-                    truncateEtlRuns();
+                truncateEtlRuns();
 
-                    log.info("End incremental sync run.");
+                log.info("End incremental sync run.");
 
-                    ETLAuditProvider.addAuditEntry(container, user, "FINISH", "Finishing SLA synchronization", slaErrors);
-                }
-                catch (BatchValidationException e)
-                {
-                    log.error(e.getMessage());
-                    throw e;
-                }
+                ETLAuditProvider.addAuditEntry(container, user, "FINISH", "Finishing SLA synchronization", slaErrors);
             }
             catch (Throwable x)
             {
@@ -213,7 +204,7 @@ public class ETLRunnable implements Runnable
         return container;
     }
 
-    private void truncateEtlRuns() throws SQLException
+    private void truncateEtlRuns()
     {
         TableInfo ti = SLASchema.getInstance().getSchema().getTable(SLASchema.TABLE_ETL_RUNS);
         Calendar cal = Calendar.getInstance();
@@ -225,7 +216,7 @@ public class ETLRunnable implements Runnable
         ex.execute(sql);
     }
 
-    private void runQueries(User user, Container container, Map<String, String> queries) throws BadConfigException, BatchValidationException
+    private void runQueries(User user, Container container, Map<String, String> queries)
     {
         for (Map.Entry<String, String> kv : queries.entrySet())
         {
@@ -244,7 +235,7 @@ public class ETLRunnable implements Runnable
                 sql = kv.getValue();
 
 
-                log.info("Running script " + fileName);
+                log.info("Running script {}", fileName);
                 String[] sqls = sql.split("GO");
 
                 for (String script : sqls)
@@ -256,7 +247,7 @@ public class ETLRunnable implements Runnable
             }
             catch (SQLException e)
             {
-                log.error("Unable to run script " + fileName);
+                log.error("Unable to run script {}", fileName);
                 log.error(e.getMessage());
                 continue;
             }
@@ -297,7 +288,7 @@ public class ETLRunnable implements Runnable
         // the baseline timestamp date.
         int paramCount = ps.getParameterMetaData().getParameterCount();
         if (paramCount == 0)
-            log.warn("Table lacks any parameters: " + targetTableName);
+            log.warn("Table lacks any parameters: {}", targetTableName);
 
         byte[] fromVersion = getLastVersion(targetTableName);
         for (int i = 1; i <= paramCount; i++)
@@ -309,7 +300,7 @@ public class ETLRunnable implements Runnable
     }
 
     /** @return count of collections that encountered errors */
-    private int merge(User user, Container container, Map<String, String> queries, UserSchema schema) throws BadConfigException, BatchValidationException
+    private int merge(User user, Container container, Map<String, String> queries, UserSchema schema) throws BadConfigException
     {
         DbScope scope = schema.getDbSchema().getScope();
         int errorCount = 0;
@@ -342,7 +333,7 @@ public class ETLRunnable implements Runnable
                 TableInfo targetTable = schema.getTable(targetTableName);
                 if (targetTable == null)
                 {
-                    log.error(targetTableName + " is not a known labkey table name, skipping the so-named sql query");
+                    log.error("{} is not a known labkey table name, skipping the so-named sql query", targetTableName);
                     errorCount++;
                     continue;
                 }
@@ -352,7 +343,7 @@ public class ETLRunnable implements Runnable
 
                 if (realTable == null)
                 {
-                    log.error("Unable to find real table for: " + targetTable.getSelectName());
+                    log.error("Unable to find real table for: {}", targetTable.getSelectName());
                     continue;
                 }
 
@@ -362,7 +353,7 @@ public class ETLRunnable implements Runnable
 
                 originConnection = getOriginConnection();
 
-                log.info("Preparing query " + targetTableName);
+                log.info("Preparing query {}", targetTableName);
                 ps = prepareQuery(targetTableName, sql, originConnection);
 
                 boolean hadResultsOnStart = true;
@@ -372,11 +363,11 @@ public class ETLRunnable implements Runnable
                     {
                         if (CANNOT_TRUNCATE.contains(targetTableName))
                         {
-                            log.error("Attempting to truncate " + targetTableName + ", which is not allowed.  Upstream code should be checked.");
+                            log.error("Attempting to truncate {}, which is not allowed.  Upstream code should be checked.", targetTableName);
                         }
                         else
                         {
-                            log.info("Truncating target table, since last rowversion is null: " + targetTableName);
+                            log.info("Truncating target table, since last rowversion is null: {}", targetTableName);
                             SQLFragment truncateSql;
                             if (realTable.getColumn("container") == null)
                             {
@@ -396,12 +387,12 @@ public class ETLRunnable implements Runnable
                     }
                     else
                     {
-                        log.error("unable to truncate targetTable, since realTable is null: " + targetTableName);
+                        log.error("unable to truncate targetTable, since realTable is null: {}", targetTableName);
                     }
                 }
 
                 Date fromDate = new Date(getLastTimestamp(targetTableName));
-                log.info("querying for " + targetTableName + " since " + new Date(fromDate.getTime()));
+                log.info("querying for {} since {}", targetTableName, new Date(fromDate.getTime()));
 
                 // get deletes from the origin.
                 Set<String> deletedIds = getDeletes(originConnection, targetTableName, getLastVersion(targetTableName));
@@ -413,7 +404,7 @@ public class ETLRunnable implements Runnable
                 boolean rollback = false;
 
                 rs = ps.executeQuery();
-                log.info("query " + targetTableName + " returned");
+                log.info("query {} returned", targetTableName);
 
                 QueryUpdateService updater = targetTable.getUpdateService();
                 updater.setBulkLoad(true);
@@ -422,10 +413,10 @@ public class ETLRunnable implements Runnable
 
                 //NOTE: the purpose of this switch is to allow alternate keyfields, such as
                 ColumnInfo filterColumn = targetTable.getColumn("objectid");
-                ColumnInfo pkColumn = targetTable.getPkColumns().get(0);
+                ColumnInfo pkColumn = targetTable.getPkColumns().getFirst();
                 if(filterColumn == null)
                 {
-                    log.info("objectid column not found for table: " + targetTable.getName() + ", using " + pkColumn.getName() + " instead");
+                    log.info("objectid column not found for table: {}, using {} instead", targetTable.getName(), pkColumn.getName());
                     filterColumn = pkColumn;
                 }
 
@@ -476,7 +467,7 @@ public class ETLRunnable implements Runnable
                             if (count > 100)
                             {
                                 //if we have the DB table, just do the delete directly.
-                                log.info("attempting to delete " + count + " rows from table: " + targetTableName + " based on deleted_records, using: " + filterColumn.getFieldKey().toString());
+                                log.info("attempting to delete {} rows from table: {} based on deleted_records, using: {}", count, targetTableName, filterColumn.getFieldKey().toString());
                                 //log.info(StringUtils.join(likeWithIds.getParams(), ", "));
 
                                 SimpleFilter filter = new SimpleFilter();
@@ -491,7 +482,7 @@ public class ETLRunnable implements Runnable
                         if (hadResultsOnStart && count > 0)
                         {
                             //if we have the DB table, just do the delete directly.
-                            log.info("attempting to delete " + count + " rows from table: " + targetTableName + " based on deleted_records, using: " + filterColumn.getFieldKey().toString());
+                            log.info("attempting to delete {} rows from table: {} based on deleted_records, using: {}", count, targetTableName, filterColumn.getFieldKey().toString());
                             log.info(StringUtils.join(likeWithIds.getParams(), ", "));
 
                             SimpleFilter filter = new SimpleFilter();
@@ -504,7 +495,7 @@ public class ETLRunnable implements Runnable
                         }
 
                         if (deleted > 0)
-                            log.info("total rows deleted: " + deleted);
+                            log.info("total rows deleted: {}", deleted);
                         else
                             log.info("no rows were deleted");
                     }
@@ -545,7 +536,7 @@ public class ETLRunnable implements Runnable
                             }
                             catch (SQLException e)
                             {
-                                log.error("Unable to find column " + filterColumn.getColumnName() + " in ETL script for " + targetTableName);
+                                log.error("Unable to find column {} in ETL script for {}", filterColumn.getColumnName(), targetTableName);
                                 throw e;
                             }
                         }
@@ -572,11 +563,11 @@ public class ETLRunnable implements Runnable
                                 Map<String, Object>[] rows = ts.getMapArray();
 
                                 long duration = ((new Date()).getTime() - start) / 1000;
-                                log.info("Pre-selected " + searchParams.size() + " rows for table: " + targetTable.getName() + " using column: " + filterColumn.getColumnName() + ", which took: " + duration + "s");
+                                log.info("Pre-selected {} rows for table: {} using column: {}, which took: {}s", searchParams.size(), targetTable.getName(), filterColumn.getColumnName(), duration);
 
                                 if (rows.length > 0)
                                 {
-                                    log.info("Preparing for insert by pre-deleting " + rows.length + " rows for table: " + targetTable.getName());
+                                    log.info("Preparing for insert by pre-deleting {} rows for table: {}", rows.length, targetTable.getName());
                                     start = new Date().getTime();
                                     int totalDeleted;
                                     if (realTable != null)
@@ -599,23 +590,23 @@ public class ETLRunnable implements Runnable
                                     }
                                     else
                                     {
-                                        log.error("Real table not found: " + targetTableName);
+                                        log.error("Real table not found: {}", targetTableName);
                                         List<Map<String, Object>> deleted = updater.deleteRows(user, container, Arrays.asList(rows), null, extraContext);
                                         totalDeleted = deleted.size();
                                     }
 
                                     if (totalDeleted != rows.length)
                                     {
-                                        log.warn("Table: " + targetTable.getName() + " delete abnormality.  searchParams: " + searchParams.size() + ", rows: " + rows.length + ", deleted: " + totalDeleted);
+                                        log.warn("Table: {} delete abnormality.  searchParams: {}, rows: {}, deleted: {}", targetTable.getName(), searchParams.size(), rows.length, totalDeleted);
                                         TableSelector ts1 = new TableSelector(targetTable, cols, filter, null);
                                         Map<String, Object>[] rows2 = ts1.getMapArray();
-                                        log.info("rows: " + rows2.length);
+                                        log.info("rows: {}", rows2.length);
                                     }
                                     duration = ((new Date()).getTime() - start) / 1000;
-                                    log.info("Finished pre-deleting " + totalDeleted + " rows for table: " + targetTable.getName() + ", which took: " + duration + "s");
+                                    log.info("Finished pre-deleting {} rows for table: {}, which took: {}s", totalDeleted, targetTable.getName(), duration);
                                 }
                                 else
-                                    log.info("No existing rows found for table: " + targetTable.getName() + ", delete not necessary");
+                                    log.info("No existing rows found for table: {}, delete not necessary", targetTable.getName());
                             }
 
                             long start = new Date().getTime();
@@ -623,7 +614,7 @@ public class ETLRunnable implements Runnable
                             updater.insertRows(user, container, sourceRows, errors, null, extraContext);
                             if (errors.hasErrors())
                             {
-                                log.error("There were errors during the sync for: " + targetTableName);
+                                log.error("There were errors during the sync for: {}", targetTableName);
                                 for (ValidationException e : errors.getRowErrors())
                                 {
                                     log.error(e.getMessage());
@@ -633,14 +624,14 @@ public class ETLRunnable implements Runnable
                             updates += sourceRows.size();
                             currentBatch += sourceRows.size();
                             long duration = ((new Date()).getTime() - start) / 1000;
-                            log.info("Insert took: " + duration + "s");
-                            log.info("Updated " + updates + " records for " + targetTableName);
+                            log.info("Insert took: {}s", duration);
+                            log.info("Updated {} records for {}", updates, targetTableName);
                             sourceRows.clear();
                             searchParams.clear();
 
                             if (currentBatch >= 40000)
                             {
-                                log.info("committing transaction: " + targetTableName);
+                                log.info("committing transaction: {}", targetTableName);
                                 transaction.commitAndKeepConnection();
 
 //                                if (realTable != null)
@@ -674,14 +665,14 @@ public class ETLRunnable implements Runnable
                         if (originConnection != null && !originConnection.isClosed())
                             originConnection.close();
 
-                        log.warn("closed connection and rolled back update of " + targetTableName);
+                        log.warn("closed connection and rolled back update of {}", targetTableName);
                     }
                     else
                     {
                         setLastVersion(targetTableName, newBaselineVersion);
                         setLastTimestamp(targetTableName, newBaselineTimestamp);
 
-                       log.info(MessageFormat.format("Committed updates for {0} records in {1}", updates, targetTableName));
+                       log.info("Committed updates for {} records in {}", updates, targetTableName);
 
                         try
                         {
@@ -704,7 +695,7 @@ public class ETLRunnable implements Runnable
             catch (SQLException e)
             {
                 // exception connecting, preparing or executing the query to the origin db
-                log.error(String.format("Error syncing '%s' - caught SQLException: %s", targetTableName, e.getMessage()), e);
+                log.error("Error syncing '{}' - caught SQLException: {}", targetTableName, e.getMessage(), e);
                 errorCount++;
             }
             finally
@@ -723,7 +714,7 @@ public class ETLRunnable implements Runnable
      * @param tableName for which to get deletes
      * @param fromVersion return deletes performed after this version
      */
-    Set<String> getDeletes(Connection originConnection, String tableName, byte[] fromVersion) throws SQLException, BadConfigException
+    Set<String> getDeletes(Connection originConnection, String tableName, byte[] fromVersion)
     {
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -736,7 +727,7 @@ public class ETLRunnable implements Runnable
             String[] sources = LK_TO_IRIS.get(tableName);
             if (sources == null || sources.length == 0)
             {
-                log.error("No table mapping for: " + tableName);
+                log.error("No table mapping for: {}", tableName);
                 return Collections.emptySet();
             }
             else
@@ -763,7 +754,7 @@ public class ETLRunnable implements Runnable
             }
 
             if (!deletes.isEmpty())
-                log.info(deletes.size() + " potential deletes pending for " + tableName);
+                log.info("{} potential deletes pending for {}", deletes.size(), tableName);
         }
         catch (Exception e)
         {
@@ -811,7 +802,7 @@ public class ETLRunnable implements Runnable
         }
     }
 
-    boolean isEmpty(TableInfo tinfo) throws SQLException
+    boolean isEmpty(TableInfo tinfo)
     {
         SQLFragment sql = new SQLFragment("SELECT * FROM ").append(tinfo.getFromSQL("x"));
         return !new SqlSelector(tinfo.getSchema(), sql).exists();
@@ -824,7 +815,7 @@ public class ETLRunnable implements Runnable
      */
     private void setLastTimestamp(String tableName, Long ts)
     {
-        log.info(String.format("setting new baseline timestamp of %s on collection %s", new Date(ts.longValue()), tableName));
+        log.info("setting new baseline timestamp of {} on collection {}", new Date(ts.longValue()), tableName);
         WritablePropertyMap pm = PropertyManager.getWritableProperties(TIMESTAMP_PROPERTY_DOMAIN, true);
         pm.put(tableName, ts.toString());
         pm.save();
@@ -983,7 +974,7 @@ public class ETLRunnable implements Runnable
         }
         catch (Exception ignored)
         {
-            log.error("There was an error closing a result set in the ETL: " + ignored.getMessage());
+            log.error("There was an error closing a result set in the ETL: {}", ignored.getMessage());
         }
     }
 
@@ -995,7 +986,7 @@ public class ETLRunnable implements Runnable
         }
         catch (Exception ignored)
         {
-            log.error("There was an error closing a result set in the ETL: " + ignored.getMessage());
+            log.error("There was an error closing a result set in the ETL: {}", ignored.getMessage());
         }
     }
 
@@ -1088,7 +1079,7 @@ public class ETLRunnable implements Runnable
 
     private final String[] TABLES_WITH_LK_ADDITIONS = new String[]{};
 
-    private String validateEtlScript(Map<String, String> queries, UserSchema schema, boolean attemptRepair) throws BadConfigException, BatchValidationException
+    private String validateEtlScript(Map<String, String> queries, UserSchema schema, boolean attemptRepair) throws BadConfigException
     {
         StringBuilder sb = new StringBuilder();
         DbScope scope = schema.getDbSchema().getScope();
@@ -1124,7 +1115,7 @@ public class ETLRunnable implements Runnable
                     TableInfo targetTable = schema.getTable(targetTableName);
                     if (targetTable == null)
                     {
-                        log.error(targetTableName + " is not a known labkey table name, skipping the so-named sql query");
+                        log.error("{} is not a known labkey table name, skipping the so-named sql query", targetTableName);
                         continue;
                     }
 
@@ -1132,15 +1123,15 @@ public class ETLRunnable implements Runnable
                     TableInfo realTable = getRealTable(targetTable);
                     if (realTable == null)
                     {
-                        log.error("Unable to find real table for: " + targetTable.getSelectName());
+                        log.error("Unable to find real table for: {}", targetTable.getSelectName());
                         continue;
                     }
 
                     ColumnInfo filterCol = realTable.getColumn("objectid");
-                    ColumnInfo pkColumn = targetTable.getPkColumns().get(0);
+                    ColumnInfo pkColumn = targetTable.getPkColumns().getFirst();
                     if(filterCol == null)
                     {
-                        log.info("objectid column not found for table: " + targetTable.getName() + ", using " + pkColumn.getName() + " instead");
+                        log.info("objectid column not found for table: {}, using {} instead", targetTable.getName(), pkColumn.getName());
                         filterCol = pkColumn;
                     }
 
@@ -1213,7 +1204,7 @@ public class ETLRunnable implements Runnable
                                 }
                                 else
                                 {
-                                    log.error("Unable to find entry in LK_TO_IRIS for table: " + targetTableName);
+                                    log.error("Unable to find entry in LK_TO_IRIS for table: {}", targetTableName);
                                 }
                             }
                         }

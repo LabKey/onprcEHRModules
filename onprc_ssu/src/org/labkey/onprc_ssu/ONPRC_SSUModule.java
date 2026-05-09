@@ -46,12 +46,6 @@ public class ONPRC_SSUModule extends ExtendedSimpleModule
     }
 
     @Override
-    public boolean hasScripts()
-    {
-        return true;
-    }
-
-    @Override
     protected void init()
     {
         addController(CONTROLLER_NAME, ONPRC_SSUController.class);

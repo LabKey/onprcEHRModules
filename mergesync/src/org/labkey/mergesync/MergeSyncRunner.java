@@ -40,7 +40,6 @@ import org.labkey.api.view.ActionURL;
 import org.labkey.api.view.ViewContext;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -84,7 +83,7 @@ public class MergeSyncRunner implements Job
      * pulls data from Merge back to EHR
      */
     @Override
-    public void execute(JobExecutionContext context) throws JobExecutionException
+    public void execute(JobExecutionContext context)
     {
         if (!MergeSyncManager.get().isPullEnabled())
             return;
@@ -99,7 +98,7 @@ public class MergeSyncRunner implements Job
     public void pullResultsFromMerge()
     {
         Date lastRun = MergeSyncManager.get().getLastRun();
-        _log.info("Pulling results from merge verified since: " + (lastRun == null ? "never run before" : _dateTimeFormat.format(lastRun)));
+        _log.info("Pulling results from merge verified since: {}", lastRun == null ? "never run before" : _dateTimeFormat.format(lastRun));
 
         if (lastRun == null)
         {
@@ -181,7 +180,7 @@ public class MergeSyncRunner implements Job
         long count = runTs.getRowCount();
         if (count > 0)
         {
-            _log.info("found " + count + " new merge runs to sync");
+            _log.info("found {} new merge runs to sync", count);
             processRuns(c, u, runTs, mergeResultTable);
             _log.info("finished pulling results from merge");
         }
@@ -233,7 +232,7 @@ public class MergeSyncRunner implements Job
         final TableSelector runTs = new TableSelector(runsTable, runFilter, null);
         if (runTs.exists())
         {
-            _log.info("verifying previous " + offset + " days of merge runs are present");
+            _log.info("verifying previous {} days of merge runs are present", offset);
             runTs.forEach(new Selector.ForEachBlock<>()
             {
                 @Override
@@ -265,7 +264,7 @@ public class MergeSyncRunner implements Job
                         }
                         else if (existingRequest.get("runLsid") == null)
                         {
-                            _log.error("merge run missing: " + accession + " / " + panelId + ".  Record of previous sync, but no clinpathRun record.  Date verified: " + _dateTimeFormat.format(mergeRunRs.getDate("dateVerified")));
+                            _log.error("merge run missing: {} / {}.  Record of previous sync, but no clinpathRun record.  Date verified: {}", accession, panelId, _dateTimeFormat.format(mergeRunRs.getDate("dateVerified")));
                             //processSingleRun(c, u, mergeResultTable, mergeRunRs, false);
                         }
                     }
@@ -280,7 +279,7 @@ public class MergeSyncRunner implements Job
         if (mergeSchema == null)
             return;
 
-        _log.info("attempting to resync single run: " + mergeAccession + " / " + mergeTestId);
+        _log.info("attempting to resync single run: {} / {}", mergeAccession, mergeTestId);
 
         TableInfo runsTable = MergeSyncUserSchema.getMergeRunsTable(mergeSchema, null);
         final TableInfo mergeResultTable = MergeSyncUserSchema.getMergeDataTable(mergeSchema, null);
@@ -296,69 +295,64 @@ public class MergeSyncRunner implements Job
 
 
         TableSelector runTs = new TableSelector(runsTable, runFilter, null);
-        runTs.forEach(new Selector.ForEachBlock<>()
-        {
-            @Override
-            public void exec(ResultSet runRs) throws SQLException
+        runTs.forEach(runRs -> {
+            //delete results if we expect automatic results
+            String mergeService = runRs.getString("servicename_abbr");
+            String labkeyServiceName = resolveServiceName(c, u, mergeService, null);
+            if (shouldSyncResults(labkeyServiceName))
             {
-                //delete results if we expect automatic results
-                String mergeService = runRs.getString("servicename_abbr");
-                String labkeyServiceName = resolveServiceName(c, u, mergeService, null);
-                if (shouldSyncResults(labkeyServiceName))
-                {
-                    deleteExistingResults(c, u, mergeAccession, mergeTestId);
-                }
-                else
-                {
-                    _log.info("this service type does not have automatic results, so we will not delete any existing results");
-                }
+                deleteExistingResults(c, u, mergeAccession, mergeTestId);
+            }
+            else
+            {
+                _log.info("this service type does not have automatic results, so we will not delete any existing results");
+            }
 
-                try
+            try
+            {
+                Map<String, Object> existingRequest = getExistingRequest(c, u, mergeAccession, mergeTestId, false);
+                if (existingRequest != null)
                 {
-                    Map<String, Object> existingRequest = getExistingRequest(c, u, mergeAccession, mergeTestId, false);
-                    if (existingRequest != null)
+                    TableSelector runsTs = new TableSelector(getClinpathRuns(c, u), PageFlowUtil.set("lsid", "Id", "project", "date"), new SimpleFilter(FieldKey.fromString("objectid"), existingRequest.get("runid")), null);
+                    Map<String, Object> runRow = runsTs.getMap();
+                    if (runRow != null)
                     {
-                        TableSelector runsTs = new TableSelector(getClinpathRuns(c, u), PageFlowUtil.set("lsid", "Id", "project", "date"), new SimpleFilter(FieldKey.fromString("objectid"), existingRequest.get("runid")), null);
-                        Map<String, Object> runRow = runsTs.getMap();
-                        if (runRow != null)
+                        runRow = new CaseInsensitiveHashMap<>(runRow);
+
+                        boolean changed = false;
+                        if (!runRow.get("Id").equals(runRs.getString("animalId")))
                         {
-                            runRow = new CaseInsensitiveHashMap<>(runRow);
+                            runRow.put("Id", runRs.getString("Id"));
+                            changed = true;
+                        }
 
-                            boolean changed = false;
-                            if (!runRow.get("Id").equals(runRs.getString("animalId")))
-                            {
-                                runRow.put("Id", runRs.getString("Id"));
-                                changed = true;
-                            }
+                        if (!DateUtils.isSameInstant((Date) runRow.get("date"), runRs.getDate("date")))
+                        {
+                            runRow.put("date", runRs.getDate("date"));
+                            changed = true;
+                        }
 
-                            if (!DateUtils.isSameInstant((Date) runRow.get("date"), runRs.getDate("date")))
-                            {
-                                runRow.put("date", runRs.getDate("date"));
-                                changed = true;
-                            }
+                        Integer project = resolveProject(c, u, runRs.getString("projectName"));
+                        if (project != null && !project.equals(runRow.get("project")))
+                        {
+                            runRow.put("project", project);
+                            changed = true;
+                        }
 
-                            Integer project = resolveProject(c, u, runRs.getString("projectName"));
-                            if (project != null && !project.equals(runRow.get("project")))
-                            {
-                                runRow.put("project", project);
-                                changed = true;
-                            }
-
-                            if (changed)
-                            {
-                                Map<String, Object> keys = new CaseInsensitiveHashMap<>();
-                                keys.put("lsid", runRow.get("lsid"));
-                                getClinpathRuns(c, u).getUpdateService().updateRows(u, c, Collections.singletonList(runRow), Collections.singletonList(keys), null, getExtraContext());
-                            }
+                        if (changed)
+                        {
+                            Map<String, Object> keys = new CaseInsensitiveHashMap<>();
+                            keys.put("lsid", runRow.get("lsid"));
+                            getClinpathRuns(c, u).getUpdateService().updateRows(u, c, Collections.singletonList(runRow), Collections.singletonList(keys), null, getExtraContext());
                         }
                     }
+                }
 
-                    processSingleRun(c, u, mergeResultTable, runRs, true);
-                }
-                catch (InvalidKeyException | BatchValidationException | QueryUpdateServiceException e)
-                {
-                    throw new RuntimeException(e.getMessage(), e);
-                }
+                processSingleRun(c, u, mergeResultTable, runRs, true);
+            }
+            catch (InvalidKeyException | BatchValidationException | QueryUpdateServiceException e)
+            {
+                throw new RuntimeException(e.getMessage(), e);
             }
         });
     }
@@ -389,7 +383,7 @@ public class MergeSyncRunner implements Job
             TableInfo resultTable = resolveServiceResultTable(c, u, servicename);
             if (resultTable == null)
             {
-                _log.error("Unable to find result table matching: " + servicename);
+                _log.error("Unable to find result table matching: {}", servicename);
                 return;
             }
 
@@ -406,7 +400,7 @@ public class MergeSyncRunner implements Job
                 }
 
                 List deleted = resultTable.getUpdateService().deleteRows(u, c, toDelete, null, getExtraContext());
-                _log.info("pre-deleted " + deleted.size() + " rows from table: " + resultTable.getName());
+                _log.info("pre-deleted {} rows from table: {}", deleted.size(), resultTable.getName());
             }
             else
             {
@@ -436,8 +430,8 @@ public class MergeSyncRunner implements Job
         TableInfo tableOrdersSynced = MergeSyncSchema.getInstance().getSchema().getTable(MergeSyncManager.TABLE_ORDERSSYNCED);
         Map<String, Object> existingRequest = getExistingRequest(c, u, accession, panelId, true);
         final String existingRunId = existingRequest == null ? null : (String)existingRequest.get("runid");
-        _log.info("processing order: " + accession);
-        _log.info("existingRunId: " + existingRunId);
+        _log.info("processing order: {}", accession);
+        _log.info("existingRunId: {}", existingRunId);
 
         Set<String> completedTasks = new HashSet<>();
         TableSelector resultsTs = new TableSelector(mergeResultTable, resultFilter, null);
@@ -489,7 +483,7 @@ public class MergeSyncRunner implements Job
 
                 if (resultsReceived && !forceSyncResults)
                 {
-                    _log.info("This order already has results imported, skipping: " + accession + "/" + panelId);
+                    _log.info("This order already has results imported, skipping: {}/{}", accession, panelId);
                     return;
                 }
             }
@@ -530,7 +524,7 @@ public class MergeSyncRunner implements Job
             {
                 if (resultsToCreate.isEmpty())
                 {
-                    _log.error("Merge request for " + mergeService + " was expected to have results, but does not.  Accession: " + accession + ", panelId: " + panelId);
+                    _log.error("Merge request for {} was expected to have results, but does not.  Accession: {}, panelId: {}", mergeService, accession, panelId);
                 }
 
                 for (String datasetName : resultsToCreate.keySet())
@@ -545,14 +539,14 @@ public class MergeSyncRunner implements Job
 
                     TableInfo ds = resultDatasets.get(datasetName);
 
-                    _log.info("creating " + datasetName + " results: " + resultsToCreate.get(datasetName).size());
+                    _log.info("creating {} results: {}", datasetName, resultsToCreate.get(datasetName).size());
 
                     BatchValidationException errors = new BatchValidationException();
                     ds.getUpdateService().insertRows(u, c, resultsToCreate.get(datasetName), errors, null, getExtraContext());
                 }
 
                 //if successful, we need to mark the run as completed
-                _log.info("marking clinpath run as complete: " + runId);
+                _log.info("marking clinpath run as complete: {}", runId);
                 Map<String, Object> toUpdate = new CaseInsensitiveHashMap<>();
                 toUpdate.put("lsid", runLsid);
                 toUpdate.put("QCStateLabel", EHRService.QCSTATES.Completed.getLabel());
@@ -567,10 +561,10 @@ public class MergeSyncRunner implements Job
             {
                 if (!resultsToCreate.isEmpty())
                 {
-                    _log.error("Merge request for " + mergeService + " was not expected to have results, but does.  Accession: " + accession + ", panelId: " + panelId);
+                    _log.error("Merge request for {} was not expected to have results, but does.  Accession: {}, panelId: {}", mergeService, accession, panelId);
                     for (String tableName : resultsToCreate.keySet())
                     {
-                        _log.error(tableName + ": " + resultsToCreate.get(tableName).size());
+                        _log.error("{}: {}", tableName, resultsToCreate.get(tableName).size());
                     }
                 }
                 else
@@ -585,7 +579,7 @@ public class MergeSyncRunner implements Job
                         Map<String, Object> toUpdateKeys = new CaseInsensitiveHashMap<>();
                         toUpdateKeys.put("lsid", runLsid);
 
-                        _log.info("marking clinpath run as delivered: " + runId);
+                        _log.info("marking clinpath run as delivered: {}", runId);
                         getClinpathRuns(c, u).getUpdateService().updateRows(u, c, Collections.singletonList(toUpdate), Collections.singletonList(toUpdateKeys), null, getExtraContext());
                     }
                     else
@@ -602,7 +596,7 @@ public class MergeSyncRunner implements Job
                 TableSelector ts = new TableSelector(getClinpathRuns(c, u), filter, null);
                 if (!ts.exists())
                 {
-                    _log.info("task has no non-completed runs, marking complete: " + t);
+                    _log.info("task has no non-completed runs, marking complete: {}", t);
                     TableInfo taskTable = DbSchema.get("ehr").getTable("tasks");
                     Map<String, Object> toUpdate = new CaseInsensitiveHashMap<>();
                     toUpdate.put("taskid", t);
@@ -611,7 +605,7 @@ public class MergeSyncRunner implements Job
                 }
                 else
                 {
-                    _log.info("task still has non-completed runs, will not mark complete: " + t);
+                    _log.info("task still has non-completed runs, will not mark complete: {}", t);
                 }
             }
 
@@ -656,7 +650,7 @@ public class MergeSyncRunner implements Job
         return map.get(labkeyServiceName) != null ? map.get(labkeyServiceName) : false;
     }
 
-    private String createTask(Container c, User u, String animalId, Date date) throws SQLException
+    private String createTask(Container c, User u, String animalId, Date date)
     {
         String key = animalId + " " + _dateFormat.format(date);
         if (_cachedTasks.containsKey(key))
@@ -680,7 +674,7 @@ public class MergeSyncRunner implements Job
 
         TableInfo taskTable = DbSchema.get("ehr").getTable("tasks");
 
-        _log.info("Creating task for merge sync: " + key);
+        _log.info("Creating task for merge sync: {}", key);
         Table.insert(u, taskTable, taskRecord);
 
         _cachedTasks.put(key, taskId);
@@ -706,7 +700,7 @@ public class MergeSyncRunner implements Job
         if (ret.isEmpty())
             return null;
 
-        Map<String, Object> map = new CaseInsensitiveHashMap<Object>(ret.get(0));
+        Map<String, Object> map = new CaseInsensitiveHashMap<Object>(ret.getFirst());
 
         //make sure this runId actually exists
         String runId = (String)map.get("runid");
@@ -730,7 +724,7 @@ public class MergeSyncRunner implements Job
             }
             else
             {
-                _log.error("There is a record of a synced merge request (" + accession + "), but the runId was not found: " + runId + ". the request will be recreated.");
+                _log.error("There is a record of a synced merge request ({}), but the runId was not found: {}. the request will be recreated.", accession, runId);
             }
         }
 
@@ -765,7 +759,7 @@ public class MergeSyncRunner implements Job
         String servicename = resolveServiceName(c, u, servicename_abbr, null);
         if (servicename == null)
         {
-            _log.error("Unable to resolve merge servicename: " + servicename_abbr);
+            _log.error("Unable to resolve merge servicename: {}", servicename_abbr);
             return null;
         }
 
@@ -781,7 +775,7 @@ public class MergeSyncRunner implements Job
         //i dont like this behavior, but if there is a remark (a proxy for having an error), the numeric result is 0, and text result is numeric, then defer to the latter
         if (!StringUtils.isEmpty(remark) && (numeric_result == null || numeric_result == 0.0) && !StringUtils.isEmpty(text_result) && text_result.matches("[-+]?\\d*\\.?\\d+"))
         {
-            _log.info("deferring to text result instead of numeric result: " + text_result);
+            _log.info("deferring to text result instead of numeric result: {}", text_result);
             numeric_result = ConvertHelper.convert(text_result, Double.class);
         }
 
@@ -794,7 +788,7 @@ public class MergeSyncRunner implements Job
         return resultRow;
     }
 
-    private TableInfo getResultDataset(Container c, User u, String serviceName, @Nullable String runId) throws SQLException
+    private TableInfo getResultDataset(Container c, User u, String serviceName, @Nullable String runId)
     {
         String servicename = resolveServiceName(c, u, serviceName, runId);
         if (servicename == null)
@@ -805,7 +799,7 @@ public class MergeSyncRunner implements Job
         TableInfo resultTable = resolveServiceResultTable(c, u, servicename);
         if (resultTable == null)
         {
-            _log.error("Unable to find result table matching: " + servicename);
+            _log.error("Unable to find result table matching: {}", servicename);
             return null;
         }
 
@@ -821,7 +815,7 @@ public class MergeSyncRunner implements Job
         return d;
     }
 
-    private String getRunLsid(Container c, User u, Integer accessionId, Integer panelId, String runId) throws SQLException
+    private String getRunLsid(Container c, User u, Integer accessionId, Integer panelId, String runId)
     {
         String key = accessionId + "||" + panelId;
         if (_cachedRuns.containsKey(key))
@@ -834,7 +828,7 @@ public class MergeSyncRunner implements Job
         return (String)map.get("lsid");
     }
 
-    private String getRunTaskId(Container c, User u, Integer accessionId, Integer panelId, String runId) throws SQLException
+    private String getRunTaskId(Container c, User u, Integer accessionId, Integer panelId, String runId)
     {
         String key = accessionId + "||" + panelId;
         if (_cachedRuns.containsKey(key))
@@ -908,7 +902,7 @@ public class MergeSyncRunner implements Job
         TableInfo clinpathRuns = getClinpathRuns(c, u);
         try
         {
-            _log.info("creating clinpath run for merge data: " + key);
+            _log.info("creating clinpath run for merge data: {}", key);
             BatchValidationException errors = new BatchValidationException();
             List<Map<String, Object>> createdRunRows = clinpathRuns.getUpdateService().insertRows(u, c, Arrays.asList(runRow), errors, null, getExtraContext());
             if (errors.hasErrors())
@@ -925,8 +919,8 @@ public class MergeSyncRunner implements Job
             {
                 Map<String, Object> map = new CaseInsensitiveHashMap<>();
                 map.put("runid", runId);
-                map.put("lsid", createdRunRows.get(0).get("lsid"));
-                map.put("taskid", createdRunRows.get(0).get("taskid"));
+                map.put("lsid", createdRunRows.getFirst().get("lsid"));
+                map.put("taskid", createdRunRows.getFirst().get("taskid"));
                 map.put("qcstate", qc.getQCState(c).getRowId());
 
                 _cachedRuns.put(key, map);
@@ -957,10 +951,10 @@ public class MergeSyncRunner implements Job
         TableSelector ts = new TableSelector(ti, Collections.singleton("requestid"), filter, null);
         List<String> ret = ts.getArrayList(String.class);
 
-        return ret.isEmpty() ? null : ret.get(0);
+        return ret.isEmpty() ? null : ret.getFirst();
     }
 
-    private String createOrderRecord(Container c, User u, String taskId, String runId, Integer accession, Integer panelId, Date date) throws SQLException
+    private String createOrderRecord(Container c, User u, String taskId, String runId, Integer accession, Integer panelId, Date date)
     {
         String objectId = new GUID().toString().toUpperCase();
         Map<String, Object> toInsert = new CaseInsensitiveHashMap<>();
@@ -978,7 +972,7 @@ public class MergeSyncRunner implements Job
         toInsert.put("modified", new Date());
         toInsert.put("modifiedby", u.getUserId());
 
-        _log.info("creating order record for merge data: " + accession + "/" + panelId);
+        _log.info("creating order record for merge data: {}/{}", accession, panelId);
         Table.insert(u, MergeSyncSchema.getInstance().getSchema().getTable(MergeSyncManager.TABLE_ORDERSSYNCED), toInsert);
 
         return objectId;
@@ -994,7 +988,7 @@ public class MergeSyncRunner implements Job
             List<String> ret = ts.getArrayList(String.class);
             if (ret != null && !ret.isEmpty())
             {
-                return ret.get(0);
+                return ret.getFirst();
             }
         }
 
@@ -1053,19 +1047,14 @@ public class MergeSyncRunner implements Job
             TableInfo ti = QueryService.get().getUserSchema(u, c, "ehr_lookups").getTable("lab_tests");
             TableSelector ts = new TableSelector(ti);
             final Map<String, Map<String, Object>> results = new HashMap<>();
-            ts.forEach(new Selector.ForEachBlock<>()
-            {
-                @Override
-                public void exec(ResultSet rs) throws SQLException
-                {
-                    String key = rs.getString("type") + "||" + rs.getString("testid");
-                    Map<String, Object> map = new HashMap<>();
-                    map.put("category", rs.getString("type"));
-                    map.put("testid", rs.getString("testid"));
-                    map.put("units", rs.getString("units"));
+            ts.forEach(rs -> {
+                String key = rs.getString("type") + "||" + rs.getString("testid");
+                Map<String, Object> map = new HashMap<>();
+                map.put("category", rs.getString("type"));
+                map.put("testid", rs.getString("testid"));
+                map.put("units", rs.getString("units"));
 
-                    results.put(key, map);
-                }
+                results.put(key, map);
             });
 
             ret = results;
@@ -1090,7 +1079,7 @@ public class MergeSyncRunner implements Job
         final Map<FieldKey, ColumnInfo> cols = QueryService.get().getColumns(ti, fks);
         TableSelector ts = new TableSelector(ti, cols.values(), new SimpleFilter(FieldKey.fromString("servicename"), servicename), null);
         List<String> datasetNames = ts.getArrayList(String.class);
-        String datasetName = datasetNames == null || datasetNames.isEmpty() ? null : datasetNames.get(0);
+        String datasetName = datasetNames == null || datasetNames.isEmpty() ? null : datasetNames.getFirst();
         if (datasetName == null)
         {
             _cachedResultTables.put(servicename, null);
@@ -1136,7 +1125,7 @@ public class MergeSyncRunner implements Job
                     sublist.removeAll(idsPresent);
                     if (!sublist.isEmpty())
                     {
-                        _log.info("creating " + sublist.size() + " animals in merge");
+                        _log.info("creating {} animals in merge", sublist.size());
                         for (String id : sublist)
                         {
                             RequestSyncHelper.createPatient(mergeSchema, c, u, id);
@@ -1157,7 +1146,7 @@ public class MergeSyncRunner implements Job
                     List<String> idsToChange = new TableSelector(patients, PageFlowUtil.set("PT_NUM"), filter, null).getArrayList(String.class);
                     if (!idsToChange.isEmpty())
                     {
-                        _log.info("marking " + idsToChange.size() + " animals as deceased in merge");
+                        _log.info("marking {} animals as deceased in merge", idsToChange.size());
                         for (String ptNum : idsToChange)
                         {
                             SQLFragment sql = new SQLFragment("UPDATE dbo.patients SET pt_fname = left(rtrim(pt_fname), 5) + ' ' + '*Deceased*' WHERE PT_NUM = ?", ptNum);
@@ -1179,7 +1168,7 @@ public class MergeSyncRunner implements Job
                     List<String> idsToChange = new TableSelector(patients, PageFlowUtil.set("PT_NUM"), filter, null).getArrayList(String.class);
                     if (!idsToChange.isEmpty())
                     {
-                        _log.info("marking " + idsToChange.size() + " animals as shipped in merge");
+                        _log.info("marking {} animals as shipped in merge", idsToChange.size());
                         for (String ptNum : idsToChange)
                         {
                             SQLFragment sql = new SQLFragment("UPDATE dbo.patients SET pt_fname = left(rtrim(pt_fname), 5) + ' ' + '*Sold*' WHERE PT_NUM = ?", ptNum);
@@ -1215,7 +1204,7 @@ public class MergeSyncRunner implements Job
             sublist.removeAll(projectsPresent);
             if (!sublist.isEmpty())
             {
-                _log.info("creating " + sublist.size() + " projects in merge");
+                _log.info("creating {} projects in merge", sublist.size());
                 Set<FieldKey> fks = PageFlowUtil.set(FieldKey.fromString("displayName"), FieldKey.fromString("investigatorId/lastName"), FieldKey.fromString("investigatorId/firstName"), FieldKey.fromString("enddate"));
                 final Map<FieldKey, ColumnInfo> cols = QueryService.get().getColumns(projects, fks);
 
@@ -1248,7 +1237,7 @@ public class MergeSyncRunner implements Job
             List<Integer> insuranceToUpdate = new TableSelector(insurance, PageFlowUtil.set("INS_INDEX"), filter, null).getArrayList(Integer.class);
             if (!insuranceToUpdate.isEmpty())
             {
-                _log.info("marking " + insuranceToUpdate.size() + " projects inactive in merge");
+                _log.info("marking {} projects inactive in merge", insuranceToUpdate.size());
                 for (Integer index : insuranceToUpdate)
                 {
                     SQLFragment sql = new SQLFragment("UPDATE dbo.insurance SET INS_TYPE = 'C', INS_ADDR1 = (INS_ADDR1 + ' ' + '(Expired)') WHERE INS_INDEX = ?", index);
@@ -1274,7 +1263,7 @@ public class MergeSyncRunner implements Job
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("displayName"), projectName);
         TableSelector ts = new TableSelector(ti, Collections.singleton("project"), filter, null);
         List<Integer> results = ts.getArrayList(Integer.class);
-        Integer ret = results.isEmpty() ? null : results.get(0);
+        Integer ret = results.isEmpty() ? null : results.getFirst();
         _cachedProjectNames.put(projectName, ret);
 
         return ret;

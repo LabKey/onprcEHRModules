@@ -13,7 +13,7 @@ public class EpocPanelForm extends ClinpathRunsFormSection
     public List<String> getTbarButtons()
     {
         List<String> defaultButtons = super.getTbarButtons();
-        defaultButtons.add(0, "EPOC_IMPORT");
+        defaultButtons.addFirst("EPOC_IMPORT");
 
         return defaultButtons;
     }

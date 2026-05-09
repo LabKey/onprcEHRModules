@@ -45,7 +45,7 @@ public class ExtSchedulerQuerySchema extends UserSchema
     }
 
     @Override
-    public QueryView createView(ViewContext context, @NotNull QuerySettings settings, BindException errors)
+    public @NotNull QueryView createView(ViewContext context, @NotNull QuerySettings settings, BindException errors)
     {
         // Enable this block if you want the Events table to show edit link for non-Admins for
         // future events which the users is the "owner"

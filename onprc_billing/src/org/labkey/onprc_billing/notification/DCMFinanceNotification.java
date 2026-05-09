@@ -90,7 +90,7 @@ public class DCMFinanceNotification extends FinanceNotification
             for (String key : dataMap.get(financialAnalyst).keySet())
             {
                 List<String> tokens = new ArrayList<>(Arrays.asList(key.split("<>")));
-                tokens.remove(0); //remove FA
+                tokens.removeFirst(); //remove FA
                 String newKey = StringUtils.join(tokens, "<>");
                 Map<String, Map<String, Integer>> newDataByCategory = newDataMap.get(newKey);
                 if (newDataByCategory == null)
@@ -106,7 +106,7 @@ public class DCMFinanceNotification extends FinanceNotification
                     Map<String, Integer> totals = dataByCategory.get(category);
                     for (String t : totals.keySet())
                     {
-                        Integer newVal = newTotals.containsKey(t) ? newTotals.get(t) : 0;
+                        Integer newVal = newTotals.getOrDefault(t, 0);
                         newVal += totals.get(t);
                         newTotals.put(t, newVal);
                     }

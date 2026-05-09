@@ -82,7 +82,7 @@ public class OGASyncManager
 
             if (_hourOfDay <= 0)
             {
-                _log.error("OGA sync has an invalid frequency, will not schedule: " + _hourOfDay);
+                _log.error("OGA sync has an invalid frequency, will not schedule: {}", _hourOfDay);
                 return;
             }
 
@@ -102,12 +102,11 @@ public class OGASyncManager
 
             StdSchedulerFactory.getDefaultScheduler().scheduleJob(_job, _trigger);
 
-            _log.info("OGA sync scheduled to run at " + getHourOfDay() + ":00 each day");
+            _log.info("OGA sync scheduled to run at {}:00 each day", getHourOfDay());
         }
         catch (IllegalArgumentException e)
         {
             _log.error("OGA sync is enabled, but the saved setting are invalid.  Sync will not start.", e);
-            return;
         }
         catch (Exception e)
         {
@@ -173,13 +172,7 @@ public class OGASyncManager
         if (isEnabled() && _trigger == null)
         {
             _log.info("scheduling OGA sync");
-            JobRunner.getDefault().execute(new Runnable(){
-                @Override
-                public void run()
-                {
-                    schedule();
-                }
-            }, 10000);
+            JobRunner.getDefault().execute(() -> schedule(), 10000);
         }
     }
 
@@ -198,10 +191,6 @@ public class OGASyncManager
             return -1;
 
         Integer value = Integer.parseInt(prop);
-        if (value == null)
-        {
-            return -1;
-        }
 
         return value;
     }
@@ -212,11 +201,7 @@ public class OGASyncManager
         if (prop == null)
             return null;
 
-        Long value = Long.parseLong(prop);
-        if (value == null)
-        {
-            return null;
-        }
+        long value = Long.parseLong(prop);
 
         return new Date(value);
     }
@@ -264,11 +249,7 @@ public class OGASyncManager
         if (prop == null)
             return false;
 
-        Boolean value = Boolean.parseBoolean(prop);
-        if (value == null)
-        {
-            return false;
-        }
+        boolean value = Boolean.parseBoolean(prop);
 
         return value;
     }
@@ -286,7 +267,7 @@ public class OGASyncManager
         }
         catch (ValidEmail.InvalidEmailException e)
         {
-            _log.error("Invalid email saved for OGA Sync: " + e.getMessage());
+            _log.error("Invalid email saved for OGA Sync: {}", e.getMessage());
         }
 
         return null;

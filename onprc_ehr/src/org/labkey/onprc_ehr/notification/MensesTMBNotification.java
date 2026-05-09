@@ -44,12 +44,6 @@ public class MensesTMBNotification extends AbstractEHRNotification
     }
 
     @Override
-    public String getCronString()
-    {
-        return null;
-    }
-
-    @Override
     public String getScheduleDescription()
     {
         return "Sent immediately when a TMB Menses Observation is Updated";
