@@ -184,8 +184,8 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
 
                 var rooms = Ext4.Object.getKeys(roomMap).sort();
                 var dividerWidth = 3;
-                var height = 80;
-                var cageWidth = 60;   //Modified: 10-15-2020
+                var height = 115;
+                var cageWidth = 51;   //Modified: 10-15-2020
                 var hasCages = false;
 
                 Ext4.each(rooms, function(room, roomIdx){
@@ -397,7 +397,7 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                                         if (!Ext4.isEmpty(cageAnimals))
                                             bgColor = 'red';
                                         else
-                                            bgColor = 'grey';
+                                            bgColor = 'purple';
                                     }
                                     else if (status == 'Unavailable')
                                     {
