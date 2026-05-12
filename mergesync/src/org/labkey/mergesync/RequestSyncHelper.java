@@ -104,44 +104,37 @@ public class RequestSyncHelper
         }
 
         Map<String, List<Map<String, Object>>> recordsToSync = new HashMap<>();
-        try
+        for (Map row : rows)
         {
-            for (Map row : rows)
+            String animalId = (String)row.get("Id");
+            Date date = (Date)row.get("date");
+            String servicerequested = (String)row.get("servicerequested");
+            String objectId = (String)row.get("objectid");
+            String taskid = (String)row.get("taskid");
+            String requestid = (String)row.get("requestid");
+            String key = (taskid == null ? "" : taskid) + "<>" + (requestid == null ? "" : requestid) + "<>" + animalId + "<>" + _dateFormat.format(date);
+
+            if (servicerequested == null || !shouldSyncService(servicerequested))
             {
-                String animalId = (String)row.get("Id");
-                Date date = (Date)row.get("date");
-                String servicerequested = (String)row.get("servicerequested");
-                String objectId = (String)row.get("objectid");
-                String taskid = (String)row.get("taskid");
-                String requestid = (String)row.get("requestid");
-                String key = (taskid == null ? "" : taskid) + "<>" + (requestid == null ? "" : requestid) + "<>" + animalId + "<>" + _dateFormat.format(date);
-
-                if (servicerequested == null || !shouldSyncService(servicerequested))
-                {
-                    _log.info("No mapping for service: " + servicerequested + ", skipping");
-                    return;
-                }
-
-                _log.info("Syncing single request to merge for animal: " + animalId);
-
-                if (hasBeenOrdered(_container, objectId))
-                {
-                    _log.error("Request has already been synced: " + objectId);
-                    continue;
-                }
-
-                List<Map<String, Object>> list = recordsToSync.get(key);
-                if (list == null)
-                    list = new ArrayList<>();
-
-                list.add(new CaseInsensitiveHashMap<Object>(row));
-
-                recordsToSync.put(key, list);
+                _log.info("No mapping for service: {}, skipping", servicerequested);
+                return;
             }
-        }
-        catch (SQLException e)
-        {
-            _log.error(e.getMessage(), e);
+
+            _log.info("Syncing single request to merge for animal: {}", animalId);
+
+            if (hasBeenOrdered(_container, objectId))
+            {
+                _log.error("Request has already been synced: {}", objectId);
+                continue;
+            }
+
+            List<Map<String, Object>> list = recordsToSync.get(key);
+            if (list == null)
+                list = new ArrayList<>();
+
+            list.add(new CaseInsensitiveHashMap<Object>(row));
+
+            recordsToSync.put(key, list);
         }
 
         if (recordsToSync.isEmpty())
@@ -152,7 +145,7 @@ public class RequestSyncHelper
         DbScope scope = mergeSchema.getScope();
         try (DbScope.Transaction transaction = scope.ensureTransaction())
         {
-            _log.info("Syncing requests to merge: " + recordsToSync.keySet().size());
+            _log.info("Syncing requests to merge: {}", recordsToSync.size());
             for (String key : recordsToSync.keySet())
             {
                 List<Map<String, Object>> records = recordsToSync.get(key);
@@ -161,25 +154,25 @@ public class RequestSyncHelper
                 String requestId = StringUtils.trimToNull(tokens[1]);
 
                 //create 1 record per batch of tests
-                String patientId = createPatientIfNeeded(mergeSchema, _container, _user, (String)records.get(0).get("Id"));
+                String patientId = createPatientIfNeeded(mergeSchema, _container, _user, (String)records.getFirst().get("Id"));
                 Integer doctorId = getMergeUserId(mergeSchema, _user, "DOC");
                 Integer techId = getMergeUserId(mergeSchema, _user, "TECH");
                 if (doctorId == null)
                 {
-                    _log.error("Unable to resolve merge user id for: " + _user.getEmail() + " with role: DOC");
+                    _log.error("Unable to resolve merge user id for: {} with role: DOC", _user.getEmail());
                     return;
                 }
 
                 if (techId == null)
                 {
-                    _log.error("Unable to resolve merge user id for: " + _user.getEmail() + " with role: TECH");
+                    _log.error("Unable to resolve merge user id for: {} with role: TECH", _user.getEmail());
                     return;
                 }
 
-                Integer insuranceId = createInsuranceIfNeeded(mergeSchema, _container, _user, (Integer)records.get(0).get("project"));
-                String visitId = createVisit(mergeSchema, _user, patientId, doctorId, techId, insuranceId, (Date)records.get(0).get("date"));
+                Integer insuranceId = createInsuranceIfNeeded(mergeSchema, _container, _user, (Integer)records.getFirst().get("project"));
+                String visitId = createVisit(mergeSchema, _user, patientId, doctorId, techId, insuranceId, (Date)records.getFirst().get("date"));
                 createCopyTo(mergeSchema, _user, patientId, doctorId, techId, visitId);
-                int orderId = createOrder(mergeSchema, _user, patientId, doctorId, techId, visitId, (Date)records.get(0).get("date"));
+                int orderId = createOrder(mergeSchema, _user, patientId, doctorId, techId, visitId, (Date)records.getFirst().get("date"));
 
                 //then 1 row per service type (clinpath runs record)
                 int letterIdx = 0;
@@ -188,7 +181,7 @@ public class RequestSyncHelper
                     Integer mergeTestId = resolveMergeTestId(mergeSchema, (String)row.get("servicerequested"));
                     if (mergeTestId == null)
                     {
-                        _log.error("Unable to find merge test name matching: " + row.get("servicerequested"));
+                        _log.error("Unable to find merge test name matching: {}", row.get("servicerequested"));
                         continue;
                     }
 
@@ -201,12 +194,12 @@ public class RequestSyncHelper
                     }
                     letterIdx = letterIdx % 26;
 
-                    int containerId = createContainer(mergeSchema, _user, orderId, mergeTestId, doctorId, techId, (Date)records.get(0).get("date"), containerName);
+                    int containerId = createContainer(mergeSchema, _user, orderId, mergeTestId, doctorId, techId, (Date)records.getFirst().get("date"), containerName);
                     int testId = createTest(mergeSchema, _user, patientId, visitId, orderId, containerId, mergeTestId, (Date)row.get("date"), containerName);
 
                     //insert record into orderssynced
                     TableInfo ordersSynced = MergeSyncSchema.getInstance().getSchema().getTable(MergeSyncManager.TABLE_ORDERSSYNCED);
-                    CaseInsensitiveHashMap toInsert = new CaseInsensitiveHashMap();
+                    CaseInsensitiveHashMap<Object> toInsert = new CaseInsensitiveHashMap<>();
                     toInsert.put("objectid", new GUID().toString());
                     toInsert.put("runid", row.get("objectid"));
                     toInsert.put("order_accession", orderId);
@@ -221,7 +214,7 @@ public class RequestSyncHelper
                     Table.insert(_user, ordersSynced, toInsert);
                 }
 
-                _log.info("created merge order: " + orderId + ", with " + records.size() + " tests");
+                _log.info("created merge order: {}, with {} tests", orderId, records.size());
             }
 
             transaction.commit();
@@ -255,10 +248,10 @@ public class RequestSyncHelper
             return null;
 
         TableInfo mergeTestNames = mergeSchema.getTable(MergeSyncManager.TABLE_MERGE_TESTINFO);
-        TableSelector ts2 = new TableSelector(mergeTestNames, PageFlowUtil.set("T_TSTNUM"), new SimpleFilter(FieldKey.fromString("T_ABBR"), ret.get(0), CompareType.EQUAL), null);
+        TableSelector ts2 = new TableSelector(mergeTestNames, PageFlowUtil.set("T_TSTNUM"), new SimpleFilter(FieldKey.fromString("T_ABBR"), ret.getFirst(), CompareType.EQUAL), null);
         List<Integer> ret2 = ts2.getArrayList(Integer.class);
 
-        return ret2.isEmpty() ? null : ret2.get(0);
+        return ret2.isEmpty() ? null : ret2.getFirst();
     }
 
     private Map<String, Object> getMergeTestInfo(DbSchema mergeSchema, int mergeTestId)
@@ -270,7 +263,7 @@ public class RequestSyncHelper
         return ret;
     }
 
-    private boolean hasBeenOrdered(Container c, String objectid) throws SQLException
+    private boolean hasBeenOrdered(Container c, String objectid)
     {
         TableInfo ordersSynced = MergeSyncSchema.getInstance().getSchema().getTable(MergeSyncManager.TABLE_ORDERSSYNCED);
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("runid"), objectid, CompareType.EQUAL);
@@ -290,16 +283,16 @@ public class RequestSyncHelper
         {
             if (existing.size() > 1)
             {
-                _log.error("More than 1 matching patient found: " + animalId);
+                _log.error("More than 1 matching patient found: {}", animalId);
             }
 
-            return existing.get(0);
+            return existing.getFirst();
         }
 
         return createPatient(mergeSchema, c, u, animalId);
     }
 
-    public static String createPatient(DbSchema mergeSchema, Container c, User u, String animalId) throws SQLException
+    public static String createPatient(DbSchema mergeSchema, Container c, User u, String animalId)
     {
         TableInfo ti = mergeSchema.getTable(MergeSyncManager.TABLE_MERGE_PATIENTS);
 
@@ -350,7 +343,7 @@ public class RequestSyncHelper
         TableSelector ts = new TableSelector(speciesTable, PageFlowUtil.set("cites_code"), new SimpleFilter(FieldKey.fromString("common"), species), null);
         List<String> ret = ts.getArrayList(String.class);
 
-        return ret != null && !ret.isEmpty() ? ret.get(0) : null;
+        return ret != null && !ret.isEmpty() ? ret.getFirst() : null;
     }
 
     private Integer createInsuranceIfNeeded(DbSchema mergeSchema, Container c, User u, Integer project) throws SQLException
@@ -362,7 +355,7 @@ public class RequestSyncHelper
         TableInfo projectTable = QueryService.get().getUserSchema(u, c, "ehr").getTable("project");
         if (projectTable == null)
         {
-            _log.error("Unable to find ehr.project in container: " + _container.getPath());
+            _log.error("Unable to find ehr.project in container: {}", _container.getPath());
             return null;
         }
 
@@ -372,7 +365,7 @@ public class RequestSyncHelper
         TableSelector projectTs = new TableSelector(projectTable, cols.values(), new SimpleFilter(FieldKey.fromString("project"), project), null);
         if (!projectTs.exists())
         {
-            _log.error("Unable to find project with Id: " + project + " in container: " + _container.getPath());
+            _log.error("Unable to find project with Id: {} in container: {}", project, _container.getPath());
             return null;
         }
 
@@ -391,17 +384,17 @@ public class RequestSyncHelper
             {
                 if (existing.size() > 1)
                 {
-                    _log.error("More than insurance found matching project: " + project);
+                    _log.error("More than insurance found matching project: {}", project);
                 }
 
-                return existing.get(0);
+                return existing.getFirst();
             }
 
             return createInsurance(mergeSchema, c, u, projectName, lastName, enddate);
         }
     }
 
-    public static Integer createInsurance(DbSchema mergeSchema, Container c, User u, String projectName, String lastName, Date enddate) throws SQLException
+    public static Integer createInsurance(DbSchema mergeSchema, Container c, User u, String projectName, String lastName, Date enddate)
     {
         TableInfo ti = mergeSchema.getTable(MergeSyncManager.TABLE_MERGE_INSURANCE);
         boolean isExpired = enddate == null ? false : DateUtils.truncate(enddate, Calendar.DATE).getTime() < DateUtils.truncate(new Date(), Calendar.DATE).getTime();
@@ -428,7 +421,7 @@ public class RequestSyncHelper
             throw new RuntimeException("Unknown index: " + colName);
         }
 
-        Integer i = ret.get(0);
+        Integer i = ret.getFirst();
 
         //increment this index
         SqlExecutor se = new SqlExecutor(ti.getSchema());
@@ -457,7 +450,7 @@ public class RequestSyncHelper
             List<Integer> ret = ts.getArrayList(Integer.class);
             if (ret != null && ret.size() == 1)
             {
-                mergeUserId = ret.get(0);
+                mergeUserId = ret.getFirst();
             }
         }
 
@@ -470,7 +463,7 @@ public class RequestSyncHelper
             List<Integer> ret = ts.getArrayList(Integer.class);
             if (ret != null && ret.size() == 1)
             {
-                mergeUserId = ret.get(0);
+                mergeUserId = ret.getFirst();
             }
         }
 
@@ -484,7 +477,7 @@ public class RequestSyncHelper
             List<Integer> ret = ts.getArrayList(Integer.class);
             if (ret != null && ret.size() == 1)
             {
-                mergeUserId = ret.get(0);
+                mergeUserId = ret.getFirst();
             }
         }
 
@@ -507,16 +500,16 @@ public class RequestSyncHelper
         TableSelector ts = new TableSelector(ti, PageFlowUtil.set("PR_NUM"), filter, null);
         List<Integer> ret = ts.getArrayList(Integer.class);
         
-        Integer i = ret == null || ret.isEmpty() ? null : ret.get(0);
+        Integer i = ret == null || ret.isEmpty() ? null : ret.getFirst();
         if (i == null)
         {
-            _log.error("Unable to find merge userId matching the login: " + mergeUserName + " with the role: DOC");
+            _log.error("Unable to find merge userId matching the login: {} with the role: DOC", mergeUserName);
         }
 
         return i;
     }
 
-    private void createCopyTo(DbSchema mergeSchema, User u, String patientId, int doctorId, int techId, String visitId) throws SQLException
+    private void createCopyTo(DbSchema mergeSchema, User u, String patientId, int doctorId, int techId, String visitId)
     {
         TableInfo ti = mergeSchema.getTable(MergeSyncManager.TABLE_MERGE_COPY_TO);
 
@@ -529,7 +522,7 @@ public class RequestSyncHelper
         Table.insert(u, ti, toInsert);
     }
 
-    private String createVisit(DbSchema mergeSchema, User u, String patientId, int doctorId, int techId, Integer insuranceId, Date date) throws SQLException
+    private String createVisit(DbSchema mergeSchema, User u, String patientId, int doctorId, int techId, Integer insuranceId, Date date)
     {
         TableInfo ti = mergeSchema.getTable(MergeSyncManager.TABLE_MERGE_VISITS);
 
@@ -576,11 +569,11 @@ public class RequestSyncHelper
 
             if (ret.isEmpty())
             {
-                _log.error("Unable to find timezone matching: " + abbr);
+                _log.error("Unable to find timezone matching: {}", abbr);
                 throw new RuntimeException("Unable to find timezone matching: " + abbr);
             }
 
-            _timezone = ret.get(0);
+            _timezone = ret.getFirst();
         }
 
         return _timezone;
@@ -597,7 +590,7 @@ public class RequestSyncHelper
 
     private final char[] ALPHABET = new char[]{'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
 
-    private int createContainer(DbSchema mergeSchema, User u, int orderId, int mergeTestId, int doctorId, int techId, Date date, Character containerName) throws SQLException
+    private int createContainer(DbSchema mergeSchema, User u, int orderId, int mergeTestId, int doctorId, int techId, Date date, Character containerName)
     {
         TableInfo containerTable = mergeSchema.getTable(MergeSyncManager.TABLE_MERGE_CONTAINERS);
         Map<String, Object> testInfo = getMergeTestInfo(mergeSchema, mergeTestId);
@@ -625,7 +618,7 @@ public class RequestSyncHelper
         return (Integer)inserted.get("CNT_INDEX");
     }
 
-    private int createOrder(DbSchema mergeSchema, User u, String patientId, int doctorId, int techId, String visitId, Date date) throws SQLException
+    private int createOrder(DbSchema mergeSchema, User u, String patientId, int doctorId, int techId, String visitId, Date date)
     {
         TableInfo ti = mergeSchema.getTable(MergeSyncManager.TABLE_MERGE_ORDERS);
 
@@ -677,7 +670,7 @@ public class RequestSyncHelper
         return pair;
     }
 
-    private int createTest(DbSchema mergeSchema, User u, String patientId, String visitId, int accession, int containerId, int mergeTestId, Date date, Character containerName) throws SQLException
+    private int createTest(DbSchema mergeSchema, User u, String patientId, String visitId, int accession, int containerId, int mergeTestId, Date date, Character containerName)
     {
         TableInfo ti = mergeSchema.getTable(MergeSyncManager.TABLE_MERGE_TEST);
         Map<String, Object> testInfo = getMergeTestInfo(mergeSchema, mergeTestId);
@@ -727,6 +720,6 @@ public class RequestSyncHelper
         SQLFragment sql = new SQLFragment("UPDATE " + MergeSyncSchema.NAME + "." + MergeSyncManager.TABLE_ORDERSSYNCED + " SET deletedate = ? WHERE runid = ?", new Date(), objectid);
         SqlExecutor se = new SqlExecutor(MergeSyncSchema.getInstance().getSchema());
         long deleted = se.execute(sql);
-        _log.info("deleted " + deleted + " merge sync records following clinpath record delete");
+        _log.info("deleted {} merge sync records following clinpath record delete", deleted);
     }
 }

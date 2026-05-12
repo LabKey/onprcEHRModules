@@ -44,12 +44,6 @@ public class GeneticsCoreModule extends ExtendedSimpleModule
     }
 
     @Override
-    public boolean hasScripts()
-    {
-        return true;
-    }
-
-    @Override
     protected void doStartupAfterSpringConfig(ModuleContext moduleContext)
     {
         SimpleButtonConfigFactory btn1 = new SimpleButtonConfigFactory(this, "Add Genetics Blood Draw Flags", "GeneticsCore.buttons.editGeneticsFlagsForSamples(dataRegionName, arguments[0] ? arguments[0].ownerCt : null, 'add')");

@@ -90,7 +90,7 @@ public class DrugAdministrationFormSection extends SimpleFormSection
     public List<String> getTbarButtons()
     {
         List<String> defaultButtons = super.getTbarButtons();
-        defaultButtons.add(0, "SEDATIONHELPER");
+        defaultButtons.addFirst("SEDATIONHELPER");
 
 //        Added: 4-18-2024  R. Blasa
         defaultButtons.remove("TEMPLATE");

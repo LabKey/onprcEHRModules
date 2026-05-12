@@ -65,12 +65,6 @@ public class ONPRC_EHR_ComplianceDBModule extends ExtendedSimpleModule
     }
 
     @Override
-    public boolean hasScripts()
-    {
-        return true;
-    }
-
-    @Override
     protected void registerSchemas()
     {
         DefaultSchema.registerProvider(ONPRC_EHR_ComplianceDBSchema.NAME, new DefaultSchema.SchemaProvider(this)

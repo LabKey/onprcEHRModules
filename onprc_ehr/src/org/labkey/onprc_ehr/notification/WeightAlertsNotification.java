@@ -34,7 +34,6 @@ import org.labkey.api.query.QueryService;
 import org.labkey.api.security.User;
 import org.labkey.api.settings.AppProps;
 import org.labkey.api.ehr.notification.AbstractEHRNotification;
-import org.labkey.api.util.PageFlowUtil;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -216,12 +215,7 @@ public class WeightAlertsNotification extends AbstractEHRNotification
                     return;
 
                 String area = rs.getString(areaKey) == null ? "" : rs.getString(areaKey);
-                Map<String, List<Map<String, Object>>> areaMap = summary.get(area);
-                if (areaMap == null)
-                {
-                    areaMap = new TreeMap<>();
-                    summary.put(area, areaMap);
-                }
+                Map<String, List<Map<String, Object>>> areaMap = summary.computeIfAbsent(area, _ -> new TreeMap<>());
 
                 String room = rs.getString(roomKey) == null ? "" : rs.getString(roomKey);
                 List<Map<String, Object>> roomList = areaMap.get(room);

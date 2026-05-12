@@ -60,7 +60,7 @@ public class ChargesARTCoreFormSection extends SimpleFormSection
     {
         List<String> defaultButtons = super.getTbarButtons();
         defaultButtons.remove("ADDANIMALS");
-        defaultButtons.add(0, "ADDANIMALST");
+        defaultButtons.addFirst("ADDANIMALST");
 
         return defaultButtons;
     }

@@ -172,7 +172,7 @@ public class TreatmentAlertsPostOpsNotification extends AbstractEHRNotification
                         {
                             area = "<Unknown Area>";
                         }
-                        Integer areaVal = totalByArea.containsKey(area) ? totalByArea.get(area) : 0;
+                        Integer areaVal = totalByArea.getOrDefault(area, 0);
                         areaVal++;
 
                         totalByArea.put(area, areaVal);

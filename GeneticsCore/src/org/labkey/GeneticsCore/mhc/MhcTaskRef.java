@@ -1,7 +1,6 @@
 package org.labkey.GeneticsCore.mhc;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.xmlbeans.XmlException;
 import org.jetbrains.annotations.NotNull;
 import org.labkey.api.assay.AssayProtocolSchema;
 import org.labkey.api.assay.AssayProvider;
@@ -57,11 +56,11 @@ public class MhcTaskRef implements TaskRefTask
         Date lastRun = getLastRun(job.getContainer());
 
         SimpleDateFormat _dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd kk:mm");
-        job.getLogger().info("Last run: " + (lastRun == null ? "never" : _dateTimeFormat.format(lastRun)));
+        job.getLogger().info("Last run: {}", lastRun == null ? "never" : _dateTimeFormat.format(lastRun));
         Date jobStart = new Date();
 
         Set<String> subjects = getIdsWithChangesForAssay(job, lastRun);
-        job.getLogger().info("Total subjects to process: " + subjects.size());
+        job.getLogger().info("Total subjects to process: {}", subjects.size());
 
         for (String subject : subjects)
         {
@@ -86,7 +85,7 @@ public class MhcTaskRef implements TaskRefTask
     }
 
     @Override
-    public void setSettings(Map<String, String> settings) throws XmlException
+    public void setSettings(Map<String, String> settings)
     {
 
     }
@@ -120,7 +119,7 @@ public class MhcTaskRef implements TaskRefTask
 
     private void processSubject(PipelineJob job, String subject) throws PipelineJobException
     {
-        job.getLogger().info("Processing: " + subject);
+        job.getLogger().info("Processing: {}", subject);
         UserSchema us = QueryService.get().getUserSchema(job.getUser(), getTargetContainer(job), "geneticscore");
         TableInfo mhcData = us.getTable("mhc_data");
 
@@ -129,13 +128,11 @@ public class MhcTaskRef implements TaskRefTask
         if (ts.exists())
         {
             List<Map<String, Object>> toDelete = new ArrayList<>();
-            ts.forEachResults(rs -> {
-                toDelete.add(Map.of("rowid", rs.getString(FieldKey.fromString("rowid")), "objectid", rs.getString(FieldKey.fromString("objectid")), "container", rs.getString(FieldKey.fromString("container"))));
-            });
+            ts.forEachResults(rs -> toDelete.add(Map.of("rowid", rs.getString(FieldKey.fromString("rowid")), "objectid", rs.getString(FieldKey.fromString("objectid")), "container", rs.getString(FieldKey.fromString("container")))));
 
             try
             {
-                job.getLogger().info("deleting existing rows: " + toDelete.size());
+                job.getLogger().info("deleting existing rows: {}", toDelete.size());
                 QueryUpdateService qus = mhcData.getUpdateService();
                 qus.setBulkLoad(true);
                 qus.deleteRows(job.getUser(), getTargetContainer(job), toDelete, null, null);
@@ -163,7 +160,7 @@ public class MhcTaskRef implements TaskRefTask
         {
             try
             {
-                job.getLogger().info("inserting rows: " + toInsert.size());
+                job.getLogger().info("inserting rows: {}", toInsert.size());
                 BatchValidationException bve = new BatchValidationException();
                 QueryUpdateService qus = mhcData.getUpdateService();
                 qus.setBulkLoad(true);
@@ -224,7 +221,7 @@ public class MhcTaskRef implements TaskRefTask
                     ExpRun run = ExperimentService.get().getExpRun(rs.getString(FieldKey.fromString("RunLsid")));
                     if (run == null)
                     {
-                        job.getLogger().warn("Unable to find RunLsid for audit row: " + rs.getObject(FieldKey.fromString("RunLsid")));
+                        job.getLogger().warn("Unable to find RunLsid for audit row: {}", rs.getObject(FieldKey.fromString("RunLsid")));
                         return;
                     }
 

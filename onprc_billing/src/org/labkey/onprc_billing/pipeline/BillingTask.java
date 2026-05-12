@@ -311,7 +311,7 @@ public class BillingTask extends PipelineJob.Task<BillingTask.Factory>
                 {
                     if (toInsert.get(field) == null)
                     {
-                        getJob().getLogger().warn("Missing value for field: " + field + " for transactionNumber: " + toInsert.get("transactionNumber"));
+                        getJob().getLogger().warn("Missing value for field: {} for transactionNumber: {}", field, toInsert.get("transactionNumber"));
                     }
                 }
 
@@ -368,7 +368,7 @@ public class BillingTask extends PipelineJob.Task<BillingTask.Factory>
         String queryName = "leaseFeeRates";
         List<Map<String, Object>> rows = getRowList(ehrContainer, "onprc_billing", queryName, colNames, params);
 
-        getJob().getLogger().info(rows.size() + " rows found");
+        getJob().getLogger().info("{} rows found", rows.size());
 
         writeToInvoicedItems(rows, colNames, queryName, false);
         getJob().getLogger().info("Finished Caching Lease Fees");
@@ -395,7 +395,7 @@ public class BillingTask extends PipelineJob.Task<BillingTask.Factory>
 
             if (!colKeys.containsKey(col))
             {
-                getJob().getLogger().warn("Unable to find column with key: " + col + " for table: " + ti.getPublicName());
+                getJob().getLogger().warn("Unable to find column with key: {} for table: {}", col, ti.getPublicName());
             }
         }
 
@@ -433,7 +433,7 @@ public class BillingTask extends PipelineJob.Task<BillingTask.Factory>
         long numDays = Math.round(((Long)(getSupport().getEndDate().getTime() - getSupport().getStartDate().getTime())).doubleValue() / DateUtils.MILLIS_PER_DAY);
         numDays++;
         params.put("NumDays", (int) numDays);
-        getJob().getLogger().info("Using start date: " + _dateFormat.format(getSupport().getStartDate()) + ", end date: " + _dateFormat.format(getSupport().getEndDate()) + ", with number of days: " + (int) numDays);
+        getJob().getLogger().info("Using start date: {}, end date: {}, with number of days: {}", _dateFormat.format(getSupport().getStartDate()), _dateFormat.format(getSupport().getEndDate()), (int) numDays);
 
         String[] colNames = new String[]{
                 "Id",
@@ -467,7 +467,7 @@ public class BillingTask extends PipelineJob.Task<BillingTask.Factory>
 
         String queryName = "perDiemRates";
         List<Map<String, Object>> rows = getRowList(ehrContainer, "onprc_billing", queryName, colNames, params);
-        getJob().getLogger().info(rows.size() + " rows found");
+        getJob().getLogger().info("{} rows found", rows.size());
 
         writeToInvoicedItems(rows, colNames, queryName, false);
         getJob().getLogger().info("Finished Caching Per Diem Fees");
@@ -519,7 +519,7 @@ public class BillingTask extends PipelineJob.Task<BillingTask.Factory>
 
         String queryName = "slaPerDiemRates";
         List<Map<String, Object>> rows = getRowList(slaContainer, "onprc_billing", queryName, colNames, params);
-        getJob().getLogger().info(rows.size() + " rows found");
+        getJob().getLogger().info("{} rows found", rows.size());
 
         writeToInvoicedItems(rows, colNames, queryName, false);
         getJob().getLogger().info("Finished Caching Per Diem Fees");
@@ -565,7 +565,7 @@ public class BillingTask extends PipelineJob.Task<BillingTask.Factory>
 
         String queryName = "procedureFeeRates";
         List<Map<String, Object>> rows = getRowList(ehrContainer, "onprc_billing", queryName, colNames, params);
-        getJob().getLogger().info(rows.size() + " rows found");
+        getJob().getLogger().info("{} rows found", rows.size());
 
         writeToInvoicedItems(rows, colNames, queryName, false);
         getJob().getLogger().info("Finished Caching Procedure Fees");
@@ -611,7 +611,7 @@ public class BillingTask extends PipelineJob.Task<BillingTask.Factory>
 
         String queryName = "labworkFeeRates";
         List<Map<String, Object>> rows = getRowList(ehrContainer, "onprc_billing", queryName, colNames, params);
-        getJob().getLogger().info(rows.size() + " rows found");
+        getJob().getLogger().info("{} rows found", rows.size());
 
         writeToInvoicedItems(rows, colNames, queryName, false);
         getJob().getLogger().info("Finished Caching Labwork Fees");
@@ -654,7 +654,7 @@ public class BillingTask extends PipelineJob.Task<BillingTask.Factory>
         };
 
         List<Map<String, Object>> rows = getRowList(ehrContainer, "onprc_billing", MISC_CHARGES_QUERY, colNames, params);
-        getJob().getLogger().info(rows.size() + " rows found");
+        getJob().getLogger().info("{} rows found", rows.size());
 
         writeToInvoicedItems(rows, colNames, MISC_CHARGES_QUERY, true);
 
@@ -665,7 +665,7 @@ public class BillingTask extends PipelineJob.Task<BillingTask.Factory>
     {
         try
         {
-            getJob().getLogger().info("Potentially updating " + rows.size() + " records in misc charges table for the query " + queryName);
+            getJob().getLogger().info("Potentially updating {} records in misc charges table for the query {}", rows.size(), queryName);
             TableInfo ti = DbSchema.get(ONPRC_BillingSchema.NAME).getTable(ONPRC_BillingSchema.TABLE_MISC_CHARGES);
             String invoiceId = getOrCreateInvoiceRunRecord();
 
@@ -700,7 +700,7 @@ public class BillingTask extends PipelineJob.Task<BillingTask.Factory>
                 Table.update(getJob().getUser(), ti, toUpdate, objectId);
             }
 
-            getJob().getLogger().info("updated " + updates + " records in misc charges table.  skipped " + skipped);
+            getJob().getLogger().info("updated {} records in misc charges table.  skipped {}", updates, skipped);
         }
         catch (RuntimeSQLException e)
         {

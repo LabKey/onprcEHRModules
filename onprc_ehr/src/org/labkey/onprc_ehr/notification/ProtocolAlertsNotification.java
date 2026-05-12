@@ -44,12 +44,6 @@ public class ProtocolAlertsNotification extends AbstractEHRNotification
     }
 
     @Override
-    public String getCronString()
-    {
-        return null;
-    }
-
-    @Override
     public String getScheduleDescription()
     {
         return "Sent immediately when a Protocol record is created";

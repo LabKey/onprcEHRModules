@@ -49,12 +49,6 @@ public class MergeSyncModule extends ExtendedSimpleModule
         return 0.11;
     }
 
-    @Override
-    public boolean hasScripts()
-    {
-        return true;
-    }
-
     @NotNull
     @Override
     protected Collection<WebPartFactory> createWebPartFactories()

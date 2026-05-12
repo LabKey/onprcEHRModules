@@ -47,7 +47,7 @@ public class EncounterMedicationsFormSection extends EncounterChildFormSection
         List<String> defaultButtons = super.getTbarButtons();
         if ("drug".equals(getQueryName()) || "Drug Administration".equals(getQueryName()))
         {
-            defaultButtons.add(0, "SEDATIONHELPER");
+            defaultButtons.addFirst("SEDATIONHELPER");
         }
 
         defaultButtons.add("DRUGAMOUNTHELPER");

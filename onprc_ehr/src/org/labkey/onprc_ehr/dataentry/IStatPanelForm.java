@@ -31,7 +31,7 @@ public class IStatPanelForm extends ClinpathRunsFormSection
     public List<String> getTbarButtons()
     {
         List<String> defaultButtons = super.getTbarButtons();
-        defaultButtons.add(0, "ISTAT_IMPORT");
+        defaultButtons.addFirst("ISTAT_IMPORT");
 
         return defaultButtons;
     }

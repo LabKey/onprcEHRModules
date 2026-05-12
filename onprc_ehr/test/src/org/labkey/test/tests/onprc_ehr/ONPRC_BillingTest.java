@@ -185,7 +185,7 @@ public class ONPRC_BillingTest extends AbstractONPRC_EHRTest
                 "Per Diems 2002.0 $0.00\n" +
                 "Procedure Charges 4.0 $0.00\n" +
                 "SLA Per Diems 0.0 $0.00";
-        Assert.assertEquals("Incorrect information in the charge summary table", expectedContent, Locator.tag("table").findElements(getDriver()).get(0).getText());
+        Assert.assertEquals("Incorrect information in the charge summary table", expectedContent, Locator.tag("table").findElements(getDriver()).getFirst().getText());
     }
 
     private void updateBirthDate(String animalId) throws IOException, CommandException
@@ -196,7 +196,7 @@ public class ONPRC_BillingTest extends AbstractONPRC_EHRTest
         demoSelect.addFilter(new Filter("participantid", animalId));
         demoSelect.setColumns(Arrays.asList("participantid", "lsid", "birth"));
         SelectRowsResponse demoResp = demoSelect.execute(getApiHelper().getConnection(), getContainerPath());
-        final String demoLsid = (String) demoResp.getRows().get(0).get("lsid");
+        final String demoLsid = (String) demoResp.getRows().getFirst().get("lsid");
 
         UpdateRowsCommand demoUpdateCmd = new UpdateRowsCommand("study", "demographics");
         demoUpdateCmd.addRow(new HashMap<>()

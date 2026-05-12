@@ -102,7 +102,7 @@ public class MergeSyncManager
 
             if (_syncInterval <= 0)
             {
-                _log.error("Merge sync has an invalid frequency, will not schedule: " + _syncInterval);
+                _log.error("Merge sync has an invalid frequency, will not schedule: {}", _syncInterval);
                 return;
             }
 
@@ -122,7 +122,7 @@ public class MergeSyncManager
 
             StdSchedulerFactory.getDefaultScheduler().scheduleJob(_job, _trigger);
 
-            _log.info("Merge sync scheduled to run every " + getSyncInterval() + " minutes");
+            _log.info("Merge sync scheduled to run every {} minutes", getSyncInterval());
         }
         catch (IllegalArgumentException e)
         {
@@ -265,7 +265,7 @@ public class MergeSyncManager
         }
         catch (ValidEmail.InvalidEmailException e)
         {
-            _log.error("Invalid email saved for Merge Sync: " + e.getMessage());
+            _log.error("Invalid email saved for Merge Sync: {}", e.getMessage());
         }
 
         return null;

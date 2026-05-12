@@ -26,7 +26,6 @@ import org.labkey.onprc_billing.security.ONPRCBillingAdminPermission;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -71,14 +70,14 @@ public class BillingTriggerHelper
             UserSchema us = QueryService.get().getUserSchema(getUser(), getContainer(), "onprc_billing_public");
             if (us == null)
             {
-                _log.error("Unable to find onprc_billing_public schema in container: " + getContainer().getPath());
+                _log.error("Unable to find onprc_billing_public schema in container: {}", getContainer().getPath());
                 return null;
             }
 
             TableInfo ti = us.getTable("publicInvoiceRuns");
             if (ti == null)
             {
-                _log.error("Unable to find onprc_billing_public.publicInvoiceRuns in container: " + getContainer().getPath());
+                _log.error("Unable to find onprc_billing_public.publicInvoiceRuns in container: {}", getContainer().getPath());
                 return null;
             }
 

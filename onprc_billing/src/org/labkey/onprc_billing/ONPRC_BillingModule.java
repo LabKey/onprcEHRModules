@@ -87,12 +87,6 @@ public class ONPRC_BillingModule extends ExtendedSimpleModule
     }
 
     @Override
-    public boolean hasScripts()
-    {
-        return true;
-    }
-
-    @Override
     @NotNull
     protected Collection<WebPartFactory> createWebPartFactories()
     {

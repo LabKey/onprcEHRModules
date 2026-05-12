@@ -226,7 +226,7 @@ public class RocheE411ImportMethod extends DefaultImportMethod
                     {
                         //find the type of sample
                         String category = "";
-                        int type = Integer.parseInt(cells.get(0));
+                        int type = Integer.parseInt(cells.getFirst());
                         if (type == 3)
                         {
                             category = "Pos Control";

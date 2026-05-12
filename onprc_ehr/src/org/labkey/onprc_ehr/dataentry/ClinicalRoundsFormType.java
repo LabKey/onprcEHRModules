@@ -24,7 +24,6 @@ import org.labkey.api.ehr.dataentry.TaskForm;
 import org.labkey.api.ehr.dataentry.TaskFormSection;
 import org.labkey.api.ehr.dataentry.WeightFormSection;
 import org.labkey.api.ehr.dataentry.DrugAdministrationFormSection;
-import org.labkey.api.ehr.security.EHRClinicalEntryPermission;
 import org.labkey.api.module.Module;
 import org.labkey.api.query.Queryable;
 import org.labkey.api.view.template.ClientDependency;
