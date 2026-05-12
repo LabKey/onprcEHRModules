@@ -60,10 +60,13 @@ SELECT
 
   -----Comprehensive Chemistry
   CASE
-      WHEN  (t.isCChemRequired1 = true AND t.isCChemCurrent1 = false )  THEN 2
-      WHEN  (t.isCChemRequired2 = true AND t.isCChemCurrent2 = false )  THEN 2
-      WHEN  (t.isCChemRequired3 = true AND t.isCChemCurrent3 = false )  THEN 2
-      WHEN  (t.isCChemRequired4 = true AND t.isCChemCurrent4 = false )  THEN 2
+      WHEN  (t.isCChemRequired2 = true AND t.isCChemCurrent2 = false )  THEN 2  ----> more  lab 340 days and age > 180 days
+      WHEN  (t.isCChemRequired4 = true AND t.isCChemCurrent4 = false )  THEN 2  ----> more lab 180 days and age > 180 days
+      WHEN  (t.isCChemRequired3 = true AND t.isCChemCurrent3 = false )  THEN 2   ----> more lab 180 days and age >= 18 days
+      WHEN  (t.isCChemRequired1 = true AND t.isCChemCurrent1 = false )  THEN 2  ----> more lab 165 days and age > 20 days
+
+
+
       ELSE 0
       END as CChembloodVol,
 
