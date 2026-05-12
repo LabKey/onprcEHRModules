@@ -86,6 +86,7 @@ SELECT
   f.heightExemption,
   CASE
     WHEN hf.Id is not null AND c1.height > pc.cage_type.height THEN 'ERROR: According to the monkeys weight-- it needs a height step taller than required.'
+    WHEN hf.Id is not null AND c1.height <= pc.cage_type.height THEN 'NOTE: According to the monkeys weight-- it needs a height step taller than required.'
     WHEN (pc.cage_type.height < c1.height AND f.heightExemption IS NULL) THEN ('ERROR: Insufficient height, ' || h.id ||' needs at least: ' || cast(c1.height AS varchar(50)))
     WHEN (pc.cage_type.height < c1.height AND f.heightExemption IS NOT NULL) THEN cast(('NOTE: Height Exemption: ' || h.Id) as varchar(500))
     ELSE null
