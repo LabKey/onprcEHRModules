@@ -356,7 +356,7 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                                             bgColor = 'red';
                                         else {
                                             //NOTE: this used to use no color.  i'm not sure why
-                                            bgColor = 'grey';
+                                            bgColor = 'transparent';
                                         }
                                     }
                                     else if (status == 'Unavailable')
@@ -397,7 +397,7 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                                         if (!Ext4.isEmpty(cageAnimals))
                                             bgColor = 'red';
                                         else
-                                            bgColor = 'grey';
+                                            bgColor = '';
                                     }
                                     else if (status == 'Unavailable')
                                     {
