@@ -270,7 +270,7 @@ LEFT JOIN (
         k.id,
         max(k.date) as lastDate
     FROM study.blood k
-    WHERE (k.additionalservices = 'ESPF Surveillance - Semiannual')
+    WHERE (k.additionalservices = '%ESPF Surveillance - Semiannual%')
     GROUP BY k.id
 
 ) espf ON (espf.id = d.id)
@@ -290,7 +290,7 @@ LEFT JOIN (
         j.id,
         max(j.date) as lastDate
     FROM study.blood j
-    WHERE j.additionalservices like  'CBC with automated differential'
+    WHERE j.additionalservices like  '%CBC with automated differential%'
     GROUP BY j.id
 
 ) cbc ON (cbc.id = d.id)
@@ -300,7 +300,7 @@ LEFT JOIN (
         m.id,
         max(m.date) as lastDate
     FROM study.blood m
-    WHERE m.additionalservices like  'Comprehensive Chemistry panel in-house'
+    WHERE m.additionalservices like  '%Comprehensive Chemistry panel in-house%'
     GROUP BY m.id
 
 ) cchem ON (cchem.id = d.id)
@@ -311,7 +311,7 @@ LEFT JOIN (
         t.id,
         max(t.date) as lastDate
     FROM study.blood t
-    WHERE t.additionalservices like  'Basic Chemistry Panel'
+    WHERE t.additionalservices like  '%Basic Chemistry Panel%'
     GROUP BY t.id
 
 ) bchem ON (bchem.id = d.id)
@@ -333,7 +333,7 @@ LEFT JOIN (
         p.id,
         max(p.date) as lastDate
     FROM study.flags p
-    WHERE p.flag.category ='Notes Pertaining to DAR' And p.flag.value = 'Assignment pool'
+    WHERE p.flag.category ='Notes Pertaining to DAR' And p.flag.value = '%Assignment pool%'
     And p.enddate is null
     GROUP BY p.id
 
