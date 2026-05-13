@@ -117,7 +117,8 @@ EHR.model.DataModelManager.registerMetadata('BehaviorDefaults', {
             },
             category: {
                 lookup: {
-                    filterArray: [LABKEY.Filter.create('category', 'Behavior')]
+                    filterArray: [LABKEY.Filter.create('category', 'Behavior'),
+                            LABKEY.Filter.create('value', 'Behaviors',LABKEY.Filter.Types.NEQ)]
                 }
             }
         }
