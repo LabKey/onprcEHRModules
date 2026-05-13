@@ -9,7 +9,7 @@
         var webpart = <%=webpartContext%>;
         Ext4.create('EHR_ComplianceDB.panel.EmployeeDetailsPanel', {
             employeeId: LABKEY.ActionURL.getParameter('employeeid'),
-            schemaName: 'ehr_compliancedb'
+            schemaName: 'EmployeeData'
         }).render(webpart.wrapperDivId);
     });
 
