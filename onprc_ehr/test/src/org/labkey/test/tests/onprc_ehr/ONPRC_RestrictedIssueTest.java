@@ -293,13 +293,16 @@ public class ONPRC_RestrictedIssueTest extends BaseWebDriverTest implements Sqls
         // verify that we can return links even if the user doesn't have permission to view a restricted issue
         Assert.assertTrue("Number of search results not expected", resultsPage.getResults().size() == 2);
 
-        // verify assigned to users will see both results but shouldn't be able to see details of issues not assigned to them
+        // verify assigned to users will see both results but shouldn't be able to see details of issues not assigned to them,
+        // also verify that there is a warning rendered if a search result is restricted
         impersonate(USER1.getEmail());
+        assertTextPresent("Restricted Issue: You do not have access. Contact your administrator for access.");
         verifyIssueAccess(ISSUE_1, true);
         verifyIssueAccess(ISSUE_2, false);
         stopImpersonating(false);
 
         impersonate(USER2.getEmail());
+        assertTextPresent("Restricted Issue: You do not have access. Contact your administrator for access.");
         verifyIssueAccess(ISSUE_1, false);
         verifyIssueAccess(ISSUE_2, true);
         stopImpersonating();
