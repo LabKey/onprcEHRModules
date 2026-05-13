@@ -32,7 +32,7 @@ Ext4.define('EHR_ComplianceDB.panel.EmployeeDetailsPanel', {
             }, {
                 xtype: 'ldk-querypanel',
                 queryConfig: {
-                    title: 'Training / Requirement Summary',
+                    title: 'Training / Requirement SummaryX',
                     schemaName: this.schemaName,
                     queryName: 'ComplianceProcedureRecentTests',  //exclude employee training exemptions
                     filterArray: filterArray,
