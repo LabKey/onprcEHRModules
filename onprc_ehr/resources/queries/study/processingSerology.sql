@@ -331,8 +331,8 @@ LEFT JOIN (
     SELECT
         p.id,
         max(p.date) as lastDate
-    FROM study.flags p
-    WHERE p.flag.category ='Notes Pertaining to DAR' And p.flag.value = 'Assignment pool'
+    FROM study.Notes p
+    WHERE p.category ='Notes Pertaining to DAR' And p.value = 'Assignment pool'
     And p.enddate is null
     GROUP BY p.id
 
