@@ -50,19 +50,21 @@ SELECT
   -----CBC
   CASE
 
-      WHEN  (t.isCBCRequired4 = true AND t.isCBCCurrent4 = false )  THEN 1   ---greater than 165 days since last tested
+      WHEN  (t.isCBCRequired2 = true AND t.isCBCCurrent2 = false )  THEN 1   ---greater than 165 days since last tested
       WHEN  (t.isCBCRequired5 = true AND t.isCBCCurrent5 = false )  THEN 1
-      WHEN  (t.isCBCRequired2 = true AND t.isCBCCurrent2 = false )  THEN 1
       WHEN  (t.isCBCRequired1 = true AND t.isCBCCurrent1 = false )  THEN 1
+      WHEN  (t.isCBCRequired3 = true AND t.isCBCCurrent3 = false )  THEN 1
+      WHEN  (t.isCBCRequired4 = true AND t.isCBCCurrent4 = false )  THEN 1
       ELSE 0
       END as CBCbloodVol,
 
 
   -----Comprehensive Chemistry
   CASE
-      WHEN  (t.isCChemRequired2 = true AND t.isCChemCurrent2 = false )  THEN 2  ----> more  lab 340 days and age > 180 days
-      WHEN  (t.isCChemRequired4 = true AND t.isCChemCurrent4 = false )  THEN 2  ----> more lab 180 days and age > 180 days
-      WHEN  (t.isCChemRequired1 = true AND t.isCChemCurrent1 = false )  THEN 2  ----> more lab 165 days and age > 20 days
+      WHEN  (t.isCChemRequired2 = true AND t.isCChemCurrent2 = false )  THEN 2
+      WHEN  (t.isCChemRequired4 = true AND t.isCChemCurrent4 = false )  THEN 2
+      WHEN  (t.isCChemRequired1 = true AND t.isCChemCurrent1 = false )  THEN 2
+      WHEN  (t.isCChemRequired3 = true AND t.isCChemCurrent3 = false )  THEN 2
       ELSE 0
       END as CChembloodVol,
 
@@ -117,15 +119,15 @@ SELECT
 
   ------ All CBC Sections
 
-  cbc.lastDate as lastCBC1,
-  timestampdiff('SQL_TSI_DAY', cbc.lastDate, now()) as daysSinceCBC1,
-  CASE
+    cbc.lastDate as lastCBC1,
+    timestampdiff('SQL_TSI_DAY', cbc.lastDate, now()) as daysSinceCBC1,
+   CASE
       WHEN ( (timestampdiff('SQL_TSI_DAY', cbc.lastDate, now()) > 165 )AND d.Id.curLocation.area in ('Corral', 'Shelters', 'PENS' ) ) THEN false
       ELSE true
       END as isCBCCurrent1,
 
   CASE
-      WHEN (d.Id.age.ageInDays > 12 )  THEN true
+      WHEN (d.Id.age.ageInDays > 20 )  THEN true
       ELSE false
       END as isCBCRequired1,
 
@@ -140,6 +142,18 @@ SELECT
       WHEN (d.Id.age.ageInDays > 180 )  THEN true
       ELSE false
       END as isCBCRequired2,
+
+    cbc.lastDate as lastCBC3,
+    timestampdiff('SQL_TSI_DAY', cbc.lastDate, now()) as daysSinceCBC3,
+   CASE
+      WHEN ( (timestampdiff('SQL_TSI_DAY', cbc.lastDate, now()) > 340) AND d.Id.curLocation.area in ('Corral', 'Shelters', 'PENS' )  ) THEN false
+      ELSE true
+      END as isCBCCurrent3,
+
+   CASE
+      WHEN (d.Id.age.ageInDays > 12 )  THEN true
+      ELSE false
+      END as isCBCRequired3,
 
 
   cbc.lastDate as lastCBC4,
@@ -180,7 +194,7 @@ SELECT
       END as isCChemCurrent1,
 
   CASE
-      WHEN (d.Id.age.ageInDays >= 18 )  THEN true
+      WHEN (d.Id.age.ageInDays > 20 )  THEN true
       ELSE false
       END as isCChemRequired1,
 
@@ -197,6 +211,17 @@ SELECT
       ELSE false
       END as isCChemRequired2,
 
+    cchem.lastDate as lastCChem3,
+        timestampdiff('SQL_TSI_DAY', cchem.lastDate, now()) as daysSinceCChem3,
+  CASE
+      WHEN (  (timestampdiff('SQL_TSI_DAY', cchem.lastDate, now()) > 180)  AND d.Id.curLocation.area in ('Corral', 'Shelters', 'PENS' )  ) THEN false
+      ELSE true
+      END as isCChemCurrent3,
+
+  CASE
+      WHEN (d.Id.age.ageInDays >= 18 )  THEN true
+      ELSE false
+      END as isCChemRequired3,
 
   cchem.lastDate as lastCChem4,
   timestampdiff('SQL_TSI_DAY', cchem.lastDate, now()) as daysSinceCChem4,
