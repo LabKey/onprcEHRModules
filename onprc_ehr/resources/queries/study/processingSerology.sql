@@ -50,10 +50,10 @@ SELECT
   -----CBC
   CASE
 
-      WHEN  (t.isCBCRequired1 = true AND t.isCBCCurrent1 = false )  THEN 1   ---greater than 165 days since last tested
-      WHEN  (t.isCBCRequired2 = true AND t.isCBCCurrent2 = false )  THEN 1
-      WHEN  (t.isCBCRequired4 = true AND t.isCBCCurrent4 = false )  THEN 1
+      WHEN  (t.isCBCRequired4 = true AND t.isCBCCurrent4 = false )  THEN 1   ---greater than 165 days since last tested
       WHEN  (t.isCBCRequired5 = true AND t.isCBCCurrent5 = false )  THEN 1
+      WHEN  (t.isCBCRequired2 = true AND t.isCBCCurrent2 = false )  THEN 1
+      WHEN  (t.isCBCRequired1 = true AND t.isCBCCurrent1 = false )  THEN 1
       ELSE 0
       END as CBCbloodVol,
 
