@@ -321,7 +321,7 @@ LEFT JOIN (
         n.id,
         max(n.date) as lastDate
     FROM study.flags n
-    WHERE n.category ='Behavior Flag' And n.value = 'Socially important'
+    WHERE n.flag.category ='Behavior Flag' And n.flag.value = 'Socially important'
     And n.enddate is null
     GROUP BY n.id
 
