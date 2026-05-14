@@ -132,7 +132,7 @@ SELECT
     cbc.lastDate as lastCBC2,
     timestampdiff('SQL_TSI_DAY', cbc.lastDate, now()) as daysSinceCBC2,
    CASE
-      WHEN ( (timestampdiff('SQL_TSI_DAY', cbc.lastDate, now()) > 340) AND d.Id.curLocation.area in ('Corrals', 'Shelters', 'PENS' ) AND (flg.Id is not null) ) THEN false
+      WHEN  ( (  (timestampdiff('SQL_TSI_DAY', cbc.lastDate, now()) > 340) ) OR cbc.lastDate is null ) AND d.Id.curLocation.area in ('Corrals', 'Shelters', 'PENS' ) AND (flg.Id is not null) ) THEN false
       ELSE true
       END as isCBCCurrent2,
 
@@ -141,20 +141,8 @@ SELECT
       ELSE false
       END as isCBCRequired2,
 
---     cbc.lastDate as lastCBC3,
---     timestampdiff('SQL_TSI_DAY', cbc.lastDate, now()) as daysSinceCBC3,
---    CASE
---       WHEN ( (timestampdiff('SQL_TSI_DAY', cbc.lastDate, now()) > 340) AND d.Id.curLocation.area in ('Corrals', 'Shelters', 'PENS' )  ) THEN false
---       ELSE true
---       END as isCBCCurrent3,
---
---    CASE
---       WHEN (d.Id.age.ageInDays > 12 and d.Id.age.ageInDays < 20 )  THEN true
---       ELSE false
---       END as isCBCRequired3,
 
-
-    cbc.lastDate as lastCBC4,
+-    cbc.lastDate as lastCBC4,
     timestampdiff('SQL_TSI_DAY', cbc.lastDate, now()) as daysSinceCBC4,
    CASE
       WHEN ( cbc.lastDate is null AND d.Id.curLocation.area in ('Corrals', 'Shelters', 'PENS' )  ) THEN false
@@ -170,7 +158,7 @@ SELECT
     cbc.lastDate as lastCBC5,
     timestampdiff('SQL_TSI_DAY', cbc.lastDate, now()) as daysSinceCBC5,
    CASE
-      WHEN ((timestampdiff('SQL_TSI_DAY', cbc.lastDate, now()) > 180)  AND (nts.Id is not null) )  THEN false
+      WHEN ( ( (timestampdiff('SQL_TSI_DAY', cbc.lastDate, now()) > 180) OR cbc.lastDate is null )  AND (nts.Id is not null) )  THEN false
       ELSE true
       END as isCBCCurrent5,
 
@@ -209,22 +197,11 @@ SELECT
       ELSE false
       END as isCChemRequired2,
 
---     cchem.lastDate as lastCChem3,
---         timestampdiff('SQL_TSI_DAY', cchem.lastDate, now()) as daysSinceCChem3,
---   CASE
---       WHEN (  (timestampdiff('SQL_TSI_DAY', cchem.lastDate, now()) > 180)  AND d.Id.curLocation.area in ('Corrals', 'Shelters', 'PENS' )  ) THEN false
---       ELSE true
---       END as isCChemCurrent3,
 --
---   CASE
---       WHEN (d.Id.age.ageInDays >= 18 AND d.Id.age.ageInDays < 20 )  THEN true
---       ELSE false
---       END as isCChemRequired3,
-
     cchem.lastDate as lastCChem4,
         timestampdiff('SQL_TSI_DAY', cchem.lastDate, now()) as daysSinceCChem4,
   CASE
-      WHEN ( ( (timestampdiff('SQL_TSI_DAY', cchem.lastDate, now()) > 180 ))  AND (nts.Id is not null )  ) THEN false
+      WHEN ( ( (timestampdiff('SQL_TSI_DAY', cchem.lastDate, now()) > 180 ) OR cchem.lastdate is null )  AND (nts.Id is not null )  ) THEN false
       ELSE true
       END as isCChemCurrent4,
 
@@ -240,7 +217,7 @@ SELECT
     bchem.lastDate as lastBChem,
         timestampdiff('SQL_TSI_DAY', bchem.lastDate, now()) as daysSinceBChem,
   CASE
-      WHEN ( ( (timestampdiff('SQL_TSI_DAY', bchem.lastDate, now()) > 340 ) OR bchem.lastDAte is null ) AND (d.Id.curLocation.area in ('Corrals', 'Shelters', 'PENS' ) )  ) THEN false
+      WHEN ( ( (timestampdiff('SQL_TSI_DAY', bchem.lastDate, now()) > 340 ) OR bchem.lastDate is null ) AND (d.Id.curLocation.area in ('Corrals', 'Shelters', 'PENS' ) )  ) THEN false
       ELSE true
       END as isBChemCurrent,
 
