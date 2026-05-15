@@ -1,0 +1,25 @@
+<customView xmlns="http://labkey.org/data/xml/queryCustomView" label="All">
+    <columns>
+        <column name="email"/>
+        <column name="employeeid"/>
+        <column name="lastname"/>
+        <column name="firstname"/>
+        <column name="host"/>
+        <column name="unit"/>
+        <column name="category"/>
+        <column name="requirementname"/>
+        <column name="trackingflag"/>
+        <column name="times_completed"/>
+        <column name="expired_period"/>
+        <column name="new_expired_period"/>
+        <column name="mostrecentcompleted_date"/>
+        <column name="comment"/>
+        <column name="months_until_renewal"/>
+        <column name="snooze_date"/>
+    </columns>
+    <sorts>
+        <sort column="lastname" descending="false"/>
+        <sort column="firstName" descending="false"/>
+        <sort column="requirementname" descending="false"/>
+    </sorts>
+</customView>
