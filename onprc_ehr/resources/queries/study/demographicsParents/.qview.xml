@@ -5,9 +5,13 @@
         <column name="damType"/>
         <column name="sire"/>
         <column name="sireType"/>
+        <column name="geneticdam"/>
+        <column name="geneticTye"/>
         <column name="fostermom"/>
-        <column name="surrogateMom"/>
         <column name="fosterType"/>
+        <column name="surrogateMom"/>
+        <column name="surrogateType"/>
+        <column name="birthdam"/>
         <column name="numParents"/>
     </columns>
     <sorts>
