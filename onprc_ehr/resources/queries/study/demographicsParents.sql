@@ -30,7 +30,6 @@ SELECT
     ELSE null
   END as sireType,
   p2.parent as geneticdam,
-  p2.method as genetictype,
   p3.parent as fostermom,
   p4.parent as surrogatedam,
   b.dam as birthdam,
