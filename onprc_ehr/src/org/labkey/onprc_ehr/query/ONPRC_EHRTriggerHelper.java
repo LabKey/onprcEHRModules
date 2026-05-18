@@ -2021,6 +2021,33 @@ public class ONPRC_EHRTriggerHelper
         return "Surgery".equals(category);
     }
 
+    //Added by Kollil
+    //Date: Apr 2026
+    public Date getProjectEndDate(Object projectId)
+    {
+        if (projectId == null)
+            return null;
+
+        int pid;
+        if (projectId instanceof Number)
+            pid = ((Number) projectId).intValue();
+        else
+            pid = Integer.parseInt(projectId.toString());
+
+        UserSchema ehrSchema = QueryService.get().getUserSchema(_user, _container, "ehr");
+        if (ehrSchema == null)
+            return null;
+
+        TableInfo ti = ehrSchema.getTable("project");
+        if (ti == null)
+            return null;
+
+        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("project"), pid);
+        TableSelector ts = new TableSelector(ti, Collections.singleton("enddate"), filter, null);
+
+        return ts.getObject(Date.class);
+    }
+
     public String getSpeciesForDam(String dam)
     {
         return new TableSelector(getTableInfo("study", "demographics"), PageFlowUtil.set("species"), new SimpleFilter(FieldKey.fromString("Id"), dam), null).getObject(String.class);
