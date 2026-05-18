@@ -16,11 +16,12 @@
 
 SELECT
   d.id,
-  p2.parent as geneticdam,
+  coalesce(p2.parent, b.dam) as dam,
   CASE
     WHEN p2.parent IS NOT NULL THEN p2.method
-      ELSE null
-  END as geneticdamType,
+    WHEN b.dam IS NOT NULL THEN 'Observed'
+    ELSE null
+  END as damType,
 
   coalesce(p1.parent, b.sire) as sire,
   CASE
