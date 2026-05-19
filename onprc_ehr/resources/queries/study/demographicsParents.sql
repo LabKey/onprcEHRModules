@@ -16,7 +16,7 @@
 
 SELECT
   d.id,
-  coalesce(p2.parent, b.dam) as dam,
+  coalesce(p2.parent, b.dam, p5.parent) as dam,
   CASE
     WHEN p2.parent IS NOT NULL THEN p2.method
     WHEN b.dam IS NOT NULL THEN 'Observed'
