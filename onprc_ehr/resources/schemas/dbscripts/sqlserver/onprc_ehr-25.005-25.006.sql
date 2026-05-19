@@ -38,7 +38,7 @@ CREATE TABLE [onprc_ehr].[Temp_Clinical_Observations](
    performedby     varchar(500) NULL,
    taskid          varchar(4000) NULL,
    qcstate         integer NULL,
-   modifiedby      integer NULL,
+   modifiedby      integer NULL
 
 )
 GO
@@ -278,9 +278,6 @@ BEGIN
                     If @@Error <> 0
                         GoTo Err_Proc
 
-
-
-                END
 
 
             ----- Proceed and fetch the next record
