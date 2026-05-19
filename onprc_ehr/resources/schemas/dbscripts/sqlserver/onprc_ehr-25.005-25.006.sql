@@ -45,7 +45,7 @@ GO
 
 CREATE TABLE [onprc_ehr].[Temp_Clinical_Observations_Master](
      [rowid] [int] IDENTITY(100,1) NOT NULL,
-     rowid           integer NULL,
+     searchid        integer NULL,
      Id              varchar(200) NULL,
      date            smalldatetime NULL,
      category        varchar(500) NULL,
