@@ -53,7 +53,7 @@ LEFT JOIN (
 LEFT JOIN (
   select p2.id, min(p2.method) as method, max(p2.parent) as parent, max(p2.modified) as modified
   FROM study.parentage p2
-  WHERE p2.method in ('Genetic','Provisional Genetic', 'Observed') AND p2.relationship = 'Dam' AND p2.enddate IS NULL
+  WHERE p2.method in ('Genetic','Provisional Genetic') AND p2.relationship = 'Dam' AND p2.enddate IS NULL
   GROUP BY p2.Id
 ) p2 ON (d.Id = p2.id)
 
