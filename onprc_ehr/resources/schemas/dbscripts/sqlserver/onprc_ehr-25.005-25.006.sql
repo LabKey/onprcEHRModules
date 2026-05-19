@@ -5,7 +5,7 @@ EXEC core.fn_dropifexists 'Temp_Clinical_Observations', 'onprc_ehr', 'TABLE', NU
 GO
 EXEC core.fn_dropifexists 'Temp_Clinical_Observations_Master', 'onprc_ehr', 'TABLE', NULL;
 
-EXEC core.fn_dropifexists 'onprc_ehr.Observation_EHRTasks', 'onprc_ehr', 'TABLE', NULL;
+EXEC core.fn_dropifexists 'Observation_EHRTasks', 'onprc_ehr', 'TABLE', NULL;
 GO
 
 
@@ -61,7 +61,7 @@ CREATE TABLE [onprc_ehr].[Temp_Clinical_Observations_Master](
 )
 GO
 
-CREATE TABLE [onprc_ehr].[onprc_ehr.Observation_EHRTasks](
+CREATE TABLE [onprc_ehr].[Observation_EHRTasks](
     [rowid] [int] IDENTITY(100,1) NOT NULL,
     taskid          varchar(4000) NULL,
     description     varchar(500)NULL,

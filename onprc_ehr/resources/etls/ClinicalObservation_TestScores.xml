@@ -28,7 +28,7 @@
 
         <transform id="step2a">
 
-            <description>Transfer to Study Clinical Observations</description>
+            <description>Transfer temp data to Study Clinical Observations</description>
 
             <source schemaName="onprc_ehr" queryName="Temp_Clinical_Observations"/>
 
