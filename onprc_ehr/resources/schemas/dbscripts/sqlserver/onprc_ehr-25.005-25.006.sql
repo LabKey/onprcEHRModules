@@ -94,7 +94,7 @@ GO
 **
 */
 
-ALTER Procedure onprc_ehr.p_Create_TB_Observationrecords
+CREATE Procedure onprc_ehr.p_Create_TB_Observationrecords
 
 
 
