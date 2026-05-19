@@ -32,14 +32,15 @@ SELECT
   p2.parent as geneticdam,
   p2.method as geneticdamtype,
   p3.parent as fostermom,
+  p3.method as fostertype,
   p4.parent as surrogatedam,
-  b.dam as birthdam,
+  coalesce(b.dam,p5.parent) as observeddam,
 
   (CASE WHEN p3.parent IS NOT NULL THEN 1 ELSE 0 END +
   CASE WHEN p4.parent IS NOT NULL THEN 1 ELSE 0 END +
   CASE WHEN coalesce(p2.parent, b.dam) IS NOT NULL THEN 1 ELSE 0 END +
   CASE WHEN coalesce(p1.parent, b.sire) IS NOT NULL THEN 1 ELSE 0 END) as numParents,
-  greatest(d.modified, p1.modified, p2.modified, p3.modified, p4.modified, b.modified) as modified
+  greatest(d.modified, p1.modified, p2.modified, p3.modified, p4.modified,p5.modified, b.modified) as modified
 FROM  study.demographics d
 
 LEFT JOIN (
@@ -68,6 +69,13 @@ LEFT JOIN (
     WHERE p4.relationship = 'Surrogate Dam' AND p4.enddate IS NULL
     GROUP BY p4.Id
 ) p4 ON (d.Id = p4.id)
+
+LEFT JOIN (
+    select p5.id, min(p5.method) as method, max(p5.parent) as parent, max(p5.modified) as modified
+    FROM study.parentage p5
+    WHERE p5.relationship = 'Observed' AND p5.enddate IS NULL
+    GROUP BY p5.Id
+) p5 ON (d.Id = p5.id)
 
 LEFT JOIN study.birth b ON (b.id = d.id)
 

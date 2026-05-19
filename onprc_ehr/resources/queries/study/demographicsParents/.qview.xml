@@ -11,7 +11,7 @@
         <column name="fosterType"/>
         <column name="surrogateMom"/>
         <column name="surrogateType"/>
-        <column name="birthdam"/>
+        <column name="observeddam"/>
         <column name="numParents"/>
     </columns>
     <sorts>
