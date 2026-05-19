@@ -6,7 +6,7 @@
         <column name="sire"/>
         <column name="sireType"/>
         <column name="geneticdam"/>
-        <column name="geneticTye"/>
+        <column name="geneticdamtype"/>
         <column name="fostermom"/>
         <column name="fosterType"/>
         <column name="surrogateMom"/>

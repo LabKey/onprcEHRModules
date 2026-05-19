@@ -48,12 +48,15 @@
                         </fk>
                     </column>
                     <column columnName="geneticdam">
-                        <columnTitle>Genetic Dam Type</columnTitle>
+                        <columnTitle>Genetic Dam</columnTitle>
                         <fk>
                             <fkDbSchema>study</fkDbSchema>
                             <fkTable>animal</fkTable>
                             <fkColumnName>id</fkColumnName>
                         </fk>
+                    </column>
+                    <column columnName="geneticdamtype">
+                        <columnTitle>Genetic Dam Type</columnTitle>
                     </column>
                     <column columnName="numParents">
                         <columnTitle>Number of Parents Known</columnTitle>
