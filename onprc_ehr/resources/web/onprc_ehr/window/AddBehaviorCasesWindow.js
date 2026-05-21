@@ -90,11 +90,20 @@ Ext4.define('ONPRC_EHR.window.AddBehaviorCasesWindow', {
             Ext4.Array.forEach(this.obsResults.rows, function(sr){
                 //reset variable
                 var newobservation = '';
+                var newAlopeciaRegrowth = '';
                 var newremark = '';
+                var  caseidtemp = null;
                 var row = new LDK.SelectRowsRow(sr);
-                newobservation = row.getValue('category');
-                newremark = row.getValue('remark');
-
+                if (caseidtemp != row.getValue('caseid') ) {
+                    if (row.getValue('Category')== 'Alopecia Score') {
+                        newobservation = row.getValue('category');
+                    }
+                    if (row.getValue('Category')== 'Alopecia Regrowth') {
+                        newAlopeciaRegrowth = row.getValue('category');
+                    }
+                    newremark = row.getValue('remark');
+                    caseidTemp = row.getValue('caseid');
+                }
                 //note: this has been changed to ensure 1 row per case
                 var key = row.getValue('caseid');
                 if (!previousObsMap[key])
@@ -112,12 +121,12 @@ Ext4.define('ONPRC_EHR.window.AddBehaviorCasesWindow', {
                     //observation: row.getValue('observation'),
                     remark: row.getValue('remark')
                 });
-                if (newobservation == "Alopecia Score" && (newremark == null || newremark == "")) {
+                if (newobservation == "Alopecia Score" && newAlopeciaRegrowth == "Alopecia Reqrowth" && key != caseidTemp && (newremark == null || newremark == "")) {
                     previousObsMap[key].push({
                         Id: row.getValue('Id'),
                         date: this.recordData.date,
                         performedby: this.recordData.performedby,
-                        caseid: row.getValue('caseid'),
+                        caseid: caseidTemp,
                         category: 'Alopecia Regrowth',
                         area: row.getValue('area'),
                         allProblemCategories:row.getValue('allProblemCategories')
