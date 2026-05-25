@@ -58,6 +58,9 @@ public class BehaviorExamFormType extends TaskForm
         {
             s.addConfigSource("BehaviorDefaults");
 
+            if (s.getName().equals("Clinical Remarks"))
+                s.addConfigSource("CaseMgmt");
+
             if (!s.getName().equals("Clinical Remarks"))
                 s.addConfigSource("ClinicalReportChild");
 
@@ -78,6 +81,7 @@ public class BehaviorExamFormType extends TaskForm
         addClientDependency(ClientDependency.supplierFromPath("ehr/model/sources/ClinicalReport.js"));
         addClientDependency(ClientDependency.supplierFromPath("ehr/panel/ExamDataEntryPanel.js"));
         addClientDependency(ClientDependency.supplierFromPath("ehr/model/sources/ClinicalReportChild.js"));
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/model/sources/CaseMgmt.js"));
         setJavascriptClass("EHR.panel.ExamDataEntryPanel");
 
         //        //Added: 12-18-2017  R.Blasa

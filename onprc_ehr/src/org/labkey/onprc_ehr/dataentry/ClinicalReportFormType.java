@@ -76,6 +76,9 @@ public class ClinicalReportFormType extends TaskForm
 //            s.addConfigSource("ClinicalReport");
             s.addConfigSource("ClinicalReport_ONPRC");
 
+            if (s.getName().equals("Clinical Remarks"))
+                s.addConfigSource("CaseMgmt");
+
             if (!s.getName().equals("Clinical Remarks"))
                 s.addConfigSource("ClinicalReportChild");
 
@@ -95,6 +98,7 @@ public class ClinicalReportFormType extends TaskForm
 
         //  Modified: 10-5-2017  R.Blasa  reinstalled 2-12-21
         addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/model/sources/ClinicalReport.js"));
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/model/sources/CaseMgmt.js"));
 
 
         //  Added: 7-22-2025  R.Blasa
