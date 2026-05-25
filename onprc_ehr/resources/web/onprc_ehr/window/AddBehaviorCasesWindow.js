@@ -79,7 +79,7 @@ Ext4.define('ONPRC_EHR.window.AddBehaviorCasesWindow', {
         var distinctCaseIds = [];
         if (caseRecords && caseRecords.length){
             Ext4.Array.forEach(caseRecords, function(cr){
-                if (distinctCaseIds.indexOf(cr.get('caseid')) == -1){
+                if (distinctCaseIds.indexOf(cr.get('caseid') == -1)){
                     distinctCaseIds.push(cr.get('caseid'));
                 }
             }, this);
@@ -90,25 +90,11 @@ Ext4.define('ONPRC_EHR.window.AddBehaviorCasesWindow', {
             Ext4.Array.forEach(this.obsResults.rows, function(sr){
                 //reset variable
                 var newobservation = '';
-                var newAlopeciaRegrowth = '';
                 var newremark = '';
-                var caseidtemp = null;
-                var tempdate = null;
-                var tempPerformedby = '';
-                var temparea = '';
-                var tempProblemcategories = '';
-                var tempId = '';
                 var row = new LDK.SelectRowsRow(sr);
-                if (caseidtemp != row.getValue('caseid') && row.getValue('Category')== 'Alopecia Score' ) {
-                    newobservation = row.getValue('category');
-                    newremark = row.getValue('remark');
-                     caseidTemp = row.getValue('caseid');
-                     tempdate = this.recordData.date;
-                     tempPerformedby = this.recordData.performedby;
-                     temparea - row.getValue('area');
-                     tempProblemcategories = row.getValue('allProblemCategories');
-                     tempId = row.getValue('Id');
-                }
+                newobservation = row.getValue('category');
+                newremark = row.getValue('remark');
+
                 //note: this has been changed to ensure 1 row per case
                 var key = row.getValue('caseid');
                 if (!previousObsMap[key])
@@ -124,17 +110,18 @@ Ext4.define('ONPRC_EHR.window.AddBehaviorCasesWindow', {
                     allProblemCategories:row.getValue('allProblemCategories'),
                     remark: row.getValue('remark')
                 });
-                if (row.getValue('category') == 'Alopecia Reqrowth' && newobservation == 'Alopecia Score' && key != caseidTemp && (newremark == null || newremark == '')) {
+                if (newobservation == 'Alopecia Score' && (newremark == null || newremark == '')) {
                     previousObsMap[key].push({
-                        Id: tempId,
-                        date: tempdate,
-                        performedby: tempPerformedby,
-                        caseid: caseidTemp,
+                        Id: row.getValue('Id'),
+                        date: this.recordData.date,
+                        performedby: this.recordData.performedby,
+                        caseid: row.getValue('caseid'),
                         category: 'Alopecia Regrowth',
-                        area: temparea,
-                        allProblemCategories: tempProblemcategories
+                        area: row.getValue('area'),
+                        allProblemCategories:row.getValue('allProblemCategories')
 
                     });
+
                 }
             }, this);
         }
