@@ -1440,6 +1440,145 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
         //TODO: make sure fields turn red as expected
     }
 
+    /**
+     * Verifies the clinremarks Id field read-only + tooltip behavior wired in via the
+     * `CaseMgmt` metadata source (onprc_ehr/model/sources/CaseMgmt.js). The source is
+     * registered against both ClinicalReportFormType and BehaviorExamFormType, so this
+     * test exercises both forms through a shared helper.
+     */
+    @Test
+    public void testClinremarksIdReadOnlyOnCaseCreated() throws Exception
+    {
+        goToEHRFolder();
+
+        // Verify case open and open & immediately close. Test Exams/Cases and BSU Exam forms.
+        verifyClinremarksIdLockOnCaseCreated("Exams/Cases", "Clinical", "Open Case", CaseEntryPath.MANAGE_CASES_LINK);
+        verifyClinremarksIdLockOnCaseCreated("BSU Exam", "Behavior", "Open & Immediately Close", CaseEntryPath.MANAGE_CASES_LINK);
+
+        // Top and bottom buttons
+        verifyClinremarksIdLockOnCaseCreated("Exams/Cases", "Clinical", "Open Case", CaseEntryPath.OPEN_MANAGE_TOP);
+        verifyClinremarksIdLockOnCaseCreated("BSU Exam", "Behavior", "Open Case", CaseEntryPath.OPEN_MANAGE_BOTTOM);
+    }
+
+    /** How the test reaches the "create new case" dialog from the data entry form. */
+    private enum CaseEntryPath
+    {
+        /** [Manage Cases] link → "Open Case" split button → "Open &lt;category&gt; Case" menu item. */
+        MANAGE_CASES_LINK,
+        /** "Open/Manage &lt;category&gt; Case" button in the Instructions panel at the top of the form. */
+        OPEN_MANAGE_TOP,
+        /** "Open/Manage &lt;category&gt; Case" button in the form's docked footer toolbar. */
+        OPEN_MANAGE_BOTTOM
+    }
+
+    private void verifyClinremarksIdLockOnCaseCreated(String formLinkLabel, String caseCategory, String openButtonLabel, CaseEntryPath entryPath)
+    {
+        final String expectedTooltip = "Refresh the form to enter data for a different animal.";
+
+        log("Verifying clinremarks Id read-only on casecreated for form: " + formLinkLabel + " via '" + openButtonLabel + "' (entry: " + entryPath + ")");
+        _helper.goToTaskForm(formLinkLabel, false);
+        _ext4Helper.clickExt4Tab("SOAP");
+
+        Ext4FieldRef idField = _helper.getExt4FieldForFormSection("SOAP", "Id");
+        Assert.assertNotNull("Could not locate Id field in SOAP section of form: " + formLinkLabel, idField);
+
+        idField.setValue(SUBJECTS[0]);
+
+        // Wait for the AnimalDetailsPanel to display the Id
+        Ext4FieldRef detailsId = _ext4Helper.queryOne("displayfield[name=animalId]", Ext4FieldRef.class);
+        Assert.assertNotNull("AnimalDetailsPanel not rendered (form: " + formLinkLabel + ")", detailsId);
+        waitFor(() -> SUBJECTS[0].equals(String.valueOf(detailsId.getValue())),
+                "AnimalDetailsPanel did not display Id " + SUBJECTS[0] + " (form: " + formLinkLabel + ")",
+                WAIT_FOR_JAVASCRIPT);
+
+        Assert.assertNotEquals("Id field should be editable before any case is created (form: " + formLinkLabel + ")",
+                Boolean.TRUE, idField.getEval("readOnly"));
+        Object preQtip = idField.getEval("getEl().dom.getAttribute('data-qtip')");
+        assertEquals("Id field should have no tooltip before any case is created (form: " + formLinkLabel + ")",
+                "", preQtip == null ? "" : preQtip.toString());
+
+        // Open a real case from the data entry form so ManageCasesPanel fires the real casecreated event
+        createCaseFromForm(SUBJECTS[0], caseCategory, openButtonLabel, entryPath);
+
+        waitFor(() -> Boolean.TRUE.equals(idField.getEval("readOnly")),
+                "Id field did not become read-only after case was opened (form: " + formLinkLabel + ")",
+                WAIT_FOR_JAVASCRIPT);
+        Object postQtip = idField.getEval("getEl().dom.getAttribute('data-qtip')");
+        assertEquals("Id field should carry the lock tooltip after case is opened (form: " + formLinkLabel + ")",
+                expectedTooltip, postQtip == null ? "" : postQtip.toString());
+
+        _helper.discardForm();
+    }
+
+    /**
+     * Opens a case for {@code animalId} from the data entry form via the given {@code entryPath}, then
+     * closes the resulting Manage Cases window. {@code openButtonLabel} is one of the OpenCaseWindow submit
+     * buttons: "Open Case" (just open) or "Open & Immediately Close" (open and immediately close permanently).
+     */
+    private void createCaseFromForm(String animalId, String caseCategory, String openButtonLabel, CaseEntryPath entryPath)
+    {
+        Locator.XPathLocator manageCasesWindow = Ext4Helper.Locators.window("Manage Cases: " + animalId);
+        triggerCreateCaseDialog(manageCasesWindow, caseCategory, entryPath);
+
+        // ManageCasesPanel asks "Open New" vs "Edit Existing" first if an active case of this category
+        // already exists for the animal (ManageCasesPanel.js: showCreateWindow). Dismiss with "Open New".
+        Locator.XPathLocator existingCaseDialog = Ext4Helper.Locators.window("Open Case");
+        if (Boolean.TRUE.equals(waitFor(() -> isElementPresent(existingCaseDialog), 2000)))
+        {
+            waitAndClick(existingCaseDialog.append(Ext4Helper.Locators.ext4ButtonEnabled("Open New")));
+            waitForElementToDisappear(existingCaseDialog);
+        }
+
+        Locator.XPathLocator openCaseWindow = Ext4Helper.Locators.window("Open Case: " + animalId);
+        waitForElement(openCaseWindow);
+
+        if ("Clinical".equals(caseCategory))
+        {
+            Ext4ComboRef vetField = Ext4ComboRef.getForLabel(this, "Assigned Vet");
+            vetField.waitForStoreLoad();
+            // Pick whichever vet the store has rather than hardcoding a display name; the test only needs the field populated
+            vetField.eval("setValue(arguments[0])", vetField.getFnEval("return this.store.getAt(0).get(this.valueField)"));
+            Ext4FieldRef.getForLabel(this, "Problem").setValue("Behavioral");
+        }
+        else if ("Behavior".equals(caseCategory))
+        {
+            Ext4FieldRef.getForLabel(this, "Subcategory").setValue("Alopecia");
+        }
+
+        waitAndClick(openCaseWindow.append(Ext4Helper.Locators.ext4ButtonEnabled(openButtonLabel)));
+        if ("Open & Immediately Close".equals(openButtonLabel))
+        {
+            waitAndClick(Ext4Helper.Locators.menuItem("Close Permanently").notHidden());
+        }
+        waitForElementToDisappear(openCaseWindow);
+
+        waitAndClick(manageCasesWindow.append(Ext4Helper.Locators.ext4ButtonEnabled("Close")));
+        waitForElementToDisappear(manageCasesWindow);
+    }
+
+    private void triggerCreateCaseDialog(Locator.XPathLocator manageCasesWindow, String caseCategory, CaseEntryPath entryPath)
+    {
+        switch (entryPath)
+        {
+            case MANAGE_CASES_LINK -> {
+                waitAndClick(Locator.linkWithText("[Manage Cases]"));
+                waitForElement(manageCasesWindow);
+                waitAndClick(manageCasesWindow.append(Ext4Helper.Locators.ext4ButtonEnabled("Open Case")));
+                waitAndClick(Ext4Helper.Locators.menuItem("Open " + caseCategory + " Case").notHidden());
+            }
+            case OPEN_MANAGE_TOP -> {
+                Locator.XPathLocator instructionsPanel = Locator.tagWithClass("div", "x4-panel").withChild(
+                        Locator.tagWithClass("div", "x4-panel-header").withDescendant(
+                                Locator.tagWithClass("span", "x4-panel-header-text").withText("Instructions")));
+                waitAndClick(instructionsPanel.append(Ext4Helper.Locators.ext4ButtonEnabled("Open/Manage " + caseCategory + " Case")));
+            }
+            case OPEN_MANAGE_BOTTOM -> {
+                Locator.XPathLocator footerToolbar = Locator.tagWithClass("div", "x4-toolbar-footer");
+                waitAndClick(footerToolbar.append(Ext4Helper.Locators.ext4ButtonEnabled("Open/Manage " + caseCategory + " Case")));
+            }
+        }
+    }
+
     @Override
     protected String getAnimalHistoryPath()
     {
