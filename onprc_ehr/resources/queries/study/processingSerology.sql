@@ -333,7 +333,7 @@ LEFT JOIN (
         p.id,
         max(p.date) as lastDate
     FROM study.flags p
-    WHERE n.flag.category ='Assign Alias' And n.flag.value = 'Assignment pool'
+    WHERE p.flag.category ='Assign Alias' And p.flag.value = 'Assignment pool'
     And p.enddate is null
     GROUP BY p.id
 
