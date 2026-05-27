@@ -270,7 +270,7 @@ LEFT JOIN (
         k.id,
         max(k.date) as lastDate
     FROM study.blood k
-    WHERE (k.additionalservices = '%ESPF Surveillance - Semiannual%')
+    WHERE (k.additionalservices like '%ESPF Surveillance - Semiannual%')
     GROUP BY k.id
 
 ) espf ON (espf.id = d.id)
