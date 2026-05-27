@@ -185,7 +185,7 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                 var rooms = Ext4.Object.getKeys(roomMap).sort();
                 var dividerWidth = 3;
                 var height = 115;
-                var cageWidth = 51;   //Modified: 10-15-2020
+                var cageWidth = 78;   //Modified: 10-15-2020
                 var hasCages = false;
 
                 Ext4.each(rooms, function(room, roomIdx){
@@ -399,6 +399,12 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                                         else
                                             bgColor = '';
                                     }
+                                    if (cageType == 'Unavailable Location'){
+                                        if (!Ext4.isEmpty(cageAnimals))
+                                            bgColor = 'blue';
+                                        else
+                                            bgColor = '';
+                                    }
                                     else if (status == 'Unavailable')
                                     {
                                         bgColor = 'yellow';
@@ -453,8 +459,10 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
 
                                         //Modified: 4-8-2020 R.Blasa  Contains symbol representing divider types
                                      items: [{
+
                                             html: row.get('cage_type') == 'No Cage' ? 'No Cage' : ('<span style="font-size: 11px;"><a>' + ri + colIdx + '</a>' + (cageType.sqft ? ' (' + (cageType.sqft / cageType.cageslots)+ suffix + ')' : '') +  (dividerInfo.displaychar ? ' [' + (dividerInfo.displaychar) + ']' : '') + '</span>'),
-                                        bodyStyle: {
+                                            html: row.get('cage_type') == 'Unavailable Location' ? 'Unavailable Location' : ('<span style="font-size: 11px;"><a>' + ri + colIdx + '</a>' + (cageType.sqft ? ' (' + (cageType.sqft / cageType.cageslots)+ suffix + ')' : '') +  (dividerInfo.displaychar ? ' [' + (dividerInfo.displaychar) + ']' : '') + '</span>'),
+                                         bodyStyle: {
                                             'background-color': 'transparent'
                                         },
                                         listeners: {
