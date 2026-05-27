@@ -128,7 +128,7 @@ SELECT
       END as isCBCCurrent1,
 
   CASE
-      WHEN (d.Id.age.ageInDays > 20 )  THEN true
+      WHEN (d.id.age.AgeInYears > 20 )  THEN true
       ELSE false
       END as isCBCRequired1,
 
@@ -152,7 +152,7 @@ SELECT
       END as isCBCCurrent3,
 
    CASE
-      WHEN (d.Id.age.ageInDays > 12 )  THEN true
+      WHEN (d.id.age.AgeInYears > 12 )  THEN true
       ELSE false
       END as isCBCRequired3,
 
@@ -165,7 +165,7 @@ SELECT
       END as isCBCCurrent4,
 
   CASE
-      WHEN (d.Id.age.ageInDays > 6 )  THEN true
+      WHEN (d.id.age.AgeInYears > 6 )  THEN true
       ELSE false
       END as isCBCRequired4,
 
@@ -195,7 +195,7 @@ SELECT
       END as isCChemCurrent1,
 
   CASE
-      WHEN (d.Id.age.ageInDays > 20 )  THEN true
+      WHEN (d.id.age.AgeInYears > 20 )  THEN true
       ELSE false
       END as isCChemRequired1,
 
@@ -220,7 +220,7 @@ SELECT
       END as isCChemCurrent3,
 
   CASE
-      WHEN (d.Id.age.ageInDays >= 18 )  THEN true
+      WHEN (d.id.age.AgeInYears >= 18 )  THEN true
       ELSE false
       END as isCChemRequired3,
 
@@ -248,7 +248,7 @@ SELECT
       END as isBChemCurrent,
 
   CASE
-      WHEN (d.Id.age.ageInDays >= 6 AND d.Id.age.ageInDays < 18 )  THEN true
+      WHEN (d.id.age.AgeInYears >= 6 AND d.id.age.AgeInYears < 18 )  THEN true
       ELSE false
       END as isBChemRequired
 
@@ -332,8 +332,8 @@ LEFT JOIN (
     SELECT
         p.id,
         max(p.date) as lastDate
-    FROM study.Notes p
-    WHERE p.category ='Notes Pertaining to DAR' And p.value = 'Assignment pool'
+    FROM study.flags p
+    WHERE n.flag.category ='Assign Alias' And n.flag.value = 'Assignment pool'
     And p.enddate is null
     GROUP BY p.id
 
