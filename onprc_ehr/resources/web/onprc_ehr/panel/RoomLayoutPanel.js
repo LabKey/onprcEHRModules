@@ -185,7 +185,7 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                 var rooms = Ext4.Object.getKeys(roomMap).sort();
                 var dividerWidth = 3;
                 var height = 115;
-                var cageWidth = 78;   //Modified: 10-15-2020
+                var cageWidth = 78;   //Modified: 5-27-2026
                 var hasCages = false;
 
                 Ext4.each(rooms, function(room, roomIdx){
@@ -359,6 +359,10 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                                             bgColor = 'transparent';
                                         }
                                     }
+                                    else if (cageType == 'Unavailable Location')
+                                    {
+                                        bgColor = '#f5b027';    // light brown
+                                    }
                                     else if (status == 'Unavailable')
                                     {
                                         bgColor = 'yellow';
@@ -400,11 +404,9 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                                             bgColor = '';
                                     }
                                     if (cageType == 'Unavailable Location'){
-                                        if (!Ext4.isEmpty(cageAnimals))
-                                            bgColor = 'blue';
-                                        else
-                                            bgColor = '';
+                                        bgColor = '#f5b027';   //light brown
                                     }
+
                                     else if (status == 'Unavailable')
                                     {
                                         bgColor = 'yellow';
