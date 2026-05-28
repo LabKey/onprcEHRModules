@@ -359,9 +359,9 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                                             bgColor = 'grey';
                                         }
                                     }
-                                    else if (cageType == 'Unavailable Cage')
+                                    else if (cageType == 'Unavailable Location')
                                     {
-                                        bgColor = 'transparent';
+                                        bgColor = 'white';
                                     }
                                     else if (status == 'Unavailable')
                                     {
@@ -403,8 +403,8 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                                         else
                                             bgColor = 'grey';
                                     }
-                                    if (cageType == 'Unavailable Cage'){
-                                        bgColor = 'transparent';
+                                    if (cageType == 'Unavailable Location'){
+                                        bgColor = 'white';
                                     }
 
                                     else if (status == 'Unavailable')
@@ -479,7 +479,7 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                                         }
                                     },{
 
-                                         html: row.get('cage_type') == 'Unavailable Cage' ? 'Unavailable Cage' :  '',
+                                         html: row.get('cage_type') == 'Unavailable Location' ? 'Unavailable Location' :  '',
 
                                      },{
                                         border: false,
