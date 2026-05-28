@@ -84,7 +84,7 @@ SELECT
   timestampdiff('SQL_TSI_DAY', srv.lastDate, now()) as daysSinceSRV,
   CASE
   WHEN (year(now()) = year(srv.lastDate)) THEN true
-    ELSE true
+    ELSE false
   END as isSRVCurrent,
 
   CASE
@@ -260,7 +260,7 @@ LEFT JOIN (
     s.id,
     max(s.date) as lastDate
   FROM study.blood s
-  WHERE (s.additionalservices like 'SPF Surveillance%' or s.additionalservices like  'Compromised SPF%')
+  WHERE (s.additionalservices like 'SPF Surveillance - Annual%' or s.additionalservices like  'Compromised SPF Surveillance%')
   GROUP BY s.id
 
 ) srv ON (srv.id = d.id)
