@@ -83,7 +83,7 @@ SELECT
   srv.lastDate as lastSRV,
   timestampdiff('SQL_TSI_DAY', srv.lastDate, now()) as daysSinceSRV,
   CASE
-  WHEN srv.lastDate is null THEN false
+  WHEN (year(now()) = year(pcr.lastDate)) THEN true
     ELSE true
   END as isSRVCurrent,
 
