@@ -356,12 +356,12 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                                             bgColor = 'red';
                                         else {
                                             //NOTE: this used to use no color.  i'm not sure why
-                                            bgColor = 'transparent';
+                                            bgColor = 'grey';
                                         }
                                     }
-                                    else if (cageType == 'Unavailable Location')
+                                    else if (cageType == 'Unavailable Cage')
                                     {
-                                        bgColor = '#f5b027';    // light brown
+                                        bgColor = 'transparent';
                                     }
                                     else if (status == 'Unavailable')
                                     {
@@ -401,10 +401,10 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                                         if (!Ext4.isEmpty(cageAnimals))
                                             bgColor = 'red';
                                         else
-                                            bgColor = '';
+                                            bgColor = 'grey';
                                     }
-                                    if (cageType == 'Unavailable Location'){
-                                        bgColor = '#f5b027';   //light brown
+                                    if (cageType == 'Unavailable Cage'){
+                                        bgColor = 'transparent';
                                     }
 
                                     else if (status == 'Unavailable')
@@ -461,9 +461,7 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
 
                                         //Modified: 4-8-2020 R.Blasa  Contains symbol representing divider types
                                      items: [{
-
                                             html: row.get('cage_type') == 'No Cage' ? 'No Cage' : ('<span style="font-size: 11px;"><a>' + ri + colIdx + '</a>' + (cageType.sqft ? ' (' + (cageType.sqft / cageType.cageslots)+ suffix + ')' : '') +  (dividerInfo.displaychar ? ' [' + (dividerInfo.displaychar) + ']' : '') + '</span>'),
-                                            html: row.get('cage_type') == 'Unavailable Location' ? 'Unavailable Location' : ('<span style="font-size: 11px;"><a>' + ri + colIdx + '</a>' + (cageType.sqft ? ' (' + (cageType.sqft / cageType.cageslots)+ suffix + ')' : '') +  (dividerInfo.displaychar ? ' [' + (dividerInfo.displaychar) + ']' : '') + '</span>'),
                                          bodyStyle: {
                                             'background-color': 'transparent'
                                         },
@@ -480,6 +478,10 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                                             }, [row, config], config)
                                         }
                                     },{
+
+                                         html: row.get('cage_type') == 'Unavailable Cage' ? 'Unavailable Cage' :  '',
+
+                                     },{
                                         border: false,
                                         style: 'margin-top: 10px;',
                                         bodyStyle: {
