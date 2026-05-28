@@ -83,12 +83,12 @@ SELECT
   srv.lastDate as lastSRV,
   timestampdiff('SQL_TSI_DAY', srv.lastDate, now()) as daysSinceSRV,
   CASE
-  WHEN (year(now()) = year(srv.lastDate)) THEN true
-    ELSE false
+  WHEN srv.lastDate is null THEN false
+    ELSE true
   END as isSRVCurrent,
 
   CASE
-   WHEN (d.Id.age.ageInDays > 180 )THEN true
+   WHEN (d.Id.age.ageInDays > 0 )THEN true
     ELSE false
   END as isSRVRequired,
 
@@ -107,13 +107,13 @@ SELECT
     espf.lastDate as lastESPF,
     timestampdiff('SQL_TSI_DAY', espf.lastDate, now()) as daysSinceESPF,
    CASE
-      WHEN ( (timestampdiff('SQL_TSI_DAY', espf.lastDate, now()) > 180) ) THEN false
+      WHEN ( (timestampdiff('SQL_TSI_DAY', espf.lastDate, now()) > 180) or espf.lastDate is null) THEN false
       ELSE true
       END as isESPFCurrent,
 
 
    CASE
-      WHEN (d.Id.age.ageInDays > 180 )  THEN true
+      WHEN (d.Id.age.ageInDays > 0 )  THEN true
       ELSE false
       END as isESPFRequired,
 
@@ -140,7 +140,7 @@ SELECT
       END as isCBCCurrent2,
 
   CASE
-      WHEN (d.Id.age.ageInDays > 180 )  THEN true
+      WHEN (d.Id.age.ageInDays > 0 )  THEN true
       ELSE false
       END as isCBCRequired2,
 
@@ -178,7 +178,7 @@ SELECT
       END as isCBCCurrent5,
 
   CASE
-      WHEN (d.Id.age.ageInDays > 180 )  THEN true
+      WHEN (d.Id.age.ageInDays > 0 )  THEN true
       ELSE false
       END as isCBCRequired5,
 
@@ -208,7 +208,7 @@ SELECT
       END as isCChemCurrent2,
 
   CASE
-      WHEN (d.Id.age.ageInDays > 180 )  THEN true
+      WHEN (d.Id.age.ageInDays > 0 )  THEN true
       ELSE false
       END as isCChemRequired2,
 
@@ -232,7 +232,7 @@ SELECT
       END as isCChemCurrent4,
 
   CASE
-      WHEN (d.Id.age.ageInDays > 180 )  THEN true
+      WHEN (d.Id.age.ageInDays > 0 )  THEN true
       ELSE false
       END as isCChemRequired4,
 
