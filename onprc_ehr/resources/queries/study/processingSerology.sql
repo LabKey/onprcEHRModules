@@ -243,7 +243,7 @@ SELECT
   bchem.lastDate as lastBChem,
   timestampdiff('SQL_TSI_DAY', bchem.lastDate, now()) as daysSinceBChem,
   CASE
-      WHEN ( ( (timestampdiff('SQL_TSI_DAY', bchem.lastDate, now()) > 340 ) OR bchem.lastDate is null ) AND d.Id.curLocation.area not in ('Corral', 'Shelters', 'PENS' )  ) THEN false
+      WHEN ( ( (timestampdiff('SQL_TSI_DAY', bchem.lastDate, now()) > 340 ) OR bchem.lastDate is null ) AND (flg.Id is not null) AND d.Id.curLocation.area not in ('Corral', 'Shelters', 'PENS' )  ) THEN false
       ELSE true
       END as isBChemCurrent,
 
