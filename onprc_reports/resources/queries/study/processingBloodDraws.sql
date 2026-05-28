@@ -3,11 +3,11 @@ SELECT
   CASE
       WHEN (a.Id IS NULL) THEN 'N'
       ELSE 'Y'
-      END as isU42,
+      END as isU42,  //0492-02
   CASE
       WHEN (b.Id IS NULL) THEN 'N'
       ELSE 'Y'
-      END as isU24,
+      END as isU24,   //0492-03
  Case when (a.Id IS NOT NULL)  And (s.PCRbloodVol > 0 ) then 2
    ELSE
     0
