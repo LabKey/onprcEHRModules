@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2025-2026 LabKey Corporation
+ *
+ * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
+ */
 /* Added by Kollil 08/22/2025
 New query created for when an animal receives an alopecia score of 4 or 5, but does not have an open behavioral case for alopecia.
 Refer to tkt # 12145.

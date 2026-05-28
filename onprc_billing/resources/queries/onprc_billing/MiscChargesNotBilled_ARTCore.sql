@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2022-2026 LabKey Corporation
+ *
+ * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
+ */
 --New query as source of Misc Charges Not yet billing will replace needed items in Test and Production
 --Modified by Kollil, 3/15/2022 - With Sally's help changed the query to get the NIH rate data correctly.
 SELECT d.Id,

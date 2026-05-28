@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2025-2026 LabKey Corporation
+ *
+ * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
+ */
 select a.employeeid, a.unit, null as category, a.enddate, a.lastName, a.firstName, a.email, a.type, a.title, a.category
 from ehr_compliancedb.employees a
 where a.unit not in (select unit from ehr_compliancedb.employeeperUnit j where j.EmployeeId = a.employeeid)

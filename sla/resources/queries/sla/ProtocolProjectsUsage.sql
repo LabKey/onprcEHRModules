@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2016-2026 LabKey Corporation
+ *
+ * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
+ */
 --Changed by LK on 4/20/2022
 -- Changed the way we access the tables from other containers. Removed the "Substitue..." lines in the code. Created templates for each section
 --of tables and referencing them through the newly created template names instead of the "Substitue..." .

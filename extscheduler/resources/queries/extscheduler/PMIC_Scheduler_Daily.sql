@@ -1,4 +1,9 @@
 /*
+ * Copyright (c) 2021-2026 LabKey Corporation
+ *
+ * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
+ */
+/*
 Created by: Kolli on 10/24/2019
 This query filters all the PMIC daily events
 */

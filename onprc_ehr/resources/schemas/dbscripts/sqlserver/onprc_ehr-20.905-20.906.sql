@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2021-2026 LabKey Corporation
+ *
+ * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
+ */
 /****** Housing transfers alert project: By Kolli******/
 /*
  Created 3 temp tables to get the list of NHP rooms usage.

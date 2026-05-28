@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2020-2026 LabKey Corporation
+ *
+ * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
+ */
 /****** Object:  StoredProcedure [onprc_billing].[oga_InsertRecords]    Script Date: 5/21/2020 5:43:28 AM ******/
 /*****Update 2020-05-21 to handle Investigator and FA Ids in Prime*******/
 

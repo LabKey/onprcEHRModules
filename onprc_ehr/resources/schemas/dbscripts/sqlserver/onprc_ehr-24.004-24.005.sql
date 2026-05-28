@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2025-2026 LabKey Corporation
+ *
+ * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
+ */
 GO
 /****** Object:  StoredProcedure [onprc_ehr].[ExpiredProtocolUpdate]    Script Date: 12/20/2024 9:09:09 AM ******/
 SET ANSI_NULLS ON
