@@ -107,7 +107,7 @@ SELECT
     espf.lastDate as lastESPF,
     timestampdiff('SQL_TSI_DAY', espf.lastDate, now()) as daysSinceESPF,
    CASE
-      WHEN ( (timestampdiff('SQL_TSI_DAY', espf.lastDate, now()) > 180) ) THEN false
+      WHEN ( (timestampdiff('SQL_TSI_DAY', espf.lastDate, now()) > 180) OR espf.lastDate is Null ) THEN false
       ELSE true
       END as isESPFCurrent,
 
