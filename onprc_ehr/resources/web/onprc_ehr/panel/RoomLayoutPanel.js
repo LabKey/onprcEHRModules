@@ -285,7 +285,7 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                                 }
 
                                 var animalItems = [];
-                                if (animals.length > 8){    //Modified: 7-5-2018  R.Blasa
+                                if (animals.length > 8) {    //Modified: 7-5-2018  R.Blasa
                                     animalItems.push({
                                         html: '<span style="font-size: 10px;">' + animals.length + ' animals</span>',
                                         border: false,
@@ -359,12 +359,10 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                                             bgColor = 'grey';
                                         }
                                     }
-                                    else if (cageType == 'Unavailable Location')
-                                    {
+                                    else if (cageType == 'Unavailable Location') {
                                         bgColor = 'white';
                                     }
-                                    else if (status == 'Unavailable')
-                                    {
+                                    else if (status == 'Unavailable') {
                                         bgColor = 'yellow';
                                     }
                                     else if (colorcage == 'Transfer Pending')
@@ -403,10 +401,6 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                                         else
                                             bgColor = 'grey';
                                     }
-                                    if (cageType == 'Unavailable Location'){
-                                        bgColor = 'white';
-                                    }
-
                                     else if (status == 'Unavailable')
                                     {
                                         bgColor = 'yellow';
@@ -438,6 +432,13 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                                 var type = row.get('cage_type');
                                 var cageType = config.cageTypeMap[row.get('cage_type')] || {};
                                 var suffix = cageType.abbreviation || '';
+                                var html_string = '';
+                                if (row.get('cage_type') == 'No Cage')
+                                  html_string = 'No Cage';
+
+                                if (row.get('cage_type') == 'Unavailable Location')
+                                    html_string = 'Unavailable Location';
+
                                 rowItems.push({
                                     border: false,
                                     style: {
@@ -461,8 +462,8 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
 
                                         //Modified: 4-8-2020 R.Blasa  Contains symbol representing divider types
                                      items: [{
-                                            html: row.get('cage_type') == 'No Cage' ? 'No Cage' : ('<span style="font-size: 11px;"><a>' + ri + colIdx + '</a>' + (cageType.sqft ? ' (' + (cageType.sqft / cageType.cageslots)+ suffix + ')' : '') +  (dividerInfo.displaychar ? ' [' + (dividerInfo.displaychar) + ']' : '') + '</span>'),
-                                         bodyStyle: {
+                                            html: row.get('cage_type') == html_string ? html_string : ('<span style="font-size: 11px;"><a>' + ri + colIdx + '</a>' + (cageType.sqft ? ' (' + (cageType.sqft / cageType.cageslots)+ suffix + ')' : '') +  (dividerInfo.displaychar ? ' [' + (dividerInfo.displaychar) + ']' : '') + '</span>'),
+                                        bodyStyle: {
                                             'background-color': 'transparent'
                                         },
                                         listeners: {
@@ -478,10 +479,6 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                                             }, [row, config], config)
                                         }
                                     },{
-
-                                         html: row.get('cage_type') == 'Unavailable Location' ? 'Unavailable Location' :  '',
-
-                                     },{
                                         border: false,
                                         style: 'margin-top: 10px;',
                                         bodyStyle: {
