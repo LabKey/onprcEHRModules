@@ -184,8 +184,8 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
 
                 var rooms = Ext4.Object.getKeys(roomMap).sort();
                 var dividerWidth = 3;
-                var height = 75;
-                var cageWidth = 60;
+                var height = 115;
+                var cageWidth = 78;   //Modified: 5-27-2026
                 var hasCages = false;
 
                 Ext4.each(rooms, function(room, roomIdx){
@@ -285,7 +285,7 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                                 }
 
                                 var animalItems = [];
-                                if (animals.length > 8){    //Modified: 7-5-2018  R.Blasa
+                                if (animals.length > 8) {    //Modified: 7-5-2018  R.Blasa
                                     animalItems.push({
                                         html: '<span style="font-size: 10px;">' + animals.length + ' animals</span>',
                                         border: false,
@@ -297,7 +297,7 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                                 else if (animals.length){
                                     Ext4.each(animals, function(animal){
                                         animalItems.push({
-                                            html: '<span style="font-size: 9px;"><a>' + animal + '</a>' + (config.animalMap[animal] ? ': ' + Ext4.util.Format.round(config.animalMap[animal].getValue('Id/mostRecentWeight/mostRecentWeight'), 1) : '') + '</span>',
+                                            html: '<span style="font-size: 11px;"><a>' + animal + '</a>' + (config.animalMap[animal] ? ': ' + Ext4.util.Format.round(config.animalMap[animal].getValue('Id/mostRecentWeight/mostRecentWeight'), 1) : '') + '</span>',
                                             animal: animal,
                                             border: false,
                                             bodyStyle: {
@@ -359,8 +359,10 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                                             bgColor = 'grey';
                                         }
                                     }
-                                    else if (status == 'Unavailable')
-                                    {
+                                    else if (cageType == 'Unavailable Location') {
+                                        bgColor = 'white';
+                                    }
+                                    else if (status == 'Unavailable') {
                                         bgColor = 'yellow';
                                     }
                                     else if (colorcage == 'Transfer Pending')
@@ -430,6 +432,13 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                                 var type = row.get('cage_type');
                                 var cageType = config.cageTypeMap[row.get('cage_type')] || {};
                                 var suffix = cageType.abbreviation || '';
+                                var html_string = '';
+                                if (row.get('cage_type') == 'No Cage')
+                                  html_string = 'No Cage';
+
+                                if (row.get('cage_type') == 'Unavailable Location')
+                                    html_string = 'Unavailable Location';
+
                                 rowItems.push({
                                     border: false,
                                     style: {
@@ -453,7 +462,7 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
 
                                         //Modified: 4-8-2020 R.Blasa  Contains symbol representing divider types
                                      items: [{
-                                            html: row.get('cage_type') == 'No Cage' ? 'No Cage' : ('<span style="font-size: 11px;"><a>' + ri + colIdx + '</a>' + (cageType.sqft ? ' (' + (cageType.sqft / cageType.cageslots)+ suffix + ')' : '') +  (dividerInfo.displaychar ? ' [' + (dividerInfo.displaychar) + ']' : '') + '</span>'),
+                                            html: row.get('cage_type') == html_string ? html_string : ('<span style="font-size: 11px;"><a>' + ri + colIdx + '</a>' + (cageType.sqft ? ' (' + (cageType.sqft / cageType.cageslots)+ suffix + ')' : '') +  (dividerInfo.displaychar ? ' [' + (dividerInfo.displaychar) + ']' : '') + '</span>'),
                                         bodyStyle: {
                                             'background-color': 'transparent'
                                         },
@@ -634,6 +643,7 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
         Ext4.apply(this, {
             border: false,
             itemId: 'roomLayoutPanel',
+            width: 1450,
             defaults: {
                 border: false
             },
