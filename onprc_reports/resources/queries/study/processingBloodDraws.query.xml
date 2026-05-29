@@ -13,6 +13,9 @@
                     <column columnName="isU42">
                         <columnTitle>Is U42?</columnTitle>
                     </column>
+                    <column columnName="isU24">
+                        <columnTitle>Is U24?</columnTitle>
+                    </column>
                     <column columnName="parentageBloodDrawVol">
                         <columnTitle>Parentage PTT (mL)</columnTitle>
                     </column>
@@ -22,11 +25,23 @@
                     <column columnName="PCRBloodVolume">
                         <columnTitle>PCR PTT (mL)</columnTitle>
                     </column>
+                    <column columnName="ESPFbloodVol">
+                        <columnTitle>ESPF PTT (mL)</columnTitle>
+                    </column>
                     <column columnName="dnaBloodDrawVol">
                         <columnTitle>DNA Pink/PTT (mL)</columnTitle>
                     </column>
                     <column columnName="serologyBloodVol">
                         <columnTitle>Serology RTT (mL)</columnTitle>
+                    </column>
+                    <column columnName="totalCBCVol">
+                        <columnTitle>CBC PTT (mL)</columnTitle>
+                    </column>
+                    <column columnName="totalCompChemBloodVol">
+                        <columnTitle>COMP Chem RTT (mL)</columnTitle>
+                    </column>
+                    <column columnName="BasicChemBloodVol">
+                        <columnTitle>BASIC Chem RTT (mL)</columnTitle>
                     </column>
                     <column columnName="geneticsBloodVol">
                         <columnTitle>Genetics Blood Vol (mL)</columnTitle>

@@ -5,9 +5,14 @@
     <column name="currentlocationroom"/>
     <column name="currentlocationcage"/>
     <column name="isU42"/>
+    <column name="isU24"/>
     <column name="spfStatus"/>
     <column name="PCRBloodVolume"/>
     <column name="serologyBloodVol"/>
+    <column name="ESPFbloodVol"/>
+    <column name="totalCompChemBloodVol"/>
+    <column name="totalCBCVol"/>
+    <column name="BasicChemBloodVol"/>
     <column name="parentageBloodDrawVol"/>
     <column name="mhcBloodDrawVol"/>
     <column name="dnaBloodDrawVol"/>
