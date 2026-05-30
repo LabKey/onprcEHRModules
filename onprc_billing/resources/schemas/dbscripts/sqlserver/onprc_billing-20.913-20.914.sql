@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2021-2026 LabKey Corporation
+ *
+ * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
+ */
 /****** Object:  StoredProcedure [onprc_billing].[oga_InsertRecords]    Script Date: 12/2/2020 12:18:09 PM ******/
 EXEC core.fn_dropifexists 'oga_InsertRecords', 'onprc_billing', 'PROCEDURE'
 GO

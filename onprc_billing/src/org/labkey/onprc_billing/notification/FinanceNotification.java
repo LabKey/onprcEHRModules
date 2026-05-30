@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013 LabKey Corporation
+ * Copyright (c) 2014-2026 LabKey Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -58,12 +58,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
-/**
- * Created with IntelliJ IDEA.
- * User: bimber
- * Date: 4/5/13
- * Time: 2:25 PM
- */
 public class FinanceNotification extends AbstractNotification
 {
     protected static final DecimalFormat _dollarFormat = new DecimalFormat("$###,##0.00");

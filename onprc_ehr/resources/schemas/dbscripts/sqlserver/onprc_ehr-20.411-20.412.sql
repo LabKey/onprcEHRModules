@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2020-2026 LabKey Corporation
+ *
+ * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
+ */
 /****** Object:  Table [onprc_ehr].[PotentialSire_source]    Script Date: 4/121/20202 7:00:04 AM ******/
 /****** Object:  Table [onprc_ehr].[PotentialDam_source]    Script Date: 4/121/20202 7:00:04 AM ******/
 /****** Object:  Table [onprc_ehr].[PotentialParents_source]    Script Date: 4/121/20202 7:00:04 AM ******/

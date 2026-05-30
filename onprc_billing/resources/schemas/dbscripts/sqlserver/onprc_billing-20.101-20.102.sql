@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2020-2026 LabKey Corporation
+ *
+ * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
+ */
 -- Adds change inflation rate to 3 position decimal
 -- add primary key and identity key
 --If the field exists in the current build we drop the column and recreate

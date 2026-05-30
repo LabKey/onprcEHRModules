@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2023-2026 LabKey Corporation
+ *
+ * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
+ */
 -- This query extracts the active procedures with missing USDA pain categories.
 -- Set the date range to 1 year back from curr date
 Select

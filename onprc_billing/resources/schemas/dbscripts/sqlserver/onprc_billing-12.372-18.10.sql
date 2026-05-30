@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2020-2026 LabKey Corporation
+ *
+ * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
+ */
 -- Contents of onprc_billing-12.373-12.374.sql to onprc_billing-17.501-17.502.sql from onprc19.1Prod
 
 --cREATED 8/25/2016
