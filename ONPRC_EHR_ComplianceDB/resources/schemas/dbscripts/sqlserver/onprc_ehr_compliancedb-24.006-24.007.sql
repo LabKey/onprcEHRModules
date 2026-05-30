@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2025-2026 LabKey Corporation
+ *
+ * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
+ */
 -- Author:	R. Blasa
 -- Created: 9-20-2024-2024
 -- Description:	Stored procedure program to create a static data set for Compliance Recent Test .sql

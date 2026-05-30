@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2021-2026 LabKey Corporation
+ *
+ * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
+ */
 
 /****** Object:  Table [list].[c10437d746_covid19testing]    Script Date: 9/16/2020 9:19:28 AM ******/
 EXEC core.fn_dropifexists 'Covid19Testing', 'extScheduler', 'TABLE', NULL;

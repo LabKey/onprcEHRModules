@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2020-2026 LabKey Corporation
+ *
+ * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
+ */
 -- Adding additional Fields for Alias insert from OGA Synch
 --Rerunning and it does not appear in Build
 --2020-03-4 Revision to add this to UAT

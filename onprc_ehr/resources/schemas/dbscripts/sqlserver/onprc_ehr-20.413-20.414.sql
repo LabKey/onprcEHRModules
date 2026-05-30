@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2020-2026 LabKey Corporation
+ *
+ * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
+ */
 
 /****** Object:  StoredProcedure [onprc_ehr].[PotentialSire_Insert]    Script Date: 4/22/2020 10:16:39 AM ******/
 -- =============================================

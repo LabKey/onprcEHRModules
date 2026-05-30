@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2024-2026 LabKey Corporation
+ *
+ * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
+ */
 CREATE TABLE [onprc_ehr].[TB_TestTemp](
     [rowid] [int] IDENTITY(100,1) NOT NULL,
      animalid      varchar(200) NULL,

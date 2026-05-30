@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2020-2026 LabKey Corporation
+ *
+ * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
+ */
 /****
 2017/1-/15 Issue with Blank G
 Tores o resolve the issue of BCS Score being blank, I changed the source from the demographcis Table to a direct read from BCS
