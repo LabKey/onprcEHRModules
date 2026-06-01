@@ -111,7 +111,7 @@ SELECT
       ELSE true
       END as isESPFCurrent,
 
---   WHEN (year(now()) = year(pcr.lastDate) And (month(pcr.lastDate) = "January" OR month(pcr.lastDate) = "July"))
+-- ESPF--->  WHEN (year(now()) = year(pcr.lastDate) And (month(pcr.lastDate) = "January" OR month(pcr.lastDate) = "July"))
 --         THEN true
 
 
