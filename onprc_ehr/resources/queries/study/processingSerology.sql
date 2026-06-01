@@ -88,7 +88,7 @@ SELECT
   END as isSRVCurrent,
 
   CASE
-   WHEN (d.Id.age.ageInDays > 0 )THEN true
+   WHEN (d.Id.age.ageInDays > 180 )THEN true
     ELSE false
   END as isSRVRequired,
 
