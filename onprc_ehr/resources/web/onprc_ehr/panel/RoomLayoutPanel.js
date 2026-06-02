@@ -342,17 +342,17 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                                     var prevIsSeparate = prevDividerInfo.countAsSeparate;
                                     var prevAnimals = prevCage.get('totalAnimals/animals');
 
-                                    if (!prevIsSeparate && !Ext4.isEmpty(cageAnimals) && row.get('cage_type') != 'Unavailable Location')
+                                    if (!prevIsSeparate && !Ext4.isEmpty(cageAnimals) && cageType != 'Unavailable Location')
                                         bgColor = 'red';
 
-                                    if (prevIsSeparate && Ext4.isEmpty(cageAnimals) && row.get('cage_type') != 'Unavailable Location')
+                                    if (prevIsSeparate && Ext4.isEmpty(cageAnimals) && cageType != 'Unavailable Location')
                                         bgColor = emptyCageColor;
 
-                                    if (!prevIsSeparate && Ext4.isEmpty(cageAnimals) && Ext4.isEmpty(prevAnimals) && row.get('cage_type') != 'Unavailable Location')
+                                    if (!prevIsSeparate && Ext4.isEmpty(cageAnimals) && Ext4.isEmpty(prevAnimals) && cageType != 'Unavailable Location')
                                         bgColor = emptyCageColor;
 
                                     if (cageType == 'No Cage'){
-                                        if (!Ext4.isEmpty(cageAnimals) && row.get('cage_type') != 'Unavailable Location')
+                                        if (!Ext4.isEmpty(cageAnimals) && cageType != 'Unavailable Location')
                                             bgColor = 'red';
                                         else {
                                             //NOTE: this used to use no color.  i'm not sure why
@@ -367,7 +367,7 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                                     }
                                     else if (colorcage == 'Transfer Pending')
                                     {
-                                        if (!Ext4.isEmpty(cageAnimals) && row.get('cage_type') != 'Unavailable Location')
+                                        if (!Ext4.isEmpty(cageAnimals) && cageType != 'Unavailable Location')
                                             bgColor = '';
                                         else
                                             bgColor = 'orange';
@@ -375,7 +375,7 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                                     }
                                     else if (colorcage == 'Held for Colony')
                                     {
-                                        if (!Ext4.isEmpty(cageAnimals) && row.get('cage_type') != 'Unavailable Location')
+                                        if (!Ext4.isEmpty(cageAnimals) && cageType != 'Unavailable Location')
                                             bgColor = '';
                                         else
                                             bgColor = '#54daff';
@@ -383,29 +383,32 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                                     }
                                     else if (colorcage == 'Empty')
                                     {
-                                        if (Ext4.isEmpty(cageAnimals) && row.get('cage_type') != 'Unavailable Location')
+                                        if (Ext4.isEmpty(cageAnimals) && cageType != 'Unavailable Location')
                                             bgColor = emptyCageColor;
 
                                     }
                                 }
                                 else {
                                     //flag cage if empty
-                                    if (Ext4.isEmpty(row.get('totalAnimals/animals') && row.get('cage_type') != 'Unavailable Location')){
+                                    if (Ext4.isEmpty(row.get('totalAnimals/animals')) && cageType != 'Unavailable Location'){
                                         bgColor = emptyCageColor;
                                     }
 
                                     //also if no cage present
                                     if (cageType == 'No Cage'){
-                                        if (!Ext4.isEmpty(cageAnimals) && row.get('cage_type') != 'Unavailable Location')
+                                        if (!Ext4.isEmpty(cageAnimals) && cageType != 'Unavailable Location')
                                             bgColor = 'red';
                                         else
                                             bgColor = 'grey';
                                     }
-                                    else if (status == 'Unavailable Location')
+                                    else if (status == 'Unavailable')
                                     {
-                                        bgColor = 'white';
+                                        if (bgColor = emptyCageColor) {
+
+                                            bgColor = 'white';
+                                        }
                                     }
-                                    else if (status == 'Unavailable' && row.get('cage_type') != 'Unavailable Location')
+                                    else if (status == 'Unavailable' && cageType != 'Unavailable Location')
                                     {
                                         bgColor = 'yellow';
                                     }
@@ -427,7 +430,7 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                                     }
                                     else if (colorcage == 'Empty')
                                     {
-                                        if (Ext4.isEmpty(cageAnimals) && row.get('cage_type') != 'Unavailable Location')
+                                        if (Ext4.isEmpty(cageAnimals) && cageType != 'Unavailable Location')
                                             bgColor = emptyCageColor;
 
                                     }
@@ -437,10 +440,10 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                                 var cageType = config.cageTypeMap[row.get('cage_type')] || {};
                                 var suffix = cageType.abbreviation || '';
                                 var html_string = '';
-                                if (row.get('cage_type') == 'No Cage')
+                                if (type == 'No Cage')
                                   html_string = 'No Cage';
 
-                                if (row.get('cage_type') == 'Unavailable Location')
+                                if (type == 'Unavailable Location')
                                     html_string = 'Unavailable Location';
 
                                 rowItems.push({
@@ -466,7 +469,7 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
 
                                         //Modified: 4-8-2020 R.Blasa  Contains symbol representing divider types
                                      items: [{
-                                            html: row.get('cage_type') == html_string ? html_string : ('<span style="font-size: 11px;"><a>' + ri + colIdx + '</a>' + (cageType.sqft ? ' (' + (cageType.sqft / cageType.cageslots)+ suffix + ')' : '') +  (dividerInfo.displaychar ? ' [' + (dividerInfo.displaychar) + ']' : '') + '</span>'),
+                                            html: type == html_string ? html_string : ('<span style="font-size: 11px;"><a>' + ri + colIdx + '</a>' + (cageType.sqft ? ' (' + (cageType.sqft / cageType.cageslots)+ suffix + ')' : '') +  (dividerInfo.displaychar ? ' [' + (dividerInfo.displaychar) + ']' : '') + '</span>'),
                                         bodyStyle: {
                                             'background-color': 'transparent'
                                         },
