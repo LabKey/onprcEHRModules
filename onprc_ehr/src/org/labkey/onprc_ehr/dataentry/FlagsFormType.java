@@ -89,15 +89,16 @@ public class FlagsFormType extends UnsaveableTask
         return canInsert;
     }
 
-    //Added: 8-7-2024 R.Blasa
+    //Added: 6-3-26 R.Blasa
     @Override
     public boolean isVisible()
     {
-        Group g = GroupManager.getGroup(getCtx().getContainer(), "Death Entry", GroupEnumType.SITE);
+        Group g = GroupManager.getGroup(getCtx().getContainer(), "Death Entry,Arrival-Departure SF", GroupEnumType.SITE);
         if (g != null && getCtx().getUser().isInGroup(g.getUserId()) && !getCtx().getContainer().hasPermission(getCtx().getUser(), AdminPermission.class))
         {
             return false;
         }
         return super.isVisible();
     }
+
 }
