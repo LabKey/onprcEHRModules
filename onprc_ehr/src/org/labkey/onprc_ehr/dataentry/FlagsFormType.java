@@ -93,8 +93,13 @@ public class FlagsFormType extends UnsaveableTask
     @Override
     public boolean isVisible()
     {
-        Group g = GroupManager.getGroup(getCtx().getContainer(), "Death Entry,Arrival-Departure SF", GroupEnumType.SITE);
+        Group g = GroupManager.getGroup(getCtx().getContainer(), "Death Entry", GroupEnumType.SITE);
         if (g != null && getCtx().getUser().isInGroup(g.getUserId()) && !getCtx().getContainer().hasPermission(getCtx().getUser(), AdminPermission.class))
+        {
+            return false;
+        }
+        Group h = GroupManager.getGroup(getCtx().getContainer(), "Arrival-Departure SF", GroupEnumType.SITE);
+        if (h != null && getCtx().getUser().isInGroup(h.getUserId()) && !getCtx().getContainer().hasPermission(getCtx().getUser(), AdminPermission.class))
         {
             return false;
         }
