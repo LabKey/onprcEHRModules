@@ -40,6 +40,7 @@ import org.labkey.api.query.FieldKey;
 import org.labkey.api.query.QueryService;
 import org.labkey.api.query.UserSchema;
 import org.labkey.api.security.RequiresPermission;
+import org.labkey.api.security.SessionApiKeyManager;
 import org.labkey.api.security.permissions.AdminPermission;
 import org.labkey.api.security.permissions.ReadPermission;
 import org.labkey.api.study.Dataset;
@@ -165,8 +166,10 @@ public class ONPRC_EHRController extends SpringActionController
     }
 
     /**
-     * Used to get the HTTP Session ID for SSRS integration. See ONPRC.Utils.getSsrsParams().
-     * This allows the cookie to be marked as HTTP-only
+     * Used to get a session key for SSRS integration. See ONPRC.Utils.getSsrsParams(). SSRS passes this value back to
+     * LabKey as the "LabKeyTransformSessionId" query parameter, which SecurityManager resolves to the user's session via
+     * SessionApiKeyManager. Returning a session key rather than the raw JSESSIONID lets the session cookie stay
+     * HTTP-only and cookie-only (no jsessionid in URLs), and the key is automatically invalidated when the session ends.
      */
     @RequiresPermission(ReadPermission.class)
     public static class GetSessionIdAction extends MutatingApiAction<Object>
@@ -174,7 +177,7 @@ public class ONPRC_EHRController extends SpringActionController
         @Override
         public Object execute(Object o, BindException errors)
         {
-            return Map.of("SessionId", getViewContext().getRequest().getSession(true).getId());
+            return Map.of("SessionId", SessionApiKeyManager.get().getApiKey(getViewContext().getRequest(), "onprc_ehr.ssrs"));
         }
     }
 
