@@ -28,8 +28,16 @@ import org.labkey.test.util.PasswordUtil;
 import org.labkey.test.util.SimpleHttpRequest;
 import org.labkey.test.util.SimpleHttpResponse;
 import org.labkey.test.util.SqlserverOnlyTest;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
 
+import javax.xml.XMLConstants;
+import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.IOException;
+import java.io.StringReader;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -38,6 +46,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Exercises the SSRS session-key authentication path end to end, without a real SSRS server.
@@ -113,10 +122,24 @@ public class ONPRC_SsrsSessionKeyTest extends BaseWebDriverTest implements Sqlse
                 Map.of("LabKeyTransformSessionId", sessionKey)));
         assertEquals("Token-authenticated callback resolved to the wrong user", expectedEmail, whoAmI.getString("email"));
 
-        // 3b) Closest-to-real: the actual selectRows callback shape SSRS uses to fetch data.
+        // 3b) Closest-to-real: the actual selectRows callback shape SSRS uses to fetch data. SSRS's XML data
+        // source extension requests the XML response format, so do the same and validate that the payload is
+        // well-formed XML containing the expected data row (the current user, filtered by email).
         SimpleHttpResponse selectRows = cookielessGet(WebTestHelper.buildURL("query", getProjectName(), "selectRows",
-                Map.of("schemaName", "core", "query.queryName", "Users", "LabKeyTransformSessionId", sessionKey)));
+                Map.of("schemaName", "core", "query.queryName", "Users", "query.columns", "Email",
+                        "query.Email~eq", expectedEmail, "respFormat", "xml", "LabKeyTransformSessionId", sessionKey)));
         assertEquals("selectRows callback with a valid token should succeed", 200, selectRows.getResponseCode());
+
+        Document doc = parseXml(selectRows.getResponseBody());
+        Element root = doc.getDocumentElement();
+        assertEquals("Unexpected root element in selectRows XML response", "response", root.getTagName());
+        Element rowsElement = (Element) root.getElementsByTagName("rows").item(0);
+        assertNotNull("selectRows XML response is missing the <rows> element", rowsElement);
+        NodeList rows = rowsElement.getElementsByTagName("element");
+        assertTrue("selectRows XML response should contain at least one data row", rows.getLength() >= 1);
+        Node email = ((Element) rows.item(0)).getElementsByTagName("Email").item(0);
+        assertNotNull("Data row in selectRows XML response is missing the Email column", email);
+        assertEquals("Data row in selectRows XML response should be for the current user", expectedEmail, email.getTextContent());
 
         // 4) Negative controls -- prove it is the token doing the work.
         // 4a) No token -> guest (empty email)
@@ -149,6 +172,23 @@ public class ONPRC_SsrsSessionKeyTest extends BaseWebDriverTest implements Sqlse
     private JSONObject cookielessGetJson(String url) throws IOException
     {
         return new JSONObject(cookielessGet(url).getResponseBody());
+    }
+
+    /**
+     * Parse a response body, failing the test if it is not well-formed XML.
+     */
+    private Document parseXml(String responseBody)
+    {
+        try
+        {
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+            return factory.newDocumentBuilder().parse(new InputSource(new StringReader(responseBody)));
+        }
+        catch (Exception e)
+        {
+            throw new AssertionError("selectRows did not return well-formed XML. Body:\n" + responseBody, e);
+        }
     }
 
     @Override
