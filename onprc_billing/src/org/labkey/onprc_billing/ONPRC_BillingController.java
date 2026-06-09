@@ -43,11 +43,13 @@ import org.labkey.api.view.NavTree;
 import org.labkey.onprc_billing.notification.BillingValidationNotification;
 import org.labkey.onprc_billing.pipeline.BillingPipelineJob;
 import org.labkey.onprc_billing.security.ONPRCBillingAdminPermission;
+import org.labkey.vfs.FileLike;
 import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -68,14 +70,14 @@ public class ONPRC_BillingController extends SpringActionController
     public static class RunBillingPipelineAction extends MutatingApiAction<BillingPipelineForm>
     {
         @Override
-        public ApiResponse execute(BillingPipelineForm form, BindException errors) throws PipelineJobException
+        public ApiResponse execute(BillingPipelineForm form, BindException errors) throws IOException
         {
             Map<String, Object> resultProperties = new HashMap<>();
 
             try
             {
                 PipeRoot pipelineRoot = PipelineService.get().findPipelineRoot(getContainer());
-                File analysisDir = BillingPipelineJob.createAnalysisDir(pipelineRoot, form.getProtocolName());
+                FileLike analysisDir = BillingPipelineJob.createAnalysisDir(pipelineRoot, form.getProtocolName());
                 PipelineService.get().queueJob(new BillingPipelineJob(getContainer(), getUser(), getViewContext().getActionURL(), pipelineRoot, analysisDir, form));
 
                 resultProperties.put("success", true);

@@ -30,8 +30,9 @@ import org.labkey.api.util.PageFlowUtil;
 import org.labkey.api.view.ActionURL;
 import org.labkey.api.view.ViewBackgroundInfo;
 import org.labkey.onprc_billing.ONPRC_BillingController;
+import org.labkey.vfs.FileLike;
 
-import java.io.File;
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -42,7 +43,6 @@ import java.util.Date;
  */
 public class BillingPipelineJob extends PipelineJob implements BillingPipelineJobSupport
 {
-    private File _analysisDir;
     private ONPRC_BillingController.BillingPipelineForm _form;
 
     // For deserialization
@@ -50,25 +50,23 @@ public class BillingPipelineJob extends PipelineJob implements BillingPipelineJo
     {
     }
 
-    public BillingPipelineJob(Container c, User user, ActionURL url, PipeRoot pipeRoot, File analysisDir, ONPRC_BillingController.BillingPipelineForm form)
+    public BillingPipelineJob(Container c, User user, ActionURL url, PipeRoot pipeRoot, FileLike analysisDir, ONPRC_BillingController.BillingPipelineForm form)
     {
         super(null, new ViewBackgroundInfo(c, user, url), pipeRoot);
-
-        _analysisDir = analysisDir;
-        setLogFile(new File(analysisDir, FileUtil.makeFileNameWithTimestamp("billingPipeline", "log")));
+        setLogFile(analysisDir.resolveChild(FileUtil.makeFileNameWithTimestamp("billingPipeline", "log")));
         _form = form;
     }
 
-    public static File createAnalysisDir(PipeRoot pipeRoot, String name) throws PipelineValidationException
+    public static FileLike createAnalysisDir(PipeRoot pipeRoot, String name) throws PipelineValidationException, IOException
     {
         String trialName = FileUtil.makeLegalName(name);
-        File analysisDir = new File(pipeRoot.getRootPath(), trialName);
+        FileLike analysisDir = pipeRoot.resolvePathToFileLike(trialName);
         int suffix = 0;
         while (analysisDir.exists())
         {
             suffix++;
             trialName = FileUtil.makeLegalName(name) + "." + suffix;
-            analysisDir = new File(pipeRoot.getRootPath(), trialName);
+            analysisDir = pipeRoot.resolvePathToFileLike(trialName);
         }
 
         analysisDir.mkdirs();
@@ -89,7 +87,7 @@ public class BillingPipelineJob extends PipelineJob implements BillingPipelineJo
     }
 
     @Override
-    public TaskPipeline getTaskPipeline()
+    public TaskPipeline<?> getTaskPipeline()
     {
         return PipelineJobService.get().getTaskPipeline(new TaskId(BillingPipelineJob.class));
     }
@@ -97,15 +95,13 @@ public class BillingPipelineJob extends PipelineJob implements BillingPipelineJo
     @Override
     public Date getStartDate()
     {
-        Date ret = _form.getStartDate() == null ? null : DateUtils.truncate(_form.getStartDate(), Calendar.DATE);
-        return ret;
+        return _form.getStartDate() == null ? null : DateUtils.truncate(_form.getStartDate(), Calendar.DATE);
     }
 
     @Override
     public Date getEndDate()
     {
-        Date ret = _form.getEndDate() == null ? null : DateUtils.truncate(_form.getEndDate(), Calendar.DATE);
-        return ret;
+        return _form.getEndDate() == null ? null : DateUtils.truncate(_form.getEndDate(), Calendar.DATE);
     }
 
     @Override
@@ -118,11 +114,5 @@ public class BillingPipelineJob extends PipelineJob implements BillingPipelineJo
     public String getName()
     {
         return _form.getProtocolName();
-    }
-
-    @Override
-    public File getAnalysisDir()
-    {
-        return _analysisDir;
     }
 }

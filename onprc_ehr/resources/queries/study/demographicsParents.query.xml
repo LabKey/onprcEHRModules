@@ -31,6 +31,17 @@
                             <fkColumnName>id</fkColumnName>
                         </fk>
                     </column>
+                    <column columnName="surrogatedam">
+                        <columnTitle>Surrogate Dam</columnTitle>
+                        <fk>
+                            <fkDbSchema>study</fkDbSchema>
+                            <fkTable>animal</fkTable>
+                            <fkColumnName>id</fkColumnName>
+                        </fk>
+                    </column>
+                    <column columnName="fostertype">
+                        <columnTitle>Foster Dam Type</columnTitle>
+                    </column>
                     <column columnName="geneticdam">
                         <columnTitle>Genetic Dam</columnTitle>
                         <fk>
@@ -39,9 +50,17 @@
                             <fkColumnName>id</fkColumnName>
                         </fk>
                     </column>
+                    <column columnName="geneticdamtype">
+                        <columnTitle>Genetic Dam Type</columnTitle>
+                    </column>
                     <column columnName="numParents">
                         <columnTitle>Number of Parents Known</columnTitle>
                     </column>
+
+                    <column columnName="observeddam">
+                        <columnTitle>Observed Dam</columnTitle>
+                    </column>
+
                 </columns>
             </table>
         </tables>
