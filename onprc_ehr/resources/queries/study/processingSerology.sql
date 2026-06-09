@@ -104,21 +104,21 @@ SELECT
     ELSE false
     END as isPCRRequired,
 
-    espf.lastDate as lastESPF,
-    timestampdiff('SQL_TSI_DAY', espf.lastDate, now()) as daysSinceESPF,
-   CASE
-      WHEN ( (timestampdiff('SQL_TSI_DAY', espf.lastDate, now()) > 180) OR espf.lastDate is Null ) THEN false
-      ELSE true
-      END as isESPFCurrent,
+--     espf.lastDate as lastESPF,
+--     timestampdiff('SQL_TSI_DAY', espf.lastDate, now()) as daysSinceESPF,
+--    CASE
+--       WHEN ( (timestampdiff('SQL_TSI_DAY', espf.lastDate, now()) > 180) OR espf.lastDate is Null ) THEN false
+--       ELSE true
+--       END as isESPFCurrent,
 
 -- ESPF--->  WHEN (year(now()) = year(pcr.lastDate) And (month(pcr.lastDate) = "January" OR month(pcr.lastDate) = "July"))
 --         THEN true
 
 
-   CASE
-      WHEN (d.Id.age.ageInDays > 0 )  THEN true
-      ELSE false
-      END as isESPFRequired,
+--    CASE
+--       WHEN (d.Id.age.ageInDays > 0 )  THEN true
+--       ELSE false
+--       END as isESPFRequired,
 
 
   ------ All CBC Sections
