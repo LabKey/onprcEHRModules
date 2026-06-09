@@ -17,7 +17,8 @@ EHR.model.DataModelManager.registerMetadata('Birth_Entry', {
                     fixed: true,
                     width: 180
                 }
-            }
+            },
+            dam: {header: 'Observed Dam'}
         }
     }
 });
