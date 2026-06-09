@@ -42,10 +42,10 @@ SELECT
     ELSE 0
   END as PCRbloodVol,
 
-  CASE
-      WHEN  (t.isESPFRequired = true AND t.isESPFCurrent = false )  THEN 4
-      ELSE 0
-      END as ESPFbloodVol,
+--   CASE
+--       WHEN  (t.isESPFRequired = true AND t.isESPFCurrent = false )  THEN 4
+--       ELSE 0
+--       END as ESPFbloodVol,
 
   -----CBC
   CASE
