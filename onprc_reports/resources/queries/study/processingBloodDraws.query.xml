@@ -25,9 +25,9 @@
                     <column columnName="PCRBloodVolume">
                         <columnTitle>PCR PTT (mL)</columnTitle>
                     </column>
-                    <column columnName="ESPFbloodVol">
-                        <columnTitle>ESPF PTT (mL)</columnTitle>
-                    </column>
+<!--                    <column columnName="ESPFbloodVol">-->
+<!--                        <columnTitle>ESPF PTT (mL)</columnTitle>-->
+<!--                    </column>-->
                     <column columnName="dnaBloodDrawVol">
                         <columnTitle>DNA Pink/PTT (mL)</columnTitle>
                     </column>

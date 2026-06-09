@@ -15,10 +15,10 @@ SELECT
 
   s.srvBloodVol as serologyBloodVol,
 
-  Case when ( b.Id IS NOT NULL )  And (s.ESPFBloodVol > 0 ) then 4
-       ELSE
-           0
-  End as ESPFBloodVol,
+--   Case when ( b.Id IS NOT NULL )  And (s.ESPFBloodVol > 0 ) then 4
+--        ELSE
+--            0
+--   End as ESPFBloodVol,
 
 
  coalesce(s.CBCbloodVol,0) as totalCBCVol,
@@ -37,10 +37,10 @@ SELECT
    ELSE
      0
    End +
-  Case when (b.Id IS NOT NULL)  And (s.ESPFBloodVol > 0 ) then 4
-  ELSE
-      0
-  End +
+--   Case when (b.Id IS NOT NULL)  And (s.ESPFBloodVol > 0 ) then 4
+--   ELSE
+--       0
+--   End +
   coalesce(s.CBCbloodVol,0)  +
   coalesce(s.CChembloodVol,0) + coalesce(s.BChembloodVol,0) +
   coalesce(g.totalBloodDrawVol, 0) as totalBloodDrawVol,
