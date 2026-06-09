@@ -1,28 +1,27 @@
 <etl xmlns="http://labkey.org/etl/xml">
-  <name>eiACUCtoPrime</name>
-  <description>Transfers from the eIACUC Import tables to the Prime tables in ONPRC_EHR</description>
+  <name>eIACUCtoPRIMe</name>
+  <description>Copies from eIACUCProd.eIACUC tables to onprc_ehr.eIACUC_PRIME_VIEW_* tables</description>
   <transforms>
+	  
     <transform id="step1a">
-      <description>Transfer to eIACUC Animal Groups</description>
+      <description>Copy Animal Groups</description>
       <source queryName="PRIME_VIEW_ANIMAL_GROUPS" schemaName="eIACUC"/>
       <destination queryName="eIACUC_PRIME_VIEW_ANIMAL_GROUPS" schemaName="ONPRC_EHR" targetOption="truncate"/>
     </transform>
       <transform id="step2a">
-      <description>Transfer to Protocols</description>
+      <description>Copy Protocols</description>
       <source queryName="PRIME_VIEW_PROTOCOLS" schemaName="eIACUC"/>
       <destination queryName="eIACUC_PRIME_VIEW_PROTOCOLS" schemaName="ONPRC_EHR" targetOption="truncate"/>
     </transform>
-      <transform id="Step 3a UpdateBaseProtocol" type="StoredProcedure">
-      <description>Determines and populates BaseProtocol and RevisionNumber data for the protocol table in schema onprc_ehr.</description>
+      <transform id="Step 3a">
+      <description>Run stored procedure to create BaseProtocol and RevisionNumber fields and merge into Protocols</description>
       <procedure schemaName="onprc_ehr" procedureName="BaseProtocol">
       </procedure>
     </transform>
 
   </transforms>
-	<schedule>
-
-             <!--3AM-->
-                    <cron expression="0 50 04 * * ?"/>
-
-        </schedule>
+  <schedule>
+     <!-- 4:50 AM -->
+     <cron expression="0 50 4 * * ?"/>
+   </schedule>
 </etl>
