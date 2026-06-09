@@ -12,7 +12,7 @@
       <source queryName="PRIME_VIEW_PROTOCOLS" schemaName="eIACUC"/>
       <destination queryName="eIACUC_PRIME_VIEW_PROTOCOLS" schemaName="ONPRC_EHR" targetOption="truncate"/>
     </transform>
-      <transform id="UpdateBaseProtocol" type="StoredProcedure">
+      <transform id="Step 3a UpdateBaseProtocol" type="StoredProcedure">
       <description>Determines and populates BaseProtocol and RevisionNumber data for the protocol table in schema onprc_ehr.</description>
       <procedure schemaName="onprc_ehr" procedureName="BaseProtocol">
       </procedure>
