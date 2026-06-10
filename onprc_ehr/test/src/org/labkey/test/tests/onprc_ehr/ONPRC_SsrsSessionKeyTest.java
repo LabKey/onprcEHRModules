@@ -97,6 +97,11 @@ public class ONPRC_SsrsSessionKeyTest extends BaseWebDriverTest implements Sqlse
                 new ModulePropertyValue("ONPRC_EHR", "/" + getProjectName(), "SSRSReportFolder", "DummySSRSFolder")
         ));
     }
+    @Override
+    protected void checkQueries()
+    {
+        // No-op, as this minimal test isn't mocking up the full ONPRC EHR folder context needed to make query validation pass
+    }
 
     @Test
     public void testSsrsSessionKeyAuthentication() throws IOException
