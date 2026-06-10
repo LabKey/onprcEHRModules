@@ -130,9 +130,27 @@ Ext4.define('ONPRC_EHR.panel.AnimalDetailsPanel', {
                 items: [{
                     fieldLabel: 'Status',
                     name: 'calculated_status'
-                },{
+                }, {
                     fieldLabel: 'Flags',
-                    name: 'flags'
+                    name: 'flags',
+                    itemId: 'flags',
+                    listeners: {
+                        change: function (field, newValue, oldValue) {
+                            let anchor = field.getEl('onprcFlagsLink');
+                            if (this?.up('panel')?.up('panel')) {
+                                let anmId = this.up('panel').up('panel').subjectId;
+                                if (anchor) {
+                                    Ext4.get(anchor).on('click', function (e) {
+                                        e.preventDefault();
+                                        if (anmId) {
+                                            EHR.Utils.showFlagPopup(anmId, this);
+                                        }
+                                    });
+                                }
+                            }
+                        }
+                    }
+
                 },{
                     fieldLabel: 'Weight',
                     name: 'weights'

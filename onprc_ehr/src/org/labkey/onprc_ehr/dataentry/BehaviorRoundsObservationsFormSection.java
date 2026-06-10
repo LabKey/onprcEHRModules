@@ -34,14 +34,14 @@ public class BehaviorRoundsObservationsFormSection extends ClinicalObservationsF
 
         addClientDependency(ClientDependency.supplierFromPath("ehr/window/AddClinicalCasesWindow.js"));
         addClientDependency(ClientDependency.supplierFromPath("ehr/window/AddSurgicalCasesWindow.js"));
-        addClientDependency(ClientDependency.supplierFromPath("ehr/window/AddBehaviorCasesWindow.js"));
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/window/AddBehaviorCasesWindow.js"));
     }
 
     @Override
     public List<String> getTbarButtons()
     {
         List<String> defaultButtons = super.getTbarButtons();
-        defaultButtons.addFirst("ADDBEHAVIORCASES");
+        defaultButtons.addFirst("ADDBEHAVIORCASESAMENDED");
 
         return defaultButtons;
     }
