@@ -1,6 +1,6 @@
 <etl xmlns="http://labkey.org/etl/xml">
   <name>eIACUCtoPRIMe</name>
-  <description>Copies from eIACUCProd.eIACUC tables to onprc_ehr.eIACUC_PRIME_VIEW_* tables</description>
+  <description>Copies from eIACUCProd.eIACUC tables to onprc_ehr.eIACUC_PRIME_VIEW_ tables</description>
   <transforms>
 	  
     <transform id="step1a">
