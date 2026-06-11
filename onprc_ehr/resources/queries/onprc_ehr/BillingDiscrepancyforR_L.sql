@@ -37,7 +37,9 @@ WITH ProcedureFees AS (
         pfr.matchesProject,
         pfr.taskId
     FROM onprc_billing.procedureFeeRates pfr
-),
+)
+
+ ,
 
 /*-------------------------------------------------------------------
   Active assignment context
@@ -87,13 +89,13 @@ SELECT
 
     CASE
         WHEN pf.ProjectBilledTo = aas.CurrentProject
-            THEN '✅ Billing is Correct'
-        ELSE '❌ Billing Needs Review'
+            THEN 'Billing is Correct'
+        ELSE 'Billing Needs Review'
         END AS ChargeReview,
 
     CASE
         WHEN aas.IsDualAssigned = true
-            THEN '⚠️ Dual Assigned'
+            THEN 'Dual Assigned'
         ELSE 'Single Assignment'
         END AS AssignmentStatus,
 
