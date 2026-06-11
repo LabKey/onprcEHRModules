@@ -13,7 +13,7 @@
       <source queryName="PRIME_VIEW_PROTOCOLS" schemaName="eIACUC"/>
       <destination queryName="eIACUC_PRIME_VIEW_PROTOCOLS" schemaName="ONPRC_EHR" targetOption="truncate"/>
     </transform>
-      <transform id="Step 3a">
+      <transform id="Step 3a" type="StoredProcedure">
       <description>Run stored procedure to create BaseProtocol and RevisionNumber fields and merge into Protocols</description>
       <procedure schemaName="onprc_ehr" procedureName="BaseProtocol">
       </procedure>
