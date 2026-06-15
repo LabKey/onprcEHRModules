@@ -38,9 +38,7 @@ WITH ProcedureFees AS (
         pfr.taskId
     FROM onprc_billing.procedureFeeRates pfr
 )
-
- ,
-
+,
 /*-------------------------------------------------------------------
   Active assignment context
 -------------------------------------------------------------------*/
