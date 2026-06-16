@@ -942,7 +942,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
                 Results rs = new ResultsImpl(object, cols);
                 String url = getExecuteQueryUrl(c, "study", "demographics", null);
                 url = url.replaceAll("executeQuery.view", "updateQuery.view");
-                url = url.replaceAll("/query/", "/ehr/");
+                url = url.replaceAll("/query-", "/ehr-");
 
                 msg.append("<tr>");
                 msg.append("<td><a href=\"" + url + "&query.Id~eq=" + rs.getString("Id") + "\">" + rs.getString("Id") + "</a></td>");
