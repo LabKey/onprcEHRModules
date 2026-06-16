@@ -305,6 +305,8 @@ Ext4.define('ONPRC_EHR.window.ClinicalProcessingWindow', {
             {snomedcode = 'F-31030'}
             if (row[7]== 3 )
             {snomedcode = 'F-31040'}
+            if (row[7]== 'No' )
+            {snomedcode = 'F-30980'}
             var obj = {
                 Id: id,
                 date: this.getTime(date, times, errors, rowIdx),

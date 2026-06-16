@@ -1,7 +1,6 @@
 package org.labkey.GeneticsCore.etl;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.xmlbeans.XmlException;
 import org.jetbrains.annotations.NotNull;
 import org.labkey.GeneticsCore.GeneticsCoreModule;
 import org.labkey.api.data.Container;
@@ -17,6 +16,8 @@ import org.labkey.api.pipeline.RecordedActionSet;
 import org.labkey.api.security.permissions.UpdatePermission;
 import org.labkey.api.view.UnauthorizedException;
 import org.labkey.api.writer.ContainerUser;
+import org.labkey.vfs.FileLike;
+import org.labkey.vfs.FileSystemLike;
 
 import java.io.File;
 import java.util.Collections;
@@ -64,19 +65,19 @@ public class ImportGeneticsCalculationsStep implements TaskRefTask
             throw new PipelineJobException("Must provide the filepath to import data using the KinshipDataPath module property");
         }
 
-        File pipeDir = new File(pipeDirPath);
+        FileLike pipeDir = FileSystemLike.wrapFile(new File(pipeDirPath));
         if (!pipeDir.exists())
         {
             throw new PipelineJobException("Path does not exist: " + pipeDir.getPath());
         }
 
-        File kinship = new File(pipeDir, "kinship.txt");
+        FileLike kinship = pipeDir.resolveChild("kinship.txt");
         if (!kinship.exists())
         {
             throw new PipelineJobException("File does not exist: " + kinship.getPath());
         }
 
-        File inbreeding = new File(pipeDir, "inbreeding.txt");
+        FileLike inbreeding = pipeDir.resolveChild("inbreeding.txt");
         if (!inbreeding.exists())
         {
             throw new PipelineJobException("File does not exist: " + inbreeding.getPath());
@@ -94,7 +95,7 @@ public class ImportGeneticsCalculationsStep implements TaskRefTask
     }
 
     @Override
-    public void setSettings(Map<String, String> settings) throws XmlException
+    public void setSettings(Map<String, String> settings)
     {
 
     }

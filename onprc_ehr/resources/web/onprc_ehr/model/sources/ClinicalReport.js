@@ -27,9 +27,6 @@ EHR.model.DataModelManager.registerMetadata('ClinicalReport_ONPRC', {
                 hidden: false,
                 allowBlank: false
             },
-            remark: {
-                hidden: false
-            },
             p2: {
                 formEditorConfig: {
                     xtype: 'ehr-plantextarea'

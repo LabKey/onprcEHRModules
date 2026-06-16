@@ -1256,85 +1256,118 @@ exports.init = function(EHR){
                 }
             }
         });
+
+        //Added by Kollil, April 2026
+        function toDateOnly(val) {
+            if (!val)
+                return null;
+
+            // row.date object
+            if (typeof val === 'object' && val.time) {
+                var d = new Date(val.time);
+                return new Date(d.getFullYear(), d.getMonth(), d.getDate());
+            }
+
+            // date strings like "2026-04-20 00:00:00.000"
+            var s = String(val).split(' ')[0]; // keep only YYYY-MM-DD
+            var parts = s.split('-');
+            if (parts.length !== 3)
+                return null;
+
+            return new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]));
+        }
+
         //     Added 10-17-2025  R. Blasa
         EHR.Server.TriggerManager.unregisterAllHandlersForQueryNameAndEvent('study', 'assignment', EHR.Server.TriggerManager.Events.BEFORE_UPSERT);
-        EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'assignment', function(helper, scriptErrors, row, oldRow){
-            if (!helper.isETL()){
+        EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.BEFORE_UPSERT, 'study', 'assignment', function(helper, scriptErrors, row, oldRow) {
+            if (!helper.isETL()) {
                 //note: the the date field is handled above by removeTimeFromDate
                 EHR.Server.Utils.removeTimeFromDate(row, scriptErrors, 'enddate');
                 EHR.Server.Utils.removeTimeFromDate(row, scriptErrors, 'projectedRelease');
             }
 
-
             //check number of allowed animals at assign/approve time
             if (!helper.isETL() && !helper.isQuickValidation() && helper.doStandardProtocolCountValidation() &&
                     //this is designed to always perform the check on imports, but also updates where the Id was changed
-                    !(oldRow && oldRow.Id && oldRow.Id==row.Id) &&
+                    !(oldRow && oldRow.Id && oldRow.Id == row.Id) &&
                     row.Id && row.project && row.date
-            ){
+            ) {
                 var assignmentsInTransaction = helper.getProperty('assignmentsInTransaction');
                 assignmentsInTransaction = assignmentsInTransaction || [];
 
                 var msgs = helper.getJavaHelper().verifyProtocolCounts(row.Id, row.project, assignmentsInTransaction);
-                if (msgs){
+                if (msgs) {
                     msgs = msgs.split("<>");
-                    for (var i=0;i<msgs.length;i++){
+                    for (var i = 0; i < msgs.length; i++) {
                         EHR.Server.Utils.addError(scriptErrors, 'project', msgs[i], 'WARN');
                     }
                 }
             }
 
-                // note: if this is automatically generated from death/departure, allow an incomplete record
-                // alerts will flag these
-                if (row.enddate && !row.releaseCondition && !helper.isGeneratedByServer()){
-                    EHR.Server.Utils.addError(scriptErrors, 'releaseCondition', 'Must provide the release condition when the release date is set', 'WARN');
-                }
+            // note: if this is automatically generated from death/departure, allow an incomplete record
+            // alerts will flag these
+            if (row.enddate && !row.releaseCondition && !helper.isGeneratedByServer()) {
+                EHR.Server.Utils.addError(scriptErrors, 'releaseCondition', 'Lakshmi, Must provide the release condition when the release date is set', 'WARN');
+            }
 
-                if (row.enddate && !row.releaseType && !helper.isGeneratedByServer()){
-                    EHR.Server.Utils.addError(scriptErrors, 'releaseType', 'Must provide the release type when the release date is set', 'WARN');
-                }
+            if (row.enddate && !row.releaseType && !helper.isGeneratedByServer()) {
+                EHR.Server.Utils.addError(scriptErrors, 'releaseType', 'Must provide the release type when the release date is set', 'WARN');
+            }
 
-                //update condition on release
-                //Modified: 5-13-2019  R.Blasa
-                if (!helper.isETL() && helper.getEvent() == 'update' && oldRow){
-                    if (EHR.Server.Security.getQCStateByLabel(row.QCStateLabel).PublicData && EHR.Server.Security.getQCStateByLabel(oldRow.QCStateLabel).PublicData){
-                        if (row.releaseCondition && row.enddate && row.releaseCondition != 206){
-                            var msg = triggerHelper.checkForConditionDowngrade(row.Id, row.enddate, row.releaseCondition);
-                            if (msg){
-                                EHR.Server.Utils.addError(scriptErrors, 'releaseCondition', msg, 'INFO');
-                            }
-                            else {
-                                triggerHelper.updateAnimalCondition(row.Id, row.enddate, row.releaseCondition);
-                            }
+            //update condition on release
+            //Modified: 5-13-2019  R.Blasa
+            if (!helper.isETL() && helper.getEvent() == 'update' && oldRow) {
+                if (EHR.Server.Security.getQCStateByLabel(row.QCStateLabel).PublicData && EHR.Server.Security.getQCStateByLabel(oldRow.QCStateLabel).PublicData) {
+                    if (row.releaseCondition && row.enddate && row.releaseCondition != 206) {
+                        var msg = triggerHelper.checkForConditionDowngrade(row.Id, row.enddate, row.releaseCondition);
+                        if (msg) {
+                            EHR.Server.Utils.addError(scriptErrors, 'releaseCondition', msg, 'INFO');
+                        } else {
+                            triggerHelper.updateAnimalCondition(row.Id, row.enddate, row.releaseCondition);
                         }
                     }
                 }
+            }
 
-                // we want to record the date a record was marked endded, in addition to the actual end itself
-                // NOTE: we only do this when both enddate and releaseType are entered
-                if (!row.enddatefinalized && row.enddate && row.releaseCondition && EHR.Server.Security.getQCStateByLabel(row.QCStateLabel).PublicData){
-                    //note: if ended in the future, defer to that date
-                    row.enddatefinalized = new Date();
-                    if (row.enddate.getTime() > row.enddatefinalized.getTime()){
-                        row.enddatefinalized = row.enddate;
-                    }
+            // we want to record the date a record was marked endded, in addition to the actual end itself
+            // NOTE: we only do this when both enddate and releaseType are entered
+            if (!row.enddatefinalized && row.enddate && row.releaseCondition && EHR.Server.Security.getQCStateByLabel(row.QCStateLabel).PublicData) {
+                //note: if ended in the future, defer to that date
+                row.enddatefinalized = new Date();
+                if (row.enddate.getTime() > row.enddatefinalized.getTime()) {
+                    row.enddatefinalized = row.enddate;
                 }
+            }
 
-                //check for condition downgrade for assign condition
-                if (!helper.isETL() && row.Id && row.assignCondition){
-                    var msg = triggerHelper.checkForConditionDowngrade(row.Id, row.date, row.assignCondition);
-                    if (msg){
-                        EHR.Server.Utils.addError(scriptErrors, 'assignCondition', msg, 'INFO');
-                    }
+            //check for condition downgrade for assign condition
+            if (!helper.isETL() && row.Id && row.assignCondition) {
+                var msg = triggerHelper.checkForConditionDowngrade(row.Id, row.date, row.assignCondition);
+                if (msg) {
+                    EHR.Server.Utils.addError(scriptErrors, 'assignCondition', msg, 'INFO');
                 }
+            }
 
-                //check for condition downgrade for assign condition
-                if (!helper.isETL() && row.Id && row.date && row.assignCondition){
-                    var msg = triggerHelper.checkForConditionDowngrade(row.Id, row.date, row.assignCondition);
-                    if (msg){
-                        EHR.Server.Utils.addError(scriptErrors, 'assignCondition', msg, 'INFO');
-                    }
+            //check for condition downgrade for assign condition
+            if (!helper.isETL() && row.Id && row.date && row.assignCondition) {
+                var msg = triggerHelper.checkForConditionDowngrade(row.Id, row.date, row.assignCondition);
+                if (msg) {
+                    EHR.Server.Utils.addError(scriptErrors, 'assignCondition', msg, 'INFO');
                 }
+            }
+
+            //Added by Kollil, April 2026. Refer to ticket # 13807
+            if (row.project && row.date) {
+                var projectEndDate = triggerHelper.getProjectEndDate(row.project); //helper.getJavaHelper().getProjectEndDate(row.project);
+                var assignmentDate = toDateOnly(row.date);
+                var endDate = toDateOnly(projectEndDate);
+
+                if (assignmentDate && endDate && assignmentDate.getTime() > endDate.getTime()) {
+                    // console.log('4.5 DEBUG assignmentDate=' + assignmentDate);
+                    EHR.Server.Utils.addError(scriptErrors, 'project', 'The assignment start date occurs after the end date of the selected center project. Please review the assignment date and confirm!', 'WARN');
+
+                }
+            }
+
         });
 
         //Added 10-5-2022  R.Blasa
@@ -1376,6 +1409,17 @@ exports.init = function(EHR){
 
             }
         });
+    });
+
+    // Added: 10-6-2025
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.AFTER_UPSERT, 'study', 'chemistryResults', function (helper, scriptErrors, row, oldRow) {
+
+
+        if (row.Id && row.qualresult && row.qualresult.indexOf('alert') !== -1)  {
+
+               console.log("alert values:  " + row.qualresult);
+            triggerHelper.sendClinpathPanicEmail(row.Id, row.runid, row.objectid);
+        }
     });
 
     //Added: 10-4-2022  R.Blasa
