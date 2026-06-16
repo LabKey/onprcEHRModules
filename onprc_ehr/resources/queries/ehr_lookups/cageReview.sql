@@ -42,6 +42,7 @@ SELECT
   t.totalWeightExempt,
   t.totalHeightExempt
 
+
 FROM (
 
 SELECT
@@ -68,6 +69,8 @@ SELECT
     sum(CASE WHEN t0.weightExemption IS NULL THEN 0 ELSE 1 END) as totalWeightExempt,
     count(t0.heightExemption) as totalHeightExempt
 
+
+
 FROM (
 
 SELECT
@@ -82,11 +85,14 @@ SELECT
   group_concat(c1.height) as heights,
   f.heightExemption,
   CASE
+    WHEN hf.Id is not null AND c1.height >= pc.cage_type.height THEN 'ERROR: According to the monkeys weight-- it needs a height step taller than required.'
+    WHEN hf.Id is not null AND c1.height < pc.cage_type.height THEN 'NOTE: According to the monkeys weight-- it needs a height step taller than required.'
     WHEN (pc.cage_type.height < c1.height AND f.heightExemption IS NULL) THEN ('ERROR: Insufficient height, ' || h.id ||' needs at least: ' || cast(c1.height AS varchar(50)))
     WHEN (pc.cage_type.height < c1.height AND f.heightExemption IS NOT NULL) THEN cast(('NOTE: Height Exemption: ' || h.Id) as varchar(500))
     ELSE null
   END as heightStatus,
-  wf.weightExemption
+  wf.weightExemption,
+  hf.height_error
 
 FROM ehr_lookups.connectedCages pc
 
@@ -98,17 +104,27 @@ LEFT JOIN (
     f.id,
     min(f.flag.value) as heightExemption
   FROM study.flags f
-  WHERE f.isActive = true AND f.flag.category = 'Caging Note' and f.flag.description like '%exempt%'
+  WHERE f.isActive = true AND f.flag.category = 'Caging Note' and (f.flag.description like '%height-exempt%' or f.flag.description like '%Medical-exempt%')
   GROUP BY f.Id
 ) f on (f.Id = h.Id)
 
---weight flags
+    --height flags
+LEFT JOIN (
+    SELECT
+        f.id,
+        min(f.flag.value) as height_error
+    FROM study.flags f
+    WHERE f.isActive = true AND f.flag.category = 'Caging Note' and (f.flag.description like '%height-error%')
+    GROUP BY f.Id
+) hf on (hf.Id = h.Id)
+
+---weight flags
 LEFT JOIN (
   SELECT
     f.id,
     min(f.flag.value) as weightExemption
   FROM study.flags f
-  WHERE f.isActive = true AND f.flag.category = 'Caging Note' and f.flag.description like '%exempt%'
+  WHERE f.isActive = true AND f.flag.category = 'Caging Note' and (f.flag.description like '%weight-exempt%' or f.flag.description like '%Medical-exempt%')
   GROUP BY f.Id
 ) wf on (wf.Id = h.Id)
 
