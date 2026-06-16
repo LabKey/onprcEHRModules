@@ -1,8 +1,7 @@
 <etl xmlns="http://labkey.org/etl/xml">
-  <name>eIACUCtoPRIMe</name>
+  <name>eiACUCtoPrime</name>
   <description>Copies from eIACUCProd.eIACUC tables to onprc_ehr.eIACUC_PRIME_VIEW_ tables</description>
   <transforms>
-	  
     <transform id="step1a">
       <description>Copy Animal Groups</description>
       <source queryName="PRIME_VIEW_ANIMAL_GROUPS" schemaName="eIACUC"/>
@@ -13,12 +12,11 @@
       <source queryName="PRIME_VIEW_PROTOCOLS" schemaName="eIACUC"/>
       <destination queryName="eIACUC_PRIME_VIEW_PROTOCOLS" schemaName="ONPRC_EHR" targetOption="truncate"/>
     </transform>
-      <transform id="Step 3a" type="StoredProcedure">
+      <transform id="step3a" type="StoredProcedure">
       <description>Run stored procedure to create BaseProtocol and RevisionNumber fields and merge into Protocols</description>
       <procedure schemaName="onprc_ehr" procedureName="BaseProtocol">
       </procedure>
     </transform>
-
   </transforms>
   <schedule>
      <!-- 4:50 AM -->
