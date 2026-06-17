@@ -412,46 +412,34 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                                         else
                                             bgColor = 'grey';
                                     }
-                                    else if (status == 'Unavailable'  )
+                                    else if (status == 'Unavailable' && cageType != 'Unavailable Location' )
                                     {
-                                        if (bgColor = emptyCageColor ) {
+                                        if (bgColor = emptyCageColor && Ext4.isEmpty(colorcage) ) {
 
                                             bgColor = 'white';
                                         }
                                     }
-                                    else if (status == 'Unavailable'  && Ext4.isEmpty(colorcage)  && cageType != 'Unavailable Location')
+                                    else if (status == 'Unavailable'   && cageType != 'Unavailable Location')
                                     {
                                         bgColor = 'yellow';
                                     }
-                                    else if (colorcage == 'Transfer Pending'  )
+                                    else if (colorcage == 'Transfer Pending' && cageType != 'Unavailable Location' )
                                     {
-                                        if (!Ext4.isEmpty(cageAnimals) && Ext4.isEmpty(colorcage) )
-                                            bgColor = '';
-                                        else
                                             bgColor = 'orange';
 
                                     }
-                                    else if (colorcage == 'Held for Colony' )
+                                    else if (colorcage == 'Held for Colony' && cageType != 'Unavailable Location' )
                                     {
-                                        if (!Ext4.isEmpty(cageAnimals) && Ext4.isEmpty(colorcage) )
-                                            bgColor = '';
-                                        else
                                             bgColor = '#54daff';
 
                                     }
-                                    else if (colorcage == 'Epen Caging'  )
+                                    else if (colorcage == 'Epen Caging' && cageType != 'Unavailable Location' )
                                     {
-                                        if (!Ext4.isEmpty(cageAnimals) && Ext4.isEmpty(colorcage)  && cageType != 'Unavailable Location')
-                                            bgColor = '';
-                                        else
                                             bgColor = 'brown';
 
                                     }
                                     else if (colorcage == 'Surgery Recovery'  )
                                     {
-                                        if (!Ext4.isEmpty(cageAnimals) && Ext4.isEmpty(colorcage)  && cageType != 'Unavailable Location')
-                                            bgColor = '';
-                                        else
                                             bgColor = 'pink';
 
                                     }
