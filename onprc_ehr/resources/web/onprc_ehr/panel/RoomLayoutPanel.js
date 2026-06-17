@@ -344,7 +344,7 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                                     var prevIsSeparate = prevDividerInfo.countAsSeparate;
                                     var prevAnimals = prevCage.get('totalAnimals/animals');
 
-                                    if (!prevIsSeparate && !Ext4.isEmpty(cageAnimals)  && cageType != 'Unavailable Location')
+                                    if (!prevIsSeparate && !Ext4.isEmpty(cageAnimals) && Ext4.isEmpty(colorcage) && cageType != 'Unavailable Location')
                                         bgColor = 'red';
 
                                     if (prevIsSeparate && Ext4.isEmpty(cageAnimals)  && cageType != 'Unavailable Location')
@@ -387,9 +387,9 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                                             bgColor = 'brown';
 
                                     }
-                                    else if (colorcage == 'Surgery Recovery' && Ext4.isEmpty(colorcage) && cageType != 'Unavailable Location' )
+                                    else if (colorcage == 'Surgery Recovery'  && cageType != 'Unavailable Location' )
                                     {
-                                        if (!Ext4.isEmpty(cageAnimals) && Ext4.isEmpty(colorcage)  && cageType != 'Unavailable Location')
+                                        if (!Ext4.isEmpty(cageAnimals)  && cageType != 'Unavailable Location')
                                             bgColor = 'pink';
 
                                     }
