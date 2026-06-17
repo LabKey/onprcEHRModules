@@ -26,6 +26,12 @@ SELECT
   t.isPCRRequired,
   t.isPCRCurrent,
 
+  t.lastBchem,
+  t.daysSinceBchem,
+  t.isBchemRequired,
+  t.isBchemCurrent,
+
+
   CASE
     WHEN (t.isSRVRequired = true AND t.isSRVCurrent = false) THEN 4
     ELSE 0
@@ -36,6 +42,38 @@ SELECT
     ELSE 0
   END as PCRbloodVol,
 
+--   CASE
+--       WHEN  (t.isESPFRequired = true AND t.isESPFCurrent = false )  THEN 4
+--       ELSE 0
+--       END as ESPFbloodVol,
+
+  -----CBC
+  CASE
+
+      WHEN  (t.isCBCRequired2 = true AND t.isCBCCurrent2 = false )  THEN 1
+      WHEN  (t.isCBCRequired5 = true AND t.isCBCCurrent5 = false )  THEN 1
+      WHEN  (t.isCBCRequired3 = true AND t.isCBCCurrent3 = false )  THEN 1
+      WHEN  (t.isCBCRequired4 = true AND t.isCBCCurrent4 = false )  THEN 1
+      WHEN  (t.isCBCRequired1 = true AND t.isCBCCurrent1 = false )  THEN 1
+      ELSE 0
+      END as CBCbloodVol,
+
+
+  -----Comprehensive Chemistry
+  CASE
+      WHEN  (t.isCChemRequired4 = true AND t.isCChemCurrent4 = false )  THEN 2
+      WHEN  (t.isCChemRequired2 = true AND t.isCChemCurrent2 = false )  THEN 2
+      WHEN  (t.isCChemRequired3 = true AND t.isCChemCurrent3 = false )  THEN 2
+      WHEN  (t.isCChemRequired1 = true AND t.isCChemCurrent1 = false )  THEN 2
+
+      ELSE 0
+      END as CChembloodVol,
+
+    -----Basic Chemistry
+  CASE
+      WHEN  (t.isBChemRequired = true AND t.isBChemCurrent = false )  THEN 2
+      ELSE 0
+      END as BchembloodVol
 
 FROM (
 
@@ -64,7 +102,159 @@ SELECT
   CASE
    WHEN (d.Id.age.ageInDays > 180 )  THEN true
     ELSE false
-    END as isPCRRequired
+    END as isPCRRequired,
+
+--     espf.lastDate as lastESPF,
+--     timestampdiff('SQL_TSI_DAY', espf.lastDate, now()) as daysSinceESPF,
+--    CASE
+--       WHEN ( (timestampdiff('SQL_TSI_DAY', espf.lastDate, now()) > 180) OR espf.lastDate is Null ) THEN false
+--       ELSE true
+--       END as isESPFCurrent,
+
+-- ESPF--->  WHEN (year(now()) = year(pcr.lastDate) And (month(pcr.lastDate) = "January" OR month(pcr.lastDate) = "July"))
+--         THEN true
+
+
+--    CASE
+--       WHEN (d.Id.age.ageInDays > 0 )  THEN true
+--       ELSE false
+--       END as isESPFRequired,
+
+
+  ------ All CBC Sections
+
+    cbc.lastDate as lastCBC1,
+    timestampdiff('SQL_TSI_DAY', cbc.lastDate, now()) as daysSinceCBC1,
+   CASE
+      WHEN ( (timestampdiff('SQL_TSI_DAY', cbc.lastDate, now()) > 165 )AND d.Id.curLocation.area in ('Corral', 'Shelters', 'PENS' ) ) THEN false
+      ELSE true
+      END as isCBCCurrent1,
+
+  CASE
+      WHEN (d.id.age.AgeInYears > 20 )  THEN true
+      ELSE false
+      END as isCBCRequired1,
+
+  cbc.lastDate as lastCBC2,
+  timestampdiff('SQL_TSI_DAY', cbc.lastDate, now()) as daysSinceCBC2,
+  CASE
+      WHEN  ( (  (timestampdiff('SQL_TSI_DAY', cbc.lastDate, now()) > 340) OR cbc.lastDate is null ) AND d.Id.curLocation.area in ('Corral', 'Shelters', 'PENS' ) AND (flg.Id is not null) ) THEN false
+      ELSE true
+      END as isCBCCurrent2,
+
+  CASE
+      WHEN (d.Id.age.ageInDays > 0 )  THEN true
+      ELSE false
+      END as isCBCRequired2,
+
+    cbc.lastDate as lastCBC3,
+    timestampdiff('SQL_TSI_DAY', cbc.lastDate, now()) as daysSinceCBC3,
+   CASE
+      WHEN ( (timestampdiff('SQL_TSI_DAY', cbc.lastDate, now()) > 340) AND d.Id.curLocation.area not in ('Corral', 'Shelters', 'PENS' )  ) THEN false
+      ELSE true
+      END as isCBCCurrent3,
+
+   CASE
+      WHEN (d.id.age.AgeInYears > 12 )  THEN true
+      ELSE false
+      END as isCBCRequired3,
+
+
+  cbc.lastDate as lastCBC4,
+  timestampdiff('SQL_TSI_DAY', cbc.lastDate, now()) as daysSinceCBC4,
+  CASE
+      WHEN ( cbc.lastDate is null AND d.Id.curLocation.area not in ('Corral', 'Shelters', 'PENS' )  ) THEN false
+      ELSE true
+      END as isCBCCurrent4,
+
+  CASE
+      WHEN (d.id.age.AgeInYears > 6 )  THEN true
+      ELSE false
+      END as isCBCRequired4,
+
+
+  cbc.lastDate as lastCBC5,
+  timestampdiff('SQL_TSI_DAY', cbc.lastDate, now()) as daysSinceCBC5,
+  CASE
+      WHEN ( ( (timestampdiff('SQL_TSI_DAY', cbc.lastDate, now()) > 180) OR cbc.lastDate is null )  AND (nts.Id is not null) )  THEN false
+      ELSE true
+      END as isCBCCurrent5,
+
+  CASE
+      WHEN (d.Id.age.ageInDays > 0 )  THEN true
+      ELSE false
+      END as isCBCRequired5,
+
+
+
+  ----- All Comp Chemistry sections
+
+
+  cchem.lastDate as lastCChem1,
+  timestampdiff('SQL_TSI_DAY', cchem.lastDate, now()) as daysSinceCChem1,
+  CASE
+      WHEN  ( ( (timestampdiff('SQL_TSI_DAY', cchem.lastDate, now()) > 165) OR cchem.lastDate is null )   AND d.Id.curLocation.area in ('Corral', 'Shelters', 'PENS' )  ) THEN false
+      ELSE true
+      END as isCChemCurrent1,
+
+  CASE
+      WHEN (d.id.age.AgeInYears > 20 )  THEN true
+      ELSE false
+      END as isCChemRequired1,
+
+
+  cchem.lastDate as lastCChem2,
+  timestampdiff('SQL_TSI_DAY', cchem.lastDate, now()) as daysSinceCChem2,
+  CASE
+      WHEN ( ( (timestampdiff('SQL_TSI_DAY', cchem.lastDate, now()) > 340)  OR cchem.lastDate is null )   AND d.Id.curLocation.area in ('Corral', 'Shelters', 'PENS' ) AND (flg.Id is not null) ) THEN false
+      ELSE true
+      END as isCChemCurrent2,
+
+  CASE
+      WHEN (d.Id.age.ageInDays > 0 )  THEN true
+      ELSE false
+      END as isCChemRequired2,
+
+    cchem.lastDate as lastCChem3,
+        timestampdiff('SQL_TSI_DAY', cchem.lastDate, now()) as daysSinceCChem3,
+  CASE
+      WHEN (  (timestampdiff('SQL_TSI_DAY', cchem.lastDate, now()) > 180)  AND d.Id.curLocation.area not in ('Corral', 'Shelters', 'PENS' )  ) THEN false
+      ELSE true
+      END as isCChemCurrent3,
+
+  CASE
+      WHEN (d.id.age.AgeInYears >= 18 )  THEN true
+      ELSE false
+      END as isCChemRequired3,
+
+  cchem.lastDate as lastCChem4,
+  timestampdiff('SQL_TSI_DAY', cchem.lastDate, now()) as daysSinceCChem4,
+  CASE
+      WHEN ( ( (timestampdiff('SQL_TSI_DAY', cchem.lastDate, now()) > 180 ) OR cchem.lastdate is null )  AND (nts.Id is not null )  ) THEN false
+      ELSE true
+      END as isCChemCurrent4,
+
+  CASE
+      WHEN (d.Id.age.ageInDays > 0 )  THEN true
+      ELSE false
+      END as isCChemRequired4,
+
+
+  ------------- Basic Chemistry
+
+
+  bchem.lastDate as lastBChem,
+  timestampdiff('SQL_TSI_DAY', bchem.lastDate, now()) as daysSinceBChem,
+  CASE
+      WHEN ( ( (timestampdiff('SQL_TSI_DAY', bchem.lastDate, now()) > 340 ) OR bchem.lastDate is null ) AND (nts.Id is null) AND d.Id.curLocation.area not in ('Corral', 'Shelters', 'PENS' )  ) THEN false
+      ELSE true
+      END as isBChemCurrent,
+
+  CASE
+      WHEN (d.id.age.AgeInYears >= 6 AND d.id.age.AgeInYears < 18 )  THEN true
+      ELSE false
+      END as isBChemRequired
+
 
 FROM study.demographics d
 
@@ -73,10 +263,20 @@ LEFT JOIN (
     s.id,
     max(s.date) as lastDate
   FROM study.blood s
-  WHERE (s.additionalservices like 'SPF Surveillance%' or s.additionalservices like  'Compromised SPF%')
+  WHERE (s.additionalservices like 'SPF Surveillance - Annual%' or s.additionalservices like  'Compromised SPF Surveillance%')
   GROUP BY s.id
 
 ) srv ON (srv.id = d.id)
+
+LEFT JOIN (
+    SELECT
+        k.id,
+        max(k.date) as lastDate
+    FROM study.blood k
+    WHERE (k.additionalservices like '%ESPF Surveillance - Semiannual%')
+    GROUP BY k.id
+
+) espf ON (espf.id = d.id)
 
 LEFT JOIN (
     SELECT
@@ -87,6 +287,60 @@ LEFT JOIN (
     GROUP BY b.id
 
 ) pcr ON (pcr.id = d.id)
+
+LEFT JOIN (
+    SELECT
+        j.id,
+        max(j.date) as lastDate
+    FROM study.blood j
+    WHERE j.additionalservices like  '%CBC with automated differential%'
+    GROUP BY j.id
+
+) cbc ON (cbc.id = d.id)
+
+LEFT JOIN (
+    SELECT
+        m.id,
+        max(m.date) as lastDate
+    FROM study.blood m
+    WHERE m.additionalservices like  '%Comprehensive Chemistry panel in-house%'
+    GROUP BY m.id
+
+) cchem ON (cchem.id = d.id)
+
+
+LEFT JOIN (
+    SELECT
+        t.id,
+        max(t.date) as lastDate
+    FROM study.blood t
+    WHERE t.additionalservices like  '%Basic Chemistry Panel%'
+    GROUP BY t.id
+
+) bchem ON (bchem.id = d.id)
+
+LEFT JOIN (
+    SELECT
+        n.id,
+        max(n.date) as lastDate
+    FROM study.flags n
+    WHERE n.flag.category ='Behavior Flag' And n.flag.value = 'Socially important'
+    And n.enddate is null
+    GROUP BY n.id
+
+) flg ON (flg.id = d.id)
+
+
+LEFT JOIN (
+    SELECT
+        p.id,
+        max(p.date) as lastDate
+    FROM study.flags p
+    WHERE p.flag.category ='Assign Alias' And p.flag.value = 'Assignment pool'
+    And p.enddate is null
+    GROUP BY p.id
+
+) nts ON (nts.id = d.id)
 
 
 WHERE d.calculated_status = 'Alive'
