@@ -148,8 +148,8 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                                 'Cages are colored Green when they are empty. <br/> ' +
                                 'Cages are colored Yellow when they are flagged as \"Unavailable\". <br/>' +
                                 'Cages are colored Orange when they are flagged as \"Transfer Pending\". <br/>' +
-                                'Cages are colored light blue when they are flagged as \"Held for Colony\".' +
-                                'Cages are colored Brown when they are flagged as \"Epen Caging\".'+
+                                'Cages are colored light blue when they are flagged as \"Held for Colony\". <br/>\'' +
+                                'Cages are colored Brown when they are flagged as \"Epen Caging\". <br/>\''+
                                 'Cages are colored Pink when they are flagged as \"Surgery Recovery\".'
                     });
                 }
