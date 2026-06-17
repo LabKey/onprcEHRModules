@@ -173,6 +173,13 @@ public class ONPRC_BillingModule extends ExtendedSimpleModule
     }
 
     @Override
+    @NotNull
+    public Set<Class> getIntegrationTests()
+    {
+        return Collections.singleton(ONPRC_BillingManager.TestCase.class);
+    }
+
+    @Override
     protected void registerSchemas()
     {
         DefaultSchema.registerProvider(ONPRC_BillingSchema.NAME, new DefaultSchema.SchemaProvider(this)
