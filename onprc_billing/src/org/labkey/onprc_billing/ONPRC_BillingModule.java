@@ -174,7 +174,7 @@ public class ONPRC_BillingModule extends ExtendedSimpleModule
 
     @Override
     @NotNull
-    public Set<Class> getIntegrationTests()
+    public Set<Class<?>> getIntegrationTests()
     {
         return Collections.singleton(ONPRC_BillingManager.TestCase.class);
     }
