@@ -18,8 +18,10 @@ SELECT
   t.date,
   t.procedureid,
   t.qcstate,
-  t.taskid
+  t.taskid,
+  t.type
 
 FROM study.encounters t
-where procedureid.name in ('TB Test Intradermal','TB Test Serologic')
+where t.procedureid.name in ('TB Test Intradermal','TB Test Serologic')
+And t.type in ('Procedure','Surgery')
 
