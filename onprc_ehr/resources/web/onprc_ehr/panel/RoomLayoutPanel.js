@@ -387,7 +387,7 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                                             bgColor = 'pink';
 
                                     }
-                                    else if (colorcage == 'Empty' && Ext4.isEmpty(colorcage) && cageType != 'Unavailable Location' )
+                                    else if (colorcage == 'Empty' && cageType != 'Unavailable Location' )
                                     {
                                             bgColor = emptyCageColor;
                                     }
