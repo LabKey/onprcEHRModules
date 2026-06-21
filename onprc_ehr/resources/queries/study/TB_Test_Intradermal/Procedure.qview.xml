@@ -15,6 +15,6 @@
         <sort column="date" descending="true"/>
     </sorts>
     <filters>
-        <filter column="type" operator="eq" value="Procedure"/>
+        <filter column="type" operator="containsnoneof" value="Procedure,Surgery"/>
     </filters>
 </customView>
