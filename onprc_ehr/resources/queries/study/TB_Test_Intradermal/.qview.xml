@@ -5,7 +5,7 @@
         <column name="project"/>
         <column name="procedureid"/>
         <column name="remark"/>
-        <column name="QCState/Label"/>
+        <column name="QCState"/>
         <column name="taskid" />
         <column name="requestid" />
         <column name="chargetype" />
