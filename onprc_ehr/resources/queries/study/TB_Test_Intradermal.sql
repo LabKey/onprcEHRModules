@@ -14,12 +14,35 @@
  * limitations under the License.
  */
 SELECT
-  t.id,
-  t.date,
-  t.procedureid,
-  t.qcstate,
-  t.taskid
+    t.id,
+    t.date,
+    t.procedureid,
+    t.qcstate,
+    t.taskid,
+    t.type,
+    t.remark,
+    t.requestid,
+    t.chargetype,
+    t.project
+
 
 FROM study.encounters t
-where procedureid.name in ('TB Test Intradermal','TB Test Serologic')
+Where  t.type in ('Procedure')
+UNION
+SELECT
+    j.id,
+    j.date,
+    j.procedureid,
+    j.qcstate,
+    j.taskid,
+    j.type,
+     j.remark,
+     j.requestid,
+     j.chargetype,
+     j.project
+
+
+FROM study.encounters j
+where j.procedureid.name in ('TB Test Intradermal')
+  And j.type in ('Surgery')
 
