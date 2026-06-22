@@ -30,16 +30,16 @@ FROM study.encounters t
 Where  t.type in ('Procedure')
 UNION
 SELECT
-    j.id,
-    j.date,
-    j.procedureid,
+        j.id,
+      j.date,
+j.procedureid,
     j.qcstate,
-    j.taskid,
-    j.type,
+     j.taskid,
+       j.type,
      j.remark,
-     j.requestid,
-     j.chargetype,
-     j.project
+   j.requestid,
+  j.chargetype,
+      j.project
 
 
 FROM study.encounters j
