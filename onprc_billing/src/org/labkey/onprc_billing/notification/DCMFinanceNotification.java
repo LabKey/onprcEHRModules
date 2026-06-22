@@ -2,6 +2,7 @@ package org.labkey.onprc_billing.notification;
 
 import org.apache.commons.lang3.StringUtils;
 import org.labkey.api.data.Container;
+import org.labkey.api.util.PageFlowUtil;
 import org.labkey.onprc_billing.ONPRC_BillingManager;
 import org.labkey.onprc_billing.ONPRC_BillingSchema;
 
@@ -57,7 +58,7 @@ public class DCMFinanceNotification extends FinanceNotification
             Container container = containerMap.get(category);
 
             String url = getExecuteQueryUrl(container, ONPRC_BillingSchema.NAME, categoryToQuery.get(category), null) + "&query.param.StartDate=" + getDateFormat(c).format(start.getTime()) + "&query.param.EndDate=" + getDateFormat(c).format(endDate.getTime());
-            msg.append("<tr><td><a href='" + url + "'>" + category + "</a></td><td>" + totalsMap.get("total") + "</td><td>" + _dollarFormat.format(totalsMap.get("totalCost")) + "</td></tr>");
+            msg.append("<tr><td><a href='" + PageFlowUtil.filter(url) + "'>" + PageFlowUtil.filter(category) + "</a></td><td>" + totalsMap.get("total") + "</td><td>" + _dollarFormat.format(totalsMap.get("totalCost")) + "</td></tr>");
         }
         msg.append("</table><br><br>");
 
@@ -141,7 +142,7 @@ public class DCMFinanceNotification extends FinanceNotification
 
                 String baseUrl = getExecuteQueryUrl(containerMap.get(category), ONPRC_BillingSchema.NAME, categoryToQuery.get(category), null) + "&query.param.StartDate=" + getDateFormat(c).format(start.getTime()) + "&query.param.EndDate=" + getDateFormat(c).format(endDate.getTime());
                 String projUrl = baseUrl + ("None".equals(tokens[0]) ? "&query.project/displayName~isblank" : "&query.project/displayName~eq=" + tokens[0]);
-                msg.append("<tr><td><a href='" + projUrl + "'>" + tokens[0] + "</a></td>");
+                msg.append("<tr><td><a href='" + PageFlowUtil.filter(projUrl) + "'>" + PageFlowUtil.filter(tokens[0]) + "</a></td>");
 
                 //alias
                 String accountUrl = null;
@@ -153,22 +154,22 @@ public class DCMFinanceNotification extends FinanceNotification
 
                 if (accountUrl != null)
                 {
-                    msg.append("<td><a href='" + accountUrl + "'>" + tokens[1] + "</a></td>");
+                    msg.append("<td><a href='" + PageFlowUtil.filter(accountUrl) + "'>" + PageFlowUtil.filter(tokens[1]) + "</a></td>");
                 }
                 else
                 {
-                    msg.append("<td>" + (tokens[1]) + "</td>");
+                    msg.append("<td>" + PageFlowUtil.filter(tokens[1]) + "</td>");
                 }
 
-                msg.append("<td>" + (tokens[2]) + "</td>");
-                msg.append("<td>" + category + "</td>");
+                msg.append("<td>" + PageFlowUtil.filter(tokens[2]) + "</td>");
+                msg.append("<td>" + PageFlowUtil.filter(category) + "</td>");
 
                 for (FieldDescriptor fd : toShow)
                 {
                     if (totals.containsKey(fd.getFieldName()))
                     {
                         String url = projUrl + fd.getFilter();
-                        msg.append("<td" + (fd.isShouldHighlight() ? " style='background-color: yellow;'" : "") + "><a href='" + url + "'>" + totals.get(fd.getFieldName()) + "</a></td>");
+                        msg.append("<td" + (fd.isShouldHighlight() ? " style='background-color: yellow;'" : "") + "><a href='" + PageFlowUtil.filter(url) + "'>" + totals.get(fd.getFieldName()) + "</a></td>");
                     }
                     else
                     {
