@@ -1,7 +1,7 @@
 <query xmlns="http://labkey.org/data/xml/query">
     <metadata>
         <tables xmlns="http://labkey.org/data/xml">
-            <table tableName="encounters" tableDbType="TABLE" useColumnOrder="true">
+            <table tableName="Procedure_Amended" tableDbType="TABLE" useColumnOrder="true">
                 <tableUrl>/ehr/encounterDetails.view?objectid=${objectid}&amp;formtype=${taskid/formtype}&amp;taskid=${taskid}</tableUrl>
                 <insertUrl />
                 <importUrl />
