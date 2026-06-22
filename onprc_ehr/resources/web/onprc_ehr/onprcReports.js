@@ -388,7 +388,9 @@ EHR.reports.medicationSchedule = function(panel, tab, viewName){
             removeableFilters: filterArray.removable,
             parameters: {
                 StartDate: date,
-                NumDays: 1
+                NumDays: 1,
+                Category:'Clinical;Clinical on behalf of Research;Clinical on behalf of Surgical'
+
             }
         })
     });
