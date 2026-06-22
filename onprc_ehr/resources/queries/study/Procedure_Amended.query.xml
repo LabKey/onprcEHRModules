@@ -2,7 +2,7 @@
     <metadata>
         <tables xmlns="http://labkey.org/data/xml">
             <table tableName="Procedure_Amended" tableDbType="TABLE" useColumnOrder="true">
-                <tableUrl>/ehr/encounterDetails.view?objectid=${objectid}&amp;formtype=${taskid/formtype}&amp;taskid=${taskid}</tableUrl>
+                <tableTitle>Procedures Amended</tableTitle>
                 <insertUrl />
                 <importUrl />
                 <updateUrl />
@@ -19,6 +19,7 @@
                         <columnTitle>Center Project</columnTitle>
                         <isHidden>false</isHidden>
                         <fk>
+                            <fkFolderPath>/ONPRC/EHR</fkFolderPath>
                             <fkDbSchema>ehr</fkDbSchema>
                             <fkTable>project</fkTable>
                             <fkColumnName>project</fkColumnName>
@@ -27,6 +28,7 @@
                      <column columnName="procedureid">
                         <columnTitle>Procedure</columnTitle>
                         <fk>
+                            <fkFolderPath>/ONPRC/EHR</fkFolderPath>
                             <fkDbSchema>ehr_lookups</fkDbSchema>
                             <fkTable>procedures</fkTable>
                             <fkColumnName>rowid</fkColumnName>
@@ -40,6 +42,7 @@
                     <column columnName="QCState">
                         <columnTitle>Status</columnTitle>
                         <fk>
+                            <fkFolderPath>/ONPRC/EHR</fkFolderPath>
                             <fkDbSchema>core</fkDbSchema>
                             <fkTable>QCState</fkTable>
                             <fkColumnName>Rowid</fkColumnName>
@@ -47,6 +50,7 @@
                     </column>
                     <column columnName="taskid">
                     <fk>
+                        <fkFolderPath>/ONPRC/EHR</fkFolderPath>
                         <fkDbSchema>ehr</fkDbSchema>
                         <fkTable>tasks</fkTable>
                         <fkColumnName>taskid</fkColumnName>
@@ -55,6 +59,7 @@
                 </column>
                     <column columnName="requestid">
                         <fk>
+                            <fkFolderPath>/ONPRC/EHR</fkFolderPath>
                             <fkDbSchema>ehr</fkDbSchema>
                             <fkTable>requests</fkTable>
                             <fkColumnName>requestid</fkColumnName>
@@ -64,6 +69,7 @@
                     <column columnName="chargetype">
                         <columnTitle>Charge Unit</columnTitle>
                         <fk>
+                            <fkFolderPath>/ONPRC/EHR</fkFolderPath>
                             <fkDbSchema>ehr_lookups</fkDbSchema>
                             <fkTable>procedureChargeType</fkTable>
                             <fkColumnName>value</fkColumnName>
@@ -72,6 +78,7 @@
                     <column columnName="type">
                         <columnTitle>Source</columnTitle>
                         <fk>
+                            <fkFolderPath>/ONPRC/EHR</fkFolderPath>
                             <fkDbSchema>ehr_lookups</fkDbSchema>
                             <fkTable>encounter_types</fkTable>
                             <fkColumnName>value</fkColumnName>
