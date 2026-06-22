@@ -49,7 +49,8 @@ EHR.model.DataModelManager.registerMetadata('Bulk_Pairing_Properties', {
                     displayColumn: 'value',
                     sort: 'category,value,sort_order',
                     filterArray: [
-                        LABKEY.Filter.create('date_disabled', null, LABKEY.Filter.Types.ISBLANK)
+                        LABKEY.Filter.create('date_disabled', null, LABKEY.Filter.Types.ISBLANK),
+                        LABKEY.Filter.create('category', 'STF Clinical', LABKEY.Filter.Types.EQUAL)
                     ]
                 }
             },
@@ -65,28 +66,19 @@ EHR.model.DataModelManager.registerMetadata('Bulk_Pairing_Properties', {
                 },
                 lookup: {
                     filterArray: [
-                        LABKEY.Filter.create('date_disabled', null, LABKEY.Filter.Types.ISBLANK)
+                        LABKEY.Filter.create('date_disabled', null, LABKEY.Filter.Types.ISBLANK),
+                        LABKEY.Filter.create('value', 'STF Clinical', LABKEY.Filter.Types.EQUAL)
                     ]
                 }
             },
-
-            enddate: {
+           enddate: {
                 hidden: false
             },
-
             separationreason: {
                 hidden: true
             },
             observation: {
-                allowBlank: true,
-                columnConfig: {
-                    width: 250
-                },
-                lookup: {
-                    filterArray: [
-                        LABKEY.Filter.create('date_disabled', null, LABKEY.Filter.Types.ISBLANK)
-                    ]
-                }
+                hidden: true
             },
 
             remark2: {
@@ -113,7 +105,13 @@ EHR.model.DataModelManager.registerMetadata('Bulk_Pairing_Properties', {
             category: {
                 allowBlank: false,
                 columnConfig: {
-                    width: 200
+                    width: 150
+                },
+                lookup: {
+                    filterArray: [
+                        LABKEY.Filter.create('date_disabled', null, LABKEY.Filter.Types.ISBLANK),
+                        LABKEY.Filter.create('value', 'STF Clinical', LABKEY.Filter.Types.EQUAL)
+                    ]
                 }
             },
             other_infant: {
