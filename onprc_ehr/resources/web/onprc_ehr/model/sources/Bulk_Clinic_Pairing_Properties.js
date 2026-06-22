@@ -61,15 +61,34 @@ EHR.model.DataModelManager.registerMetadata('Bulk_Pairing_Properties', {
                 hidden: true
             },
             endeventType: {
-                columnConfig: {
-                    width: 180
-                },
-                lookup: {
-                    filterArray: [
-                        LABKEY.Filter.create('date_disabled', null, LABKEY.Filter.Types.ISBLANK),
-                        LABKEY.Filter.create('value', 'STF Clinical', LABKEY.Filter.Types.EQUAL)
-                    ]
-                }
+
+                    columnConfig: {
+                        width: 250
+                    },
+                    editorConfig: {
+                        caseSensitive: false,
+                        anyMatch: true,
+                        listConfig: {
+                            innerTpl: '{[(values.category ? "<b>" + LABKEY.Utils.encodeHtml(values.category) + ":</b> " : "") + LABKEY.Utils.encodeHtml(values.value)]}',
+                            getInnerTpl: function () {
+                                return this.innerTpl;
+                            }
+                        }
+                    },
+                    lookup: {
+                        xtype: 'combobox',
+                        schemaName: 'ehr_Lookups',
+                        queryName: 'pairingendtypes',
+                        columns: 'value,category,sort_order,date_disabled',
+                        keyColumn: 'value',
+                        displayColumn: 'value',
+                        sort: 'category,value,sort_order',
+                        filterArray: [
+                            LABKEY.Filter.create('date_disabled', null, LABKEY.Filter.Types.ISBLANK),
+                            LABKEY.Filter.create('category', 'STF Clinical', LABKEY.Filter.Types.EQUAL)
+                        ]
+                    }
+
             },
            enddate: {
                 hidden: false
