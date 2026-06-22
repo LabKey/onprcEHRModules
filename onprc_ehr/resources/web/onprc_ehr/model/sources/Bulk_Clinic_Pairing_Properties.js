@@ -61,15 +61,15 @@ EHR.model.DataModelManager.registerMetadata('Bulk_Pairing_Properties', {
                 hidden: true
             },
             endeventType: {
-                    lookup: {
-                        columnConfig: {
-                            width: 250
-                        },
-                        filterArray: [
-                            LABKEY.Filter.create('date_disabled', null, LABKEY.Filter.Types.ISBLANK)
-                        ]
-                    }
-            },
+                columnConfig: {
+                    width: 250
+                },
+                lookup: {
+                    filterArray: [
+                        LABKEY.Filter.create('date_disabled', null, LABKEY.Filter.Types.ISBLANK)
+                    ]
+                }
+        },
            enddate: {
                 hidden: false
             },
