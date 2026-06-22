@@ -3,9 +3,8 @@
         <column name="Id"/>
         <column name="date"/>
         <column name="procedureid"/>
-        <column name="type"/>
-        <column name="qcstate"/>
-        <column name="taskid"/>
+        <column name="qcstate" />
+        <column name="taskid" />
     </columns>
     <sorts>
         <sort column="date" descending="true"/>
