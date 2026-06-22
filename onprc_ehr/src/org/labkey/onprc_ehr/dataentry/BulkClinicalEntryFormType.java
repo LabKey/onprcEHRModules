@@ -65,6 +65,8 @@ public class BulkClinicalEntryFormType extends TaskForm
             s.addConfigSource("ClinicalDefaults");
             //Added 6-4-2015 Blasa
             s.addConfigSource("ClinicalProcedures");
+
+            s.addConfigSource("Bulk_Pairing_Properties");
         }
 
         addClientDependency(ClientDependency.supplierFromPath("ehr/model/sources/ClinicalDefaults.js"));
@@ -93,7 +95,7 @@ public class BulkClinicalEntryFormType extends TaskForm
         addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/window/FormTemplateWindow.js"));
 
         //Added 6-22-2026 R.Blasa
-        addClientDependency(ClientDependency.supplierFromPath("/onprc_ehr/model/sources/Pairing_Properties.js"));
+        addClientDependency(ClientDependency.supplierFromPath("/onprc_ehr/model/sources/Bulk_Clinic_Pairing_Properties.js"));
 
 
 
