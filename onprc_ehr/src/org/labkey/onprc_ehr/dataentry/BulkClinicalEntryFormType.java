@@ -55,6 +55,7 @@ public class BulkClinicalEntryFormType extends TaskForm
                 new DrugAdministrationFormSection(ClientDependency.supplierFromPath("onprc_ehr/window/ONPRC_AddScheduledTreatmentWindow.js")),
                 new TreatmentOrdersFormSection(),
                 new WeightFormSection(),
+                new PairingFormSection(),
                 new SimpleGridPanel("study", "blood", "Blood Draws"),
                 new SimpleGridPanel("ehr", "snomed_tags", "Diagnostic Codes")
         ));
@@ -90,6 +91,9 @@ public class BulkClinicalEntryFormType extends TaskForm
 
         //Added 11-4-2025 R. Blasa
         addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/window/FormTemplateWindow.js"));
+
+        //Added 6-22-2026 R.Blasa
+        addClientDependency(ClientDependency.supplierFromPath("/onprc_ehr/model/sources/Pairing_Properties.js"));
 
 
 
