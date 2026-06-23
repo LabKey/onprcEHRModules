@@ -13,8 +13,7 @@
                     <column columnName="date">
                         <columnTitle>Date</columnTitle>
                     </column>
-                    <column columnName="project">
-                    </column>
+
                     <column columnName="project">
                         <columnTitle>Center Project</columnTitle>
                         <isHidden>false</isHidden>
