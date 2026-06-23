@@ -75,16 +75,7 @@ public class PMICRequestFormType extends RequestForm
         {
             return false;
         }
-
-        //Added: 6-23-2026  R.Blasa
-
-        Group h = GroupManager.getGroup(getCtx().getContainer(), "Bulk Clinical SF", GroupEnumType.SITE);
-        if (h != null && getCtx().getUser().isInGroup(h.getUserId()) && !getCtx().getContainer().hasPermission(getCtx().getUser(), AdminPermission.class))
-        {
-            return false;
-        }
-            return super.isVisible();
-
+        return super.isVisible();
     }
 
 }
