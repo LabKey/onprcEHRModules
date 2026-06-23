@@ -117,7 +117,7 @@ EHR.model.DataModelManager.registerMetadata('Bulk_Pairing_Properties', {
                 hidden: true
             },
             lowestcage: {
-                hidden: true
+                hidden: false
             },
             remark: {
                 xtype: 'textareafield',
