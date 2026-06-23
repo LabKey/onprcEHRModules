@@ -6,6 +6,6 @@
     </sorts>
     <filters>
         <filter column="calculated_status" operator="eq" value="Alive"/>
-        <filter column="category" operator="containsnoneof" value="Clinical,Clinical on behalf of Research,Clinical on behalf of Surgical"/>
+        <filter column="category" operator="doesnotcontain" value="Diet"/>
    </filters>
 </customView>
