@@ -97,18 +97,16 @@ public class BulkClinicalEntryFormType extends TaskForm
         //Added 6-22-2026 R.Blasa
         addClientDependency(ClientDependency.supplierFromPath("/onprc_ehr/model/sources/Bulk_Clinic_Pairing_Properties.js"));
 
-
-
     }
 
-//    @Override
-//    protected boolean canInsert()
-//    {
-//        if (!getCtx().getContainer().hasPermission(getCtx().getUser(), EHRClinicalEntryPermission.class))
-//            return false;
-//
-//        return super.canInsert();
-//    }
+    @Override
+    protected boolean canInsert()
+    {
+        if (!getCtx().getContainer().hasPermission(getCtx().getUser(), EHRClinicalEntryPermission.class))
+            return false;
+
+        return super.canInsert();
+    }
 
     @Override
     protected List<String> getMoreActionButtonConfigs()

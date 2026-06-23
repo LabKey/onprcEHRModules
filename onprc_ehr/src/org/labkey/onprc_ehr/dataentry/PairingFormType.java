@@ -21,11 +21,7 @@ import org.labkey.api.ehr.dataentry.TaskForm;
 import org.labkey.api.ehr.dataentry.TaskFormSection;
 import org.labkey.api.ehr.security.EHRBehaviorEntryPermission;
 import org.labkey.api.module.Module;
-import org.labkey.api.security.Group;
-import org.labkey.api.security.GroupManager;
-import org.labkey.api.security.permissions.AdminPermission;
 import org.labkey.api.view.template.ClientDependency;
-import org.labkey.security.xml.GroupEnumType;
 
 import java.util.Arrays;
 
@@ -70,17 +66,6 @@ public class PairingFormType extends TaskForm
         addClientDependency(ClientDependency.supplierFromPath("/onprc_ehr/form/field/PairedAdultsEntryField.js"));
 
 
-    }
-    //Added: 6-23-2026  R.Blasa
-    @Override
-    public boolean isVisible()
-    {
-        Group h = GroupManager.getGroup(getCtx().getContainer(), "Bulk Clinical SF", GroupEnumType.SITE);
-        if (h != null && getCtx().getUser().isInGroup(h.getUserId()) && !getCtx().getContainer().hasPermission(getCtx().getUser(), AdminPermission.class))
-        {
-            return false;
-        }
-        return super.isVisible();
     }
 
 
