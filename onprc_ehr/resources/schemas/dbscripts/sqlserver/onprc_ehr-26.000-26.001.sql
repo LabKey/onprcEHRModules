@@ -84,7 +84,7 @@ GO
 /*
 **
 ** 	Created by
-**      R. Blasa   6-5-2024      A  Program Process that reviews all TB Test entries on a given date, and creates a
+**      R. Blasa   6-24-2026      A  Program Process that reviews all TB Test entries on a given date, and creates a
 **                                               new TB Test Clinical Observation record based on
 **                                               having the same monkey id, date, and to be assigned to a Data Admin for reviews.
 **
@@ -143,17 +143,10 @@ BEGIN
         a.modifiedby
 
 
-
-
     from studydataset.c6d214_encounters  a
-    Where a.participantid not in (select b.participantid  from studydataset.c6d171_clinical_observations b
-                                  where a.participantid = b.participantid
-                                    And cast(b.date as date)  = dateadd(day,3,cast(a.date as date))
-                                    And b.category = 'TB TST Score (72 hr)'
-                                    And a.modified >=  cast(getdate() as date)
-                                    And a.type = 'Procedure' And a.qcstate = 18 And a.procedureid = 802   )
-
-      And a.type = 'Procedure' And a.qcstate = 18 And a.procedureid = 802         -----'TB Test Intradermal'
+      Where a.type = 'Procedure'
+      And a.qcstate = 18
+      And a.procedureid = 802         -----'TB Test Intradermal'
       And a.modified >=  cast(getdate() as date)
       And a.participantid in ( select k.participantid from studydataset.c6d203_demographics k
                                where k.calculated_status = 'alive')
@@ -197,36 +190,6 @@ BEGIN
     ----Create a single task for each daily process
 
 
-    Insert into onprc_ehr.Observation_EHRTasks
-    (
-        taskid,
-        description,
-        title,
-        qcstate,
-        formType,
-        category,
-        assignedto,
-        createdby,
-        modifiedby
-
-    )
-
-    Values  (
-
-                @TaskID,
-                'TB TST Scores ' + cast(@Date as varchar(50)) ,   	        ------ Title  consist of animal id and Clinical procedure date
-                'TB TST Scores',
-                20,                             --- Qc State (In Progress)
-                'TB TST Scores',             ------ FormType
-                'task',                      -----  category,
-                1822,                       ------- Assigned To Data Admins
-                1042, 				     -------- Created By IS
-                1042				     ----- Modified by IS
-
-            )
-
-    If @@Error <> 0
-        GoTo Err_Proc
 
 
 
@@ -235,7 +198,50 @@ BEGIN
 
             -----Begin entry Tb observation process
 
-            Select @Animalid =animalid, @date = date, @modifiedby=modifiedby, @createdby =createdby,@performedby= performedby from onprc_ehr.TB_TestTemp Where rowid = @Searchkey
+            Select @Animalid =animalid, @date = date, @modifiedby=modifiedby, @createdby =createdby,@performedby= performedby
+            from onprc_ehr.TB_TestTemp Where rowid = @Searchkey
+
+
+
+
+            If not exists (select * from studydataset.c6d171_clinical_observations j Where j.participantid  = @AnimalID
+                And cast(j.date as date) = dateadd(day,3,cast(@date as date))
+                And j.category = 'TB TST Score (72 hr)'
+                And j.qcstate = 18                                    )
+
+                BEGIN
+
+
+                 Insert into onprc_ehr.Observation_EHRTasks
+                   (
+                       taskid,
+                       description,
+                       title,
+                       qcstate,
+                       formType,
+                       category,
+                       assignedto,
+                       createdby,
+                       modifiedby
+
+                   )
+
+                   Values  (
+
+                               @TaskID,
+                               'TB TST Scores ' + cast(@Date as varchar(50)) ,   	        ------ Title  consist of animal id and Clinical procedure date
+                               'TB TST Scores',
+                               20,                             --- Qc State (In Progress)
+                               'TB TST Scores',             ------ FormType
+                               'task',                      -----  category,
+                               1822,                       ------- Assigned To Data Admins
+                               1042, 				     -------- Created By IS
+                               1042				     ----- Modified by IS
+
+                           )
+
+                         If @@Error <> 0
+                                  GoTo Err_Proc
 
 
                     ----- Initialize data entries
