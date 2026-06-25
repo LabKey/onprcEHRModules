@@ -533,6 +533,11 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                                 }
                             }
                             else {
+
+
+
+
+
                                 rowItems.push({
                                     border: true,
                                     width: cageWidth,
@@ -658,7 +663,7 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
         Ext4.apply(this, {
             border: false,
             itemId: 'roomLayoutPanel',
-            width: 1450,
+            width: 2850,
             defaults: {
                 border: false
             },
@@ -666,6 +671,7 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
                 xtype: this.printMode ? 'panel' : 'ldk-webpartpanel',
                 title: this.printMode ? null : 'Room Layout',
                 border: false,
+                autoScroll: !this.printMode,
                 defaults: {
                     border: false
                 },
