@@ -18,7 +18,13 @@ SELECT
   m.id,
   m.date,
   m.gestation_days as gestation_days,
-TIMESTAMPADD('SQL_TSI_DAY',(p.Gestation - m.gestation_days), m.date)   as ExpectedDelivery,
+ CASE
+     WHEN m.gestation_days is not null then
+         TIMESTAMPADD('SQL_TSI_DAY',(p.Gestation - m.gestation_days), m.date)
+     WHEN m.estDeliverydate is not null then m.estDeliverydate
+     ELSE
+        'None'
+     END as ExpectedDelivery,
 m.QCState
 
 FROM study.pregnancyConfirmation m
