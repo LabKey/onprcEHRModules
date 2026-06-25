@@ -267,16 +267,16 @@ BEGIN
 
                     )
                     values (
-                               @animalid,
-                               @date,
-                               'TB TST Score (72 hr)',
-                               'Right Eyelid',
-                               'Grade: Negative',
-                               @createdby,
-                               @performedby,
-                               @TaskID,
-                               20 ,                                     ---- In Progress QCState
-                               @modifiedby                         -----modified
+                       @animalid,
+                       @date,
+                       'TB TST Score (72 hr)',
+                       'Right Eyelid',
+                       'Grade: Negative',
+                       @createdby,
+                       @performedby,
+                       @TaskID,
+                       20 ,                                     ---- In Progress QCState
+                       @modifiedby                         -----modified
 
 
                            )
@@ -285,6 +285,7 @@ BEGIN
                         GoTo Err_Proc
 
 
+                END --(If not exist)
 
             ----- Proceed and fetch the next record
 
