@@ -50,7 +50,7 @@ Ext4.define('ONPRC_EHR.window.AddBehaviorCasesWindow', {
             requiredVersion: 9.1,
             schemaName: 'study',
             queryName: 'cases',
-            sort: 'Id/curLocation/location,Id,remark,allProblemCategories',
+            sort: 'Id/curLocation/room,Id/curLocation/cage,Id,remark,allProblemCategories',
             columns: 'Id,objectid,remark,allProblemCategories',
             filterArray: casesFilterArray,
             scope: this,
