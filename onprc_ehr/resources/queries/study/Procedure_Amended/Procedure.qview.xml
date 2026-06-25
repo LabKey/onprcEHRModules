@@ -10,6 +10,8 @@
         <column name="requestid" />
         <column name="chargetype" />
         <column name="type" />
+<!--        <column name="Id/curLocation/room" />-->
+<!--        <column name="Id/curLocation/area" />-->
     </columns>
     <sorts>
         <sort column="date" descending="true"/>

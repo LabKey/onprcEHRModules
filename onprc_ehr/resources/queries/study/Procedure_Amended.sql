@@ -23,7 +23,10 @@ SELECT
     t.remark,
     t.requestid,
     t.chargetype,
-    t.project
+    t.project,
+    t.objectid,
+    t.Id.curLocation.room,
+    t.Id.curLocation.area
 
 
 FROM study.encounters t
@@ -39,7 +42,10 @@ j.procedureid,
      j.remark,
    j.requestid,
   j.chargetype,
-      j.project
+      j.project,
+      j.objectid,
+      j.Id.curLocation.room,
+        j.Id.curLocation.area
 
 
 FROM study.encounters j
