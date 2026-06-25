@@ -26,7 +26,5 @@ INNER JOIN ehr_lookups.species p on (m.Id.DataSet.demographics.species = p.commo
 And m.date in (select max(s.date) AS d from study.pregnancyConfirmation s where s.id = m.id)
 And m.Id.DataSet.demographics.calculated_status.code = 'Alive'
 And (m.outcome.birthDate >= cast(now() as date) or m.outcome.birthDate is null)
-                                        And (Select count(*) from ehr.snomed_tags stg where stg.code.code = 'F-30980' And stg.id = m.id
-                                      And stg.date >= m.date ) = 0
 
 
