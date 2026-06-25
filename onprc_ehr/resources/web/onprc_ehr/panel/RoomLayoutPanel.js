@@ -663,7 +663,7 @@ Ext4.define('ONPRC.panel.RoomLayoutPanel', {
         Ext4.apply(this, {
             border: false,
             itemId: 'roomLayoutPanel',
-            width: 1750,
+            width: 2850,
             defaults: {
                 border: false
             },
