@@ -13,8 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+
+
 SELECT
-    t.id,
+    t.Id,
     t.date,
     t.procedureid,
     t.qcstate,
@@ -23,26 +26,30 @@ SELECT
     t.remark,
     t.requestid,
     t.chargetype,
-    t.project
+    t.project,
+    t.lsid
 
 
 FROM study.encounters t
 Where  t.type in ('Procedure')
-UNION
-SELECT
-        j.id,
+
+  UNION
+
+ SELECT
+      j.Id,
       j.date,
-j.procedureid,
-    j.qcstate,
-     j.taskid,
-       j.type,
-     j.remark,
-   j.requestid,
-  j.chargetype,
-      j.project
+      j.procedureid,
+      j.qcstate,
+      j.taskid,
+      j.type,
+      j.remark,
+      j.requestid,
+      j.chargetype,
+      j.project,
+      j.lsid
 
 
-FROM study.encounters j
-where j.procedureid.name in ('TB Test Intradermal')
-  And j.type in ('Surgery')
+ FROM study.encounters j
+ where j.procedureid.name in ('TB Test Intradermal')
+   And j.type in ('Surgery')
 

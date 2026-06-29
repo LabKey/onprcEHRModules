@@ -10,11 +10,12 @@
         <column name="requestid" />
         <column name="chargetype" />
         <column name="type" />
+
     </columns>
     <sorts>
         <sort column="date" descending="true"/>
     </sorts>
     <filters>
-        <filter column="type" operator="containsnoneof" value="Procedure,Surgery"/>
+        <filter column="type" operator="containsoneof" value="Procedure;Surgery"/>
     </filters>
 </customView>
