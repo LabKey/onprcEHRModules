@@ -909,7 +909,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
     protected void incompleteBirthRecords(final Container c, User u, final StringBuilder msg)
     {
         SimpleFilter filter = new SimpleFilter(new SimpleFilter.OrClause(
-                //new CompareType.CompareClause(FieldKey.fromString("species"), CompareType.ISBLANK, null),
+                new CompareType.CompareClause(FieldKey.fromString("Id/demographics/gender"), CompareType.EQUAL, "Pending"),
                 new CompareType.CompareClause(FieldKey.fromString("Id/demographics/gender"), CompareType.ISBLANK, null),
                 new CompareType.CompareClause(FieldKey.fromString("Id/demographics/species"), CompareType.ISBLANK, null),
                 new CompareType.CompareClause(FieldKey.fromString("Id/demographics/geographic_origin"), CompareType.ISBLANK, null)
