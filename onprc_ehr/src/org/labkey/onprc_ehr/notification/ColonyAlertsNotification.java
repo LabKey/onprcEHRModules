@@ -15,6 +15,7 @@
  */
 package org.labkey.onprc_ehr.notification;
 
+import com.google.gwt.user.cellview.client.AbstractCellTable;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
 import org.labkey.api.data.Aggregate;
@@ -952,8 +953,16 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
                 msg.append("<td>" + (rs.getString("date") == null ? "Unknown" : rs.getDate("date")) + "</td>");
                 msg.append("<td>" + (rs.getString("remark") == null ? " " : rs.getString("remark")) + "</td>");
 
-                msg.append("<td>" + (rs.getString(FieldKey.fromString("Id/demographics/gender/meaning")) == null ? "MISSING" : rs.getString(FieldKey.fromString("Id/demographics/gender/meaning"))) + "</td>");
-                msg.append("<td>" + (rs.getString(FieldKey.fromString("Id/demographics/gender/meaning")) == "Pending" ? "Pending" : rs.getString(FieldKey.fromString("Id/demographics/gender/meaning"))) + "</td>");
+                //Added: 6-30-2026  R. Blasa
+                if (rs.getString(FieldKey.fromString("Id/demographics/gender/meaning")) == "Pending")
+                {
+                    msg.append("<td>" +  rs.getString(FieldKey.fromString("Id/demographics/gender/meaning")) + "</td>");
+                }
+                    else
+                {
+                    msg.append("<td>" + (rs.getString(FieldKey.fromString("Id/demographics/gender/meaning")) == null ? "MISSING" : rs.getString(FieldKey.fromString("Id/demographics/gender/meaning"))) + "</td>");
+                }
+
                 msg.append("<td>" + (rs.getString(FieldKey.fromString("Id/demographics/species")) == null ? "MISSING" : rs.getString(FieldKey.fromString("Id/demographics/species"))) + "</td>");
                 msg.append("<td>" + (rs.getString(FieldKey.fromString("Id/demographics/geographic_origin")) == null ? "MISSING" : rs.getString(FieldKey.fromString("Id/demographics/geographic_origin"))) + "</td>");
                 msg.append("</tr>");
