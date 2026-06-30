@@ -953,6 +953,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
                 msg.append("<td>" + (rs.getString("remark") == null ? " " : rs.getString("remark")) + "</td>");
 
                 msg.append("<td>" + (rs.getString(FieldKey.fromString("Id/demographics/gender/meaning")) == null ? "MISSING" : rs.getString(FieldKey.fromString("Id/demographics/gender/meaning"))) + "</td>");
+                msg.append("<td>" + (rs.getString(FieldKey.fromString("Id/demographics/gender/meaning")) == "Pending" ? "Pending" : rs.getString(FieldKey.fromString("Id/demographics/gender/meaning"))) + "</td>");
                 msg.append("<td>" + (rs.getString(FieldKey.fromString("Id/demographics/species")) == null ? "MISSING" : rs.getString(FieldKey.fromString("Id/demographics/species"))) + "</td>");
                 msg.append("<td>" + (rs.getString(FieldKey.fromString("Id/demographics/geographic_origin")) == null ? "MISSING" : rs.getString(FieldKey.fromString("Id/demographics/geographic_origin"))) + "</td>");
                 msg.append("</tr>");
