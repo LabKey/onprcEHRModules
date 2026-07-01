@@ -39,7 +39,7 @@ public class SurgicalRoundsRemarksFormSection extends SurgeryRoundsRemarksFormSe
         setConfigSources(Collections.singletonList("Task"));
 
         addClientDependency(ClientDependency.supplierFromPath("ehr/window/AddClinicalCasesWindow.js"));
-        addClientDependency(ClientDependency.supplierFromPath("ehr/window/AddSurgicalCasesWindow.js"));
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/window/AddSurgicalCasesWindow.js"));
         addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/window/BulkChangeCasesWindow.js"));
 
         _showLocation = true;
@@ -49,7 +49,7 @@ public class SurgicalRoundsRemarksFormSection extends SurgeryRoundsRemarksFormSe
     public List<String> getTbarButtons()
     {
         List<String> defaultButtons = super.getTbarButtons();
-        defaultButtons.add(0, "ADDSURGICALCASES");
+        defaultButtons.add(0, "ADDSURGICALCASES_Amended");
         defaultButtons.add("BULK_CHANGE_CASES");
 
         return defaultButtons;
