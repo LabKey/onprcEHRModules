@@ -139,7 +139,6 @@ Ext4.define('EHR.window.AddSurgicalCasesWindow', {
                     caseid: row.getValue('caseid'),
                     category: row.getValue('category'),
                     area: row.getValue('area'),
-                    p2:row.getValue('p2'),
                     observation: row.getValue('observation'),
                     remark: row.getValue('remark')
                 });
