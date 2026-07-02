@@ -1,11 +1,14 @@
+/**
+ * Created: R.Blasa on 10/25/2017.
+ */
 /*
- * Copyright (c) 2014-2019 LabKey Corporation
+ * Copyright (c) 2014 LabKey Corporation
  *
  * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
  */
-Ext4.define('ONPRC_EHR.form.field.PlanTextArea', {
+Ext4.define('ONPRC_EHR.form.field.CEG_PlantextArea', {
     extend: 'Ext.form.field.TextArea',
-    alias: 'widget.onprc_ehr-plantextarea',
+    alias: 'widget.onprc_ehr-CEG_Plantextarea',
 
     onAnimalChange: function(){
         this.updateDisplayEl();
@@ -27,7 +30,7 @@ Ext4.define('ONPRC_EHR.form.field.PlanTextArea', {
         this.linkEl = this.linkDiv.createChild({
             tag: 'a',
             cls: 'labkey-text-link',
-            html: (this.getValue() ? 'Copy Latest P2' : 'Edit P2')
+            html: (this.getValue() ? 'Copy Latest CEG_Plan' : 'Edit CEG_Plan')
         });
 
         var panel = this.up('ehr-formpanel');
@@ -50,7 +53,7 @@ Ext4.define('ONPRC_EHR.form.field.PlanTextArea', {
             })
         }
 
-        this.linkEl.on('click', this.copyMostRecentP2, this);
+        this.linkEl.on('click', this.copyMostRecentCEG_Plan, this);
         this.setupMask();
     },
 
@@ -86,7 +89,7 @@ Ext4.define('ONPRC_EHR.form.field.PlanTextArea', {
         }
 
         if (this.linkEl){
-            this.linkEl.update('Copy Latest P2');
+            this.linkEl.update('Copy Latest CEG_Plan');
         }
 
         if (this.inputEl)
@@ -100,17 +103,16 @@ Ext4.define('ONPRC_EHR.form.field.PlanTextArea', {
 
         var rec = EHR.DataEntryUtils.getBoundRecord(this);
         if (rec && rec.get('Id')){
-            this.getMostRecentP2(rec, function(ret, Id){
+            this.getMostRecentCEG_Plan(rec, function(ret, Id){
                 if (!ret || !this.displayEl){
-                    this.displayEl.update('Either no active case or no P2 for ' + (Id || rec.get('Id')));
                     return;
                 }
 
-                if (ret.mostRecentP2 && ret.isActive){
-                    this.displayEl.update(ret.mostRecentP2);
+                if (ret.mostRecentCeg_Plan && ret.isActive){
+                    this.displayEl.update(ret.mostRecentCeg_Plan);
                 }
                 else {
-                    this.displayEl.update('Either no active case or no P2 for ' + (Id || rec.get('Id')));
+                    this.displayEl.update('Either no active case or no CEG_Plan for ' + (Id || rec.get('Id')));
                 }
             });
         }
@@ -119,7 +121,7 @@ Ext4.define('ONPRC_EHR.form.field.PlanTextArea', {
         }
     },
 
-    copyMostRecentP2: function(){
+    copyMostRecentCEG_Plan: function(){
         var rec = EHR.DataEntryUtils.getBoundRecord(this);
         if (!rec || !rec.get('Id')){
             Ext4.Msg.alert('Error', 'No Id Entered');
@@ -129,24 +131,24 @@ Ext4.define('ONPRC_EHR.form.field.PlanTextArea', {
         Ext4.Msg.wait('Loading...');
         this.showTextArea();
 
-        this.getMostRecentP2(rec, function(ret){
+        this.getMostRecentCEG_Plan(rec, function(ret){
             Ext4.Msg.hide();
 
-            if (ret && ret.mostRecentP2){
-                this.setValue(ret.mostRecentP2);
-                this.linkEl.update('Refresh P2');
+            if (ret){
+                this.setValue(ret.mostRecentCeg_Plan);
+                this.linkEl.update('Refresh CEG Plan');
             }
         }, true);
     },
 
-    getMostRecentP2: function(rec, cb, alwaysUseCallback){
+    getMostRecentCEG_Plan: function(rec, cb, alwaysUseCallback){
         var date = rec.get('date') || new Date();
         var id = rec.get('Id');
         this.pendingIdRequest = id;
 
         LABKEY.Query.executeSql({
             schemaName: 'study',
-            sql: 'SELECT c.Id, c.p2 as mostRecentP2, c.caseid, c.caseid.category as caseCategory, c.caseid.isActive as isActive FROM study.clinRemarks c WHERE (c.category != \'Replaced SOAP\' OR c.category IS NULL) AND c.caseid.category= \'Clinical\' AND c.p2 IS NOT NULL AND c.Id = \'' + rec.get('Id') + '\' ORDER BY c.date DESC LIMIT 1',
+            sql: 'SELECT c.Id, c.CEG_Plan as mostRecentCeg_Plan, c.caseid, c.caseid.category as caseCategory, c.caseid.isActive as isActive FROM study.clinRemarks c WHERE (c.category != \'Replaced SOAP\' OR c.category IS NULL) AND c.CEG_Plan IS NOT NULL AND c.Id = \'' + rec.get('Id') + '\' ORDER BY c.date DESC LIMIT 1',
             failure: LDK.Utils.getErrorCallback(),
             scope: this,
             success: function(results){
@@ -155,7 +157,7 @@ Ext4.define('ONPRC_EHR.form.field.PlanTextArea', {
                     return;
                 }
 
-                if (results && results.rows && results.rows.length){
+                if (results && results.rows && results.rows.length && results.rows[0].mostRecentCeg_Plan){
                     cb.call(this, results.rows[0], results.rows[0].Id);
                 }
                 else {
