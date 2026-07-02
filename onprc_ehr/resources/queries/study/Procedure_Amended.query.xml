@@ -3,26 +3,18 @@
         <tables xmlns="http://labkey.org/data/xml">
             <table tableName="Procedure_Amended" tableDbType="TABLE" useColumnOrder="true">
                 <tableTitle>Procedures Amended</tableTitle>
-                <insertUrl />
-                <importUrl />
-                <updateUrl />
-                <deleteUrl />
                 <columns>
                     <column columnName="Id">
+                        <fk>
+                            <fkDbSchema>study</fkDbSchema>
+                            <fkTable>animal</fkTable>
+                            <fkColumnName>Id</fkColumnName>
+                        </fk>
                     </column>
                     <column columnName="date">
                         <columnTitle>Date</columnTitle>
                     </column>
 
-                    <column columnName="project">
-                        <columnTitle>Center Project</columnTitle>
-                        <isHidden>false</isHidden>
-                        <fk>
-                            <fkDbSchema>ehr</fkDbSchema>
-                            <fkTable>project</fkTable>
-                            <fkColumnName>project</fkColumnName>
-                        </fk>
-                    </column>
                      <column columnName="procedureid">
                         <columnTitle>Procedure</columnTitle>
                         <fk>
@@ -60,6 +52,13 @@
                             <fkDisplayColumnName>rowid</fkDisplayColumnName>
                         </fk>
                     </column>
+                    <column columnName="project">
+                        <fk>
+                            <fkDbSchema>ehr</fkDbSchema>
+                            <fkTable>project</fkTable>
+                            <fkColumnName>project</fkColumnName>
+                        </fk>
+                    </column>
                     <column columnName="chargetype">
                         <columnTitle>Charge Unit</columnTitle>
                         <fk>
@@ -75,6 +74,10 @@
                             <fkTable>encounter_types</fkTable>
                             <fkColumnName>value</fkColumnName>
                         </fk>
+                    </column>
+                    <column columnName="lsid">
+                        <isHidden>true</isHidden>
+                        <isKeyField>true</isKeyField>
                     </column>
                 </columns>
             </table>
