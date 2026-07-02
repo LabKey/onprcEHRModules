@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Created By: Kollil, June 2026.
+ Create an ETL process to update SLA census, investigator data:
+ This ETL process is created to change the current process of transferring data into a db view (vw_SLAProjects) first and then into SLA census table.
+
+ A new stored procedure is created to update sla.census.investigatorId directly from ehr.project and onprc_ehr.investigators
+
+ Run this stored proc daily at 5am
+-->
+<etl xmlns="http://labkey.org/etl/xml">
+
+    <name>SLACensusInvestigator</name>
+
+    <description>Executes stored procedure to populate the SLA census investigator data</description>
+
+    <transforms>
+        <transform id="Stored_Proc" type="StoredProcedure">
+            <description>Runs the stored procedure to update sla.census.investigatorId directly from ehr.project and onprc_ehr.investigators datasets</description>
+            <procedure schemaName="onprc_ehr" procedureName="SLACensusInvestigatorUpdate"> </procedure>
+        </transform>
+    </transforms>
+
+    <schedule>
+        <!-- Runs daily at 5am -->
+        <cron expression="0 0 05 * * ?"/>
+    </schedule>
+
+</etl>
