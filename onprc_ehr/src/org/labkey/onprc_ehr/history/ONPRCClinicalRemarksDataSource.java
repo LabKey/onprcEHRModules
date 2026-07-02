@@ -15,7 +15,6 @@
  */
 package org.labkey.onprc_ehr.history;
 
-import com.google.gwt.user.cellview.client.AbstractCellTable;
 import org.labkey.api.data.Container;
 import org.labkey.api.data.Results;
 import org.labkey.api.ehr.history.AbstractDataSource;
@@ -92,15 +91,7 @@ public class ONPRCClinicalRemarksDataSource extends AbstractDataSource
         appendNote(rs, "o", "O", sb);
         appendNote(rs, "a", "A", sb);
         appendNote(rs, "p", "P", sb);
-        if ("Surgery".equals(category))
-        {
-            appendNote(rs, "p2", "S2", sb);
-        }
-        else
-        {
-           appendNote(rs, "p2", "P2", sb);
-        }
-
+        appendNote(rs, "p2", "P2", sb);
         appendNote(rs, "CEG_Plan", "CEG Plan", sb);
         appendNote(rs, "remark", "Other Remark", sb);
 

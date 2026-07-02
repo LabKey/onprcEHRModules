@@ -97,7 +97,7 @@ Ext4.define('EHR.window.AddSurgicalCasesWindow', {
                 o: null,
                 a: null,
                 p: null,
-                p2: row.getValue('lastP2'),
+                R2: row.getValue('lastP2'),
                 caseid: row.getValue('objectid'),
                 remark: this.defaultRemark,
                 performedby: this.recordData.performedby,

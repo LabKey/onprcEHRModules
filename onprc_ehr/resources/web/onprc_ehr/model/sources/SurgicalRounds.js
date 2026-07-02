@@ -37,7 +37,7 @@ EHR.model.DataModelManager.registerMetadata('SurgicalRounds', {
                 hidden: true
             },
             P2: {
-                header: 'S2',
+                header: 'P2',
                 hidden: false,
                 height: 75
             }
