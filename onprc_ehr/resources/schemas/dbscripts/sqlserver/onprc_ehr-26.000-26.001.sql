@@ -111,7 +111,8 @@ DECLARE
     @createdby              integer,
     @performedby            varchar(200),
     @modifiedby             integer,
-    @RunID                 varchar(4000)
+    @RunID                 varchar(4000),
+    @FirstFlag             integer
 
 
 
@@ -176,6 +177,7 @@ BEGIN
     Set @TaskID = NULL
     Set @Animalid = Null
     Set @RunID   = Null
+    Set @FirstFlag = 0
 
 
 
@@ -211,7 +213,8 @@ BEGIN
 
                 BEGIN
 
-
+                If @FirstFlag != 1
+                BEGIN
                  Insert into onprc_ehr.Observation_EHRTasks
                    (
                        taskid,
@@ -242,6 +245,11 @@ BEGIN
 
                          If @@Error <> 0
                                   GoTo Err_Proc
+
+                     ---Set Task insert process only once per single process
+                         Set @FirsFlag = 1
+
+                 END ---(@FirstFlag)
 
 
                     ----- Initialize data entries
