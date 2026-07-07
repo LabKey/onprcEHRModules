@@ -15,7 +15,6 @@
  */
 package org.labkey.onprc_ehr.notification;
 
-import com.google.gwt.user.cellview.client.AbstractCellTable;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
 import org.labkey.api.data.Aggregate;
