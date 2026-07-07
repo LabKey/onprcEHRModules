@@ -164,7 +164,7 @@ public class ONPRC_BillingController extends SpringActionController
             Set<String> ids = DataRegionSelection.getSelected(form.getViewContext(), true);
 
             StringBuilder msg = new StringBuilder("You have selected " + ids.size() + " billing runs to delete.  This will also delete: <p>");
-            for (String m : ONPRC_BillingManager.get().deleteBillingRuns(getUser(), ids, true))
+            for (String m : ONPRC_BillingManager.get().deleteBillingRuns(getUser(), getContainer(), ids, true))
             {
                 msg.append(m).append("<br>");
             }
@@ -178,7 +178,7 @@ public class ONPRC_BillingController extends SpringActionController
         public boolean handlePost(QueryForm form, BindException errors) throws Exception
         {
             Set<String> ids = DataRegionSelection.getSelected(form.getViewContext(), true);
-            ONPRC_BillingManager.get().deleteBillingRuns(getUser(), ids, false);
+            ONPRC_BillingManager.get().deleteBillingRuns(getUser(), getContainer(), ids, false);
 
             return true;
         }
