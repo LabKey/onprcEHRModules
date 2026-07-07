@@ -11,6 +11,7 @@
 EXEC core.fn_dropifexists 'SLACensusInvestigatorUpdate', 'onprc_ehr', 'PROCEDURE';
 GO
 
+--Create stored procedure to update the investigators data in sla.census table.
 CREATE PROCEDURE [onprc_ehr].[SLACensusInvestigatorUpdate]
 AS
 

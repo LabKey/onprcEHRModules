@@ -21,8 +21,8 @@
     </transforms>
 
     <schedule>
-        <!-- Runs daily at 5am -->
-        <cron expression="0 0 05 * * ?"/>
+        <!-- Runs daily at 4am -->
+        <cron expression="0 0 04 * * ?"/>
     </schedule>
 
 </etl>
