@@ -909,7 +909,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
     protected void incompleteBirthRecords(final Container c, User u, final StringBuilder msg)
     {
         SimpleFilter filter = new SimpleFilter(new SimpleFilter.OrClause(
-                //new CompareType.CompareClause(FieldKey.fromString("species"), CompareType.ISBLANK, null),
+                new CompareType.CompareClause(FieldKey.fromString("Id/demographics/gender"), CompareType.EQUAL, "p"),
                 new CompareType.CompareClause(FieldKey.fromString("Id/demographics/gender"), CompareType.ISBLANK, null),
                 new CompareType.CompareClause(FieldKey.fromString("Id/demographics/species"), CompareType.ISBLANK, null),
                 new CompareType.CompareClause(FieldKey.fromString("Id/demographics/geographic_origin"), CompareType.ISBLANK, null)
@@ -952,7 +952,16 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
                 msg.append("<td>" + (rs.getString("date") == null ? "Unknown" : rs.getDate("date")) + "</td>");
                 msg.append("<td>" + (rs.getString("remark") == null ? " " : rs.getString("remark")) + "</td>");
 
-                msg.append("<td>" + (rs.getString(FieldKey.fromString("Id/demographics/gender/meaning")) == null ? "MISSING" : rs.getString(FieldKey.fromString("Id/demographics/gender/meaning"))) + "</td>");
+                //Added: 6-30-2026  R. Blasa
+                if (rs.getString(FieldKey.fromString("Id/demographics/gender/meaning")) == "Pending")
+                {
+                    msg.append("<td>" +  rs.getString(FieldKey.fromString("Id/demographics/gender/meaning")) + "</td>");
+                }
+                    else
+                {
+                    msg.append("<td>" + (rs.getString(FieldKey.fromString("Id/demographics/gender/meaning")) == null ? "MISSING" : rs.getString(FieldKey.fromString("Id/demographics/gender/meaning"))) + "</td>");
+                }
+
                 msg.append("<td>" + (rs.getString(FieldKey.fromString("Id/demographics/species")) == null ? "MISSING" : rs.getString(FieldKey.fromString("Id/demographics/species"))) + "</td>");
                 msg.append("<td>" + (rs.getString(FieldKey.fromString("Id/demographics/geographic_origin")) == null ? "MISSING" : rs.getString(FieldKey.fromString("Id/demographics/geographic_origin"))) + "</td>");
                 msg.append("</tr>");
