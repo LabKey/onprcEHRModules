@@ -46,7 +46,7 @@ declare
     @AnimalID			varchar(100),
     @date               smalldatetime,
     @objectid           varchar(4000),
-    @caseid             vachar(4000)
+    @caseid             varchar(4000)
 
 
 Begin
@@ -54,7 +54,7 @@ Begin
 
     ----- Reset the last two months only
 
-    Delete  onprc_ehr.Rpt_Temp_ProblemList
+    Delete  onprc_ehr.Rpt_TempProblemList
 
     If @@Error <> 0
         GoTo Err_Proc
@@ -80,7 +80,7 @@ Begin
     And subcategory = 'Digit Amputation'
     And qcstate = 18
 
-    Order by searchid
+    Order by participantid
 
     Select top 1  @SearchKey = searchID from onprc_ehr.Rpt_TempProblemList
     Order by searchid
@@ -124,7 +124,7 @@ Begin
         ---- Create an audit record of these entries
 
           insert into onprc_ehr.Rpt_TempProblemListMaster
-              Select *
+              Select animalid, date, objectid, caseid
               from onprc_ehr.Rpt_TempProblemList
 
 
