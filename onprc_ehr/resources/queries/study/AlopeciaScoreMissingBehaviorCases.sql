@@ -9,7 +9,11 @@ Added date comparison to check only dates  and ignore time
 SELECT
     mr.Id,
     d.species,
-    d.gender,
+    CASE
+        WHEN LOWER(d.gender) = 'f' THEN 'Female'
+        WHEN LOWER(d.gender) = 'm' THEN 'Male'
+        ELSE d.gender
+    END AS gender,
     d.Id.age.ageinYearsRounded,
     d.Id.curLocation.area,
     d.Id.curLocation.room,
