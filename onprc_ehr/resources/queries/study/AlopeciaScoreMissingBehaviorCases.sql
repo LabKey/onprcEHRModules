@@ -29,14 +29,14 @@ FROM (
          FROM study.clinical_observations AS co
          WHERE
            co.category = 'Alopecia Score'
-           AND co.created >= TIMESTAMPADD(SQL_TSI_YEAR, -1, NOW())
+           AND co.created >= TIMESTAMPADD(SQL_TSI_MONTH, -1, NOW())
            AND co.created = (
              SELECT MAX(co2.created)
              FROM study.clinical_observations AS co2
              WHERE
                co2.Id = co.Id
                AND co2.category = 'Alopecia Score'
-               AND co2.created >= TIMESTAMPADD(SQL_TSI_DAY, -7, NOW())
+               AND co2.created >= TIMESTAMPADD(SQL_TSI_MONTH, -1, NOW())
          )
      ) AS mr
          INNER JOIN study.demographics AS d ON mr.Id = d.Id
