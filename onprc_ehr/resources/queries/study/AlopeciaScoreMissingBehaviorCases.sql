@@ -5,6 +5,9 @@ Show 1 year data.
 
 Modified by Kollil 09/15/2025
 Added date comparison to check only dates  and ignore time
+
+Modified by Kollil July 2026
+Showing only 1 week data, Refer to tkt # 14974
 */
 SELECT
     mr.Id,
@@ -33,7 +36,7 @@ FROM (
              WHERE
                co2.Id = co.Id
                AND co2.category = 'Alopecia Score'
-               AND co2.created >= TIMESTAMPADD(SQL_TSI_YEAR, -1, NOW())
+               AND co2.created >= TIMESTAMPADD(SQL_TSI_DAY, -7, NOW())
          )
      ) AS mr
          INNER JOIN study.demographics AS d ON mr.Id = d.Id
@@ -47,8 +50,6 @@ WHERE
       c.Id = mr.Id
       AND c.category = 'Behavior'
       AND c.allProblemCategories = 'Behavioral: Alopecia'
---       AND c.date <= mr.date
---       AND (c.enddate IS NULL OR c.enddate > mr.date)
       AND CAST(c.date AS DATE) <= CAST(mr.date AS DATE)
       AND (c.enddate IS NULL OR CAST(c.enddate AS DATE) >= CAST(mr.date AS DATE))
 )

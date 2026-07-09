@@ -351,8 +351,7 @@ public class BehaviorNotification extends ColonyAlertsNotification
             final Map<FieldKey, ColumnInfo> colMap = QueryService.get().getColumns(ti, columns);
             TableSelector ts2 = new TableSelector(ti, colMap.values(), null, new Sort("Id"));
 
-//            msg.append("<hr><b>Assignments with new \"Release date\" added within the last 24hrs:</b><br><br>\n");
-            msg.append("<table border=1 style='border-collapse: collapse;'>");
+            msg.append("<table border=1 style='border-collapse: collapse; border: 1px solid black;'>");
             msg.append("<tr bgcolor = " + '"' + "#FFD700" + '"' + "style='font-weight: bold;'>");
             msg.append("<td>Id </td><td>Sex </td><td>Room </td><td>Cage </td><td>Project </td><td>Protocol </td><td>Title </td><td>Project Investigator </td><td>Assign Date </td><td>Release Date </td><td>Projected Release Date </td><td>Assignment Type </td><td>Assign Condition </td><td>Projected Release Condition </td><td>Condition At Release </td></tr>");
 
@@ -360,22 +359,22 @@ public class BehaviorNotification extends ColonyAlertsNotification
                 Results rs = new ResultsImpl(object, colMap);
                 String url = getParticipantURL(c, rs.getString("Id"));
 
-                msg.append("<tr bgcolor = " + '"' + "#FFFACD" + '"' + ">");
-                msg.append("<td><b> <a href='" + url + "'>" + PageFlowUtil.filter(rs.getString("Id")) + "</a> </b></td>\n");
-                msg.append("<td>" + PageFlowUtil.filter(rs.getString("Sex")) + "</td>");
-                msg.append("<td>" + PageFlowUtil.filter(rs.getString("Room")) + "</td>");
-                msg.append("<td>" + PageFlowUtil.filter(rs.getString("Cage")) + "</td>");
-                msg.append("<td>" + PageFlowUtil.filter(rs.getString("project")) + "</td>");
-                msg.append("<td>" + PageFlowUtil.filter(rs.getString("Protocol")) + "</td>");
-                msg.append("<td>" + PageFlowUtil.filter(rs.getString("Title")) + "</td>");
-                msg.append("<td>" + PageFlowUtil.filter(rs.getString("ProjectInvestigator")) + "</td>");
-                msg.append("<td>" + PageFlowUtil.filter(rs.getString("AssignDate")) + "</td>");
-                msg.append("<td>" + PageFlowUtil.filter(rs.getString("ReleaseDate")) + "</td>");
-                msg.append("<td>" + PageFlowUtil.filter(rs.getString("ProjectedReleaseDate")) + "</td>");
-                msg.append("<td>" + PageFlowUtil.filter(rs.getString("assignmentType")) + "</td>");
-                msg.append("<td>" + PageFlowUtil.filter(rs.getString("assignCondition")) + "</td>");
-                msg.append("<td>" + PageFlowUtil.filter(rs.getString("projectedReleaseCondition")) + "</td>");
-                msg.append("<td>" + PageFlowUtil.filter(rs.getString("ConditionAtRelease")) + "</td>");
+                msg.append("<tr>");
+                msg.append("<td style='border: 1px solid black;'><b> <a href='" + url + "'>" + PageFlowUtil.filter(rs.getString("Id")) + "</a> </b></td>\n");
+                msg.append("<td style='border: 1px solid black;'>" + PageFlowUtil.filter(rs.getString("Sex")) + "</td>");
+                msg.append("<td style='border: 1px solid black;'>" + PageFlowUtil.filter(rs.getString("Room")) + "</td>");
+                msg.append("<td style='border: 1px solid black;'>" + PageFlowUtil.filter(rs.getString("Cage")) + "</td>");
+                msg.append("<td style='border: 1px solid black;'>" + PageFlowUtil.filter(rs.getString("project")) + "</td>");
+                msg.append("<td style='border: 1px solid black;'>" + PageFlowUtil.filter(rs.getString("Protocol")) + "</td>");
+                msg.append("<td style='border: 1px solid black;'>" + PageFlowUtil.filter(rs.getString("Title")) + "</td>");
+                msg.append("<td style='border: 1px solid black;'>" + PageFlowUtil.filter(rs.getString("ProjectInvestigator")) + "</td>");
+                msg.append("<td style='border: 1px solid black;'>" + PageFlowUtil.filter(rs.getString("AssignDate")) + "</td>");
+                msg.append("<td style='border: 1px solid black;'>" + PageFlowUtil.filter(rs.getString("ReleaseDate")) + "</td>");
+                msg.append("<td style='border: 1px solid black;'>" + PageFlowUtil.filter(rs.getString("ProjectedReleaseDate")) + "</td>");
+                msg.append("<td style='border: 1px solid black;'>" + PageFlowUtil.filter(rs.getString("assignmentType")) + "</td>");
+                msg.append("<td style='border: 1px solid black;'>" + PageFlowUtil.filter(rs.getString("assignCondition")) + "</td>");
+                msg.append("<td style='border: 1px solid black;'>" + PageFlowUtil.filter(rs.getString("projectedReleaseCondition")) + "</td>");
+                msg.append("<td style='border: 1px solid black;'>" + PageFlowUtil.filter(rs.getString("ConditionAtRelease")) + "</td>");
                 msg.append("</tr>");
             });
             msg.append("</table><br><hr>");
@@ -403,7 +402,7 @@ public class BehaviorNotification extends ColonyAlertsNotification
             msg.append("<a href='" + getExecuteQueryUrl(c, "study", "AlopeciaScoreMissingBehaviorCases", null)  + "'>Click here to view them in a separate window</a>\n");
             msg.append("\n\n");
 
-            //CHnages made byKolli, July 2026, Refer to tkt # 14974
+            //Changes made byKolli, July 2026, Refer to tkt # 14974
             //Display the daily report in the email
             Set<FieldKey> columns = new HashSet<>();
             columns.add(FieldKey.fromString("Id"));
