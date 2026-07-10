@@ -1322,6 +1322,7 @@
         <column columnName="created" />
         <column columnName="createdby" />
         <column columnName="performedby" />
+        <column columnName="date_posted" />
 
     </columns>
 </table>
@@ -1338,6 +1339,53 @@
 
         </columns>
     </table>
+
+    <table tableName="Temp_Clinical_Observations" tableDbType="TABLE">
+        <columns>
+            <column columnName="rowid"/>
+            <column columnName="Id"/>
+            <column columnName="date"/>
+            <column columnName="category"/>
+             <column columnName="area"/>
+              <column columnName="observation"/>
+            <column columnName="created"/>
+            <column columnName="performedby"/>
+             <column columnName="taskid"/>
+              <column columnName="qcstate"/>
+               <column columnName="modifiedby"/>
+        </columns>
+    </table>
+    <table tableName="Temp_Clinical_Observations_Master" tableDbType="TABLE">
+        <columns>
+            <column columnName="rowid"/>
+            <column columnName="Id"/>
+            <column columnName="date"/>
+            <column columnName="category"/>
+            <column columnName="area"/>
+            <column columnName="observation"/>
+            <column columnName="created"/>
+            <column columnName="performedby"/>
+            <column columnName="taskid"/>
+            <column columnName="qcstate"/>
+            <column columnName="modifiedby"/>
+            <column columnName="posted_date"/>
+        </columns>
+    </table>
+
+    <table tableName="Observation_EHRTasks" tableDbType="TABLE">
+        <columns>
+            <column columnName="rowid"/>
+            <column columnName="taskid"/>
+            <column columnName="description"/>
+            <column columnName="qcstate"/>
+            <column columnName="formtype"/>
+            <column columnName="category"/>
+            <column columnName="assignedto"/>
+            <column columnName="createdby"/>
+            <column columnName="modifiedby"/>
+        </columns>
+    </table>
+
     <table tableName="procedure_default_blood" tableDbType="TABLE" useColumnOrder="true">
         <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
         <auditLogging>DETAILED</auditLogging>

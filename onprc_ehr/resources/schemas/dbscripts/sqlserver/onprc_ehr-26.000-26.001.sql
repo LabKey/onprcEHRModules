@@ -1,6 +1,9 @@
 
 EXEC core.fn_dropifexists 'TB_TestTemp', 'onprc_ehr', 'TABLE', NULL;
 GO
+
+EXEC core.fn_dropifexists 'TB_TestTempMaster', 'onprc_ehr', 'TABLE', NULL;
+GO
 EXEC core.fn_dropifexists 'Temp_Clinical_Observations', 'onprc_ehr', 'TABLE', NULL;
 GO
 EXEC core.fn_dropifexists 'Temp_Clinical_Observations_Master', 'onprc_ehr', 'TABLE', NULL;
