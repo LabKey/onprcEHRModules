@@ -103,7 +103,7 @@ Begin
             Set pb.subcategory = 'Digit Removal/Caudectomy'
             From studydataset.c6d200_problem pb
             Where pb.Participantid = @Animalid
-              And objectid = @objectid
+              And pb.objectid = @objectid
 
 
             If @@Error <> 0
