@@ -26,7 +26,7 @@ CREATE TABLE onprc_ehr.Rpt_TempProblemListMaster(
 **
 **	 Created by	Date		Comment
 **
-** 	   blasa     7-7-2026   Process to updated historical problem list records
+** 	   blasa     7-7-2026   Process to update historical problem list records
 **
 **
 **
