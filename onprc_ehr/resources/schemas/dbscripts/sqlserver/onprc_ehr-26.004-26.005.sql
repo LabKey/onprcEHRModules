@@ -112,7 +112,7 @@ Begin
 
             Set @TempSearchkey = @Searchkey
 
-            Select Top 1 @SearchKey = searchid From onprc_ehr.Rpt_TempJmacDate
+            Select Top 1 @SearchKey = searchid From onprc_ehr.Rpt_TempProblemList
             Where searchid > @Tempsearchkey
             Order by searchid
 
