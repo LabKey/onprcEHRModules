@@ -7,7 +7,7 @@ Modified by Kollil 09/15/2025
 Added date comparison to check only dates  and ignore time
 
 Modified by Kollil July 2026
-Showing only 1 week data, Refer to tkt # 14974
+Showing only 1 month data, Refer to tkt # 14974
 */
 SELECT
     mr.Id,
