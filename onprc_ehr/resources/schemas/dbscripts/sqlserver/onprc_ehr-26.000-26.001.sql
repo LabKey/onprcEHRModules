@@ -1,9 +1,6 @@
 
 EXEC core.fn_dropifexists 'TB_TestTemp', 'onprc_ehr', 'TABLE', NULL;
 GO
-
-EXEC core.fn_dropifexists 'TB_TestTempMaster', 'onprc_ehr', 'TABLE', NULL;
-GO
 EXEC core.fn_dropifexists 'Temp_Clinical_Observations', 'onprc_ehr', 'TABLE', NULL;
 GO
 EXEC core.fn_dropifexists 'Temp_Clinical_Observations_Master', 'onprc_ehr', 'TABLE', NULL;
@@ -70,6 +67,7 @@ CREATE TABLE [onprc_ehr].[Observation_EHRTasks](
     [rowid] [int] IDENTITY(100,1) NOT NULL,
     taskid          varchar(4000) NULL,
     description     varchar(500)NULL,
+    title           varchar(500)NULL,
     qcstate         smallint NULL,
     formtype        varchar(500) NULL,
     category        varchar(500) NULL,
@@ -132,10 +130,18 @@ BEGIN
 
     Truncate table onprc_ehr.TB_TestTemp
 
-
     If @@Error <> 0
         GoTo Err_Proc
 
+     Truncate table [onprc_ehr].[Temp_Clinical_Observations]
+
+            If @@Error <> 0
+                GoTo Err_Proc
+
+    Truncate table  [onprc_ehr].[Observation_EHRTasks]
+
+            If @@Error <> 0
+                GoTo Err_Proc
 
     --- Generate a list TB test monkeys                        )
 
@@ -160,6 +166,11 @@ BEGIN
         And a.modified >= @TestDate
       And a.participantid in ( select k.participantid from studydataset.c6d203_demographics k
                                where k.calculated_status = 'alive')
+      AND a.participantid not in (select j.participantid from studydataset.c6d171_clinical_observations j
+                                 Where j.participantid  = a.participantid
+                                 And j.date  = dateadd(day,3,a.date)
+                                 And j.category = 'TB TST Score (72 hr)'
+                                 And j.qcstate = 18  )
 
     order by a.participantid, a.date desc
 
@@ -213,7 +224,7 @@ BEGIN
 
 
             If not exists (select * from studydataset.c6d171_clinical_observations j Where j.participantid  = @AnimalID
-                And cast(j.date as date) = dateadd(day,3,cast(@date as date))
+                And j.date  = dateadd(day,3,@date)
                 And j.category = 'TB TST Score (72 hr)'
                 And j.qcstate = 18                                    )
 
@@ -286,11 +297,11 @@ BEGIN
                        'TB TST Score (72 hr)',
                        'Right Eyelid',
                        'Grade: Negative',
-                       1842,                       -----created by IS
+                       1042,                       -----created by IS
                        @performedby,
                        @TaskID,
                        20 ,                                     ---- In Progress QCState
-                       1842                         -----modified by IS
+                       1042                         -----modified by IS
 
 
                            )
