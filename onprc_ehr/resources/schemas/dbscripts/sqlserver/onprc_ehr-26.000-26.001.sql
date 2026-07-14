@@ -123,8 +123,6 @@ DECLARE
 
 BEGIN
 
-     ----- Set Test Date
-       Set @TestDate = '7/1/2026'
 
     ---- Reset temp table
 
@@ -159,11 +157,10 @@ BEGIN
 
 
     from studydataset.c6d214_encounters  a
-      Where a.type = 'Procedure'
+      Where a.type in ('Procedure','Surgery')
       And a.qcstate = 18
       And a.procedureid = 802         -----'TB Test Intradermal'
-      ----And a.modified >=  cast(getdate() as date)
-        And a.modified >= @TestDate
+      And a.modified >= cast(getdate() as date)
       And a.participantid in ( select k.participantid from studydataset.c6d203_demographics k
                                where k.calculated_status = 'alive')
       AND a.participantid not in (select j.participantid from studydataset.c6d171_clinical_observations j
@@ -207,7 +204,6 @@ BEGIN
     Order by rowid
 
 
-    Set @TaskID = NEWID()         ----- Task Record Object ID
 
     ----Create a single task for each daily process
 
@@ -232,6 +228,10 @@ BEGIN
 
                 If @FirstFlag != 1
                 BEGIN
+                     ---- created a new task id
+                 Set @TaskID = NEWID()
+
+                     ---- Create Clinical Observation entries
                  Insert into onprc_ehr.Observation_EHRTasks
                    (
                        taskid,
