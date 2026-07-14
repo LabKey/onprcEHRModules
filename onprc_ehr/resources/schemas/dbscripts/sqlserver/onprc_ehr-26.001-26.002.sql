@@ -10,7 +10,9 @@
 ---- ComplianceRecentTestsorg  --> directory and xml files
 
 
-EXEC core.fn_dropifexists 's_JmacRemovalDateProcess','onprc_ehr','TABLE';
+
+----Drop corresponding temp tables
+
 
 
 ----Drop corresponding temp tables
