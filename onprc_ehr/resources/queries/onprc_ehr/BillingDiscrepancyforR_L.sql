@@ -3,24 +3,12 @@
  Query Name      : GJ_BillingDiscrepanciesRL
  Schema          : onprc_ehr
  Purpose         : Identify procedure charges where the billed project
-                   does not match the animal’s current project,
-                   using project.displayName for clarity
- Parameters      : @DaysBack (integer, 1–30)
- Issue / Ticket  : EHR Issue 11870
- Author          : jonesga
- Last Modified   : 2026-04-17
-=====================================================================
-*/
-/*
-=====================================================================
- Query Name      : GJ_BillingDiscrepanciesRL
- Schema          : onprc_ehr
- Purpose         : Identify procedure charges where the billed project
                    does not match the animal’s current project and
                    highlight animals with dual active assignments.
  Issue / Ticket  : EHR Issue 11870
  Author          : jonesga
- Last Modified   : 2026-04-21
+ Last Modified   : 2026-07-15
+update"         Deploying to Test F for review
 =====================================================================
 */
 
