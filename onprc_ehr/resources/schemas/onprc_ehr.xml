@@ -1321,6 +1321,7 @@
         <column columnName="objectid"/>
         <column columnName="created"/>
         <column columnName="createdby"/>
+        <column columnName="modifiedby"/>
         <column columnName="performedby"/>
         <column columnName="date_posted"/>
     </columns>
