@@ -149,7 +149,7 @@ public class MhcTaskRef implements TaskRefTask
             {
                 job.getLogger().info("deleting existing rows: {}", toDelete.size());
                 QueryUpdateService qus = mhcData.getUpdateService();
-                qus.setBulkLoad(true);
+                qus.setBulkLoad(false); //preserve audit trail
                 qus.deleteRows(job.getUser(), getTargetContainer(job), toDelete, null, null);
             }
             catch (InvalidKeyException | BatchValidationException | QueryUpdateServiceException | SQLException e)
