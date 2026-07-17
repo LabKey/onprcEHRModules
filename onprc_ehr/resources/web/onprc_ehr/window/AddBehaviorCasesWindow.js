@@ -114,7 +114,8 @@ Ext4.define('ONPRC_EHR.window.AddBehaviorCasesWindow', {
                     allProblemCategories:row.getValue('allProblemCategories'),
                     remark: row.getValue('remark')
                 });
-                if (row.getValue('category') == 'Alopecia Score' && (tempcaseid == row.getValue('caseid') || tempcaseid == null) && (newobservation != row.getValue('category')|| newobservation == null ) && (row.getValue('remark') == null || row.getValue('remark') == '')) {
+
+                if (row.getValue('category') == 'Alopecia Score'  && (newobservation != row.getValue('category')) && (row.getValue('remark') == null || row.getValue('remark') == '')) {
                     previousObsMap[key].push({
                         Id: row.getValue('Id'),
                         date: this.recordData.date,
