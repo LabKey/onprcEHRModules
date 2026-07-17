@@ -95,7 +95,7 @@ Ext4.define('ONPRC_EHR.window.AddBehaviorCasesWindow', {
 
                 var row = new LDK.SelectRowsRow(sr);
 
-                if (tempcaseid != row.getValue('caseid') && row.getValue('category') == 'Alopecia Regrowth' ) {
+                if ( row.getValue('category') == 'Alopecia Regrowth' ) {
                     newobservation = row.getValue('category');  //load Alopecia Regrowth
                     tempcaseid = row.getValue('caseid');
                 }
@@ -114,7 +114,7 @@ Ext4.define('ONPRC_EHR.window.AddBehaviorCasesWindow', {
                     allProblemCategories:row.getValue('allProblemCategories'),
                     remark: row.getValue('remark')
                 });
-                if (row.getValue('category') == 'Alopecia Score' && newobservation != 'Alopecia Regrowth' && (row.getValue('remark') == null || row.getValue('remark') == '')) {
+                if (row.getValue('category') == 'Alopecia Score' && tempcaseid == row.getValue('caseid') && newobservation != 'Alopecia Regrowth' && (row.getValue('remark') == null || row.getValue('remark') == '')) {
                     previousObsMap[key].push({
                         Id: row.getValue('Id'),
                         date: this.recordData.date,
@@ -125,8 +125,6 @@ Ext4.define('ONPRC_EHR.window.AddBehaviorCasesWindow', {
                         allProblemCategories:row.getValue('allProblemCategories')
 
                     });
-                       // reset variables
-                       newobservation ='';
 
                 }
             }, this);
