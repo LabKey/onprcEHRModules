@@ -50,7 +50,7 @@ Ext4.define('ONPRC_EHR.window.AddBehaviorCasesWindow', {
             requiredVersion: 9.1,
             schemaName: 'study',
             queryName: 'cases',
-            sort: 'Id/curLocation/room,Id/curLocation/cage,Id,remark,allProblemCategories',
+            sort: 'Id/curLocation/room,Id/curLocation/cage,Id,category,remark,allProblemCategories',
             columns: 'Id,objectid,remark,allProblemCategories',
             filterArray: casesFilterArray,
             scope: this,
@@ -86,15 +86,19 @@ Ext4.define('ONPRC_EHR.window.AddBehaviorCasesWindow', {
         }
 
         var previousObsMap = {};
+        var newobservation = '';
+        var tempcaseid = '';
+
         if (this.obsResults && this.obsResults.rows && this.obsResults.rows.length){
             Ext4.Array.forEach(this.obsResults.rows, function(sr){
                 //reset variable
-                var newobservation = '';
-                var newremark = '';
-                var row = new LDK.SelectRowsRow(sr);
-                newobservation = row.getValue('category');
-                newremark = row.getValue('remark');
 
+                var row = new LDK.SelectRowsRow(sr);
+
+                if (tempcaseid != row.getValue('caseid') && row.getValue('category') == 'Alopecia Regrowth' ) {
+                    newobservation = row.getValue('category');  //load Alopecia Regrowth
+                    tempcaseid = row.getValue('caseid');
+                }
                 //note: this has been changed to ensure 1 row per case
                 var key = row.getValue('caseid');
                 if (!previousObsMap[key])
@@ -110,7 +114,7 @@ Ext4.define('ONPRC_EHR.window.AddBehaviorCasesWindow', {
                     allProblemCategories:row.getValue('allProblemCategories'),
                     remark: row.getValue('remark')
                 });
-                if (newobservation == 'Alopecia Score' && (newremark == null || newremark == '')) {
+                if (row.getValue('category') == 'Alopecia Score' && newobservation != 'Alopecia Regrowth' && (row.getValue('remark') == null || row.getValue('remark') == '')) {
                     previousObsMap[key].push({
                         Id: row.getValue('Id'),
                         date: this.recordData.date,
@@ -121,6 +125,8 @@ Ext4.define('ONPRC_EHR.window.AddBehaviorCasesWindow', {
                         allProblemCategories:row.getValue('allProblemCategories')
 
                     });
+                       // reset variables
+                       newobservation ='';
 
                 }
             }, this);
