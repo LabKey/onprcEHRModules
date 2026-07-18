@@ -98,9 +98,18 @@ Ext4.define('ONPRC_EHR.window.AddBehaviorCasesWindow', {
 
                 //note: this has been changed to ensure 1 row per case
                 var key = row.getValue('caseid');
-                if ( row.getValue('category') == 'Alopecia Regrowth' && (tempcaseid != key || tempcaseid == '') ) {
-                    newobservation = row.getValue('category');  //load Alopecia Regrowth
-                    tempcaseid = row.getValue('caseid');
+                // if ( row.getValue('category') == 'Alopecia Regrowth' || (tempcaseid != key || tempcaseid == '') ) {
+                    if (  (tempcaseid != key || tempcaseid == '') ) {
+                        if (row.getValue('category') != 'Alopecia Regrowth') {
+                            newobservation = '';
+                            tempcaseid = '';
+                        }
+                        else
+                        {
+                            newobservation = row.getValue('category');  //load Alopecia Regrowth
+                            tempcaseid = row.getValue('caseid');
+                        }
+
                 }
                 if (!previousObsMap[key])
                     previousObsMap[key] = [];
