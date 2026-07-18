@@ -95,12 +95,13 @@ Ext4.define('ONPRC_EHR.window.AddBehaviorCasesWindow', {
 
                 var row = new LDK.SelectRowsRow(sr);
 
-                if ( row.getValue('category') == 'Alopecia Regrowth' && tempcaseid != row.getValue('caseid')  ) {
+
+                //note: this has been changed to ensure 1 row per case
+                var key = row.getValue('caseid');
+                if ( row.getValue('category') == 'Alopecia Regrowth' && (tempcaseid != key || key == null) ) {
                     newobservation = row.getValue('category');  //load Alopecia Regrowth
                     tempcaseid = row.getValue('caseid');
                 }
-                //note: this has been changed to ensure 1 row per case
-                var key = row.getValue('caseid');
                 if (!previousObsMap[key])
                     previousObsMap[key] = [];
 
@@ -115,7 +116,7 @@ Ext4.define('ONPRC_EHR.window.AddBehaviorCasesWindow', {
                     remark: row.getValue('remark')
                 });
 
-                if (row.getValue('category') == 'Alopecia Score'  && (newobservation != row.getValue('category')) && (row.getValue('remark') == null || row.getValue('remark') == '')) {
+                if (row.getValue('category') == 'Alopecia Score'  && (newobservation == '') && tempcaseid == '' && (row.getValue('remark') == null || row.getValue('remark') == '')) {
                     previousObsMap[key].push({
                         Id: row.getValue('Id'),
                         date: this.recordData.date,
@@ -126,7 +127,8 @@ Ext4.define('ONPRC_EHR.window.AddBehaviorCasesWindow', {
                         allProblemCategories:row.getValue('allProblemCategories')
 
                     });
-
+                       newobservation = '';
+                       tempcaseid = '';
                 }
             }, this);
         }
