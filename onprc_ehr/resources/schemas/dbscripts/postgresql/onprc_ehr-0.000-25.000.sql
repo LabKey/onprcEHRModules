@@ -13,9 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/* onprc_ehr-12.20-12.30.sql */
-
-/* onprc_ehr-12.20-12.21.sql */
 
 CREATE SCHEMA onprc_ehr;
 
@@ -23,16 +20,12 @@ CREATE TABLE onprc_ehr.etl_runs
 (
     RowId SERIAL,
     date TIMESTAMP,
-
     Container ENTITYID NOT NULL,
+    queryname varchar(200),
+    rowversion varchar(200),
 
     CONSTRAINT PK_etl_runs PRIMARY KEY (rowId)
 );
-
-/* onprc_ehr-12.21-12.22.sql */
-
-ALTER TABLE onprc_ehr.etl_runs ADD queryname varchar(200);
-ALTER TABLE onprc_ehr.etl_runs ADD rowversion varchar(200);
 
 CREATE TABLE onprc_ehr.investigators (
     rowId SERIAL NOT NULL,
@@ -51,23 +44,27 @@ CREATE TABLE onprc_ehr.investigators (
     dateDisabled TIMESTAMP,
     division varchar(100),
     financialAnalyst int,
-
     createdby userid,
     created TIMESTAMP,
     modifiedby userid,
     modified TIMESTAMP,
+    objectid ENTITYID,
+    assignedVet int,
+    userid int,
+    employeeid varchar(100),
+    Department varchar(250) NULL,
+
     CONSTRAINT pk_investigators PRIMARY KEY (rowid)
 );
 
-ALTER TABLE onprc_ehr.investigators ADD objectid ENTITYID;
-
-ALTER TABLE onprc_ehr.investigators ADD assignedVet int;
+CREATE INDEX investigators_rowid_lastname ON onprc_ehr.investigators (rowid, lastname);
 
 CREATE TABLE onprc_ehr.serology_test_schedule (
   rowid SERIAL,
   code varchar(100),
   flag varchar(100),
   interval int,
+  species VARCHAR(100),
 
   CONSTRAINT PK_serology_test_schedule PRIMARY KEY (rowid)
 );
@@ -86,15 +83,11 @@ INSERT INTO onprc_ehr.serology_test_schedule (code, flag, interval) VALUES ('E-Y
 INSERT INTO onprc_ehr.serology_test_schedule (code, flag, interval) VALUES ('E-Y3287','SPF 9', 12);
 INSERT INTO onprc_ehr.serology_test_schedule (code, flag, interval) VALUES ('E-YY331','SPF 9', 12);
 
---implemented based on SQLServer database engine tuning monitor
-CREATE INDEX investigators_rowid_lastname ON onprc_ehr.investigators (rowid, lastname);
-
-CREATE TABLE onprc_ehr.tissue_recipients (
+CREATE TABLE onprc_ehr.customers (
   rowId SERIAL NOT NULL,
   firstName varchar(100),
   lastName varchar(100),
   institution varchar(100),
-
   title varchar(1000),
   affiliation varchar(1000),
   address varchar(1000),
@@ -105,62 +98,46 @@ CREATE TABLE onprc_ehr.tissue_recipients (
   phoneNumber varchar(100),
   recipientType varchar(100),
   emailAddress varchar(100),
-
   shipAddress varchar(1000),
   shipCity varchar(100),
   shipState varchar(100),
   shipCountry varchar(100),
   shipZip varchar(100),
-
   dateCreated TIMESTAMP,
   dateDisabled TIMESTAMP,
-
   investigatorId int,
-
   objectid entityid,
   container entityid,
   createdby userid,
   created TIMESTAMP,
   modifiedby userid,
   modified TIMESTAMP,
-  CONSTRAINT pk_tissue_recipients PRIMARY KEY (rowid)
+
+  CONSTRAINT pk_customers PRIMARY KEY (rowid)
 );
 
-ALTER TABLE onprc_ehr.investigators ADD userid int;
-
-ALTER TABLE onprc_ehr.investigators ADD employeeid varchar(100);
-
---added to facilitate the split billing code into a separate module from ONPRC_EHR.
---this should cause the server to think all existing scripts were in fact run, even though they ran as the onprc_ehr module
-INSERT INTO core.SqlScripts (Created, Createdby, Modified, Modifiedby, FileName, ModuleName)
-SELECT Created, Createdby, Modified, Modifiedby, FileName, 'ONPRC_Billing' as ModuleName
-FROM core.SqlScripts
-WHERE FileName LIKE 'onprc_billing-%' AND ModuleName = 'ONPRC_EHR';
+-- TODO: Assuming this can be deleted, no longer needed for PostgreSQL
+-- INSERT INTO core.SqlScripts (Created, Createdby, Modified, Modifiedby, FileName, ModuleName)
+-- SELECT Created, Createdby, Modified, Modifiedby, FileName, 'ONPRC_Billing' as ModuleName
+-- FROM core.SqlScripts
+-- WHERE FileName LIKE 'onprc_billing-%' AND ModuleName = 'ONPRC_EHR';
 
 CREATE TABLE onprc_ehr.vet_assignment (
   rowid SERIAL,
   userid int,
   area varchar(100),
   protocol varchar(100),
-
   container ENTITYID NOT NULL,
   created TIMESTAMP,
   createdby int,
   modified TIMESTAMP,
   modifiedby int,
+  room varchar(100),
+  priority BOOLEAN,
+  project INT,
 
   CONSTRAINT PK_vet_assignment PRIMARY KEY (rowid)
 );
-
-ALTER TABLE onprc_ehr.vet_assignment ADD room varchar(100);
-
-ALTER TABLE onprc_ehr.vet_assignment ADD priority integer;
-
-ALTER TABLE onprc_ehr.tissue_recipients RENAME TO customers;
-
-ALTER TABLE onprc_ehr.vet_assignment DROP COLUMN priority;
-
-ALTER TABLE onprc_ehr.vet_assignment ADD priority BOOLEAN;
 
 CREATE TABLE onprc_ehr.housing_transfer_requests (
   Id varchar(100),
@@ -170,7 +147,6 @@ CREATE TABLE onprc_ehr.housing_transfer_requests (
   reason varchar(100),
   remark varchar(4000),
   qcstate int,
-
   requestid entityid,
   objectid entityid NOT NULL,
   container entityid,
@@ -178,12 +154,11 @@ CREATE TABLE onprc_ehr.housing_transfer_requests (
   createdby int,
   modified TIMESTAMP,
   modifiedby int,
+  divider integer,
+  formSort integer,
 
   CONSTRAINT PK_housing_transfer_requests PRIMARY KEY (objectid)
 );
-
-ALTER TABLE onprc_ehr.housing_transfer_requests ADD divider integer;
-ALTER TABLE onprc_ehr.housing_transfer_requests ADD formSort integer;
 
 UPDATE ehr.tasks SET formtype = 'Bulk Clinical Entry' WHERE formtype = 'Clinical Remarks';
 
@@ -201,25 +176,7 @@ CREATE TABLE onprc_ehr.birth_condition (
     CONSTRAINT PK_birth_condition PRIMARY KEY (rowid)
 );
 
---this should be OK since we declare a dependency on EHR, meaning its scripts will run first
 UPDATE ehr.qcStateMetadata SET draftData = TRUE WHERE QCStateLabel = 'Request: Pending';
-
-CREATE TABLE onprc_ehr.observation_types (
-    value varchar(200),
-    category varchar(200),
-    editorconfig varchar(4000),
-    schemaname varchar(200),
-    queryname varchar(200),
-    valuecolumn varchar(200),
-    createdby int,
-    created TIMESTAMP,
-    modifiedby int,
-    modified TIMESTAMP,
-
-    CONSTRAINT PK_observation_types PRIMARY KEY (value)
-);
-
-ALTER TABLE onprc_ehr.serology_test_schedule ADD species VARCHAR(100);
 
 CREATE TABLE onprc_ehr.encounter_summaries_remarks (
   id varchar(100),
@@ -228,12 +185,11 @@ CREATE TABLE onprc_ehr.encounter_summaries_remarks (
   schemaName varchar(100),
   queryName varchar(100),
   remark text,
-
   objectid varchar(60) NOT NULL,
   container entityid NOT NULL,
-  createdby smallint,
+  createdby userid,
   created TIMESTAMP,
-  modifiedby smallint,
+  modifiedby userid,
   modified TIMESTAMP,
   taskid  entityid,
   category varchar(100),
@@ -265,49 +221,9 @@ CREATE TABLE onprc_ehr.NHP_Training(
    CONSTRAINT PK_NHPTrainingObject PRIMARY KEY (objectid)
 );
 
----- BEGIN contents of onprc_ehr-17.20-17.21.sql
-ALTER TABLE onprc_ehr.observation_types ADD container entityid;
-
-UPDATE onprc_ehr.observation_types
-SET container = (SELECT c.entityid FROM core.containers c
-                 LEFT JOIN core.Containers c2 ON c.Parent = c2.EntityId
-                 WHERE c.name = 'EHR' and c2.name = 'ONPRC')
-WHERE container IS NULL;
-
-INSERT INTO ehr.observation_types
-(value,
- category,
- editorconfig,
- schemaName,
- queryName,
- valueColumn,
- createdby,
- created,
- modifiedby,
- modified,
- container
-)
-SELECT
-    value,
-    category,
-    editorconfig,
-    schemaName,
-    queryName,
-    valueColumn,
-    createdby,
-    created,
-    modifiedby,
-    modified,
-    container
-FROM onprc_ehr.observation_types obs
-WHERE obs.container IS NOT NULL;
-
-DROP TABLE onprc_ehr.observation_types;
----- END contents of onprc_ehr-17.20-17.21.sql...
-
 CREATE TABLE onprc_ehr.AvailableBloodVolume(
     datecreated TIMESTAMP NULL,
-    id varchar(32) NULL,
+    id varchar(32) NOT NULL,
     gender varchar(4000) NULL,
     species varchar(4000) NULL,
     yoa double precision NULL,
@@ -318,7 +234,9 @@ CREATE TABLE onprc_ehr.AvailableBloodVolume(
     BCSage int NULL,
     previousdraws double precision NULL,
     ABV double precision NULL,
-    dsrowid bigint NOT NULL
+    dsrowid bigint NOT NULL,
+
+    CONSTRAINT PK_AvailableBloodVolume PRIMARY KEY (Id)
 );
 
 CREATE TABLE onprc_ehr.Reference_StaffNames(
@@ -370,8 +288,6 @@ CREATE TABLE onprc_ehr.usersActiveNames(
     LastLogin TIMESTAMP NULL,
     Active BOOLEAN NOT NULL
 );
-
-/* 20.xxx SQL scripts */
 
 CREATE TABLE onprc_ehr.eIACUC_PRIME_VIEW_ANIMAL_GROUPS(
 	rowid SERIAL NOT NULL,
@@ -456,7 +372,10 @@ CREATE TABLE onprc_ehr.eIACUC_PRIME_VIEW_PROTOCOLS(
 	modified TIMESTAMP NULL,
 	PROTOCOL_State varchar(250) NULL,
 	PPQ_Numbers varchar(255) NULL,
-	Description varchar(255) NULL
+	Description varchar(255) NULL,
+	BaseProtocol varchar(100) NULL,
+	RevisionNumber varchar(100) NULL,
+	NewestRecord INT NULL
 );
 
 CREATE TABLE onprc_ehr.eIACUC_PRIME_VIEW_SURGICAL_PROCS(
@@ -470,48 +389,6 @@ CREATE TABLE onprc_ehr.eIACUC_PRIME_VIEW_SURGICAL_PROCS(
 	Recovery_Days int NULL,
 	Surgery_Name varchar(255) NULL
 );
-
-DROP TABLE onprc_ehr.eIACUC_PRIME_VIEW_ANIMAL_GROUPS;
-
-CREATE TABLE onprc_ehr.eIACUC_PRIME_VIEW_ANIMAL_GROUPS(
-	rowid SERIAL NOT NULL,
-	Parent_Protocol varchar(255) NOT NULL,
-	Group_ID varchar(255) NULL,
-	Group_Name varchar(255) NULL,
-	Species varchar(255) NULL,
-	SPF_Status varchar(255) NULL,
-	Weight_Start varchar(255) NULL,
-	Weight_End varchar(255) NULL,
-	Age_Start varchar(255) NULL,
-	Age_End varchar(255) NULL,
-	Gender varchar(255) NULL,
-	Number_of_Animals_Max int NULL,
-	Breeding_Colony int NULL,
-	Non_Standard_Housing_Types text NULL,
-	Non_Standard_Housing_Description text NULL,
-	Non_Standard_Housing_Frequency_and_Duration text NULL,
-	Non_Standard_Housing_Monitoring text NULL,
-	createdby int NULL,
-	created TIMESTAMP NULL,
-	modifiedby int NULL,
-	modified TIMESTAMP NULL,
-	Restraint text NULL,
-	Nutritional_Manipulation_Description text NULL,
-	Nutritional_Manipulation_Adverse_Consequences text NULL,
-	Nutritional_Manipulation_Health_Assessment text NULL,
-	Non_Pharmaceutical_Grade_Drug_Use text NULL,
-	Food_Withheld int NULL,
-	Water_Withheld int NULL,
-	Food_Water_Withheld_Description text NULL,
-	Food_Water_Withheld_Justification text NULL,
-	Food_Water_Withheld_Adverse_Consequences text NULL,
-	Death_As_Endpoint_Number_of_Animals text NULL,
-	Death_As_Endpoint_Justification text NULL
-);
-
-SELECT core.fn_dropifexists('potentialDam_Source', 'onprc_ehr', 'TABLE', NULL);
-SELECT core.fn_dropifexists('potentialsire_Source', 'onprc_ehr', 'TABLE', NULL);
-SELECT core.fn_dropifexists('potentialParents_Source', 'onprc_ehr', 'TABLE', NULL);
 
 CREATE TABLE onprc_ehr.PotentialSire_source(
     RowId SERIAL NOT NULL,
@@ -579,42 +456,6 @@ CREATE TABLE onprc_ehr.PotentialParents_source(
 
     CONSTRAINT pk_potentialParent PRIMARY KEY (rowID)
 );
-
-CREATE OR REPLACE FUNCTION onprc_ehr.PotentialDam_Insert() RETURNS void AS $$
-BEGIN
-    TRUNCATE TABLE onprc_ehr.PotentialDam_source;
-    INSERT INTO onprc_ehr.PotentialDam_source
-    (participantId, Date, Species, room, cage, DamAgeAtTime, PotentialDam, DamBirth, Damgender, DamSpecies, DamDeath, created, createdBy, modified, modifiedBy, container)
-    SELECT
-        b.participantid,
-        b.date,
-        b.species,
-        b.room,
-        b.cage,
-        (b.date::date - d.birth::date) / 365,
-        h.participantID,
-        d.birth,
-        d.gender,
-        d.species,
-        d.death,
-        now(),
-        1011,
-        now(),
-        1011,
-        'CD17027B-C55F-102F-9907-5107380A54BE'::entityid
-    FROM studyDataset.c6d202_birth b
-             JOIN studyDataset.c6d194_housing h ON
-        (b.participantId <> h.participantId AND
-         (h.date <= b.date AND h.enddate >= b.date) AND
-         h.room = b.room AND (h.cage = b.cage OR (h.cage IS NULL AND b.cage IS NULL))
-            OR h.participantid = b.dam
-            )
-             JOIN studyDataset.c6d203_demographics d ON d.participantid = h.participantid
-             JOIN studyDataset.c6d203_demographics d1 ON d1.participantID = b.participantid
-    WHERE d.gender = 'm' AND (b.date::date - d.birth::date) > 912.5
-      AND d.species = d1.species;
-END;
-$$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION onprc_ehr.PotentialSire_Insert() RETURNS void AS $$
 BEGIN
@@ -688,8 +529,6 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-SELECT core.fn_dropifexists('StudyDetails_Reference_Data','onprc_ehr','TABLE',NULL);
-
 CREATE TABLE onprc_ehr.StudyDetails_Reference_Data(
     rowId SERIAL NOT NULL,
     value varchar(1000) NULL,
@@ -704,12 +543,6 @@ CREATE TABLE onprc_ehr.StudyDetails_Reference_Data(
 
     CONSTRAINT pk_StudyDetails_Reference_Data PRIMARY KEY (rowId)
 );
-
-ALTER TABLE onprc_ehr.vet_assignment ADD project INT;
-
-SELECT core.fn_dropifexists('availableCages_temp','onprc_ehr','TABLE',NULL);
-SELECT core.fn_dropifexists('availableCagesByRoom_temp','onprc_ehr','TABLE',NULL);
-SELECT core.fn_dropifexists('roomUtilization_temp','onprc_ehr','TABLE',NULL);
 
 CREATE TABLE onprc_ehr.availableCages_temp(
     location varchar(50) NOT NULL,
@@ -807,8 +640,6 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-SELECT core.fn_dropifexists('PMIC_Reference_Data','onprc_ehr','TABLE',NULL);
-
 CREATE TABLE onprc_ehr.PMIC_Reference_Data(
     RowId SERIAL NOT NULL,
     value varchar(1000) NULL,
@@ -823,29 +654,6 @@ CREATE TABLE onprc_ehr.PMIC_Reference_Data(
     CONSTRAINT pk_PMIC_Reference_Data PRIMARY KEY (RowId)
 );
 
-ALTER TABLE onprc_ehr.AvailableBloodVolume ALTER COLUMN Id SET NOT NULL;
-
-ALTER TABLE onprc_ehr.AvailableBloodVolume ADD CONSTRAINT PK_AvailableBloodVolume PRIMARY KEY (Id);
-
-/* 21.xxx SQL scripts */
-
-SELECT core.fn_dropifexists('ASB_SpecialInstructions','onprc_ehr','TABLE',NULL);
-
-CREATE TABLE onprc_ehr.ASB_SpecialInstructions(
-    RowId SERIAL NOT NULL,
-    value varchar(1000) NOT NULL,
-    remarks varchar(2000) NULL,
-    dateDisabled TIMESTAMP NULL,
-    created TIMESTAMP NULL,
-    createdBy int NULL,
-    modified TIMESTAMP NULL,
-    modifiedBy int NULL,
-
-    CONSTRAINT pk_ASB_SpecialInstructions PRIMARY KEY (RowId)
-);
-
-SELECT core.fn_dropifexists('ASB_SpecialInstructions','onprc_ehr','TABLE',NULL);
-
 CREATE TABLE onprc_ehr.ASB_SpecialInstructions(
     value varchar(1000) NOT NULL,
     remarks varchar(2000) NULL,
@@ -858,58 +666,35 @@ CREATE TABLE onprc_ehr.ASB_SpecialInstructions(
     CONSTRAINT pk_ASB_SpecialInstructions PRIMARY KEY (value)
 );
 
--- Prima tables and stored procs cleanup
-SELECT core.fn_dropifexists('Prima_CaseBase','onprc_ehr','TABLE',NULL);
-SELECT core.fn_dropifexists('Prima_CassetteEvents','onprc_ehr','TABLE',NULL);
-SELECT core.fn_dropifexists('Prima_CassetteEventLocations','onprc_ehr','TABLE',NULL);
-SELECT core.fn_dropifexists('Prima_CassetteBases','onprc_ehr','TABLE',NULL);
-SELECT core.fn_dropifexists('Prima_LabstationTypes','onprc_ehr','TABLE',NULL);
-SELECT core.fn_dropifexists('Prima_SlideBases','onprc_ehr','TABLE',NULL);
-SELECT core.fn_dropifexists('Prima_SlideEvents','onprc_ehr','TABLE',NULL);
-SELECT core.fn_dropifexists('Prima_SlideEventLocations','onprc_ehr','TABLE',NULL);
-SELECT core.fn_dropifexists('Prima_StainTests','onprc_ehr','TABLE',NULL);
-SELECT core.fn_dropifexists('Prima_SurgicalWheels','onprc_ehr','TABLE',NULL);
-SELECT core.fn_dropifexists('Prima_UserPersons','onprc_ehr','TABLE',NULL);
-SELECT core.fn_dropifexists('PrimaSlideBillingReport', 'onprc_ehr', 'PROCEDURE', NULL);
-SELECT core.fn_dropifexists('PrimaBlockBillingReport', 'onprc_ehr', 'PROCEDURE', NULL);
-
-CREATE TABLE onprc_ehr.Prima_UserPersons(
+CREATE TABLE onprc_ehr.Prima_Animals(
     Id int NOT NULL,
+    AlternateIdentifier varchar(63) NULL,
+    BreedId int NULL,
     DateOfBirth TIMESTAMP NULL,
-    DepartmentName varchar(127) NULL,
-    FirstName varchar(31) NULL,
+    FecesId int NULL,
     Gender smallint NOT NULL,
-    LastName varchar(31) NULL,
-    MiddleName varchar(31) NULL,
-    Prefix int NULL,
-    SSN varchar(9) NULL,
-    ProfessionalTitles varchar(127) NULL,
-    DateOfDeath TIMESTAMP NULL
-);
-
-CREATE TABLE onprc_ehr.Prima_SurgicalWheels(
-    Id SERIAL NOT NULL,
-    Constant smallint NULL,
-    Description varchar(255) NULL,
-    IsActive BOOLEAN NOT NULL,
-    CreatedByUserId int NOT NULL,
-    Deleted TIMESTAMPTZ NULL,
-    DeletedByUserId int NULL,
-    NextVersionId int NULL,
-    PreviousVersionId int NULL,
-    Title varchar(5) NOT NULL,
+    GeneTarget varchar(127) NULL,
+    GeneticLine varchar(127) NULL,
+    Genotype varchar(127) NULL,
+    Identifier varchar(127) NULL,
+    MannerOfDeathId int NULL,
+    RoomNumber varchar(9) NULL,
+    SpeciesId int NOT NULL,
+    StomachContentsId int NULL,
+    StrainId int NULL,
+    DateOfDeath TIMESTAMP NULL,
     Created TIMESTAMPTZ NOT NULL,
-    LastModified varchar(500) NOT NULL
+    OwnerId int NULL,
+    Perfuse BOOLEAN NOT NULL,
+    SampleType smallint NOT NULL
 );
 
-CREATE TABLE onprc_ehr.Prima_StainTests(
-    Id SERIAL NOT NULL,
-    Abbreviation varchar(127) NOT NULL,
+CREATE TABLE onprc_ehr.Prima_TissueCollections(
+    Id int NOT NULL,
     Constant smallint NULL,
-    CptCode varchar(6) NULL,
-    Description varchar(255) NULL,
-    StainTestCategoryId int NOT NULL,
-    TimeLength int NOT NULL,
+    IsWholeAnimal BOOLEAN NOT NULL,
+    SpeciesId int NOT NULL,
+    SpecimenType int NOT NULL,
     CreatedByUserId int NOT NULL,
     Deleted TIMESTAMPTZ NULL,
     DeletedByUserId int NULL,
@@ -917,30 +702,8 @@ CREATE TABLE onprc_ehr.Prima_StainTests(
     PreviousVersionId int NULL,
     Title varchar(127) NOT NULL,
     Created TIMESTAMPTZ NOT NULL,
-    LastModified varchar(500) NOT NULL,
-    IsValidated BOOLEAN NOT NULL
-);
-
-CREATE TABLE onprc_ehr.Prima_SlideBases(
-    Id BIGSERIAL NOT NULL,
-    HandStain BOOLEAN NOT NULL,
-    IsCharged BOOLEAN NOT NULL,
-    StainTestId int NOT NULL,
-    DilutionFactor int NULL,
-    CaseBaseId int NOT NULL,
-    IsRadioActive BOOLEAN NOT NULL,
-    PriorityLevelId int NOT NULL,
-    QcStatus smallint NOT NULL,
-    SurgicalSerialPart smallint NOT NULL,
-    Created TIMESTAMPTZ NOT NULL,
-    OrderedStatus smallint NOT NULL,
-    SavedIdentifier varchar(24) NULL,
-    BarcodeContent varchar(72) NULL,
-    CurrentBatchId int NULL,
-    AlternateIdentifier varchar(63) NULL,
-    PrintStatus smallint NOT NULL,
-    ItemStatus smallint NOT NULL,
-    FreeTextNotes varchar(4000) NULL
+    LastModified TIMESTAMP NOT NULL,
+    Abbreviation varchar(127) NULL
 );
 
 CREATE TABLE onprc_ehr.Prima_CaseBase(
@@ -968,42 +731,10 @@ CREATE TABLE onprc_ehr.Prima_CaseBase(
     SurgeryAge varchar(31) NULL
 );
 
-CREATE TABLE onprc_ehr.Prima_CassetteEvents(
-    Id BIGSERIAL NOT NULL,
-    CassetteBaseId bigint NOT NULL,
-    EventType smallint NOT NULL,
-    Status smallint NOT NULL,
-    Trigger smallint NOT NULL,
-    UserId int NOT NULL,
-    Created TIMESTAMPTZ NOT NULL,
-    EventAction int NULL,
-    TissueProcessorId int NULL,
-    TissueProcessorProgramId int NULL,
-    Discriminator varchar(128) NOT NULL,
-    CassetteBatchId int NULL,
-    CassetteOrderId bigint NULL,
-    AutomatedCassetteArchivalMachineId int NULL,
-    DisposalReasonId int NULL,
-    ShipmentId int NULL,
-    IsEstimated BOOLEAN NULL,
-    PrintCount int NULL,
-    BarcodeContent text NULL
-);
-
-CREATE TABLE onprc_ehr.Prima_CassetteEventLocations(
-    CassetteEventId bigint NOT NULL,
-    LabStationTypeId int NOT NULL,
-    LocationId int NOT NULL,
-    WorkstationId int NULL,
-    Created TIMESTAMPTZ NOT NULL,
-    PersonId int NULL
-);
-
 CREATE TABLE onprc_ehr.Prima_CassetteBases(
-    Id BIGSERIAL NOT NULL,
+    Id bigint NOT NULL,
     CassetteColorId int NOT NULL,
     EmbeddingInstructionId int NOT NULL,
-    EmbeddingNotes varchar(4000) NULL,
     HasTissue BOOLEAN NOT NULL,
     ProtocolCassetteId int NULL,
     SpecimenBaseId bigint NOT NULL,
@@ -1011,7 +742,6 @@ CREATE TABLE onprc_ehr.Prima_CassetteBases(
     TissueProcessorProgramId int NULL,
     TissueQuantity smallint NOT NULL,
     CaseBaseId int NOT NULL,
-    IsRadioActive BOOLEAN NOT NULL,
     PriorityLevelId int NOT NULL,
     QcStatus smallint NOT NULL,
     SurgicalSerialPart smallint NOT NULL,
@@ -1019,56 +749,11 @@ CREATE TABLE onprc_ehr.Prima_CassetteBases(
     OrderedStatus smallint NOT NULL,
     SavedIdentifier varchar(24) NULL,
     BarcodeContent varchar(72) NULL,
-    CurrentBatchId int NULL,
     AlternateIdentifier varchar(63) NULL,
     PrintStatus smallint NOT NULL,
-    ItemStatus smallint NOT NULL
-);
-
-CREATE TABLE onprc_ehr.Prima_LabstationTypes(
-    Id SERIAL NOT NULL,
-    CanProcess int NOT NULL,
-    Constant int NULL,
-    Description varchar(255) NULL,
-    IsEnabled BOOLEAN NOT NULL,
-    "Order" int NOT NULL,
-    Title varchar(127) NULL,
-    Created TIMESTAMPTZ NOT NULL,
-    LastModified varchar(500) NOT NULL
-);
-
-CREATE TABLE onprc_ehr.Prima_SlideEvents(
-    Id BIGSERIAL NOT NULL,
-    SlideBaseId bigint NOT NULL,
-    EventType smallint NOT NULL,
-    Status smallint NOT NULL,
-    Trigger smallint NOT NULL,
-    UserId int NOT NULL,
-    Created TIMESTAMPTZ NOT NULL,
-    EventAction int NULL,
-    CoverSlipperId int NULL,
-    OvenId int NULL,
-    OvenProgramId int NULL,
-    SlideImagerId int NULL,
-    SlideStainerId int NULL,
-    Discriminator varchar(128) NOT NULL,
-    SlideBatchId int NULL,
-    SlideOrderId bigint NULL,
-    DisposalReasonId int NULL,
-    ShipmentId int NULL,
-    PrintCount int NULL,
-    BarcodeContent text NULL,
-    EquipmentId int NULL,
-    AutomatedSlideArchivalMachineId int NULL
-);
-
-CREATE TABLE onprc_ehr.Prima_SlideEventLocations(
-    SlideEventId bigint NOT NULL,
-    LabStationTypeId int NOT NULL,
-    LocationId int NOT NULL,
-    WorkstationId int NULL,
-    Created TIMESTAMPTZ NOT NULL,
-    PersonId int NULL
+    ItemStatus smallint NOT NULL,
+    Hazard smallint NOT NULL,
+    CurrentContainerId int NULL
 );
 
 CREATE OR REPLACE FUNCTION onprc_ehr.PrimaSlideBillingReport(
@@ -1181,22 +866,6 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-SELECT core.fn_dropifexists('ASB_SpecialInstructions','onprc_ehr','TABLE',NULL);
-
-CREATE TABLE onprc_ehr.ASB_SpecialInstructions(
-    value varchar(1000) NOT NULL,
-    remarks varchar(2000) NULL,
-    dateDisabled TIMESTAMP NULL,
-    created TIMESTAMP NULL,
-    createdBy int NULL,
-    modified TIMESTAMP NULL,
-    modifiedBy int NULL,
-
-    CONSTRAINT pk_ASB_SpecialInstructions PRIMARY KEY (value)
-);
-
-SELECT core.fn_dropifexists('StudyDetails_RandalData','onprc_ehr','TABLE',NULL);
-
 CREATE TABLE onprc_ehr.StudyDetails_RandalData(
     id INT NOT NULL,
     Rh varchar(100) NULL,
@@ -1210,21 +879,19 @@ CREATE TABLE onprc_ehr.StudyDetails_RandalData(
     rhCode varchar(100) NULL,
     grpnm INT NULL,
     Sex varchar(100) NULL,
-    cohortStart date null,
-    cohortEnd date null,
-    "Do" date null,
-    DPC0 date null,
-    contprog varchar(100) NULl,
-    PIDO date null,
-    DPTO date Null,
-    Birth date null,
-    Nx_date date null,
-    stims varchar(100) NULl,
-    active varchar(100) NULl,
+    cohortStart date NULL,
+    cohortEnd date NULL,
+    "Do" date NULL,
+    DPC0 date NULL,
+    contprog varchar(100) NULL,
+    PIDO date NULL,
+    DPTO date NULL,
+    Birth date NULL,
+    Nx_date date NULL,
+    stims varchar(100) NULL,
+    active varchar(100) NULL,
     CONSTRAINT pk_StudyDetails_Randal PRIMARY KEY (Id)
 );
-
-SELECT core.fn_dropifexists('BSUageclass','onprc_ehr','TABLE',NULL);
 
 CREATE TABLE onprc_ehr.BSUageclass
 (
@@ -1240,16 +907,6 @@ CREATE TABLE onprc_ehr.BSUageclass
 
     CONSTRAINT PK_bsuageclass PRIMARY KEY (rowId)
 );
-
--- Drop unused incorrectly named procedure
-DROP FUNCTION IF EXISTS public.etlStep1eIACUCtoPRIMEProcessing();
-DROP FUNCTION IF EXISTS onprc_ehr.etlStep1eIACUCtoPRIMEProcessing();
-
--- Added to allow department designation
-SELECT core.fn_dropifexists('Investigators', 'onprc_ehr', 'COLUMN', 'Department');
-ALTER TABLE onprc_ehr.investigators ADD Department varchar(250) Null;
-
-/* 23.xxx SQL scripts */
 
 CREATE TABLE onprc_ehr.Epoc_tests
 (
@@ -1270,17 +927,17 @@ CREATE TABLE onprc_ehr.Epoc_tests
 
 CREATE TABLE onprc_ehr.Reference_Data_IDkey
 (
-        rowId SERIAL,
-        displayName varchar(4000) DEFAULT NULL,
-        idkey integer NOT NULL,
-        columnName varchar(1000) NOT NULL,
-        status integer NULL,
-        type varchar(500) NULL,
-        sort_order integer null,
-        created TIMESTAMP NOT NULL,
-        endDate TIMESTAMP DEFAULT NULL,
+    rowId SERIAL,
+    displayName varchar(4000) DEFAULT NULL,
+    idkey integer NOT NULL,
+    columnName varchar(1000) NOT NULL,
+    status integer NULL,
+    type varchar(500) NULL,
+    sort_order integer NULL,
+    created TIMESTAMP NOT NULL,
+    endDate TIMESTAMP DEFAULT NULL,
 
-        CONSTRAINT pk_referenceIDkey PRIMARY KEY (idkey)
+    CONSTRAINT pk_referenceIDkey PRIMARY KEY (idkey)
 );
 
 CREATE OR REPLACE FUNCTION onprc_ehr.p_PopulateReferenceDataIDkey() RETURNS int AS $$
@@ -1309,22 +966,6 @@ EXCEPTION WHEN OTHERS THEN
 END;
 $$ LANGUAGE plpgsql;
 
-ALTER TABLE onprc_ehr.encounter_summaries_remarks ALTER COLUMN createdby TYPE userid;
-ALTER TABLE onprc_ehr.encounter_summaries_remarks ALTER COLUMN modifiedby TYPE userid;
-
-CREATE TABLE onprc_ehr.PrimeProblemListTemp(
-    rowid INTEGER GENERATED BY DEFAULT AS IDENTITY (START WITH 100) NOT NULL,
-    animalid varchar(200) NULL,
-    date TIMESTAMP NULL,
-    objectid varchar(4000) NULL,
-    caseid varchar(4000) NULL,
-    case_enddate TIMESTAMP,
-    created TIMESTAMP
-);
-
-SELECT core.fn_dropifexists('PrimeProblemListTemp', 'onprc_ehr', 'TABLE', NULL);
-SELECT core.fn_dropifexists('PrimeProblemListMaster', 'onprc_ehr', 'TABLE', NULL);
-
 CREATE OR REPLACE FUNCTION onprc_ehr.p_CageStatusupdates() RETURNS int AS $$
 BEGIN
     IF EXISTS (SELECT 1 FROM ehr_lookups.cage) THEN
@@ -1352,7 +993,9 @@ CREATE TABLE onprc_ehr.CageAuditLog(
     area varchar(500) NULL,
     housingtype varchar(500) NULL,
     housingcondition varchar(500) NULL,
-    date_created TIMESTAMP NULL
+    date_created TIMESTAMP NULL,
+
+    CONSTRAINT pk_searchid PRIMARY KEY (searchid)
 );
 
 CREATE OR REPLACE FUNCTION onprc_ehr.p_CageAuditHistoryProcess() RETURNS int AS $$
@@ -1381,11 +1024,6 @@ EXCEPTION WHEN OTHERS THEN
 END;
 $$ LANGUAGE plpgsql;
 
-ALTER TABLE onprc_ehr.CageAuditLog ADD CONSTRAINT pk_searchid PRIMARY KEY (searchid);
-
-SELECT core.fn_dropifexists('Temp_ClnRemarks','onprc_ehr','TABLE',NULL);
-SELECT core.fn_dropifexists('[onprc_ehr].[MPA_ClnRemarkAddition]', 'onprc_ehr', 'PROCEDURE', NULL);
-
 CREATE TABLE onprc_ehr.Temp_ClnRemarks
 (
     date TIMESTAMP,
@@ -1401,59 +1039,12 @@ CREATE TABLE onprc_ehr.Temp_ClnRemarks
     modifiedby int
 );
 
-CREATE OR REPLACE FUNCTION onprc_ehr.MPA_ClnRemarkAddition() RETURNS void AS $$
-DECLARE
-    MPACount int;
-    taskId varchar(4000);
-    displayName varchar(250);
-BEGIN
-    DELETE FROM onprc_ehr.Temp_ClnRemarks;
-
-    SELECT COUNT(*) INTO MPACount 
-    FROM studyDataset.c6d178_drug
-    WHERE code = 'E-85760' 
-      AND date::date = now()::date 
-      AND qcstate = 18;
-
-    IF MPACount > 0 THEN
-        taskId := core.fn_nextid();
-
-        INSERT INTO ehr.tasks
-        (taskid, category, title, formtype, qcstate, assignedto, duedate, createdby, created,
-         container, modifiedby, modified, description, datecompleted)
-        VALUES
-        (taskId, 'Task', 'Bulk Clinical Entry', 'Bulk Clinical Entry', 18, 1003, now(), 1003, now(),
-         'CD17027B-C55F-102F-9907-5107380A54BE'::entityid, 1003, now(), 'Created by the ETL process', now());
-
-        INSERT INTO onprc_ehr.Temp_ClnRemarks (
-            date, qcstate, participantid, project, remark, p, performedby, category, taskid, createdby, modifiedby
-        )
-        SELECT 
-            now(), 
-            18, 
-            participantid, 
-            project, 
-            'Remark entered by the ETL process', 
-            'MPA injection administered', 
-            'onprcitsupport@ohsu.edu', 
-            'Clinical', 
-            taskId, 
-            1003, 
-            1003
-        FROM studyDataset.c6d178_drug
-        WHERE code = 'E-85760' 
-          AND date::date = now()::date 
-          AND qcstate = 18;
-    END IF;
-END;
-$$ LANGUAGE plpgsql;
-
 CREATE TABLE onprc_ehr.Environmental_Reference_Data (
     rowId SERIAL,
     label varchar(250) DEFAULT NULL,
     value varchar(500) ,
     columnName varchar(255)  NOT NULL,
-    sort_order integer  null,
+    sort_order integer NULL,
     endDate TIMESTAMP DEFAULT NULL,
 
     CONSTRAINT pk_referenceenv PRIMARY KEY (value)
@@ -1478,7 +1069,7 @@ CREATE TABLE onprc_ehr.Environmental_Assessment(
    retest  varchar(300) NULL,
    colony_count  varchar(300) NULL,
    test_method  varchar(300) NULL,
-   objectid ENTITYID Not Null,
+   objectid ENTITYID NOT NULL,
    createdby int NULL,
    created TIMESTAMP NULL,
    modifiedby int NULL,
@@ -1819,12 +1410,6 @@ EXCEPTION WHEN OTHERS THEN
 END;
 $$ LANGUAGE plpgsql;
 
-/* 24.xxx SQL scripts */
-
-ALTER TABLE onprc_ehr.eIACUC_PRIME_VIEW_PROTOCOLS ADD BaseProtocol varchar(100) Null;
-ALTER TABLE onprc_ehr.eIACUC_PRIME_VIEW_PROTOCOLS ADD RevisionNumber varchar(100) Null;
-ALTER TABLE onprc_ehr.eIACUC_PRIME_VIEW_PROTOCOLS ADD NewestRecord INT Null;
-
 CREATE OR REPLACE FUNCTION onprc_ehr.BaseProtocol() RETURNS void AS $$
 BEGIN
     WITH BaseProtocol_CTE AS (
@@ -1895,11 +1480,11 @@ $$ LANGUAGE plpgsql;
 CREATE TABLE onprc_ehr.procedure_default_blood (
   rowid SERIAL,
   procedureid  int,
-  sampletype varchar(300) Null,
-  additionalServices varchar(1000) Null,
-  reason varchar(300) Null,
-  instructions varchar(2000) Null,
-  chargetype varchar(400) Null,
+  sampletype varchar(300) NULL,
+  additionalServices varchar(1000) NULL,
+  reason varchar(300) NULL,
+  instructions varchar(2000) NULL,
+  chargetype varchar(400) NULL,
 
   CONSTRAINT PK_procedure_default_blood PRIMARY KEY (rowid)
 );
@@ -1995,112 +1580,6 @@ EXCEPTION WHEN OTHERS THEN
     RETURN 1;
 END;
 $$ LANGUAGE plpgsql;
-
-SELECT core.fn_dropifexists('Prima_Animals','onprc_ehr','TABLE',NULL);
-SELECT core.fn_dropifexists('Prima_CassetteBases','onprc_ehr','TABLE',NULL);
-SELECT core.fn_dropifexists('Prima_TissueCollections','onprc_ehr','TABLE',NULL);
-SELECT core.fn_dropifexists('Prima_CaseBase','onprc_ehr','TABLE',NULL);
-
-SELECT core.fn_dropifexists('Prima_VeterinaryResearchCase','onprc_ehr','TABLE',NULL);
-SELECT core.fn_dropifexists('Prima_CassetteEvents','onprc_ehr','TABLE',NULL);
-SELECT core.fn_dropifexists('Prima_CassetteEventLocations','onprc_ehr','TABLE',NULL);
-SELECT core.fn_dropifexists('Prima_LabstationTypes','onprc_ehr','TABLE',NULL);
-SELECT core.fn_dropifexists('Prima_SlideBases','onprc_ehr','TABLE',NULL);
-SELECT core.fn_dropifexists('Prima_SlideEvents','onprc_ehr','TABLE',NULL);
-SELECT core.fn_dropifexists('Prima_SlideEventLocations','onprc_ehr','TABLE',NULL);
-SELECT core.fn_dropifexists('Prima_StainTests','onprc_ehr','TABLE',NULL);
-SELECT core.fn_dropifexists('Prima_SurgicalWheels','onprc_ehr','TABLE',NULL);
-SELECT core.fn_dropifexists('Prima_UserPersons','onprc_ehr','TABLE',NULL);
-
-CREATE TABLE onprc_ehr.Prima_Animals(
-    Id int NOT NULL,
-    AlternateIdentifier varchar(63) NULL,
-    BreedId int NULL,
-    DateOfBirth TIMESTAMP NULL,
-    FecesId int NULL,
-    Gender smallint NOT NULL,
-    GeneTarget varchar(127) NULL,
-    GeneticLine varchar(127) NULL,
-    Genotype varchar(127) NULL,
-    Identifier varchar(127) NULL,
-    MannerOfDeathId int NULL,
-    RoomNumber varchar(9) NULL,
-    SpeciesId int NOT NULL,
-    StomachContentsId int NULL,
-    StrainId int NULL,
-    DateOfDeath TIMESTAMP NULL,
-    Created TIMESTAMPTZ NOT NULL,
-    OwnerId int NULL,
-    Perfuse BOOLEAN NOT NULL,
-    SampleType smallint NOT NULL
-);
-
-CREATE TABLE onprc_ehr.Prima_TissueCollections(
-    Id int NOT NULL,
-    Constant smallint NULL,
-    IsWholeAnimal BOOLEAN NOT NULL,
-    SpeciesId int NOT NULL,
-    SpecimenType int NOT NULL,
-    CreatedByUserId int NOT NULL,
-    Deleted TIMESTAMPTZ NULL,
-    DeletedByUserId int NULL,
-    NextVersionId int NULL,
-    PreviousVersionId int NULL,
-    Title varchar(127) NOT NULL,
-    Created TIMESTAMPTZ NOT NULL,
-    LastModified TIMESTAMP NOT NULL,
-    Abbreviation varchar(127) NULL
-);
-
-CREATE TABLE onprc_ehr.Prima_CaseBase(
-    Id int NOT NULL,
-    DifferentialDiagnosisId int NULL,
-    PathologistId int NULL,
-    PriorityLevelId int NOT NULL,
-    ResidentPathologistId int NULL,
-    SerialNumber int NOT NULL,
-    SurgeryDate TIMESTAMP NULL,
-    SurgicalWheelId int NOT NULL,
-    Created TIMESTAMPTZ NOT NULL,
-    ResearcherId int NULL,
-    StudyId int NULL,
-    Discriminator varchar(128) NULL,
-    StudyPhaseId int NULL,
-    CohortId int NULL,
-    SavedIdentifier text NULL,
-    Status smallint NOT NULL,
-    AlternateIdentifier varchar(24) NULL,
-    SurgeryLocationId int NULL,
-    ResearchPatientId int NULL,
-    AnimalId int NULL,
-    ClinicalPatientId int NULL,
-    SurgeryAge varchar(31) NULL
-);
-
-CREATE TABLE onprc_ehr.Prima_CassetteBases(
-    Id bigint NOT NULL,
-    CassetteColorId int NOT NULL,
-    EmbeddingInstructionId int NOT NULL,
-    HasTissue BOOLEAN NOT NULL,
-    ProtocolCassetteId int NULL,
-    SpecimenBaseId bigint NOT NULL,
-    TissueCollectionId int NULL,
-    TissueProcessorProgramId int NULL,
-    TissueQuantity smallint NOT NULL,
-    CaseBaseId int NOT NULL,
-    PriorityLevelId int NOT NULL,
-    QcStatus smallint NOT NULL,
-    SurgicalSerialPart smallint NOT NULL,
-    Created TIMESTAMPTZ NOT NULL,
-    OrderedStatus smallint NOT NULL,
-    SavedIdentifier varchar(24) NULL,
-    BarcodeContent varchar(72) NULL,
-    AlternateIdentifier varchar(63) NULL,
-    PrintStatus smallint NOT NULL,
-    ItemStatus smallint NOT NULL,
-    Hazard smallint NOT NULL,
-    CurrentContainerId int NULL
-);
 
 CREATE TABLE onprc_ehr.Rpt_AnimalIDTissues(
     Searchkey SERIAL NOT NULL,
