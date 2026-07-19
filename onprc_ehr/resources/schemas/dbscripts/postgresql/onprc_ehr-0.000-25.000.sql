@@ -116,7 +116,7 @@ CREATE TABLE onprc_ehr.customers (
   CONSTRAINT pk_customers PRIMARY KEY (rowid)
 );
 
--- TODO: Assuming this can be deleted, no longer needed for PostgreSQL
+-- TODO: Should delete, no longer needed for PostgreSQL
 -- INSERT INTO core.SqlScripts (Created, Createdby, Modified, Modifiedby, FileName, ModuleName)
 -- SELECT Created, Createdby, Modified, Modifiedby, FileName, 'ONPRC_Billing' as ModuleName
 -- FROM core.SqlScripts
