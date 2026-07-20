@@ -269,7 +269,7 @@ CREATE TABLE onprc_ehr.Frequency_DayofWeek(
 
 CREATE TABLE onprc_ehr.usersActiveNames(
     Email varchar(64) NULL,
-    _ts TIMESTAMP NOT NULL,
+    _ts TIMESTAMP DEFAULT now(),
     EntityId ENTITYID NULL,
     CreatedBy USERID NULL,
     Created TIMESTAMP NULL,
@@ -397,7 +397,7 @@ CREATE TABLE onprc_ehr.PotentialSire_source(
     Species varchar(100) NULL,
     room varchar(100) NULL,
     cage varchar(100) NULL,
-    SireAgeAtTime integer NULL,
+    SireAgeAtTime integer NULL, -- TODO: Check this - DateTime type on SQL Server, but looks like INTEGER is the correct type
     PotentialSire varchar(100) NULL,
     SireBirth TIMESTAMP NULL,
     Siregender varchar(100) NULL,
@@ -419,7 +419,7 @@ CREATE TABLE onprc_ehr.PotentialDam_source(
     Species varchar(100) NULL,
     room varchar(100) NULL,
     cage varchar(100) NULL,
-    DamAgeAtTime integer NULL,
+    DamAgeAtTime integer NULL, -- TODO: Check this - DateTime type on SQL Server, but looks like INTEGER is the correct type
     PotentialDam varchar(100) NULL,
     DamBirth TIMESTAMP NULL,
     Damgender varchar(100) NULL,
@@ -441,9 +441,9 @@ CREATE TABLE onprc_ehr.PotentialParents_source(
     Species varchar(100) NULL,
     BirthRoom varchar(100) NULL,
     Birthcage varchar(100) NULL,
-    ParentAgeAtTime integer NULL,
+    ParentAgeAtTime integer NULL, -- TODO: Check this - DateTime type on SQL Server, but looks like INTEGER is the correct type
     PotentialParent varchar(100) NULL,
-    "[PotentialParentType" varchar(100) NULL,  -- TODO: Yes, we need to get rid of that bracket, but this is how it is in the SQL Server script
+    "[PotentialParentType" varchar(100) NULL, -- TODO: Yes, we need to get rid of that bracket, but this is how it is in the SQL Server script
     ParentBirth TIMESTAMP NULL,
     Parentgender varchar(100) NULL,
     ParentSpecies varchar(100) NULL,
@@ -702,7 +702,7 @@ CREATE TABLE onprc_ehr.Prima_TissueCollections(
     PreviousVersionId int NULL,
     Title varchar(127) NOT NULL,
     Created TIMESTAMPTZ NOT NULL,
-    LastModified TIMESTAMP NOT NULL,
+    LastModified TIMESTAMP DEFAULT now(),
     Abbreviation varchar(127) NULL
 );
 
@@ -949,7 +949,7 @@ BEGIN
         Name,
         UserId,
         'Active_Groups',
-        Active,
+        CASE WHEN Active THEN 1 ELSE 0 END,
         Type,
         NULL,
         now(),
@@ -957,7 +957,7 @@ BEGIN
     FROM core.Principals
     WHERE type = 'g'
       AND UserId > 0
-      AND Active = 1
+      AND Active IS TRUE
       AND Container IS NULL;
 
     RETURN 0;

@@ -36,6 +36,7 @@ import org.labkey.test.util.DataRegionTable;
 import org.labkey.test.util.Ext4Helper;
 import org.labkey.test.util.LogMethod;
 import org.labkey.test.util.PortalHelper;
+import org.labkey.test.util.SqlserverOnlyTest;
 import org.labkey.test.util.ext4cmp.Ext4FieldRef;
 import org.labkey.test.util.ext4cmp.Ext4GridRef;
 
@@ -55,7 +56,7 @@ import static org.labkey.test.util.Ext4Helper.TextMatchTechnique.CONTAINS;
 
 @Category({EHR.class, ONPRC.class})
 @BaseWebDriverTest.ClassTimeout(minutes = 20)
-public class ONPRC_BillingTest extends AbstractONPRC_EHRTest
+public class ONPRC_BillingTest extends AbstractONPRC_EHRTest implements SqlserverOnlyTest
 {
     protected static String PROJECT_NAME = "ONPRC_Billing_TestProject";
     private static final String BILLING_FOLDER_PATH = "/" + PROJECT_NAME + "/" + BILLING_FOLDER;
