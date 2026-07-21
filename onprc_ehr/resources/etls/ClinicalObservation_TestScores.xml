@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<etl xmlns="http://labkey.org/etl/xml">
+
+    <name>Clinical_Observation_TestScores_Process</name>
+
+    <description>Create new sets of Clinical Observation Test Scores</description>
+
+
+    <transforms>
+
+        <transform id="Stored_ClinicalObservationScores" type="StoredProcedure">
+            <description>Runs a stored procedure that generates Clinical Observation Test Scores</description>
+            <procedure schemaName="onprc_ehr" procedureName="p_Create_TB_Observationrecords">
+            </procedure>
+        </transform>
+
+
+        <transform id="step1a">
+
+            <description>Transfer ehr_task temp to EHR Tasks</description>
+
+            <source schemaName="onprc_ehr" queryName="Observation_EHRTasks"/>
+
+            <destination schemaName="EHR" queryName="tasks"  />
+
+        </transform>
+
+        <transform id="step2a">
+
+            <description>Transfer temp data to Study Clinical Observations</description>
+
+            <source schemaName="onprc_ehr" queryName="Temp_Clinical_Observations"/>
+
+            <destination schemaName="study" queryName="clinical_observations" />
+
+        </transform>
+
+
+    </transforms>
+
+    <schedule>
+         <!--Scheduled to execute once 9Pm daily   -->
+        <cron expression="0 0 21 * * ?"/>
+
+    </schedule>
+
+
+</etl>
+
+
+
+
