@@ -1,6 +1,6 @@
 //This viewport takes a role of container that contains a scheduler.
 //If you need more than one scheduler on the page, you need to wrap viewport items in your own view.
-Ext.define('App.view.Viewport_Radiology', {
+Ext.define('App.view.ViewportRadiology', {
     extend     : 'Ext.Viewport',
     requires   : [
         'App.view.ViewportController'
@@ -22,7 +22,7 @@ Ext.define('App.view.Viewport_Radiology', {
             region  : 'east'
         },
         {
-            xtype   : 'scheduler_Radiology',
+            xtype   : 'schedulerRadiology',
             region  : 'center'
         }
     ]

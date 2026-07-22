@@ -1,7 +1,7 @@
-Ext.define('App.view.Scheduler', {
+Ext.define('App.view.SchedulerRadiology', {
     extend        : 'Sch.panel.SchedulerGrid',
-    alias         : 'widget.scheduler_Radiology',
-    reference     : 'scheduler_Radiology',
+    alias         : 'widget.schedulerRadiology',
+    reference     : 'schedulerRadiology',
     startDate     : new Date(),
     //endDate       : new Date(),
     startTime     : 6,
@@ -28,14 +28,14 @@ Ext.define('App.view.Scheduler', {
             text : 'Previous',
             iconCls: 'x-fa fa-arrow-circle-left',
             handler: function (btn) {
-                var scheduler = btn.up('scheduler_Radiology');
+                var scheduler = btn.up('schedulerRadiology');
                 scheduler.timeAxis.shift(-7, Sch.util.Date.DAY);
             }
         },
         {
             text : 'Today',
             handler: function (btn) {
-                var scheduler = btn.up('scheduler_Radiology');
+                var scheduler = btn.up('schedulerRadiology');
                 // Clear time here so date adjustment wouldn't result in 2 days span
                 scheduler.setStart(Sch.util.Date.clearTime(new Date()));
             }
@@ -45,7 +45,7 @@ Ext.define('App.view.Scheduler', {
             iconCls: 'x-fa fa-arrow-circle-right',
             iconAlign: 'right',
             handler: function (btn) {
-                var scheduler = btn.up('scheduler_Radiology');
+                var scheduler = btn.up('schedulerRadiology');
                 scheduler.timeAxis.shift(7, Sch.util.Date.DAY);
             }
         },
@@ -55,7 +55,7 @@ Ext.define('App.view.Scheduler', {
             scope        : this,
             menu         : Ext.create('Ext.menu.DatePicker', {
                 handler : function (dp, date) {
-                    var scheduler = dp.up('scheduler_Radiology');
+                    var scheduler = dp.up('schedulerRadiology');
                     scheduler.setStart(Sch.util.Date.clearTime(date));
                 }
             })
@@ -66,7 +66,7 @@ Ext.define('App.view.Scheduler', {
             hidden: !LABKEY.user.canInsert,
             scope: this,
             handler: function (btn) {
-                var scheduler = btn.up('scheduler_Radiology');
+                var scheduler = btn.up('schedulerRadiology');
 
                 Ext.create('Ext.window.Window', {
                     title : 'Create New Event',
