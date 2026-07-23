@@ -19,7 +19,7 @@ GO
 EXEC core.fn_dropifexists 'Rpt_TempJmacDate','onprc_ehr','TABLE';
 GO
 
-XEC core.fn_dropifexists 'JmacRemovalDate','onprc_ehr','TABLE';
+EXEC core.fn_dropifexists 'JmacRemovalDate','onprc_ehr','TABLE';
 GO
 --Drop stored procedures
 EXEC core.fn_dropifexists 's_JmacRemovalDateProcess','onprc_ehr','PROCEDURE';
