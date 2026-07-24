@@ -756,6 +756,10 @@ CREATE TABLE onprc_ehr.Prima_CassetteBases(
     CurrentContainerId int NULL
 );
 
+/*
+    TODO: References Prima_slideevents, Prima_LabstationTypes, Prima_slidebases, Prima_userpersons, etc. — tables that
+    were created and dropped in SQL Server and therefore never created in this PostgreSQL script. Should delete.
+ */
 CREATE OR REPLACE FUNCTION onprc_ehr.PrimaSlideBillingReport(
     startDate TIMESTAMP,
     endDate TIMESTAMP
@@ -776,7 +780,7 @@ BEGIN
     complete := 7;
 
     RETURN QUERY
-    SELECT 
+    SELECT
         Prima_surgicalwheels.title::varchar(5) AS "Surgical Wheel",
         CASE
             WHEN Prima_userpersons.lastname IS NOT NULL THEN
@@ -786,7 +790,7 @@ BEGIN
         Prima_staintests.title::varchar(127) AS "Stain Test",
         sub2.slidecount::bigint AS "Slide Count"
     FROM (
-        SELECT 
+        SELECT
             surgicalwheelid,
             Prima_slidebases.staintestid,
             Prima_casebase.pathologistid,
@@ -794,14 +798,14 @@ BEGIN
         FROM (
             SELECT Min(Prima_slideevents.created) AS VerifyOrBarcodeEventTime,
                    slidebaseid
-            FROM onprc_ehr.Prima_slideevents 
+            FROM onprc_ehr.Prima_slideevents
             JOIN onprc_ehr.Prima_SlideEventLocations ON Prima_slideeventlocations.SlideEventId = Prima_slideevents.id
-                AND Prima_slideeventlocations.LabStationTypeId = staining 
+                AND Prima_slideeventlocations.LabStationTypeId = staining
             WHERE eventtype = complete
             GROUP BY slidebaseid
         ) sub
         JOIN onprc_ehr.Prima_slidebases ON slidebaseid = Prima_slidebases.id
-        JOIN onprc_ehr.Prima_casebase ON Prima_casebase.id = Prima_slidebases.casebaseid 
+        JOIN onprc_ehr.Prima_casebase ON Prima_casebase.id = Prima_slidebases.casebaseid
         WHERE sub.verifyorbarcodeeventtime >= startDate
           AND sub.verifyorbarcodeeventtime < endDate
         GROUP BY surgicalwheelid, pathologistid, staintestid
@@ -813,6 +817,10 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+/*
+    TODO: References Prima_LabstationTypes, Prima_userpersons, etc. — tables that were created and dropped in SQL Server
+    and therefore never created in this PostgreSQL script. Should delete.
+*/
 CREATE OR REPLACE FUNCTION onprc_ehr.PrimaBlockBillingReport(
     startDate TIMESTAMP,
     endDate TIMESTAMP
@@ -961,7 +969,7 @@ BEGIN
       AND Container IS NULL;
 
     RETURN 0;
-EXCEPTION WHEN OTHERS THEN
+EXCEPTION WHEN OTHERS THEN -- TODO: This swallows all errors and returns a bare status code, which can hide runtime issues. Claude suggests at minimum log the caught error (GET STACKED DIAGNOSTICS + RAISE WARNING) before returning 1, as the ArchiveAuditTables proc already does.
     RETURN 1;
 END;
 $$ LANGUAGE plpgsql;
@@ -974,7 +982,7 @@ BEGIN
         WHERE status IS NULL;
     END IF;
     RETURN 0;
-EXCEPTION WHEN OTHERS THEN
+EXCEPTION WHEN OTHERS THEN -- TODO: This swallows all errors and returns a bare status code, which can hide runtime issues. Claude suggests at minimum log the caught error (GET STACKED DIAGNOSTICS + RAISE WARNING) before returning 1, as the ArchiveAuditTables proc already does.
     RETURN 1;
 END;
 $$ LANGUAGE plpgsql;
@@ -1019,7 +1027,7 @@ BEGIN
         FROM ehr_lookups.cage a;
     END IF;
     RETURN 0;
-EXCEPTION WHEN OTHERS THEN
+EXCEPTION WHEN OTHERS THEN -- TODO: This swallows all errors and returns a bare status code, which can hide runtime issues. Claude suggests at minimum log the caught error (GET STACKED DIAGNOSTICS + RAISE WARNING) before returning 1, as the ArchiveAuditTables proc already does.
     RETURN 1;
 END;
 $$ LANGUAGE plpgsql;
@@ -1113,7 +1121,7 @@ BEGIN
     END IF;
 
     RETURN 0;
-EXCEPTION WHEN OTHERS THEN
+EXCEPTION WHEN OTHERS THEN -- TODO: This swallows all errors and returns a bare status code, which can hide runtime issues. Claude suggests at minimum log the caught error (GET STACKED DIAGNOSTICS + RAISE WARNING) before returning 1, as the ArchiveAuditTables proc already does.
     RETURN 1;
 END;
 $$ LANGUAGE plpgsql;
@@ -1245,7 +1253,7 @@ BEGIN
     END IF;
 
     RETURN 0;
-EXCEPTION WHEN OTHERS THEN
+EXCEPTION WHEN OTHERS THEN -- TODO: This swallows all errors and returns a bare status code, which can hide runtime issues. Claude suggests at minimum log the caught error (GET STACKED DIAGNOSTICS + RAISE WARNING) before returning 1, as the ArchiveAuditTables proc already does.
     RETURN 1;
 END;
 $$ LANGUAGE plpgsql;
@@ -1405,7 +1413,7 @@ BEGIN
     FROM onprc_ehr.TB_TestTemp;
 
     RETURN 0;
-EXCEPTION WHEN OTHERS THEN
+EXCEPTION WHEN OTHERS THEN -- TODO: This swallows all errors and returns a bare status code, which can hide runtime issues. Claude suggests at minimum log the caught error (GET STACKED DIAGNOSTICS + RAISE WARNING) before returning 1, as the ArchiveAuditTables proc already does.
     RETURN 1;
 END;
 $$ LANGUAGE plpgsql;
@@ -1576,7 +1584,7 @@ BEGIN
     FROM onprc_ehr.Rpt_AnimalID_Weights;
 
     RETURN 0;
-EXCEPTION WHEN OTHERS THEN
+EXCEPTION WHEN OTHERS THEN -- TODO: This swallows all errors and returns a bare status code, which can hide runtime issues. Claude suggests at minimum log the caught error (GET STACKED DIAGNOSTICS + RAISE WARNING) before returning 1, as the ArchiveAuditTables proc already does.
     RETURN 1;
 END;
 $$ LANGUAGE plpgsql;
@@ -1647,7 +1655,7 @@ BEGIN
     FROM onprc_ehr.Rpt_AnimalIDTissues;
 
     RETURN 0;
-EXCEPTION WHEN OTHERS THEN
+EXCEPTION WHEN OTHERS THEN -- TODO: This swallows all errors and returns a bare status code, which can hide runtime issues. Claude suggests at minimum log the caught error (GET STACKED DIAGNOSTICS + RAISE WARNING) before returning 1, as the ArchiveAuditTables proc already does.
     RETURN 1;
 END;
 $$ LANGUAGE plpgsql;
@@ -1750,7 +1758,7 @@ BEGIN
     END IF;
 
     RETURN 0;
-EXCEPTION WHEN OTHERS THEN
+EXCEPTION WHEN OTHERS THEN -- TODO: This swallows all errors and returns a bare status code, which can hide runtime issues. Claude suggests at minimum log the caught error (GET STACKED DIAGNOSTICS + RAISE WARNING) before returning 1, as the ArchiveAuditTables proc already does.
     RETURN 1;
 END;
 $$ LANGUAGE plpgsql;
@@ -1798,7 +1806,7 @@ BEGIN
     END IF;
 
     RETURN 0;
-EXCEPTION WHEN OTHERS THEN
+EXCEPTION WHEN OTHERS THEN -- TODO: This swallows all errors and returns a bare status code, which can hide runtime issues. Claude suggests at minimum log the caught error (GET STACKED DIAGNOSTICS + RAISE WARNING) before returning 1, as the ArchiveAuditTables proc already does.
     RETURN 1;
 END;
 $$ LANGUAGE plpgsql;
