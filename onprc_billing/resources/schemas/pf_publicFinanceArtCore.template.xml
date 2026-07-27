@@ -1,0 +1,38 @@
+
+<templateSchema sourceSchemaName="onprc_billing" xmlns="http://labkey.org/data/xml/externalSchema" xmlns:cv="http://labkey.org/data/xml/queryCustomView">
+    <tables>
+        <tableName>aliases</tableName>
+        <tableName>dataAccess</tableName>
+        <tableName>projectAccountHistory</tableName>
+        <tableName>publicInvoicedItems</tableName>
+    </tables>
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="aliases" tableDbType="NOT_IN_DB">
+                <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+                <tableTitle>Aliases</tableTitle>
+            </table>
+            <table tableName="dataAccess" tableDbType="NOT_IN_DB">
+                <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+                <tableTitle>Data Access</tableTitle>
+            </table>
+            <table tableName="publicInvoicedItems" tableDbType="NOT_IN_DB">
+                <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+                <tableTitle>Invoiced Items</tableTitle>
+               <!-- <filters>
+                    <filter column="Category"
+                            operator="eq"
+                            value="ART Core" />
+                    <filter column="date"
+                            operator = "dategte"
+                            value="2022-01-01"/>
+                </filters>-->
+            </table>
+
+            <table tableName="projectAccountHistory" tableDbType="NOT_IN_DB">
+                <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+                <tableTitle>Project Account History</tableTitle>
+            </table>
+        </tables>
+    </metadata>
+</templateSchema>
