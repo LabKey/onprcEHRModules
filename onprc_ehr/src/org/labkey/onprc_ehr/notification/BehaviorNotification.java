@@ -348,8 +348,7 @@ public class BehaviorNotification extends ColonyAlertsNotification
             final Map<FieldKey, ColumnInfo> colMap = QueryService.get().getColumns(ti, columns);
             TableSelector ts2 = new TableSelector(ti, colMap.values(), null, new Sort("Id"));
 
-//            msg.append("<hr><b>Assignments with new \"Release date\" added within the last 24hrs:</b><br><br>\n");
-            msg.append("<table border=1 style='border-collapse: collapse;'>");
+            msg.append("<table border=1 style='border-collapse: collapse; border: 1px solid black;'>");
             msg.append("<tr bgcolor = " + '"' + "#FFD700" + '"' + "style='font-weight: bold;'>");
             msg.append("<td>Id </td><td>Sex </td><td>Room </td><td>Cage </td><td>Project </td><td>Protocol </td><td>Title </td><td>Project Investigator </td><td>Assign Date </td><td>Release Date </td><td>Projected Release Date </td><td>Assignment Type </td><td>Assign Condition </td><td>Projected Release Condition </td><td>Condition At Release </td></tr>");
 
@@ -357,22 +356,22 @@ public class BehaviorNotification extends ColonyAlertsNotification
                 Results rs = new ResultsImpl(object, colMap);
                 String url = getParticipantURL(c, rs.getString("Id"));
 
-                msg.append("<tr bgcolor = " + '"' + "#FFFACD" + '"' + ">");
-                msg.append("<td><b> <a href='" + url + "'>" + PageFlowUtil.filter(rs.getString("Id")) + "</a> </b></td>\n");
-                msg.append("<td>" + PageFlowUtil.filter(rs.getString("Sex")) + "</td>");
-                msg.append("<td>" + PageFlowUtil.filter(rs.getString("Room")) + "</td>");
-                msg.append("<td>" + PageFlowUtil.filter(rs.getString("Cage")) + "</td>");
-                msg.append("<td>" + PageFlowUtil.filter(rs.getString("project")) + "</td>");
-                msg.append("<td>" + PageFlowUtil.filter(rs.getString("Protocol")) + "</td>");
-                msg.append("<td>" + PageFlowUtil.filter(rs.getString("Title")) + "</td>");
-                msg.append("<td>" + PageFlowUtil.filter(rs.getString("ProjectInvestigator")) + "</td>");
-                msg.append("<td>" + PageFlowUtil.filter(rs.getString("AssignDate")) + "</td>");
-                msg.append("<td>" + PageFlowUtil.filter(rs.getString("ReleaseDate")) + "</td>");
-                msg.append("<td>" + PageFlowUtil.filter(rs.getString("ProjectedReleaseDate")) + "</td>");
-                msg.append("<td>" + PageFlowUtil.filter(rs.getString("assignmentType")) + "</td>");
-                msg.append("<td>" + PageFlowUtil.filter(rs.getString("assignCondition")) + "</td>");
-                msg.append("<td>" + PageFlowUtil.filter(rs.getString("projectedReleaseCondition")) + "</td>");
-                msg.append("<td>" + PageFlowUtil.filter(rs.getString("ConditionAtRelease")) + "</td>");
+                msg.append("<tr>");
+                msg.append("<td style='border: 1px solid black;'><b> <a href='" + url + "'>" + PageFlowUtil.filter(rs.getString("Id")) + "</a> </b></td>\n");
+                msg.append("<td style='border: 1px solid black;'>" + PageFlowUtil.filter(rs.getString("Sex")) + "</td>");
+                msg.append("<td style='border: 1px solid black;'>" + PageFlowUtil.filter(rs.getString("Room")) + "</td>");
+                msg.append("<td style='border: 1px solid black;'>" + PageFlowUtil.filter(rs.getString("Cage")) + "</td>");
+                msg.append("<td style='border: 1px solid black;'>" + PageFlowUtil.filter(rs.getString("project")) + "</td>");
+                msg.append("<td style='border: 1px solid black;'>" + PageFlowUtil.filter(rs.getString("Protocol")) + "</td>");
+                msg.append("<td style='border: 1px solid black;'>" + PageFlowUtil.filter(rs.getString("Title")) + "</td>");
+                msg.append("<td style='border: 1px solid black;'>" + PageFlowUtil.filter(rs.getString("ProjectInvestigator")) + "</td>");
+                msg.append("<td style='border: 1px solid black;'>" + PageFlowUtil.filter(rs.getString("AssignDate")) + "</td>");
+                msg.append("<td style='border: 1px solid black;'>" + PageFlowUtil.filter(rs.getString("ReleaseDate")) + "</td>");
+                msg.append("<td style='border: 1px solid black;'>" + PageFlowUtil.filter(rs.getString("ProjectedReleaseDate")) + "</td>");
+                msg.append("<td style='border: 1px solid black;'>" + PageFlowUtil.filter(rs.getString("assignmentType")) + "</td>");
+                msg.append("<td style='border: 1px solid black;'>" + PageFlowUtil.filter(rs.getString("assignCondition")) + "</td>");
+                msg.append("<td style='border: 1px solid black;'>" + PageFlowUtil.filter(rs.getString("projectedReleaseCondition")) + "</td>");
+                msg.append("<td style='border: 1px solid black;'>" + PageFlowUtil.filter(rs.getString("ConditionAtRelease")) + "</td>");
                 msg.append("</tr>");
             });
             msg.append("</table><br><hr>");
@@ -391,17 +390,62 @@ public class BehaviorNotification extends ColonyAlertsNotification
         TableInfo ti = getStudySchema(c, u).getTable("AlopeciaScoreMissingBehaviorCases");
 
         TableSelector ts = new TableSelector(ti, null, null);
-        long total = ts.getRowCount();
-        msg.append("<b>Animals with alopecia score of 4 or 5, but does not have an open behavioral case for alopecia:</b><p>");
-        if (total > 0)
-        {
-            msg.append( total + " entries found. ");
-            msg.append("<a href='" + getExecuteQueryUrl(c, "study", "AlopeciaScoreMissingBehaviorCases", null)  + "'>Click here to view them</a>\n");
-            msg.append("<hr>\n\n");
+        long count = ts.getRowCount();
+
+        //Get num of rows
+        if (count > 0) {
+            msg.append("<b>Animals with alopecia score of 4 or 5, but does not have an open behavioral case for alopecia:</b><p>");
+            msg.append( count + " entries found. ");
+            msg.append("<a href='" + getExecuteQueryUrl(c, "study", "AlopeciaScoreMissingBehaviorCases", null)  + "'>Click here to view them in a separate window</a>\n");
+            msg.append("\n\n");
+
+            //Changes made byKolli, July 2026, Refer to tkt # 14974
+            //Display the daily report in the email
+            Set<FieldKey> columns = new HashSet<>();
+            columns.add(FieldKey.fromString("Id"));
+            columns.add(FieldKey.fromString("species"));
+            columns.add(FieldKey.fromString("gender"));
+            columns.add(FieldKey.fromString("ageinYearsRounded"));
+            columns.add(FieldKey.fromString("area"));
+            columns.add(FieldKey.fromString("room"));
+            columns.add(FieldKey.fromString("cage"));
+            columns.add(FieldKey.fromString("MostRecentAlopeciaScore"));
+            columns.add(FieldKey.fromString("date"));
+            columns.add(FieldKey.fromString("performedby"));
+
+            final Map<FieldKey, ColumnInfo> colMap = QueryService.get().getColumns(ti, columns);
+            TableSelector ts2 = new TableSelector(ti, colMap.values(), null, new Sort("Id"));
+
+            msg.append("<table border=1 style='border-collapse: collapse; border: 1px solid black;'>");
+            msg.append("<tr bgcolor = " + '"' + "#FFD700" + '"' + "style='font-weight: bold;'>");
+            msg.append("<td>Id </td><td>Species </td><td>Sex </td><td>Age(Years, Rounded) </td><td>Area </td><td>Room </td><td>Cage </td><td>Most Recent Alopecia Score </td><td>Date </td><td>Performed By </td></tr>");
+
+            ts2.forEach(object -> {
+                Results rs = new ResultsImpl(object, colMap);
+                String url = getParticipantURL(c, rs.getString("Id"));
+
+                msg.append("<tr>");
+                msg.append("<td style='border: 1px solid black;'><b> <a href='" + url + "'>" + PageFlowUtil.filter(rs.getString("Id")) + "</a> </b></td>\n");
+                msg.append("<td style='border: 1px solid black;'>" + PageFlowUtil.filter(rs.getString("Species")) + "</td>");
+                msg.append("<td style='border: 1px solid black;'>" + PageFlowUtil.filter(rs.getString("gender")) + "</td>");
+                msg.append("<td style='border: 1px solid black;'>" + PageFlowUtil.filter(rs.getString("ageinYearsRounded")) + "</td>");
+                msg.append("<td style='border: 1px solid black;'>" + PageFlowUtil.filter(rs.getString("area")) + "</td>");
+                msg.append("<td style='border: 1px solid black;'>" + PageFlowUtil.filter(rs.getString("room")) + "</td>");
+                msg.append("<td style='border: 1px solid black;'>" + PageFlowUtil.filter(rs.getString("cage")) + "</td>");
+                msg.append("<td style='border: 1px solid black;'>" + PageFlowUtil.filter(rs.getString("MostRecentAlopeciaScore")) + "</td>");
+                java.sql.Date date = rs.getDate("date");
+                msg.append("<td style='border: 1px solid black;'>")
+                        .append(PageFlowUtil.filter(
+                                date == null ? "" : new java.text.SimpleDateFormat("MM/dd/yyyy").format(date)
+                        ))
+                        .append("</td>");
+                msg.append("<td style='border: 1px solid black;'>" + PageFlowUtil.filter(rs.getString("performedby")) + "</td>");
+                msg.append("</tr>");
+            });
+            msg.append("</table><br><hr>");
         }
-        else
-        {
-            msg.append("<b>WARNING: No animals found with alopecia score of 4 or 5, but does not have an open behavioral case for alopecia!</b><br><hr>\n");
+        else {
+            msg.append("<b>WARNING: No animals found with alopecia score of 4 or 5, there fore no open behavioral case(s) for alopecia!</b><br><hr>\n");
         }
    }
 
