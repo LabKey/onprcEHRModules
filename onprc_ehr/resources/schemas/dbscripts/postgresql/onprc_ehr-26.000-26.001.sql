@@ -1,3 +1,5 @@
+-- TODO: I left TIMESTAMP(0) types here (that's how Gemini translated SmallDateTime), but I'm guessing we may want TIMESTAMP for consistency
+
 -- Cleanly drop existing tables and functions using standard PostgreSQL DDL
 DROP TABLE IF EXISTS onprc_ehr.TB_TestTemp;
 DROP TABLE IF EXISTS onprc_ehr.TB_TestTempMaster;
