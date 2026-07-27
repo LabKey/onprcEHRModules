@@ -4,7 +4,7 @@ CREATE TABLE onprc_ehr.RequirementName_Convert (
     PreviousDesignation varchar(255) NULL,
     afterName varchar(255) NULL,
     FileName varchar(1000) NULL,
-    CONSTRAINT PK_RequirementName_Convert PRIMARY KEY (searchid)
+    CONSTRAINT PK_RequirementName_Convert PRIMARY KEY (searchid) -- TODO: Note - no PK on SQL Server
 );
 
 /*

@@ -17,7 +17,7 @@ CREATE TABLE onprc_ehr.TB_TestTemp (
     performedby varchar(200) NULL,
     modifiedby integer NULL,
     date_posted timestamp(0) NULL,
-    CONSTRAINT PK_TB_TestTemp PRIMARY KEY (rowid)
+    CONSTRAINT PK_TB_TestTemp PRIMARY KEY (rowid) -- TODO: Note - no PK on SQL Server
 );
 
 -- Create Temp_Clinical_Observations table
@@ -33,7 +33,7 @@ CREATE TABLE onprc_ehr.Temp_Clinical_Observations (
     taskid varchar(4000) NULL,
     qcstate integer NULL,
     modifiedby integer NULL,
-    CONSTRAINT PK_Temp_Clinical_Observations PRIMARY KEY (rowid)
+    CONSTRAINT PK_Temp_Clinical_Observations PRIMARY KEY (rowid) -- TODO: Note - no PK on SQL Server
 );
 
 -- Create Temp_Clinical_Observations_Master table
@@ -49,9 +49,9 @@ CREATE TABLE onprc_ehr.Temp_Clinical_Observations_Master (
     performedby varchar(500) NULL,
     taskid varchar(4000) NULL,
     qcstate smallint NULL,
-    modifiedby timestamp(0) NULL, -- Maintained smalldatetime equivalent
+    modifiedby INT NULL, -- TODO: smalldatetime on SQL Server is clearly wrong, so switched to INT
     Posted_date timestamp(0) NULL,
-    CONSTRAINT PK_Temp_Clinical_Observations_Master PRIMARY KEY (rowid)
+    CONSTRAINT PK_Temp_Clinical_Observations_Master PRIMARY KEY (rowid) -- TODO: Note - no PK on SQL Server
 );
 
 -- Create Observation_EHRTasks table
@@ -66,7 +66,7 @@ CREATE TABLE onprc_ehr.Observation_EHRTasks (
     assignedto smallint NULL,
     createdby smallint NULL,
     modifiedby smallint NULL,
-    CONSTRAINT PK_Observation_EHRTasks PRIMARY KEY (rowid)
+    CONSTRAINT PK_Observation_EHRTasks PRIMARY KEY (rowid) -- TODO: Note - no PK on SQL Server
 );
 
 /*
@@ -116,7 +116,7 @@ BEGIN
         a.modifiedby,
         CURRENT_TIMESTAMP
     FROM studydataset.c6d214_encounters a
-    WHERE a.type IN ('Procedure', 'Surgery')
+    WHERE a.type IN ('Procedure', 'Surgery') -- TODO: Check capitalization of stored data. PG is case-sensitive.
       AND a.qcstate = 18
       AND a.procedureid = 802
       AND a.modified >= CURRENT_DATE
@@ -175,7 +175,7 @@ BEGIN
 
             IF v_FirstFlag != 1 THEN
                 -- Create a new unique task ID
-                v_TaskId := UPPER(gen_random_uuid()::text);
+                v_TaskId := gen_random_uuid()::text;
 
                 -- Create Clinical Observation Task Entry
                 INSERT INTO onprc_ehr.Observation_EHRTasks (
@@ -263,11 +263,8 @@ BEGIN
         createdby, 
         performedby, 
         taskid, 
-        qcstate, 
-        CASE 
-            WHEN modifiedby IS NOT NULL THEN '1900-01-01'::timestamp + (modifiedby || ' days')::interval 
-            ELSE NULL 
-        END,
+        qcstate,
+        modifiedby
         CURRENT_TIMESTAMP
     FROM onprc_ehr.Temp_Clinical_Observations;
 

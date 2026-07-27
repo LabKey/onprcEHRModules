@@ -443,7 +443,7 @@ CREATE TABLE onprc_ehr.PotentialParents_source(
     Birthcage varchar(100) NULL,
     ParentAgeAtTime integer NULL, -- TODO: Check this - DateTime type on SQL Server, but looks like INTEGER is the correct type
     PotentialParent varchar(100) NULL,
-    "[PotentialParentType" varchar(100) NULL, -- TODO: Yes, we need to get rid of that bracket, but this is how it is in the SQL Server script
+    "[PotentialParentType" varchar(100) NULL, -- TODO: Keep this random bracket for now (to match SQL Server script). Should rename in a separate upgrade script, perhaps after migration work.
     ParentBirth TIMESTAMP NULL,
     Parentgender varchar(100) NULL,
     ParentSpecies varchar(100) NULL,
@@ -889,7 +889,7 @@ CREATE TABLE onprc_ehr.StudyDetails_RandalData(
     Sex varchar(100) NULL,
     cohortStart date NULL,
     cohortEnd date NULL,
-    "Do" date NULL,
+    "do" date NULL,
     DPC0 date NULL,
     contprog varchar(100) NULL,
     PIDO date NULL,
@@ -1095,28 +1095,28 @@ BEGIN
     IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'list' AND table_name = 'c8754d723_surface_sanitation_minus_rodac_48hr') THEN
         EXECUTE 'INSERT INTO onprc_ehr.Environmental_Assessment
         (date, testing_location, service_requested, test_type, colony_count, pass_fail, performedby, action, remarks, objectid, created, createdby, modified, modifiedby, qcstate, container)
-        SELECT date, TestSite, ''Sanitation: Contact Plate'', TestType, ColonyCount, PassFail, CollectedBy, Action, comment, core.fn_nextid()::entityid, now(), 1896, now(), 1896, 18, ''98F39B23-5E3B-1037-AFE5-BD25D057100A''::entityid
+        SELECT date, TestSite, ''Sanitation: Contact Plate'', TestType, ColonyCount, PassFail, CollectedBy, Action, comment, gen_random_uuid()::entityid, now(), 1896, now(), 1896, 18, ''98F39B23-5E3B-1037-AFE5-BD25D057100A''::entityid
         FROM list.c8754d723_surface_sanitation_minus_rodac_48hr';
     END IF;
 
     IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'list' AND table_name = 'c8754d726_h2o_testing') THEN
         EXECUTE 'INSERT INTO onprc_ehr.Environmental_Assessment
         (date, testing_location, service_requested, water_source, test_type, test_results, pass_fail, remarks, objectid, created, createdby, modified, modifiedby, qcstate, container)
-        SELECT date, TestSite, ''Sanitation: Water Test'', H2OSource, TestType, result, PassFail, comment, core.fn_nextid()::entityid, now(), 1896, now(), 1896, 18, ''98F39B23-5E3B-1037-AFE5-BD25D057100A''::entityid
+        SELECT date, TestSite, ''Sanitation: Water Test'', H2OSource, TestType, result, PassFail, comment, gen_random_uuid()::entityid, now(), 1896, now(), 1896, 18, ''98F39B23-5E3B-1037-AFE5-BD25D057100A''::entityid
         FROM list.c8754d726_h2o_testing';
     END IF;
 
     IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'list' AND table_name = 'c8754d795_biological_indicator_log') THEN
         EXECUTE 'INSERT INTO onprc_ehr.Environmental_Assessment
         (date, testing_location, service_requested, biological_Cycle, biological_BI, pass_fail, retest, action, performedby, remarks, objectid, created, createdby, modified, modifiedby, qcstate, container)
-        SELECT date, autoclave, ''Sanitation: Bio-indicator'', "cycle (if applicable)", "BI# (for ASA)", "Pass / Fail", "Results Read by", action, "Collected By", comment, core.fn_nextid()::entityid, now(), 1896, now(), 1896, 18, ''98F39B23-5E3B-1037-AFE5-BD25D057100A''::entityid
+        SELECT date, autoclave, ''Sanitation: Bio-indicator'', "cycle (if applicable)", "BI# (for ASA)", "Pass / Fail", "Results Read by", action, "Collected By", comment, gen_random_uuid()::entityid, now(), 1896, now(), 1896, 18, ''98F39B23-5E3B-1037-AFE5-BD25D057100A''::entityid
         FROM list.c8754d795_biological_indicator_log';
     END IF;
 
     IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'list' AND table_name = 'c8754d731_atp_testing') THEN
         EXECUTE 'INSERT INTO onprc_ehr.Environmental_Assessment
         (date, performedby, service_requested, testing_location, surface_tested, pass_fail, remarks, retest, test_results, action, objectid, created, createdby, modified, modifiedby, qcstate, container)
-        SELECT date, Tech_Initials, ''Sanitation: ATP'', area, Surface, initial, comments, retest, Lab_Group, location, core.fn_nextid()::entityid, now(), 1896, now(), 1896, 18, ''98F39B23-5E3B-1037-AFE5-BD25D057100A''::entityid
+        SELECT date, Tech_Initials, ''Sanitation: ATP'', area, Surface, initial, comments, retest, Lab_Group, location, gen_random_uuid()::entityid, now(), 1896, now(), 1896, 18, ''98F39B23-5E3B-1037-AFE5-BD25D057100A''::entityid
         FROM list.c8754d731_atp_testing';
     END IF;
 
@@ -1272,7 +1272,7 @@ BEGIN
     IF MPACount > 0 THEN
         SELECT u.displayName INTO displayName FROM core.users u WHERE u.userid = 1003;
 
-        taskId := core.fn_nextid();
+        taskId := gen_random_uuid();
 
         INSERT INTO ehr.tasks
         (taskid, category, title, formtype, qcstate, assignedto, duedate, createdby, created,
@@ -1347,7 +1347,7 @@ BEGIN
       AND a.participantid IN (
         SELECT k.participantid 
         FROM studydataset.c6d203_demographics k
-        WHERE k.calculated_status = 'alive'
+        WHERE k.calculated_status = 'Alive'
       )
     ORDER BY a.participantid, a.date DESC;
 
@@ -1355,14 +1355,14 @@ BEGIN
         RETURN 0;
     END IF;
 
-    taskId := core.fn_nextid();
+    taskId := gen_random_uuid();
 
     INSERT INTO EHR.Tasks (
         taskid, description, title, qcstate, formType, category, container, assignedto, created, createdby, modified, modifiedby
     )
     VALUES (
         taskId,
-        'TB TST Scores ' || COALESCE(obsDate::text, ''),
+        'TB TST Scores ' || COALESCE(obsDate::text, ''), -- TODO: Change from SQL Server to not output NULL
         'TB TST Scores',
         20,
         'TB TST Scores',
@@ -1384,7 +1384,7 @@ BEGIN
               AND j.date::date = obsDate::date 
               AND j.category = 'TB TST Score (72 hr)'
         ) THEN
-            runId := core.fn_nextid();
+            runId := gen_random_uuid();
 
             INSERT INTO studydataset.c6d171_clinical_observations (
                 participantid, date, category, area, observation, created, createdby, performedby, objectid, taskid, qcstate, modified, modifiedby, lsid
@@ -1451,7 +1451,7 @@ BEGIN
         FROM
             onprc_ehr.eIACUC_PRIME_VIEW_PROTOCOLS
         WHERE
-            Protocol_State IN ('approved','expired', 'terminated')
+            Protocol_State IN ('Approved','Expired', 'Terminated') -- TODO: Check capitalization of stored data. PG is case-sensitive.
         GROUP BY
             BaseProtocol
     ),
@@ -1557,7 +1557,7 @@ BEGIN
             SELECT 1 FROM studydataset.c6d175_weight
             WHERE participantid = r.animalID AND date = r.date
         ) THEN
-            runId := core.fn_nextid();
+            runId := gen_random_uuid();
 
             INSERT INTO studydataset.c6d175_weight (
                 participantid, date, weight, qcstate, created, createdby, modified, modifiedby, taskid, objectid, remark, lsid
@@ -1574,7 +1574,7 @@ BEGIN
                 r.taskId,
                 runId,
                 'Weight added from Path Tissue records',
-                'urn:lsid:ohsu.edu:Study.Data-6:1045.' || r.animalID || '.' || to_char(r.date::date, 'YYYYMMDD') || '.0000.' || runId
+                'urn:lsid:ohsu.edu:Study.Data-6:1045.' || r.animalID || '.' || to_char(r.date::date, 'YYYYMMDD') || '.0000.' || runId -- TODO: SQL Server hard-coded LSID had a leading space. Maybe need to preserve that here?
             );
         END IF;
     END LOOP;
@@ -1625,7 +1625,7 @@ BEGIN
     ORDER BY e.participantid, e.date;
 
     FOR r IN SELECT * FROM onprc_ehr.Rpt_AnimalIDTissues LOOP
-        taskId := core.fn_nextid();
+        taskId := gen_random_uuid();
 
         INSERT INTO EHR.Tasks (
             taskid, description, title, qcstate, formType, category, container, assignedto, created, createdby, modified, modifiedby
