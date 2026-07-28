@@ -19,14 +19,7 @@
             <table tableName="publicInvoicedItems" tableDbType="NOT_IN_DB">
                 <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
                 <tableTitle>Invoiced Items</tableTitle>
-                <filters>
-                    <filter column="Category"
-                            operator="eq"
-                            value="ART Core" />
-                    <filter column="date"
-                            operator = "dategte"
-                            value="2022-01-01"/>
-                </filters>-->
+
             </table>
 
             <table tableName="projectAccountHistory" tableDbType="NOT_IN_DB">
