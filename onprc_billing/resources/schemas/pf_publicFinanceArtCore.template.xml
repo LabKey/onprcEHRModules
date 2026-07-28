@@ -19,7 +19,7 @@
             <table tableName="publicInvoicedItems" tableDbType="NOT_IN_DB">
                 <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
                 <tableTitle>Invoiced Items</tableTitle>
-               <!-- <filters>
+                <filters>
                     <filter column="Category"
                             operator="eq"
                             value="ART Core" />
