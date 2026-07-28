@@ -50,6 +50,17 @@ GO
 EXEC core.fn_dropifexists 'RptMergeChargetypeUpdateSP','dbo','PROCEDURE';
 GO
 
+----Drop corresponding temp tables
+EXEC core.fn_dropifexists 'Rpt_TempProblemList','onprc_ehr','TABLE';
+GO
+
+EXEC core.fn_dropifexists 'Rpt_TempProblemListMaster','onprc_ehr','TABLE';
+GO
+
+--Drop stored procedures
+EXEC core.fn_dropifexists 's_MasterProblemHistoricalProcess','onprc_ehr','PROCEDURE';
+GO
+
 
 ----Drop corresponding temp tables
 ---- No temp tables to include here
