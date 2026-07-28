@@ -1,62 +1,140 @@
+
+CREATE TABLE onprc_ehr.Rpt_TempProblemList(
+    searchid integer IDENTITY(100,1) NOT NULL,
+    animalid varchar(200) NULL,
+    date    smalldatetime NULL,
+    objectid varchar(4000) NULL,
+    caseid    varchar(4000) NULL
+
+    ) ON [PRIMARY]
+    GO
+
+CREATE TABLE onprc_ehr.Rpt_TempProblemListMaster(
+      searchid integer IDENTITY(100,1) NOT NULL,
+      animalid varchar(200) NULL,
+      date    smalldatetime NULL,
+      objectid varchar(4000) NULL,
+      caseid    varchar(4000) NULL
+
+) ON [PRIMARY]
+    GO
+
+
+
+
 /*
-     Created: 7-16-2026   R. Blasa   Process to removed temp tables, and stored prcoedure that are no longer needed
+**
+**	 Created by	Date		Comment
+**
+** 	   blasa     7-7-2026   Process to update historical problem list records
+**
+**
+**
+**/
 
- */
----Dropping user defined sql queries
- --- ComplianceProcedureRecenttTestsorg.sql
----- ComplianceProcedureRecentTestsorg  --> directory and xml files
-
---- ComplianceRecenttTestsorg.sql
----- ComplianceRecentTestsorg  --> directory and xml files
-
-
-----Drop corresponding temp tables
-  ---- No temp tables to include here
---Drop stored procedures
-EXEC core.fn_dropifexists 'sp_Compliance_requirementname_Update_Process','onprc_ehr','PROCEDURE';
-GO
-----Drop corresponding temp tables
-EXEC core.fn_dropifexists 'Rpt_TempJmacDate','onprc_ehr','TABLE';
-GO
-
-EXEC core.fn_dropifexists 'JmacRemovalDate','onprc_ehr','TABLE';
-GO
---Drop stored procedures
-EXEC core.fn_dropifexists 's_JmacRemovalDateProcess','onprc_ehr','PROCEDURE';
-GO
-----Drop corresponding temp tables
-  ---- No temp tables to include here
---Drop stored procedures
-EXEC core.fn_dropifexists 'p_EnvironmentalHistoricalUpdates','onprc_ehr','PROCEDURE';
-GO
-----Drop corresponding temp tables
-  ---- No temp tables to include here
---Drop stored procedures
-EXEC core.fn_dropifexists 'p_Environmental_Update_Process','onprc_ehr','PROCEDURE';
-GO
-----Drop corresponding temp tables
-EXEC core.fn_dropifexists 'Rpt_SLaCensus','dbo','TABLE';
-GO
---Drop stored procedures
-EXEC core.fn_dropifexists 'sp_RpSLASummaryCensus','dbo','PROCEDURE';
-GO
-
-----Drop corresponding temp tables
-EXEC core.fn_dropifexists 'Rpt_Labwork_MergeUpdate','dbo','TABLE';
-GO
-EXEC core.fn_dropifexists 'Rpt_Labwork_MergeUpdatelog','dbo','TABLE';
-GO
---Drop stored procedures
-EXEC core.fn_dropifexists 'RptMergeChargetypeUpdateSP','dbo','PROCEDURE';
-GO
+CREATE  Procedure onprc_ehr.s_MasterProblemHistoricalProcess
 
 
-----Drop corresponding temp tables
----- No temp tables to include here
---Drop stored procedures
-EXEC core.fn_dropifexists 'p_ComplianceTranslatestringUpdate','onprc_ehr_compliancedb','PROCEDURE';
-GO
+AS
 
+
+declare
+
+
+    @TempSearchKey     	Int,
+    @Searchkey         	Int,
+    @AnimalID			varchar(100),
+    @date               smalldatetime,
+    @objectid           varchar(4000),
+    @caseid             varchar(4000)
+
+
+Begin
+
+
+    ----- Reset the last two months only
+
+    Delete  onprc_ehr.Rpt_TempProblemList
+
+    If @@Error <> 0
+        GoTo Err_Proc
+
+
+
+    Set @Tempsearchkey = 0
+    Set @Searchkey  = 0
+    Set @Animalid = ''
+    Set @date = null
+    Set @objectid = null
+    Set @caseid = null
+
+    --- Set initial processing
+
+    Insert into onprc_ehr.Rpt_TempProblemList
+    select  participantid,
+            date,
+            objectid,
+            caseid
+    from  studydataset.c6d200_problem
+    Where category = 'Wound'
+    And subcategory = 'Digit Amputation'
+    And qcstate = 18
+
+    Order by participantid
+
+    Select top 1  @SearchKey = searchID from onprc_ehr.Rpt_TempProblemList
+    Order by searchid
+
+
+    While @Tempsearchkey < @SearchKey
+        Begin
+
+            Set @Animalid = ''
+            Set @date = null
+            Set @objectid = null
+
+            select @animalid = animalid, @Date = date, @Objectid = objectid
+            from Rpt_TempProblemList Where searchid = @Searchkey
+
+            -------Begin updating records
+
+
+            Update pb
+            Set pb.subcategory = 'Digit Removal/Caudectomy'
+            From studydataset.c6d200_problem pb
+            Where pb.Participantid = @Animalid
+              And pb.objectid = @objectid
+
+
+            If @@Error <> 0
+                GoTo Err_Proc
+
+
+            Set @TempSearchkey = @Searchkey
+
+            Select Top 1 @SearchKey = searchid From onprc_ehr.Rpt_TempProblemList
+            Where searchid > @Tempsearchkey
+            Order by searchid
+
+
+
+
+        End ------(While @tempsearchkey < @Searchkey)
+
+        ---- Create an audit record of these entries
+
+          insert into onprc_ehr.Rpt_TempProblemListMaster
+              Select animalid, date, objectid, caseid
+              from onprc_ehr.Rpt_TempProblemList
+
+
+    Return 0
+
+    Err_Proc:    Return 1
+
+
+
+END
 
 
 
