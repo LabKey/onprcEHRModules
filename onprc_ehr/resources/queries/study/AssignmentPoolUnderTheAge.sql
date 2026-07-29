@@ -31,17 +31,17 @@ SELECT
           AND h.removalDate IS NULL
           AND h.roommateEnd IS NULL
           AND h.roommateId IS NOT NULL
-          AND d.enddate IS NULL
-          AND d.isActive = 1
-          AND d.project.displayname NOT IN ('0492-02', '0492-03')
+          --AND d.enddate IS NULL
+          --AND d.isActive = 1
+          --AND d.project.displayname NOT IN ('0492-02', '0492-03')
     ) AS Cagemate_Assignments
 
 FROM study.Assignment a
 WHERE
-    a.enddate IS NULL
-    AND a.isActive = 1
-    AND a.Id.Age.ageinyears <= 3
-    AND a.project.displayname NOT IN ('0492-02', '0492-03')
+    --a.enddate IS NULL
+    --AND a.isActive = 1
+    a.Id.Age.ageinyears <= 3
+    --AND a.project.displayname NOT IN ('0492-02', '0492-03')
     AND a.Id.demographics.species = 'Rhesus Macaque'
     AND EXISTS (
         SELECT 1
