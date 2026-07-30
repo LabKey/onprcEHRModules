@@ -16,13 +16,15 @@
 EXEC core.fn_dropifexists 'sp_Compliance_requirementname_Update_Process','onprc_ehr','PROCEDURE';
 GO
 ----Drop corresponding temp tables
+
+--Drop stored procedures
+EXEC core.fn_dropifexists 's_JmacRemovalDateProcess','onprc_ehr','PROCEDURE';
+GO
+
 EXEC core.fn_dropifexists 'Rpt_TempJmacDate','onprc_ehr','TABLE';
 GO
 
 EXEC core.fn_dropifexists 'JmacRemovalDate','onprc_ehr','TABLE';
-GO
---Drop stored procedures
-EXEC core.fn_dropifexists 's_JmacRemovalDateProcess','onprc_ehr','PROCEDURE';
 GO
 ----Drop corresponding temp tables
   ---- No temp tables to include here
@@ -34,11 +36,18 @@ GO
 --Drop stored procedures
 EXEC core.fn_dropifexists 'p_Environmental_Update_Process','onprc_ehr','PROCEDURE';
 GO
+
+--Drop stored procedures
+EXEC core.fn_dropifexists 'sp_RpSLASummaryCensus','dbo','PROCEDURE';
+GO
+
 ----Drop corresponding temp tables
 EXEC core.fn_dropifexists 'Rpt_SLaCensus','dbo','TABLE';
 GO
+
+
 --Drop stored procedures
-EXEC core.fn_dropifexists 'sp_RpSLASummaryCensus','dbo','PROCEDURE';
+EXEC core.fn_dropifexists 'RptMergeChargetypeUpdateSP','dbo','PROCEDURE';
 GO
 
 ----Drop corresponding temp tables
@@ -46,16 +55,7 @@ EXEC core.fn_dropifexists 'Rpt_Labwork_MergeUpdate','dbo','TABLE';
 GO
 EXEC core.fn_dropifexists 'Rpt_Labwork_MergeUpdatelog','dbo','TABLE';
 GO
---Drop stored procedures
-EXEC core.fn_dropifexists 'RptMergeChargetypeUpdateSP','dbo','PROCEDURE';
-GO
 
-----Drop corresponding temp tables
-EXEC core.fn_dropifexists 'Rpt_TempProblemList','onprc_ehr','TABLE';
-GO
-
-EXEC core.fn_dropifexists 'Rpt_TempProblemListMaster','onprc_ehr','TABLE';
-GO
 
 --Drop stored procedures
 EXEC core.fn_dropifexists 's_MasterProblemHistoricalProcess','onprc_ehr','PROCEDURE';
@@ -67,6 +67,14 @@ GO
 --Drop stored procedures
 EXEC core.fn_dropifexists 'p_ComplianceTranslatestringUpdate','onprc_ehr_compliancedb','PROCEDURE';
 GO
+
+----Drop corresponding temp tables
+EXEC core.fn_dropifexists 'Rpt_TempProblemList','onprc_ehr','TABLE';
+GO
+
+EXEC core.fn_dropifexists 'Rpt_TempProblemListMaster','onprc_ehr','TABLE';
+GO
+
 
 
 
