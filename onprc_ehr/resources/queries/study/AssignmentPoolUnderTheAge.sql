@@ -38,9 +38,9 @@ SELECT
 
 FROM study.Assignment a
 WHERE
+    a.Id.Age.ageinyears <= 3
     --a.enddate IS NULL
     --AND a.isActive = 1
-    a.Id.Age.ageinyears <= 3
     --AND a.project.displayname NOT IN ('0492-02', '0492-03')
     AND a.Id.demographics.species = 'Rhesus Macaque'
     AND EXISTS (
