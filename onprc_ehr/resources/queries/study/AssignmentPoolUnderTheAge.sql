@@ -39,6 +39,7 @@ SELECT
 FROM study.Assignment a
 WHERE
     a.Id.Age.ageinyears <= 3
+    --Remove these filters
     --a.enddate IS NULL
     --AND a.isActive = 1
     --AND a.project.displayname NOT IN ('0492-02', '0492-03')
