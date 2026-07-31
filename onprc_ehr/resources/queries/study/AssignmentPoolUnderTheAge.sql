@@ -22,18 +22,18 @@ SELECT
           AND h.roommateId IS NOT NULL
     ) AS Cagemates,
 
+    /* Concatenate all active projects & investigator into one cell */
     (
-        SELECT GROUP_CONCAT(DISTINCT CAST(d.project.displayname AS VARCHAR), ', ')
+        SELECT GROUP_CONCAT(DISTINCT CAST('[' + d.project.protocol.investigatorId.lastname + ']' + d.project.displayname + '' AS VARCHAR), ', ')
         FROM housingRoommatesDivider h
-                 LEFT JOIN study.assignment d
-                           ON d.Id = h.roommateId
+        LEFT JOIN study.assignment d ON d.Id = h.roommateId
         WHERE h.Id = a.Id
-          AND h.removalDate IS NULL
-          AND h.roommateEnd IS NULL
-          AND h.roommateId IS NOT NULL
-          --AND d.enddate IS NULL
-          --AND d.isActive = 1
-          --AND d.project.displayname NOT IN ('0492-02', '0492-03')
+            AND h.removalDate IS NULL
+            AND h.roommateEnd IS NULL
+            AND h.roommateId IS NOT NULL
+            AND d.enddate IS NULL
+            AND d.isActive = 1
+            AND d.project.displayname NOT IN ('0492-02', '0492-03')
     ) AS Cagemate_Assignments
 
 FROM study.Assignment a
