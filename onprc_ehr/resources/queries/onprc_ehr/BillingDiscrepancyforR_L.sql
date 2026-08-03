@@ -37,8 +37,13 @@ WITH ProcedureFees AS (
              a.project.displayName AS ProjectName
          FROM study.assignment a
          WHERE
-             a.enddate IS NULL
-            OR a.enddate >= CURDATE()
+             (a.enddate IS NULL OR a.enddate >= CURDATE())
+           AND a.date = (
+             SELECT MAX(a2.date)
+             FROM study.assignment a2
+             WHERE a2.Id = a.Id
+               AND (a2.enddate IS NULL OR a2.enddate >= CURDATE())
+         )
      ),
 
      AssignmentCounts AS (
@@ -73,19 +78,21 @@ SELECT
     pf.ProjectBilledTo,
     aas.CurrentProject,
 
+
+
     CASE
         WHEN pf.ProjectBilledTo = aas.CurrentProject
+            OR aas.CurrentProject IS NULL
             THEN 'Billing is Correct'
         ELSE 'Billing Needs Review'
         END AS ChargeReview,
 
-    CASE
+   /* CASE
         WHEN aas.IsDualAssigned = true
             THEN 'Dual Assigned'
         ELSE 'Single Assignment'
-        END AS AssignmentStatus,
+        END AS AssignmentStatus,*/
 
-    aas.AssignmentCount,
 
     pf.chargeType,
     pf.procedureId,
@@ -99,7 +106,7 @@ FROM ProcedureFees pf
                    ON pf.id = aas.Id
 
 WHERE
-    pf.ProjectBilledTo NOT LIKE '0492-%'
+    pf.ProjectBilledTo NOT LIKE '0492'
         --or
   --AND aas.IsDualAssigned = true)
 
