@@ -13,6 +13,7 @@ SELECT
     a.Id.curlocation.cage AS Cage,
     'Assignment Pool' AS Flag,
 
+    /* Concatenate all active cagemate IDs into one cell */
     (
         SELECT GROUP_CONCAT(DISTINCT CAST(h.roommateId AS VARCHAR), ', ')
         FROM housingRoommatesDivider h
