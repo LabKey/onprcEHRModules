@@ -429,7 +429,7 @@ public class FinanceNotification extends AbstractNotification
             Map<String, Double> totalsMap = totalsByCategory.get(category);
             Container container = containerMap.get(category);
 
-            String url = getExecuteQueryUrl(container, ONPRC_BillingSchema.NAME, categoryToQuery.get(category), null) + "&query.param.StartDate=" + getDateFormat(c).format(start.getTime()) + "&query.param.EndDate=" + getDateFormat(c).format(endDate.getTime());
+            String url = getExecuteQueryUrl(container, ONPRC_BillingSchema.NAME, categoryToQuery.get(category), null) + "&query.param.StartDate=" + PageFlowUtil.encodeURIComponent(getDateFormat(c).format(start.getTime())) + "&query.param.EndDate=" + PageFlowUtil.encodeURIComponent(getDateFormat(c).format(endDate.getTime()));
             msg.append("<tr><td><a href='" + PageFlowUtil.filter(url) + "'>" + PageFlowUtil.filter(category) + "</a></td><td>" + totalsMap.get("total") + "</td><td>" + _dollarFormat.format(totalsMap.get("totalCost")) + "</td></tr>");
         }
         msg.append("</table><br><br>");
@@ -473,8 +473,8 @@ public class FinanceNotification extends AbstractNotification
                 {
                     Map<String, Integer> totals = dataByCategory.get(category);
 
-                    String baseUrl = getExecuteQueryUrl(containerMap.get(category), ONPRC_BillingSchema.NAME, categoryToQuery.get(category), null) + "&query.param.StartDate=" + getDateFormat(c).format(start.getTime()) + "&query.param.EndDate=" + getDateFormat(c).format(endDate.getTime());
-                    String projUrl = baseUrl + ("None".equals(tokens[1]) ? "&query.project/displayName~isblank" : "&query.project/displayName~eq=" + tokens[1]);
+                    String baseUrl = getExecuteQueryUrl(containerMap.get(category), ONPRC_BillingSchema.NAME, categoryToQuery.get(category), null) + "&query.param.StartDate=" + PageFlowUtil.encodeURIComponent(getDateFormat(c).format(start.getTime())) + "&query.param.EndDate=" + PageFlowUtil.encodeURIComponent(getDateFormat(c).format(endDate.getTime()));
+                    String projUrl = baseUrl + ("None".equals(tokens[1]) ? "&query.project/displayName~isblank" : "&query.project/displayName~eq=" + PageFlowUtil.encodeURIComponent(tokens[1]));
                     msg.append("<tr><td>" + PageFlowUtil.filter(financialAnalyst) + "</td>");    //the FA
                     msg.append("<td><a href='" + PageFlowUtil.filter(projUrl) + "'>" + PageFlowUtil.filter(tokens[1]) + "</a></td>");
 
@@ -483,7 +483,7 @@ public class FinanceNotification extends AbstractNotification
                     Container financeContainer = ONPRC_BillingManager.get().getBillingContainer(containerMap.get(category));
                     if (financeContainer != null && !"Unknown".equals((tokens[2])))
                     {
-                        accountUrl = getExecuteQueryUrl(financeContainer, ONPRC_BillingSchema.NAME, "aliases", null, null) + "&query.alias~eq=" + tokens[2];
+                        accountUrl = getExecuteQueryUrl(financeContainer, ONPRC_BillingSchema.NAME, "aliases", null, null) + "&query.alias~eq=" + PageFlowUtil.encodeURIComponent(tokens[2]);
                     }
 
                     if (accountUrl != null)
