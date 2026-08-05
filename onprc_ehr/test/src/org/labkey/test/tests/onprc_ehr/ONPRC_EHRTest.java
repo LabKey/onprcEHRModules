@@ -76,6 +76,7 @@ import java.util.UUID;
 import java.util.function.Function;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -86,6 +87,34 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
 {
     protected String PROJECT_NAME = "ONPRC_EHR_TestProject";
     private final String ANIMAL_HISTORY_URL = "/" + getContainerPath() + "/ehr-animalHistory.view";
+
+    /** Data entry actions that stay disabled after validation whenever the form has WARN- or ERROR-level problems. */
+    private static final List<String> ERROR_GATED_ACTIONS =
+            List.of("Save Draft", "Save & Close", "Submit for Review", "Submit Final", "Submit And Reload");
+    private static final String FORCE_SUBMIT_ACTION = "Force Submit";
+    private static final int VALIDATION_SAMPLE_ATTEMPTS = 3;
+
+    /** Reads whether validation is running and the disabled state of every data entry action, in one round trip. */
+    private static final String ACTION_STATES_SCRIPT = """
+            var panel = Ext4.ComponentQuery.query('ehr-dataentrypanel')[0];
+            if (!panel)
+                return null;
+
+            var actions = {};
+            function visit(item)
+            {
+                if (item.text)
+                    actions[item.text] = !!item.isDisabled();
+                if (item.menu)
+                    item.menu.items.each(visit);
+            }
+            Ext4.Array.forEach(panel.getToolbarItems() || [], function(toolbar){
+                toolbar.items.each(visit);
+            });
+
+            var indicator = panel.getValidationIndicator();
+            return {validating: !!(indicator && indicator.isVisible()), actions: actions};
+            """;
 
     @Override
     protected String getProjectName()
@@ -566,7 +595,7 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         try
         {
             log("Bulk adding animals in treatment orders for temporary test animals");
-            _helper.goToTaskForm("Medications/Diet", false);
+            goToTaskFormWithExactLabel("Medications/Diet");
             Ext4GridRef treatmentGrid = _helper.getExt4GridForFormSection("Medication/Treatment Orders");
             addBatchIdsToGrid(treatmentGrid, allIds);
 
@@ -2001,6 +2030,21 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         assertEquals(value, getFormElement(loc));
     }
 
+    /**
+     * {@link org.labkey.test.util.ehr.EHRTestHelper#goToTaskForm(String, boolean)} matches the form link by substring
+     * and clicks the first hit, so asking for "Medications/Diet" can open the CMU variant of the form instead. Match
+     * the label exactly.
+     */
+    private void goToTaskFormWithExactLabel(String label)
+    {
+        goToProjectHome();
+        waitAndClickAndWait(Locator.tagContainingText("a", "Enter Data"));
+        waitAndClick(Locator.tagContainingText("a", "Enter New Data"));  //click tab
+        waitForElement(Locator.tagContainingText("span", "Colony Management:"));  //proxy for list loading
+        waitAndClick(WAIT_FOR_PAGE, Locator.tagWithText("a", label).withClass("labkey-text-link"), WAIT_FOR_PAGE);
+        waitForElement(Ext4Helper.Locators.ext4Button("Save Draft"), WAIT_FOR_PAGE * 2);
+    }
+
     private void addBatchIdsToGrid(Ext4GridRef grid, List<String> ids)
     {
         grid.clickTbarButton("Add Batch");
@@ -2011,37 +2055,88 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         grid.waitForRowCount(ids.size());
     }
 
+    /**
+     * Every submit action on a data entry form is disabled while a validation request is in flight. Actions gated on
+     * WARN or ERROR stay disabled after the pass finishes, because this form has problems at both levels, but 'Force
+     * Submit' exists to override validation errors and so becomes available again as soon as validation completes.
+     * Its disabled state therefore only exists inside the validation window, and has to be sampled together with the
+     * others in a single call: a sequence of per-action waits can straddle the end of validation and see 'Force
+     * Submit' already re-enabled.
+     */
     private void assertActionsDisabledDuringValidation()
     {
-        List<String> buttonTexts = Arrays.asList("Save Draft", "Save & Close", "Submit For Review", "Submit Final");
-        List<String> menuItemTexts = Arrays.asList("Submit And Reload", "Force Submit");
-        Locator.XPathLocator validationIndicator = Locator.tagContainingText("span", "Validating...").notHidden();
-        waitFor(() -> !validationIndicator.findElements(getDriver()).isEmpty(),
-                "Validation indicator never appeared", WAIT_FOR_PAGE);
+        List<String> allGatedActions = new ArrayList<>(ERROR_GATED_ACTIONS);
+        allGatedActions.add(FORCE_SUBMIT_ACTION);
 
-        for (String buttonText : buttonTexts)
+        DataEntryActionStates inFlight = sampleActionStatesDuringValidation();
+        for (String action : allGatedActions)
         {
-            List<Ext4CmpRef> buttons = _ext4Helper.componentQuery("button[text='" + buttonText + "']", Ext4CmpRef.class);
-            if (!buttons.isEmpty())
+            assertTrue("Action is missing from the form: " + action, inFlight.isPresent(action));
+            assertTrue(action + " was not disabled while validation was in progress", inFlight.isDisabled(action));
+        }
+
+        waitFor(() -> !sampleActionStates().validating(), "Validation did not complete", WAIT_FOR_PAGE * 2);
+        waitForText(WAIT_FOR_PAGE * 2, "WARN");
+        waitForText(WAIT_FOR_PAGE * 2, "ERROR");
+
+        DataEntryActionStates settled = sampleActionStates();
+        for (String action : ERROR_GATED_ACTIONS)
+        {
+            assertTrue(action + " should stay disabled while the form has errors", settled.isDisabled(action));
+        }
+        assertFalse(FORCE_SUBMIT_ACTION + " should be available again once validation has completed",
+                settled.isDisabled(FORCE_SUBMIT_ACTION));
+    }
+
+    /**
+     * Captures the state of every data entry action at an instant when validation is known to be running. A pass can
+     * complete before the first sample lands, so re-validate and try again rather than reporting a failure.
+     */
+    private DataEntryActionStates sampleActionStatesDuringValidation()
+    {
+        for (int attempt = 1; attempt <= VALIDATION_SAMPLE_ATTEMPTS; attempt++)
+        {
+            DataEntryActionStates sample = waitFor(() -> {
+                DataEntryActionStates states = sampleActionStates();
+                return states.validating() ? states : null;
+            }, WAIT_FOR_JAVASCRIPT);
+
+            if (sample != null)
+                return sample;
+
+            if (attempt < VALIDATION_SAMPLE_ATTEMPTS)
             {
-                waitFor(() -> Boolean.TRUE.equals(buttons.get(0).getEval("isDisabled() == arguments[0]", true)),
-                        buttonText + " did not become disabled during validation", WAIT_FOR_PAGE);
+                log("No validation pass was in flight; re-validating to sample again");
+                waitAndClick(_helper.getDataEntryButton("More Actions"));
+                waitAndClick(Ext4Helper.Locators.menuItem("Re-Validate").notHidden());
             }
         }
 
-        waitAndClick(_helper.getDataEntryButton("More Actions"));
-        waitForElement(Ext4Helper.Locators.menu().notHidden());
-        for (String menuItemText : menuItemTexts)
-        {
-            waitForElement(Ext4Helper.Locators.menuItemDisabled(menuItemText).notHidden());
-        }
-        waitAndClick(_helper.getDataEntryButton("More Actions"));
-        waitForElementToDisappear(Ext4Helper.Locators.menu().notHidden());
+        throw new AssertionError("Unable to sample the form while validation was in progress");
+    }
 
-        waitFor(() -> validationIndicator.findElements(getDriver()).isEmpty(),
-                "Validation indicator did not disappear", WAIT_FOR_PAGE * 2);
-        waitForText(WAIT_FOR_PAGE * 2, "WARN");
-        waitForText(WAIT_FOR_PAGE * 2, "ERROR");
+    @SuppressWarnings("unchecked")
+    private DataEntryActionStates sampleActionStates()
+    {
+        Map<String, Object> sample = executeScript(ACTION_STATES_SCRIPT, Map.class);
+        assertNotNull("Unable to find the data entry panel", sample);
+
+        return new DataEntryActionStates(Boolean.TRUE.equals(sample.get("validating")),
+                (Map<String, Object>) sample.get("actions"));
+    }
+
+    /** Whether validation was running when this snapshot was taken, and the disabled state of each action by label. */
+    private record DataEntryActionStates(boolean validating, Map<String, Object> disabledByLabel)
+    {
+        private boolean isPresent(String label)
+        {
+            return disabledByLabel.containsKey(label);
+        }
+
+        private boolean isDisabled(String label)
+        {
+            return Boolean.TRUE.equals(disabledByLabel.get(label));
+        }
     }
 
     private List<String> createTemporaryValidationAnimals(int count) throws Exception
