@@ -1064,9 +1064,13 @@ exports.init = function(EHR){
 
             Added Diet to the list by Kollil on 5/14/25. Refer to tkt #12506
             5. E-X1380 - Diet Daily (Non-standard), 5LOP (TAD)
+
+            Added Diet to the list by Kollil on 8/5/2026. Refer to tkt #15123
+            5. E-YYY85 - 5000 Chow
+
          */
         if (row.code != 'E-85760' && row.code != 'E-Y7735' && row.code != 'E-X0500' &&
-                row.code != 'E-Y9750' && row.code != 'E-X1380' && !row.enddate) {
+                row.code != 'E-Y9750' && row.code != 'E-X1380' && row.code != 'E-YYY85' && !row.enddate) {
             EHR.Server.Utils.addError(scriptErrors, 'enddate', 'Must enter enddate', 'WARN');
         }
 

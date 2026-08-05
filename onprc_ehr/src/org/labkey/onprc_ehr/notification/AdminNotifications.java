@@ -106,7 +106,8 @@ public class AdminNotifications extends ColonyAlertsNotification
                     " <br>2. E-Y7735 (Diet - Weekly Multivitamin)" +
                     " <br>3. E-X0500 (Diet, L-Phyto (Low-phytoestrogen)) " +
                     " <br>4. E-Y9750 (Diet, 5047 High Protein, Jumbo) " +
-                    " <br>5. E-X1380 (Diet Daily (Non-standard), 5LOP (TAD)) <hr>");
+                    " <br>5. E-X1380 (Diet Daily (Non-standard), 5LOP (TAD)) " +
+                    " <br>6. E-YYY85 (5000 Chow) <hr>");
         }
         else if (count > 0)
         {
