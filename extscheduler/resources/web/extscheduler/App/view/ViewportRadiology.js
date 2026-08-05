@@ -3,14 +3,14 @@
 Ext.define('App.view.ViewportRadiology', {
     extend     : 'Ext.Viewport',
     requires   : [
-        'App.view.ViewportController'
+        'App.view.ViewportControllerAmended'
     ],
     controller : 'viewport',
     viewModel  : {},
     layout     : 'border',
     items      : [
         {
-            xtype   : 'navigationbar',
+            xtype   : 'navigationbarAmended',
             region  : 'north'
         },
         {
@@ -18,7 +18,7 @@ Ext.define('App.view.ViewportRadiology', {
             region  : 'north'
         },
         {
-            xtype   : 'infopanel',
+            xtype   : 'infopanelAmended',
             region  : 'east'
         },
         {
