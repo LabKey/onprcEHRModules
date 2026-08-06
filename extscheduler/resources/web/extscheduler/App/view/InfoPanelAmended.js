@@ -14,11 +14,10 @@ Ext.define('App.view.InfoPanelAmended', {
     },
     items : [
         {
-            xtype : 'eventformAmended',
-            title : 'Necropsy Calendar Schedule',
+            xtype : 'eventform_Amended',
+            title : 'Radiology Calendar Schedule',
             editable : false
         }
 
     ]
 });
-

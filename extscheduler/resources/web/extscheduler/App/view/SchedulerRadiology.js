@@ -28,14 +28,14 @@ Ext.define('App.view.SchedulerRadiology', {
             text : 'Previous',
             iconCls: 'x-fa fa-arrow-circle-left',
             handler: function (btn) {
-                var scheduler = btn.up('scheduler');
+                var scheduler = btn.up('schedulerRadiology');
                 scheduler.timeAxis.shift(-7, Sch.util.Date.DAY);
             }
         },
         {
             text : 'Today',
             handler: function (btn) {
-                var scheduler = btn.up('scheduler');
+                var scheduler = btn.up('schedulerRadiology');
                 // Clear time here so date adjustment wouldn't result in 2 days span
                 scheduler.setStart(Sch.util.Date.clearTime(new Date()));
             }
