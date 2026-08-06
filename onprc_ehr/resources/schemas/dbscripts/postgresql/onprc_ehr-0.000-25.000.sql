@@ -593,7 +593,7 @@ BEGIN
         lc.divider,
         CASE
             WHEN c.cage_type = 'No Cage' THEN 0
-            WHEN (SELECT d.countAsSeparate FROM ehr_lookups.divider_types d WHERE lc.divider = d.rowid) = 0 THEN 0
+            WHEN NOT (SELECT d.countAsSeparate FROM ehr_lookups.divider_types d WHERE lc.divider = d.rowid) THEN 0
             ELSE 1
             END as isAvailable,
         CASE
@@ -1260,31 +1260,32 @@ $$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION onprc_ehr.MPA_ClnRemarkAddition() RETURNS void AS $$
 DECLARE
-    MPACount Int;
-    taskId varchar(4000);
-    displayName varchar(250);
+    -- v_ prefix avoids the same-named dataset columns below: plpgsql errors on an unqualified name that matches both a variable and a column.
+    v_MPACount Int;
+    v_taskId varchar(4000);
+    v_displayName varchar(250);
 BEGIN
     DELETE FROM onprc_ehr.Temp_ClnRemarks;
 
-    SELECT COUNT(*) INTO MPACount FROM studyDataset.c6d178_drug
+    SELECT COUNT(*) INTO v_MPACount FROM studyDataset.c6d178_drug
     WHERE code = 'E-85760' AND date::date = now()::date AND qcstate = 18;
 
-    IF MPACount > 0 THEN
-        SELECT u.displayName INTO displayName FROM core.users u WHERE u.userid = 1003;
+    IF v_MPACount > 0 THEN
+        SELECT u.displayName INTO v_displayName FROM core.users u WHERE u.userid = 1003;
 
-        taskId := gen_random_uuid();
+        v_taskId := gen_random_uuid();
 
         INSERT INTO ehr.tasks
         (taskid, category, title, formtype, qcstate, assignedto, duedate, createdby, created,
          container, modifiedby, modified, description, datecompleted)
         VALUES
-        (taskId, 'Task', 'Bulk Clinical Entry', 'Bulk Clinical Entry', 18, 1003, now(), 1003, now(),
+        (v_taskId, 'Task', 'Bulk Clinical Entry', 'Bulk Clinical Entry', 18, 1003, now(), 1003, now(),
          'CD17027B-C55F-102F-9907-5107380A54BE'::entityid, 1003, now(), 'Created by the ETL process', now());
 
         INSERT INTO onprc_ehr.Temp_ClnRemarks (
             date, qcstate, participantid, project, remark, p, performedby, category, taskid, createdby, modifiedby
         )
-        SELECT now(), 18, participantid, project, 'Remark entered by the ETL process', 'MPA injection administered', displayName, 'Clinical', taskId, 1003, 1003
+        SELECT now(), 18, participantid, project, 'Remark entered by the ETL process', 'MPA injection administered', v_displayName, 'Clinical', v_taskId, 1003, 1003
         FROM studyDataset.c6d178_drug
         WHERE code = 'E-85760' AND date::date = now()::date AND qcstate = 18;
     END IF;
@@ -1525,8 +1526,9 @@ CREATE TABLE onprc_ehr.Rpt_AnimalID_WeightsMaster(
 );
 
 CREATE OR REPLACE FUNCTION onprc_ehr.sp_PathologyTissueWeightsProcess(
-    StartDate TIMESTAMP,
-    EndDate TIMESTAMP
+    -- v_ prefix avoids the tissue_samples.enddate column below: plpgsql errors on an unqualified name that matches both a parameter and a column.
+    v_StartDate TIMESTAMP,
+    v_EndDate TIMESTAMP
 ) RETURNS int AS $$
 DECLARE
     r RECORD;
@@ -1546,8 +1548,8 @@ BEGIN
         e.modifiedby
     FROM studydataset.c6d174_tissue_samples e
     WHERE e.tissue = 'T-00010'
-      AND e.date >= StartDate 
-      AND e.date < (EndDate + INTERVAL '1 day')
+      AND e.date >= v_StartDate
+      AND e.date < (v_EndDate + INTERVAL '1 day')
       AND e.qcstate = 18
       AND e.weight IS NOT NULL
     ORDER BY date DESC;
@@ -1610,7 +1612,8 @@ CREATE OR REPLACE FUNCTION onprc_ehr.sp_RptNecropsyTissueDistributionUpdates(
 ) RETURNS int AS $$
 DECLARE
     r RECORD;
-    taskId varchar(4000);
+    -- v_ prefix avoids the tissuedistributions.taskid column below: plpgsql errors on an unqualified name that matches both a variable and a column.
+    v_taskId varchar(4000);
 BEGIN
     DELETE FROM onprc_ehr.Rpt_AnimalIDTissues;
 
@@ -1625,13 +1628,13 @@ BEGIN
     ORDER BY e.participantid, e.date;
 
     FOR r IN SELECT * FROM onprc_ehr.Rpt_AnimalIDTissues LOOP
-        taskId := gen_random_uuid();
+        v_taskId := gen_random_uuid();
 
         INSERT INTO EHR.Tasks (
             taskid, description, title, qcstate, formType, category, container, assignedto, created, createdby, modified, modifiedby
         )
         VALUES (
-            taskId,
+            v_taskId,
             'Path Tissues ' || COALESCE(r.date::text, ''),
             'PathologyTissues',
             18,
@@ -1646,7 +1649,7 @@ BEGIN
         );
 
         UPDATE studydataset.c6d265_tissuedistributions
-        SET taskid = taskId
+        SET taskid = v_taskId
         WHERE participantid = r.animalID AND date = r.date;
     END LOOP;
 

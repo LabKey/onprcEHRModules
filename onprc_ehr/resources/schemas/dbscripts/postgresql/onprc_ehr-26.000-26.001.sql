@@ -250,8 +250,7 @@ BEGIN
 
     END LOOP;
 
-    -- Create a master copy of the completed transaction with safe explicit column mapping.
-    -- PostgreSQL handles the conversion of integer 'modifiedby' to timestamp(0) 'modifiedby' via epoch math.
+    -- Create a master copy of the completed transaction
     INSERT INTO onprc_ehr.Temp_Clinical_Observations_Master (
         searchid, Id, date, category, area, observation, createdby, performedby, taskid, qcstate, modifiedby, Posted_date
     )
@@ -266,7 +265,7 @@ BEGIN
         performedby, 
         taskid, 
         qcstate,
-        modifiedby
+        modifiedby,
         CURRENT_TIMESTAMP
     FROM onprc_ehr.Temp_Clinical_Observations;
 
