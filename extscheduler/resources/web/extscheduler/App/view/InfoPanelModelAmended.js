@@ -1,6 +1,6 @@
 Ext.define('App.view.InfoPanelModelAmended', {
     extend   : 'Ext.app.ViewModel',
-    alias    : 'viewmodel.infopanelPaneldModelAmended',
+    alias    : 'viewmodel.infopanel',
     data     : {
         //eventRecord should be defined here because otherwise we can't bind {!eventRecord}
         eventRecord    : null,
