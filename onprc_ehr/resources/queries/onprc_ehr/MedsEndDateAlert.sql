@@ -15,11 +15,11 @@
 */
 SELECT
     Id,
-    date,
+    CAST(date AS DATE) AS date,
     enddate,
-    frequency,
+    frequency.meaning as frequency,
     treatmenttimes,
-    project,
+    project.displayname as project,
     code,
     volumewithunits,
     concentrationwithunits,
@@ -28,8 +28,8 @@ SELECT
     performedby,
     remark,
     reason,
-    modifiedby,
-    modified,
+    modifiedby.displayname as modifiedby,
+    CAST(modified AS DATE) AS modified,
     category,
     taskid.rowid as TaskId
 FROM study.treatment_order
