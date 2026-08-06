@@ -2,8 +2,8 @@
 <query xmlns="http://labkey.org/data/xml/query">
     <metadata>
         <tables xmlns="http://labkey.org/data/xml">
-            <table tableName="AssignmentPoolUnderTheAge" tableDbType="TABLE">
-                <tableTitle>Animals under the age of 3 with an assignment pool flag</tableTitle>
+            <table tableName="AlopeciaScoreMissingBehaviorCases" tableDbType="TABLE">
+                <tableTitle>Animals with alopecia score 4 or 5 with missing behavior cases</tableTitle>
             </table>
         </tables>
     </metadata>
