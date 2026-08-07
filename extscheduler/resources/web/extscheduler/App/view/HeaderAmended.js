@@ -1,6 +1,6 @@
 Ext.define('App.view.HeaderAmended', {
     extend  : 'Ext.panel.Header',
-    alias   : 'widget.appheaderAmended',
+    alias   : 'widget.appheader',
     cls     : 'app-header',
     height  : 40,
     layout: {

@@ -1,7 +1,7 @@
 //This controller is watching for viewport and child views which don't have their own viewController.
 Ext.define('App.view.ViewportControllerAmended', {
     extend : 'Ext.app.ViewController',
-    alias  : 'controller.viewportAmended',
+    alias  : 'controller.viewportRadiology',
 
     control : {
         'schedulergrid' : {

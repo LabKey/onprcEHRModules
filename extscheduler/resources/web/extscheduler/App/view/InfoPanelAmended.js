@@ -4,9 +4,9 @@ Ext.define('App.view.InfoPanelAmended', {
     requires  : [
         'App.view.InfoPanelModelAmended'
     ],
-    viewModel : 'infopanelamended',
-    reference : 'infopanelamended',
-    cls       : 'infopanelamended',
+    viewModel : 'infopanelAmended',
+    reference : 'infopanelAmended',
+    cls       : 'infopanelAmended',
     width     : 340,
     layout    : {
         type  : 'vbox',
