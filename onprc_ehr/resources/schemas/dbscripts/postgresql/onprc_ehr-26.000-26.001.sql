@@ -118,21 +118,21 @@ BEGIN
         a.modifiedby,
         CURRENT_TIMESTAMP
     FROM studydataset.c6d214_encounters a
-    WHERE a.type IN ('Procedure', 'Surgery') -- TODO: Check capitalization of stored data. PG is case-sensitive.
+    WHERE lower(a.type) IN (lower('Procedure'), lower('Surgery'))
       AND a.qcstate = 18
       AND a.procedureid = 802
       AND a.modified >= CURRENT_DATE
       AND a.participantid IN (
           SELECT k.participantid 
           FROM studydataset.c6d203_demographics k
-          WHERE k.calculated_status = 'Alive'
+          WHERE lower(k.calculated_status) = lower('Alive')
       )
       AND a.participantid NOT IN (
           SELECT j.participantid 
           FROM studydataset.c6d171_clinical_observations j
           WHERE j.participantid = a.participantid
             AND j.date = a.date + INTERVAL '3 days'
-            AND j.category = 'TB TST Score (72 hr)'
+            AND lower(j.category) = lower('TB TST Score (72 hr)')
             AND j.qcstate = 18
       );
 
@@ -171,7 +171,7 @@ BEGIN
             SELECT 1 FROM studydataset.c6d171_clinical_observations j 
             WHERE j.participantid = v_AnimalID
               AND j.date = v_date + INTERVAL '3 days'
-              AND j.category = 'TB TST Score (72 hr)'
+              AND lower(j.category) = lower('TB TST Score (72 hr)')
               AND j.qcstate = 18
         ) THEN
 

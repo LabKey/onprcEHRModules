@@ -160,7 +160,7 @@ CREATE TABLE onprc_ehr.housing_transfer_requests (
   CONSTRAINT PK_housing_transfer_requests PRIMARY KEY (objectid)
 );
 
-UPDATE ehr.tasks SET formtype = 'Bulk Clinical Entry' WHERE formtype = 'Clinical Remarks';
+UPDATE ehr.tasks SET formtype = 'Bulk Clinical Entry' WHERE lower(formtype) = lower('Clinical Remarks');
 
 CREATE TABLE onprc_ehr.birth_condition (
     rowid SERIAL,
@@ -176,7 +176,7 @@ CREATE TABLE onprc_ehr.birth_condition (
     CONSTRAINT PK_birth_condition PRIMARY KEY (rowid)
 );
 
-UPDATE ehr.qcStateMetadata SET draftData = TRUE WHERE QCStateLabel = 'Request: Pending';
+UPDATE ehr.qcStateMetadata SET draftData = TRUE WHERE lower(QCStateLabel) = lower('Request: Pending');
 
 CREATE TABLE onprc_ehr.encounter_summaries_remarks (
   id varchar(100),
@@ -488,7 +488,7 @@ BEGIN
             )
              JOIN studyDataset.c6d203_demographics d ON d.participantid = h.participantid
              JOIN studyDataset.c6d203_demographics d1 ON d1.participantID = b.participantid
-    WHERE d.gender = 'm' AND (b.date::date - d.birth::date) > 912.5
+    WHERE lower(d.gender) = lower('m') AND (b.date::date - d.birth::date) > 912.5
       AND d.species = d1.species;
 END;
 $$ LANGUAGE plpgsql;
@@ -524,7 +524,7 @@ BEGIN
             )
              JOIN studyDataset.c6d203_demographics d ON d.participantid = h.participantid
              JOIN studyDataset.c6d203_demographics d1 ON d1.participantID = b.participantid
-    WHERE d.gender = 'f' AND (b.date::date - d.birth::date) > 912.5
+    WHERE lower(d.gender) = lower('f') AND (b.date::date - d.birth::date) > 912.5
       AND d.species = d1.species;
 END;
 $$ LANGUAGE plpgsql;
@@ -592,16 +592,16 @@ BEGIN
         lc.cage_type as lower_cage_type,
         lc.divider,
         CASE
-            WHEN c.cage_type = 'No Cage' THEN 0
+            WHEN lower(c.cage_type) = lower('No Cage') THEN 0
             WHEN NOT (SELECT d.countAsSeparate FROM ehr_lookups.divider_types d WHERE lc.divider = d.rowid) THEN 0
             ELSE 1
             END as isAvailable,
         CASE
-            WHEN (c.status IS NOT NULL AND c.status = 'Unavailable') THEN 1
+            WHEN (c.status IS NOT NULL AND lower(c.status) = lower('Unavailable')) THEN 1
             ELSE 0
             END as isMarkedUnavailable
     FROM ehr_lookups.cage c
-         LEFT JOIN ehr_lookups.cage lc ON (lc.cage_type <> 'No Cage' AND c.room = lc.room AND (SELECT cp.row FROM ehr_lookups.cage_positions cp WHERE c.cage = cp.cage) = (SELECT cp.row FROM ehr_lookups.cage_positions cp WHERE lc.cage = cp.cage) AND ((SELECT cp.columnIdx FROM ehr_lookups.cage_positions cp WHERE c.cage = cp.cage) - 1) = (SELECT cp.columnIdx FROM ehr_lookups.cage_positions cp WHERE lc.cage = cp.cage) );
+         LEFT JOIN ehr_lookups.cage lc ON (lower(lc.cage_type) <> lower('No Cage') AND c.room = lc.room AND (SELECT cp.row FROM ehr_lookups.cage_positions cp WHERE c.cage = cp.cage) = (SELECT cp.row FROM ehr_lookups.cage_positions cp WHERE lc.cage = cp.cage) AND ((SELECT cp.columnIdx FROM ehr_lookups.cage_positions cp WHERE c.cage = cp.cage) - 1) = (SELECT cp.columnIdx FROM ehr_lookups.cage_positions cp WHERE lc.cage = cp.cage) );
 
     DELETE FROM onprc_ehr.availableCagesByRoom_temp;
 
@@ -755,124 +755,6 @@ CREATE TABLE onprc_ehr.Prima_CassetteBases(
     Hazard smallint NOT NULL,
     CurrentContainerId int NULL
 );
-
-/*
-    TODO: References Prima_slideevents, Prima_LabstationTypes, Prima_slidebases, Prima_userpersons, etc. — tables that
-    were created and dropped in SQL Server and therefore never created in this PostgreSQL script. Should delete.
- */
-CREATE OR REPLACE FUNCTION onprc_ehr.PrimaSlideBillingReport(
-    startDate TIMESTAMP,
-    endDate TIMESTAMP
-)
-RETURNS TABLE (
-    "Surgical Wheel" varchar(5),
-    "Pathologist" text,
-    "Stain Test" varchar(127),
-    "Slide Count" bigint
-) AS $$
-DECLARE
-    staining int;
-    embedding int;
-    complete int;
-BEGIN
-    staining := (SELECT id FROM onprc_ehr.Prima_LabstationTypes WHERE Constant = 10);
-    embedding := (SELECT id FROM onprc_ehr.Prima_LabstationTypes WHERE Constant = 7);
-    complete := 7;
-
-    RETURN QUERY
-    SELECT
-        Prima_surgicalwheels.title::varchar(5) AS "Surgical Wheel",
-        CASE
-            WHEN Prima_userpersons.lastname IS NOT NULL THEN
-                (Prima_userpersons.lastname || ', ' || Prima_userpersons.firstname || ' ' || COALESCE(Prima_userpersons.middlename, ''))::text
-            ELSE 'Unassigned Pathologist'::text
-        END AS "Pathologist",
-        Prima_staintests.title::varchar(127) AS "Stain Test",
-        sub2.slidecount::bigint AS "Slide Count"
-    FROM (
-        SELECT
-            surgicalwheelid,
-            Prima_slidebases.staintestid,
-            Prima_casebase.pathologistid,
-            Count(*) AS SlideCount
-        FROM (
-            SELECT Min(Prima_slideevents.created) AS VerifyOrBarcodeEventTime,
-                   slidebaseid
-            FROM onprc_ehr.Prima_slideevents
-            JOIN onprc_ehr.Prima_SlideEventLocations ON Prima_slideeventlocations.SlideEventId = Prima_slideevents.id
-                AND Prima_slideeventlocations.LabStationTypeId = staining
-            WHERE eventtype = complete
-            GROUP BY slidebaseid
-        ) sub
-        JOIN onprc_ehr.Prima_slidebases ON slidebaseid = Prima_slidebases.id
-        JOIN onprc_ehr.Prima_casebase ON Prima_casebase.id = Prima_slidebases.casebaseid
-        WHERE sub.verifyorbarcodeeventtime >= startDate
-          AND sub.verifyorbarcodeeventtime < endDate
-        GROUP BY surgicalwheelid, pathologistid, staintestid
-    ) sub2
-    LEFT JOIN onprc_ehr.Prima_userpersons ON Prima_userpersons.id = sub2.pathologistid
-    LEFT JOIN onprc_ehr.Prima_surgicalwheels ON Prima_surgicalwheels.id = sub2.surgicalwheelid
-    LEFT JOIN onprc_ehr.Prima_staintests ON Prima_staintests.id = sub2.staintestid
-    ORDER BY "Surgical Wheel", "Pathologist", "Stain Test";
-END;
-$$ LANGUAGE plpgsql;
-
-/*
-    TODO: References Prima_LabstationTypes, Prima_userpersons, etc. — tables that were created and dropped in SQL Server
-    and therefore never created in this PostgreSQL script. Should delete.
-*/
-CREATE OR REPLACE FUNCTION onprc_ehr.PrimaBlockBillingReport(
-    startDate TIMESTAMP,
-    endDate TIMESTAMP
-)
-RETURNS TABLE (
-    "Surgical Wheel" varchar(5),
-    "Pathologist" text,
-    "Cassette Count" bigint
-) AS $$
-DECLARE
-    staining int;
-    embedding int;
-    complete int;
-BEGIN
-    staining := (SELECT id FROM onprc_ehr.Prima_LabstationTypes WHERE Constant = 10);
-    embedding := (SELECT id FROM onprc_ehr.Prima_LabstationTypes WHERE Constant = 7);
-    complete := 7;
-
-    RETURN QUERY
-    SELECT 
-        Prima_surgicalwheels.title::varchar(5) AS "Surgical Wheel",
-        CASE
-            WHEN Prima_userpersons.lastname IS NOT NULL THEN
-                (Prima_userpersons.lastname || ', ' || Prima_userpersons.firstname || ' ' || COALESCE(Prima_userpersons.middlename, ''))::text
-            ELSE 'Unassigned Pathologist'::text
-        END AS "Pathologist",
-        sub2.cassettecount::bigint AS "Cassette Count"
-    FROM (
-        SELECT 
-            surgicalwheelid,
-            Prima_casebase.pathologistid,
-            Count(*) AS CassetteCount
-        FROM (
-            SELECT Min(Prima_cassetteevents.created) AS VerifyOrBarcodeEventTime,
-                   cassettebaseid
-            FROM onprc_ehr.Prima_cassetteevents
-            JOIN onprc_ehr.Prima_CassetteEventLocations ON Prima_CassetteEventLocations.CassetteEventId = Prima_cassetteevents.id
-                AND Prima_CassetteEventLocations.LabStationTypeId = embedding 
-            WHERE eventtype = complete
-            GROUP BY cassettebaseid
-        ) sub
-        JOIN onprc_ehr.Prima_cassettebases ON cassettebaseid = Prima_cassettebases.id
-        JOIN onprc_ehr.Prima_casebase ON Prima_casebase.id = Prima_cassettebases.casebaseid
-        WHERE sub.verifyorbarcodeeventtime >= startDate
-          AND sub.verifyorbarcodeeventtime < endDate
-        GROUP BY surgicalwheelid, pathologistid
-    ) sub2
-    LEFT JOIN onprc_ehr.Prima_userpersons ON Prima_userpersons.id = sub2.pathologistid
-    LEFT JOIN onprc_ehr.Prima_surgicalwheels ON Prima_surgicalwheels.id = sub2.surgicalwheelid
-    ORDER BY "Surgical Wheel", "Pathologist";
-END;
-$$ LANGUAGE plpgsql;
 
 CREATE TABLE onprc_ehr.StudyDetails_RandalData(
     id INT NOT NULL,
@@ -1121,127 +1003,127 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION onprc_ehr.p_EnvironmentalHistoricalUpdates() RETURNS int AS $$
 BEGIN
     IF EXISTS (SELECT 1 FROM onprc_ehr.Environmental_Assessment) THEN
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'COL SW' WHERE testing_location = 'Col. SW';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Annex Rm 1', charge_unit = 'Clinpath' WHERE testing_location = 'Annex Rm 1';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'COL SW', charge_unit = 'Clinpath' WHERE testing_location = 'Colony SW';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Catch Area 2', charge_unit = 'Clinpath' WHERE testing_location = 'Catch 2';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Pens Run 1 Lixit' WHERE testing_location = 'Pens Run 1';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Pens Run 10 Lixit' WHERE testing_location = 'Pens Run 10';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Pens Run 11 Lixit' WHERE testing_location = 'Pens Run 11';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Pens Run 12 Lixit' WHERE testing_location = 'Pens Run 12';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Pens Run 2 Lixit' WHERE testing_location = 'Pens Run 2';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Pens Run 3 Lixit' WHERE testing_location = 'Pens Run 3';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Pens Run 4 Lixit' WHERE testing_location = 'Pens Run 4';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Pens Run 5 Lixit' WHERE testing_location = 'Pens Run 5';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Pens Run 6 Lixit' WHERE testing_location = 'Pens Run 6';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Pens Run 7 Lixit' WHERE testing_location = 'Pens Run 7';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Pens Run 8 Lixit' WHERE testing_location = 'Pens Run 8';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Pens Run 9 Lixit' WHERE testing_location = 'Pens Run 9';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'SGH 1 Lixit' WHERE testing_location = 'SGH 1';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'SGH 10 Lixit' WHERE testing_location = 'SGH 10';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'SGH 11 Lixit' WHERE testing_location = 'SGH 11';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'SGH 12 Lixit' WHERE testing_location = 'SGH 12';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'SGH 13 Lixit' WHERE testing_location = 'SGH 13';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'SGH 14 Lixit' WHERE testing_location = 'SGH 14';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'SGH 15 Lixit' WHERE testing_location = 'SGH 15';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'SGH 16 Lixit' WHERE testing_location = 'SGH 16';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'SGH 17 Lixit' WHERE testing_location = 'SGH 17';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'SGH 18 Lixit' WHERE testing_location = 'SGH 18';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'SGH 19 Lixit' WHERE testing_location = 'SGH 19';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'SGH 2 Lixit' WHERE testing_location = 'SGH 2';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'SGH 20 Lixit' WHERE testing_location = 'SGH 20';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'SGH 21 Lixit' WHERE testing_location = 'SGH 21';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'SGH 22 Lixit' WHERE testing_location = 'SGH 22';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'SGH 23 Lixit' WHERE testing_location = 'SGH 23';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'SGH 24 Lixit' WHERE testing_location = 'SGH 24';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'SGH 25 Lixit' WHERE testing_location = 'SGH 25';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'SGH 26 Lixit' WHERE testing_location = 'SGH 26';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'SGH 27 Lixit' WHERE testing_location = 'SGH 27';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'SGH 28 Lixit' WHERE testing_location = 'SGH 28';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'SGH 29 Lixit' WHERE testing_location = 'SGH 29';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'SGH 30 Lixit' WHERE testing_location = 'SGH 30';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'SGH 3 Lixit' WHERE testing_location = 'SGH 3';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'SGH 31 Lixit' WHERE testing_location = 'SGH 31';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'SGH 32 Lixit' WHERE testing_location = 'SGH 32';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'SGH 4 Lixit' WHERE testing_location = 'SGH 4';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'SGH 5 Lixit' WHERE testing_location = 'SGH 5';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'SGH 6 Lixit' WHERE testing_location = 'SGH 6';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'SGH 7 Lixit' WHERE testing_location = 'SGH 7';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'SGH 8 Lixit' WHERE testing_location = 'SGH 8';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'SGH 9 Lixit' WHERE testing_location = 'SGH 9';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'BOS RM 102' WHERE testing_location = 'Bosky 102';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'BOS RM 103' WHERE testing_location = 'Bosky 103';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'BOS RM 104' WHERE testing_location = 'Bosky 104';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'BOS RM 122' WHERE testing_location = 'Bosky 122';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'BOS RM 123' WHERE testing_location = 'Bosky 123';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Cage Washer Colony Annex toy' WHERE testing_location = 'Cage Washer Colony Annex tunnel toy';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Cage Washer VGTI Large (Jan/June)' WHERE testing_location = 'Cage Washer VGTI Large (semi-annual)';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Cage Washer VGTI Small (Jan/June)' WHERE testing_location = 'Cage Washer VGTI Small (semi-annual)';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Dishwasher Colony North' WHERE testing_location = 'Dishwasher N. Colony';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Dishwasher Colony South' WHERE testing_location = 'Dishwasher S. Colony';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Annex Rm 37' WHERE testing_location = 'Annex room 37';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Catch Area 2' WHERE testing_location = 'Catch 2';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Catch Area 5' WHERE testing_location = 'Catch 5';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'COL SW' WHERE testing_location = 'Col. SW';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'COL NW' WHERE testing_location = 'Col. NW';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'COL NW' WHERE testing_location = 'Colony NW';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'COL RM 4' WHERE testing_location = 'Colony RM 4';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'COL Run 1' WHERE testing_location = 'Colony Run 1';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'COL Run 2' WHERE testing_location = 'Colony Run 2';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'COL Run 3' WHERE testing_location = 'Colony Run 3';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'COL Run 4' WHERE testing_location = 'Colony Run 4';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'COL Run 5' WHERE testing_location = 'Colony Run 5';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'COL Run 6' WHERE testing_location = 'Colony Run 6';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'COL Run 7' WHERE testing_location = 'Colony Run 7';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'COL Run 8' WHERE testing_location = 'Colony Run 8';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'COL SW' WHERE testing_location = 'Colony SW';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'SGH 1' WHERE testing_location = 'SGH 1  inside';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'SGH 1' WHERE testing_location = 'SGH 1 inside';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'SGH 2' WHERE testing_location = 'SGH 2  outside';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'SGH 2' WHERE testing_location = 'SGH 2 outside';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'SGH 29' WHERE testing_location = 'SGH 29  inside';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'SGH 29' WHERE testing_location = 'SGH 29 inside';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'SGH 30' WHERE testing_location = 'SGH 30  outside';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'SGH 30' WHERE testing_location = 'SGH 30 outside';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Dishwasher Bldg 611 ' WHERE testing_location = 'SGH 30 outside';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Dishwasher ASA 135' WHERE testing_location = 'Dishwasher ASA 135 ';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Dishwasher ASA 136' WHERE testing_location = 'Dishwasher ASA 136 ';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Dishwasher Bldg 611' WHERE testing_location = 'Dishwasher Bldg 611 ';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Annex Rm 1' WHERE testing_location = 'AN RM 1';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Annex Rm 34' WHERE testing_location = 'AN RM 34';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Annex Rm 13' WHERE testing_location = 'AN RM 13';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Annex Rm 14' WHERE testing_location = 'AN RM 14';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Annex Rm 15' WHERE testing_location = 'AN RM 15';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Annex Rm 16' WHERE testing_location = 'AN RM 16';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Annex Rm 2' WHERE testing_location = 'AN RM 2';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Annex Rm 34' WHERE testing_location = 'AN RM 34';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Annex Rm 39' WHERE testing_location = 'AN RM 39';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Annex Rm 4' WHERE testing_location = 'AN RM 4';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Annex Run 1' WHERE testing_location = 'AN RUN 1';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Annex Run 2' WHERE testing_location = 'AN RUN 2';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Annex Run 3' WHERE testing_location = 'AN RUN 3';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Annex Run 30' WHERE testing_location = 'AN RUN 30';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Col Run 7E' WHERE testing_location = 'Col Run 7 E';
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'COL SW' WHERE lower(testing_location) = lower('Col. SW');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Annex Rm 1', charge_unit = 'Clinpath' WHERE lower(testing_location) = lower('Annex Rm 1');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'COL SW', charge_unit = 'Clinpath' WHERE lower(testing_location) = lower('Colony SW');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Catch Area 2', charge_unit = 'Clinpath' WHERE lower(testing_location) = lower('Catch 2');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Pens Run 1 Lixit' WHERE lower(testing_location) = lower('Pens Run 1');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Pens Run 10 Lixit' WHERE lower(testing_location) = lower('Pens Run 10');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Pens Run 11 Lixit' WHERE lower(testing_location) = lower('Pens Run 11');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Pens Run 12 Lixit' WHERE lower(testing_location) = lower('Pens Run 12');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Pens Run 2 Lixit' WHERE lower(testing_location) = lower('Pens Run 2');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Pens Run 3 Lixit' WHERE lower(testing_location) = lower('Pens Run 3');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Pens Run 4 Lixit' WHERE lower(testing_location) = lower('Pens Run 4');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Pens Run 5 Lixit' WHERE lower(testing_location) = lower('Pens Run 5');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Pens Run 6 Lixit' WHERE lower(testing_location) = lower('Pens Run 6');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Pens Run 7 Lixit' WHERE lower(testing_location) = lower('Pens Run 7');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Pens Run 8 Lixit' WHERE lower(testing_location) = lower('Pens Run 8');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Pens Run 9 Lixit' WHERE lower(testing_location) = lower('Pens Run 9');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'SGH 1 Lixit' WHERE lower(testing_location) = lower('SGH 1');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'SGH 10 Lixit' WHERE lower(testing_location) = lower('SGH 10');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'SGH 11 Lixit' WHERE lower(testing_location) = lower('SGH 11');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'SGH 12 Lixit' WHERE lower(testing_location) = lower('SGH 12');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'SGH 13 Lixit' WHERE lower(testing_location) = lower('SGH 13');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'SGH 14 Lixit' WHERE lower(testing_location) = lower('SGH 14');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'SGH 15 Lixit' WHERE lower(testing_location) = lower('SGH 15');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'SGH 16 Lixit' WHERE lower(testing_location) = lower('SGH 16');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'SGH 17 Lixit' WHERE lower(testing_location) = lower('SGH 17');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'SGH 18 Lixit' WHERE lower(testing_location) = lower('SGH 18');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'SGH 19 Lixit' WHERE lower(testing_location) = lower('SGH 19');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'SGH 2 Lixit' WHERE lower(testing_location) = lower('SGH 2');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'SGH 20 Lixit' WHERE lower(testing_location) = lower('SGH 20');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'SGH 21 Lixit' WHERE lower(testing_location) = lower('SGH 21');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'SGH 22 Lixit' WHERE lower(testing_location) = lower('SGH 22');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'SGH 23 Lixit' WHERE lower(testing_location) = lower('SGH 23');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'SGH 24 Lixit' WHERE lower(testing_location) = lower('SGH 24');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'SGH 25 Lixit' WHERE lower(testing_location) = lower('SGH 25');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'SGH 26 Lixit' WHERE lower(testing_location) = lower('SGH 26');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'SGH 27 Lixit' WHERE lower(testing_location) = lower('SGH 27');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'SGH 28 Lixit' WHERE lower(testing_location) = lower('SGH 28');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'SGH 29 Lixit' WHERE lower(testing_location) = lower('SGH 29');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'SGH 30 Lixit' WHERE lower(testing_location) = lower('SGH 30');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'SGH 3 Lixit' WHERE lower(testing_location) = lower('SGH 3');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'SGH 31 Lixit' WHERE lower(testing_location) = lower('SGH 31');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'SGH 32 Lixit' WHERE lower(testing_location) = lower('SGH 32');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'SGH 4 Lixit' WHERE lower(testing_location) = lower('SGH 4');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'SGH 5 Lixit' WHERE lower(testing_location) = lower('SGH 5');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'SGH 6 Lixit' WHERE lower(testing_location) = lower('SGH 6');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'SGH 7 Lixit' WHERE lower(testing_location) = lower('SGH 7');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'SGH 8 Lixit' WHERE lower(testing_location) = lower('SGH 8');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'SGH 9 Lixit' WHERE lower(testing_location) = lower('SGH 9');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'BOS RM 102' WHERE lower(testing_location) = lower('Bosky 102');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'BOS RM 103' WHERE lower(testing_location) = lower('Bosky 103');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'BOS RM 104' WHERE lower(testing_location) = lower('Bosky 104');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'BOS RM 122' WHERE lower(testing_location) = lower('Bosky 122');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'BOS RM 123' WHERE lower(testing_location) = lower('Bosky 123');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Cage Washer Colony Annex toy' WHERE lower(testing_location) = lower('Cage Washer Colony Annex tunnel toy');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Cage Washer VGTI Large (Jan/June)' WHERE lower(testing_location) = lower('Cage Washer VGTI Large (semi-annual)');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Cage Washer VGTI Small (Jan/June)' WHERE lower(testing_location) = lower('Cage Washer VGTI Small (semi-annual)');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Dishwasher Colony North' WHERE lower(testing_location) = lower('Dishwasher N. Colony');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Dishwasher Colony South' WHERE lower(testing_location) = lower('Dishwasher S. Colony');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Annex Rm 37' WHERE lower(testing_location) = lower('Annex room 37');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Catch Area 2' WHERE lower(testing_location) = lower('Catch 2');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Catch Area 5' WHERE lower(testing_location) = lower('Catch 5');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'COL SW' WHERE lower(testing_location) = lower('Col. SW');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'COL NW' WHERE lower(testing_location) = lower('Col. NW');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'COL NW' WHERE lower(testing_location) = lower('Colony NW');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'COL RM 4' WHERE lower(testing_location) = lower('Colony RM 4');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'COL Run 1' WHERE lower(testing_location) = lower('Colony Run 1');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'COL Run 2' WHERE lower(testing_location) = lower('Colony Run 2');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'COL Run 3' WHERE lower(testing_location) = lower('Colony Run 3');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'COL Run 4' WHERE lower(testing_location) = lower('Colony Run 4');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'COL Run 5' WHERE lower(testing_location) = lower('Colony Run 5');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'COL Run 6' WHERE lower(testing_location) = lower('Colony Run 6');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'COL Run 7' WHERE lower(testing_location) = lower('Colony Run 7');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'COL Run 8' WHERE lower(testing_location) = lower('Colony Run 8');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'COL SW' WHERE lower(testing_location) = lower('Colony SW');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'SGH 1' WHERE lower(testing_location) = lower('SGH 1  inside');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'SGH 1' WHERE lower(testing_location) = lower('SGH 1 inside');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'SGH 2' WHERE lower(testing_location) = lower('SGH 2  outside');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'SGH 2' WHERE lower(testing_location) = lower('SGH 2 outside');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'SGH 29' WHERE lower(testing_location) = lower('SGH 29  inside');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'SGH 29' WHERE lower(testing_location) = lower('SGH 29 inside');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'SGH 30' WHERE lower(testing_location) = lower('SGH 30  outside');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'SGH 30' WHERE lower(testing_location) = lower('SGH 30 outside');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Dishwasher Bldg 611 ' WHERE lower(testing_location) = lower('SGH 30 outside');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Dishwasher ASA 135' WHERE lower(testing_location) = lower('Dishwasher ASA 135 ');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Dishwasher ASA 136' WHERE lower(testing_location) = lower('Dishwasher ASA 136 ');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Dishwasher Bldg 611' WHERE lower(testing_location) = lower('Dishwasher Bldg 611 ');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Annex Rm 1' WHERE lower(testing_location) = lower('AN RM 1');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Annex Rm 34' WHERE lower(testing_location) = lower('AN RM 34');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Annex Rm 13' WHERE lower(testing_location) = lower('AN RM 13');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Annex Rm 14' WHERE lower(testing_location) = lower('AN RM 14');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Annex Rm 15' WHERE lower(testing_location) = lower('AN RM 15');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Annex Rm 16' WHERE lower(testing_location) = lower('AN RM 16');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Annex Rm 2' WHERE lower(testing_location) = lower('AN RM 2');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Annex Rm 34' WHERE lower(testing_location) = lower('AN RM 34');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Annex Rm 39' WHERE lower(testing_location) = lower('AN RM 39');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Annex Rm 4' WHERE lower(testing_location) = lower('AN RM 4');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Annex Run 1' WHERE lower(testing_location) = lower('AN RUN 1');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Annex Run 2' WHERE lower(testing_location) = lower('AN RUN 2');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Annex Run 3' WHERE lower(testing_location) = lower('AN RUN 3');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Annex Run 30' WHERE lower(testing_location) = lower('AN RUN 30');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Col Run 7E' WHERE lower(testing_location) = lower('Col Run 7 E');
 
         UPDATE onprc_ehr.Environmental_Assessment
         SET charge_unit = 'Clinpath'
-        WHERE testing_location IN (SELECT DISTINCT value FROM onprc_ehr.Environmental_Reference_Data WHERE columnname = 'testlocation');
+        WHERE lower(testing_location) IN (SELECT DISTINCT lower(value) FROM onprc_ehr.Environmental_Reference_Data WHERE lower(columnname) = lower('testlocation'));
 
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Col Run 7A' WHERE testing_location = 'Col Run 7 A';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Col Run 7B' WHERE testing_location = 'Col Run 7 B';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Col Run 7D' WHERE testing_location = 'Col Run 7 D';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Colony Rm 2 (Clinic)' WHERE testing_location = 'Colony Rm 2 Clinic';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Pens RM 102A  (Clinic)' WHERE testing_location = 'Pens Rm 102A (Clinic)';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Pens RM 104 (Feed)' WHERE testing_location = 'PENS Rm 104 (Feed Room)';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Pens RM 104 (Feed)' WHERE testing_location = 'Pens RM 104 (Feed )';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'VGTI 0120 (clean cage wash)' WHERE testing_location = 'VGTI 0120 (clean cage wash';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Col Run 6A' WHERE testing_location = 'Col Run 6 A';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Col Run 6C' WHERE testing_location = 'Col Run 6 C';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'ASB 3 Cage Wash' WHERE testing_location = 'ASB 3 Cage Wash Area';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'ASB 1 Cage Wash' WHERE testing_location = 'ASB 1 Cage Wash Area';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Cage Washer ASB 1 cage' WHERE testing_location = 'Cage Washer ASB 1';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Cage Washer VGTI Large (Jan/June)' WHERE testing_location = 'Cage Washer VGTI Large';
-        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Cage Washer VGTI Small (Jan/June)' WHERE testing_location = 'Cage Washer VGTI Small';
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Col Run 7A' WHERE lower(testing_location) = lower('Col Run 7 A');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Col Run 7B' WHERE lower(testing_location) = lower('Col Run 7 B');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Col Run 7D' WHERE lower(testing_location) = lower('Col Run 7 D');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Colony Rm 2 (Clinic)' WHERE lower(testing_location) = lower('Colony Rm 2 Clinic');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Pens RM 102A  (Clinic)' WHERE lower(testing_location) = lower('Pens Rm 102A (Clinic)');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Pens RM 104 (Feed)' WHERE lower(testing_location) = lower('PENS Rm 104 (Feed Room)');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Pens RM 104 (Feed)' WHERE lower(testing_location) = lower('Pens RM 104 (Feed )');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'VGTI 0120 (clean cage wash)' WHERE lower(testing_location) = lower('VGTI 0120 (clean cage wash');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Col Run 6A' WHERE lower(testing_location) = lower('Col Run 6 A');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Col Run 6C' WHERE lower(testing_location) = lower('Col Run 6 C');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'ASB 3 Cage Wash' WHERE lower(testing_location) = lower('ASB 3 Cage Wash Area');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'ASB 1 Cage Wash' WHERE lower(testing_location) = lower('ASB 1 Cage Wash Area');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Cage Washer ASB 1 cage' WHERE lower(testing_location) = lower('Cage Washer ASB 1');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Cage Washer VGTI Large (Jan/June)' WHERE lower(testing_location) = lower('Cage Washer VGTI Large');
+        UPDATE onprc_ehr.Environmental_Assessment SET testing_location = 'Cage Washer VGTI Small (Jan/June)' WHERE lower(testing_location) = lower('Cage Washer VGTI Small');
     END IF;
 
     RETURN 0;
@@ -1258,7 +1140,7 @@ BEGIN
     DELETE FROM onprc_ehr.Temp_ClnRemarks;
 
     SELECT COUNT(*) INTO v_MPACount FROM studyDataset.c6d178_drug
-    WHERE code = 'E-85760' AND date::date = now()::date AND qcstate = 18;
+    WHERE lower(code) = lower('E-85760') AND date::date = now()::date AND qcstate = 18;
 
     IF v_MPACount > 0 THEN
         SELECT u.displayName INTO v_displayName FROM core.users u WHERE u.userid = 1003;
@@ -1277,7 +1159,7 @@ BEGIN
         )
         SELECT now(), 18, participantid, project, 'Remark entered by the ETL process', 'MPA injection administered', v_displayName, 'Clinical', v_taskId, 1003, 1003
         FROM studyDataset.c6d178_drug
-        WHERE code = 'E-85760' AND date::date = now()::date AND qcstate = 18;
+        WHERE lower(code) = lower('E-85760') AND date::date = now()::date AND qcstate = 18;
     END IF;
 END;
 $$ LANGUAGE plpgsql;
@@ -1325,20 +1207,20 @@ BEGIN
         FROM studydataset.c6d171_clinical_observations b
         WHERE a.participantid = b.participantid 
           AND b.date::date = (a.date::date + INTERVAL '3 days')::date 
-          AND b.category = 'TB TST Score (72 hr)'
+          AND lower(b.category) = lower('TB TST Score (72 hr)')
           AND a.created >= now()::date
-          AND a.type = 'Procedure' 
+          AND lower(a.type) = lower('Procedure') 
           AND a.qcstate = 18 
           AND a.procedureid = 802
     )
-      AND a.type = 'Procedure' 
+      AND lower(a.type) = lower('Procedure') 
       AND a.qcstate = 18 
       AND a.procedureid = 802
       AND a.created >= now()::date
       AND a.participantid IN (
         SELECT k.participantid 
         FROM studydataset.c6d203_demographics k
-        WHERE k.calculated_status = 'Alive'
+        WHERE lower(k.calculated_status) = lower('Alive')
       )
     ORDER BY a.participantid, a.date DESC;
 
@@ -1373,7 +1255,7 @@ BEGIN
             SELECT 1 FROM studydataset.c6d171_clinical_observations j 
             WHERE j.participantid = r.animalid
               AND j.date::date = obsDate::date 
-              AND j.category = 'TB TST Score (72 hr)'
+              AND lower(j.category) = lower('TB TST Score (72 hr)')
         ) THEN
             runId := gen_random_uuid();
 
@@ -1440,7 +1322,7 @@ BEGIN
         FROM
             onprc_ehr.eIACUC_PRIME_VIEW_PROTOCOLS
         WHERE
-            Protocol_State IN ('Approved','Expired', 'Terminated') -- TODO: Check capitalization of stored data. PG is case-sensitive.
+            lower(Protocol_State) IN (lower('Approved'), lower('Expired'), lower('Terminated'))
         GROUP BY
             BaseProtocol
     ),
@@ -1465,7 +1347,7 @@ BEGIN
             p.enddate
         FROM DistinctProtocols d 
         INNER JOIN ehr.protocol p ON d.BaseProtocol = p.external_ID
-        WHERE d.Protocol_State <> 'Approved' AND p.enddate IS NULL
+        WHERE lower(d.Protocol_State) <> lower('Approved') AND p.enddate IS NULL
     )
     UPDATE ehr.protocol p
     SET enddate = now()
@@ -1535,7 +1417,7 @@ BEGIN
         e.modified,
         e.modifiedby
     FROM studydataset.c6d174_tissue_samples e
-    WHERE e.tissue = 'T-00010'
+    WHERE lower(e.tissue) = lower('T-00010')
       AND e.date >= v_StartDate
       AND e.date < (v_EndDate + INTERVAL '1 day')
       AND e.qcstate = 18

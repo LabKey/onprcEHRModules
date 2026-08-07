@@ -47,36 +47,36 @@ BEGIN
         UPDATE ehr_compliancedb.Requirements ss
         SET RequirementName = TRIM(jj.aftername) || ' ' || TRIM(jj.filename)
         FROM onprc_ehr.RequirementName_Convert jj 
-        WHERE ss.RequirementName LIKE TRIM(v_Code) || '%'
-          AND jj.PreviousDesignation LIKE TRIM(v_Code) || '%';
+        WHERE ss.RequirementName ILIKE TRIM(v_Code) || '%'
+          AND jj.PreviousDesignation ILIKE TRIM(v_Code) || '%';
 
         -- 2. Process Completion Dates
         UPDATE ehr_compliancedb.CompletionDates ss
         SET RequirementName = TRIM(jj.aftername) || ' ' || TRIM(jj.filename)
         FROM onprc_ehr.RequirementName_Convert jj 
-        WHERE ss.RequirementName LIKE TRIM(v_Code) || '%'
-          AND jj.PreviousDesignation LIKE TRIM(v_Code) || '%';
+        WHERE ss.RequirementName ILIKE TRIM(v_Code) || '%'
+          AND jj.PreviousDesignation ILIKE TRIM(v_Code) || '%';
 
         -- 3. Process Requirements per Employees
         UPDATE ehr_compliancedb.RequirementsPerEmployee ss
         SET RequirementName = TRIM(jj.aftername) || ' ' || TRIM(jj.filename)
         FROM onprc_ehr.RequirementName_Convert jj 
-        WHERE ss.RequirementName LIKE TRIM(v_Code) || '%'
-          AND jj.PreviousDesignation LIKE TRIM(v_Code) || '%';
+        WHERE ss.RequirementName ILIKE TRIM(v_Code) || '%'
+          AND jj.PreviousDesignation ILIKE TRIM(v_Code) || '%';
 
         -- 4. Process Requirements per Categories
         UPDATE ehr_compliancedb.RequirementsPerCategory ss
         SET RequirementName = TRIM(jj.aftername) || ' ' || TRIM(jj.filename)
         FROM onprc_ehr.RequirementName_Convert jj 
-        WHERE ss.RequirementName LIKE TRIM(v_Code) || '%'
-          AND jj.PreviousDesignation LIKE TRIM(v_Code) || '%';
+        WHERE ss.RequirementName ILIKE TRIM(v_Code) || '%'
+          AND jj.PreviousDesignation ILIKE TRIM(v_Code) || '%';
 
         -- 5. Process Employee Requirements Exemptions
         UPDATE ehr_compliancedb.EmployeeRequirementExemptions ss
         SET RequirementName = TRIM(jj.aftername) || ' ' || TRIM(jj.filename)
         FROM onprc_ehr.RequirementName_Convert jj 
-        WHERE ss.RequirementName LIKE TRIM(v_Code) || '%'
-          AND jj.PreviousDesignation LIKE TRIM(v_Code) || '%';
+        WHERE ss.RequirementName ILIKE TRIM(v_Code) || '%'
+          AND jj.PreviousDesignation ILIKE TRIM(v_Code) || '%';
 
         -- Set temp key to current key to advance the cursor state
         v_TempSearchKey := v_SearchKey;
