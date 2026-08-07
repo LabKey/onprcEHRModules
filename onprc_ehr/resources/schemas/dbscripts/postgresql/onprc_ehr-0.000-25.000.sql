@@ -1712,7 +1712,7 @@ BEGIN
             protocol::varchar(400),
             account,
             title,
-            research,
+            research::int, -- boolean on PostgreSQL, bit on SQL Server; no implicit cast to the smallint target
             createdby,
             created,
             modified,
@@ -1742,7 +1742,7 @@ BEGIN
             protocol::varchar(400),
             account,
             title,
-            research,
+            research::int,
             createdby,
             created,
             modified,

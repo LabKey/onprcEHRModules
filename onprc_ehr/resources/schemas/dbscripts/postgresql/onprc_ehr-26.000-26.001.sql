@@ -125,7 +125,7 @@ BEGIN
       AND a.participantid IN (
           SELECT k.participantid 
           FROM studydataset.c6d203_demographics k
-          WHERE k.calculated_status = 'alive'
+          WHERE k.calculated_status = 'Alive'
       )
       AND a.participantid NOT IN (
           SELECT j.participantid 
