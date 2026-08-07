@@ -969,8 +969,6 @@ BEGIN
       AND Container IS NULL;
 
     RETURN 0;
-EXCEPTION WHEN OTHERS THEN -- TODO: This swallows all errors and returns a bare status code, which can hide runtime issues. Claude suggests at minimum log the caught error (GET STACKED DIAGNOSTICS + RAISE WARNING) before returning 1, as the ArchiveAuditTables proc already does.
-    RETURN 1;
 END;
 $$ LANGUAGE plpgsql;
 
@@ -982,8 +980,6 @@ BEGIN
         WHERE status IS NULL;
     END IF;
     RETURN 0;
-EXCEPTION WHEN OTHERS THEN -- TODO: This swallows all errors and returns a bare status code, which can hide runtime issues. Claude suggests at minimum log the caught error (GET STACKED DIAGNOSTICS + RAISE WARNING) before returning 1, as the ArchiveAuditTables proc already does.
-    RETURN 1;
 END;
 $$ LANGUAGE plpgsql;
 
@@ -1027,8 +1023,6 @@ BEGIN
         FROM ehr_lookups.cage a;
     END IF;
     RETURN 0;
-EXCEPTION WHEN OTHERS THEN -- TODO: This swallows all errors and returns a bare status code, which can hide runtime issues. Claude suggests at minimum log the caught error (GET STACKED DIAGNOSTICS + RAISE WARNING) before returning 1, as the ArchiveAuditTables proc already does.
-    RETURN 1;
 END;
 $$ LANGUAGE plpgsql;
 
@@ -1121,8 +1115,6 @@ BEGIN
     END IF;
 
     RETURN 0;
-EXCEPTION WHEN OTHERS THEN -- TODO: This swallows all errors and returns a bare status code, which can hide runtime issues. Claude suggests at minimum log the caught error (GET STACKED DIAGNOSTICS + RAISE WARNING) before returning 1, as the ArchiveAuditTables proc already does.
-    RETURN 1;
 END;
 $$ LANGUAGE plpgsql;
 
@@ -1253,8 +1245,6 @@ BEGIN
     END IF;
 
     RETURN 0;
-EXCEPTION WHEN OTHERS THEN -- TODO: This swallows all errors and returns a bare status code, which can hide runtime issues. Claude suggests at minimum log the caught error (GET STACKED DIAGNOSTICS + RAISE WARNING) before returning 1, as the ArchiveAuditTables proc already does.
-    RETURN 1;
 END;
 $$ LANGUAGE plpgsql;
 
@@ -1414,8 +1404,6 @@ BEGIN
     FROM onprc_ehr.TB_TestTemp;
 
     RETURN 0;
-EXCEPTION WHEN OTHERS THEN -- TODO: This swallows all errors and returns a bare status code, which can hide runtime issues. Claude suggests at minimum log the caught error (GET STACKED DIAGNOSTICS + RAISE WARNING) before returning 1, as the ArchiveAuditTables proc already does.
-    RETURN 1;
 END;
 $$ LANGUAGE plpgsql;
 
@@ -1586,8 +1574,6 @@ BEGIN
     FROM onprc_ehr.Rpt_AnimalID_Weights;
 
     RETURN 0;
-EXCEPTION WHEN OTHERS THEN -- TODO: This swallows all errors and returns a bare status code, which can hide runtime issues. Claude suggests at minimum log the caught error (GET STACKED DIAGNOSTICS + RAISE WARNING) before returning 1, as the ArchiveAuditTables proc already does.
-    RETURN 1;
 END;
 $$ LANGUAGE plpgsql;
 
@@ -1658,8 +1644,6 @@ BEGIN
     FROM onprc_ehr.Rpt_AnimalIDTissues;
 
     RETURN 0;
-EXCEPTION WHEN OTHERS THEN -- TODO: This swallows all errors and returns a bare status code, which can hide runtime issues. Claude suggests at minimum log the caught error (GET STACKED DIAGNOSTICS + RAISE WARNING) before returning 1, as the ArchiveAuditTables proc already does.
-    RETURN 1;
 END;
 $$ LANGUAGE plpgsql;
 
@@ -1761,8 +1745,6 @@ BEGIN
     END IF;
 
     RETURN 0;
-EXCEPTION WHEN OTHERS THEN -- TODO: This swallows all errors and returns a bare status code, which can hide runtime issues. Claude suggests at minimum log the caught error (GET STACKED DIAGNOSTICS + RAISE WARNING) before returning 1, as the ArchiveAuditTables proc already does.
-    RETURN 1;
 END;
 $$ LANGUAGE plpgsql;
 
@@ -1809,7 +1791,5 @@ BEGIN
     END IF;
 
     RETURN 0;
-EXCEPTION WHEN OTHERS THEN -- TODO: This swallows all errors and returns a bare status code, which can hide runtime issues. Claude suggests at minimum log the caught error (GET STACKED DIAGNOSTICS + RAISE WARNING) before returning 1, as the ArchiveAuditTables proc already does.
-    RETURN 1;
 END;
 $$ LANGUAGE plpgsql;

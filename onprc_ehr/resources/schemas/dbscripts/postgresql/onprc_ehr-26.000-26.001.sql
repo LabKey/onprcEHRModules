@@ -270,10 +270,5 @@ BEGIN
     FROM onprc_ehr.Temp_Clinical_Observations;
 
     RETURN 0;
-
-EXCEPTION
-    WHEN OTHERS THEN
-        -- Equivalent to the Err_Proc label rollback/failure return
-        RETURN 1;
 END;
 $$;

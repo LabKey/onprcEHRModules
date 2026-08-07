@@ -96,10 +96,5 @@ BEGIN
     END LOOP;
 
     RETURN 0;
-
-EXCEPTION
-    WHEN OTHERS THEN
-        -- Equivalent to Err_Proc rollback/failure return
-        RETURN 1;
 END;
 $$;
