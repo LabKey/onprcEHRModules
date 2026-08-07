@@ -26,6 +26,10 @@
                 <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
                 <tableTitle>Project Account History</tableTitle>
             </table>
+            <table tableName="InvoicesItemsArtCore" tableDbType="NOT_IN_DB">
+                <javaCustomizer class="org.labkey.ehr.table.DefaultEHRCustomizer" />
+                <tableTitle>InvoicedItemsArtCore</tableTitle>
+            </table>
         </tables>
     </metadata>
 </templateSchema>
