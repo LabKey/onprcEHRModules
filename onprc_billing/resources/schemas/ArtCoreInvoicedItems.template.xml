@@ -1,0 +1,23 @@
+
+<templateSchema xmlns="http://labkey.org/data/xml/externalSchema"
+                xmlns:dat="http://labkey.org/data/xml"
+                xmlns:cv="http://labkey.org/data/xml/queryCustomView"
+                sourceSchemaName="onprc_billing" >
+    <tables>
+        <tableName>invoiceRuns</tableName>
+        <tableName>chargeableItemCategories</tableName>
+        <tableName>fiscalAuthorities</tableName>
+        <tableName>invoicedItems</tableName>
+    </tables>
+    <metadata>
+        <dat:tables>
+            <dat:table tableName="invoicedItems" tableDbType="NOT_IN_DB">
+                <dat:filters ref="category-filter"/>
+            </dat:table>
+            <dat:filters name="category-filter">
+                <cv:filter column="category" operator="eq" value="ART Core"/>
+            </dat:filters>
+
+        </dat:tables>
+    </metadata>
+</templateSchema>
