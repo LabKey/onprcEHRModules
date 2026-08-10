@@ -1,5 +1,7 @@
 CREATE PROCEDURE audit.ArchiveAuditTables(
-    INOUT p_RetentionMonths INT
+    -- Name must match the <parameter name="@RetentionMonths"> declared by the ArchiveAuditLogs ETL; LabKey binds
+    -- stored procedure parameters by name, so a prefixed name would silently arrive NULL.
+    INOUT RetentionMonths INT
 )
 LANGUAGE plpgsql
 AS $$
@@ -21,10 +23,10 @@ DECLARE
     v_ErrorMessage TEXT;
 BEGIN
     -- Calculate Retention Months
-    p_RetentionMonths := CASE WHEN p_RetentionMonths - 6 > 12 THEN p_RetentionMonths - 6 ELSE 12 END;
-    RAISE NOTICE 'Archiving audit logs older than % months old', p_RetentionMonths;
-    
-    v_CutoffDate := CURRENT_TIMESTAMP - (p_RetentionMonths || ' months')::INTERVAL;
+    RetentionMonths := CASE WHEN RetentionMonths - 6 > 12 THEN RetentionMonths - 6 ELSE 12 END;
+    RAISE NOTICE 'Archiving audit logs older than % months old', RetentionMonths;
+
+    v_CutoffDate := CURRENT_TIMESTAMP - (RetentionMonths || ' months')::INTERVAL;
 
     -- Validate if source schema exists
     IF NOT EXISTS (SELECT 1 FROM pg_namespace WHERE nspname = v_SourceSchema) THEN
@@ -82,7 +84,7 @@ BEGIN
             INSERT INTO %I.ArchiveAuditLog (TableName, Operation, StartTime, Status, RetentionMonths)
             VALUES ($1, ''Archive'', CURRENT_TIMESTAMP, ''Started'', $2)
             RETURNING LogID', v_DestLogSchema);
-        EXECUTE v_SQL USING v_CurrentTable.table_name, p_RetentionMonths INTO v_LogID;
+        EXECUTE v_SQL USING v_CurrentTable.table_name, RetentionMonths INTO v_LogID;
 
         -- Subtransaction block to handle errors per table
         BEGIN
