@@ -17,6 +17,7 @@
         <column name="startDate"/>
         <column name="category"/>
         <column name="reason" />
+        <column name="qcstate" />
         <column name="treatmentStatus" />
     </columns>
     <sorts>
