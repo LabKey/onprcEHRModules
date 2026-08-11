@@ -1556,7 +1556,63 @@
             <column columnName="caseid"/>
         </columns>
     </table>
+    <table tableName="Observation_Historical_EHRTasks" tableDbType="TABLE">
+        <columns>
+            <column columnName="rowid"/>
+            <column columnName="taskid"/>
+            <column columnName="description"/>
+            <column columnName="title"/>
+            <column columnName="qcstate"/>
+            <column columnName="formtype"/>
+            <column columnName="assignedto"/>
+            <column columnName="category"/>
+            <column columnName="createdby"/>
+            <column columnName="modifiedby"/>
+        </columns>
+    </table>
+    <table tableName="Temp_Clinical_Observations_Historical_Master" tableDbType="TABLE">
+        <columns>
+            <column columnName="searchid"/>
+            <column columnName="Id"/>
+            <column columnName="date"/>
+            <column columnName="category"/>
+            <column columnName="area"/>
+            <column columnName="observation"/>
+            <column columnName="createdby"/>
+            <column columnName="performedby"/>
+            <column columnName="taskid"/>
+            <column columnName="qcstate"/>
+            <column columnName="modifiedby"/>
+            <column columnName="Posted_date"/>
+        </columns>
+    </table>
 
-
-
+    <table tableName="Temp_Clinical_Observations_Historical" tableDbType="TABLE">
+        <columns>
+            <column columnName="rowid"/>
+            <column columnName="Id"/>
+            <column columnName="date"/>
+            <column columnName="category"/>
+            <column columnName="area"/>
+            <column columnName="observation"/>
+            <column columnName="createdby"/>
+            <column columnName="performedby"/>
+            <column columnName="taskid"/>
+            <column columnName="qcstate"/>
+            <column columnName="modifiedby"/>
+          </columns>
+    </table>
+    <table tableName="TB_TestTemp_Historical" tableDbType="TABLE">
+        <columns>
+            <column columnName="rowid"/>
+            <column columnName="animalid"/>
+            <column columnName="date"/>
+            <column columnName="objectid"/>
+            <column columnName="created"/>
+            <column columnName="createdby"/>
+            <column columnName="performedby"/>
+            <column columnName="modifiedby"/>
+            <column columnName="date_posted"/>
+        </columns>
+    </table>
 </tables>
