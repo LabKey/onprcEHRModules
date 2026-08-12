@@ -60,8 +60,7 @@ public class BloodDrawFormType extends TaskForm
         addClientDependency(getAddScheduledTreatmentWindowDependency());
         addClientDependency(ClientDependency.supplierFromPath("ehr/form/field/SnomedTreatmentCombo.js"));
 
-       //Modified: 8-11-2026  R. Blasa
-        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/model/sources/BloodDraw.js"));
+        addClientDependency(ClientDependency.supplierFromPath("ehr/model/sources/BloodDraw.js"));
 
         for (FormSection s : getFormSections())
         {
