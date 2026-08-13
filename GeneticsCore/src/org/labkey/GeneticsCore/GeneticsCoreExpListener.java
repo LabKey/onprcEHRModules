@@ -15,6 +15,7 @@
  */
 package org.labkey.GeneticsCore;
 
+import org.jetbrains.annotations.Nullable;
 import org.labkey.api.assay.AssayProvider;
 import org.labkey.api.assay.AssayService;
 import org.labkey.api.data.Container;
@@ -47,7 +48,7 @@ public class GeneticsCoreExpListener implements ExperimentListener
     //}
 
     @Override
-    public void beforeDataDelete(Container c, User user, List<? extends ExpData> data)
+    public void beforeDataDelete(Container c, User user, List<? extends ExpData> data, @Nullable String auditUserComment)
     {
         //NOTE: this is only used b/c beforeRunDelete() doesnt pass the User
         Set<ExpRun> runs = data.stream().map(ExpData::getRun).filter(Objects::nonNull).collect(Collectors.toSet());
