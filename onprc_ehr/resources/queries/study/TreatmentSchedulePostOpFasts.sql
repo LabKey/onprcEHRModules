@@ -18,7 +18,7 @@ Changes made by Kollil on Mar 8th, 2022
 */
 Select
     e.Id,
-    e.Id.curLocation.room || ' ' ||  e.id.curLocation.cage as location,
+    e.Id.curLocation.room + ' ' +  e.id.curLocation.cage as location,
     e.date,
     e.enddate,
     e.project.name as project,
@@ -36,8 +36,8 @@ From encounters e, ehr.requests r
 Where
 e.requestid = r.requestid
 And procedureid in (1804,1807,2440, 3089) -- get these procedures only
-And (date < cast(TimeStampAdd('SQL_TSI_DAY',1,cast(cast(now() as date) as varchar(30)) || ' ' || '08:00') as TIMESTAMP)
-And date > cast(cast(cast(now() as date) as varchar(30)) || ' ' || '16:00' as TIMESTAMP)  )  ---Between 4pm thru 8am
+And (date < cast(TimeStampAdd('SQL_TSI_DAY',1,cast(cast(now() as date) as varchar(30)) + ' ' + '08:00') as TIMESTAMP)
+And date > cast(cast(cast(now() as date) as varchar(30)) + ' ' + '16:00' as TIMESTAMP)  )  ---Between 4pm thru 8am
 And instructions not in ('Lab staff will pull chow and wash caging')
 And type = 'Procedure'
 

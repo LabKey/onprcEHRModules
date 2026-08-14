@@ -25,7 +25,7 @@ SELECT
 
     /* Concatenate all active projects & investigator into one cell */
     (
-        SELECT GROUP_CONCAT(DISTINCT CAST('[' || d.project.protocol.investigatorId.lastname || ']' || d.project.displayname || '' AS VARCHAR), ', ')
+        SELECT GROUP_CONCAT(DISTINCT CAST('[' + d.project.protocol.investigatorId.lastname + ']' + d.project.displayname + '' AS VARCHAR), ', ')
         FROM housingRoommatesDivider h
         LEFT JOIN study.assignment d ON d.Id = h.roommateId
         WHERE h.Id = a.Id

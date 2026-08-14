@@ -14,10 +14,10 @@ SELECT a.protocol,
        --b.Number_Of_Animals_Max as Allowed,
        a.startdate,
        a.enddate,
-       'Group Id & Name: ' || b.group_id || ', ' || b.group_name || ', Breeding Allowed: ' || (Case When cast (b.breeding_colony AS varchar) = '0' Then 'NO' Else 'YES' END) as Breeding_Info
+       'Group Id & Name: ' + b.group_id + ', ' + b.group_name + ', Breeding Allowed: ' + (Case When cast (b.breeding_colony AS varchar) = '0' Then 'NO' Else 'YES' END) as Breeding_Info
 FROM sla.allowableAnimals a, onprc_ehr.eIACUC_PRIME_VIEW_PROTOCOLS c, onprc_ehr.eIACUC_PRIME_VIEW_ANIMAL_GROUPS b
 Where c.Protocol_State = 'Approved'
-  And (c.protocol_Id = a.protocol.displayname OR c.protocol_Id like '%' || a.protocol.displayname)
+  And (c.protocol_Id = a.protocol.displayname OR c.protocol_Id like '%' + a.protocol.displayname)
   And c.protocol_Id = b.parent_protocol
   And curdate() between a.startdate And a.endDate
   And b.species = CASE
