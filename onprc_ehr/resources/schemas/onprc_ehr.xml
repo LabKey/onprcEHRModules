@@ -1572,6 +1572,7 @@
     </table>
     <table tableName="Temp_Clinical_Observations_Historical_Master" tableDbType="TABLE">
         <columns>
+            <column columnName="rowid"/>
             <column columnName="searchid"/>
             <column columnName="Id"/>
             <column columnName="date"/>
