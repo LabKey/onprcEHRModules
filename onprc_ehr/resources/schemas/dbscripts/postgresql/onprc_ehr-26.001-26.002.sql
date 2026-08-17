@@ -62,9 +62,5 @@ BEGIN
     FROM onprc_ehr.Rpt_TempProblemList;
 
     RETURN 0;
-
-EXCEPTION
-    WHEN OTHERS THEN
-        RETURN 1;
 END;
 $$ LANGUAGE plpgsql;

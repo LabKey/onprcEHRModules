@@ -1328,11 +1328,11 @@ SELECT core.fn_dropifexists('RateCalc', 'onprc_ehr', 'FUNCTION', NULL);
 
 CREATE OR REPLACE FUNCTION onprc_ehr.RateCalc
 (
-    alias varchar(20),
-    chargeId float8,
-    project float8,
-    startDate date,
-    baseSubsidyVal float8
+    v_alias varchar(20),
+    v_chargeId float8,
+    v_project float8,
+    v_startDate date,
+    v_baseSubsidyVal float8
 )
 RETURNS float8
 LANGUAGE plpgsql
@@ -1351,70 +1351,70 @@ DECLARE
     aliasRaiseFA smallint;
     chargeRaiseFA smallint;
 BEGIN
-    baseSubsidyVal := .47;
+    v_baseSubsidyVal := .47;
     basesubsidy := .47;
     unitCost := 1000;
-    subsidy := baseSubsidyVal;
+    subsidy := v_baseSubsidyVal;
 
     SELECT cr.unitcost INTO projectExemption
     FROM onprc_billing.chargeRateExemptions cr
-    WHERE cr.chargeId = chargeId::integer
-      AND cr.project = project::integer
-      AND cr.startDate < startDate
-      AND ((startDate <= cr.endDate) OR (cr.enddate IS NULL))
+    WHERE cr.chargeId = v_chargeId::integer
+      AND cr.project = v_project::integer
+      AND cr.startDate < v_startDate
+      AND ((v_startDate <= cr.endDate) OR (cr.enddate IS NULL))
     LIMIT 1;
 
     SELECT pm.multiplier INTO projectMultipler
     FROM onprc_billing.projectMultipliers pm
-    WHERE pm.account = alias
-      AND pm.startdate <= startDate
-      AND ((pm.enddate >= startDate) OR (pm.enddate IS NULL))
+    WHERE pm.account = v_alias
+      AND pm.startdate <= v_startDate
+      AND ((pm.enddate >= v_startDate) OR (pm.enddate IS NULL))
     LIMIT 1;
 
     SELECT a.category INTO NonOGAAlias
     FROM onprc_billing.aliases a
-    WHERE a.alias = alias
-      AND (a.budgetStartDate < startDate AND a.budgetEndDate > startDate)
+    WHERE a.alias = v_alias
+      AND (a.budgetStartDate < v_startDate AND a.budgetEndDate > v_startDate)
     LIMIT 1;
 
     SELECT a.aliasType INTO blankAliasType
     FROM onprc_billing.aliases a
-    WHERE a.alias = alias
-      AND (a.budgetStartDate < startDate AND a.budgetEndDate > startDate)
+    WHERE a.alias = v_alias
+      AND (a.budgetStartDate < v_startDate AND a.budgetEndDate > v_startDate)
     LIMIT 1;
 
     SELECT CASE WHEN t.removeSubsidy = true THEN 1 ELSE 0 END INTO removeSubsidy
     FROM onprc_billing.aliases a
     JOIN onprc_billing.aliasTypes t ON a.aliasType = t.aliasType
-    WHERE a.alias = alias
-      AND (a.budgetStartDate < startDate AND a.budgetEndDate > startDate)
+    WHERE a.alias = v_alias
+      AND (a.budgetStartDate < v_startDate AND a.budgetEndDate > v_startDate)
     LIMIT 1;
 
     SELECT CASE WHEN c.canRaiseFA = true THEN 1 ELSE 0 END INTO chargeRaiseFA
     FROM onprc_billing.chargeableItems c
     JOIN onprc_billing.chargeRates cr ON c.rowId = cr.chargeId
-    WHERE cr.chargeId = chargeId::integer
-      AND (cr.StartDate < startDate AND cr.EndDate > startDate)
+    WHERE cr.chargeId = v_chargeId::integer
+      AND (cr.StartDate < v_startDate AND cr.EndDate > v_startDate)
     LIMIT 1;
 
     SELECT CASE WHEN t.canRaiseFA = true THEN 1 ELSE 0 END INTO aliasRaiseFA
     FROM onprc_billing.aliases a
     JOIN onprc_billing.aliasTypes t ON a.aliasType = t.aliasType
-    WHERE a.alias = alias
-      AND (a.budgetStartDate < startDate AND a.budgetEndDate > startDate)
+    WHERE a.alias = v_alias
+      AND (a.budgetStartDate < v_startDate AND a.budgetEndDate > v_startDate)
     LIMIT 1;
 
     SELECT a.faRate INTO faRate
     FROM onprc_billing.aliases a
-    WHERE a.alias = alias
-      AND (a.budgetStartDate < startDate AND a.budgetEndDate > startDate)
+    WHERE a.alias = v_alias
+      AND (a.budgetStartDate < v_startDate AND a.budgetEndDate > v_startDate)
     LIMIT 1;
 
     SELECT r.unitcost INTO unitCost
     FROM onprc_billing.chargeRates r
-    WHERE r.chargeID = chargeId::integer
-      AND r.startDate <= startDate
-      AND ((r.enddate >= startDate) OR r.enddate IS NULL)
+    WHERE r.chargeID = v_chargeId::integer
+      AND r.startDate <= v_startDate
+      AND ((r.enddate >= v_startDate) OR r.enddate IS NULL)
     LIMIT 1;
 
     unitCostVal := CASE
@@ -1482,20 +1482,20 @@ BEGIN
         projectDescription,
         projectStatus,
         aliasType,
-        "COMMENTS",
-        "PPQNumber",
-        "PPQDate",
-        "AwardStatus",
-        "AwardID",
-        "ApplicationType",
-        "ProjectID",
-        "ActivityType",
-        "AwardNumber",
-        "AwardSuffix",
-        "ADFMEmpNum",
-        "ADFMFullName",
-        "Org",
-        "OriginatingAgencyAwardNum"
+        COMMENTS,
+        PPQNumber,
+        PPQDate,
+        AwardStatus,
+        AwardID,
+        ApplicationType,
+        ProjectID,
+        ActivityType,
+        AwardNumber,
+        AwardSuffix,
+        ADFMEmpNum,
+        ADFMFullName,
+        Org,
+        OriginatingAgencyAwardNum
     )
     SELECT
         CAST(o."ALIAS" AS varchar(200)),
@@ -1535,9 +1535,9 @@ BEGIN
         CAST(o."ADFM EMP NUM" AS varchar(255)),
         o."ADFM FULL NAME",
         o."ORG",
-        o."ORIGINATING_AGENCY_AWARD_NUM"
+        o.ORIGINATING_AGENCY_AWARD_NUM
     FROM onprc_billing.ogasynch o
-    LEFT OUTER JOIN onprc_ehr.investigators i ON o."PI EMP NUM" = i.employeeid AND i.datedisabled IS NULL
+    LEFT OUTER JOIN onprc_ehr.investigators i ON CAST(o."PI EMP NUM" AS varchar(100)) = i.employeeid AND i.datedisabled IS NULL
     LEFT OUTER JOIN onprc_billing.fiscalAuthorities f ON f.employeeId = CAST(o."PDFM EMP NUM" AS varchar(100)) AND f.active = true;
 END;
 $$;

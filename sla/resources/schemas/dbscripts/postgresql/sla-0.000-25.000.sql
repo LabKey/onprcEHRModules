@@ -604,7 +604,7 @@ BEGIN
                 FROM ehr.project
                 WHERE name = (SELECT project FROM TempWeaning WHERE rowid = _counter);
 
-                _purchaseId := core.fn_calculate_entityid();
+                _purchaseId := gen_random_uuid()::ENTITYID;
 
                 -- Check if the row is already transferred into the main SLA tables. If DOT is null means the row hasn't been transferred yet.
                 -- Insert weaning data into sla.purchase table as a pending order
@@ -622,7 +622,7 @@ BEGIN
                  objectid, container, createdby, created, modifiedby, modified, sla_DOB, vendorLocation)
                 SELECT _purchaseId, species, CAST((CURRENT_DATE - CAST(date AS DATE)) AS VARCHAR) || ' days', '', '', '', sex, strain, '', numAlive, NULL, NULL, '', '',
                 '', '', date + INTERVAL '21 days', date + INTERVAL '21 days', NULL, '', '', NULL,
-                core.fn_calculate_entityid(), '4831D09C-4169-1034-BAD2-5107380A9819', 1003, now(), NULL, NULL, date, vendorLocation
+                gen_random_uuid()::ENTITYID, '4831D09C-4169-1034-BAD2-5107380A9819', 1003, now(), NULL, NULL, date, vendorLocation
                 FROM TempWeaning WHERE rowid = _counter;
 
                 --Update the sla.weaning row with the date of transfer date set for the transferred weaning row
@@ -654,7 +654,7 @@ BEGIN
                              objectid, container, createdby, created, modifiedby, modified, sla_DOB, vendorLocation)
                             SELECT _purchaseId, species, CAST((CURRENT_DATE - CAST(date AS DATE)) AS VARCHAR) || ' days', '', '', '', sex, strain, '', numAlive, NULL, NULL, '', '',
                             '', '', date + INTERVAL '21 days', date + INTERVAL '21 days', NULL, '', '', NULL,
-                            core.fn_calculate_entityid(), '4831D09C-4169-1034-BAD2-5107380A9819', 1003, now(), NULL, NULL, date, vendorLocation
+                            gen_random_uuid()::ENTITYID, '4831D09C-4169-1034-BAD2-5107380A9819', 1003, now(), NULL, NULL, date, vendorLocation
                             FROM TempWeaning WHERE rowid = _counter2;
 
                             UPDATE sla.weaning
