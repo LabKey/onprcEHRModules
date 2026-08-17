@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 CREATE SCHEMA onprc_billing;
 
 --this table contains one row each time a billing run is performed, which gleans items to be charged from a variety of sources
