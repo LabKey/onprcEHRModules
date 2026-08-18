@@ -57,7 +57,14 @@ public class SLAModule extends ExtendedSimpleModule
     @Override
     public @Nullable Double getSchemaVersion()
     {
-        return 23.003;
+        return 25.000;
+    }
+
+    @Override
+    public double getEarliestUpgradeVersion()
+    {
+        // Allow upgrades from 23.000+
+        return 23.000;
     }
 
     @Override
