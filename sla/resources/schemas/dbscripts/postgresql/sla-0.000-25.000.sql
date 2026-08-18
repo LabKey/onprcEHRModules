@@ -496,7 +496,7 @@ SELECT core.fn_dropifexists('protocols', 'sla', 'TABLE', NULL);
 --Drop table if exists
 SELECT core.fn_dropifexists('weaning', 'sla', 'TABLE', NULL);
 --Drop Stored proc if exists
-SELECT core.fn_dropifexists('SLAWeaningDataTransfer', 'onprc_ehr', 'PROCEDURE', NULL);
+DROP FUNCTION IF EXISTS onprc_ehr.SLAWeaningDataTransfer();
 
 CREATE TABLE sla.weaning (
     rowid SERIAL NOT NULL,
@@ -529,7 +529,8 @@ CREATE TABLE sla.weaning (
 -- the data into SLA tables
 -- ==========================================================================================
 
-CREATE OR REPLACE PROCEDURE onprc_ehr.SLAWeaningDataTransfer()
+CREATE OR REPLACE FUNCTION onprc_ehr.SLAWeaningDataTransfer()
+RETURNS void
 LANGUAGE plpgsql
 AS $$
 DECLARE
@@ -575,8 +576,8 @@ BEGIN
         INSERT INTO TempWeaning (orig_weaning_rowid, investigator, date, project, vendorlocation, DOB, DOM, species, sex, strain, numAlive, created)
         SELECT rowid, investigator, date, project, vendorlocation, date, DOM, species,
             CASE
-                WHEN sex = 'F' THEN 'Female'
-                WHEN sex = 'M' THEN 'Male'
+                WHEN lower(sex) = lower('F') THEN 'Female'
+                WHEN lower(sex) = lower('M') THEN 'Male'
                 ELSE 'Male or Female'
             END AS sex,
             strain, numAlive, now()

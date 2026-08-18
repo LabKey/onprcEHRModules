@@ -459,7 +459,7 @@ CREATE TABLE onprc_ehr.PotentialParents_source(
 
 CREATE OR REPLACE FUNCTION onprc_ehr.PotentialSire_Insert() RETURNS void AS $$
 BEGIN
-    TRUNCATE TABLE onprc_ehr.PotentialSire_source;
+    TRUNCATE TABLE onprc_ehr.PotentialSire_source RESTART IDENTITY;
     INSERT INTO onprc_ehr.PotentialSire_source
     (participantId, Date, Species, room, cage, SireAgeAtTime, PotentialSire, sireBirth, siregender, sireSpecies, SireDeath, created, createdBy, modified, modifiedBy, container)
     SELECT
@@ -495,7 +495,7 @@ $$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION onprc_ehr.PotentialDam_Insert() RETURNS void AS $$
 BEGIN
-    TRUNCATE TABLE onprc_ehr.PotentialDam_source;
+    TRUNCATE TABLE onprc_ehr.PotentialDam_source RESTART IDENTITY;
     INSERT INTO onprc_ehr.PotentialDam_source
     (participantId, Date, Species, room, cage, DamAgeAtTime, PotentialDam, DamBirth, Damgender, DamSpecies, DamDeath, created, createdBy, modified, modifiedBy, container)
     SELECT
@@ -832,7 +832,7 @@ CREATE TABLE onprc_ehr.Reference_Data_IDkey
 
 CREATE OR REPLACE FUNCTION onprc_ehr.p_PopulateReferenceDataIDkey() RETURNS int AS $$
 BEGIN
-    TRUNCATE TABLE onprc_ehr.Reference_Data_IDkey;
+    TRUNCATE TABLE onprc_ehr.Reference_Data_IDkey RESTART IDENTITY;
 
     INSERT INTO onprc_ehr.Reference_Data_IDkey (displayName, idkey, columnName, status, type, sort_order, created, endDate)
     SELECT
@@ -1191,7 +1191,7 @@ DECLARE
     runId varchar(4000);
     obsDate TIMESTAMP;
 BEGIN
-    TRUNCATE TABLE onprc_ehr.TB_TestTemp;
+    TRUNCATE TABLE onprc_ehr.TB_TestTemp RESTART IDENTITY;
 
     INSERT INTO onprc_ehr.TB_TestTemp (animalid, date, objectid, created, createdby, performedby)
     SELECT

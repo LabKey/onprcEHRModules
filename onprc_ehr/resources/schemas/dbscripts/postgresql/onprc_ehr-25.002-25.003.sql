@@ -1,4 +1,4 @@
-CREATE PROCEDURE audit.ArchiveAuditTables(
+CREATE FUNCTION audit.ArchiveAuditTables(
     -- Name must match the <parameter name="@RetentionMonths"> declared by the ArchiveAuditLogs ETL; LabKey binds
     -- stored procedure parameters by name, so a prefixed name would silently arrive NULL.
     INOUT RetentionMonths INT

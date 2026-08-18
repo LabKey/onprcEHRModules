@@ -1,4 +1,4 @@
-CREATE OR REPLACE PROCEDURE audit.ArchiveAuditTables(
+CREATE OR REPLACE FUNCTION audit.ArchiveAuditTables(
     INOUT RetentionMonths INT
 )
 LANGUAGE plpgsql

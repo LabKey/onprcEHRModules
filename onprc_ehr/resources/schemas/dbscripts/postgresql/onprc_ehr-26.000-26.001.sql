@@ -102,9 +102,9 @@ DECLARE
     v_TestDate           timestamp(0);
 BEGIN
     -- Reset temp tables
-    TRUNCATE TABLE onprc_ehr.TB_TestTemp;
-    TRUNCATE TABLE onprc_ehr.Temp_Clinical_Observations;
-    TRUNCATE TABLE onprc_ehr.Observation_EHRTasks;
+    TRUNCATE TABLE onprc_ehr.TB_TestTemp RESTART IDENTITY;
+    TRUNCATE TABLE onprc_ehr.Temp_Clinical_Observations RESTART IDENTITY;
+    TRUNCATE TABLE onprc_ehr.Observation_EHRTasks RESTART IDENTITY;
 
     -- Generate a list of TB test monkeys
     INSERT INTO onprc_ehr.TB_TestTemp (animalid, date, objectid, created, createdby, performedby, modifiedby, date_posted)

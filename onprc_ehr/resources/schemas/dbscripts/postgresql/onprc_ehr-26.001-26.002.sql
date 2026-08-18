@@ -39,8 +39,8 @@ BEGIN
             objectid,
             caseid
     FROM studydataset.c6d200_problem
-    WHERE category = 'Wound'
-      AND subcategory = 'Digit Amputation'
+    WHERE lower(category) = lower('Wound')
+      AND lower(subcategory) = lower('Digit Amputation')
       AND qcstate = 18
     ORDER BY participantid;
 

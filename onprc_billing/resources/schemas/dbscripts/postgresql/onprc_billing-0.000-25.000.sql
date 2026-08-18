@@ -963,7 +963,18 @@ ALTER TABLE onprc_billing.AnnualRateChange Add CONSTRAINT PK_AnnualRateChange_Ro
 -- add primary key and identity key
 ALTER TABLE onprc_billing.AnnualRateChange ALTER COLUMN InflationRate TYPE Numeric(18,4);
 
-CREATE OR REPLACE PROCEDURE onprc_billing.AnnualRateChangeProcess()
+-- RETAINED BUT DEAD - translated for completeness only; do not wire this up as-is.
+-- 1. It reads and writes Rpt_ChargesProjection, which no script in any module creates.
+-- 2. Nothing calls it. rateChangeprocess.xml invokes onprc_billing.AnnualRateChangeUpdate,
+--    a routine that exists in neither dialect.
+-- 3. The SQL Server original ended by returning a result set (SELECT ... FROM Rpt_ChargesProjection
+--    ORDER BY chargeid). That is dropped here, since a plpgsql function cannot return a result set
+--    without a refcursor or RETURNS TABLE. Reviving this would mean creating the table and
+--    reinstating that result set.
+-- Contrast onprc_ehr.PrimaSlideBillingReport / PrimaBlockBillingReport, which were dropped from the
+-- PostgreSQL translation for the same reason. That omission is silent; this one is recorded here.
+CREATE OR REPLACE FUNCTION onprc_billing.AnnualRateChangeProcess()
+RETURNS void
 LANGUAGE plpgsql
 AS $$
 DECLARE
@@ -1225,7 +1236,8 @@ ALTER TABLE onprc_billing.aliases ADD FundingSourceName VARCHAR(255) Null;
 SELECT core.fn_dropifexists('aliases', 'onprc_billing', 'COLUMN', 'Org');
 ALTER TABLE onprc_billing.aliases ADD Org VARCHAR(255) Null;
 
-CREATE OR REPLACE PROCEDURE onprc_billing.AliasCleanup202004()
+CREATE OR REPLACE FUNCTION onprc_billing.AliasCleanup202004()
+RETURNS void
 LANGUAGE plpgsql
 AS $$
 BEGIN
@@ -1243,7 +1255,7 @@ BEGIN
 
     UPDATE onprc_billing.aliases a1
     SET projectStatus = 'Non Active GL', aliasEnabled = 'n', datedisabled = CURRENT_TIMESTAMP, comments = 'GL Alias Not Active entered Previously'
-    WHERE a1.alias NOT LIKE '9%' AND (a1.comments != 'In Use - Non ONPRC Alias' OR a1.comments IS NULL);
+    WHERE a1.alias NOT LIKE '9%' AND (lower(a1.comments) != lower('In Use - Non ONPRC Alias') OR a1.comments IS NULL);
 
     UPDATE onprc_billing.aliases a2
     SET dateDisabled = CURRENT_TIMESTAMP, comments = 'Expired Alias', aliasEnabled = 'n'
@@ -1253,7 +1265,7 @@ BEGIN
     SET dateDisabled = CURRENT_TIMESTAMP, comments = 'Grant Closed', projectStatus = 'Grant Closed', aliasEnabled = 'N'
     FROM onprc_billing.ogasynch s
     WHERE CAST(a4.alias AS varchar(50)) = CAST(s."ALIAS" AS varchar(50))
-      AND a4.dateDisabled IS NULL AND a4.projectstatus IN ('Archived','Closed','IM PURGEd');
+      AND a4.dateDisabled IS NULL AND lower(a4.projectstatus) IN (lower('Archived'), lower('Closed'), lower('IM PURGEd'));
 
     --Remove Records not associated with ONPRC
     DELETE FROM onprc_billing.aliases
@@ -1314,18 +1326,19 @@ ALTER TABLE onprc_billing.aliases ADD FundingSourceName VARCHAR(255) Null;
 SELECT core.fn_dropifexists('aliases', 'onprc_billing', 'COLUMN', 'Org');
 ALTER TABLE onprc_billing.aliases ADD Org VARCHAR(255) Null;
 
-SELECT core.fn_dropifexists('OGA_RemoveRecords', 'onprc_billing', 'PROCEDURE', NULL);
+DROP FUNCTION IF EXISTS onprc_billing.OGA_RemoveRecords();
 
-CREATE OR REPLACE PROCEDURE onprc_billing.OGA_RemoveRecords()
+CREATE OR REPLACE FUNCTION onprc_billing.OGA_RemoveRecords()
+RETURNS void
 LANGUAGE plpgsql
 AS $$
 BEGIN
     DELETE FROM onprc_billing.aliases
-    WHERE category != 'OHSU GL';
+    WHERE lower(category) != lower('OHSU GL');
 END;
 $$;
 
-SELECT core.fn_dropifexists('RateCalc', 'onprc_ehr', 'FUNCTION', NULL);
+DROP FUNCTION IF EXISTS onprc_ehr.RateCalc(varchar, float8, float8, date, float8);
 
 CREATE OR REPLACE FUNCTION onprc_ehr.RateCalc
 (
@@ -1357,72 +1370,75 @@ BEGIN
     unitCost := 1000;
     subsidy := v_baseSubsidyVal;
 
-    SELECT cr.unitcost INTO projectExemption
-    FROM onprc_billing.chargeRateExemptions cr
-    WHERE cr.chargeId = v_chargeId::integer
-      AND cr.project = v_project::integer
-      AND cr.startDate < v_startDate
-      AND ((v_startDate <= cr.endDate) OR (cr.enddate IS NULL))
-    LIMIT 1;
+    -- Each lookup below is a scalar subquery, matching the SQL Server original's "SET @x = (SELECT ...)".
+    -- Both dialects yield NULL when nothing matches and raise an error when more than one row matches.
+    -- Do not substitute LIMIT 1: overlapping date ranges would then silently pick an arbitrary rate.
+    projectExemption := (
+        SELECT cr.unitcost
+        FROM onprc_billing.chargeRateExemptions cr
+        WHERE cr.chargeId = v_chargeId::integer
+          AND cr.project = v_project::integer
+          AND cr.startDate < v_startDate
+          AND ((v_startDate <= cr.endDate) OR (cr.enddate IS NULL)));
 
-    SELECT pm.multiplier INTO projectMultipler
-    FROM onprc_billing.projectMultipliers pm
-    WHERE pm.account = v_alias
-      AND pm.startdate <= v_startDate
-      AND ((pm.enddate >= v_startDate) OR (pm.enddate IS NULL))
-    LIMIT 1;
+    projectMultipler := (
+        SELECT pm.multiplier
+        FROM onprc_billing.projectMultipliers pm
+        WHERE pm.account = v_alias
+          AND pm.startdate <= v_startDate
+          AND ((pm.enddate >= v_startDate) OR (pm.enddate IS NULL)));
 
-    SELECT a.category INTO NonOGAAlias
-    FROM onprc_billing.aliases a
-    WHERE a.alias = v_alias
-      AND (a.budgetStartDate < v_startDate AND a.budgetEndDate > v_startDate)
-    LIMIT 1;
+    NonOGAAlias := (
+        SELECT a.category
+        FROM onprc_billing.aliases a
+        WHERE a.alias = v_alias
+          AND (a.budgetStartDate < v_startDate AND a.budgetEndDate > v_startDate));
 
-    SELECT a.aliasType INTO blankAliasType
-    FROM onprc_billing.aliases a
-    WHERE a.alias = v_alias
-      AND (a.budgetStartDate < v_startDate AND a.budgetEndDate > v_startDate)
-    LIMIT 1;
+    blankAliasType := (
+        SELECT a.aliasType
+        FROM onprc_billing.aliases a
+        WHERE a.alias = v_alias
+          AND (a.budgetStartDate < v_startDate AND a.budgetEndDate > v_startDate));
 
-    SELECT CASE WHEN t.removeSubsidy = true THEN 1 ELSE 0 END INTO removeSubsidy
-    FROM onprc_billing.aliases a
-    JOIN onprc_billing.aliasTypes t ON a.aliasType = t.aliasType
-    WHERE a.alias = v_alias
-      AND (a.budgetStartDate < v_startDate AND a.budgetEndDate > v_startDate)
-    LIMIT 1;
+    removeSubsidy := (
+        SELECT CASE WHEN t.removeSubsidy = true THEN 1 ELSE 0 END
+        FROM onprc_billing.aliases a
+        JOIN onprc_billing.aliasTypes t ON a.aliasType = t.aliasType
+        WHERE a.alias = v_alias
+          AND (a.budgetStartDate < v_startDate AND a.budgetEndDate > v_startDate));
 
-    SELECT CASE WHEN c.canRaiseFA = true THEN 1 ELSE 0 END INTO chargeRaiseFA
-    FROM onprc_billing.chargeableItems c
-    JOIN onprc_billing.chargeRates cr ON c.rowId = cr.chargeId
-    WHERE cr.chargeId = v_chargeId::integer
-      AND (cr.StartDate < v_startDate AND cr.EndDate > v_startDate)
-    LIMIT 1;
+    chargeRaiseFA := (
+        SELECT CASE WHEN c.canRaiseFA = true THEN 1 ELSE 0 END
+        FROM onprc_billing.chargeableItems c
+        JOIN onprc_billing.chargeRates cr ON c.rowId = cr.chargeId
+        WHERE cr.chargeId = v_chargeId::integer
+          AND (cr.StartDate < v_startDate AND cr.EndDate > v_startDate));
 
-    SELECT CASE WHEN t.canRaiseFA = true THEN 1 ELSE 0 END INTO aliasRaiseFA
-    FROM onprc_billing.aliases a
-    JOIN onprc_billing.aliasTypes t ON a.aliasType = t.aliasType
-    WHERE a.alias = v_alias
-      AND (a.budgetStartDate < v_startDate AND a.budgetEndDate > v_startDate)
-    LIMIT 1;
+    aliasRaiseFA := (
+        SELECT CASE WHEN t.canRaiseFA = true THEN 1 ELSE 0 END
+        FROM onprc_billing.aliases a
+        JOIN onprc_billing.aliasTypes t ON a.aliasType = t.aliasType
+        WHERE a.alias = v_alias
+          AND (a.budgetStartDate < v_startDate AND a.budgetEndDate > v_startDate));
 
-    SELECT a.faRate INTO faRate
-    FROM onprc_billing.aliases a
-    WHERE a.alias = v_alias
-      AND (a.budgetStartDate < v_startDate AND a.budgetEndDate > v_startDate)
-    LIMIT 1;
+    faRate := (
+        SELECT a.faRate
+        FROM onprc_billing.aliases a
+        WHERE a.alias = v_alias
+          AND (a.budgetStartDate < v_startDate AND a.budgetEndDate > v_startDate));
 
-    SELECT r.unitcost INTO unitCost
-    FROM onprc_billing.chargeRates r
-    WHERE r.chargeID = v_chargeId::integer
-      AND r.startDate <= v_startDate
-      AND ((r.enddate >= v_startDate) OR r.enddate IS NULL)
-    LIMIT 1;
+    unitCost := (
+        SELECT r.unitcost
+        FROM onprc_billing.chargeRates r
+        WHERE r.chargeID = v_chargeId::integer
+          AND r.startDate <= v_startDate
+          AND ((r.enddate >= v_startDate) OR r.enddate IS NULL));
 
     unitCostVal := CASE
         WHEN projectExemption IS NOT NULL THEN projectExemption
         WHEN projectMultipler IS NOT NULL THEN projectMultipler * unitCost
         WHEN unitCost IS NULL THEN NULL
-        WHEN NonOGAAlias IS NOT NULL AND NonOGAAlias != 'OGA' THEN unitCost
+        WHEN NonOGAAlias IS NOT NULL AND lower(NonOGAAlias) != lower('OGA') THEN unitCost
         WHEN blankAliasType IS NULL THEN NULL
         WHEN (removeSubsidy = 1 AND (aliasRaiseFA = 1 AND chargeRaiseFA = 1)) THEN
             ((unitCost / (1 - COALESCE(subsidy, 0))) * (CASE WHEN (faRate IS NOT NULL AND faRate < baseSubsidy) THEN (1 + baseSubsidy / (1 + faRate)) ELSE 1 END))
@@ -1439,9 +1455,10 @@ BEGIN
 END;
 $$;
 
-SELECT core.fn_dropifexists('ClearOGASync', 'onprc_billing', 'PROCEDURE', NULL);
+DROP FUNCTION IF EXISTS onprc_billing.ClearOGASync();
 
-CREATE OR REPLACE PROCEDURE onprc_billing.ClearOGASync()
+CREATE OR REPLACE FUNCTION onprc_billing.ClearOGASync()
+RETURNS void
 LANGUAGE plpgsql
 AS $$
 BEGIN
@@ -1456,9 +1473,10 @@ ALTER TABLE onprc_billing.aliases ADD OriginatingAgencyAwardNum VarChar(255) Nul
 ALTER TABLE onprc_billing.ogaSynch ADD ORIGINATING_AGENCY_AWARD_NUM VarChar(255) Null;
 
 --20220406 update of SP for insert
-SELECT core.fn_dropifexists('oga_InsertRecords', 'onprc_billing', 'PROCEDURE', NULL);
+DROP FUNCTION IF EXISTS onprc_billing.oga_InsertRecords();
 
-CREATE OR REPLACE PROCEDURE onprc_billing.oga_InsertRecords()
+CREATE OR REPLACE FUNCTION onprc_billing.oga_InsertRecords()
+RETURNS void
 LANGUAGE plpgsql
 AS $$
 BEGIN
@@ -1550,9 +1568,10 @@ ALTER TABLE onprc_billing.ogaSynch ADD ORIGINATING_AGENCY_AWARD_NUM VarChar(255)
 
 /* 23.xxx SQL scripts */
 
-SELECT core.fn_dropifexists('UpdateClinPathEndDate', 'onprc_billing', 'PROCEDURE', NULL);
+DROP FUNCTION IF EXISTS onprc_billing.UpdateClinPathEndDate();
 
-CREATE OR REPLACE PROCEDURE onprc_billing.UpdateClinPathEndDate()
+CREATE OR REPLACE FUNCTION onprc_billing.UpdateClinPathEndDate()
+RETURNS void
 LANGUAGE plpgsql
 AS $$
 BEGIN
