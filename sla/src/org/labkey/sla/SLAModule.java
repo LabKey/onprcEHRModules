@@ -57,7 +57,7 @@ public class SLAModule extends ExtendedSimpleModule
     @Override
     public @Nullable Double getSchemaVersion()
     {
-        return 25.000;
+        return 26.000;
     }
 
     @Override
@@ -65,12 +65,6 @@ public class SLAModule extends ExtendedSimpleModule
     {
         // Allow upgrades from 23.000+
         return 23.000;
-    }
-
-    @Override
-    public boolean hasScripts()
-    {
-        return true;
     }
 
     @Override
