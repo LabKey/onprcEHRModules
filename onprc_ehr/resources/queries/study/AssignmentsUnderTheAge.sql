@@ -44,7 +44,7 @@
 FROM Assignment a
 WHERE
   a.Id.Age.ageinyears <= 3
-  AND a.Id.demographics.species = 'Rhesus Macaque'
+  AND LOWER(a.Id.demographics.species) = LOWER('Rhesus Macaque')
   AND a.enddate IS NULL
   AND a.isActive = 1
   AND a.project.displayname NOT IN ('0492-02', '0492-03')

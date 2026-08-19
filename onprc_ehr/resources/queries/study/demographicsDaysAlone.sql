@@ -47,6 +47,6 @@ LEFT JOIN study.Housing h2 ON (
     AND h2.qcstate.publicdata = true
   )
 
-WHERE d.calculated_status = 'Alive'
+WHERE LOWER(d.calculated_status) = LOWER('Alive')
 
 GROUP BY h1.id, h1.room, h1.cage

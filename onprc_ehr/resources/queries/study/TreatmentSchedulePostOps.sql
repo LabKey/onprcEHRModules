@@ -91,7 +91,7 @@ WHERE t1.date is not null
 ) s
 
 ) s ON (s.animalid = h.id)
-   WHERE h.calculated_status = 'Alive'
+   WHERE LOWER(h.calculated_status) = LOWER('Alive')
    --account for date/time in schedule
    AND s.date >= s.startDate AND (s.date <= s.enddate OR s.enddate IS NULL)
 

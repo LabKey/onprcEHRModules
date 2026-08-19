@@ -16,4 +16,4 @@ c.CalcMethodReason,
 
 
 FROM bloodCalcCriteria c
-WHere c.CalcMethod = 'BCS'
+WHere LOWER(c.CalcMethod) = LOWER('BCS')

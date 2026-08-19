@@ -48,7 +48,7 @@ FROM (
       curdate() as dateOnly,
       0 as quantity
     FROM study.demographics d1
-    WHERE d1.calculated_status = 'Alive'
+    WHERE LOWER(d1.calculated_status) = LOWER('Alive')
 
     UNION ALL
 

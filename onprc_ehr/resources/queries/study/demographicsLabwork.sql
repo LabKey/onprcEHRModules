@@ -18,11 +18,11 @@ SELECT
   max(CASE WHEN h.type = 'Hematology' THEN h.date ELSE null END) as lastHematologyDate,
   TIMESTAMPDIFF('SQL_TSI_DAY',  max(CASE WHEN h.type = 'Hematology' THEN h.date ELSE null END), now()) as daysSinceCBCExam,
 
-   max(CASE WHEN h.type = 'Biochemistry' THEN h.date ELSE null END) as lastBiochemistryDate  ,
-   TIMESTAMPDIFF('SQL_TSI_DAY',  max(CASE WHEN h.type = 'Biochemistry' THEN h.date ELSE null END), now()) as daysSinceCHEMExam
+   max(CASE WHEN LOWER(h.type) = LOWER('Biochemistry') THEN h.date ELSE null END) as lastBiochemistryDate  ,
+   TIMESTAMPDIFF('SQL_TSI_DAY',  max(CASE WHEN LOWER(h.type) = LOWER('Biochemistry') THEN h.date ELSE null END), now()) as daysSinceCHEMExam
 
 FROM study.demographics d
-LEFT JOIN study.clinpathRuns h ON (d.id = h.id AND (h.type = 'Hematology' OR h.type = 'Biochemistry') And h.QCState.label = 'Completed')
-WHERE d.calculated_status = 'Alive'
+LEFT JOIN study.clinpathRuns h ON (d.id = h.id AND (h.type = 'Hematology' OR LOWER(h.type) = LOWER('Biochemistry')) And h.QCState.label = 'Completed')
+WHERE LOWER(d.calculated_status) = LOWER('Alive')
 GROUP BY d.id
 

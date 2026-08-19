@@ -88,7 +88,7 @@ FROM study.demographics h JOIN (
         ) s
 
 ) s ON (s.animalid = h.id)
-WHERE h.calculated_status = 'Alive'
+WHERE LOWER(h.calculated_status) = LOWER('Alive')
   --account for date/time in schedule
   --and s.date >= s.startDate and s.date <= s.enddate
   --Added the enddate = null clause by Kollil, 10/25/24. Refer to ticket #11471

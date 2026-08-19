@@ -91,7 +91,7 @@ SELECT
   sum(coalesce(s.quantity, 0)) as totalQuantity
 FROM Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.DNA_Bank.samples s
 --include DNA Bank workbook only
-WHERE s.dateremoved is null and sampleType = 'Buffy Coat'
+WHERE s.dateremoved is null and LOWER(sampleType) = LOWER('Buffy Coat')
 GROUP BY s.subjectId
 ) s2 ON (s2.subjectId = d.Id)
 

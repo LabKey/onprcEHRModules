@@ -20,7 +20,7 @@ SELECT
 
   count(t.Id) as totalTreatmentsGiven,
   COUNT(CASE WHEN t.category = 'Behavior' THEN 1 ELSE null END) as totalBehaviorTreatmentsGiven,
-   COUNT(CASE WHEN t.category = 'Clinical' THEN 1 ELSE null END) as totalClinicalTreatmentsGiven,
+   COUNT(CASE WHEN LOWER(t.category) = LOWER('Clinical') THEN 1 ELSE null END) as totalClinicalTreatmentsGiven,
    COUNT(CASE WHEN t.category = 'Surgical' THEN 1 ELSE null END) as totalSurgicalTreatmentsGiven,
 
 

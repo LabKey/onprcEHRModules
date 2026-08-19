@@ -29,7 +29,7 @@ SELECT
   c.mostRecentCeg_Plan
 
 FROM study.cases c
-WHERE c.isActive = true AND c.category = 'Clinical'
+WHERE c.isActive = true AND LOWER(c.category) = LOWER('Clinical')
 
 UNION ALL
 

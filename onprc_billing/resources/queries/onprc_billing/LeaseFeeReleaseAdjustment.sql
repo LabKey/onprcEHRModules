@@ -29,7 +29,7 @@ a5.id as ESPFAnimal,
 (SELECT max(rowid) as rowid FROM Site.{substitutePath moduleProperty('onprc_billing','BillingContainer')}.onprc_billing_public.chargeableItems ci WHERE ci.name = javaConstant('org.labkey.onprc_billing.ONPRC_BillingManager.LEASE_FEE_ADJUSTMENT') and ci.active = true) as chargeId,
 CASE
   when (fl.id Is Not Null) then 0
-  when (d.researchOwned = 'yes') then 0
+  when (LOWER(d.researchOwned) = LOWER('yes')) then 0
   else 1
   end as quantity,
 lf2.chargeId as leaseCharge1,

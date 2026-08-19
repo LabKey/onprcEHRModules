@@ -39,5 +39,5 @@ And procedureid in (1804,1807,2440, 3089) -- get these procedures only
 And (date < cast(TimeStampAdd('SQL_TSI_DAY',1,cast(cast(now() as date) as varchar(30)) || ' ' || '08:00') as TIMESTAMP)
 And date > cast(cast(cast(now() as date) as varchar(30)) || ' ' || '16:00' as TIMESTAMP)  )  ---Between 4pm thru 8am
 And instructions not in ('Lab staff will pull chow and wash caging')
-And type = 'Procedure'
+And LOWER(type) = LOWER('Procedure')
 

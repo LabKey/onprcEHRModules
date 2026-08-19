@@ -44,13 +44,13 @@ WHERE
     --a.enddate IS NULL
     --AND a.isActive = 1
     --AND a.project.displayname NOT IN ('0492-02', '0492-03')
-    AND a.Id.demographics.species = 'Rhesus Macaque'
+    AND LOWER(a.Id.demographics.species) = LOWER('Rhesus Macaque')
     AND EXISTS (
         SELECT 1
         FROM study.flags f
         WHERE f.Id = a.Id
           AND f.flag.category = 'Assign Alias'
-          AND f.flag.value = 'Assignment Pool'
+          AND LOWER(f.flag.value) = LOWER('Assignment Pool')
           AND f.enddate IS NULL
 )
 

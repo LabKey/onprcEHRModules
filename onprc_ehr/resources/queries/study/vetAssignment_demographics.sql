@@ -34,6 +34,6 @@ FROM Study.Demographics AS Demographics
 LEFT JOIN CasesData ON Demographics.Id = CasesData.Id
 LEFT JOIN Study.Housing AS Housing ON Demographics.Id = Housing.Id
 LEFT JOIN Study.VetAssignment_projects AS AssignedProject ON Demographics.Id = AssignedProject.Id
-WHERE Demographics.Calculated_Status = 'Alive'
+WHERE LOWER(Demographics.Calculated_Status) = LOWER('Alive')
     AND NOT (LOWER(LEFT(Demographics.Id,1)) BETWEEN 'a' AND 'z')
     AND Housing.Enddate IS NULL

@@ -28,7 +28,7 @@ cr.unitCost as NIHRate,
 --case statement when dayeleaselength > 0 then dayleasr leanth else 1  as quantity
 case
     when r.DayLeaseLength> 0 then r.dayleaseLength
-    when r.researchowned = 'Yes' then 0
+    when LOWER(r.researchowned) = LOWER('Yes') then 0
     when d.birthType = 'Born to Resource Dam' then 0
     Else 1
     End as Quantity,
@@ -66,7 +66,7 @@ When d.creditResource is not Null then d.creditTo
     End  as CreditAccount,
 case
     WHen r.releaseType = 'No Charge' then 0
-    when r.researchOwned = 'Yes' then 0
+    when LOWER(r.researchOwned) = LOWER('Yes') then 0
     when r.DayLeaseLength > 0 and r.daylease = 'yes' then (r.dayleaseLength * r.CalculatedRate)
     when r.revisedrate is not null and r.revisedrate > r.CalculatedRate then (r.revisedRate - r.CalculatedRate)
     when r.revisedrate is not null and r.revisedrate < r.CalculatedRate then (r.CalculatedRate - r.RevisedRate)

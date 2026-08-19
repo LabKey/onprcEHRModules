@@ -22,6 +22,6 @@ FROM study.cases c
 
 --2 years
 WHERE timestampdiff('SQL_TSI_DAY', c.date, now()) <= (365 * 2)
-AND c.category = 'Clinical'
+AND LOWER(c.category) = LOWER('Clinical')
 
 GROUP BY c.Id, c.problemCategories
