@@ -15,5 +15,9 @@ FROM Prima_CassetteBases as ctb
          join Prima_CaseBase cb on cb.Id = ctb.CaseBaseId
          Join Prima_Animals an on cb.AnimalId = an.Id
 Where ctb.SavedIdentifier NOT LIKE 'IPC%'
-  And ctb.SavedIdentifier NOT LIKE '19[0-9][0-9]%'
-  And ctb.SavedIdentifier NOT LIKE '20[0-9][0-9]%'
+  And NOT (LEFT(ctb.SavedIdentifier,2) = '19'
+           AND SUBSTRING(ctb.SavedIdentifier,3,1) BETWEEN '0' AND '9'
+           AND SUBSTRING(ctb.SavedIdentifier,4,1) BETWEEN '0' AND '9')
+  And NOT (LEFT(ctb.SavedIdentifier,2) = '20'
+           AND SUBSTRING(ctb.SavedIdentifier,3,1) BETWEEN '0' AND '9'
+           AND SUBSTRING(ctb.SavedIdentifier,4,1) BETWEEN '0' AND '9')

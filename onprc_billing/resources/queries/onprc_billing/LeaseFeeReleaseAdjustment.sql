@@ -93,4 +93,4 @@ and (a.enddateFinalized >= startDate and a.enddateFinalized <= enddate)
 AND a.qcstate.publicdata = true
 and lf.chargeID  is not null
 --AND lf.active = true
-AND a2.id IS NULL and a.participantID not like '[a-z]%'
+AND a2.id IS NULL and NOT (LOWER(LEFT(a.participantID,1)) BETWEEN 'a' AND 'z')

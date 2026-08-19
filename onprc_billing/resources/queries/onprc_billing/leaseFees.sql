@@ -266,4 +266,4 @@ WHERE a.releaseCondition != a.projectedReleaseCondition
 and (A.id != A5.id or A5.id is Null)
 AND a.enddatefinalized is not null AND CAST(a.enddatefinalized AS DATE) >= CAST(STARTDATE AS DATE) AND CAST(a.enddatefinalized AS DATE) <= CAST(EndDate as DATE)
 AND a.qcstate.publicdata = true AND lf.active = true
-AND a2.id IS NULL and a.participantID not like '[a-z]%'
+AND a2.id IS NULL and NOT (LOWER(LEFT(a.participantID,1)) BETWEEN 'a' AND 'z')
