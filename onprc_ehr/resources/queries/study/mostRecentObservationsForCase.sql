@@ -70,7 +70,7 @@ SELECT
     MAX(date) AS latest_date,
     GROUP_CONCAT(
             CAST(observation_string AS VARCHAR(1000)),
-            CHAR(10)
+            CHR(10)
     ) AS observations
 FROM ObservationStrings
 GROUP BY Id, caseid

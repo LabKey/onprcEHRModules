@@ -14,12 +14,12 @@ SELECT
     p.unitCost as MCEnteredUnitCost,
     case
         WHen p.unitCost is NOT NULL then p.unitCost
-        When  RateCalc(p.debitedaccount,p.chargeID,p.project,p.Date,alias.farate)  Is Not Null then RateCalc(p.debitedaccount,p.chargeID,p.project,p.Date,alias.farate)
+        When  RateCalc(p.debitedaccount,p.chargeID,p.project, CAST(p.Date AS DATE),alias.farate)  Is Not Null then RateCalc(p.debitedaccount,p.chargeID,p.project, CAST(p.Date AS DATE),alias.farate)
         Else cr.unitcost
         ENd as RateCalc,
     case
         WHen p.unitCost is NOT NULL then 'Misc Rate Entered'
-        When  RateCalc(p.debitedaccount,p.chargeID,p.project,p.Date,alias.farate)  Is Not Null then 'Rate Calc Function'
+        When  RateCalc(p.debitedaccount,p.chargeID,p.project, CAST(p.Date AS DATE),alias.farate)  Is Not Null then 'Rate Calc Function'
         else 'Passed Thru to Cr UnitCost'
         ENd as RateMethod,
     round(CAST(CASE
