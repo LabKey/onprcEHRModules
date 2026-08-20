@@ -16,7 +16,7 @@ EHR.model.DataModelManager.registerMetadata('PMIC_Services', {
                     date: {
                         xtype: 'xdatetime',
                         extFormat: 'Y-m-d H:i',
-                        defaultValue: (new Date()).format('Y-m-d 8:0')
+                        defaultValue: Ext4.Date.format(new Date(), 'Y-m-d 8:0')
                     },
                     type: {
                         defaultValue: 'Procedure',
