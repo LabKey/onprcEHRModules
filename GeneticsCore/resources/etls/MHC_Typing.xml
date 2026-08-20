@@ -11,6 +11,7 @@
                     <column>marker</column>
                     <column>result</column>
                     <column>assaytype</column>
+                    <column>librarytype</column>
                     <column>score</column>
                     <column>totalTests</column>
                     <column>objectid</column>
