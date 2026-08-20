@@ -61,7 +61,7 @@ SELECT
 
     coalesce(p.creditedaccount, cu.account, ce.account) as creditAccount,
     CASE WHEN (cu.account IS NOT NULL) THEN 'Charge Unit' ELSE 'Chargeable Item' END as creditAccountType,
-    null as creditAccountId,
+    CAST(null AS INTEGER) as creditAccountId, --typed so the *Rates queries can UNION this with a real rowid
     coalesce(alias.investigatorId, p.project.investigatorId) as investigatorId,
     CASE
         --dont flag adjustments/reversals as exceptions

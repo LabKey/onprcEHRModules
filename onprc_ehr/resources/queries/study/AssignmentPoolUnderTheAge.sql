@@ -33,7 +33,7 @@ SELECT
             AND h.roommateEnd IS NULL
             AND h.roommateId IS NOT NULL
             AND d.enddate IS NULL
-            AND d.isActive = 1
+            AND d.isActive = true
             AND d.project.displayname NOT IN ('0492-02', '0492-03')
     ) AS Cagemate_Assignments
 

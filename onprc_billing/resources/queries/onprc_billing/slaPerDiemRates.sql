@@ -97,7 +97,7 @@ SELECT
     ELSE null
   END as isExpiredAccount,
   CASE WHEN (TIMESTAMPDIFF('SQL_TSI_DAY', p.date, curdate()) > 45) THEN 'Y' ELSE null END as isOldCharge,
-  p.project as currentActiveAlias
+  CAST(p.project AS VARCHAR(200)) as currentActiveAlias
 
 FROM onprc_billing.slaPerDiems p
 

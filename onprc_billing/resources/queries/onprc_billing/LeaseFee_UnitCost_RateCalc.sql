@@ -51,7 +51,7 @@ select
     '' as BirthType,
     'automatic_adjustment' as AssignmentTypeNA,
     '' as DayLease,
-    '' as DayLeaseLength, --integer
+    CAST(null AS INTEGER) as DayLeaseLength, --integer; empty string here breaks the UNION with the numeric column above
     '' as MultipleAssignments,
     a.date,
     a.enddate as projectedrelease,

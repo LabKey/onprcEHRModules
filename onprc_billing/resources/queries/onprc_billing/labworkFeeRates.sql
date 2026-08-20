@@ -181,7 +181,7 @@ SELECT
   mc.item,
   mc.category,
   case
-    When mc.project.displayName in (Select project from Site.{substitutePath moduleProperty('ONPRC_Billing','BillingContainer')}.lists.LabFee_NoChargeProjects where enddate is null)
+    When mc.project in (Select project from Site.{substitutePath moduleProperty('ONPRC_Billing','BillingContainer')}.lists.LabFee_NoChargeProjects where enddate is null)
         then 0
         else mc.unitcost
         End as unitCost,
