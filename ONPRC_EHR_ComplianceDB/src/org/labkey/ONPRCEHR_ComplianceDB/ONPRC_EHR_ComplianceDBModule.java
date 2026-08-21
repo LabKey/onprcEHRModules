@@ -55,19 +55,13 @@ public class ONPRC_EHR_ComplianceDBModule extends ExtendedSimpleModule
     @Override
     public Double getSchemaVersion()
     {
-        return 25.001;
-    } //Modified: 9-8-025
+        return 26.000;
+    }
 
     @Override
     public @NotNull Collection<String> getSchemaNames()
     {
         return Collections.singleton(ONPRC_EHR_ComplianceDBSchema.NAME);
-    }
-
-    @Override
-    public boolean hasScripts()
-    {
-        return true;
     }
 
     @Override
