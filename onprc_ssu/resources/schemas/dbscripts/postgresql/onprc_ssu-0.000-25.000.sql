@@ -22,6 +22,10 @@ CREATE TABLE onprc_ssu.schedule (
   date timestamp,
   location varchar(200),
   procedureid int,
+  project integer,
+  formcreated boolean,
+  encounterid entityid,
+  taskid entityid,
 
   objectid entityid not null,
 
@@ -33,9 +37,3 @@ CREATE TABLE onprc_ssu.schedule (
 
   constraint PK_schedule PRIMARY KEY (objectid)
 );
-
-ALTER TABLE onprc_ssu.schedule ADD project integer;
-
-ALTER TABLE onprc_ssu.schedule ADD formcreated boolean;
-ALTER TABLE onprc_ssu.schedule ADD encounterid entityid;
-ALTER TABLE onprc_ssu.schedule ADD taskid entityid;
