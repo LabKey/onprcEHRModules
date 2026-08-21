@@ -46,9 +46,9 @@ public class ONPRC_SSUModule extends ExtendedSimpleModule
     }
 
     @Override
-    public boolean hasScripts()
+    public double getEarliestUpgradeVersion()
     {
-        return true;
+        return 13.23;
     }
 
     @Override
