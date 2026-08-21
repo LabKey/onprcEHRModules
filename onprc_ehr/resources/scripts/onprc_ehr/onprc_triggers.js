@@ -136,6 +136,19 @@ exports.init = function(EHR){
         });
     });
 
+    //Set explicitly so a module-level allowDatesInDistantPast=true cannot downgrade this WARN to INFO.
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.INIT, 'study', 'departure', function(event, helper){
+        helper.setScriptOptions({
+            allowDatesInDistantPast: false
+        });
+    });
+
+    EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.INIT, 'study', 'housing', function(event, helper){
+        helper.setScriptOptions({
+            allowDatesInDistantPast: false
+        });
+    });
+
     //Added: 8-1-2019  R.Blasa
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.INIT, 'study', 'birth', function(event, helper){
         //NOTE: births are sometimes not entered until processing, meaning they could be significantly in the past
