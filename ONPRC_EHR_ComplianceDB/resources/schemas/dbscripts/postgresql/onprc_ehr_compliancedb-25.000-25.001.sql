@@ -4,11 +4,8 @@ ALTER TABLE onprc_ehr_compliancedb.ComplianceProcedureReport ALTER COLUMN new_ex
 ALTER TABLE onprc_ehr_compliancedb.ComplianceRecentReport ALTER COLUMN expired_period TYPE VARCHAR(50);
 ALTER TABLE onprc_ehr_compliancedb.ComplianceRecentReport ALTER COLUMN new_expired_period TYPE VARCHAR(50);
 
-DROP FUNCTION IF EXISTS onprc_ehr_compliancedb.p_ComplianceProcedureOverDueSoon_Process;
-
 -- Author:	R. Blasa
 -- Created: 9-20-2024
-
 /*
 **
 ** 	Created by
@@ -16,8 +13,6 @@ DROP FUNCTION IF EXISTS onprc_ehr_compliancedb.p_ComplianceProcedureOverDueSoon_
 **                                 the ComplianceProcedureRecentTest.sql query
 **
 **                  1-22-2026      Fix the issues with more than one subquery results
-**
-**
 **
 */
 
@@ -197,9 +192,9 @@ BEGIN
       AND a.requirementname IN (SELECT q.requirementname FROM ehr_compliancedb.Requirements q WHERE q.requirementname = a.requirementname AND q.dateDisabled IS NULL)
     GROUP BY a.requirementname, a.employeeid
 
+    -- Additional requirements for employees that have not completed training, but is required
     UNION
 
-    -- Additional requirements for employees that have not completed training, but is required
     SELECT
         j.requirementname,
         j.employeeid,
@@ -275,11 +270,8 @@ EXCEPTION
 END;
 $$ LANGUAGE plpgsql;
 
-DROP FUNCTION IF EXISTS onprc_ehr_compliancedb.p_ComplianceProcedureOverDueSoon_Process;
-
 -- Author:	R. Blasa
 -- Created: 9-20-2024
-
 /*
 **
 ** 	Created by
@@ -287,7 +279,6 @@ DROP FUNCTION IF EXISTS onprc_ehr_compliancedb.p_ComplianceProcedureOverDueSoon_
 **                                 the ComplianceRecentTest.sql query
 **
 **                   1-22-2026   Fix the issues with more than one subquery results
-**
 **
 */
 
@@ -467,9 +458,9 @@ BEGIN
       AND a.requirementname IN (SELECT q.requirementname FROM ehr_compliancedb.Requirements q WHERE q.requirementname = a.requirementname AND q.dateDisabled IS NULL)
     GROUP BY a.requirementname, a.employeeid
 
+    -- Training that was completed by as an employee training exemptions, and at least completed one, or more times
     UNION
 
-    -- Training that was completed by as an employee training exemptions, and at least completed one, or more times
     SELECT
         a.requirementname,
         a.employeeid,
@@ -539,9 +530,9 @@ BEGIN
       AND a.requirementname IN (SELECT q.requirementname FROM ehr_compliancedb.Requirements q WHERE q.requirementname = a.requirementname AND q.dateDisabled IS NULL)
     GROUP BY a.requirementname, a.employeeid
 
+    -- Additional requirements for employees that have not completed training, but is required
     UNION
 
-    -- Additional requirements for employees that have not completed training, but is required
     SELECT
         j.requirementname,
         j.employeeid,
