@@ -129,7 +129,7 @@ BEGIN
     SELECT
         _ResourceID,
         'No Covid-19 Testing',
-        c.date + INTERVAL '1530 hours',
+        c.date + INTERVAL '1530 hours', -- TODO: Claude flagged this as a likely bug (also in SQL Server). This is 63.75 days.
         c.date + INTERVAL '19 hours',
         1003,
         '5C3C9FF8-6BCF-1038-930A-7D62F3A605B4',
