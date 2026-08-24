@@ -20,7 +20,7 @@ CREATE TABLE onprc_ehr_compliancedb.Employeetraining_Details
     employeeid varchar(255) not null,
     requirementname  varchar(3000)  null,
     date_completed datetime,
-    required_training smallint,
+    required_training varchar(50),
     objectid  varchar(4000),
     container varchar(4000),
     unit     varchar(1000),
@@ -35,7 +35,7 @@ CREATE TABLE onprc_ehr_compliancedb.Employeetraining_Details
 );
 GO
 
-insert into onprc_ehr_compliancedb.Employee_Assigned_Location
+insert into onprc_ehr_compliancedb.EmployeeAssignedLocation
   (
   employeeid,
   location,
@@ -57,14 +57,14 @@ select distinct employeeid,
                 1007,
                 newid(),   ---objectid
                 'CD170458-C55F-102F-9907-5107380A54BE'  ----container
-from ehr_compliancedb.Employeetraining where  requirementname like 'area training%'
+from onprc_ehr_compliancedb.Employeetraining_Details where  requirementname like 'area training%'
 
 Go
 
 Insert into onprc_ehr_compliancedb.Employeetraining_Details
 (employeeid,
  requirementname,
- datecompleted,
+ date_completed,
  required_training,
  objectid,
  container,
