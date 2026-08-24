@@ -33,6 +33,7 @@ WITH ProcedureFees AS (
   Collapse to ONE row per animal.
   - CurrentProjects: comma list, for display only
   - AssignmentCount / IsDualAssigned: aggregated per animal
+  - recent
 -------------------------------------------------------------------*/
      AnimalAssignmentStatus AS (
          SELECT
