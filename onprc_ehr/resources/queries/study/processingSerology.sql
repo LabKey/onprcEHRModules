@@ -336,13 +336,13 @@ LEFT JOIN (
         p.id,
         max(p.date) as lastDate
     FROM study.flags p
-    WHERE p.flag.category ='Assign Alias' And LOWER(p.flag.value) = LOWER('Assignment pool')
+    WHERE p.flag.category ='Assign Alias' And LOWER(p.flag.value) = 'assignment pool'
     And p.enddate is null
     GROUP BY p.id
 
 ) nts ON (nts.id = d.id)
 
 
-WHERE LOWER(d.calculated_status) = LOWER('Alive')
+WHERE LOWER(d.calculated_status) = 'alive'
 
 ) t

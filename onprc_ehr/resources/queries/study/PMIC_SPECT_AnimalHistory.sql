@@ -26,4 +26,4 @@ from study.PMIC_SPECTImagingData a, study.encounters e
 Where a.taskid = e.taskid
   and a.id = e.id
   and e.chargetype = 'PMIC'
-  and LOWER(e.type) = LOWER('procedure')
+  and LOWER(e.type) = 'procedure'

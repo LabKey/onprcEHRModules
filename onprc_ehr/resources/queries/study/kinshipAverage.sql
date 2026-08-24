@@ -16,9 +16,9 @@
 SELECT
   t.Id,
   --NOTE: add 0.5 to include kinship with self
-  CAST((0.5 + coalesce(t.sumCoefficient, 0)) / (select count(*) as total from study.demographics d where LOWER(d.calculated_status) = LOWER('Alive') and d.species = t.species) as double) as avgCoefficient,
+  CAST((0.5 + coalesce(t.sumCoefficient, 0)) / (select count(*) as total from study.demographics d where LOWER(d.calculated_status) = 'alive' and d.species = t.species) as double) as avgCoefficient,
   t.distinctAnimals,
-  (select count(*) as total from study.demographics d where LOWER(d.calculated_status) = LOWER('Alive') and d.species = t.species) as totalInPopulation,
+  (select count(*) as total from study.demographics d where LOWER(d.calculated_status) = 'alive' and d.species = t.species) as totalInPopulation,
   t.species
 
 FROM (
@@ -30,10 +30,10 @@ SELECT
   count(k.Id2) as distinctAnimals
 
 FROM study.demographics d
-JOIN study.demographics d2 ON (LOWER(d2.calculated_status) = LOWER('Alive') and d.species = d2.species)
+JOIN study.demographics d2 ON (LOWER(d2.calculated_status) = 'alive' and d.species = d2.species)
 LEFT JOIN ehr.kinshipSummary k ON (d.Id = k.Id AND d2.Id = k.Id2)
 
-WHERE LOWER(d.calculated_status) = LOWER('Alive')
+WHERE LOWER(d.calculated_status) = 'alive'
 
 GROUP BY d.Id
 

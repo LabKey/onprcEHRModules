@@ -13,16 +13,16 @@ SELECT
     ELSE null
   END as isInfant,
   CASE
-    WHEN (LOWER(t1.gender) = LOWER('m') AND t1.ageAtTime >= 4.0 ) THEN 1
+    WHEN (LOWER(t1.gender) = 'm' AND t1.ageAtTime >= 4.0 ) THEN 1
     ELSE null
   END as isBreedingMale,
   CASE
-    WHEN (LOWER(t1.gender) = LOWER('f') AND t1.ageAtTime >= 3.0 ) THEN 1
+    WHEN (LOWER(t1.gender) = 'f' AND t1.ageAtTime >= 3.0 ) THEN 1
     ELSE null
   END as isBreedingFemale,
   CASE
-    WHEN (LOWER(t1.gender) = LOWER('f') AND t1.ageAtTime >= 1.0 AND t1.ageAtTime < 3.0 ) THEN 1
-    WHEN (LOWER(t1.gender) = LOWER('m') AND t1.ageAtTime >= 1.0 AND t1.ageAtTime < 4.0 ) THEN 1
+    WHEN (LOWER(t1.gender) = 'f' AND t1.ageAtTime >= 1.0 AND t1.ageAtTime < 3.0 ) THEN 1
+    WHEN (LOWER(t1.gender) = 'm' AND t1.ageAtTime >= 1.0 AND t1.ageAtTime < 4.0 ) THEN 1
     ELSE null
   END as isJuvenille
 
@@ -61,9 +61,9 @@ SELECT
   group_concat(DISTINCT a.project.investigatorId.division, chr(10)) as divisions,
   count(a.lsid) as totalAssignments,
   sum(CASE WHEN (h.room.housingType.value = 'Cage Location' AND h.room.area != 'Hospital') THEN 1 ELSE 0 END) as isCaged,
-  sum(CASE WHEN LOWER(a.project.use_category) = LOWER('Research') THEN 1 ELSE 0 END) as totalResearchAssignments,
-  sum(CASE WHEN a.project.use_category = 'U42' THEN 1 ELSE 0 END) as isU42,
-  sum(CASE WHEN a.project.use_category = 'U24' THEN 1 ELSE 0 END) as isU24,
+  sum(CASE WHEN LOWER(a.project.use_category) = 'research' THEN 1 ELSE 0 END) as totalResearchAssignments,
+  sum(CASE WHEN LOWER(a.project.use_category) = 'u42' THEN 1 ELSE 0 END) as isU42,
+  sum(CASE WHEN LOWER(a.project.use_category) = 'u24' THEN 1 ELSE 0 END) as isU24,
   group_concat(DISTINCT f.flag.value, chr(10)) as spfStatus
 
 FROM study.housingOverlaps h

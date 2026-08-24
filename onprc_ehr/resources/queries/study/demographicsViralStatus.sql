@@ -26,7 +26,7 @@ LEFT JOIN (
     count(distinct f.flag.value) as total
 
   FROM study.flags f
-  WHERE f.isActive = true AND f.flag.category = 'SPF' and LOWER(f.id.dataset.demographics.calculated_status) = LOWER('Alive')
+  WHERE f.isActive = true AND f.flag.category = 'SPF' and LOWER(f.id.dataset.demographics.calculated_status) = 'alive'
 
   GROUP BY f.id
 ) t ON (d.id = t.id)

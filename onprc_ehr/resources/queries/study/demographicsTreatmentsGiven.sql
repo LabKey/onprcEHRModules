@@ -19,9 +19,9 @@ SELECT
 
 
   count(t.Id) as totalTreatmentsGiven,
-  COUNT(CASE WHEN t.category = 'Behavior' THEN 1 ELSE null END) as totalBehaviorTreatmentsGiven,
-   COUNT(CASE WHEN LOWER(t.category) = LOWER('Clinical') THEN 1 ELSE null END) as totalClinicalTreatmentsGiven,
-   COUNT(CASE WHEN t.category = 'Surgical' THEN 1 ELSE null END) as totalSurgicalTreatmentsGiven,
+  COUNT(CASE WHEN LOWER(t.category) = 'behavior' THEN 1 ELSE null END) as totalBehaviorTreatmentsGiven,
+   COUNT(CASE WHEN LOWER(t.category) = 'clinical' THEN 1 ELSE null END) as totalClinicalTreatmentsGiven,
+   COUNT(CASE WHEN LOWER(t.category) = 'surgical' THEN 1 ELSE null END) as totalSurgicalTreatmentsGiven,
 
 
   GROUP_CONCAT(t.code.meaning, chr(10)) as activeTreatments

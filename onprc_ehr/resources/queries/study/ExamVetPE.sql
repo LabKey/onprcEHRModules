@@ -90,6 +90,6 @@ LEFT JOIN (
 
 
 
-WHERE LOWER(d.calculated_status) = LOWER('Alive')
+WHERE LOWER(d.calculated_status) = 'alive'
 
 GROUP BY d.id, d.id.age.AgeInYears, g.date,g.p2, d.id.assignedVet.assignedVet

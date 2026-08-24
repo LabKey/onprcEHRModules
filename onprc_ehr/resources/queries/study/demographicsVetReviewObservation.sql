@@ -3,7 +3,7 @@ select dem.*,
 
        (select s.date from study.mostRecentClinicalObservationsForAnimal s  where s.id = dem.id) as mostRecentClinicalObservationsdate,
 
-       ( select group_concat(DISTINCT ('BCS: ' || j.observation), chr(10)) AS c from "Clinical Observations" j where j.id = dem.id  and LOWER(j.category) = LOWER('BCS')  and j.date >= (select max(k.date) AS MaxDate
+       ( select group_concat(DISTINCT ('BCS: ' || j.observation), chr(10)) AS c from "Clinical Observations" j where j.id = dem.id  and LOWER(j.category) = 'bcs'  and j.date >= (select max(k.date) AS MaxDate
                                                                                      from  "Clinical Observations" k where k.category = 'Vet Review' and dem.id = k.Id) ) as mostRecentBCSScore,
 
       ( select group_concat(DISTINCT (q.procedureid.name  || ' : ' || q.remark), chr(10)) AS c from "Clinical Encounters" q where q.id = dem.id  and q.type.value = 'Procedure'
@@ -19,15 +19,15 @@ select dem.*,
 
 
 from study.demographics dem
-  Where  dem.id in (Select cln.id from "Clinical Observations" cln where cln.category = 'Observations' and cln.remark is not null and cln.QCState.Label = 'Completed'
+  Where  dem.id in (Select cln.id from "Clinical Observations" cln where LOWER(cln.category) = 'observations' and cln.remark is not null and cln.QCState.Label = 'Completed'
                   and cln.date >= (select max(r.date) AS MaxDate from "Clinical Observations" r where r.category = 'Vet Review' and r.QCState.Label = 'Completed'
                                                                                        and r.Id = cln.Id)  )
 
-    Or dem.id in (Select cln.id from "Clinical Observations" cln where LOWER(cln.category) = LOWER('BCS') and cln.observation is not null and cln.QCState.Label = 'Completed'
+    Or dem.id in (Select cln.id from "Clinical Observations" cln where LOWER(cln.category) = 'bcs' and cln.observation is not null and cln.QCState.Label = 'Completed'
                   and cln.date >= (select max(r.date) AS MaxDate from "Clinical Observations" r where r.category = 'Vet Review' and r.QCState.Label = 'Completed'
                                                                                        and r.Id = cln.Id)  )
 
-   Or dem.id in (Select rem.id from "Clinical Remarks" rem where LOWER(rem.category) = LOWER('Clinical') and rem.QCState.Label = 'Completed'
+   Or dem.id in (Select rem.id from "Clinical Remarks" rem where LOWER(rem.category) = 'clinical' and rem.QCState.Label = 'Completed'
      and rem.date >= (select max(r.date) AS MaxDate from "Clinical Observations" r where r.category = 'Vet Review' and r.QCState.Label = 'Completed'
     and rem.id = r.Id)  )
 

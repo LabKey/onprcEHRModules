@@ -8,7 +8,7 @@ SELECT
 d.id,
 group_concat(DISTINCT d2.id) as Offspring,
 count(DISTINCT d2.id)  AS TotalOffspring,
-SUM(CASE WHEN LOWER(d2.calculated_status) = LOWER('Alive') THEN 1 ELSE 0 END) as TotalLivingOffspring,
+SUM(CASE WHEN LOWER(d2.calculated_status) = 'alive' THEN 1 ELSE 0 END) as TotalLivingOffspring,
 
 min(d2.birth) as earliestBirth,
 max(d2.birth) as latestBirth

@@ -16,9 +16,9 @@ c.CalcMethod,
 
 CAST(
 Case
-	When LOWER(c.CalcMethod) = LOWER('fr') then
+	When LOWER(c.CalcMethod) = 'fr' then
 		(Select (fr.totalBloodVolume * c.percentage) as frtba from study,bloodcalcFixedRate fr where c.id = fr.id)
-	When LOWER(c.calcMethod) = LOWER('BCS') then
+	When LOWER(c.calcMethod) = 'bcs' then
 		(Select (b.bcstbv * c.percentage) as bcstba from study.Bloodcalcbcs b where c.id = b.id)
 	End AS DOUBLE) as ABV
 FROM bloodCalcCriteria c

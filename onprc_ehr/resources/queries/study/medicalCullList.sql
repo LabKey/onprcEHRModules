@@ -19,4 +19,4 @@ f.date as dateAdded
 
 FROM study.demographics d
 JOIN study.flags f ON (d.id = f.id AND f.isActive = true AND f.flag.value = 'Clinically Restricted')
-WHERE LOWER(d.calculated_status) = LOWER('Alive')
+WHERE LOWER(d.calculated_status) = 'alive'

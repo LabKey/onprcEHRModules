@@ -105,13 +105,13 @@ SELECT
   CASE WHEN alias.fiscalAuthority.faid IS NULL THEN 'Y' ELSE null END as isMissingFaid,
   CASE
     WHEN alias.aliasEnabled IS NULL THEN 'N'
-    WHEN LOWER(alias.aliasEnabled) != LOWER('Y') THEN 'N'
+    WHEN LOWER(alias.aliasEnabled) != 'y' THEN 'N'
     ELSE null
   END as isAcceptingCharges,
   CASE
     WHEN (alias.budgetStartDate IS NOT NULL AND CAST(alias.budgetStartDate as date) > CAST(p.date as date)) THEN 'Prior To Budget Start'
     WHEN (alias.budgetEndDate IS NOT NULL AND CAST(alias.budgetEndDate as date) < CAST(p.date as date)) THEN 'After Budget End'
-    WHEN (alias.projectStatus IS NOT NULL AND LOWER(alias.projectStatus) != LOWER('ACTIVE') AND alias.projectStatus != 'No Cost Ext' AND alias.projectStatus != 'Partial Setup') THEN 'Grant Project Not Active'
+    WHEN (alias.projectStatus IS NOT NULL AND LOWER(alias.projectStatus) != 'active' AND LOWER(alias.projectStatus) != 'no cost ext' AND LOWER(alias.projectStatus) != 'partial setup') THEN 'Grant Project Not Active'
     ELSE null
   END as isExpiredAccount,
   CASE WHEN (TIMESTAMPDIFF('SQL_TSI_DAY', p.date, curdate()) > 45) THEN 'Y' ELSE null END as isOldCharge,

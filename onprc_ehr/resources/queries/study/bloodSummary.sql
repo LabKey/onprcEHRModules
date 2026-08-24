@@ -31,7 +31,7 @@ round(b.TBV,2) as TotalBloodVolume,
 --round((b.TBV*.125),2) as AllowableBlood1,
 
  Case
-	When LOWER(species)<> LOWER('Rhesus Macaque')  --'Fixed Rate Process'
+	When LOWER(species)<> 'rhesus macaque'  --'Fixed Rate Process'
 	    Then  round((b.species.blood_per_kg  * b.id.MostRecentWeight.MostRecentWeight * b.max_draw_pct),2)
 	When
 		b.DaysSinceBCS > 365
@@ -42,7 +42,7 @@ round(b.TBV,2) as TotalBloodVolume,
 	end As AllowableBlood,
 
 	Case
-	When LOWER(species)<> LOWER('Rhesus Macaque')  --'Fixed Rate Process'
+	When LOWER(species)<> 'rhesus macaque'  --'Fixed Rate Process'
 	    Then
 	      Case
           When (b.bloodPrevious>b.bloodFuture)
@@ -81,7 +81,7 @@ round(b.TBV,2) as TotalBloodVolume,
  	end As AvailableBlood,
 
  Case
-	When LOWER(species)<> LOWER('Rhesus Macaque')  Then 'FR'
+	When LOWER(species)<> 'rhesus macaque'  Then 'FR'
 	When
 		b.DaysSinceBCS > 365
 		Then  'FR'
@@ -166,6 +166,6 @@ FROM
     --NOTE: this uses date part only
     JOIN (SELECT w.id, MAX(dateOnly) as dateOnly FROM study.weight w WHERE w.qcstate.publicdata = true GROUP BY w.id) lastWeight ON (d.id = lastWeight.id)
     LEFT OUTER JOIN study.demographicsCurrentBCS bcs on bcs.id = d.id
-WHERE LOWER(d.calculated_status) = LOWER('Alive')
+WHERE LOWER(d.calculated_status) = 'alive'
 
 ) b

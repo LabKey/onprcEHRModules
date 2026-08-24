@@ -14,4 +14,4 @@ c.CalcMethodReason,
 (c.bpk*c.Weight) as TOtalBloodVolume
 
 FROM bloodCalcCriteria c
-WHere LOWER(c.CalcMethod) = LOWER('FR')
+WHere LOWER(c.CalcMethod) = 'fr'

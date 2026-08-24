@@ -36,4 +36,4 @@ SELECT a.alias,
        a.FUndingSourceName,
        a.Org
 FROM aliases a 
-where LOWER(aliasEnabled) = LOWER('y') 
+where LOWER(aliasEnabled) = 'y' 

@@ -43,6 +43,6 @@ LEFT JOIN (
 ) t ON (t.id = d.id)
 LEFT JOIN study.hematologyResults hr1 ON (hr1.id = d.id AND hr1.date = t.lastDate AND (hr1.testid = 'PLT' OR hr1.testid = 'HCT'))
 
-WHERE LOWER(d.calculated_status) = LOWER('Alive')
+WHERE LOWER(d.calculated_status) = 'alive'
 GROUP BY d.Id
 ) t

@@ -14,7 +14,7 @@ FROM study.Demographics d
 JOIN study.demographicsParents d2
   ON (d.Id = d2.sire OR d.Id = d2.dam)
 
-WHERE d2.Id.age.ageInYears <= 1.0 and LOWER(d2.Id.demographics.calculated_status) = LOWER('Alive')
+WHERE d2.Id.age.ageInYears <= 1.0 and LOWER(d2.Id.demographics.calculated_status) = 'alive'
 
 GROUP BY d.id
 

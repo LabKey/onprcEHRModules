@@ -14,4 +14,4 @@ SELECT
   c.mostRecentCeg_Plan
 
 FROM study.cases c
-WHERE c.isOpen = true AND LOWER(c.category) = LOWER('Clinical')
+WHERE c.isOpen = true AND LOWER(c.category) = 'clinical'

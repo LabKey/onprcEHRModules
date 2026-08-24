@@ -70,7 +70,7 @@ LEFT JOIN (
 
     FROM study.clinpathRuns k
     WHERE  (k.servicerequested = 'Basic Chemistry Panel' or k.servicerequested = 'Comprehensive Chemistry Panel')
-      And LOWER(k.type) = LOWER('Biochemistry')
+      And LOWER(k.type) = 'biochemistry'
       And k.date in (select max(jj.date) from study.clinpathRuns jj Where ((jj.Id = k.Id) And (jj.servicerequested = 'Basic Chemistry Panel' or jj.servicerequested = 'Comprehensive Chemistry Panel')) )
     GROUP BY k.Id, k.date, k.servicerequested
 ) k ON (k.Id = d.Id)
@@ -78,6 +78,6 @@ LEFT JOIN (
 
 
 
-WHERE LOWER(d.calculated_status) = LOWER('Alive')
+WHERE LOWER(d.calculated_status) = 'alive'
 
 GROUP BY d.id, d.id.age.AgeInYears, g.date,g.p2,k.date, k.servicerequested

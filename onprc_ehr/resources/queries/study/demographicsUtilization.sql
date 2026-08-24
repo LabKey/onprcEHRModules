@@ -73,5 +73,5 @@ GROUP BY t.Id
 
 ) t1 ON (t1.Id = d.Id)
 
-WHERE LOWER(d.calculated_status) = LOWER('Alive')
+WHERE LOWER(d.calculated_status) = 'alive'
 
