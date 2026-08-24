@@ -1478,7 +1478,6 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         waitForElement(Locator.tagWithText("div", "The form has the following errors and warnings:"));
 
         _helper.getExt4FieldForFormSection("Necropsy", "Id").setValue(MORE_ANIMAL_IDS[1]);
-        _helper.getExt4FieldForFormSection("Necropsy", "Date").setValue(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
         Ext4ComboRef procedureField = new Ext4ComboRef(_helper.getExt4FieldForFormSection("Necropsy", "Procedure").getId(), this);
         procedureField.setComboByDisplayValue("Necropsy & Histopathology Grade 2: Standard");
 
