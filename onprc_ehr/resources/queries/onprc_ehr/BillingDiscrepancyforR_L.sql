@@ -34,7 +34,8 @@ WITH ProcedureFees AS (
   - CurrentProjects: comma list, for display only
   - AssignmentCount / IsDualAssigned: aggregated per animal
   - recent update to limit 1 recor d per occurrence
-  -- One more truy
+  -- One more truy for update
+
 -------------------------------------------------------------------*/
      AnimalAssignmentStatus AS (
          SELECT
