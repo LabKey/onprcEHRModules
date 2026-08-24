@@ -83,13 +83,7 @@ public class ONPRC_BillingModule extends ExtendedSimpleModule
     @Override
     public @Nullable Double getSchemaVersion()
     {
-        return 25.006;
-    }
-
-    @Override
-    public boolean hasScripts()
-    {
-        return true;
+        return 26.000;
     }
 
     @Override
@@ -170,6 +164,13 @@ public class ONPRC_BillingModule extends ExtendedSimpleModule
     public Set<String> getSchemaNames()
     {
         return Collections.singleton(ONPRC_BillingSchema.NAME);
+    }
+
+    @Override
+    @NotNull
+    public Set<Class<?>> getIntegrationTests()
+    {
+        return Collections.singleton(ONPRC_BillingManager.TestCase.class);
     }
 
     @Override
