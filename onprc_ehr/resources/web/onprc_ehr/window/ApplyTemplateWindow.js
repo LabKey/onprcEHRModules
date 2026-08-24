@@ -63,7 +63,7 @@ Ext4.define('ONPRC_EHR.window.ApplyTemplateWindow', {
                 }
                 LDK.Utils.logToServer({
                     level: 'ERROR',
-                    message: 'TEMP DEBUG ApplyTemplateWindow: no encounters records.  idSelectionMode=' + this.idSelectionMode
+                    message: 'TEMP DEBUG ONPRC_EHR.window.ApplyTemplateWindow: no encounters records.  idSelectionMode=' + this.idSelectionMode
                             + ' storeFound=' + !!debugStore
                             + ' count=' + (debugStore ? debugStore.getCount() : -1)
                             + ' rows=[' + debugRows.join(' | ') + ']'
