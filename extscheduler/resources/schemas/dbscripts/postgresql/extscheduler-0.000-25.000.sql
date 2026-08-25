@@ -48,7 +48,7 @@ BEGIN
         SELECT 1 FROM extscheduler.events R
         LEFT JOIN (
             SELECT ObjectId, Value FROM prop.Properties
-            JOIN prop.PropertySets ON PropertySets."Set" = Properties."Set"
+            JOIN prop.PropertySets ON PropertySets.Set = Properties.Set
             WHERE Name = 'ExtSchedulerAllowEventOverlap'
         ) P ON R.Container = P.ObjectId
         WHERE (P.Value IS NULL OR P.Value = 'false') AND (
@@ -132,7 +132,7 @@ BEGIN
         c.date + INTERVAL '1530 hours', -- TODO: Claude flagged this as a likely bug (also in SQL Server). This is 63.75 days.
         c.date + INTERVAL '19 hours',
         1003,
-        '5C3C9FF8-6BCF-1038-930A-7D62F3A605B4',
+        '5c3c9ff8-6bcf-1038-930a-7d62f3a605b4',
         1003,
         NOW(),
         1,
@@ -168,7 +168,7 @@ BEGIN
         c.date + INTERVAL '7 hours',
         c.date + INTERVAL '8 hours',
         1003,
-        '5C3C9FF8-6BCF-1038-930A-7D62F3A605B4',
+        '5c3c9ff8-6bcf-1038-930a-7d62f3a605b4',
         1003,
         NOW(),
         1,
@@ -204,7 +204,7 @@ BEGIN
         c.date + INTERVAL '7 hours',
         c.date + INTERVAL '19 hours',
         1003,
-        '5C3C9FF8-6BCF-1038-930A-7D62F3A605B4',
+        '5c3c9ff8-6bcf-1038-930a-7d62f3a605b4',
         1003,
         NOW(),
         1,

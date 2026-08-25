@@ -125,6 +125,7 @@ DECLARE
     _requirementnameFinal VARCHAR(2000);
     _requirementname      VARCHAR(2000);
     _employeeid           VARCHAR(500);
+    _employeeidFinal      VARCHAR(500);
     _Completiondate       TIMESTAMP;
     _SciShieldID          INT;
     rec                   RECORD;
@@ -156,19 +157,20 @@ BEGIN
         _requirementnameFinal := '';
         _requirementname := COALESCE(rec.requirementname, '');
         _employeeid := TRIM(LOWER(COALESCE(rec.employeeid, '')));
+        _employeeidFinal := NULL;
         _Completiondate := rec.completeddate;
         _SciShieldID := rec.rowid;
 
         -- Validate requirementname
-        IF EXISTS (SELECT 1 FROM onprc_ehr_compliancedb.SciShield_Reference_Data WHERE label = _requirementname AND columnname = 'requirementname') THEN
+        IF EXISTS (SELECT 1 FROM onprc_ehr_compliancedb.SciShield_Reference_Data WHERE lower(label) = lower(_requirementname) AND lower(columnname) = 'requirementname') THEN
             SELECT value INTO _requirementnameFinal
             FROM onprc_ehr_compliancedb.SciShield_Reference_Data
-            WHERE label = _requirementname AND columnname = 'requirementname'
+            WHERE lower(label) = lower(_requirementname) AND lower(columnname) = 'requirementname'
             LIMIT 1;
-        ELSIF EXISTS (SELECT 1 FROM ehr_compliancedb.requirements WHERE requirementname = _requirementname) THEN
+        ELSIF EXISTS (SELECT 1 FROM ehr_compliancedb.requirements WHERE lower(requirementname) = lower(_requirementname)) THEN
             SELECT requirementname INTO _requirementnameFinal
             FROM ehr_compliancedb.requirements
-            WHERE requirementname = _requirementname
+            WHERE lower(requirementname) = lower(_requirementname)
             LIMIT 1;
         ELSE
             UPDATE onprc_ehr_compliancedb.SciShield_Data ss
@@ -179,7 +181,7 @@ BEGIN
         END IF;
 
         -- Validate if the record already exists
-        IF EXISTS (SELECT 1 FROM ehr_compliancedb.completiondates WHERE employeeid = _employeeid AND requirementname = _requirementnameFinal AND date = _Completiondate) THEN
+        IF EXISTS (SELECT 1 FROM ehr_compliancedb.completiondates WHERE lower(employeeid) = _employeeid AND lower(requirementname) = lower(_requirementnameFinal) AND date = _Completiondate) THEN
             UPDATE onprc_ehr_compliancedb.SciShield_Data ss
             SET processed = 4
             WHERE ss.rowid = _SciShieldID;
@@ -187,8 +189,14 @@ BEGIN
             CONTINUE;
         END IF;
 
-        -- Validate if the employeeid is defined
-        IF NOT EXISTS (SELECT 1 FROM ehr_compliancedb.employees WHERE employeeid = _employeeid AND enddate IS NULL) THEN
+        -- Validate if the employeeid is defined. Keep the stored spelling: the lowercased search key
+        -- would violate the completiondates -> employees foreign key on insert.
+        SELECT employeeid INTO _employeeidFinal
+        FROM ehr_compliancedb.employees
+        WHERE lower(employeeid) = _employeeid AND enddate IS NULL
+        LIMIT 1;
+
+        IF _employeeidFinal IS NULL THEN
             UPDATE onprc_ehr_compliancedb.SciShield_Data ss
             SET processed = 2
             WHERE ss.rowid = _SciShieldID;
@@ -197,11 +205,11 @@ BEGIN
         END IF;
 
         -- If all previous version were validated proceed with the record insert
-        IF NOT EXISTS (SELECT 1 FROM ehr_compliancedb.completiondates WHERE employeeid = _employeeid AND requirementname = _requirementnameFinal AND date = _Completiondate) THEN
+        IF NOT EXISTS (SELECT 1 FROM ehr_compliancedb.completiondates WHERE lower(employeeid) = _employeeid AND lower(requirementname) = lower(_requirementnameFinal) AND date = _Completiondate) THEN
             INSERT INTO ehr_compliancedb.completiondates
                 (employeeid, requirementname, date, trainer, container, created, createdby, modified, modifiedby)
             VALUES
-                (_employeeid, _requirementnameFinal, _Completiondate, 'ONLINE TRAINING', 'CD170458-C55F-102F-9907-5107380A54BE', now(), 2595, now(), 2595);
+                (_employeeidFinal, _requirementnameFinal, _Completiondate, 'ONLINE TRAINING', 'cd170458-c55f-102f-9907-5107380a54be', now(), 2595, now(), 2595);
 
             UPDATE onprc_ehr_compliancedb.SciShield_Data ss
             SET processed = 1
@@ -234,56 +242,56 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION onprc_ehr_compliancedb.p_ComplianceTranslatestringUpdate()
 RETURNS integer AS $$
 BEGIN
-    IF EXISTS (SELECT 1 FROM ehr_compliancedb.EmployeePerUnit WHERE unit LIKE '%arrs%') THEN
-        UPDATE ehr_compliancedb.EmployeePerUnit SET unit = replace(unit, 'arrs', 'DCM');
+    IF EXISTS (SELECT 1 FROM ehr_compliancedb.EmployeePerUnit WHERE unit ILIKE '%arrs%') THEN
+        UPDATE ehr_compliancedb.EmployeePerUnit SET unit = regexp_replace(unit, 'arrs', 'DCM', 'gi');
     END IF;
 
-    IF EXISTS (SELECT 1 FROM ehr_compliancedb.EmployeePerUnit WHERE category LIKE '%arrs%') THEN
-        UPDATE ehr_compliancedb.EmployeePerUnit SET category = replace(category, 'arrs', 'DCM');
+    IF EXISTS (SELECT 1 FROM ehr_compliancedb.EmployeePerUnit WHERE category ILIKE '%arrs%') THEN
+        UPDATE ehr_compliancedb.EmployeePerUnit SET category = regexp_replace(category, 'arrs', 'DCM', 'gi');
     END IF;
 
-    IF EXISTS (SELECT 1 FROM ehr_compliancedb.Employees WHERE majorudds LIKE '%arrs%') THEN
-        UPDATE ehr_compliancedb.Employees SET majorudds = replace(majorudds, 'arrs', 'DCM');
+    IF EXISTS (SELECT 1 FROM ehr_compliancedb.Employees WHERE majorudds ILIKE '%arrs%') THEN
+        UPDATE ehr_compliancedb.Employees SET majorudds = regexp_replace(majorudds, 'arrs', 'DCM', 'gi');
     END IF;
 
-    IF EXISTS (SELECT 1 FROM ehr_compliancedb.Employees WHERE unit LIKE '%arrs%') THEN
-        UPDATE ehr_compliancedb.Employees SET unit = replace(unit, 'arrs', 'DCM');
+    IF EXISTS (SELECT 1 FROM ehr_compliancedb.Employees WHERE unit ILIKE '%arrs%') THEN
+        UPDATE ehr_compliancedb.Employees SET unit = regexp_replace(unit, 'arrs', 'DCM', 'gi');
     END IF;
 
-    IF EXISTS (SELECT 1 FROM ehr_compliancedb.Employees WHERE category LIKE '%arrs%') THEN
-        UPDATE ehr_compliancedb.Employees SET category = replace(category, 'arrs', 'DCM');
+    IF EXISTS (SELECT 1 FROM ehr_compliancedb.Employees WHERE category ILIKE '%arrs%') THEN
+        UPDATE ehr_compliancedb.Employees SET category = regexp_replace(category, 'arrs', 'DCM', 'gi');
     END IF;
 
-    IF EXISTS (SELECT 1 FROM ehr_compliancedb.requirements WHERE requirementname LIKE '%arrs%') THEN
-        UPDATE ehr_compliancedb.requirements SET requirementname = replace(requirementname, 'arrs', 'DCM');
+    IF EXISTS (SELECT 1 FROM ehr_compliancedb.requirements WHERE requirementname ILIKE '%arrs%') THEN
+        UPDATE ehr_compliancedb.requirements SET requirementname = regexp_replace(requirementname, 'arrs', 'DCM', 'gi');
     END IF;
 
-    IF EXISTS (SELECT 1 FROM ehr_compliancedb.EmployeeRequirementExemptions WHERE requirementname LIKE '%arrs%') THEN
-        UPDATE ehr_compliancedb.EmployeeRequirementExemptions SET requirementname = replace(requirementname, 'arrs', 'DCM');
+    IF EXISTS (SELECT 1 FROM ehr_compliancedb.EmployeeRequirementExemptions WHERE requirementname ILIKE '%arrs%') THEN
+        UPDATE ehr_compliancedb.EmployeeRequirementExemptions SET requirementname = regexp_replace(requirementname, 'arrs', 'DCM', 'gi');
     END IF;
 
-    IF EXISTS (SELECT 1 FROM ehr_compliancedb.unit_names WHERE unit LIKE '%arrs%') THEN
-        UPDATE ehr_compliancedb.unit_names SET unit = replace(unit, 'arrs', 'DCM');
+    IF EXISTS (SELECT 1 FROM ehr_compliancedb.unit_names WHERE unit ILIKE '%arrs%') THEN
+        UPDATE ehr_compliancedb.unit_names SET unit = regexp_replace(unit, 'arrs', 'DCM', 'gi');
     END IF;
 
-    IF EXISTS (SELECT 1 FROM ehr_compliancedb.RequirementsPerCategory WHERE RequirementName LIKE '%arrs%') THEN
-        UPDATE ehr_compliancedb.RequirementsPerCategory SET requirementname = replace(requirementname, 'arrs', 'DCM');
+    IF EXISTS (SELECT 1 FROM ehr_compliancedb.RequirementsPerCategory WHERE RequirementName ILIKE '%arrs%') THEN
+        UPDATE ehr_compliancedb.RequirementsPerCategory SET requirementname = regexp_replace(requirementname, 'arrs', 'DCM', 'gi');
     END IF;
 
-    IF EXISTS (SELECT 1 FROM ehr_compliancedb.RequirementsPerCategory WHERE category LIKE '%arrs%') THEN
-        UPDATE ehr_compliancedb.RequirementsPerCategory SET category = replace(category, 'arrs', 'DCM');
+    IF EXISTS (SELECT 1 FROM ehr_compliancedb.RequirementsPerCategory WHERE category ILIKE '%arrs%') THEN
+        UPDATE ehr_compliancedb.RequirementsPerCategory SET category = regexp_replace(category, 'arrs', 'DCM', 'gi');
     END IF;
 
-    IF EXISTS (SELECT 1 FROM ehr_compliancedb.RequirementsPerCategory WHERE unit LIKE '%arrs%') THEN
-        UPDATE ehr_compliancedb.RequirementsPerCategory SET unit = replace(unit, 'arrs', 'DCM');
+    IF EXISTS (SELECT 1 FROM ehr_compliancedb.RequirementsPerCategory WHERE unit ILIKE '%arrs%') THEN
+        UPDATE ehr_compliancedb.RequirementsPerCategory SET unit = regexp_replace(unit, 'arrs', 'DCM', 'gi');
     END IF;
 
-    IF EXISTS (SELECT 1 FROM ehr_compliancedb.completiondates WHERE requirementname LIKE '%arrs%') THEN
-        UPDATE ehr_compliancedb.completiondates SET requirementname = replace(requirementname, 'arrs', 'DCM');
+    IF EXISTS (SELECT 1 FROM ehr_compliancedb.completiondates WHERE requirementname ILIKE '%arrs%') THEN
+        UPDATE ehr_compliancedb.completiondates SET requirementname = regexp_replace(requirementname, 'arrs', 'DCM', 'gi');
     END IF;
 
-    IF EXISTS (SELECT 1 FROM ehr_compliancedb.EmployeeCategory WHERE categoryname LIKE '%arrs%') THEN
-        UPDATE ehr_compliancedb.EmployeeCategory SET categoryname = replace(categoryname, 'arrs', 'DCM');
+    IF EXISTS (SELECT 1 FROM ehr_compliancedb.EmployeeCategory WHERE categoryname ILIKE '%arrs%') THEN
+        UPDATE ehr_compliancedb.EmployeeCategory SET categoryname = regexp_replace(categoryname, 'arrs', 'DCM', 'gi');
     END IF;
 
     RETURN 0;
@@ -943,10 +951,10 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION onprc_ehr_compliancedb.p_ComplianceAccesscontainerUpdate()
 RETURNS integer AS $$
 BEGIN
-    IF EXISTS (SELECT 1 FROM ehr_compliancedb.completiondates WHERE container = 'F1C05E2D-618D-103D-ABC9-9814909BFFCD') THEN
+    IF EXISTS (SELECT 1 FROM ehr_compliancedb.completiondates WHERE container = 'f1c05e2d-618d-103d-abc9-9814909bffcd') THEN
         UPDATE ehr_compliancedb.completiondates
-        SET container = 'CD170458-C55F-102F-9907-5107380A54BE'
-        WHERE container = 'F1C05E2D-618D-103D-ABC9-9814909BFFCD';
+        SET container = 'cd170458-c55f-102f-9907-5107380a54be'
+        WHERE container = 'f1c05e2d-618d-103d-abc9-9814909bffcd';
     END IF;
 
     RETURN 0;
