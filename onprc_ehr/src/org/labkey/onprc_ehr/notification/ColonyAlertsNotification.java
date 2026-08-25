@@ -234,6 +234,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         long count = ts.getRowCount();
         if (count > 0)
         {
+            //Changed the num of days by Kollil in Aug, 2026. Refer to tkt #15129
             msg.append("<b>WARNING: There are " + count + " flags for assignment aliases/candidates that have been active for more than 180 days.  This may indicate these flags should be ended.</b><br>\n");
             msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "flags", null) + "&" + filter.toQueryString("query") + "'>Click here to view them</a><br>\n\n");
             msg.append("<hr>\n\n");
