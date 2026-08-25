@@ -394,7 +394,7 @@ BEGIN
             END AS DOUBLE PRECISION
         ) AS MonthsUntilRenewal
     FROM ehr_compliancedb.employeeperunit a, ehr_compliancedb.requirementspercategory b
-    WHERE (a.unit = b.unit OR a.category = b.category)
+    WHERE (lower(a.unit) = lower(b.unit) OR lower(a.category) = lower(b.category))
       AND b.requirementname NOT IN (SELECT DISTINCT t.requirementname FROM ehr_compliancedb.employeerequirementexemptions t WHERE a.employeeid = t.employeeid AND b.requirementname = t.requirementname)
       AND a.employeeid IN (SELECT p.employeeid FROM ehr_compliancedb.employees p WHERE a.employeeid = p.employeeid AND p.enddate IS NULL)
       AND b.requirementname IN (SELECT q.requirementname FROM ehr_compliancedb.Requirements q WHERE q.requirementname = b.requirementname AND q.dateDisabled IS NULL)
@@ -470,7 +470,7 @@ BEGIN
     WHERE a.requirementname NOT IN (
         SELECT DISTINCT h.requirementname
         FROM ehr_compliancedb.employeeperunit k, ehr_compliancedb.requirementspercategory h
-        WHERE (k.unit = h.unit OR k.category = h.category) AND a.employeeid = k.employeeid
+        WHERE (lower(k.unit) = lower(h.unit) OR lower(k.category) = lower(h.category)) AND a.employeeid = k.employeeid
     )
       AND a.requirementname NOT IN (SELECT DISTINCT t.requirementname FROM ehr_compliancedb.employeerequirementexemptions t WHERE a.employeeid = t.employeeid AND a.requirementname = t.requirementname)
       AND a.employeeid IN (SELECT p.employeeid FROM ehr_compliancedb.employees p WHERE a.employeeid = p.employeeid AND p.enddate IS NULL)
@@ -610,7 +610,7 @@ BEGIN
       AND j.requirementname NOT IN (
           SELECT DISTINCT h.requirementname
           FROM ehr_compliancedb.employeeperunit k, ehr_compliancedb.requirementspercategory h
-          WHERE (k.unit = h.unit OR k.category = h.category) AND j.employeeid = k.employeeid
+          WHERE (lower(k.unit) = lower(h.unit) OR lower(k.category) = lower(h.category)) AND j.employeeid = k.employeeid
       )
       AND j.requirementname NOT IN (SELECT DISTINCT t.requirementname FROM ehr_compliancedb.employeerequirementexemptions t WHERE j.employeeid = t.employeeid AND j.requirementname = t.requirementname)
       AND j.requirementname NOT IN (SELECT DISTINCT k.requirementname FROM ehr_compliancedb.completiondates k WHERE k.employeeid = j.employeeid)
@@ -717,7 +717,7 @@ BEGIN
             END AS DOUBLE PRECISION
         ) AS MonthsUntilRenewal
     FROM ehr_compliancedb.employeeperunit a, ehr_compliancedb.requirementspercategory b
-    WHERE (a.unit = b.unit OR a.category = b.category)
+    WHERE (lower(a.unit) = lower(b.unit) OR lower(a.category) = lower(b.category))
       AND b.requirementname NOT IN (SELECT DISTINCT t.requirementname FROM ehr_compliancedb.employeerequirementexemptions t WHERE a.employeeid = t.employeeid AND b.requirementname = t.requirementname)
       AND a.employeeid IN (SELECT p.employeeid FROM ehr_compliancedb.employees p WHERE a.employeeid = p.employeeid AND p.enddate IS NULL)
       AND b.requirementname IN (SELECT q.requirementname FROM ehr_compliancedb.Requirements q WHERE q.requirementname = b.requirementname AND q.dateDisabled IS NULL)
@@ -793,7 +793,7 @@ BEGIN
     WHERE a.requirementname NOT IN (
         SELECT DISTINCT h.requirementname
         FROM ehr_compliancedb.employeeperunit k, ehr_compliancedb.requirementspercategory h
-        WHERE (k.unit = h.unit OR k.category = h.category) AND a.employeeid = k.employeeid
+        WHERE (lower(k.unit) = lower(h.unit) OR lower(k.category) = lower(h.category)) AND a.employeeid = k.employeeid
     )
       AND a.requirementname NOT IN (SELECT DISTINCT t.requirementname FROM ehr_compliancedb.employeerequirementexemptions t WHERE a.employeeid = t.employeeid AND a.requirementname = t.requirementname)
       AND a.employeeid IN (SELECT p.employeeid FROM ehr_compliancedb.employees p WHERE a.employeeid = p.employeeid AND p.enddate IS NULL)
@@ -933,7 +933,7 @@ BEGIN
       AND j.requirementname NOT IN (
           SELECT DISTINCT h.requirementname
           FROM ehr_compliancedb.employeeperunit k, ehr_compliancedb.requirementspercategory h
-          WHERE (k.unit = h.unit OR k.category = h.category) AND j.employeeid = k.employeeid
+          WHERE (lower(k.unit) = lower(h.unit) OR lower(k.category) = lower(h.category)) AND j.employeeid = k.employeeid
       )
       AND j.requirementname NOT IN (SELECT DISTINCT t.requirementname FROM ehr_compliancedb.employeerequirementexemptions t WHERE j.employeeid = t.employeeid AND j.requirementname = t.requirementname)
       AND j.requirementname NOT IN (SELECT DISTINCT k.requirementname FROM ehr_compliancedb.completiondates k WHERE k.employeeid = j.employeeid)
