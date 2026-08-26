@@ -40,7 +40,7 @@ public class GeneticsCoreModule extends ExtendedSimpleModule
     @Override
     public @Nullable Double getSchemaVersion()
     {
-        return 17.14;
+        return 17.15;
     }
 
     @Override
