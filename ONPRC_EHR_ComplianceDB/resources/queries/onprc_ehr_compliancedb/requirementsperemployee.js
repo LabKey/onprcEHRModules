@@ -4,12 +4,9 @@
 * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
 */
 
-var console = require("console");
 var LABKEY = require("labkey");
 
 var helper = org.labkey.ldk.query.LookupValidationHelper.create(LABKEY.Security.currentContainer.id, LABKEY.Security.currentUser.id, 'onprc_ehr_compliancedb', 'requirementsperemployee');
-
-console.log("** evaluating: " + this['javax.script.filename']);
 
 function beforeInsert(row, errors){
     beforeUpsert(row, errors);
