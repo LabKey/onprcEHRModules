@@ -1,0 +1,621 @@
+<<<<<<< HEAD
+
+EXEC core.fn_dropifexists 'TB_TestTemp_Historical', 'onprc_ehr', 'TABLE', NULL;
+GO
+
+EXEC core.fn_dropifexists 'Temp_Clinical_Observations_Historical', 'onprc_ehr', 'TABLE', NULL;
+GO
+EXEC core.fn_dropifexists 'Temp_Clinical_Observations_Historical_Master', 'onprc_ehr', 'TABLE', NULL;
+
+EXEC core.fn_dropifexists 'Observation_Historical_EHRTasks', 'onprc_ehr', 'TABLE', NULL;
+GO
+
+
+
+
+
+CREATE TABLE [onprc_ehr].[TB_TestTemp_Historical](
+  [rowid] [int] IDENTITY(100,1) NOT NULL,
+  animalid      varchar(200) NULL,
+  date          datetime NULL,
+  objectid      ENTITYID NOT NULL,
+  created       datetime NULL,
+  createdby     integer NULL,
+  performedby   varchar(200) NULL,
+  modifiedby    integer NULL,
+  date_posted    smalldatetime
+
+
+)
+GO
+
+
+CREATE TABLE [onprc_ehr].[Temp_Clinical_Observations_Historical](
+   [rowid] [int] IDENTITY(100,1) NOT NULL,
+   Id              varchar(200) NULL,
+   date            smalldatetime NULL,
+   category        varchar(500) NULL,
+   area            varchar(500) NULL,
+   observation     varchar(500) NULL,
+   createdby       integer NULL,
+   performedby     varchar(500) NULL,
+   taskid          varchar(4000) NULL,
+   qcstate         integer NULL,
+   modifiedby      integer NULL
+
+
+)
+GO
+
+CREATE TABLE [onprc_ehr].[Temp_Clinical_Observations_Historical_Master](
+     [rowid] [int] IDENTITY(100,1) NOT NULL,
+     searchid        integer NULL,
+     Id              varchar(200) NULL,
+     date            smalldatetime NULL,
+     category        varchar(500) NULL,
+     area            varchar(500) NULL,
+     observation     varchar(500) NULL,
+     createdby       integer NULL,
+     performedby     varchar(500) NULL,
+     taskid          varchar(4000) NULL,
+     qcstate         smallint NULL,
+     modifiedby      smalldatetime NULL,
+     Posted_date     smalldatetime
+
+)
+GO
+
+CREATE TABLE [onprc_ehr].[Observation_Historical_EHRTasks](
+    [rowid] [int] IDENTITY(100,1) NOT NULL,
+    taskid          varchar(4000) NULL,
+    description     varchar(500)NULL,
+    title           varchar(500)NULL,
+    qcstate         smallint NULL,
+    formtype        varchar(500) NULL,
+    category        varchar(500) NULL,
+    assignedto      smallint NULL,
+    createdby       smallint NULL,
+    modifiedby      smallint NULL
+
+
+)
+GO
+
+
+EXEC core.fn_dropifexists 'p_Create_TB_Observation_Historical_records', 'onprc_ehr', 'PROCEDURE', NULL;
+GO
+
+
+/*
+**
+** 	Created by
+**      R. Blasa   7-31-2026      A  Program Process that reviews all TB Test Encounter entries on a current date, and creates a
+**                                 new TB Test Clinical Observation record based on
+**                                 having the same monkey id, date, and then to be assigned to a Data Admin for reviews.
+**
+
+**
+**
+*/
+
+CREATE Procedure onprc_ehr.p_Create_TB_Observation_Historical_records
+                       @Start_Date  smalldatetime,
+                       @End_Date    smalldatetime
+
+
+
+AS
+
+
+
+DECLARE
+    @SearchKey              Int,
+    @TempsearchKey	        Int,
+    @TaskId		            varchar(4000),
+    @AnimalID               varchar(100),
+    @date                   smalldatetime,
+    @createdby              integer,
+    @performedby            varchar(500),
+    @modifiedby             integer,
+    @RunID                  varchar(4000),
+    @FirstFlag              integer,
+    @TestDate               smalldatetime
+
+
+
+
+BEGIN
+
+
+    ---- Reset temp table
+
+    Truncate table onprc_ehr.TB_TestTemp_Historical
+
+    If @@Error <> 0
+        GoTo Err_Proc
+
+     Truncate table [onprc_ehr].[Temp_Clinical_Observations_Historical]
+
+            If @@Error <> 0
+                GoTo Err_Proc
+
+    Truncate table  [onprc_ehr].[Observation_Historical_EHRTasks]
+
+            If @@Error <> 0
+                GoTo Err_Proc
+
+    --- Generate a list TB test monkeys                        )
+
+    Insert into onprc_ehr.TB_TestTemp_Historical
+
+    select
+        a.participantid,
+        a.date,
+        a.objectid,
+        a.created,
+        a.createdBy,
+        a.performedby,
+        a.modifiedby,
+        getdate()      -----date processed
+
+
+    from studydataset.c6d214_encounters  a
+      Where a.type in ('Procedure','Surgery')
+      And a.qcstate = 18
+      And a.procedureid = 802         -----'TB Test Intradermal'
+      And (a.modified >= @Start_Date And a.modified < dateadd(day, 1, @End_Date) )
+      And a.participantid in ( select k.participantid from studydataset.c6d203_demographics k
+                               where k.calculated_status = 'alive')
+      AND a.participantid not in (select j.participantid from studydataset.c6d171_clinical_observations j
+                                 Where j.participantid  = a.participantid
+                                 And j.date  = dateadd(day,3,a.date)
+                                 And j.category = 'TB TST Score (72 hr)'
+                                 And j.qcstate = 18  )
+
+    order by a.participantid, a.date desc
+
+
+    If @@Error <> 0
+        GoTo Err_Proc
+
+    ---- When there are no records to process, exit immediately from the program.
+
+    If (Select count(*) from onprc_ehr.TB_TestTemp_Historical) = 0
+        BEGIN
+            GOTO No_Records
+        END
+
+
+    ---- Reset temp variables
+
+    Set @SearchKey = 0
+    Set @TempSearchKey = 0
+    Set @Date = NULL
+    Set @modifiedby = NULL
+    Set @createdby =NULL
+    Set @performedby = NULL
+    Set @TaskID = NULL
+    Set @Animalid = Null
+    Set @RunID   = Null
+    Set @FirstFlag = 0
+
+
+
+    ----- extract initial row id
+
+    Select Top 1 @Searchkey = rowid  from onprc_ehr.TB_TestTemp_Historical
+    Order by rowid
+
+
+
+    ----Create a single task for each daily process
+
+
+    While @TempSearchKey < @SearchKey
+        BEGIN
+
+            -----Begin entry Tb observation process
+
+            Select @Animalid =animalid, @date = date, @modifiedby=modifiedby, @createdby =createdby,@performedby= performedby
+            from onprc_ehr.TB_TestTemp_Historical Where rowid = @Searchkey
+
+
+
+
+            If not exists (select * from studydataset.c6d171_clinical_observations j Where j.participantid  = @AnimalID
+                And j.date  = dateadd(day,3,@date)
+                And j.category = 'TB TST Score (72 hr)'  )
+
+
+                BEGIN
+
+                If @FirstFlag != 1
+                BEGIN
+                     ---- created a new task id
+                 Set @TaskID = NEWID()
+
+                     ---- Create Clinical Observation entries
+                 Insert into onprc_ehr.Observation_Historical_EHRTasks
+                   (
+                       taskid,
+                       description,
+                       title,
+                       qcstate,
+                       formType,
+                       category,
+                       assignedto,
+                       createdby,
+                       modifiedby
+
+                   )
+
+                   Values  (
+
+                       @TaskID,
+                       'TB TST Scores ' + cast(@Date as varchar(50)) ,   	        ------ Title  consist of animal id and Clinical procedure date
+                       'TB TST Scores',
+                       20,                             --- Qc State (In Progress)
+                       'TB TST Scores',                ------ FormType
+                       'task',                      -----  category,
+                       1822,                        ------- Assigned To Data Admins
+                       1042, 				        -------- Created By IS
+                       1042				           ----- Modified by IS
+
+                           )
+
+                         If @@Error <> 0
+                                  GoTo Err_Proc
+
+                     ---Set Task insert process only once per single process
+                         Set @FirstFlag = 1
+
+                 END ---(@FirstFlag)
+
+
+                    ----- Initialize data entries
+                    Set @date = dateadd(day, 3,@date)  ----- Add three days from TB Test date
+
+
+
+                    --- Create a Clinical Observation Record
+
+              Insert into Temp_Clinical_Observations_Historical
+                    (
+                        Id,
+                        date,
+                        category,
+                        area,
+                        observation,
+                        createdby,
+                        performedby,
+                        taskid,
+                        qcstate,
+                        modifiedby
+
+
+                    )
+                    values (
+                       @animalid,
+                       @date,
+                       'TB TST Score (72 hr)',
+                       'Right Eyelid',
+                       'Grade: Negative',
+                       1042,                       -----created by IS
+                       @performedby,
+                       @TaskID,
+                       20 ,                                     ---- In Progress QCState
+                       1042                         -----modified by IS
+
+
+                           )
+
+                    If @@Error <> 0
+                        GoTo Err_Proc
+
+
+                END --(If not exist)
+
+            ----- Proceed and fetch the next record
+
+            Set @TempSearchKey = @SearchKey
+
+            Select Top 1 @SearchKey = rowid from onprc_ehr.TB_TestTemp
+            Where rowid > @TempSearchKey
+            Order by rowid
+
+
+        END ----   While @TempSearchKey
+
+
+    ----- Create a master copy of the completed transaction
+
+    Insert into onprc_ehr.Temp_Clinical_Observations_Master
+    Select *, getdate()
+             from onprc_ehr.Temp_Clinical_Observations_Historical
+
+    If @@Error <> 0
+        GoTo Err_Proc
+
+
+
+    No_Records:
+
+    RETURN 0
+
+
+    Err_Proc:
+    -------Error Generated, program processed stopped
+    RETURN 1
+
+
+END
+
+GO
+
+
+
+
+
+
+
+
+
+
+
+=======
+SET
+QUOTED_IDENTIFIER ON;
+GO
+
+ALTER PROCEDURE
+[audit].[ArchiveAuditTables] (
+    @RetentionMonths INT OUTPUT
+)
+AS
+BEGIN
+    SET
+NOCOUNT ON;
+
+    -- Declare variables
+    DECLARE
+@SourceDB NVARCHAR(128) = DB_NAME(),
+            @DestDB NVARCHAR(128) = 'labkey_audit',
+            @SchemaName NVARCHAR(128) = 'audit';
+
+    SET
+@RetentionMonths = CASE WHEN @RetentionMonths - 6 > 12 THEN @RetentionMonths - 6 ELSE 12
+END;
+    PRINT
+N'Archiving audit logs older than ' + CAST(@RetentionMonths AS NVARCHAR(3)) + N' months old'
+
+    DECLARE
+@CutoffDate DATETIME = DATEADD(MONTH, -@RetentionMonths, GETDATE());
+
+
+    -- Validate if source database exists
+    IF
+NOT EXISTS (SELECT 1 FROM sys.databases WHERE NAME = @SourceDB)
+BEGIN
+        RAISERROR
+('Source database "%s" does not exist.', 16, 1, @SourceDB);
+        RETURN;
+END
+
+    -- Validate if destination database exists
+    IF
+NOT EXISTS (SELECT 1 FROM sys.databases WHERE NAME = @DestDB)
+BEGIN
+        RAISERROR
+('Destination database "%s" does not exist.', 16, 1, @DestDB);
+        RETURN;
+END
+
+    -- Create ArchiveAuditLog table if not exists (useful for testing)
+    DECLARE
+@CreateLogTableSQL NVARCHAR(MAX) = '
+    IF NOT EXISTS (SELECT 1 FROM ' + QUOTENAME(@DestDB) + '.INFORMATION_SCHEMA.TABLES
+                   WHERE TABLE_SCHEMA = ''dbo'' AND TABLE_NAME = ''ArchiveAuditLog'')
+    BEGIN
+        EXEC(''USE ' + QUOTENAME(@DestDB) + ';
+        CREATE TABLE dbo.ArchiveAuditLog (
+            LogID INT IDENTITY(1,1) NOT NULL,
+            TableName NVARCHAR(128) NOT NULL,
+            Operation NVARCHAR(50) NOT NULL,
+            StartTime DATETIME NOT NULL,
+            EndTime DATETIME NULL,
+            Status NVARCHAR(50) NULL,
+            RecordsProcessed INT NULL,
+            ErrorMessage NVARCHAR(MAX) NULL,
+            RetentionMonths INT NULL,
+            CONSTRAINT PK_ArchiveAuditLog PRIMARY KEY (LogID)
+        )'');
+    END';
+
+EXEC sp_executesql @CreateLogTableSQL;
+
+    -- Create RetentionMonths column in ArchiveAuditLog table if not exist
+    DECLARE
+@CreateRetentionColumnSQL NVARCHAR(MAX) = '
+    IF NOT EXISTS (SELECT 1 FROM ' + QUOTENAME(@DestDB) + '.INFORMATION_SCHEMA.COLUMNS
+               WHERE TABLE_SCHEMA = ''dbo''
+                 AND TABLE_NAME = ''ArchiveAuditLog''
+                 AND COLUMN_NAME = ''RetentionMonths'')
+    BEGIN
+        EXEC(''USE ' + QUOTENAME(@DestDB) + ';
+        ALTER TABLE dbo.ArchiveAuditLog
+            ADD RetentionMonths INT NULL
+        '');
+    END';
+
+EXEC sp_executesql @CreateRetentionColumnSQL;
+
+    -- Validate if source schema exists
+    DECLARE
+@SourceSchemaCheck NVARCHAR(MAX) = '
+        IF NOT EXISTS (SELECT 1 FROM ' + QUOTENAME(@SourceDB) + '.sys.schemas WHERE name = ''' + @SchemaName + ''')
+        BEGIN
+            RAISERROR(''Source schema "%s" does not exist'', 16, 1, ''' + @SchemaName + ''');
+        END';
+
+EXEC sp_executesql @SourceSchemaCheck;
+
+    -- Create destination schema if not exists
+    DECLARE
+@CreateDestSchemaSQL NVARCHAR(MAX) = '
+        IF NOT EXISTS (SELECT 1 FROM ' + QUOTENAME(@DestDB) + '.sys.schemas WHERE name = ''' + @SchemaName + ''')
+        BEGIN
+            EXEC ' + QUOTENAME(@DestDB) + '.sys.sp_executesql N''CREATE SCHEMA ' + QUOTENAME(@SchemaName) + ''';
+        END';
+
+EXEC sp_executesql @CreateDestSchemaSQL;
+
+    -- Get list of tables to process
+CREATE TABLE #TableList
+(
+    TableName NVARCHAR(128)
+);
+
+DECLARE
+@GetTablesSQL NVARCHAR(MAX) = '
+        INSERT INTO #TableList
+        SELECT TABLE_NAME
+        FROM ' + QUOTENAME(@SourceDB) + '.INFORMATION_SCHEMA.TABLES
+        WHERE TABLE_SCHEMA = ''' + @SchemaName + '''
+          AND TABLE_NAME NOT IN (''c3d330_userauditdomain'', ''c3d317_groupauditdomain'')';
+
+EXEC sp_executesql @GetTablesSQL;
+
+    DECLARE
+@CurrentTable NVARCHAR(128);
+    DECLARE
+TableCursor CURSOR LOCAL FAST_FORWARD FOR
+SELECT TableName FROM #TableList;
+
+OPEN TableCursor;
+FETCH NEXT FROM TableCursor INTO @CurrentTable;
+
+WHILE
+@@FETCH_STATUS = 0
+BEGIN
+        DECLARE
+@LogID INT;
+
+        -- Log the start of archiving for current table
+        DECLARE
+@InsertLogSQL NVARCHAR(MAX) = '
+            USE ' + QUOTENAME(@DestDB) + ';
+            INSERT INTO dbo.ArchiveAuditLog
+                (TableName, Operation, StartTime, Status, RetentionMonths)
+            VALUES (''' + @CurrentTable + ''', ''Archive'', GETDATE(), ''Started'', ' + CAST(@RetentionMonths AS NVARCHAR(10)) + ');
+            SELECT @LogIDOUT = SCOPE_IDENTITY();';
+
+EXEC sp_executesql @InsertLogSQL, N'@LogIDOUT INT OUTPUT', @LogIDOUT = @LogID OUTPUT;
+
+BEGIN TRY
+            DECLARE
+@FullSourceTable NVARCHAR(512) = QUOTENAME(@SourceDB) + '.' + QUOTENAME(@SchemaName) + '.' + QUOTENAME(@CurrentTable),
+                    @FullDestTable NVARCHAR(512) = QUOTENAME(@DestDB) + '.' + QUOTENAME(@SchemaName) + '.' + QUOTENAME(@CurrentTable),
+                    @ColumnList NVARCHAR(MAX) = '';
+
+            -- Create destination table if it doesn't exist
+            DECLARE
+@CheckTableSQL NVARCHAR(MAX) = '
+                IF NOT EXISTS (SELECT 1 FROM ' + QUOTENAME(@DestDB) + '.INFORMATION_SCHEMA.TABLES
+                    WHERE TABLE_SCHEMA = ''' + @SchemaName + '''
+                    AND TABLE_NAME = ''' + @CurrentTable + ''')
+                BEGIN
+                    SELECT * INTO ' + @FullDestTable + '
+                    FROM ' + @FullSourceTable + '
+                    WHERE 1 = 0;
+                END';
+
+EXEC sp_executesql @CheckTableSQL;
+
+            -- Get column list (excluding identity columns)
+CREATE TABLE #Columns
+(
+    ColumnName NVARCHAR(128),
+    IsIdentity BIT
+);
+
+DECLARE
+@GetColumnsSQL NVARCHAR(MAX) = '
+                INSERT INTO #Columns
+                SELECT c.name AS ColumnName,
+                COLUMNPROPERTY(OBJECT_ID(''' + @FullSourceTable + '''), c.name, ''IsIdentity'') AS IsIdentity
+                FROM ' + QUOTENAME(@SourceDB) + '.sys.columns c
+                JOIN ' + QUOTENAME(@SourceDB) + '.sys.tables t ON c.object_id = t.object_id
+                JOIN ' + QUOTENAME(@SourceDB) + '.sys.schemas s ON t.schema_id = s.schema_id
+                WHERE s.name = ''' + @SchemaName + '''
+                AND t.name = ''' + @CurrentTable + '''';
+
+EXEC sp_executesql @GetColumnsSQL;
+
+SELECT @ColumnList = STRING_AGG(QUOTENAME(ColumnName), ', ')
+FROM #Columns
+WHERE IsIdentity = 0;
+
+DROP TABLE #Columns;
+
+-- Archive data
+BEGIN
+TRANSACTION;
+
+                DECLARE
+@ArchiveSQL NVARCHAR(MAX) = '
+                    INSERT INTO ' + @FullDestTable + ' (' + @ColumnList + ')
+                    SELECT ' + @ColumnList + '
+                    FROM ' + @FullSourceTable + '
+                    WHERE Created < @CutoffDate;
+
+                    DECLARE @RecordsInserted INT = @@ROWCOUNT;
+
+                    DELETE FROM ' + @FullSourceTable + '
+                    WHERE Created < @CutoffDate;
+
+                    DECLARE @RecordsDeleted INT = @@ROWCOUNT;
+
+                    UPDATE ' + QUOTENAME(@DestDB) + '.dbo.ArchiveAuditLog
+                    SET RecordsProcessed = @RecordsInserted,
+                        EndTime = GETDATE(),
+                        Status = ''Success''
+                    WHERE LogID = @LogID;';
+
+EXEC sp_executesql @ArchiveSQL,
+                    N'@CutoffDate DATETIME, @LogID INT',
+                    @CutoffDate = @CutoffDate,
+                    @LogID = @LogID;
+
+COMMIT TRANSACTION;
+END TRY
+BEGIN CATCH
+IF @@TRANCOUNT > 0
+                ROLLBACK TRANSACTION;
+
+                DECLARE
+@ErrorMessage NVARCHAR(4000) = 'Error archiving ' + @CurrentTable + ': ' + ERROR_MESSAGE();
+
+                DECLARE
+@UpdateLogSQL NVARCHAR(MAX) = '
+                    UPDATE ' + QUOTENAME(@DestDB) + '.dbo.ArchiveAuditLog
+                    SET EndTime = GETDATE(),
+                        Status = ''Error'',
+                        ErrorMessage = @ErrorMessage
+                    WHERE LogID = ' + CAST(@LogID AS NVARCHAR(10));
+
+EXEC sp_executesql @UpdateLogSQL, N'@ErrorMessage NVARCHAR(4000)', @ErrorMessage = @ErrorMessage;
+
+                PRINT
+@ErrorMessage;
+END CATCH
+
+FETCH NEXT FROM TableCursor INTO @CurrentTable;
+END
+
+CLOSE TableCursor;
+DEALLOCATE
+TableCursor;
+
+DROP TABLE #TableList;
+END
+>>>>>>> release26.3-SNAPSHOT
