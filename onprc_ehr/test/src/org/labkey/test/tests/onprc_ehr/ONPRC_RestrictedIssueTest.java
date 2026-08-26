@@ -15,7 +15,6 @@ import org.labkey.test.pages.issues.UpdatePage;
 import org.labkey.test.pages.search.SearchResultsPage;
 import org.labkey.test.util.IssuesHelper;
 import org.labkey.test.util.SearchHelper;
-import org.labkey.test.util.SqlserverOnlyTest;
 import org.labkey.test.util.TestUser;
 
 import java.util.Arrays;
@@ -26,7 +25,7 @@ import static org.labkey.test.util.PermissionsHelper.EDITOR_ROLE;
 import static org.labkey.test.util.PermissionsHelper.FOLDER_ADMIN_ROLE;
 
 @Category({EHR.class, ONPRC.class})
-public class ONPRC_RestrictedIssueTest extends BaseWebDriverTest implements SqlserverOnlyTest
+public class ONPRC_RestrictedIssueTest extends BaseWebDriverTest
 {
     private final IssuesHelper _issuesHelper;
 
