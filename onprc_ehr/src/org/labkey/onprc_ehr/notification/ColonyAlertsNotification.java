@@ -225,7 +225,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
     protected void candidatesForLongTime(final Container c, User u, final StringBuilder msg)
     {
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("isActive"), true, CompareType.EQUAL);
-        filter.addCondition(FieldKey.fromString("daysElapsed"), 30, CompareType.GTE);
+        filter.addCondition(FieldKey.fromString("daysElapsed"), 180, CompareType.GTE);
         filter.addCondition(FieldKey.fromString("flag/category"), "Assign Alias", CompareType.EQUAL);
         filter.addCondition(FieldKey.fromString("flag/value"), ONPRC_EHRManager.AUC_RESERVED, CompareType.NEQ_OR_NULL);
 
@@ -233,7 +233,8 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         long count = ts.getRowCount();
         if (count > 0)
         {
-            msg.append("<b>WARNING: There are " + count + " flags for assignment aliases/candidates that have been active for more than 30 days.  This may indicate these flags should be ended.</b><br>\n");
+            //Changed the num of days by Kollil in Aug, 2026. Refer to tkt #15129
+            msg.append("<b>WARNING: There are " + count + " flags for assignment aliases/candidates that have been active for more than 180 days.  This may indicate these flags should be ended.</b><br>\n");
             msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "flags", null) + "&" + filter.toQueryString("query") + "'>Click here to view them</a><br>\n\n");
             msg.append("<hr>\n\n");
         }
