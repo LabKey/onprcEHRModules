@@ -39,10 +39,6 @@ public class LabworkRequestFormType extends RequestForm
     {
         super(ctx, owner, NAME, LABEL, "Requests", Arrays.asList(
                 new RequestFormSection(),
-
-               //Modified: 1-14-2019  R. Blasa No longer need Merge web link
-//                new LabworkRequestInstructionsFormSection(),
-
                 new AnimalDetailsFormSection(),
                 new ClinpathRunsFormSection(true)
         ));
@@ -55,7 +51,6 @@ public class LabworkRequestFormType extends RequestForm
             //Added 2-8-2016 Blasa
         addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/model/sources/labworkPanel.js"));
 
-        addClientDependency(ClientDependency.supplierFromModuleName("MergeSync"));
         addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/panel/LabworkRequestDataEntryPanel.js"));
         setJavascriptClass("ONPRC_EHR.panel.LabworkRequestDataEntryPanel");
     }
