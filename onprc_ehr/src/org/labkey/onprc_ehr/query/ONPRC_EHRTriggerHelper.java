@@ -1274,8 +1274,8 @@ public class ONPRC_EHRTriggerHelper
     //Modified: 10-13-2016 R.Blasa  to include assign Arrival date
     public void doBirthTriggers(String id, Date date, String dam, Date Arrival_Date, String birthCondition, String species, boolean isBecomingPublic) throws Exception
     {
-        //is the infant is dead, terminate the assignments
-        Date enddate = isBirthAlive(birthCondition) ? null : date;
+
+        Date enddate =  null ;
 
 
         //also check for a pre-existing death record:
