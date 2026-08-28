@@ -15,6 +15,7 @@
  */
 package org.labkey.onprc_ehr.notification;
 
+import com.google.gwt.user.cellview.client.AbstractCellTable;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
 import org.labkey.api.data.Aggregate;
@@ -225,7 +226,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
     protected void candidatesForLongTime(final Container c, User u, final StringBuilder msg)
     {
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("isActive"), true, CompareType.EQUAL);
-        filter.addCondition(FieldKey.fromString("daysElapsed"), 30, CompareType.GTE);
+        filter.addCondition(FieldKey.fromString("daysElapsed"), 180, CompareType.GTE);
         filter.addCondition(FieldKey.fromString("flag/category"), "Assign Alias", CompareType.EQUAL);
         filter.addCondition(FieldKey.fromString("flag/value"), ONPRC_EHRManager.AUC_RESERVED, CompareType.NEQ_OR_NULL);
 
@@ -233,7 +234,8 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
         long count = ts.getRowCount();
         if (count > 0)
         {
-            msg.append("<b>WARNING: There are " + count + " flags for assignment aliases/candidates that have been active for more than 30 days.  This may indicate these flags should be ended.</b><br>\n");
+            //Changed the num of days by Kollil in Aug, 2026. Refer to tkt #15129
+            msg.append("<b>WARNING: There are " + count + " flags for assignment aliases/candidates that have been active for more than 180 days.  This may indicate these flags should be ended.</b><br>\n");
             msg.append("<p><a href='" + getExecuteQueryUrl(c, "study", "flags", null) + "&" + filter.toQueryString("query") + "'>Click here to view them</a><br>\n\n");
             msg.append("<hr>\n\n");
         }
@@ -909,7 +911,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
     protected void incompleteBirthRecords(final Container c, User u, final StringBuilder msg)
     {
         SimpleFilter filter = new SimpleFilter(new SimpleFilter.OrClause(
-                //new CompareType.CompareClause(FieldKey.fromString("species"), CompareType.ISBLANK, null),
+                new CompareType.CompareClause(FieldKey.fromString("Id/demographics/gender"), CompareType.EQUAL, "p"),
                 new CompareType.CompareClause(FieldKey.fromString("Id/demographics/gender"), CompareType.ISBLANK, null),
                 new CompareType.CompareClause(FieldKey.fromString("Id/demographics/species"), CompareType.ISBLANK, null),
                 new CompareType.CompareClause(FieldKey.fromString("Id/demographics/geographic_origin"), CompareType.ISBLANK, null)
@@ -942,7 +944,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
                 Results rs = new ResultsImpl(object, cols);
                 String url = getExecuteQueryUrl(c, "study", "demographics", null);
                 url = url.replaceAll("executeQuery.view", "updateQuery.view");
-                url = url.replaceAll("/query/", "/ehr/");
+                url = url.replaceAll("/query-", "/ehr-");
 
                 msg.append("<tr>");
                 msg.append("<td><a href=\"" + url + "&query.Id~eq=" + rs.getString("Id") + "\">" + rs.getString("Id") + "</a></td>");
@@ -952,7 +954,16 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
                 msg.append("<td>" + (rs.getString("date") == null ? "Unknown" : rs.getDate("date")) + "</td>");
                 msg.append("<td>" + (rs.getString("remark") == null ? " " : rs.getString("remark")) + "</td>");
 
-                msg.append("<td>" + (rs.getString(FieldKey.fromString("Id/demographics/gender/meaning")) == null ? "MISSING" : rs.getString(FieldKey.fromString("Id/demographics/gender/meaning"))) + "</td>");
+                //Added: 6-30-2026  R. Blasa
+                if (rs.getString(FieldKey.fromString("Id/demographics/gender/meaning")) == "Pending")
+                {
+                    msg.append("<td>" +  rs.getString(FieldKey.fromString("Id/demographics/gender/meaning")) + "</td>");
+                }
+                    else
+                {
+                    msg.append("<td>" + (rs.getString(FieldKey.fromString("Id/demographics/gender/meaning")) == null ? "MISSING" : rs.getString(FieldKey.fromString("Id/demographics/gender/meaning"))) + "</td>");
+                }
+
                 msg.append("<td>" + (rs.getString(FieldKey.fromString("Id/demographics/species")) == null ? "MISSING" : rs.getString(FieldKey.fromString("Id/demographics/species"))) + "</td>");
                 msg.append("<td>" + (rs.getString(FieldKey.fromString("Id/demographics/geographic_origin")) == null ? "MISSING" : rs.getString(FieldKey.fromString("Id/demographics/geographic_origin"))) + "</td>");
                 msg.append("</tr>");

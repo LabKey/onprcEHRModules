@@ -49,7 +49,6 @@ import org.labkey.onprc_billing.dataentry.ChargesVirologyCoreFormType;
 import org.labkey.onprc_billing.dataentry.ChargesARTCoreFormType;
 import org.labkey.onprc_billing.dataentry.ReversalFormType;
 import org.labkey.onprc_billing.notification.BillingValidationNotification;
-import org.labkey.onprc_billing.notification.DCMFinanceNotification;
 import org.labkey.onprc_billing.notification.FinanceNotification;
 import org.labkey.onprc_billing.pipeline.BillingPipelineProvider;
 import org.labkey.onprc_billing.query.BillingAuditProvider;
@@ -83,13 +82,7 @@ public class ONPRC_BillingModule extends ExtendedSimpleModule
     @Override
     public @Nullable Double getSchemaVersion()
     {
-        return 25.006;
-    }
-
-    @Override
-    public boolean hasScripts()
-    {
-        return true;
+        return 26.000;
     }
 
     @Override
@@ -119,7 +112,6 @@ public class ONPRC_BillingModule extends ExtendedSimpleModule
         PipelineService.get().registerPipelineProvider(new BillingPipelineProvider(this));
 
         NotificationService.get().registerNotification(new FinanceNotification());
-        NotificationService.get().registerNotification(new DCMFinanceNotification());
         NotificationService.get().registerNotification(new BillingValidationNotification());
 
         EHRService.get().registerTableCustomizer(this, ONPRC_BillingCustomizer.class);
@@ -170,6 +162,13 @@ public class ONPRC_BillingModule extends ExtendedSimpleModule
     public Set<String> getSchemaNames()
     {
         return Collections.singleton(ONPRC_BillingSchema.NAME);
+    }
+
+    @Override
+    @NotNull
+    public Set<Class<?>> getIntegrationTests()
+    {
+        return Collections.singleton(ONPRC_BillingManager.TestCase.class);
     }
 
     @Override
