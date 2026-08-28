@@ -106,13 +106,14 @@ public class AdminNotifications extends ColonyAlertsNotification
                     " <br>2. E-Y7735 (Diet - Weekly Multivitamin)" +
                     " <br>3. E-X0500 (Diet, L-Phyto (Low-phytoestrogen)) " +
                     " <br>4. E-Y9750 (Diet, 5047 High Protein, Jumbo) " +
-                    " <br>5. E-X1380 (Diet Daily (Non-standard), 5LOP (TAD)) <hr>");
+                    " <br>5. E-X1380 (Diet Daily (Non-standard), 5LOP (TAD)) " +
+                    " <br>6. E-YYY85 (5000 Chow) <hr>");
         }
         else if (count > 0)
         {
             //Display the report link on the notification page
-            msg.append("<br><b>" + count + " treatment order(s) found with missing end dates</b><br><br>");
-            msg.append("<p><a href='" + getExecuteQueryUrl(c, "onprc_ehr", "MedsEndDateAlert", null) + "'>Click here to view the treatments</a></p>\n");
+            msg.append("<br>" + count + " treatment order(s) found with missing end dates. ");
+            msg.append("<a href='" + getExecuteQueryUrl(c, "onprc_ehr", "MedsEndDateAlert", null) + "'>Click here to view the Medications/Diets in a grid view</a>\n");
             msg.append("<hr>");
 
             //Display the report in the email
@@ -134,40 +135,41 @@ public class AdminNotifications extends ColonyAlertsNotification
             columns.add(FieldKey.fromString("modifiedby"));
             columns.add(FieldKey.fromString("modified"));
             columns.add(FieldKey.fromString("category"));
+            columns.add(FieldKey.fromString("qcstate"));
             columns.add(FieldKey.fromString("taskid"));
 
             final Map<FieldKey, ColumnInfo> colMap = QueryService.get().getColumns(ti, columns);
             TableSelector ts2 = new TableSelector(ti, colMap.values(), null, new Sort("date"));
 
             // Table header
-            msg.append("<table border=1 style='border-collapse: collapse;'>");
-            msg.append("<tr>");
-            msg.append("<br><table border=1 style='border-collapse: collapse;'>");
+
+            msg.append("<table border=1 style='border-collapse: collapse; border: 1px solid black;'>");
             msg.append("<tr bgcolor = " + '"' + "#00FF7F" + '"' + "style='font-weight: bold;'>");
-            msg.append("<td> Id </td><td> Begin Date </td><td> End Date </td><td> Frequency </td><td> Times </td><td> Charge To </td><td> Treatment </td><td> Volume </td><td> Concentration </td><td> Amount </td><td> Route </td><td> Ordered By </td><td> Remark </td><td> Reason </td><td> Modified By </td><td> Modified Date </td><td> Category </td><td> Task Id </td></tr>");
+            msg.append("<td> Id </td><td> Begin Date </td><td> End Date </td><td> Frequency </td><td> Times </td><td> Charge To </td><td> Treatment </td><td> Volume </td><td> Concentration </td><td> Amount </td><td> Route </td><td> Ordered By </td><td> Remark </td><td> Reason </td><td> Modified By </td><td> Modified Date </td><td> Category </td><td> QCState </td><td> Task Id </td></tr>");
 
             ts2.forEach(object -> {
                 Results rs = new ResultsImpl(object, colMap);
                 String url = getParticipantURL(c, rs.getString("Id"));
 
-                msg.append("<td> <a href='" + url + "'>" + PageFlowUtil.filter(rs.getString("Id")) + "</a></td>\n");
-                msg.append("<td>" + PageFlowUtil.filter(rs.getString("date")) + "</td>");
-                msg.append("<td>" + PageFlowUtil.filter(rs.getString("enddate")) + "</td>");
-                msg.append("<td>" + PageFlowUtil.filter(rs.getString("frequency")) + "</td>");
-                msg.append("<td>" + PageFlowUtil.filter(rs.getString("treatmentTimes")) + "</td>");
-                msg.append("<td>" + PageFlowUtil.filter(rs.getString("project")) + "</td>");
-                msg.append("<td>" + PageFlowUtil.filter(rs.getString("code")) + "</td>");
-                msg.append("<td>" + PageFlowUtil.filter(rs.getString("volumewithunits")) + "</td>");
-                msg.append("<td>" + PageFlowUtil.filter(rs.getString("concentrationwithunits")) + "</td>");
-                msg.append("<td>" + PageFlowUtil.filter(rs.getString("amountwithunits")) + "</td>");
-                msg.append("<td>" + PageFlowUtil.filter(rs.getString("route")) + "</td>");
-                msg.append("<td>" + PageFlowUtil.filter(rs.getString("performedby")) + "</td>");
-                msg.append("<td>" + PageFlowUtil.filter(rs.getString("remark")) + "</td>");
-                msg.append("<td>" + PageFlowUtil.filter(rs.getString("reason")) + "</td>");
-                msg.append("<td>" + PageFlowUtil.filter(rs.getString("modifiedby")) + "</td>");
-                msg.append("<td>" + PageFlowUtil.filter(rs.getString("modified")) + "</td>");
-                msg.append("<td>" + PageFlowUtil.filter(rs.getString("category")) + "</td>");
-                msg.append("<td>" + PageFlowUtil.filter(rs.getString("taskid")) + "</td>");
+                msg.append("<td style='border: 1px solid black;'><b> <a href='" + url + "'>" + PageFlowUtil.filter(rs.getString("Id")) + "</a> </b></td>\n");
+                msg.append("<td style='border: 1px solid black;'>" + PageFlowUtil.filter(rs.getString("date")) + "</td>");
+                msg.append("<td style='border: 1px solid black;'>" + PageFlowUtil.filter(rs.getString("enddate")) + "</td>");
+                msg.append("<td style='border: 1px solid black;'>" + PageFlowUtil.filter(rs.getString("frequency")) + "</td>");
+                msg.append("<td style='border: 1px solid black;'>" + PageFlowUtil.filter(rs.getString("treatmentTimes")) + "</td>");
+                msg.append("<td style='border: 1px solid black;'>" + PageFlowUtil.filter(rs.getString("project")) + "</td>");
+                msg.append("<td style='border: 1px solid black;'>" + PageFlowUtil.filter(rs.getString("code")) + "</td>");
+                msg.append("<td style='border: 1px solid black;'>" + PageFlowUtil.filter(rs.getString("volumewithunits")) + "</td>");
+                msg.append("<td style='border: 1px solid black;'>" + PageFlowUtil.filter(rs.getString("concentrationwithunits")) + "</td>");
+                msg.append("<td style='border: 1px solid black;'>" + PageFlowUtil.filter(rs.getString("amountwithunits")) + "</td>");
+                msg.append("<td style='border: 1px solid black;'>" + PageFlowUtil.filter(rs.getString("route")) + "</td>");
+                msg.append("<td style='border: 1px solid black;'>" + PageFlowUtil.filter(rs.getString("performedby")) + "</td>");
+                msg.append("<td style='border: 1px solid black;'>" + PageFlowUtil.filter(rs.getString("remark")) + "</td>");
+                msg.append("<td style='border: 1px solid black;'>" + PageFlowUtil.filter(rs.getString("reason")) + "</td>");
+                msg.append("<td style='border: 1px solid black;'>" + PageFlowUtil.filter(rs.getString("modifiedby")) + "</td>");
+                msg.append("<td style='border: 1px solid black;'>" + PageFlowUtil.filter(rs.getString("modified")) + "</td>");
+                msg.append("<td style='border: 1px solid black;'>" + PageFlowUtil.filter(rs.getString("category")) + "</td>");
+                msg.append("<td style='border: 1px solid black;'>" + PageFlowUtil.filter(rs.getString("qcstate")) + "</td>");
+                msg.append("<td style='border: 1px solid black;'>" + PageFlowUtil.filter(rs.getString("taskid")) + "</a> </b></td>\n");
                 msg.append("</tr>");
             });
             msg.append("</table>");

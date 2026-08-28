@@ -36,6 +36,7 @@ import org.labkey.test.util.DataRegionTable;
 import org.labkey.test.util.Ext4Helper;
 import org.labkey.test.util.LogMethod;
 import org.labkey.test.util.PortalHelper;
+import org.labkey.test.util.SqlserverOnlyTest;
 import org.labkey.test.util.ext4cmp.Ext4FieldRef;
 import org.labkey.test.util.ext4cmp.Ext4GridRef;
 
@@ -53,9 +54,28 @@ import java.util.Set;
 
 import static org.labkey.test.util.Ext4Helper.TextMatchTechnique.CONTAINS;
 
+/**
+ * NOTE: onprc_billing and sla both declare "SupportedDatabases: mssql, pgsql", but this test — the only one that
+ * exercises billing behaviour — is still SQL Server only, so that PostgreSQL claim is not verified by CI.
+ * <p>
+ * The gap is narrower than "no PostgreSQL coverage", and the distinction matters. AbstractGenericONPRC_EHRTest
+ * enables ONPRC_Billing and SLA and builds linked schemas over both, and it does run on PostgreSQL. So the
+ * bootstrap scripts execute and the schemas get created under CI on PostgreSQL. What is never exercised is the
+ * body of any stored routine: plpgsql does not resolve table or column references until a routine is first
+ * called, so a routine that CI creates successfully can still be entirely broken.
+ * <p>
+ * That is precisely how a batch of PostgreSQL defects reached review in the 26.3 migration — wrong identifier
+ * quoting, an int/varchar join, plpgsql variable/column ambiguity, a call to a function that does not exist, and
+ * routines declared as PROCEDURE that LabKey's ETL layer cannot invoke at all. Every one sat inside a routine
+ * body that CI created and never called.
+ * <p>
+ * A cheap first step would be a PostgreSQL test that merely invokes each onprc_billing and sla routine once;
+ * that alone would have caught most of the above. Removing SqlserverOnlyTest here is the fuller fix, but this
+ * test has never been run against PostgreSQL and should not be enabled without a green run first.
+ */
 @Category({EHR.class, ONPRC.class})
 @BaseWebDriverTest.ClassTimeout(minutes = 20)
-public class ONPRC_BillingTest extends AbstractONPRC_EHRTest
+public class ONPRC_BillingTest extends AbstractONPRC_EHRTest implements SqlserverOnlyTest
 {
     protected static String PROJECT_NAME = "ONPRC_Billing_TestProject";
     private static final String BILLING_FOLDER_PATH = "/" + PROJECT_NAME + "/" + BILLING_FOLDER;

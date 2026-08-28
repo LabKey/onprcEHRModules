@@ -48,6 +48,7 @@ import org.labkey.api.util.PageFlowUtil;
 import org.labkey.api.view.ActionURL;
 import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;
+import org.labkey.api.security.SessionApiKeyManager;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -174,7 +175,8 @@ public class ONPRC_EHRController extends SpringActionController
         @Override
         public Object execute(Object o, BindException errors)
         {
-            return Map.of("SessionId", getViewContext().getRequest().getSession(true).getId());
+//            return Map.of("SessionId", getViewContext().getRequest().getSession(true).getId());
+            return Map.of("SessionId", SessionApiKeyManager.get().getApiKey(getViewContext().getRequest(), "onprc_ehr.ssrs"));
         }
     }
 

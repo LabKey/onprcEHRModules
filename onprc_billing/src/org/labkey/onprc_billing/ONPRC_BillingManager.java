@@ -15,6 +15,10 @@
  */
 package org.labkey.onprc_billing;
 
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 import org.labkey.api.collections.CaseInsensitiveHashMap;
 import org.labkey.api.data.CompareType;
 import org.labkey.api.data.Container;
@@ -31,12 +35,19 @@ import org.labkey.api.module.ModuleProperty;
 import org.labkey.api.query.FieldKey;
 import org.labkey.api.query.Queryable;
 import org.labkey.api.security.User;
+import org.labkey.api.util.GUID;
+import org.labkey.api.util.JunitUtil;
+import org.labkey.api.util.TestContext;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * User: bimber
@@ -71,16 +82,28 @@ public class ONPRC_BillingManager
         return _instance;
     }
 
-    public List<String> deleteBillingRuns(User user, Collection<String> pks, boolean testOnly)
+    public List<String> deleteBillingRuns(User user, Container container, Collection<String> pks, boolean testOnly)
     {
         TableInfo invoiceRuns = ONPRC_BillingSchema.getInstance().getSchema().getTable(ONPRC_BillingSchema.TABLE_INVOICE_RUNS);
         TableInfo invoicedItems = ONPRC_BillingSchema.getInstance().getSchema().getTable(ONPRC_BillingSchema.TABLE_INVOICED_ITEMS);
         TableInfo miscCharges = ONPRC_BillingSchema.getInstance().getSchema().getTable(ONPRC_BillingSchema.TABLE_MISC_CHARGES);
 
         //create filters
-        SimpleFilter invoiceRunFilter = new SimpleFilter(FieldKey.fromString("invoiceId"), pks, CompareType.IN);
+        SimpleFilter invoiceRunsFilter = createContainerScopedInFilter(container, "objectid", pks);
+        Set<String> invoiceRunIds = getInvoiceRunIds(invoiceRuns, invoiceRunsFilter);
+        if (invoiceRunIds.isEmpty())
+        {
+            List<String> ret = new ArrayList<>();
+            if (testOnly)
+            {
+                ret.add("0 records from invoiced items");
+                ret.add("0 records from misc charges will be removed from the deleted invoice, which means they will be picked up by the next billing period.  They are not deleted.");
+            }
+            return ret;
+        }
 
-        SimpleFilter miscChargesFilter = new SimpleFilter(FieldKey.fromString("invoiceId"), pks, CompareType.IN);
+        SimpleFilter invoiceRunFilter = createContainerScopedInFilter(container, "invoiceId", invoiceRunIds);
+        SimpleFilter miscChargesFilter = createMiscChargesFilter(invoiceRunIds);
 
         //perform the work
         List<String> ret = new ArrayList<>();
@@ -96,7 +119,7 @@ public class ONPRC_BillingManager
         {
             try (DbScope.Transaction transaction = ExperimentService.get().ensureTransaction())
             {
-                long deleted1 = Table.delete(invoicedItems, invoiceRunFilter);
+                Table.delete(invoicedItems, invoiceRunFilter);
 
                 TableSelector tsMiscCharges2 = new TableSelector(miscCharges, Collections.singleton("objectid"), miscChargesFilter, null);
                 String[] miscChargesIds = tsMiscCharges2.getArray(String.class);
@@ -107,13 +130,40 @@ public class ONPRC_BillingManager
                     Table.update(user, miscCharges, map, objectid);
                 }
 
-                long deleted3 = Table.delete(invoiceRuns, new SimpleFilter(FieldKey.fromString("objectid"), pks, CompareType.IN));
+                Table.delete(invoiceRuns, invoiceRunsFilter);
 
                 transaction.commit();
             }
         }
 
         return ret;
+    }
+
+    private SimpleFilter createContainerScopedInFilter(Container container, String columnName, Collection<String> values)
+    {
+        return SimpleFilter.createContainerFilter(container).addInClause(FieldKey.fromString(columnName), values);
+    }
+
+    private Set<String> getInvoiceRunIds(TableInfo invoiceRuns, SimpleFilter objectIdFilter)
+    {
+        TableSelector tsInvoiceRuns = new TableSelector(invoiceRuns, Collections.singleton("objectid"), objectIdFilter, null);
+        String[] invoiceRunIds = tsInvoiceRuns.getArray(String.class);
+        return new HashSet<>(Arrays.asList(invoiceRunIds));
+    }
+
+    private SimpleFilter createMiscChargesFilter(Collection<String> invoiceRunIds)
+    {
+        // Intentionally NOT container-scoped. Source miscCharges records can live in different containers
+        // (the billing/finance container, the configured EHR study container, or other satellite containers that
+        // feed charges into a billing run), so there is no reliable, complete set of "source" containers to filter on.
+        //
+        // This is not a cross-container security issue: invoiceRunIds has already been narrowed by getInvoiceRunIds()
+        // to the run ids that actually exist in the requesting container (see the container-scoped objectIdFilter).
+        // A forged or out-of-container run id never reaches this filter, so matching miscCharges solely by
+        // invoiceId only ever touches charges belonging to runs the caller is already authorized to delete.
+        SimpleFilter filter = new SimpleFilter();
+        filter.addInClause(FieldKey.fromString("invoiceId"), invoiceRunIds);
+        return filter;
     }
 
     public Container getBillingContainer(Container c)
@@ -138,5 +188,146 @@ public class ONPRC_BillingManager
 
         return ContainerManager.getForPath(path);
 
+    }
+
+    public static class TestCase extends Assert
+    {
+        private static final String FOLDER_A = "ONPRCBillingDeleteTestA";
+        private static final String FOLDER_B = "ONPRCBillingDeleteTestB";
+        private static final String FOLDER_SATELLITE = "ONPRCBillingDeleteTestSatellite";
+
+        private User _user;
+        private Container _containerA;
+        private Container _containerB;
+        private Container _containerSatellite;
+        private String _runIdA;
+        private String _runIdB;
+
+        @Before
+        public void setUp()
+        {
+            _user = TestContext.get().getUser();
+            deleteTestFolders();
+
+            Container junit = JunitUtil.getTestContainer();
+            _containerA = createBillingFolder(junit, FOLDER_A);
+            _containerB = createBillingFolder(junit, FOLDER_B);
+            _containerSatellite = createBillingFolder(junit, FOLDER_SATELLITE);
+
+            _runIdA = insertBillingRun(_containerA);
+            _runIdB = insertBillingRun(_containerB);
+        }
+
+        @After
+        public void tearDown()
+        {
+            deleteTestFolders();
+        }
+
+        @Test
+        public void testDeleteBillingRunsIsContainerScoped()
+        {
+            ONPRC_BillingManager manager = ONPRC_BillingManager.get();
+            ONPRC_BillingSchema schema = ONPRC_BillingSchema.getInstance();
+
+            // A testOnly preview issued from container A targeting container B's run must not see container B's rows.
+            for (String summary : manager.deleteBillingRuns(_user, _containerA, List.of(_runIdB), true))
+                assertTrue("Preview from another container should count 0 rows, but got: " + summary, summary.startsWith("0 "));
+
+            // An actual delete issued from container A targeting container B's run must leave container B untouched.
+            manager.deleteBillingRuns(_user, _containerA, List.of(_runIdB), false);
+            assertEquals("invoiceRuns row in container B should survive a delete issued from container A", 1, containerRowCount(getTable(schema, ONPRC_BillingSchema.TABLE_INVOICE_RUNS), _containerB));
+            assertEquals("invoicedItems row in container B should survive a delete issued from container A", 1, containerRowCount(getTable(schema, ONPRC_BillingSchema.TABLE_INVOICED_ITEMS), _containerB));
+            assertEquals("miscCharges row in container B should still reference its invoice", 1, miscChargesWithInvoiceCount(_containerB));
+
+            // Satellite source data: miscCharges can live in a container that is neither the requesting/finance
+            // container nor the run's own container. The delete is keyed off the authorized run id, so these rows are
+            // still previewed and detached.
+            String runIdWithSatelliteMiscCharge = insertBillingRun(_containerA, _containerSatellite);
+            List<String> satellitePreview = manager.deleteBillingRuns(_user, _containerA, List.of(runIdWithSatelliteMiscCharge), true);
+            assertTrue("Preview should count miscCharges rows in an unrelated source container: " + satellitePreview,
+                    satellitePreview.stream().anyMatch(summary -> summary.startsWith("1 records from misc charges")));
+
+            manager.deleteBillingRuns(_user, _containerA, List.of(runIdWithSatelliteMiscCharge), false);
+            assertEquals("miscCharges row in the satellite source container should be detached from the deleted invoice", 0, miscChargesWithInvoiceCount(_containerSatellite));
+            assertEquals("miscCharges row in the satellite source container should not be deleted", 1, containerRowCount(getTable(schema, ONPRC_BillingSchema.TABLE_MISC_CHARGES), _containerSatellite));
+
+            // Positive control: deleting a run from its own container removes its rows.
+            manager.deleteBillingRuns(_user, _containerA, List.of(_runIdA), false);
+            assertEquals("invoiceRuns row in container A should be deleted", 0, containerRowCount(getTable(schema, ONPRC_BillingSchema.TABLE_INVOICE_RUNS), _containerA));
+            assertEquals("invoicedItems row in container A should be deleted", 0, containerRowCount(getTable(schema, ONPRC_BillingSchema.TABLE_INVOICED_ITEMS), _containerA));
+            assertEquals("miscCharges row in container A should be detached from the deleted invoice", 0, miscChargesWithInvoiceCount(_containerA));
+            assertEquals("miscCharges row in container A should not be deleted", 1, containerRowCount(getTable(schema, ONPRC_BillingSchema.TABLE_MISC_CHARGES), _containerA));
+        }
+
+        private Container createBillingFolder(Container parent, String name)
+        {
+            Container c = ContainerManager.createContainer(parent, name, _user);
+            Set<Module> active = new HashSet<>(c.getActiveModules());
+            active.add(ModuleLoader.getInstance().getModule(ONPRC_BillingModule.NAME));
+            c.setActiveModules(active, _user);
+            return c;
+        }
+
+        private String insertBillingRun(Container c)
+        {
+            return insertBillingRun(c, c);
+        }
+
+        private String insertBillingRun(Container billingContainer, Container miscChargesContainer)
+        {
+            ONPRC_BillingSchema schema = ONPRC_BillingSchema.getInstance();
+            String runId = GUID.makeGUID();
+
+            Map<String, Object> run = new CaseInsensitiveHashMap<>();
+            run.put("objectid", runId);
+            run.put("runDate", new Date());
+            run.put("billingPeriodStart", new Date());
+            run.put("billingPeriodEnd", new Date());
+            run.put("container", billingContainer.getId());
+            Table.insert(_user, getTable(schema, ONPRC_BillingSchema.TABLE_INVOICE_RUNS), run);
+
+            Map<String, Object> invoicedItem = new CaseInsensitiveHashMap<>();
+            invoicedItem.put("objectid", GUID.makeGUID());
+            invoicedItem.put("invoiceId", runId);
+            invoicedItem.put("container", billingContainer.getId());
+            Table.insert(_user, getTable(schema, ONPRC_BillingSchema.TABLE_INVOICED_ITEMS), invoicedItem);
+
+            Map<String, Object> miscCharge = new CaseInsensitiveHashMap<>();
+            miscCharge.put("objectid", GUID.makeGUID());
+            miscCharge.put("invoiceId", runId);
+            miscCharge.put("container", miscChargesContainer.getId());
+            Table.insert(_user, getTable(schema, ONPRC_BillingSchema.TABLE_MISC_CHARGES), miscCharge);
+
+            return runId;
+        }
+
+        private TableInfo getTable(ONPRC_BillingSchema schema, String tableName)
+        {
+            return schema.getSchema().getTable(tableName);
+        }
+
+        private long containerRowCount(TableInfo table, Container c)
+        {
+            return new TableSelector(table, SimpleFilter.createContainerFilter(c), null).getRowCount();
+        }
+
+        private long miscChargesWithInvoiceCount(Container c)
+        {
+            SimpleFilter filter = SimpleFilter.createContainerFilter(c);
+            filter.addCondition(FieldKey.fromParts("invoiceId"), null, CompareType.NONBLANK);
+            return new TableSelector(getTable(ONPRC_BillingSchema.getInstance(), ONPRC_BillingSchema.TABLE_MISC_CHARGES), filter, null).getRowCount();
+        }
+
+        private void deleteTestFolders()
+        {
+            Container junit = JunitUtil.getTestContainer();
+            for (String name : List.of(FOLDER_A, FOLDER_B, FOLDER_SATELLITE))
+            {
+                Container c = junit.getChild(name);
+                if (c != null)
+                    ContainerManager.delete(c, _user);
+            }
+        }
     }
 }

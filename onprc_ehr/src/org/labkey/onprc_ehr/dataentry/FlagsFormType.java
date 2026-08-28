@@ -89,7 +89,7 @@ public class FlagsFormType extends UnsaveableTask
         return canInsert;
     }
 
-    //Added: 8-7-2024 R.Blasa
+    //Added: 6-3-26 R.Blasa
     @Override
     public boolean isVisible()
     {
@@ -98,6 +98,12 @@ public class FlagsFormType extends UnsaveableTask
         {
             return false;
         }
+        Group h = GroupManager.getGroup(getCtx().getContainer(), "Arrival-Departure SF", GroupEnumType.SITE);
+        if (h != null && getCtx().getUser().isInGroup(h.getUserId()) && !getCtx().getContainer().hasPermission(getCtx().getUser(), AdminPermission.class))
+        {
+            return false;
+        }
         return super.isVisible();
     }
+
 }

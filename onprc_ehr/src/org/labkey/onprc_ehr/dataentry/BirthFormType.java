@@ -21,7 +21,11 @@ import org.labkey.api.ehr.dataentry.FormSection;
 import org.labkey.api.ehr.dataentry.TaskForm;
 import org.labkey.api.ehr.dataentry.TaskFormSection;
 import org.labkey.api.module.Module;
+import org.labkey.api.security.Group;
+import org.labkey.api.security.GroupManager;
+import org.labkey.api.security.permissions.AdminPermission;
 import org.labkey.api.view.template.ClientDependency;
+import org.labkey.security.xml.GroupEnumType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -106,5 +110,17 @@ public class BirthFormType extends TaskForm
 
         return defaultButtons;
     }
+    //Added: 6-3-26 R.Blasa
+    @Override
+    public boolean isVisible()
+    {
+        Group g = GroupManager.getGroup(getCtx().getContainer(), "Arrival-Departure SF", GroupEnumType.SITE);
+        if (g != null && getCtx().getUser().isInGroup(g.getUserId()) && !getCtx().getContainer().hasPermission(getCtx().getUser(), AdminPermission.class))
+        {
+            return false;
+        }
+        return super.isVisible();
+    }
+
 
 }

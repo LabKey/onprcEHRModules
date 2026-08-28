@@ -10,6 +10,8 @@
         <column name="performedby"/>
         <column name="category"/>
         <column name="taskid" />
+        <column name="category" />
+
     </columns>
     <sorts>
            <sort column="date" descending="true"/>
