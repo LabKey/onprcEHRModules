@@ -9,11 +9,11 @@ Notes:
 
 WITH CasesData AS (
     SELECT Id,
-        Open_CMU_Cases.AssignedVet.DisplayName AS CaseVet,
-        Open_CMU_Cases.Date AS CaseDate,
-        GROUP_CONCAT(ProblemCategories, ';') AS ActiveMasterProblems
-    FROM Study.ClinicalCases_Open AS Open_CMU_Cases
-    GROUP BY Open_CMU_Cases.AssignedVet.DisplayName, Id, Open_CMU_Cases.Date
+        c.AssignedVet.DisplayName AS CaseVet,
+        c.Date AS CaseDate,
+        GROUP_CONCAT(CAST(c.caseNo AS VARCHAR) + ': ' + c.ProblemCategories, ';') AS ActiveMasterProblems
+    FROM Study.ClinicalCases_Open AS c
+    GROUP BY c.AssignedVet.DisplayName, Id, c.Date
 )
 SELECT
     Demographics.Id,
