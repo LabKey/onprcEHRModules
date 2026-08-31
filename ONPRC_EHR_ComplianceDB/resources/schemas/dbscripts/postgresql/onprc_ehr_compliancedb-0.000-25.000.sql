@@ -360,7 +360,7 @@ BEGIN
               AND yy.requirementname = b.requirementname AND yy.employeeid = a.employeeid
         ) AS comment,
         (
-            SELECT string_agg(DISTINCT yy.snooze_date::text, chr(10))
+            SELECT max(yy.snooze_date)
             FROM ehr_compliancedb.completiondates yy
             WHERE yy.date IN (SELECT max(zz.date) FROM ehr_compliancedb.completiondates zz WHERE zz.requirementname = b.requirementname AND zz.employeeid = a.employeeid)
               AND yy.requirementname = b.requirementname AND yy.employeeid = a.employeeid
@@ -433,7 +433,7 @@ BEGIN
               AND yy.requirementname = a.requirementname AND yy.employeeid = a.employeeid
         ) AS comment,
         (
-            SELECT string_agg(DISTINCT yy.snooze_date::text, chr(10))
+            SELECT max(yy.snooze_date)
             FROM ehr_compliancedb.completiondates yy
             WHERE yy.date IN (SELECT max(zz.date) FROM ehr_compliancedb.completiondates zz WHERE zz.requirementname = a.requirementname AND zz.employeeid = a.employeeid)
               AND yy.requirementname = a.requirementname AND yy.employeeid = a.employeeid
@@ -510,7 +510,7 @@ BEGIN
               AND yy.requirementname = a.requirementname AND yy.employeeid = a.employeeid
         ) AS comment,
         (
-            SELECT string_agg(DISTINCT yy.snooze_date::text, chr(10))
+            SELECT max(yy.snooze_date)
             FROM ehr_compliancedb.completiondates yy
             WHERE yy.date IN (SELECT max(zz.date) FROM ehr_compliancedb.completiondates zz WHERE zz.requirementname = a.requirementname AND zz.employeeid = a.employeeid)
               AND yy.requirementname = a.requirementname AND yy.employeeid = a.employeeid
@@ -683,7 +683,7 @@ BEGIN
               AND yy.requirementname = b.requirementname AND yy.employeeid = a.employeeid
         ) AS comment,
         (
-            SELECT string_agg(DISTINCT yy.snooze_date::text, chr(10))
+            SELECT max(yy.snooze_date)
             FROM ehr_compliancedb.completiondates yy
             WHERE yy.date IN (SELECT max(zz.date) FROM ehr_compliancedb.completiondates zz WHERE zz.requirementname = b.requirementname AND zz.employeeid = a.employeeid)
               AND yy.requirementname = b.requirementname AND yy.employeeid = a.employeeid
@@ -756,7 +756,7 @@ BEGIN
               AND yy.requirementname = a.requirementname AND yy.employeeid = a.employeeid
         ) AS comment,
         (
-            SELECT string_agg(DISTINCT yy.snooze_date::text, chr(10))
+            SELECT max(yy.snooze_date)
             FROM ehr_compliancedb.completiondates yy
             WHERE yy.date IN (SELECT max(zz.date) FROM ehr_compliancedb.completiondates zz WHERE zz.requirementname = a.requirementname AND zz.employeeid = a.employeeid)
               AND yy.requirementname = a.requirementname AND yy.employeeid = a.employeeid
@@ -833,7 +833,7 @@ BEGIN
               AND yy.requirementname = a.requirementname AND yy.employeeid = a.employeeid
         ) AS comment,
         (
-            SELECT string_agg(DISTINCT yy.snooze_date::text, chr(10))
+            SELECT max(yy.snooze_date)
             FROM ehr_compliancedb.completiondates yy
             WHERE yy.date IN (SELECT max(zz.date) FROM ehr_compliancedb.completiondates zz WHERE zz.requirementname = a.requirementname AND zz.employeeid = a.employeeid)
               AND yy.requirementname = a.requirementname AND yy.employeeid = a.employeeid
