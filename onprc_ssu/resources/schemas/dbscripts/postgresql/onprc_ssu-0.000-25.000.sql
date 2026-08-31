@@ -14,6 +14,26 @@
  * limitations under the License.
  */
 
-ALTER TABLE onprc_ssu.schedule ADD formcreated bit;
-ALTER TABLE onprc_ssu.schedule ADD encounterid entityid;
-ALTER TABLE onprc_ssu.schedule ADD taskid entityid;
+CREATE SCHEMA onprc_ssu;
+
+CREATE TABLE onprc_ssu.schedule (
+  rowid SERIAL,
+  Id varchar(100),
+  date timestamp,
+  location varchar(200),
+  procedureid int,
+  project integer,
+  formcreated boolean,
+  encounterid entityid,
+  taskid entityid,
+
+  objectid entityid not null,
+
+  container entityid,
+  created timestamp,
+  createdby int,
+  modified timestamp,
+  modifiedby int,
+
+  constraint PK_schedule PRIMARY KEY (objectid)
+);

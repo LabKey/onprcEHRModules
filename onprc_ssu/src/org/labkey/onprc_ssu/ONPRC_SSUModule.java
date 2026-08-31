@@ -42,13 +42,13 @@ public class ONPRC_SSUModule extends ExtendedSimpleModule
     @Override
     public @Nullable Double getSchemaVersion()
     {
-        return 13.23;
+        return 26.000;
     }
 
     @Override
-    public boolean hasScripts()
+    public double getEarliestUpgradeVersion()
     {
-        return true;
+        return 13.23;
     }
 
     @Override
