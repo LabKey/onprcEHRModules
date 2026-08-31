@@ -1163,6 +1163,9 @@ exports.init = function(EHR){
                 if (!row.quantity && row.num_tubes && row.tube_vol){
                     row.quantity = row.num_tubes * row.tube_vol;
                 }
+                if (row.additionalServices == null) {
+                    EHR.Server.Utils.addError(scriptErrors, 'additionalServices', 'Please select from a list of Additional Services items', 'INFO');
+                }
 
                 if (row.additionalServices) {
                     if (row.tube_type || row.tube_vol){
