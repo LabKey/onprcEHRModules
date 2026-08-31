@@ -843,7 +843,7 @@ exports.init = function(EHR){
         // Refer to tkt # 13777
         // Check whether the animal's current/latest housing record already exists, and if that record has an enddate, throw an error
         // Only check when creating a new active housing record:
-        // IF this is a NEW housing record, AND, the new record has no end date, AND, the animal already has a housing record with no end date, THEN throw an error
+        // IF this is a NEW housing record, AND, the new record has no end date, AND, the animal already has a housing record with no end date, THEN WARN the user
         if (row.Id && !row.enddate && !oldRow) {
             LABKEY.Query.selectRows({
                 schemaName: 'study',
