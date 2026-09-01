@@ -128,7 +128,6 @@ public class ONPRC_BillingTest extends AbstractONPRC_EHRTest implements Sqlserve
 
         //run finance notifications
         Set<String> notifications = new HashSet<>();
-        notifications.add("DCM Finance Notification");
         notifications.add("Finance Notification");
 
         beginAt(WebTestHelper.getBaseURL() + "/ldk/" + getContainerPath() + "/notificationAdmin.view");
