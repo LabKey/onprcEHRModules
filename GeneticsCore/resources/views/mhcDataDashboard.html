@@ -86,6 +86,12 @@
                             schemaName: 'geneticscore',
                             queryName: 'mhc_data'
                         })
+                    },{
+                        name: 'Manage Library Types',
+                        url: LABKEY.ActionURL.buildURL('query', 'executeQuery.view', null, {
+                            schemaName: 'sequenceanalysis',
+                            queryName: 'library_types'
+                        })
                     }]
                 },{
                     header: 'Data Archival',

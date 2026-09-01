@@ -159,7 +159,7 @@ public class MhcTaskRef implements TaskRefTask
         }
 
         List<Map<String, Object>> toInsert = new ArrayList<>();
-        Set<String> fields = PageFlowUtil.set("subjectid", "marker", "result", "assaytype", "totalTests", "score");
+        Set<String> fields = PageFlowUtil.set("subjectid", "marker", "result", "assaytype", "totalTests", "score", "librarytype");
         new TableSelector(us.getTable("mhc_data_source"), fields, new SimpleFilter(FieldKey.fromString("subjectId"), subject), null).forEachResults(rs -> {
             CaseInsensitiveHashMap<Object> map = new CaseInsensitiveHashMap<>();
             for (String f : fields)

@@ -44,6 +44,9 @@
             <ns:column columnName="assaytype">
                 <ns:columnTitle>Assay Type</ns:columnTitle>
             </ns:column>
+            <ns:column columnName="librarytype">
+                <ns:columnTitle>Library Type</ns:columnTitle>
+            </ns:column>
             <ns:column columnName="objectid">
                 <ns:columnTitle>Key</ns:columnTitle>
                 <ns:isHidden>true</ns:isHidden>
