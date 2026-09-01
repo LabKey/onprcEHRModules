@@ -10,10 +10,7 @@ SELECT
     f.Id,
     f.AssignedVet,
     f.AssignmentType,
-    GROUP_CONCAT(
-            CASE WHEN f.matchedRule = 0 THEN f.ActiveMasterProblems ELSE NULL END,
-            ', '
-    ) AS MasterProblems,
+    CASE WHEN f.matchedRule = 0 THEN f.ActiveMasterProblems ELSE NULL END AS MasterProblems,
     f.Area,
     f.Room
 FROM vetAssignment_filter f
@@ -22,4 +19,3 @@ WHERE f.matchedRule = (
     FROM vetAssignment_filter sub
     WHERE sub.Id = f.Id
 )
-GROUP BY f.Id, f.AssignedVet, f.AssignmentType, f.Area, f.Room

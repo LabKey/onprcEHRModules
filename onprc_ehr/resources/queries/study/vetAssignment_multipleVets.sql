@@ -1,5 +1,5 @@
 WITH assignmentData AS (
-    SELECT
+    SELECT DISTINCT
         Id,
         Area,
         Room,

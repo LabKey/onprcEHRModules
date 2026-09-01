@@ -75,7 +75,6 @@ FROM (
                 END AS AssignmentType,
                 d.ActiveMasterProblems,
                 d.CaseVet,
-                d.CaseDate,
                 d.Project,
                 d.AssignmentType AS ProjectType,
                 d.Protocol,

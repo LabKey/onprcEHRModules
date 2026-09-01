@@ -10,15 +10,15 @@ Notes:
 WITH CasesData AS (
     SELECT Id,
         Open_CMU_Cases.AssignedVet.DisplayName AS CaseVet,
-        Open_CMU_Cases.Date AS CaseDate,
+--        Open_CMU_Cases.Date AS CaseDate,
         GROUP_CONCAT(ProblemCategories, ';') AS ActiveMasterProblems
     FROM Study.ClinicalCases_Open AS Open_CMU_Cases
-    GROUP BY Open_CMU_Cases.AssignedVet.DisplayName, Id, Open_CMU_Cases.Date
+    GROUP BY Open_CMU_Cases.AssignedVet.DisplayName, Id/*, Open_CMU_Cases.Date*/
 )
 SELECT
     Demographics.Id,
     CasesData.CaseVet,
-    CasesData.CaseDate,
+--    CasesData.CaseDate,
     CasesData.ActiveMasterProblems,
     Housing.Room,
     Housing.Room.Area,
