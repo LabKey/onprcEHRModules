@@ -1245,8 +1245,8 @@ public class ONPRC_EHRTriggerHelper
     //    Added: 6-27-2017  F.Blasa  Process when transitioning from Prenatal - Fetus to Live
     public void doBirthConditionAfterPrenatal(String id, Date date, String dam, Date Arrival_Date, String birthCondition, boolean isBecomingPublic) throws Exception
     {
-        //is the infant is dead, terminate the assignments
-        Date enddate = isBirthAlive(birthCondition) ? null : date;
+
+        Date enddate = null ;
 
         String nonRestrictedFlag = getFlag("Condition", NONRESTRICTED, null, true);
         if (nonRestrictedFlag != null)
