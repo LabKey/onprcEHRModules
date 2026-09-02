@@ -16,7 +16,33 @@
                 allowBlank: false,
                 shownInGrid: false,
                 defaultValue: 'Clinical'
+            },
+
+            route: {
+                editorConfig: {
+                    plugins: [Ext4.create('LDK.plugin.UserEditableCombo', {
+                        allowChooseOther: false
+                    })]
+                }
+
+            },
+            vol_units: {
+                editorConfig: {
+                    plugins: [Ext4.create('LDK.plugin.UserEditableCombo', {
+                        allowChooseOther: false
+                    })]
+                }
+
+            },
+            amount_units: {
+                editorConfig: {
+                    plugins: [Ext4.create('LDK.plugin.UserEditableCombo', {
+                        allowChooseOther: false
+                    })]
+                }
+
             }
+
         }
     }
 });
