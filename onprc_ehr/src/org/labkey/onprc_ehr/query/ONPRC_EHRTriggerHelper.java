@@ -1278,13 +1278,6 @@ public class ONPRC_EHRTriggerHelper
         Date enddate =  null ;
 
 
-        //also check for a pre-existing death record:
-        Date deathDate = new TableSelector(getTableInfo("study", "deaths"), Collections.singleton("date"), new SimpleFilter(FieldKey.fromString("Id"), id), null).getObject(Date.class);
-        if (deathDate != null)
-        {
-            enddate = deathDate;
-        }
-
         //note: we only want this to run the first time this record becomes public, not on subsequent updates
         if (isBecomingPublic)
         {
