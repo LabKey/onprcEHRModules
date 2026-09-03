@@ -1,0 +1,9 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="observationsLinkedToAnotherAnimalsCase" tableDbType="NOT_IN_DB">
+                <tableTitle>Observations Linked to Another Animal's Case</tableTitle>
+            </table>
+        </tables>
+    </metadata>
+</query>

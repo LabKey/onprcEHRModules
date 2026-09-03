@@ -18,7 +18,7 @@ WITH CasesData AS (
 SELECT
     Demographics.Id,
     CasesData.CaseVet,
-    CasesData.CaseDate,
+CasesData.CaseDate,
     CasesData.ActiveMasterProblems,
     Housing.Room,
     Housing.Room.Area,

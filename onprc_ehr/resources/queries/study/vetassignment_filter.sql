@@ -74,8 +74,8 @@ FROM (
                     ELSE 'No Matching Rule'
                 END AS AssignmentType,
                 d.ActiveMasterProblems,
-                d.CaseVet,
                 d.CaseDate,
+                d.CaseVet,
                 d.Project,
                 d.AssignmentType AS ProjectType,
                 d.Protocol,
