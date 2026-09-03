@@ -44,6 +44,44 @@ EHR.model.DataModelManager.registerMetadata('Default', {
                     ret.setHours(8);
                     return ret;
                 }
+            },
+            route: {
+                editorConfig: {
+                    plugins: ['ldk-usereditablecombo'],
+                    allowChooseOther: false
+                }
+            },
+            vol_units: {
+                editorConfig: {
+                    plugins: ['ldk-usereditablecombo'],
+                    allowChooseOther: false
+                }
+            },
+            amount_units: {
+                editorConfig: {
+                    plugins: ['ldk-usereditablecombo'],
+                    allowChooseOther: false
+                }
+            }
+        },
+        'study.drug': {
+            route: {
+                editorConfig: {
+                    plugins: ['ldk-usereditablecombo'],
+                    allowChooseOther: false
+                }
+            },
+            vol_units: {
+                editorConfig: {
+                    plugins: ['ldk-usereditablecombo'],
+                    allowChooseOther: false
+                }
+            },
+            amount_units: {
+                editorConfig: {
+                    plugins: ['ldk-usereditablecombo'],
+                    allowChooseOther: false
+                }
             }
         },
 
