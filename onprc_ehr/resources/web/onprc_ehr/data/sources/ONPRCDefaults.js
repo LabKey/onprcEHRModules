@@ -47,42 +47,49 @@ EHR.model.DataModelManager.registerMetadata('Default', {
             },
             route: {
                 editorConfig: {
-                    plugins: ['ldk-usereditablecombo'],
-                    allowChooseOther: false
+                    plugins: [Ext4.create('LDK.plugin.UserEditableCombo', {
+                        allowChooseOther: false
+                    })]
                 }
             },
             vol_units: {
                 editorConfig: {
-                    plugins: ['ldk-usereditablecombo'],
-                    allowChooseOther: false
+                    plugins: [Ext4.create('LDK.plugin.UserEditableCombo', {
+                        allowChooseOther: false
+                    })]
                 }
             },
             amount_units: {
                 editorConfig: {
-                    plugins: ['ldk-usereditablecombo'],
-                    allowChooseOther: false
+                    plugins: [Ext4.create('LDK.plugin.UserEditableCombo', {
+                        allowChooseOther: false
+                    })]
                 }
             }
-        },
+          },
         'study.drug': {
             route: {
                 editorConfig: {
-                    plugins: ['ldk-usereditablecombo'],
-                    allowChooseOther: false
+                    plugins: [Ext4.create('LDK.plugin.UserEditableCombo', {
+                        allowChooseOther: false
+                    })]
                 }
             },
             vol_units: {
                 editorConfig: {
-                    plugins: ['ldk-usereditablecombo'],
-                    allowChooseOther: false
+                    plugins: [Ext4.create('LDK.plugin.UserEditableCombo', {
+                        allowChooseOther: false
+                    })]
                 }
             },
             amount_units: {
                 editorConfig: {
-                    plugins: ['ldk-usereditablecombo'],
-                    allowChooseOther: false
+                    plugins: [Ext4.create('LDK.plugin.UserEditableCombo', {
+                        allowChooseOther: false
+                    })]
                 }
             }
+
         },
 
         'study.blood' : {
