@@ -20,7 +20,7 @@ SELECT a.project as ProjectID,
        --i.LastName + ': ' + a.name + '('+ p.external_id +')' +  ' ' + aa.Breeding_Info + ' - ' + a.title + ' (Species: ' + aa.species + ')' as PIIacuc
 
        --Removed the Breeding info in the protocol field as we are not storing the information when user selects the item from drop down list. Approved by Kati in Tkt #11797
-       i.LastName + ': ' + a.name + '('+ p.external_id +')' + ' - ' + a.title + ' (Species: ' + aa.species + ')' as PIIacuc
+       i.LastName || ': ' || a.name || '('|| p.external_id ||')' || ' - ' || a.title || ' (Species: ' || aa.species || ')' as PIIacuc
 FROM publicehr.project a
          LEFT JOIN publicehr.protocol p ON p.protocol = a.protocol
          LEFT JOIN onprc_ehr.investigators i ON i.rowId = a.investigatorId

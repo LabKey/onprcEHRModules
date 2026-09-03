@@ -31,7 +31,7 @@ round(b.TBV,2) as TotalBloodVolume,
 --round((b.TBV*.125),2) as AllowableBlood1,
 
  Case
-	When species<> 'Rhesus Macaque'  --'Fixed Rate Process'
+	When LOWER(species)<> 'rhesus macaque'  --'Fixed Rate Process'
 	    Then  round((b.species.blood_per_kg  * b.id.MostRecentWeight.MostRecentWeight * b.max_draw_pct),2)
 	When
 		b.DaysSinceBCS > 365
@@ -42,7 +42,7 @@ round(b.TBV,2) as TotalBloodVolume,
 	end As AllowableBlood,
 
 	Case
-	When species<> 'Rhesus Macaque'  --'Fixed Rate Process'
+	When LOWER(species)<> 'rhesus macaque'  --'Fixed Rate Process'
 	    Then
 	      Case
           When (b.bloodPrevious>b.bloodFuture)
@@ -81,7 +81,7 @@ round(b.TBV,2) as TotalBloodVolume,
  	end As AvailableBlood,
 
  Case
-	When species<> 'Rhesus Macaque'  Then 'FR'
+	When LOWER(species)<> 'rhesus macaque'  Then 'FR'
 	When
 		b.DaysSinceBCS > 365
 		Then  'FR'
@@ -117,7 +117,7 @@ SELECT
   TIMESTAMPDIFF('SQL_TSI_DAY',bcs.date,Now()) as DaysSinceBCS,
   --This ca;ciates tje tt
    Case
- 			when  TIMESTAMPDIFF('SQL_TSI_DAY',bcs.date,Now())  < 365 THEN round(cast (113.753 + ((0.752 *  d.id.MostRecentWeight.MostRecentWeight ) - (18.919 * bcs.score))as double),2)
+ 			when  TIMESTAMPDIFF('SQL_TSI_DAY',bcs.date,Now())  < 365 THEN round(cast (113.753 + ((0.752 *  d.id.MostRecentWeight.MostRecentWeight ) - (18.919 * CAST(bcs.score AS DOUBLE)))as double),2)
  			Else (d.species.blood_per_kg  * d.id.MostRecentWeight.MostRecentWeight)
 			END as TotalBloodAvailable,
 
@@ -137,11 +137,11 @@ SELECT
 
   -- blood volume (ml/kg)
 ------113.753+(0.752*Wt)- (18.919*BCS)
-(113.753+(0.752 *  d.id.MostRecentWeight.MostRecentWeight ) - (18.919 * bcs.score)) as BloodVolume,
+(113.753+(0.752 *  d.id.MostRecentWeight.MostRecentWeight ) - (18.919 * CAST(bcs.score AS DOUBLE))) as BloodVolume,
 
 --TBV(mnl)
 -----weight * Blood Volume
-(d.id.MostRecentWeight.MostRecentWeight * (113.753+(0.752 *  d.id.MostRecentWeight.MostRecentWeight ) - (18.919 * bcs.score))) as TBV,
+(d.id.MostRecentWeight.MostRecentWeight * (113.753+(0.752 *  d.id.MostRecentWeight.MostRecentWeight ) - (18.919 * CAST(bcs.score AS DOUBLE)))) as TBV,
 --Allowable BV
 -----TBV*.125
 
@@ -166,6 +166,6 @@ FROM
     --NOTE: this uses date part only
     JOIN (SELECT w.id, MAX(dateOnly) as dateOnly FROM study.weight w WHERE w.qcstate.publicdata = true GROUP BY w.id) lastWeight ON (d.id = lastWeight.id)
     LEFT OUTER JOIN study.demographicsCurrentBCS bcs on bcs.id = d.id
-WHERE d.calculated_status = 'Alive'
+WHERE LOWER(d.calculated_status) = 'alive'
 
 ) b

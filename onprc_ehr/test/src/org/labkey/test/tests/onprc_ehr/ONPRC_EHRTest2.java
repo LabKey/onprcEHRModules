@@ -65,6 +65,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -1076,12 +1077,12 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
         createAnimal();
         markDead(deadAnimal);
 
-        Map<String, Map<String, String>> formsToTest = Map.of(
-                "Birth", Map.of("gridToTest", "Births", "allowDatesInDistantPast", "true", "allowDeadIds", "true", "allowAnyId", "true"),
-                "Death", Map.of("gridToTest", "Deaths", "allowDatesInDistantPast", "true", "allowDeadIds", "false", "allowAnyId", "false"),
-                "Arrival", Map.of("gridToTest", "Arrivals", "allowDatesInDistantPast", "true", "allowDeadIds", "true", "allowAnyId", "true"),
-                "Departure", Map.of("gridToTest", "Departures", "allowDatesInDistantPast", "false", "allowDeadIds", "false", "allowAnyId", "false"),
-                "Housing Transfers", Map.of("gridToTest", "Housing Transfers", "allowDatesInDistantPast", "false", "allowDeadIds", "false", "allowAnyId", "false"));
+        Map<String, Map<String, String>> formsToTest = new LinkedHashMap<>();
+        formsToTest.put("Birth", Map.of("gridToTest", "Births", "allowDatesInDistantPast", "true", "allowDeadIds", "true", "allowAnyId", "true"));
+        formsToTest.put("Death", Map.of("gridToTest", "Deaths", "allowDatesInDistantPast", "true", "allowDeadIds", "false", "allowAnyId", "false"));
+        formsToTest.put("Arrival", Map.of("gridToTest", "Arrivals", "allowDatesInDistantPast", "true", "allowDeadIds", "true", "allowAnyId", "true"));
+        formsToTest.put("Departure", Map.of("gridToTest", "Departures", "allowDatesInDistantPast", "false", "allowDeadIds", "false", "allowAnyId", "false"));
+        formsToTest.put("Housing Transfers", Map.of("gridToTest", "Housing Transfers", "allowDatesInDistantPast", "false", "allowDeadIds", "false", "allowAnyId", "false"));
 
         goToEHRFolder();
         clickAndWait(Locator.linkWithText("Enter Data / Task Review"));

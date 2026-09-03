@@ -28,7 +28,7 @@ SELECT d.Id,
        d.removesubsidy,
        d.canRaiseFA,
        r.ChargeID, --integer
-       RateCalc(d.alias,r.chargeID,d.project,d.Date,d.farate)  as CalculatedRate,
+       RateCalc(d.alias,r.chargeID,d.project, CAST(d.Date AS DATE),d.farate)  as CalculatedRate,
        r.revisedChargeID
 
 FROM Site.{substitutePath moduleProperty('onprc_billing','BillingContainer')}.onprc_billing.leasefee_rateData r join
@@ -51,7 +51,7 @@ select
     '' as BirthType,
     'automatic_adjustment' as AssignmentTypeNA,
     '' as DayLease,
-    '' as DayLeaseLength, --integer
+    CAST(null AS INTEGER) as DayLeaseLength, --integer; empty string here breaks the UNION with the numeric column above
     '' as MultipleAssignments,
     a.date,
     a.enddate as projectedrelease,
@@ -67,7 +67,7 @@ select
     a.removeSubsidy as removesubsidy,
     a.canRaiseFA as canRaiseFA,
     a.leaseCharge1, --integer
-    RateCalc(a.alias,a.leasecharge2,a.projectID, a.date,a.farate) as RevisedRate,
+    RateCalc(a.alias,a.leasecharge2,a.projectID, CAST(a.date AS DATE),a.farate) as RevisedRate,
     a.leaseCharge2
 
 FROM Site.{substitutePath moduleProperty('onprc_billing','BillingContainer')}.onprc_billing.LeaseFeeReleaseAdjustment a

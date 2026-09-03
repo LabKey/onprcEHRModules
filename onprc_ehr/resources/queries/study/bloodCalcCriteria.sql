@@ -10,7 +10,7 @@ d.blood_per_kg as bpk,
 d.blood_draw_interval as interval,
 d.max_draw_pct  as Percentage,
 Case
-	When d.species <> 'Rhesus Macaque' then 'Fixed Rate by Speices'
+	When LOWER(d.species) <> 'rhesus macaque' then 'Fixed Rate by Speices'
 	WHen d.score is Null  then 'Fixed Rate no BCS'
 	when  TIMESTAMPDIFF('SQL_TSI_DAY',d.date,Now())  > 548  Then 'Fixed Rate  BCS out of Date'
 	when d.DaysAge < 730 then 'Fixed Rate NHP Too Young'
@@ -18,7 +18,7 @@ Case
 	else 'BCS'
 	End as CalcMethodReason,
 Case
-	When d.species <> 'Rhesus Macaque' then 'Fr'
+	When LOWER(d.species) <> 'rhesus macaque' then 'Fr'
 	WHen d.score is Null  then 'fr'
 	when  TIMESTAMPDIFF('SQL_TSI_DAY',d.date,Now())  > 548  Then 'fr'
 	when d.DaysAge < 730 then 'Fr'

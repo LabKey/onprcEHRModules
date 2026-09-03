@@ -19,7 +19,7 @@ t.faRate,
 t.removesubsidy,
 t.canRaiseFA,
 
-RateCalc(c.alias,c.chargeID,c.projectID,c.assignmentDate,t.farate)  as CalculatedRate
+RateCalc(c.alias,c.chargeID,c.projectID, CAST(c.assignmentDate AS DATE),t.farate)  as CalculatedRate
 
 FROM Site.{substitutePath moduleProperty('onprc_billing','BillingContainer')}.onprc_Billing.leasefee_RateData c
 	left join Site.{substitutePath moduleProperty('onprc_billing','BillingContainer')}.onprc_Billing.chargeRates r

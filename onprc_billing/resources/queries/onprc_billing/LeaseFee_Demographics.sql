@@ -42,7 +42,7 @@ Case
 	--When da.id
 	when ( a.date = a.id.birth.date and t.id is not null) then 'TMB Birth'
 
-	when a.project.use_category = 'Research' then 'Research'
+	when LOWER(a.project.use_category) = 'research' then 'Research'
 	Else a.project.use_category
 end
 as	AssignmentType,
@@ -118,4 +118,4 @@ Left outer join Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.
 Left outer join Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.study.tmbDam tmb on tmb.id = a.id  and (tmb.date <= a.date and tmb.enddate >= a.date or tmb.endDate is Null)
 where a.datefinalized >= startDate and (a.datefinalized <= enddate or a.enddate is null)
 
-and a.id not like  '[a-z]%'
+and NOT (LOWER(LEFT(a.id,1)) BETWEEN 'a' AND 'z')

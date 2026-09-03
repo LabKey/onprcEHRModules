@@ -31,5 +31,5 @@ from study.demographics d
   left outer join study.birth b on d.id = b.id
  left outer join study.demographicsMostRecentWeight w on d.id = w.id
   left outer join demographicsMostRecentBCS mbcs on mbcs.id = d.id
-where d.calculated_status = 'Alive'
-and d.ID not like '[a-z]%'
+where LOWER(d.calculated_status) = 'alive'
+and NOT (LOWER(LEFT(d.ID,1)) BETWEEN 'a' AND 'z')

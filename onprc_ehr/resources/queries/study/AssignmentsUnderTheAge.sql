@@ -29,7 +29,7 @@
     ) AS Cagemates,
     /* Concatenate all active projects & investigator into one cell */
     (
-        SELECT GROUP_CONCAT(DISTINCT CAST('[' + d.project.protocol.investigatorId.lastname + ']' + d.project.displayname + '' AS VARCHAR), ', ')
+        SELECT GROUP_CONCAT(DISTINCT CAST('[' || d.project.protocol.investigatorId.lastname || ']' || d.project.displayname || '' AS VARCHAR), ', ')
         FROM housingRoommatesDivider h
         LEFT JOIN study.assignment d ON d.Id = h.roommateId
         WHERE h.Id = a.Id
@@ -37,16 +37,16 @@
             AND h.roommateEnd IS NULL
             AND h.roommateId IS NOT NULL
             AND d.enddate IS NULL
-            AND d.isActive = 1
+            AND d.isActive = true
             AND d.project.displayname NOT IN ('0492-02', '0492-03')
     ) AS Cagemate_Assignments
 
 FROM Assignment a
 WHERE
   a.Id.Age.ageinyears <= 3
-  AND a.Id.demographics.species = 'Rhesus Macaque'
+  AND LOWER(a.Id.demographics.species) = 'rhesus macaque'
   AND a.enddate IS NULL
-  AND a.isActive = 1
+  AND a.isActive = true
   AND a.project.displayname NOT IN ('0492-02', '0492-03')
 
 

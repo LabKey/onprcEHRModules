@@ -25,7 +25,7 @@ SELECT
   --NOTE: if changing this logic, processingGeneticsBlooddraws.sql should also be updated
   CASE
     WHEN f3.Id is not null THEN false
-    WHEN (d.species = 'RHESUS MACAQUE' AND d.Id.age.ageInYears <= 5.0 AND d.geographic_origin = 'India' AND (a.Id IS NOT NULL OR d.gender = 'm')) THEN true
+    WHEN (LOWER(d.species) = 'rhesus macaque' AND d.Id.age.ageInYears <= 5.0 AND d.geographic_origin = 'India' AND (a.Id IS NOT NULL OR LOWER(d.gender) = 'm')) THEN true
     else false
   END as isMHCRequired,
   CASE

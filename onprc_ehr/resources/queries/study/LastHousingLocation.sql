@@ -17,7 +17,7 @@
 
 --  Created: 12-19-2018  R.Blasa
 
-select a.Id,(a.room + ' ' + coalesce(a.cage, '')) as location from study.housing a
+select a.Id,(a.room || ' ' || coalesce(a.cage, '')) as location from study.housing a
 where a.date in (Select max( b.date) AS MaxDate from study.housing b
  where a.Id = b.Id
  and a.qcstate.publicdata = true )
