@@ -486,8 +486,8 @@ ALTER Table onprc_billing.procedureFeeDefinition DROP COLUMN billedby;
 ALTER Table onprc_billing.procedureFeeDefinition ADD chargetype varchar(100);
 
 ALTER TABLE onprc_billing.invoiceRuns ALTER COLUMN objectid SET NOT NULL;
-SELECT core.fn_dropifexists('invoiceRuns', 'onprc_billing', 'CONSTRAINT', 'pk_invoiceRuns');
 
+ALTER TABLE onprc_billing.invoiceRuns DROP CONSTRAINT IF EXISTS pk_invoiceRuns;
 ALTER TABLE onprc_billing.invoiceRuns ADD CONSTRAINT pk_invoiceRuns PRIMARY KEY (objectid);
 
 ALTER TABLE onprc_billing.invoicedItems ADD creditAccountId int;
@@ -527,7 +527,7 @@ ALTER TABLE onprc_billing.invoicedItems ADD transactionNumber varchar(100);
 
 ALTER TABLE onprc_billing.miscCharges ADD objectid entityid NOT NULL;
 
-SELECT core.fn_dropifexists('miscCharges', 'onprc_billing', 'CONSTRAINT', 'pk_miscCharges');
+ALTER TABLE onprc_billing.miscCharges DROP CONSTRAINT IF EXISTS pk_miscCharges;
 
 ALTER TABLE onprc_billing.miscCharges ADD CONSTRAINT pk_miscCharges PRIMARY KEY (objectid);
 
@@ -1122,19 +1122,13 @@ $$;
 -- Adds change inflation rate to 3 position decimal
 -- add primary key and identity key
 --If the field exists in the current build we drop the column and recreate
-SELECT core.fn_dropifexists('aliases', 'onprc_billing', 'COLUMN', 'COMMENTS');
 ALTER TABLE onprc_billing.aliases ADD COMMENTS VarChar(255) Null;
 
-SELECT core.fn_dropifexists('aliases', 'onprc_billing', 'COLUMN', 'dateDisabled');
 ALTER TABLE onprc_billing.aliases ADD dateDisabled TIMESTAMP Null;
 
-SELECT core.fn_dropifexists('aliases', 'onprc_billing', 'COLUMN', 'PPQNumber');
 ALTER TABLE onprc_billing.aliases ADD PPQNumber VARCHAR(25) Null;
 
-SELECT core.fn_dropifexists('aliases', 'onprc_billing', 'COLUMN', 'PPQDate');
 ALTER TABLE onprc_billing.aliases ADD PPQDate TIMESTAMP Null;
-
-SELECT core.fn_dropifexists('ogaSynch', 'onprc_billing', 'TABLE', NULL);
 
 CREATE TABLE onprc_billing.ogasynch (
 	lastIndexed timestamp NULL,
@@ -1188,52 +1182,38 @@ CREATE TABLE onprc_billing.ogasynch (
 -- Adding additional Fields for Alias insert from OGA Synch
 --Rerunning and it does not appear in Build
 --2020-03-4 Revision to add this to UAT
-SELECT core.fn_dropifexists('aliases', 'onprc_billing', 'COLUMN', 'ApplicationType');
 ALTER TABLE onprc_billing.aliases ADD ApplicationType VarChar(255) Null;
 
-SELECT core.fn_dropifexists('aliases', 'onprc_billing', 'COLUMN', 'ApplicationTypeDescription');
 ALTER TABLE onprc_billing.aliases ADD ApplicationTypeDescription VarChar(255) Null;
 
-SELECT core.fn_dropifexists('aliases', 'onprc_billing', 'COLUMN', 'AwardStatus');
 ALTER TABLE onprc_billing.aliases ADD AwardStatus VARCHAR(100) Null;
 
-SELECT core.fn_dropifexists('aliases', 'onprc_billing', 'COLUMN', 'AwardID');
 ALTER TABLE onprc_billing.aliases ADD AwardID VARCHAR(100) Null;
 
-SELECT core.fn_dropifexists('aliases', 'onprc_billing', 'COLUMN', 'ApplicationType');
+ALTER TABLE onprc_billing.aliases DROP COLUMN IF EXISTS ApplicationType CASCADE;
 ALTER TABLE onprc_billing.aliases ADD ApplicationType VARCHAR(255) Null;
 
-SELECT core.fn_dropifexists('aliases', 'onprc_billing', 'COLUMN', 'ProjectID');
 ALTER TABLE onprc_billing.aliases ADD ProjectID VARCHAR(100) Null;
 
-SELECT core.fn_dropifexists('aliases', 'onprc_billing', 'COLUMN', 'ActivityType');
 ALTER TABLE onprc_billing.aliases ADD ActivityType VARCHAR(255) Null;
 
-SELECT core.fn_dropifexists('aliases', 'onprc_billing', 'COLUMN', 'AwardNumber');
 ALTER TABLE onprc_billing.aliases ADD AwardNumber VARCHAR(255) Null;
 
-SELECT core.fn_dropifexists('aliases', 'onprc_billing', 'COLUMN', 'AwardSuffix');
 ALTER TABLE onprc_billing.aliases ADD AwardSuffix VARCHAR(255) Null;
 
-SELECT core.fn_dropifexists('aliases', 'onprc_billing', 'COLUMN', 'Org');
 ALTER TABLE onprc_billing.aliases ADD Org VARCHAR(255) Null;
 
-SELECT core.fn_dropifexists('aliases', 'onprc_billing', 'COLUMN', 'ADFMEmpNum');
 ALTER TABLE onprc_billing.aliases ADD ADFMEmpNum VARCHAR(255) Null;
 
-SELECT core.fn_dropifexists('aliases', 'onprc_billing', 'COLUMN', 'ADFMFullName');
 ALTER TABLE onprc_billing.aliases ADD ADFMFullName VARCHAR(255) Null;
 
-SELECT core.fn_dropifexists('aliases', 'onprc_billing', 'COLUMN', 'ActivityTypeDescription');
 ALTER TABLE onprc_billing.aliases ADD ActivityTypeDescription VARCHAR(255) Null;
 
-SELECT core.fn_dropifexists('aliases', 'onprc_billing', 'COLUMN', 'FundingSourceNumber');
 ALTER TABLE onprc_billing.aliases ADD FundingSourceNumber VARCHAR(255) Null;
 
-SELECT core.fn_dropifexists('aliases', 'onprc_billing', 'COLUMN', 'FundingSourceName');
 ALTER TABLE onprc_billing.aliases ADD FundingSourceName VARCHAR(255) Null;
 
-SELECT core.fn_dropifexists('aliases', 'onprc_billing', 'COLUMN', 'Org');
+ALTER TABLE onprc_billing.aliases DROP COLUMN IF EXISTS Org CASCADE;
 ALTER TABLE onprc_billing.aliases ADD Org VARCHAR(255) Null;
 
 CREATE OR REPLACE FUNCTION onprc_billing.AliasCleanup202004()
@@ -1278,52 +1258,52 @@ BEGIN
 END;
 $$;
 
-SELECT core.fn_dropifexists('aliases', 'onprc_billing', 'COLUMN', 'ApplicationType');
+ALTER TABLE onprc_billing.aliases DROP COLUMN IF EXISTS ApplicationType CASCADE;
 ALTER TABLE onprc_billing.aliases ADD ApplicationType VarChar(255) Null;
 
-SELECT core.fn_dropifexists('aliases', 'onprc_billing', 'COLUMN', 'ApplicationTypeDescription');
+ALTER TABLE onprc_billing.aliases DROP COLUMN IF EXISTS ApplicationTypeDescription CASCADE;
 ALTER TABLE onprc_billing.aliases ADD ApplicationTypeDescription VarChar(255) Null;
 
-SELECT core.fn_dropifexists('aliases', 'onprc_billing', 'COLUMN', 'AwardStatus');
+ALTER TABLE onprc_billing.aliases DROP COLUMN IF EXISTS AwardStatus CASCADE;
 ALTER TABLE onprc_billing.aliases ADD AwardStatus VARCHAR(100) Null;
 
-SELECT core.fn_dropifexists('aliases', 'onprc_billing', 'COLUMN', 'AwardID');
+ALTER TABLE onprc_billing.aliases DROP COLUMN IF EXISTS AwardID CASCADE;
 ALTER TABLE onprc_billing.aliases ADD AwardID VARCHAR(100) Null;
 
-SELECT core.fn_dropifexists('aliases', 'onprc_billing', 'COLUMN', 'ApplicationType');
+ALTER TABLE onprc_billing.aliases DROP COLUMN IF EXISTS ApplicationType CASCADE;
 ALTER TABLE onprc_billing.aliases ADD ApplicationType VARCHAR(255) Null;
 
-SELECT core.fn_dropifexists('aliases', 'onprc_billing', 'COLUMN', 'ProjectID');
+ALTER TABLE onprc_billing.aliases DROP COLUMN IF EXISTS ProjectID CASCADE;
 ALTER TABLE onprc_billing.aliases ADD ProjectID VARCHAR(100) Null;
 
-SELECT core.fn_dropifexists('aliases', 'onprc_billing', 'COLUMN', 'ActivityType');
+ALTER TABLE onprc_billing.aliases DROP COLUMN IF EXISTS ActivityType CASCADE;
 ALTER TABLE onprc_billing.aliases ADD ActivityType VARCHAR(255) Null;
 
-SELECT core.fn_dropifexists('aliases', 'onprc_billing', 'COLUMN', 'AwardNumber');
+ALTER TABLE onprc_billing.aliases DROP COLUMN IF EXISTS AwardNumber CASCADE;
 ALTER TABLE onprc_billing.aliases ADD AwardNumber VARCHAR(255) Null;
 
-SELECT core.fn_dropifexists('aliases', 'onprc_billing', 'COLUMN', 'AwardSuffix');
+ALTER TABLE onprc_billing.aliases DROP COLUMN IF EXISTS AwardSuffix CASCADE;
 ALTER TABLE onprc_billing.aliases ADD AwardSuffix VARCHAR(255) Null;
 
-SELECT core.fn_dropifexists('aliases', 'onprc_billing', 'COLUMN', 'Org');
+ALTER TABLE onprc_billing.aliases DROP COLUMN IF EXISTS Org CASCADE;
 ALTER TABLE onprc_billing.aliases ADD Org VARCHAR(255) Null;
 
-SELECT core.fn_dropifexists('aliases', 'onprc_billing', 'COLUMN', 'ADFMEmpNum');
+ALTER TABLE onprc_billing.aliases DROP COLUMN IF EXISTS ADFMEmpNum CASCADE;
 ALTER TABLE onprc_billing.aliases ADD ADFMEmpNum VARCHAR(255) Null;
 
-SELECT core.fn_dropifexists('aliases', 'onprc_billing', 'COLUMN', 'ADFMFullName');
+ALTER TABLE onprc_billing.aliases DROP COLUMN IF EXISTS ADFMFullName CASCADE;
 ALTER TABLE onprc_billing.aliases ADD ADFMFullName VARCHAR(255) Null;
 
-SELECT core.fn_dropifexists('aliases', 'onprc_billing', 'COLUMN', 'ActivityTypeDescription');
+ALTER TABLE onprc_billing.aliases DROP COLUMN IF EXISTS ActivityTypeDescription CASCADE;
 ALTER TABLE onprc_billing.aliases ADD ActivityTypeDescription VARCHAR(255) Null;
 
-SELECT core.fn_dropifexists('aliases', 'onprc_billing', 'COLUMN', 'FundingSourceNumber');
+ALTER TABLE onprc_billing.aliases DROP COLUMN IF EXISTS FundingSourceNumber CASCADE;
 ALTER TABLE onprc_billing.aliases ADD FundingSourceNumber VARCHAR(255) Null;
 
-SELECT core.fn_dropifexists('aliases', 'onprc_billing', 'COLUMN', 'FundingSourceName');
+ALTER TABLE onprc_billing.aliases DROP COLUMN IF EXISTS FundingSourceName CASCADE;
 ALTER TABLE onprc_billing.aliases ADD FundingSourceName VARCHAR(255) Null;
 
-SELECT core.fn_dropifexists('aliases', 'onprc_billing', 'COLUMN', 'Org');
+ALTER TABLE onprc_billing.aliases DROP COLUMN IF EXISTS Org CASCADE;
 ALTER TABLE onprc_billing.aliases ADD Org VARCHAR(255) Null;
 
 DROP FUNCTION IF EXISTS onprc_billing.OGA_RemoveRecords();
@@ -1468,7 +1448,6 @@ $$;
 
 /* 22.xxx SQL scripts */
 
-SELECT core.fn_dropifexists('aliases', 'onprc_billing', 'COLUMN', 'Originating Agency Award Number');
 ALTER TABLE onprc_billing.aliases ADD OriginatingAgencyAwardNum VarChar(255) Null;
 ALTER TABLE onprc_billing.ogaSynch ADD ORIGINATING_AGENCY_AWARD_NUM VarChar(255) Null;
 
@@ -1561,8 +1540,8 @@ BEGIN
 END;
 $$;
 
-SELECT core.fn_dropifexists('aliases', 'onprc_billing', 'COLUMN', 'OriginatingAgencyAwardNum');
-SELECT core.fn_dropifexists('ogaSynch', 'onprc_billing', 'COLUMN', 'ORIGINATING_AGENCY_AWARD_NUM');
+ALTER TABLE onprc_billing.aliases DROP COLUMN IF EXISTS OriginatingAgencyAwardNum CASCADE;
+ALTER TABLE onprc_billing.ogaSynch DROP COLUMN IF EXISTS ORIGINATING_AGENCY_AWARD_NUM CASCADE;
 ALTER TABLE onprc_billing.aliases ADD OriginatingAgencyAwardNum VarChar(255) Null;
 ALTER TABLE onprc_billing.ogaSynch ADD ORIGINATING_AGENCY_AWARD_NUM VarChar(255) Null;
 
@@ -1581,5 +1560,3 @@ BEGIN
 END;
 $$;
 
-/*Corrected to remove sql script not related to this module.*/
-SELECT core.fn_dropifexists('annualinflationrate', 'onprc_billing', 'table', NULL);
