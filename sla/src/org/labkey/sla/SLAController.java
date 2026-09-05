@@ -52,6 +52,7 @@ import org.labkey.api.util.ConfigurationException;
 import org.labkey.api.util.MailHelper;
 import org.labkey.api.util.MimeMap.MimeType;
 import org.labkey.api.util.PageFlowUtil;
+import org.labkey.api.util.logging.LogHelper;
 import org.labkey.api.view.ActionURL;
 import org.labkey.api.view.HtmlView;
 import org.labkey.sla.etl.ETL;
@@ -353,8 +354,7 @@ public class SLAController extends SpringActionController
 
     private File getLogFile(String name)
     {
-        File tomcatHome = new File(System.getProperty("catalina.home"));
-        return new File(tomcatHome, "logs/" + name);
+        return new File(LogHelper.getLabKeyLogDir(), name);
     }
 
     @RequiresPermission(AdminPermission.class)
