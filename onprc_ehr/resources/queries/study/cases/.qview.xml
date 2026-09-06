@@ -8,6 +8,7 @@
         <column name="date"/>
         <column name="reviewdate"/>
         <column name="enddate"/>
+        <column name="caseNo"/>
         <column name="allProblemCategories"/>
         <column name="Id/demographics/species"/>
         <column name="Id/demographics/gender"/>

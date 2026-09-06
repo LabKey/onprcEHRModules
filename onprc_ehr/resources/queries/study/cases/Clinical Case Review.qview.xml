@@ -11,6 +11,7 @@
         <!--all since last review-->
         <column name="mostRecentRemark"/>
         <column name="remark"/>
+        <column name="caseNo"/>
         <column name="allProblemCategories"/>
         <column name="lastVetReview"/>
         <column name="Id/utilization/use"/>

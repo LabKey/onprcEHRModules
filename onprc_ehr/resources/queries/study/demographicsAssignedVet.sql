@@ -10,10 +10,10 @@ SELECT
     f.Id,
     f.AssignedVet,
     f.AssignmentType,
-    GROUP_CONCAT(
+    GROUP_CONCAT(DISTINCT
             CASE WHEN f.matchedRule = 0 THEN f.ActiveMasterProblems ELSE NULL END,
-            ', '
-    ) AS MasterProblems,
+            '; '
+    ) AS masterProblems,
     f.Area,
     f.Room
 FROM vetAssignment_filter f
