@@ -100,20 +100,4 @@
         </columns>
     </table>
 
-    <table tableName="dateParts" tableDbType="TABLE">
-        <columns>
-            <column columnName="date"/>
-            <column columnName="dateOnly"/>
-            <column columnName="DayOfYear"/>
-            <column columnName="DayofMonth"/>
-            <column columnName="DayofWeek"/>
-            <column columnName="DayName"/>
-            <column columnName="WeekofMonth"/>
-            <column columnName="WeekofYear"/>
-            <column columnName="Month"/>
-            <column columnName="year"/>
-        </columns>
-    </table>
-
-
 </tables>
