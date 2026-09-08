@@ -1,5 +1,5 @@
 CREATE TABLE [onprc_ehr].[TB_TestTemp_Historical](
-    [rowid] [int] IDENTITY(100,1) NOT NULL,
+    rowid        [int] IDENTITY(100,1) NOT NULL,
     animalid      varchar(200) NULL,
     date          datetime NULL,
     objectid      ENTITYID NOT NULL,
@@ -8,14 +8,12 @@ CREATE TABLE [onprc_ehr].[TB_TestTemp_Historical](
     performedby   varchar(200) NULL,
     modifiedby    integer NULL,
     date_posted    smalldatetime
-
-
     )
     GO
 
 
 CREATE TABLE [onprc_ehr].[Temp_Clinical_Observations_Historical](
-    [rowid] [int] IDENTITY(100,1) NOT NULL,
+    rowid           [int] IDENTITY(100,1) NOT NULL,
     Id              varchar(200) NULL,
     date            smalldatetime NULL,
     category        varchar(500) NULL,
@@ -31,7 +29,7 @@ CREATE TABLE [onprc_ehr].[Temp_Clinical_Observations_Historical](
     GO
 
 CREATE TABLE [onprc_ehr].[Temp_Clinical_Observations_Historical_Master](
-    [rowid] [int] IDENTITY(100,1) NOT NULL,
+    rowid [int] IDENTITY(100,1) NOT NULL,
     searchid        integer NULL,
     Id              varchar(200) NULL,
     date            smalldatetime NULL,
@@ -49,7 +47,7 @@ CREATE TABLE [onprc_ehr].[Temp_Clinical_Observations_Historical_Master](
     GO
 
 CREATE TABLE [onprc_ehr].[Observation_Historical_EHRTasks](
-    [rowid] [int] IDENTITY(100,1) NOT NULL,
+    rowid [int] IDENTITY(100,1) NOT NULL,
     taskid          varchar(4000) NULL,
     description     varchar(500)NULL,
     title           varchar(500)NULL,
@@ -59,7 +57,6 @@ CREATE TABLE [onprc_ehr].[Observation_Historical_EHRTasks](
     assignedto      smallint NULL,
     createdby       smallint NULL,
     modifiedby      smallint NULL
-
 
     )
     GO
