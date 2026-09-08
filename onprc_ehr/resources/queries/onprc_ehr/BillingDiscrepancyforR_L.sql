@@ -87,11 +87,11 @@ SELECT
         ELSE 'Billing Needs Review'
         END AS ChargeReview,
 
-   /* CASE
+   CASE
         WHEN aas.IsDualAssigned = true
             THEN 'Dual Assigned'
         ELSE 'Single Assignment'
-        END AS AssignmentStatus,*/
+        END AS AssignmentStatus,
 
 
     pf.chargeType,
