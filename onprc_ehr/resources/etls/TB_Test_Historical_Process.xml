@@ -9,14 +9,7 @@
 
     <transforms>
 
-        <transform id="Stored_TB_Test_Historical" type="StoredProcedure">
-            <description>Runs a stored procedure that generates TB Test 72 hour values</description>
-            <procedure schemaName="onprc_ehr" procedureName="p_Create_TB_Observation_Historical_records">
-            </procedure>
-        </transform>
-
-
-        <transform id="step1a">
+        <transform id="step1">
 
             <description>Transfer to EHR Tasks</description>
 
@@ -26,7 +19,7 @@
 
         </transform>
 
-        <transform id="step2a">
+        <transform id="step2">
 
             <description>Transfer temp table data to study clinical observation </description>
 
