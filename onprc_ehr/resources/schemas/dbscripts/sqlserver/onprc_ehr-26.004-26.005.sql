@@ -82,7 +82,7 @@ GO
 */
 
 CREATE Procedure onprc_ehr.p_Create_TB_Observation_Historical_records
-    @Start_Date  smalldatetime,
+                       @Start_Date  smalldatetime,
                        @End_Date    smalldatetime
 
 
@@ -146,7 +146,7 @@ from studydataset.c6d214_encounters  a
 Where a.type in ('Procedure','Surgery')
   And a.qcstate = 18
   And a.procedureid = 802         -----'TB Test Intradermal'
-  And (a.modified >= @Start_Date And a.modified < dateadd(day, 1, @End_Date) )
+  And (a.date >= @Start_Date And a.date < dateadd(day, 1, @End_Date) )
   And a.participantid in ( select k.participantid from studydataset.c6d203_demographics k
                            where k.calculated_status = 'alive')
   AND a.participantid not in (select j.participantid from studydataset.c6d171_clinical_observations j
