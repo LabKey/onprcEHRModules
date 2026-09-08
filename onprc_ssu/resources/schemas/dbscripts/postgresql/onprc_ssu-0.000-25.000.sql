@@ -14,24 +14,25 @@
  * limitations under the License.
  */
 
--- Create schema, tables, indexes, and constraints used for ONPRC_SSU module here
--- All SQL VIEW definitions should be created in onprc_ssu-create.sql and dropped in onprc_ssu-drop.sql
 CREATE SCHEMA onprc_ssu;
-GO
 
 CREATE TABLE onprc_ssu.schedule (
-  rowid int identity(1,1),
+  rowid SERIAL,
   Id varchar(100),
-  date datetime,
+  date timestamp,
   location varchar(200),
   procedureid int,
+  project integer,
+  formcreated boolean,
+  encounterid entityid,
+  taskid entityid,
 
   objectid entityid not null,
 
   container entityid,
-  created datetime,
+  created timestamp,
   createdby int,
-  modified datetime,
+  modified timestamp,
   modifiedby int,
 
   constraint PK_schedule PRIMARY KEY (objectid)
