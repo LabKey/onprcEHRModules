@@ -36,3 +36,11 @@ CREATE TABLE onprc_ssu.schedule (
 
   constraint PK_schedule PRIMARY KEY (objectid)
 );
+
+/* 13.xxx SQL scripts */
+
+ALTER TABLE onprc_ssu.schedule ADD project integer;
+
+ALTER TABLE onprc_ssu.schedule ADD formcreated bit;
+ALTER TABLE onprc_ssu.schedule ADD encounterid entityid;
+ALTER TABLE onprc_ssu.schedule ADD taskid entityid;
