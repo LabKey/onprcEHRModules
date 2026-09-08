@@ -1,3 +1,17 @@
+/*
+=====================================================================
+ Query Name      : GJ_BillingDiscrepanciesRL
+ Schema          : onprc_ehr
+ Purpose         : Identify procedure charges where the billed project
+                   does not match the animal’s current project and
+                   highlight animals with dual active assignments.
+ Issue / Ticket  : EHR Issue 11870
+ Author          : jonesga
+ Last Modified   : 2026-07-15
+update"         Deploying to Test F for review
+=====================================================================
+*/
+
 WITH ProcedureFees AS (
     SELECT
         pfr.id,
@@ -11,8 +25,11 @@ WITH ProcedureFees AS (
         pfr.matchesProject,
         pfr.taskId
     FROM onprc_billing.procedureFeeRates pfr
-),
-
+)
+,
+/*-------------------------------------------------------------------
+  Active assignment context
+-------------------------------------------------------------------*/
      ActiveAssignments AS (
          SELECT
              a.Id,
@@ -29,22 +46,26 @@ WITH ProcedureFees AS (
          )
      ),
 
-/*-------------------------------------------------------------------
-  Collapse to ONE row per animal.
-  - CurrentProjects: comma list, for display only
-  - AssignmentCount / IsDualAssigned: aggregated per animal
-  - recent update to limit 1 recor d per occurrence
-  -- One more truy for update
+     AssignmentCounts AS (
+         SELECT
+             Id,
+             COUNT(DISTINCT project) AS AssignmentCount
+         FROM ActiveAssignments
+         GROUP BY Id
+     ),
 
--------------------------------------------------------------------*/
      AnimalAssignmentStatus AS (
          SELECT
              aa.Id,
-             GROUP_CONCAT(DISTINCT aa.ProjectName) AS CurrentProjects,
-             COUNT(DISTINCT aa.project)            AS AssignmentCount,
-             CASE WHEN COUNT(DISTINCT aa.project) > 1 THEN true ELSE false END AS IsDualAssigned
+             aa.ProjectName AS CurrentProject,
+             ac.AssignmentCount,
+             CASE
+                 WHEN ac.AssignmentCount > 1 THEN true
+                 ELSE false
+                 END AS IsDualAssigned
          FROM ActiveAssignments aa
-         GROUP BY aa.Id
+                  LEFT JOIN AssignmentCounts ac
+                            ON aa.Id = ac.Id
      )
 
 /*-------------------------------------------------------------------
@@ -53,26 +74,25 @@ WITH ProcedureFees AS (
 SELECT
     pf.id,
     pf.date,
+
     pf.ProjectBilledTo,
-    aas.CurrentProjects,
+    aas.CurrentProject,
+
+
 
     CASE
-        WHEN aas.CurrentProjects IS NULL
+        WHEN pf.ProjectBilledTo = aas.CurrentProject
+            OR aas.CurrentProject IS NULL
             THEN 'Billing is Correct'
-        -- billed project matches ANY of the animal's active assignments
-        WHEN EXISTS (
-            SELECT 1
-            FROM ActiveAssignments aa2
-            WHERE aa2.Id = pf.id
-              AND aa2.ProjectName = pf.ProjectBilledTo
-        ) THEN 'Billing is Correct'
         ELSE 'Billing Needs Review'
         END AS ChargeReview,
 
-    CASE
-        WHEN aas.IsDualAssigned = true THEN 'Dual Assigned'
+   /* CASE
+        WHEN aas.IsDualAssigned = true
+            THEN 'Dual Assigned'
         ELSE 'Single Assignment'
-        END AS AssignmentStatus,
+        END AS AssignmentStatus,*/
+
 
     pf.chargeType,
     pf.procedureId,
@@ -87,6 +107,8 @@ FROM ProcedureFees pf
 
 WHERE
     pf.ProjectBilledTo NOT LIKE '0492'
+        --or
+  --AND aas.IsDualAssigned = true)
 
 ORDER BY
     pf.date DESC,
