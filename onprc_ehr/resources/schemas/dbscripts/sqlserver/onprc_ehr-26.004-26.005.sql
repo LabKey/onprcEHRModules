@@ -159,9 +159,9 @@ order by a.participantid, a.date desc
     ---- When there are no records to process, exit immediately from the program.
 
     If (Select count(*) from onprc_ehr.TB_TestTemp_Historical) = 0
-BEGIN
-GOTO No_Records
-END
+    BEGIN
+      GOTO No_Records
+    END
 
 
     ---- Reset temp variables
@@ -208,7 +208,7 @@ from onprc_ehr.TB_TestTemp_Historical Where rowid = @Searchkey
 BEGIN
 
                 If @FirstFlag != 1
-BEGIN
+                BEGIN
                      ---- created a new task id
                  Set @TaskID = NEWID()
 
@@ -247,7 +247,7 @@ BEGIN
                      ---Set Task insert process only once per single process
                          Set @FirstFlag = 1
 
-END ---(@FirstFlag)
+                END ---(@FirstFlag)
 
 
                     ----- Initialize data entries
@@ -297,9 +297,9 @@ END --(If not exist)
 
             Set @TempSearchKey = @SearchKey
 
-Select Top 1 @SearchKey = rowid from onprc_ehr.TB_TestTemp
-Where rowid > @TempSearchKey
-Order by rowid
+            Select Top 1 @SearchKey = rowid from onprc_ehr.TB_TestTemp_Historical
+            Where rowid > @TempSearchKey
+            Order by rowid
 
 
 END ----   While @TempSearchKey
