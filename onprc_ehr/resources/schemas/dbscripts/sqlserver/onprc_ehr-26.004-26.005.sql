@@ -146,7 +146,7 @@ Where a.type in ('Procedure','Surgery')
   And (a.date >= @Start_Date And a.date < dateadd(day, 1, @End_Date) )
   AND a.participantid not in (select j.participantid from studydataset.c6d171_clinical_observations j
                               Where j.participantid  = a.participantid
-                                And j.date  = dateadd(day,3,a.date)
+                                And cast(j.date as date)  = dateadd(day,3,cast(a.date as date) )
                                 And j.category = 'TB TST Score (72 hr)'
                                 And j.qcstate = 18  )
 
@@ -194,14 +194,14 @@ BEGIN
 
             -----Begin entry Tb observation process
 
-Select @Animalid =animalid, @date = date, @modifiedby=modifiedby, @createdby =createdby,@performedby= performedby
+Select @Animalid =animalid, @date = cast(date as date), @modifiedby=modifiedby, @createdby =createdby,@performedby= performedby
 from onprc_ehr.TB_TestTemp_Historical Where rowid = @Searchkey
 
 
 
 
     If not exists (select * from studydataset.c6d171_clinical_observations j Where j.participantid  = @AnimalID
-                                        And j.date  = dateadd(day,3,@date)
+                                        And cast(j.date as date)  = dateadd(day,3,@date)
                                         And j.category = 'TB TST Score (72 hr)'  )
 
 
