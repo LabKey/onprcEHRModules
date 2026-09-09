@@ -144,8 +144,6 @@ Where a.type in ('Procedure','Surgery')
   And a.qcstate = 18
   And a.procedureid = 802         -----'TB Test Intradermal'
   And (a.date >= @Start_Date And a.date < dateadd(day, 1, @End_Date) )
-  And a.participantid in ( select k.participantid from studydataset.c6d203_demographics k
-                           where k.calculated_status = 'alive')
   AND a.participantid not in (select j.participantid from studydataset.c6d171_clinical_observations j
                               Where j.participantid  = a.participantid
                                 And j.date  = dateadd(day,3,a.date)
