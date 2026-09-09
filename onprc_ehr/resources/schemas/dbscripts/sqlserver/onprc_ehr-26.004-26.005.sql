@@ -130,7 +130,7 @@ Truncate table onprc_ehr.TB_TestTemp_Historical
 
 select
     a.participantid,
-    a.date,
+    cast(a.date as date),
     a.objectid,
     a.created,
     a.createdBy,
@@ -194,7 +194,7 @@ BEGIN
 
             -----Begin entry Tb observation process
 
-Select @Animalid =animalid, @date = cast(date as date), @modifiedby=modifiedby, @createdby =createdby,@performedby= performedby
+Select @Animalid =animalid, @date = date, @modifiedby=modifiedby, @createdby =createdby,@performedby= performedby
 from onprc_ehr.TB_TestTemp_Historical Where rowid = @Searchkey
 
 
