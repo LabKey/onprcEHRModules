@@ -49,7 +49,6 @@ import org.labkey.onprc_billing.dataentry.ChargesVirologyCoreFormType;
 import org.labkey.onprc_billing.dataentry.ChargesARTCoreFormType;
 import org.labkey.onprc_billing.dataentry.ReversalFormType;
 import org.labkey.onprc_billing.notification.BillingValidationNotification;
-import org.labkey.onprc_billing.notification.DCMFinanceNotification;
 import org.labkey.onprc_billing.notification.FinanceNotification;
 import org.labkey.onprc_billing.pipeline.BillingPipelineProvider;
 import org.labkey.onprc_billing.query.BillingAuditProvider;
@@ -113,7 +112,6 @@ public class ONPRC_BillingModule extends ExtendedSimpleModule
         PipelineService.get().registerPipelineProvider(new BillingPipelineProvider(this));
 
         NotificationService.get().registerNotification(new FinanceNotification());
-        NotificationService.get().registerNotification(new DCMFinanceNotification());
         NotificationService.get().registerNotification(new BillingValidationNotification());
 
         EHRService.get().registerTableCustomizer(this, ONPRC_BillingCustomizer.class);
