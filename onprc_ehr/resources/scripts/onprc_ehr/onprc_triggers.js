@@ -838,6 +838,28 @@ exports.init = function(EHR){
         if (row.birth_date_type == 'Undetermined'){
             EHR.Server.Utils.addError(scriptErrors, 'birth_date_type', 'You can save records with Undetermined; however, you will need to change this before finalizing the form', 'WARN');
         }
+
+        // Added by Kollil - Aug 2026
+        // Refer to tkt # 13777
+        // Check whether the animal's current/latest housing record already exists, and if that record has an enddate, throw an error
+        // Only check when creating a new active housing record:
+        // IF this is a NEW housing record, AND, the new record has no end date, AND, the animal already has a housing record with no end date, THEN WARN the user
+        if (row.Id && !row.enddate && !oldRow) {
+            LABKEY.Query.selectRows({
+                schemaName: 'study',
+                queryName: 'housing',
+                filterArray: [
+                    LABKEY.Filter.create('Id', row.Id),
+                    LABKEY.Filter.create('enddate', null, LABKEY.Filter.Types.ISBLANK)
+                ],
+                success: function(data) {
+                    if (data && data.rows && data.rows.length > 0) {
+                        EHR.Server.Utils.addError(scriptErrors, 'Id', 'This animal already has an active housing record. Please end the current housing record before adding a new one','WARN');
+                    }
+                }
+            });
+        }
+
     });
 
     EHR.Server.TriggerManager.registerHandlerForQuery(EHR.Server.TriggerManager.Events.ON_BECOME_PUBLIC, 'study', 'housing', function(scriptErrors, helper, row, oldRow){
