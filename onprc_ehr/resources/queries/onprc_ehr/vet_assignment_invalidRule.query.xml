@@ -1,0 +1,9 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="vet_assignment_InvalidRule" tableDbType="NOT_IN_DB">
+                <tableTitle>Invalid Vet Assignment Rules</tableTitle>
+            </table>
+        </tables>
+    </metadata>
+</query>
