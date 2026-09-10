@@ -284,7 +284,7 @@ EHR.model.DataModelManager.registerMetadata('Default', {
         },
 
         //Modified: 9-10-2026 R. Blasa
-        'study.departure': {
+        'study.Departure': {
             destination: {
                 editorConfig: {
                     plugins: [Ext4.create('LDK.plugin.UserEditableCombo', {
