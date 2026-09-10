@@ -1,22 +1,4 @@
-SELECT
-    f.Id,
-    f.AssignedVet,
-    f.AssignmentType,
-    GROUP_CONCAT(
-            CASE WHEN f.matchedRule = 0 THEN f.ActiveMasterProblems ELSE NULL END,
-            ', '
-    ) AS MasterProblems,
-    f.Area,
-    f.Room
-FROM vetAssignment_filter f
-WHERE f.matchedRule = (
-    SELECT min(matchedRule)
-    FROM vetAssignment_filter sub
-    WHERE sub.Id = f.Id
-)
-GROUP BY f.Id, f.AssignedVet, f.AssignmentType, f.Area, f.Room
-
-/* WITH MinRule AS (
+WITH MinRule AS (
     SELECT Id, MIN(matchedRule) AS MinMatchedRule
     FROM vetAssignment_filter
     GROUP BY Id
@@ -25,12 +7,12 @@ GROUP BY f.Id, f.AssignedVet, f.AssignmentType, f.Area, f.Room
         SELECT
             Id,
             AssignedVet,
-            GROUP_CONCAT(DISTINCT ActiveMasterProblems, ', ') AS GroupedMasterProblems
+            GROUP_CONCAT(DISTINCT ActiveMasterProblems, ', ') AS GroupedMasterProblems -- DISTINCT prevents duplicate master problems if dual-assigned
         FROM vetAssignment_filter
         WHERE matchedRule = 0
         GROUP BY Id, AssignedVet
     )
-SELECT DISTINCT
+SELECT DISTINCT -- DISTINCT prevents duplicate rows
     f.Id,
     f.AssignedVet,
     f.AssignmentType,
@@ -43,4 +25,4 @@ FROM vetAssignment_filter f
               AND m.MinMatchedRule = f.matchedRule
      LEFT JOIN VetCaseData v
                ON v.Id = f.Id
-                   AND v.AssignedVet = f.AssignedVet */
+                   AND v.AssignedVet = f.AssignedVet
