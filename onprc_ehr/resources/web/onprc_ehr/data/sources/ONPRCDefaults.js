@@ -255,7 +255,16 @@ EHR.model.DataModelManager.registerMetadata('Default', {
                 height: 52
             }
         },
-
+        //Modified: 9-10-2026 R. Blasa affects both Necropsy and Surgery
+        'ehr.encounter_participants': {
+        username: {
+            editorConfig: {
+                plugins: [Ext4.create('LDK.plugin.UserEditableCombo', {
+                    allowChooseOther: false
+                })]
+            }
+         }
+      },
         //Added: 12-27-2017   R.blasa
 
         'study.flags': {
