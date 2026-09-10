@@ -265,6 +265,16 @@ EHR.model.DataModelManager.registerMetadata('Default', {
             }
          }
       },
+        //Modified: 9-10-2026 R. Blasa
+        'study.housing': {
+            room: {
+                editorConfig: {
+                    plugins: [Ext4.create('LDK.plugin.UserEditableCombo', {
+                        allowChooseOther: false
+                    })]
+                }
+            }
+        },
         //Added: 12-27-2017   R.blasa
 
         'study.flags': {
