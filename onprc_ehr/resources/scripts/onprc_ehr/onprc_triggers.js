@@ -27,7 +27,11 @@ exports.init = function(EHR){
                     Id: row.Id,
                     birth: row.date,
                     date: row.date,
-                    calculated_status: 'Fetus'
+                    calculated_status: 'Fetus',
+                    species: row.species,
+                    geographic_origin: row.geographic_origin,
+                    gender: row.gender
+
                 };
 
 
@@ -692,16 +696,6 @@ exports.init = function(EHR){
                         hasUpdates = true;
                     }
 
-                    //update death date in demographics if born dead
-                    if (row.Id && row.date && !data.death && !triggerHelper.isBirthAlive(row.birth_condition || null)){
-                        obj.death = row.date;
-                        hasUpdates = true;
-
-                        //if this is the first time a birth condition was entered, treat this the same as when a death is entered
-                        if (oldRow && !oldRow.birth_condition){
-                            helper.onDeathDeparture(row.Id, row.date);
-                        }
-                    }
 
                     if (hasUpdates){
                         obj.Id = row.Id;
