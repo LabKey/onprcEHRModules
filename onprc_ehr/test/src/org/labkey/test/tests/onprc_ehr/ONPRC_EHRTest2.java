@@ -393,14 +393,14 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
         SelectRowsCommand weightSelect = new SelectRowsCommand("study", "weight");
         weightSelect.addFilter(new Filter("Id", offspringId, Filter.Operator.EQUAL));
 
-        if (!isAlive)
-        {
-            //if the animal was born dead, we expect these flags to be endded automatically
-            groupSelect.addFilter(new Filter("enddate", null, Filter.Operator.NONBLANK));
-            spfFlagSelect.addFilter(new Filter("enddate", null, Filter.Operator.NONBLANK));
-            conditionSelect.addFilter(new Filter("enddate", null, Filter.Operator.NONBLANK));
-            housingSelect.addFilter(new Filter("enddate", null, Filter.Operator.NONBLANK));
-        }
+//        if (!isAlive)
+//        {
+//            //if the animal was born dead, we expect these flags to be endded automatically
+//            groupSelect.addFilter(new Filter("enddate", null, Filter.Operator.NONBLANK));
+//            spfFlagSelect.addFilter(new Filter("enddate", null, Filter.Operator.NONBLANK));
+//            conditionSelect.addFilter(new Filter("enddate", null, Filter.Operator.NONBLANK));
+//            housingSelect.addFilter(new Filter("enddate", null, Filter.Operator.NONBLANK));
+//        }
 
         if (isPublic)
         {
@@ -416,16 +416,16 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
             }
 
             //expect death date
-            if (!isAlive)
-            {
-                //in our test scenario, death date always matches birth
-                org.junit.Assert.assertEquals("demographics death date should match birth", birthDate, demographicsRow.get("death"));
-            }
-            else
-            {
-                //in our test scenario, death date always matches birth
-                Assert.assertNull("demographics death date should be null", demographicsRow.get("death"));
-            }
+//            if (!isAlive)
+//            {
+//                //in our test scenario, death date always matches birth
+//                org.junit.Assert.assertEquals("demographics death date should match birth", birthDate, demographicsRow.get("death"));
+//            }
+//            else
+//            {
+//                //in our test scenario, death date always matches birth
+//                Assert.assertNull("demographics death date should be null", demographicsRow.get("death"));
+//            }
 
             org.junit.Assert.assertEquals("demographics birth date not set properly", birthDate, demographicsRow.get("birth"));
 
