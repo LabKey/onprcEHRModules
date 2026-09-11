@@ -1,3 +1,6 @@
+-- Current scripts create this as a FUNCTION, but earlier versions had created a PROCEDURE by this name. Tolerate that case.
+DROP PROCEDURE IF EXISTS audit.ArchiveAuditTables;
+
 CREATE OR REPLACE FUNCTION audit.ArchiveAuditTables(
     INOUT RetentionMonths INT
 )

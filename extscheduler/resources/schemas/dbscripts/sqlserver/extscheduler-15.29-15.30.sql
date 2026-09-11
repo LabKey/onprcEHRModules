@@ -1,1 +1,0 @@
-ALTER TABLE extscheduler.Events ADD Comments VARCHAR(255);
