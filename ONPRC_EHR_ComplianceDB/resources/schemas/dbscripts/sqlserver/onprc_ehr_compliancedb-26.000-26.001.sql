@@ -35,6 +35,22 @@ CREATE TABLE onprc_ehr_compliancedb.Employeetraining_Details
 );
 GO
 
+CREATE TABLE onprc_ehr_compliancedb.requirementname_translation
+(
+    RowId INT IDENTITY(1,1) NOT NULL,
+     spreadsheet_name  varchar(255) not null,
+     prime_name varchar(255)  null,
+     grid_type  varchar(100) null,
+     date_disabled  datetime,
+     created datetime,
+     createdby USERID,
+     container varchar(4000)
+
+);
+GO
+
+
+
 insert into onprc_ehr_compliancedb.EmployeeAssignedLocation
   (
   employeeid,
@@ -81,7 +97,7 @@ select
     e.employeeid,
 
 
-    b.requirementname,
+    (select j.spreadsheet_name from onprc_ehr_compliancedb.requirementname_translation  j where j.prime_name = b. requirementname) as requirementname,
 
 
     (select max(zz.date) from ehr_compliancedb.completiondates zz where zz.requirementname = b.requirementname and zz.employeeid= e.employeeid   ) as completiondate,
