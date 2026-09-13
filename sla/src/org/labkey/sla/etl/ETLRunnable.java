@@ -452,16 +452,7 @@ public class ETLRunnable implements Runnable
                                 likeWithIds.append(" OR ");
                             }
 
-                            if (targetTable.getSqlDialect().isPostgreSQL())
-                            {
-                                String delim = "||";
-                                likeWithIds.append(filterColumn.getValueSql("t")).append(" LIKE ? " + delim + " '%' ");
-                            }
-                            else
-                            {
-                                String delim = "+";
-                                likeWithIds.append(filterColumn.getValueSql("t")).append(" LIKE CAST((? " + delim + " '%') as nvarchar(4000)) ");
-                            }
+                            likeWithIds.append(filterColumn.getValueSql("t")).append(" LIKE ? || '%' ");
 
                             count++;
                             if (count > 100)
