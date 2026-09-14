@@ -44,7 +44,52 @@ EHR.model.DataModelManager.registerMetadata('Default', {
                     ret.setHours(8);
                     return ret;
                 }
+            },
+            route: {
+                editorConfig: {
+                    plugins: [Ext4.create('LDK.plugin.UserEditableCombo', {
+                        allowChooseOther: false
+                    })]
+                }
+            },
+            vol_units: {
+                editorConfig: {
+                    plugins: [Ext4.create('LDK.plugin.UserEditableCombo', {
+                        allowChooseOther: false
+                    })]
+                }
+            },
+            amount_units: {
+                editorConfig: {
+                    plugins: [Ext4.create('LDK.plugin.UserEditableCombo', {
+                        allowChooseOther: false
+                    })]
+                }
             }
+          },
+        'study.drug': {
+            route: {
+                editorConfig: {
+                    plugins: [Ext4.create('LDK.plugin.UserEditableCombo', {
+                        allowChooseOther: false
+                    })]
+                }
+            },
+            vol_units: {
+                editorConfig: {
+                    plugins: [Ext4.create('LDK.plugin.UserEditableCombo', {
+                        allowChooseOther: false
+                    })]
+                }
+            },
+            amount_units: {
+                editorConfig: {
+                    plugins: [Ext4.create('LDK.plugin.UserEditableCombo', {
+                        allowChooseOther: false
+                    })]
+                }
+            }
+
         },
 
         'study.blood' : {
@@ -96,6 +141,13 @@ EHR.model.DataModelManager.registerMetadata('Default', {
                     width: 150
                 }
            },
+            source: {
+                editorConfig: {
+                    plugins: [Ext4.create('LDK.plugin.UserEditableCombo', {
+                        allowChooseOther: false
+                    })]
+                }
+            },
             //Added: 5-3-2018 R.Blasa
             acquisitionType: {
                 hidden: false,
@@ -210,7 +262,37 @@ EHR.model.DataModelManager.registerMetadata('Default', {
                 height: 52
             }
         },
+        //Modified: 9-10-2026 R. Blasa affects both Necropsy and Surgery
+        'ehr.encounter_participants': {
+        username: {
+            editorConfig: {
+                plugins: [Ext4.create('LDK.plugin.UserEditableCombo', {
+                    allowChooseOther: false
+                })]
+            }
+         }
+      },
+        //Modified: 9-10-2026 R. Blasa
+        'study.housing': {
+            room: {
+                editorConfig: {
+                    plugins: [Ext4.create('LDK.plugin.UserEditableCombo', {
+                        allowChooseOther: false
+                    })]
+                }
+            }
+        },
 
+        //Modified: 9-10-2026 R. Blasa
+        'study.Departure': {
+            destination: {
+                editorConfig: {
+                    plugins: [Ext4.create('LDK.plugin.UserEditableCombo', {
+                        allowChooseOther: false
+                    })]
+                }
+            }
+        },
         //Added: 12-27-2017   R.blasa
 
         'study.flags': {
