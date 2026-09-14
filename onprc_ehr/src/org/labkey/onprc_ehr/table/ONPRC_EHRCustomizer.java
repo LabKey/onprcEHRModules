@@ -487,12 +487,12 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
             SQLFragment sql = new SQLFragment("CASE " +
                     //sat/sun are overtime
                     //"WHEN " + ti.getSqlDialect().getDatePart(Calendar.DAY_OF_WEEK, ExprColumn.STR_TABLE_ALIAS + ".date") + " IN (1, 7) THEN 'Y' " +
-                    "WHEN {fn dayofweek(" + ExprColumn.STR_TABLE_ALIAS + ".date)}" + " IN (1, 7) THEN 'Y' " +
+                    "WHEN {fn dayofweek(" + ExprColumn.STR_TABLE_ALIAS + ".date)} IN (1, 7) THEN 'Y' " +
                     //otherwise base off enddate
                     //any time after 1600 is overtime
-                    "WHEN {fn hour(" + ExprColumn.STR_TABLE_ALIAS + ".date)}" + " >= 16 THEN 'Y' " +
+                    "WHEN {fn hour(" + ExprColumn.STR_TABLE_ALIAS + ".date)} >= 16 THEN 'Y' " +
                     "WHEN " + ExprColumn.STR_TABLE_ALIAS + ".enddate IS NULL THEN NULL " +
-                    "WHEN {fn hour(" + ExprColumn.STR_TABLE_ALIAS + ".enddate)}" + " >= 16 THEN 'Y' " +
+                    "WHEN {fn hour(" + ExprColumn.STR_TABLE_ALIAS + ".enddate)} >= 16 THEN 'Y' " +
                     "ELSE null END"
             );
 
@@ -1335,7 +1335,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         if (null == objectId || null == ti.getColumn("Id"))
             return;
 
-        SQLFragment latestHxSql = new SQLFragment("(SELECT (" + "r.hx" + ") as _expr FROM " + realTable.getSelectName() +
+        SQLFragment latestHxSql = new SQLFragment("(SELECT (r.hx) as _expr FROM " + realTable.getSelectName() +
                 " r WHERE "
                 + " r.caseid = " + ExprColumn.STR_TABLE_ALIAS + ".objectid AND "
                 + " r.participantId = " + ExprColumn.STR_TABLE_ALIAS + ".participantId AND r.hx IS NOT NULL AND (r.category != ? OR r.category IS NULL) ORDER BY r.date desc  LIMIT 1 )", ONPRC_EHRManager.REPLACED_SOAP);
@@ -1346,7 +1346,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         ti.addColumn(latestHx);
 
         //does not use caseId
-        SQLFragment recentp2Sql = new SQLFragment("(SELECT (" + "r.p2" + ") as _expr FROM " + realTable.getSelectName() +
+        SQLFragment recentp2Sql = new SQLFragment("(SELECT (r.p2) as _expr FROM " + realTable.getSelectName() +
                 " r WHERE "
                 //+ " r.caseid = " + ExprColumn.STR_TABLE_ALIAS + ".objectid AND "
                 + " r.participantId = " + ExprColumn.STR_TABLE_ALIAS + ".participantId AND r.p2 IS NOT NULL AND (r.category != ? OR r.category IS NULL) ORDER BY r.date desc  LIMIT 1 )", ONPRC_EHRManager.REPLACED_SOAP);
@@ -1357,7 +1357,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         ti.addColumn(recentP2);
 
         //uses caseId.  this is a proxy for rounds
-        SQLFragment recentRemarkSql = new SQLFragment("(SELECT (" + "r.remark" + ") as _expr FROM " + realTable.getSelectName() +
+        SQLFragment recentRemarkSql = new SQLFragment("(SELECT (r.remark) as _expr FROM " + realTable.getSelectName() +
                 " r WHERE "
                 + " r.caseid = " + ExprColumn.STR_TABLE_ALIAS + ".objectid AND "
                 + " r.participantId = " + ExprColumn.STR_TABLE_ALIAS + ".participantId AND r.remark IS NOT NULL AND (r.category != ? OR r.category IS NULL) ORDER BY r.date desc  LIMIT 1 )", ONPRC_EHRManager.REPLACED_SOAP);
@@ -1368,7 +1368,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         ti.addColumn(recentRemark);
 
         //don't use caseId.  CEg Plan info Added: 10-25-2017 R.Blasa
-        SQLFragment recentCeg_Plansql = new SQLFragment("(SELECT (" + "r.CEG_Plan" + ") as _expr FROM " + realTable.getSelectName() +
+        SQLFragment recentCeg_Plansql = new SQLFragment("(SELECT (r.CEG_Plan) as _expr FROM " + realTable.getSelectName() +
                 " r WHERE "
 //                + " r.caseid = " + ExprColumn.STR_TABLE_ALIAS + ".objectid AND "
                 + " r.participantId = " + ExprColumn.STR_TABLE_ALIAS + ".participantId AND r.CEG_Plan IS NOT NULL AND (r.category != ? OR r.category IS NULL) ORDER BY r.date desc  LIMIT 1 )", ONPRC_EHRManager.REPLACED_SOAP);
@@ -1624,9 +1624,9 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
                         " WHEN " + ExprColumn.STR_TABLE_ALIAS + ".enddate IS NOT NULL THEN NULL " +
                         " WHEN (" + ti.getSqlDialect().getDateDiff(Calendar.DATE, "{fn curdate()}", ExprColumn.STR_TABLE_ALIAS + ".approve") + " >= 1095) THEN NULL" +
                         //when both dates are null, show null
-                        " WHEN (" + ExprColumn.STR_TABLE_ALIAS + ".approve" + " IS NULL AND " + ExprColumn.STR_TABLE_ALIAS + ".lastAnnualReview" + " IS NULL) THEN NULL" +
+                        " WHEN (" + ExprColumn.STR_TABLE_ALIAS + ".approve IS NULL AND " + ExprColumn.STR_TABLE_ALIAS + ".lastAnnualReview IS NULL) THEN NULL" +
                         //otherwise, show the next annual renewal date
-                        " ELSE {fn timestampadd(SQL_TSI_DAY, 364, COALESCE(" + ExprColumn.STR_TABLE_ALIAS + ".lastAnnualReview, " + ExprColumn.STR_TABLE_ALIAS + ".approve)" + ")}" +
+                        " ELSE {fn timestampadd(SQL_TSI_DAY, 364, COALESCE(" + ExprColumn.STR_TABLE_ALIAS + ".lastAnnualReview, " + ExprColumn.STR_TABLE_ALIAS + ".approve))}" +
                         " END)";
                 SQLFragment sql = new SQLFragment(sqlString);
                 ExprColumn annualReviewDateCol = new ExprColumn(ti, annualReviewDate, sql, JdbcType.DATE, ti.getColumn("approve"));
@@ -1640,7 +1640,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
                         " WHEN " + ExprColumn.STR_TABLE_ALIAS + ".enddate IS NOT NULL THEN NULL " +
                         " WHEN (" + ti.getSqlDialect().getDateDiff(Calendar.DATE, "{fn curdate()}", ExprColumn.STR_TABLE_ALIAS + ".approve") + " >= 1095) THEN NULL" +
                         //when both date are null, it is due
-                        " WHEN (" + ExprColumn.STR_TABLE_ALIAS + ".approve" + " IS NULL AND " + ExprColumn.STR_TABLE_ALIAS + ".lastAnnualReview" + " IS NULL) THEN 0" +
+                        " WHEN (" + ExprColumn.STR_TABLE_ALIAS + ".approve IS NULL AND " + ExprColumn.STR_TABLE_ALIAS + ".lastAnnualReview IS NULL) THEN 0" +
                         //NOTE: these expire 1 day prior to a full year, so use 364 instead of 365
                         " ELSE 364 - (" + ti.getSqlDialect().getDateDiff(Calendar.DATE, "{fn curdate()}", "COALESCE(" + ExprColumn.STR_TABLE_ALIAS + ".lastAnnualReview, " + ExprColumn.STR_TABLE_ALIAS + ".approve)") + ")" +
                         " END)");
