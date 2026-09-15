@@ -23,5 +23,5 @@ assignment.project,
 --assignment.project.use_category,
 v.userId.displayName as vetAssigned
 FROM Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.study.assignment left outer join Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.onprc_ehr.Vet_Assignment v on assignment.project = v.project
-where assignment.project.use_category != 'research' and enddate is null
+where LOWER(assignment.project.use_category) != 'research' and enddate is null
 group by assignment.id, assignment.project,v.userId.displayName

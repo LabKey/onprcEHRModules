@@ -8,4 +8,4 @@ d.earliestRemarkSinceReview,
 d.lastVetReview,
 v.assignedVet
 FROM demographicsAssignedVet v join demographics d on v.id = d.id
-where d.lastDayAtCenter > TimestampDiff('SQL_TSI_Day', 90, Now())
+where d.lastDayAtCenter > TimestampAdd('SQL_TSI_Day', -90, Now())

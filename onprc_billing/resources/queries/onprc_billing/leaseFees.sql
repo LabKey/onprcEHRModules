@@ -163,8 +163,8 @@ SELECT
   a.releaseCondition,
   a.assignCondition,
   a.releaseType,
-  a.ageAtTime.AgeAtTimeYearsRounded as ageAtTime,
   ' ' as ESPFAnimal,
+  a.ageAtTime.AgeAtTimeYearsRounded as ageAtTime,
   'Lease Setup Fees' as category,
   (SELECT rowid FROM onprc_billing_public.chargeableItems ci WHERE ci.active = true AND ci.name = javaConstant('org.labkey.onprc_billing.ONPRC_BillingManager.LEASE_SETUP_FEES')) as chargeId,
   1 AS quantity,
@@ -209,8 +209,8 @@ a.projectedReleaseCondition,
 a.releaseCondition,
 a.assignCondition,
 a.releaseType,
-a.ageAtTime.AgeAtTimeYearsRounded as ageAtTime,
 a5.id as ESPFAnimal,
+a.ageAtTime.AgeAtTimeYearsRounded as ageAtTime,
 'Lease Fees' as category,
 --////This selectes the charge ID to be used
 (SELECT max(rowid) as rowid FROM onprc_billing_public.chargeableItems ci WHERE ci.name = javaConstant('org.labkey.onprc_billing.ONPRC_BillingManager.LEASE_FEE_ADJUSTMENT') and ci.active = true) as chargeId,
@@ -266,4 +266,4 @@ WHERE a.releaseCondition != a.projectedReleaseCondition
 and (A.id != A5.id or A5.id is Null)
 AND a.enddatefinalized is not null AND CAST(a.enddatefinalized AS DATE) >= CAST(STARTDATE AS DATE) AND CAST(a.enddatefinalized AS DATE) <= CAST(EndDate as DATE)
 AND a.qcstate.publicdata = true AND lf.active = true
-AND a2.id IS NULL and a.participantID not like '[a-z]%'
+AND a2.id IS NULL and NOT (LOWER(LEFT(a.participantID,1)) BETWEEN 'a' AND 'z')

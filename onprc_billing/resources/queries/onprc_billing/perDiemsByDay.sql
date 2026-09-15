@@ -61,7 +61,7 @@ FROM (
         count(*) AS totalAssignmentRecords,
         group_concat(DISTINCT a2.project.displayName) AS overlappingProjects,
         count(DISTINCT a2.project) AS totalOverlappingProjects,
-        sum(CASE WHEN a2.project.use_Category = 'Research' THEN 1 ELSE 0 END) as totalOverlappingResearchProjects,
+        sum(CASE WHEN LOWER(a2.project.use_Category) = 'research' THEN 1 ELSE 0 END) as totalOverlappingResearchProjects,
         group_concat(DISTINCT a2.project.use_category) AS overlappingProjectsCategory,
         group_concat(DISTINCT a2.project.protocol) AS overlappingProtocols,
         count(h3.room) AS totalHousingRecords,
