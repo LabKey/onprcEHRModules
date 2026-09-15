@@ -1975,21 +1975,7 @@ public class ONPRC_EHRTriggerHelper
     {
         if (_nextProtocolId == null)
         {
-            String suffix;
-            if (DbScope.getLabKeyScope().getSqlDialect().isPostgreSQL())
-            {
-                suffix = "protocol ~ '^([0-9]+)$'";
-            }
-            else if (DbScope.getLabKeyScope().getSqlDialect().isSqlServer())
-            {
-                suffix = "protocol NOT LIKE '%[^0-9]%'";
-            }
-            else
-            {
-                throw new IllegalArgumentException("ONPRC_EHR Module is only supported on either postgres or sqlserver");
-            }
-
-            SqlSelector ss = new SqlSelector(DbSchema.get("ehr"), "SELECT COALESCE(max(CAST(protocol as INTEGER)), 0) as expr FROM ehr.protocol WHERE " + suffix);
+            SqlSelector ss = new SqlSelector(DbSchema.get("ehr"), "SELECT COALESCE(max(CAST(protocol as INTEGER)), 0) as expr FROM ehr.protocol WHERE protocol ~ '^([0-9]+)$'");
             List<Integer> ret = ss.getArrayList(Integer.class);
             _nextProtocolId = ret.isEmpty() ? 0 : ret.getFirst();
         }

@@ -487,12 +487,12 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
             SQLFragment sql = new SQLFragment("CASE " +
                     //sat/sun are overtime
                     //"WHEN " + ti.getSqlDialect().getDatePart(Calendar.DAY_OF_WEEK, ExprColumn.STR_TABLE_ALIAS + ".date") + " IN (1, 7) THEN 'Y' " +
-                    "WHEN {fn dayofweek(" + ExprColumn.STR_TABLE_ALIAS + ".date)}" + " IN (1, 7) THEN 'Y' " +
+                    "WHEN {fn dayofweek(" + ExprColumn.STR_TABLE_ALIAS + ".date)} IN (1, 7) THEN 'Y' " +
                     //otherwise base off enddate
                     //any time after 1600 is overtime
-                    "WHEN {fn hour(" + ExprColumn.STR_TABLE_ALIAS + ".date)}" + " >= 16 THEN 'Y' " +
+                    "WHEN {fn hour(" + ExprColumn.STR_TABLE_ALIAS + ".date)} >= 16 THEN 'Y' " +
                     "WHEN " + ExprColumn.STR_TABLE_ALIAS + ".enddate IS NULL THEN NULL " +
-                    "WHEN {fn hour(" + ExprColumn.STR_TABLE_ALIAS + ".enddate)}" + " >= 16 THEN 'Y' " +
+                    "WHEN {fn hour(" + ExprColumn.STR_TABLE_ALIAS + ".enddate)} >= 16 THEN 'Y' " +
                     "ELSE null END"
             );
 
@@ -1061,6 +1061,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
 
     }
 
+    //TODO GH Issue 1575: SQL Server only (REPLICATE/LEN), so nothing below runs. Needs a PostgreSQL rewrite.
     private void customizeTreatmentOrdersTable(AbstractTableInfo ti)
     {
         //for now, sqlserver only
@@ -1101,6 +1102,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         }
     }
 
+    //TODO GH Issue 1575: SQL Server only (REPLICATE/LEN), so nothing below runs. Needs a PostgreSQL rewrite.
     private void customizeTreatmentFrequency(AbstractTableInfo ti)
     {
         //for now, sqlserver only
@@ -1199,6 +1201,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
                 ti.addColumn(earliestRemarkCol);
 
                 //date part not supported in postgres
+                //TODO GH Issue 1575: SQL Server only, so remarksEnteredSinceReview is missing from the Vet Review views. Needs a PostgreSQL rewrite.
                 if (ti.getSqlDialect().isSqlServer())
                 {
                     //NOTE: the first token in the group_concat() is used for sorting
@@ -1327,18 +1330,15 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
             return;
         }
 
-        String prefix = ti.getSqlDialect().isSqlServer() ? " TOP 1 " : "";
-        String suffix = ti.getSqlDialect().isSqlServer() ? "" : " LIMIT 1 ";
-
         //uses caseId
         ColumnInfo objectId = ti.getColumn("objectid");
         if (null == objectId || null == ti.getColumn("Id"))
             return;
 
-        SQLFragment latestHxSql = new SQLFragment("(SELECT " + prefix + " (" + "r.hx" + ") as _expr FROM " + realTable.getSelectName() +
+        SQLFragment latestHxSql = new SQLFragment("(SELECT (r.hx) as _expr FROM " + realTable.getSelectName() +
                 " r WHERE "
                 + " r.caseid = " + ExprColumn.STR_TABLE_ALIAS + ".objectid AND "
-                + " r.participantId = " + ExprColumn.STR_TABLE_ALIAS + ".participantId AND r.hx IS NOT NULL AND (r.category != ? OR r.category IS NULL) ORDER BY r.date desc " + suffix + ")", ONPRC_EHRManager.REPLACED_SOAP);
+                + " r.participantId = " + ExprColumn.STR_TABLE_ALIAS + ".participantId AND r.hx IS NOT NULL AND (r.category != ? OR r.category IS NULL) ORDER BY r.date desc  LIMIT 1 )", ONPRC_EHRManager.REPLACED_SOAP);
 
         ExprColumn latestHx = new ExprColumn(ti, hxName, latestHxSql, JdbcType.VARCHAR, objectId, ti.getColumn("Id"));
         latestHx.setLabel("Latest Hx For Case");
@@ -1346,10 +1346,10 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         ti.addColumn(latestHx);
 
         //does not use caseId
-        SQLFragment recentp2Sql = new SQLFragment("(SELECT " + prefix + " (" + "r.p2" + ") as _expr FROM " + realTable.getSelectName() +
+        SQLFragment recentp2Sql = new SQLFragment("(SELECT (r.p2) as _expr FROM " + realTable.getSelectName() +
                 " r WHERE "
                 //+ " r.caseid = " + ExprColumn.STR_TABLE_ALIAS + ".objectid AND "
-                + " r.participantId = " + ExprColumn.STR_TABLE_ALIAS + ".participantId AND r.p2 IS NOT NULL AND (r.category != ? OR r.category IS NULL) ORDER BY r.date desc " + suffix + ")", ONPRC_EHRManager.REPLACED_SOAP);
+                + " r.participantId = " + ExprColumn.STR_TABLE_ALIAS + ".participantId AND r.p2 IS NOT NULL AND (r.category != ? OR r.category IS NULL) ORDER BY r.date desc  LIMIT 1 )", ONPRC_EHRManager.REPLACED_SOAP);
         ExprColumn recentP2 = new ExprColumn(ti, "mostRecentP2", recentp2Sql, JdbcType.VARCHAR, objectId);
         recentP2.setLabel("Most Recent P2");
         recentP2.setDescription("This column will display the most recent P2 that has been entered for the animal.");
@@ -1357,10 +1357,10 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         ti.addColumn(recentP2);
 
         //uses caseId.  this is a proxy for rounds
-        SQLFragment recentRemarkSql = new SQLFragment("(SELECT " + prefix + " (" + "r.remark" + ") as _expr FROM " + realTable.getSelectName() +
+        SQLFragment recentRemarkSql = new SQLFragment("(SELECT (r.remark) as _expr FROM " + realTable.getSelectName() +
                 " r WHERE "
                 + " r.caseid = " + ExprColumn.STR_TABLE_ALIAS + ".objectid AND "
-                + " r.participantId = " + ExprColumn.STR_TABLE_ALIAS + ".participantId AND r.remark IS NOT NULL AND (r.category != ? OR r.category IS NULL) ORDER BY r.date desc " + suffix + ")", ONPRC_EHRManager.REPLACED_SOAP);
+                + " r.participantId = " + ExprColumn.STR_TABLE_ALIAS + ".participantId AND r.remark IS NOT NULL AND (r.category != ? OR r.category IS NULL) ORDER BY r.date desc  LIMIT 1 )", ONPRC_EHRManager.REPLACED_SOAP);
         ExprColumn recentRemark = new ExprColumn(ti, "mostRecentRemark", recentRemarkSql, JdbcType.VARCHAR, objectId);
         recentRemark.setLabel("Most Recent Remark For Case");
         recentRemark.setDescription("This column will display the most recent remark that has been entered for the animal.");
@@ -1368,10 +1368,10 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         ti.addColumn(recentRemark);
 
         //don't use caseId.  CEg Plan info Added: 10-25-2017 R.Blasa
-        SQLFragment recentCeg_Plansql = new SQLFragment("(SELECT " + prefix + " (" + "r.CEG_Plan" + ") as _expr FROM " + realTable.getSelectName() +
+        SQLFragment recentCeg_Plansql = new SQLFragment("(SELECT (r.CEG_Plan) as _expr FROM " + realTable.getSelectName() +
                 " r WHERE "
 //                + " r.caseid = " + ExprColumn.STR_TABLE_ALIAS + ".objectid AND "
-                + " r.participantId = " + ExprColumn.STR_TABLE_ALIAS + ".participantId AND r.CEG_Plan IS NOT NULL AND (r.category != ? OR r.category IS NULL) ORDER BY r.date desc " + suffix + ")", ONPRC_EHRManager.REPLACED_SOAP);
+                + " r.participantId = " + ExprColumn.STR_TABLE_ALIAS + ".participantId AND r.CEG_Plan IS NOT NULL AND (r.category != ? OR r.category IS NULL) ORDER BY r.date desc  LIMIT 1 )", ONPRC_EHRManager.REPLACED_SOAP);
         ExprColumn recentCeg_plan = new ExprColumn(ti, "mostRecentCeg_Plan", recentCeg_Plansql, JdbcType.VARCHAR, objectId);
         recentCeg_plan.setLabel("Most Recent Ceg Plan For Case");
         recentCeg_plan.setDescription("This column will display the most recent CEG Plan that has been entered for the animal.");
@@ -1481,7 +1481,6 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         }
 
         //find any surgical procedures from the same date as this case
-        String chr = ti.getSqlDialect().isPostgreSQL() ? "chr" : "char";
         SQLFragment procedureSql = new SQLFragment("(SELECT cast(max(p.followupDays) as varchar(2))" +
                 " FROM " + realTable.getSelectName() + " r " +
                 " JOIN ehr_lookups.procedures p ON (p.rowid = r.procedureid) " +
@@ -1613,6 +1612,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
             }
         }
 
+        //TODO GH Issue 1575: SQL Server only, so annualReviewDate, daysUntilAnnualReview, renewalDate and daysUntilRenewal are missing on PostgreSQL. The SQL here looks portable; the guard may be broader than the SQL requires.
         if (ti.getSqlDialect().isSqlServer())
         {
             String annualReviewDate = "annualReviewDate";
@@ -1624,9 +1624,9 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
                         " WHEN " + ExprColumn.STR_TABLE_ALIAS + ".enddate IS NOT NULL THEN NULL " +
                         " WHEN (" + ti.getSqlDialect().getDateDiff(Calendar.DATE, "{fn curdate()}", ExprColumn.STR_TABLE_ALIAS + ".approve") + " >= 1095) THEN NULL" +
                         //when both dates are null, show null
-                        " WHEN (" + ExprColumn.STR_TABLE_ALIAS + ".approve" + " IS NULL AND " + ExprColumn.STR_TABLE_ALIAS + ".lastAnnualReview" + " IS NULL) THEN NULL" +
+                        " WHEN (" + ExprColumn.STR_TABLE_ALIAS + ".approve IS NULL AND " + ExprColumn.STR_TABLE_ALIAS + ".lastAnnualReview IS NULL) THEN NULL" +
                         //otherwise, show the next annual renewal date
-                        " ELSE {fn timestampadd(SQL_TSI_DAY, 364, COALESCE(" + ExprColumn.STR_TABLE_ALIAS + ".lastAnnualReview, " + ExprColumn.STR_TABLE_ALIAS + ".approve)" + ")}" +
+                        " ELSE {fn timestampadd(SQL_TSI_DAY, 364, COALESCE(" + ExprColumn.STR_TABLE_ALIAS + ".lastAnnualReview, " + ExprColumn.STR_TABLE_ALIAS + ".approve))}" +
                         " END)";
                 SQLFragment sql = new SQLFragment(sqlString);
                 ExprColumn annualReviewDateCol = new ExprColumn(ti, annualReviewDate, sql, JdbcType.DATE, ti.getColumn("approve"));
@@ -1640,7 +1640,7 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
                         " WHEN " + ExprColumn.STR_TABLE_ALIAS + ".enddate IS NOT NULL THEN NULL " +
                         " WHEN (" + ti.getSqlDialect().getDateDiff(Calendar.DATE, "{fn curdate()}", ExprColumn.STR_TABLE_ALIAS + ".approve") + " >= 1095) THEN NULL" +
                         //when both date are null, it is due
-                        " WHEN (" + ExprColumn.STR_TABLE_ALIAS + ".approve" + " IS NULL AND " + ExprColumn.STR_TABLE_ALIAS + ".lastAnnualReview" + " IS NULL) THEN 0" +
+                        " WHEN (" + ExprColumn.STR_TABLE_ALIAS + ".approve IS NULL AND " + ExprColumn.STR_TABLE_ALIAS + ".lastAnnualReview IS NULL) THEN 0" +
                         //NOTE: these expire 1 day prior to a full year, so use 364 instead of 365
                         " ELSE 364 - (" + ti.getSqlDialect().getDateDiff(Calendar.DATE, "{fn curdate()}", "COALESCE(" + ExprColumn.STR_TABLE_ALIAS + ".lastAnnualReview, " + ExprColumn.STR_TABLE_ALIAS + ".approve)") + ")" +
                         " END)");
