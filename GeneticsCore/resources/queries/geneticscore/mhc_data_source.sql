@@ -28,7 +28,7 @@ SELECT
     count(*) as totalTests,
     cast('POS' as varchar) as result,
     cast('SBT' as varchar) as assaytype,
-    a.analysisId.readset.libraryType as librarytype,
+    group_concat(DISTINCT a.analysisId.readset.libraryType, ',') as librarytype,
     sum(a.result) / (SELECT count(DISTINCT a2.analysisId) as total FROM assay.GenotypeAssay.Genotype.Data a2 WHERE a2.subjectId = a.subjectId AND a2.run.assayType = 'SBT' ) AS score,
 
 FROM assay.GenotypeAssay.Genotype.Data a
