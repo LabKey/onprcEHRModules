@@ -3,7 +3,7 @@
  *
  * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
  */
-Ext4.define('ONPRC_EHR.form.field.RoomFieldSingle', {
+Ext4.define('EHR.form.field.RoomFieldSingle', {
     extend: 'Ext.form.field.ComboBox',
     alias: 'widget.onprc_ehr-roomfieldsingle',
 
@@ -29,7 +29,6 @@ Ext4.define('ONPRC_EHR.form.field.RoomFieldSingle', {
                 filterArray: [LABKEY.Filter.create('datedisabled', null, LABKEY.Filter.Types.ISBLANK)],
                 autoLoad: true
             },
-            // plugins: ['ldk-usereditablecombo']
         });
 
         this.callParent(arguments);
