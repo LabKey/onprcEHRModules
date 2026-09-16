@@ -38,7 +38,6 @@ import org.labkey.test.Locator;
 import org.labkey.test.Locators;
 import org.labkey.test.TestFileUtils;
 import org.labkey.test.WebTestHelper;
-import org.labkey.test.categories.EHR;
 import org.labkey.test.categories.ONPRC;
 import org.labkey.test.components.BodyWebPart;
 import org.labkey.test.pages.ehr.AnimalHistoryPage;
@@ -80,7 +79,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-@Category({EHR.class, ONPRC.class})
+@Category({ONPRC.class})
 @BaseWebDriverTest.ClassTimeout(minutes = 60)
 public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
 {
