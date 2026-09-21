@@ -29,7 +29,8 @@ CREATE TABLE onprc_ehr_compliancedb.Employeetraining_Details
     createdby smallint,
     created   datetime,
     modifiedby  smallint,
-    modified datetime
+    modified datetime,
+    grid_type  varchar(500) null
 
         CONSTRAINT PK_employeetrainingdetails PRIMARY KEY (RowId)
 );
@@ -90,7 +91,8 @@ Insert into onprc_ehr_compliancedb.Employeetraining_Details
  createdby,
  created,
  modifiedby,
- modified
+ modified,
+ grid_type
 )
 
 select
@@ -118,7 +120,9 @@ select
     1007,    ------ createdby
     getdate(),  ------ created
     1007,
-    getdate()
+    getdate(),
+
+    (select j.grid_type from onprc_ehr_compliancedb.requirementname_translation  j where j.prime_name = b. requirementname) as grod_type,
 
 
 from  ehr_compliancedb.requirementspercategory b, ehr_compliancedb.employeeperUnit e
