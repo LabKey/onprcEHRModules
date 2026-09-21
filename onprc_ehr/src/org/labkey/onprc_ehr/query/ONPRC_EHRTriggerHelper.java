@@ -1245,8 +1245,8 @@ public class ONPRC_EHRTriggerHelper
     //    Added: 6-27-2017  F.Blasa  Process when transitioning from Prenatal - Fetus to Live
     public void doBirthConditionAfterPrenatal(String id, Date date, String dam, Date Arrival_Date, String birthCondition, boolean isBecomingPublic) throws Exception
     {
-        //is the infant is dead, terminate the assignments
-        Date enddate = isBirthAlive(birthCondition) ? null : date;
+
+        Date enddate = null ;
 
         String nonRestrictedFlag = getFlag("Condition", NONRESTRICTED, null, true);
         if (nonRestrictedFlag != null)
@@ -1274,16 +1274,9 @@ public class ONPRC_EHRTriggerHelper
     //Modified: 10-13-2016 R.Blasa  to include assign Arrival date
     public void doBirthTriggers(String id, Date date, String dam, Date Arrival_Date, String birthCondition, String species, boolean isBecomingPublic) throws Exception
     {
-        //is the infant is dead, terminate the assignments
-        Date enddate = isBirthAlive(birthCondition) ? null : date;
 
+        Date enddate =  null ;
 
-        //also check for a pre-existing death record:
-        Date deathDate = new TableSelector(getTableInfo("study", "deaths"), Collections.singleton("date"), new SimpleFilter(FieldKey.fromString("Id"), id), null).getObject(Date.class);
-        if (deathDate != null)
-        {
-            enddate = deathDate;
-        }
 
         //note: we only want this to run the first time this record becomes public, not on subsequent updates
         if (isBecomingPublic)
