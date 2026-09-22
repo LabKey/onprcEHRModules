@@ -99,7 +99,7 @@ select
     e.employeeid,
 
 
-    (select j.spreadsheet_name from onprc_ehr_compliancedb.requirementname_translation  j where j.prime_name = b. requirementname) as requirementname,
+    (select string_agg( j.spreadsheet_name, char(10)) from onprc_ehr_compliancedb.requirementname_translation  j where j.prime_name = b. requirementname) as requirementname,
 
 
     (select max(zz.date) from ehr_compliancedb.completiondates zz where zz.requirementname = b.requirementname and zz.employeeid= e.employeeid   ) as completiondate,
@@ -122,7 +122,7 @@ select
     1007,
     getdate(),
 
-    (select j.grid_type from onprc_ehr_compliancedb.requirementname_translation  j where j.prime_name = b. requirementname) as grod_type,
+    (select string_agg( j.grid_type, char(10)) from onprc_ehr_compliancedb.requirementname_translation  j where j.prime_name = b. requirementname) as grid_type
 
 
 from  ehr_compliancedb.requirementspercategory b, ehr_compliancedb.employeeperUnit e
