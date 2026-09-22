@@ -35,14 +35,14 @@ Case When r.aliasAtTime is Null then 'y'
 --Alias Accepting Charges
 CASE
     WHEN a.aliasEnabled IS NULL THEN 'N'
-    WHEN a.aliasEnabled != 'Y' THEN 'N'
+    WHEN LOWER(a.aliasEnabled) != 'y' THEN 'N'
     ELSE null
   END as isAcceptingCharges,
 --Expired Alias
   CASE
     WHEN (a.budgetStartDate IS NOT NULL AND CAST(a.budgetStartDate as date) > CAST(r.assignmentdate as date)) THEN 'Prior To Budget Start'
     WHEN (a.budgetEndDate IS NOT NULL AND Cast(a.budgetEndDate as date ) < CAST(r.assignmentdate as date)) THEN 'After Budget End'
-    WHEN (a.projectStatus IS NOT NULL AND a.projectStatus != 'ACTIVE' AND a.projectStatus != 'No Cost Ext' AND a.projectStatus != 'Partial Setup') THEN 'Grant Project Not Active'
+    WHEN (a.projectStatus IS NOT NULL AND LOWER(a.projectStatus) != 'active' AND LOWER(a.projectStatus) != 'no cost ext' AND LOWER(a.projectStatus) != 'partial setup') THEN 'Grant Project Not Active'
     ELSE null
   END as isExpiredAccount,
 -->45 Days Olde

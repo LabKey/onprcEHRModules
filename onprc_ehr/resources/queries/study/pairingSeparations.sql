@@ -22,7 +22,7 @@ SELECT
 FROM study.pairings p1
 LEFT JOIN study.pairings p2 ON (p1.Id = p2.Id AND p2.date > p1.date)
 WHERE p1.eventType = 'Temporary separation' AND TIMESTAMPDIFF('SQL_TSI_DAY', p1.date, curdate()) > 7 AND p2.Id IS NULL
-AND p1.Id.demographics.calculated_status = 'Alive'
+AND LOWER(p1.Id.demographics.calculated_status) = 'alive'
 
 UNION ALL
 
@@ -35,4 +35,4 @@ SELECT
 FROM study.pairings p1
 LEFT JOIN study.pairings p2 ON (p1.Id = p2.Id AND p2.date > p1.date)
 WHERE p1.eventType = 'Extended temporary separation' AND TIMESTAMPDIFF('SQL_TSI_DAY', p1.date, curdate()) > 30 AND p2.Id IS NULL
-AND p1.Id.demographics.calculated_status = 'Alive'
+AND LOWER(p1.Id.demographics.calculated_status) = 'alive'

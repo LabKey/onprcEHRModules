@@ -48,7 +48,7 @@ FROM study.housing h
 
 --NOTE: this filter is added because otherwise a monkey marked as dead (but still with a housing record) could be
 JOIN study.housing h2
-ON (h2.Id.demographics.calculated_status = 'Alive' AND h.room = h2.room and (h.effectiveCage.effectiveCage = h2.effectiveCage.effectiveCage OR (h.cage IS NULL and h2.cage IS NULL) OR (h.room.housingType.value != 'Cage Location' AND h.cage = h2.cage)))
+ON (LOWER(h2.Id.demographics.calculated_status) = 'alive' AND h.room = h2.room and (h.effectiveCage.effectiveCage = h2.effectiveCage.effectiveCage OR (h.cage IS NULL and h2.cage IS NULL) OR (h.room.housingType.value != 'Cage Location' AND h.cage = h2.cage)))
 
 LEFT JOIN ehr_lookups.cage c ON (h.effectiveCage.effectiveCage = c.cage AND c.room = h.room)
 
@@ -60,4 +60,4 @@ GROUP BY h.id, h.room, h.effectiveCage.effectiveCage, c.divider.countAsPaired, c
 
 ) t ON (t.id = d.id)
 
-WHERE d.calculated_status = 'Alive'
+WHERE LOWER(d.calculated_status) = 'alive'

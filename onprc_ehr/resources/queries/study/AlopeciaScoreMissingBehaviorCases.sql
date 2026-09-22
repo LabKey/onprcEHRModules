@@ -41,7 +41,7 @@ FROM (
      ) AS mr
          INNER JOIN study.demographics AS d ON mr.Id = d.Id
 WHERE
-  d.calculated_status = 'Alive'
+  LOWER(d.calculated_status) = 'alive'
   AND mr.observation IN ('4', '5')
   AND NOT EXISTS (
     SELECT 1

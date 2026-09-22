@@ -37,7 +37,7 @@ b.dam,
 da.project as DualAssigned,
 Case
 --Research Owned Animal
-	When l.researchowned = 'yes' then 'researchOwned'
+	When LOWER(l.researchowned) = 'yes' then 'researchOwned'
 --Adult Research Assignment P51 Animal (animal unassigned and adult)
 ----**Dual Assigned Obese JMac Control Infant Lease
 	When l.id.age.ageinyears < 3 and da.projectname  = '0622-01'and (l.id !=r.id or r.id is null) then 'Obese JMac Control Infant'
@@ -50,9 +50,9 @@ Case
 --Dual assigned ESPF using different Chared Code
 --	When da.projectName  = '0492-03' then 'DualAssignedESPF'
 --Dual assigned TMB Male on Day Lease
-	When l.agegroup = 'Adult'  and da.projectname = '0300'  and l.dayLease = 'yes' then 'TMB Adult Day Lease'
+	When LOWER(l.agegroup) = 'adult'  and da.projectname = '0300'  and l.dayLease = 'yes' then 'TMB Adult Day Lease'
 --Dual assigned Obese Male Day Lease
-	When l.agegroup = 'Adult'  and da.projectname = '0833'  and l.dayLease = 'yes' then 'OBESE Adult Day Lease'
+	When LOWER(l.agegroup) = 'adult'  and da.projectname = '0833'  and l.dayLease = 'yes' then 'OBESE Adult Day Lease'
 --Full LEase P51 adult
 	When l.id.age.ageinyears > 1 and l.daylease <> 'yes' and (da.projectname  <> '0833' or da.projectName is Null) then 'Research Assignment P51 Adult'
 --**Dual Assigned TMB-Dam Assigned Use lease_TMB as Process --------------------------------------------------------------------------------------------------------
@@ -73,13 +73,13 @@ Case
 ----**Dual Assigned Obese JMac WSD Infant Lease
 	When l.id.age.ageinyears < 3 and da.projectname  = '0622-01'and l.id =r.id then 'Obese JMac WSD Infant'
 ----**Dual Assigned Obese Adult Day Lease
-	When l.agegroup = 'adult' and da.projectname  = '0833' and l.daylease = 'yes' then 'OBESE Adult Day Lease'
+	When LOWER(l.agegroup) = 'adult' and da.projectname  = '0833' and l.daylease = 'yes' then 'OBESE Adult Day Lease'
 ----**Dual Assigned Obese Adult Male Lease
-	When l.agegroup = 'adult' and da.projectname  = '0833' and l.daylease = 'no' and Cast(l.projectedReleaseCondition as Varchar(20)) != 'Terminal' then 'OBESE Adult Male Lease'
+	When LOWER(l.agegroup) = 'adult' and da.projectname  = '0833' and l.daylease = 'no' and Cast(l.projectedReleaseCondition as Varchar(20)) != 'Terminal' then 'OBESE Adult Male Lease'
 ----Dual Assigned Obese Adult Male Terminal Lease
-	When l.agegroup = 'adult' and da.projectname  = '0833' and l.daylease = 'no' and Cast(l.projectedReleaseCondition as Varchar(20)) = 'Terminal' then 'OBESE Adult Terminal Leasel'
+	When LOWER(l.agegroup) = 'adult' and da.projectname  = '0833' and l.daylease = 'no' and Cast(l.projectedReleaseCondition as Varchar(20)) = 'Terminal' then 'OBESE Adult Terminal Leasel'
 --when Adult Animal Assigned to Research project
-	when l.agegroup = 'adult' and da.project  ='0300' then 'Aninal Lease Fee -TMB'
+	when LOWER(l.agegroup) = 'adult' and da.project  ='0300' then 'Aninal Lease Fee -TMB'
 --Infant Research Assignment P51 Animal Day Lease -------------------------------------------------------------------------------------------------------
 	When l.id.age.ageinyears < 1 and l.daylease = 'yes' then 'Day Lease Research Assignment P51 Infant'
 --Infant Research Assignment P51 Animal-------------------------------------------------------------------------------------------------------
@@ -106,4 +106,4 @@ FROM Site.{substitutePath moduleProperty('onprc_billing','BillingContainer')}.on
 	left outer join Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.study.lease_ObeseInfant_HFDDam R on l.id = r.id
 	Left outer join Site.{substitutePath moduleProperty('EHR','EHRStudyContainer')}.study.dualassigned da on da.id = l.id and (da.dualassignment = l.project
             and (da.enddate is null or da.enddate > l.date) and (da.dualenddate is null or Dualenddate > l.date))
-where l.researchowned = 'no'
+where LOWER(l.researchowned) = 'no'

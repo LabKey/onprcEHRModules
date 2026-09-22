@@ -26,5 +26,5 @@ group_concat(DISTINCT f.flag.value) as flags
 FROM study.demographics d
 LEFT JOIN study.assignment a ON (a.id = d.id AND (a.releaseCondition.meaning = 'Terminal' OR a.projectedReleaseCondition.meaning = 'Terminal'))
 LEFT JOIN study.flags f ON (f.id = d.id AND f.isActive = true AND f.flag.category = 'Condition' AND f.flag.value in ('Clinically Restricted', 'Terminal'))
-WHERE d.calculated_status = 'Alive'
+WHERE LOWER(d.calculated_status) = 'alive'
 GROUP BY d.id
