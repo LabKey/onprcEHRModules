@@ -1,12 +1,10 @@
 
 select
     coalesce(jj.requirementname, '') as requirementname,
-    jj.employeeid as employeeid,
-    jj.grid_type as grid_type
+    jj.employeeid as employeeid
 
-from onprc_ehr_compliancedb.employeeTraining_details  jj where
-    jj.requirementname in (select distinct ss.requirementname from ehr_compliancedb.requirements ss where ss.requirementname like 'Area Training%' and ss.requirementname <> '' )
+from onprc_ehr_compliancedb.employeeTraining_details  jj where jj.grid_type = 'skills'
 
 
-group by   jj.employeeid, jj.requirementname
+group by   jj.employeeid, jj.requirementname, jj.grid_type
     PIVOT   requirementname by employeeid
