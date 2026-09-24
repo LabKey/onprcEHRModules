@@ -128,6 +128,7 @@ select
 from  ehr_compliancedb.requirementspercategory b, ehr_compliancedb.employeeperUnit e
 Where  (b.unit = e.unit )
   And e.employeeid  in (select distinct kk.employeeid from ehr_compliancedb.Employees kk where kk.enddate is null)
+And b.requirementname in ( select prime_name from onprc_ehr_compliancedb.requirementname_translation  )
 
 group by e.employeeid, b.requirementname
 
