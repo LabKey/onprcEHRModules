@@ -23,6 +23,7 @@ import org.labkey.api.ldk.ExtendedSimpleModule;
 import org.labkey.api.ldk.notification.NotificationService;
 import org.labkey.api.module.ModuleContext;
 import org.labkey.onprc_ssu.notification.SSU_Notification;
+import org.labkey.onprc_ssu.notification.SSU_RoundsNotification;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -61,6 +62,8 @@ public class ONPRC_SSUModule extends ExtendedSimpleModule
     protected void doStartupAfterSpringConfig(ModuleContext moduleContext)
     {
         NotificationService.get().registerNotification(new SSU_Notification(this));
+        //Added by Kollil on 8/23/24
+        NotificationService.get().registerNotification(new SSU_RoundsNotification(this));
     }
 
     @Override
