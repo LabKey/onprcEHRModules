@@ -2,7 +2,7 @@
     When BSU creates a case AND scores the alopecia at either 4 or 5 (only those scores)
     THEN the vet assigned to that animal should receive an alert.
     Show open cases in last 7 days
-Refer to old tkt # 12523, new ticket #
+Refer to old tkt # 12523, new ticket # 15401
 */
 SELECT
     co.Id,

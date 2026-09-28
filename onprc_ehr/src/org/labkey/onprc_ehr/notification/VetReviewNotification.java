@@ -37,8 +37,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by bimber on 9/18/2014.
@@ -108,15 +110,53 @@ public class VetReviewNotification extends ColonyAlertsNotification
 
         if (total > 0)
         {
-            msg.append("<b>ALERT: Animals with alopecia score of 4 or 5 with open behavioral case for alopecia in last 7 days:</b><p>");
-            msg.append("There are " + total + " entries found. ");
-            msg.append("<a href='" + getExecuteQueryUrl(c, "study", "DVMAlertforAlopeciaCases", null)  + "'>Click here to view them</a>\n");
-            msg.append("<hr>\n\n");
+            msg.append("<br><b>ALERT: <b> " + total + " animals found with alopecia score of 4 or 5 with open behavioral case for alopecia in the last 7 days. ");
+            msg.append("<a href='" + getExecuteQueryUrl(c, "study", "DVMAlertforAlopeciaCases", null)  + "'>Click here to view the data ina grid view</a>\n");
+            msg.append("<hr>");
+
+            //Display the report in the email
+            Set<FieldKey> columns = new HashSet<>();
+            columns.add(FieldKey.fromString("Id"));
+            columns.add(FieldKey.fromString("AlertObservationDate"));
+            columns.add(FieldKey.fromString("AlopeciaScore"));
+            columns.add(FieldKey.fromString("performedby"));
+            columns.add(FieldKey.fromString("enteredSincevetReview"));
+            columns.add(FieldKey.fromString("AssignedVet"));
+            columns.add(FieldKey.fromString("BehaviorCaseOpenDate"));
+            columns.add(FieldKey.fromString("VetReviewDueDate"));
+
+            final Map<FieldKey, ColumnInfo> colMap = QueryService.get().getColumns(ti, columns);
+            TableSelector ts2 = new TableSelector(ti, colMap.values(), null, new Sort("date"));
+
+            // Table header
+            msg.append("<table>");
+            msg.append("<tr style='font-weight: bold;'>");
+            msg.append("<td> Id </td><td> Alert Observation Date </td><td> Alopecia Score </td><td> Performed by </td><td> Entered Since Vet Review </td><td> Assigned Vet </td><td> Behavior Case Open Date </td><td> Vet Review Due Date </td></tr>");
+
+            ts2.forEach(object -> {
+                Results rs = new ResultsImpl(object, colMap);
+                String url = getParticipantURL(c, rs.getString("Id"));
+
+                msg.append("<td style='border: 1px solid black;'><b> <a href='" + url + "'>" + PageFlowUtil.filter(rs.getString("Id")) + "</a> </b></td>\n");
+                msg.append("<td style='border: 1px solid black;'>" + PageFlowUtil.filter(rs.getString("date")) + "</td>");
+                msg.append("<td style='border: 1px solid black;'>" + PageFlowUtil.filter(rs.getString("AlertObservationDate")) + "</td>");
+                msg.append("<td style='border: 1px solid black;'>" + PageFlowUtil.filter(rs.getString("AlopeciaScore")) + "</td>");
+                msg.append("<td style='border: 1px solid black;'>" + PageFlowUtil.filter(rs.getString("performedby")) + "</td>");
+                msg.append("<td style='border: 1px solid black;'>" + PageFlowUtil.filter(rs.getString("enteredSincevetReview")) + "</td>");
+                msg.append("<td style='border: 1px solid black;'>" + PageFlowUtil.filter(rs.getString("AssignedVet")) + "</td>");
+                msg.append("<td style='border: 1px solid black;'>" + PageFlowUtil.filter(rs.getString("BehaviorCaseOpenDate")) + "</td>");
+                msg.append("<td style='border: 1px solid black;'>" + PageFlowUtil.filter(rs.getString("VetReviewDueDate")) + "</td>");
+                msg.append("</tr>");
+            });
+            msg.append("</table>");
         }
+
         else
         {
             msg.append("<b>WARNING: No animals found with alopecia score of 4 or 5 with open behavioral case for alopecia in last 7 days!</b><br><hr>\n");
         }
+
+
     }
 
     public void vetRecordsUnderReview(Container c, User u, final StringBuilder msg)
