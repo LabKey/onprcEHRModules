@@ -97,7 +97,7 @@ public class VetReviewNotification extends ColonyAlertsNotification
     /* Added by Kollil 09/22/2025
     When BSU creates a case AND scores the alopecia at either 4 or 5 (only those scores)
     THEN the vet assigned to that animal should receive an alert. Show open cases in last 7 days
-    Refer to tkt # 12523
+    Refer to old tkt # 12523, new tkt # 15401
     */
     private void DVMAlopeciaAlert(final Container c, User u, final StringBuilder msg)
     {
