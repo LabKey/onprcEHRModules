@@ -1,3 +1,3 @@
-SELECT rowid,aliases.alias, aliases.alias + ' - ' + aliases.investigatorName as aliasPI
+SELECT rowid,aliases.alias, aliases.alias || ' - ' || aliases.investigatorName as aliasPI
 FROM aliases
-WHERE projectStatus = 'Active'
+WHERE LOWER(projectStatus) = 'active'

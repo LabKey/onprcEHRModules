@@ -269,7 +269,7 @@ Ext4.define('ONPRC_EHR.panel.AnimalDetailsPanel', {
                 interval = interval + ' days ago';
             }
 
-            text = row.weight + ' kg, ' + date.format(LABKEY.extDefaultDateFormat) + (!Ext4.isEmpty(interval) ? ' (' + interval + ')' : '');
+            text = row.weight + ' kg, ' + Ext4.Date.format(date, LABKEY.extDefaultDateFormat) + (!Ext4.isEmpty(interval) ? ' (' + interval + ')' : '');
         }
 
         toSet['weights'] = text;

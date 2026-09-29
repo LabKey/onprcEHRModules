@@ -19,9 +19,9 @@ SELECT
   group_concat(DISTINCT a.project.investigatorId.lastName, chr(10)) as investigators,
   group_concat(DISTINCT a.project.investigatorId.division, chr(10)) as divisions,
   count(a.lsid) as totalAssignments,
-  sum(CASE WHEN a.project.use_category = 'Research' THEN 1 ELSE 0 END) as totalResearchAssignments,
-  sum(CASE WHEN a.project.use_category = 'U42' THEN 1 ELSE 0 END) as isU42,
-  sum(CASE WHEN a.project.use_category = 'U24' THEN 1 ELSE 0 END) as isU24
+  sum(CASE WHEN LOWER(a.project.use_category) = 'research' THEN 1 ELSE 0 END) as totalResearchAssignments,
+  sum(CASE WHEN LOWER(a.project.use_category) = 'u42' THEN 1 ELSE 0 END) as isU42,
+  sum(CASE WHEN LOWER(a.project.use_category) = 'u24' THEN 1 ELSE 0 END) as isU24
 
 FROM study.birthRateData b
 

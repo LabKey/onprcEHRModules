@@ -14,13 +14,13 @@ join (
     co.Id,
     max(co.date) as maxDate
   FROM study.clinical_observations co
-  WHERE co.qcstate.publicdata = true AND co.category = 'BCS'
+  WHERE co.qcstate.publicdata = true AND LOWER(co.category) = 'bcs'
   GROUP BY co.Id
 ) co2 ON (co.Id = co2.Id AND co.date = co2.maxDate)
 
-WHERE co.qcstate.publicdata = true AND co.category = 'BCS'
+WHERE co.qcstate.publicdata = true AND LOWER(co.category) = 'bcs'
 And co.observation = (Select Min(b1.observation) from study.clinical_observations b1 where b1.id =co.id
-And co.date = b1.date and b1.category = 'bcs' and b1.observation is not null)
+And co.date = b1.date and LOWER(b1.category) = 'bcs' and b1.observation is not null)
 GROUP BY co.Id
 
 

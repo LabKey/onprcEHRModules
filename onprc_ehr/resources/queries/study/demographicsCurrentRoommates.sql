@@ -26,6 +26,6 @@ LEFT JOIN (
 ) h
   ON (h.id = d.id)
 
-WHERE d.calculated_status='Alive'
+WHERE LOWER(d.calculated_status)='alive'
 
 GROUP BY d.id

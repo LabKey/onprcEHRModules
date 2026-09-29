@@ -32,7 +32,7 @@ LEFT JOIN study.animal_group_members gm ON (d.Id = gm.Id AND gm.isActive = true)
 
 LEFT JOIN study.demographicsCurrentLocation cl ON (cl.Id = d.Id)
 
-WHERE d.calculated_status = 'Alive'
+WHERE LOWER(d.calculated_status) = 'alive'
 
 ) t
 

@@ -286,7 +286,7 @@ Ext4.define('ONPRC_Billing.window.ReverseChargeWindow', {
                     displayField: 'account',
                     valueField: 'account',
                     listConfig: {
-                        innerTpl: '{[LABKEY.Utils.encodeHtml(values["account"] + (values["account"] == "Other" ? "" : " (" + (values["startdate"] ? values["startdate"].format("Y-m-d") : "No Start") + " - " + (values["enddate"] ? values["enddate"].format("Y-m-d") : "No End") + ")"))]}',
+                        innerTpl: '{[LABKEY.Utils.encodeHtml(values["account"] + (values["account"] == "Other" ? "" : " (" + (values["startdate"] ? Ext4.Date.format(values["startdate"], "Y-m-d") : "No Start") + " - " + (values["enddate"] ? Ext4.Date.format(values["enddate"], "Y-m-d") : "No End") + ")"))]}',
                         getInnerTpl: function(){
                             return this.innerTpl;
                         }

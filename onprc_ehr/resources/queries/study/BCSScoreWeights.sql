@@ -28,9 +28,9 @@ SELECT
 FROM study.Clinical_Observations p, study.weight K
 WHERE p.qcstate.publicdata = true
   And (p.id = k.id)
-  And p.category = 'BCS'
+  And LOWER(p.category) = 'bcs'
   And p.date in (Select max(r.date) AS d from study.Clinical_Observations r
-                 Where r.category = 'BCS' And r.id = p.id
+                 Where LOWER(r.category) = 'bcs' And r.id = p.id
                     And r.QCState.Label = 'Completed' )
 
   And (K.date in

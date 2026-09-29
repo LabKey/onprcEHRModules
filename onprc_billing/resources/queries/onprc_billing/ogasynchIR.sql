@@ -8,7 +8,7 @@ SELECT ogasynch.lastIndexed,
        ogasynch."OGA AWARD NUMBER",
        ogasynch."OGA AWARD TYPE",
        ogasynch."OGA PROJECT NUMBER",
-       ogasynch.ALIAS,
+       CAST(ogasynch.ALIAS AS VARCHAR(200)) AS ALIAS, --ogasynch stores the alias as an integer; aliases.alias is a varchar, and PostgreSQL will not compare the two implicitly
        ogasynch."ALIAS ENABLED FLAG",
        ogasynch."ALIAS ENABLED FLAG_MVIndicator",
        ogasynch.faRate,

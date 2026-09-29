@@ -44,7 +44,7 @@ Case
 	Else Null
 	End as chargeID,
 --lf.chargeId,
-Null as RevisedChargeID,
+CAST(Null as Integer) as RevisedChargeID, --typed so PostgreSQL can join it to chargeRates.chargeId
 
 1 as quantity
 

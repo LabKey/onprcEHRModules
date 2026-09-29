@@ -1,8 +1,8 @@
 SELECT  Id,
 --         Id.demographics.gender as Sex,
         CASE
-            WHEN Id.demographics.gender = 'F' THEN 'Female'
-            WHEN Id.demographics.gender = 'M' THEN 'Male'
+            WHEN LOWER(Id.demographics.gender) = 'f' THEN 'Female'
+            WHEN LOWER(Id.demographics.gender) = 'm' THEN 'Male'
             ELSE 'Unknown'
             END AS Sex,
         Id.Age.ageinyearsrounded as AgeInYearsRounded,
