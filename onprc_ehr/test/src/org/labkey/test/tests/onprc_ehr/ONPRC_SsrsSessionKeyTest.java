@@ -124,24 +124,23 @@ public class ONPRC_SsrsSessionKeyTest extends BaseWebDriverTest
         assertNotEquals("getSessionId returned the raw JSESSIONID instead of a session key", jsessionId, sessionKey);
 
         String expectedEmail = PasswordUtil.getUsername();
-
-        // Attempt authentication with the optional feature flag off
         Connection cn = createDefaultConnection();
-        OptionalFeatureHelper.disableOptionalFeature(cn, API_KEY_OPTIONAL_FEATURE_FLAG);
 
         try
         {
+            // Attempt authentication with the optional feature flag off
+            OptionalFeatureHelper.disableOptionalFeature(cn, API_KEY_OPTIONAL_FEATURE_FLAG);
             JSONObject featureOff = cookielessGetJson(WebTestHelper.buildURL("login", getProjectName(), "whoami",
                 Map.of("apikey", sessionKey)));
             assertEquals("With optional feature off, apikey parameter should have been ignored, resulting in guest", "guest", featureOff.getString("email"));
 
-            // Turn on the optional feature flag
-            OptionalFeatureHelper.enableOptionalFeature(createDefaultConnection(), API_KEY_OPTIONAL_FEATURE_FLAG);
+            // Turn on the optional feature flag for the rest of the test
+            OptionalFeatureHelper.enableOptionalFeature(cn, API_KEY_OPTIONAL_FEATURE_FLAG);
 
             // Attempt authentication using the old, unsupported parameter name
-            JSONObject oldParameter = cookielessGetJson(WebTestHelper.buildURL("login", getProjectName(), "whoami",
+            SimpleHttpResponse oldParameter = cookielessGet(WebTestHelper.buildURL("login", getProjectName(), "whoami",
                 Map.of("LabKeyTransformSessionId", sessionKey)));
-            assertEquals("LabKeyTransformSessionId parameter should have been ignored, resulting in guest", "guest", oldParameter.getString("email"));
+            assertEquals("LabKeyTransformSessionId parameter should have been rejected", 400, oldParameter.getResponseCode());
 
             // 3) Simulate the SSRS callback: cookieless, no Basic auth, ONLY the token on the URL.
             // 3a) Identity check via whoami -- proves the callback authenticates as the right user.
