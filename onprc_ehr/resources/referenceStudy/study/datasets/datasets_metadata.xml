@@ -840,6 +840,12 @@
             <column columnName="formSort">
                 <datatype>integer</datatype>
             </column>
+            <column columnName="type">
+                <datatype>varchar</datatype>
+            </column>
+            <column columnName="Obsremarks">
+                <datatype>varchar</datatype>
+            </column>
         </columns>
         <tableTitle>Clinical Observations</tableTitle>
     </table>
@@ -909,6 +915,12 @@
                 <datatype>varchar</datatype>
             </column>
             <column columnName="CEG_Plan">
+                <datatype>varchar</datatype>
+            </column>
+            <column columnName="type">
+                <datatype>varchar</datatype>
+            </column>
+            <column columnName="obsScoreremarks">
                 <datatype>varchar</datatype>
             </column>
         </columns>
