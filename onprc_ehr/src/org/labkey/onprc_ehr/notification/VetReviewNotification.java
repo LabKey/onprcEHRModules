@@ -111,7 +111,7 @@ public class VetReviewNotification extends ColonyAlertsNotification
         if (total > 0)
         {
             msg.append("<br><b>ALERT: <b> " + total + " animals found with alopecia score of 4 or 5 with open behavioral case for alopecia in the last 7 days. ");
-            msg.append("<a href='" + getExecuteQueryUrl(c, "study", "DVMAlertforAlopeciaCases", null)  + "'>Click here to view the data ina grid view</a>\n");
+            msg.append("<a href='" + getExecuteQueryUrl(c, "study", "DVMAlertforAlopeciaCases", null)  + "'>Click here to view the data in a grid view</a>\n");
             msg.append("<hr>");
 
             //Display the report in the email

@@ -9,7 +9,11 @@ SELECT
     co.date AS AlertObservationDate,
     co.observation AS AlopeciaScore,
     co.performedby,
-    co.enteredSincevetReview,
+    CASE
+        WHEN co.enteredSincevetReview = 1 THEN 'true'
+        WHEN co.enteredSincevetReview = 0 THEN 'false'
+        ELSE NULL
+    END AS enteredSincevetReview,
     co.Id.assignedVet.AssignedVet AS AssignedVet,
     c.BehaviorCaseOpenDate,
     TIMESTAMPADD(SQL_TSI_DAY, 7, c.BehaviorCaseOpenDate) AS VetReviewDueDate
