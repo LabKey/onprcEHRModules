@@ -138,7 +138,6 @@ public class VetReviewNotification extends ColonyAlertsNotification
                 String url = getParticipantURL(c, rs.getString("Id"));
 
                 msg.append("<td style='border: 1px solid black;'><b> <a href='" + url + "'>" + PageFlowUtil.filter(rs.getString("Id")) + "</a> </b></td>\n");
-                msg.append("<td style='border: 1px solid black;'>" + PageFlowUtil.filter(rs.getString("date")) + "</td>");
                 msg.append("<td style='border: 1px solid black;'>" + PageFlowUtil.filter(rs.getString("AlertObservationDate")) + "</td>");
                 msg.append("<td style='border: 1px solid black;'>" + PageFlowUtil.filter(rs.getString("AlopeciaScore")) + "</td>");
                 msg.append("<td style='border: 1px solid black;'>" + PageFlowUtil.filter(rs.getString("performedby")) + "</td>");
