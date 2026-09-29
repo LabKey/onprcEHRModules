@@ -19,6 +19,7 @@ import org.json.JSONObject;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.labkey.remoteapi.Connection;
 import org.labkey.test.BaseWebDriverTest;
 import org.labkey.test.ModulePropertyValue;
 import org.labkey.test.TestTimeoutException;
@@ -125,60 +126,68 @@ public class ONPRC_SsrsSessionKeyTest extends BaseWebDriverTest
         String expectedEmail = PasswordUtil.getUsername();
 
         // Attempt authentication with the optional feature flag off
-        OptionalFeatureHelper.disableOptionalFeature(createDefaultConnection(), API_KEY_OPTIONAL_FEATURE_FLAG);
+        Connection cn = createDefaultConnection();
+        OptionalFeatureHelper.disableOptionalFeature(cn, API_KEY_OPTIONAL_FEATURE_FLAG);
 
-        JSONObject featureOff = cookielessGetJson(WebTestHelper.buildURL("login", getProjectName(), "whoami",
-            Map.of("apikey", sessionKey)));
-        assertEquals("With optional feature off, apikey parameter should have been ignored, resulting in guest", "guest", featureOff.getString("email"));
+        try
+        {
+            JSONObject featureOff = cookielessGetJson(WebTestHelper.buildURL("login", getProjectName(), "whoami",
+                Map.of("apikey", sessionKey)));
+            assertEquals("With optional feature off, apikey parameter should have been ignored, resulting in guest", "guest", featureOff.getString("email"));
 
-        // Turn on the optional feature flag
-        OptionalFeatureHelper.enableOptionalFeature(createDefaultConnection(), API_KEY_OPTIONAL_FEATURE_FLAG);
+            // Turn on the optional feature flag
+            OptionalFeatureHelper.enableOptionalFeature(createDefaultConnection(), API_KEY_OPTIONAL_FEATURE_FLAG);
 
-        // Attempt authentication using the old, unsupported parameter name
-        JSONObject oldParameter = cookielessGetJson(WebTestHelper.buildURL("login", getProjectName(), "whoami",
-            Map.of("LabKeyTransformSessionId", sessionKey)));
-        assertEquals("LabKeyTransformSessionId parameter should have been ignored, resulting in guest", "guest", oldParameter.getString("email"));
+            // Attempt authentication using the old, unsupported parameter name
+            JSONObject oldParameter = cookielessGetJson(WebTestHelper.buildURL("login", getProjectName(), "whoami",
+                Map.of("LabKeyTransformSessionId", sessionKey)));
+            assertEquals("LabKeyTransformSessionId parameter should have been ignored, resulting in guest", "guest", oldParameter.getString("email"));
 
-        // 3) Simulate the SSRS callback: cookieless, no Basic auth, ONLY the token on the URL.
-        // 3a) Identity check via whoami -- proves the callback authenticates as the right user.
-        JSONObject whoAmI = cookielessGetJson(WebTestHelper.buildURL("login", getProjectName(), "whoami",
-            Map.of("apikey", sessionKey)));
-        assertEquals("Token-authenticated callback resolved to the wrong user", expectedEmail, whoAmI.getString("email"));
+            // 3) Simulate the SSRS callback: cookieless, no Basic auth, ONLY the token on the URL.
+            // 3a) Identity check via whoami -- proves the callback authenticates as the right user.
+            JSONObject whoAmI = cookielessGetJson(WebTestHelper.buildURL("login", getProjectName(), "whoami",
+                Map.of("apikey", sessionKey)));
+            assertEquals("Token-authenticated callback resolved to the wrong user", expectedEmail, whoAmI.getString("email"));
 
-        // 3b) Closest-to-real: the actual selectRows callback shape SSRS uses to fetch data. SSRS's XML data
-        // source extension requests the XML response format, so do the same and validate that the payload is
-        // well-formed XML containing the expected data row (the current user, filtered by email).
-        SimpleHttpResponse selectRows = cookielessGet(WebTestHelper.buildURL("query", getProjectName(), "selectRows",
-            Map.of("schemaName", "core", "query.queryName", "Users", "query.columns", "Email",
-                "query.Email~eq", expectedEmail, "respFormat", "xml", "apikey", sessionKey)));
-        assertEquals("selectRows callback with a valid token should succeed", 200, selectRows.getResponseCode());
+            // 3b) Closest-to-real: the actual selectRows callback shape SSRS uses to fetch data. SSRS's XML data
+            // source extension requests the XML response format, so do the same and validate that the payload is
+            // well-formed XML containing the expected data row (the current user, filtered by email).
+            SimpleHttpResponse selectRows = cookielessGet(WebTestHelper.buildURL("query", getProjectName(), "selectRows",
+                Map.of("schemaName", "core", "query.queryName", "Users", "query.columns", "Email",
+                    "query.Email~eq", expectedEmail, "respFormat", "xml", "apikey", sessionKey)));
+            assertEquals("selectRows callback with a valid token should succeed", 200, selectRows.getResponseCode());
 
-        Document doc = parseXml(selectRows.getResponseBody());
-        Element root = doc.getDocumentElement();
-        assertEquals("Unexpected root element in selectRows XML response", "response", root.getTagName());
-        Element rowsElement = (Element) root.getElementsByTagName("rows").item(0);
-        assertNotNull("selectRows XML response is missing the <rows> element", rowsElement);
-        NodeList rows = rowsElement.getElementsByTagName("element");
-        assertTrue("selectRows XML response should contain at least one data row", rows.getLength() >= 1);
-        Node email = ((Element) rows.item(0)).getElementsByTagName("Email").item(0);
-        assertNotNull("Data row in selectRows XML response is missing the Email column", email);
-        assertEquals("Data row in selectRows XML response should be for the current user", expectedEmail, email.getTextContent());
+            Document doc = parseXml(selectRows.getResponseBody());
+            Element root = doc.getDocumentElement();
+            assertEquals("Unexpected root element in selectRows XML response", "response", root.getTagName());
+            Element rowsElement = (Element) root.getElementsByTagName("rows").item(0);
+            assertNotNull("selectRows XML response is missing the <rows> element", rowsElement);
+            NodeList rows = rowsElement.getElementsByTagName("element");
+            assertTrue("selectRows XML response should contain at least one data row", rows.getLength() >= 1);
+            Node email = ((Element) rows.item(0)).getElementsByTagName("Email").item(0);
+            assertNotNull("Data row in selectRows XML response is missing the Email column", email);
+            assertEquals("Data row in selectRows XML response should be for the current user", expectedEmail, email.getTextContent());
 
-        // 4) Negative controls -- prove it is the token doing the work.
-        // 4a) No token -> guest (empty email)
-        JSONObject noToken = cookielessGetJson(WebTestHelper.buildURL("login", getProjectName(), "whoami"));
-        assertEquals("A cookieless callback with no token should be guest", "guest", noToken.getString("email"));
+            // 4) Negative controls -- prove it is the token doing the work.
+            // 4a) No token -> guest (empty email)
+            JSONObject noToken = cookielessGetJson(WebTestHelper.buildURL("login", getProjectName(), "whoami"));
+            assertEquals("A cookieless callback with no token should be guest", "guest", noToken.getString("email"));
 
-        // 4b) Bogus token -> guest
-        JSONObject bogus = cookielessGetJson(WebTestHelper.buildURL("login", getProjectName(), "whoami",
-            Map.of("apikey", "not-a-real-session-key")));
-        assertFalse("A cookieless callback with a bogus token should be guest", bogus.getBoolean("success"));
+            // 4b) Bogus token -> guest
+            JSONObject bogus = cookielessGetJson(WebTestHelper.buildURL("login", getProjectName(), "whoami",
+                Map.of("apikey", "not-a-real-session-key")));
+            assertFalse("A cookieless callback with a bogus token should be guest", bogus.getBoolean("success"));
 
-        // 5) Lifecycle: after the user logs out, the session key must stop working (auto-invalidated with the session).
-        signOut();
-        JSONObject afterLogout = cookielessGetJson(WebTestHelper.buildURL("login", getProjectName(), "whoami",
-            Map.of("apikey", sessionKey)));
-        assertFalse("A cookieless callback with a bogus token should be guest", afterLogout.getBoolean("success"));
+            // 5) Lifecycle: after the user logs out, the session key must stop working (auto-invalidated with the session).
+            signOut();
+            JSONObject afterLogout = cookielessGetJson(WebTestHelper.buildURL("login", getProjectName(), "whoami",
+                Map.of("apikey", sessionKey)));
+            assertFalse("A cookieless callback with a bogus token should be guest", afterLogout.getBoolean("success"));
+        }
+        finally
+        {
+            OptionalFeatureHelper.resetOptionalFeature(cn, API_KEY_OPTIONAL_FEATURE_FLAG);
+        }
     }
 
     /**
@@ -218,9 +227,5 @@ public class ONPRC_SsrsSessionKeyTest extends BaseWebDriverTest
     protected void doCleanup(boolean afterTest) throws TestTimeoutException
     {
         _containerHelper.deleteProject(getProjectName(), afterTest);
-        if (afterTest)
-        {
-            OptionalFeatureHelper.resetOptionalFeature(createDefaultConnection(), API_KEY_OPTIONAL_FEATURE_FLAG);
-        }
     }
 }
