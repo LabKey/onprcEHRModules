@@ -129,7 +129,7 @@ public class VetReviewNotification extends ColonyAlertsNotification
             TableSelector ts2 = new TableSelector(ti, colMap.values(), null, new Sort("date"));
 
             // Table header
-            msg.append("<table>");
+            msg.append("<table border=1 style='border-collapse: collapse;'>");
             msg.append("<tr style='font-weight: bold;'>");
             msg.append("<td> Id </td><td> Alert Observation Date </td><td> Alopecia Score </td><td> Performed by </td><td> Entered Since Vet Review </td><td> Assigned Vet </td><td> Behavior Case Open Date </td><td> Vet Review Due Date </td></tr>");
 
@@ -147,7 +147,7 @@ public class VetReviewNotification extends ColonyAlertsNotification
                 msg.append("<td style='border: 1px solid black;'>" + PageFlowUtil.filter(rs.getString("VetReviewDueDate")) + "</td>");
                 msg.append("</tr>");
             });
-            msg.append("</table>");
+            msg.append("</table><br><hr>");
         }
 
         else
