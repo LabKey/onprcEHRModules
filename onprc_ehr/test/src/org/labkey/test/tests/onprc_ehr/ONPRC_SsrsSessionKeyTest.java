@@ -144,9 +144,11 @@ public class ONPRC_SsrsSessionKeyTest extends BaseWebDriverTest
 
             // 3) Simulate the SSRS callback: cookieless, no Basic auth, ONLY the token on the URL.
             // 3a) Identity check via whoami -- proves the callback authenticates as the right user.
-            JSONObject whoAmI = cookielessGetJson(WebTestHelper.buildURL("login", getProjectName(), "whoami",
+            SimpleHttpResponse whoAmIResponse = cookielessGet(WebTestHelper.buildURL("login", getProjectName(), "whoami",
                 Map.of("apikey", sessionKey)));
+            JSONObject whoAmI = new JSONObject(whoAmIResponse.getResponseBody());
             assertEquals("Token-authenticated callback resolved to the wrong user", expectedEmail, whoAmI.getString("email"));
+            assertNoSessionCookie(whoAmIResponse);
 
             // 3b) Closest-to-real: the actual selectRows callback shape SSRS uses to fetch data. SSRS's XML data
             // source extension requests the XML response format, so do the same and validate that the payload is
@@ -155,6 +157,7 @@ public class ONPRC_SsrsSessionKeyTest extends BaseWebDriverTest
                 Map.of("schemaName", "core", "query.queryName", "Users", "query.columns", "Email",
                     "query.Email~eq", expectedEmail, "respFormat", "xml", "apikey", sessionKey)));
             assertEquals("selectRows callback with a valid token should succeed", 200, selectRows.getResponseCode());
+            assertNoSessionCookie(selectRows);
 
             Document doc = parseXml(selectRows.getResponseBody());
             Element root = doc.getDocumentElement();
@@ -203,6 +206,17 @@ public class ONPRC_SsrsSessionKeyTest extends BaseWebDriverTest
     private JSONObject cookielessGetJson(String url) throws IOException
     {
         return new JSONObject(cookielessGet(url).getResponseBody());
+    }
+
+    // An apikey URL parameter must not plant a session cookie, since the URL could have come from an attacker
+    private void assertNoSessionCookie(SimpleHttpResponse response)
+    {
+        List<String> sessionCookies = response.getResponseHeaderFields().entrySet().stream()
+            .filter(e -> "Set-Cookie".equalsIgnoreCase(e.getKey()))
+            .flatMap(e -> e.getValue().stream())
+            .filter(cookie -> cookie.startsWith("JSESSIONID="))
+            .toList();
+        assertTrue("apikey URL parameter should not set a JSESSIONID cookie: " + sessionCookies, sessionCookies.isEmpty());
     }
 
     /**
