@@ -124,7 +124,7 @@ public class ONPRC_SsrsSessionKeyTest extends BaseWebDriverTest
 
         String expectedEmail = PasswordUtil.getUsername();
 
-        // Attempt to authenticate with the optional feature flag off
+        // Attempt authentication with the optional feature flag off
         OptionalFeatureHelper.disableOptionalFeature(createDefaultConnection(), API_KEY_OPTIONAL_FEATURE_FLAG);
 
         JSONObject featureOff = cookielessGetJson(WebTestHelper.buildURL("login", getProjectName(), "whoami",
@@ -134,7 +134,7 @@ public class ONPRC_SsrsSessionKeyTest extends BaseWebDriverTest
         // Turn on the optional feature flag
         OptionalFeatureHelper.enableOptionalFeature(createDefaultConnection(), API_KEY_OPTIONAL_FEATURE_FLAG);
 
-        // Attempt to authentication using the old parameter name
+        // Attempt authentication using the old, unsupported parameter name
         JSONObject oldParameter = cookielessGetJson(WebTestHelper.buildURL("login", getProjectName(), "whoami",
             Map.of("LabKeyTransformSessionId", sessionKey)));
         assertEquals("LabKeyTransformSessionId parameter should have been ignored, resulting in guest", "guest", oldParameter.getString("email"));
