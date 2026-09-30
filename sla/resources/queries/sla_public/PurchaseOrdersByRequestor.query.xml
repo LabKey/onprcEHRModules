@@ -3,7 +3,7 @@
     <metadata>
         <tables xmlns="http://labkey.org/data/xml">
             <table tableName="PurchaseOrdersByRequestor" tableDbType="NOT_IN_DB">
-                <tableTitle>Check Purchase Orders By Requestor</tableTitle>
+                <tableTitle>Purchase Orders By Requestor</tableTitle>
                 <columns>
                     <column columnName="requestorid">
                         <isHidden>true</isHidden>
