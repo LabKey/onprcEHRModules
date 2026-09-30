@@ -68,6 +68,8 @@ import static org.junit.Assert.assertTrue;
 public class ONPRC_SsrsSessionKeyTest extends BaseWebDriverTest
 {
     private final static String API_KEY_OPTIONAL_FEATURE_FLAG = "AllowApiKeyParameter";
+    private final static String API_KEY_PARAMETER_NAME = "apikey";
+    private final static String OLD_PARAMETER_NAME = "LabKeyTransformSessionId";
 
     @Override
     protected String getProjectName()
@@ -131,21 +133,21 @@ public class ONPRC_SsrsSessionKeyTest extends BaseWebDriverTest
             // Attempt authentication with the optional feature flag off
             OptionalFeatureHelper.disableOptionalFeature(cn, API_KEY_OPTIONAL_FEATURE_FLAG);
             JSONObject featureOff = cookielessGetJson(WebTestHelper.buildURL("login", getProjectName(), "whoami",
-                Map.of("apikey", sessionKey)));
-            assertEquals("With optional feature off, apikey parameter should have been ignored, resulting in guest", "guest", featureOff.getString("email"));
+                Map.of(API_KEY_PARAMETER_NAME, sessionKey)));
+            assertEquals("With optional feature off, " + API_KEY_PARAMETER_NAME + " parameter should have been ignored, resulting in guest", "guest", featureOff.getString("email"));
 
             // Turn on the optional feature flag for the rest of the test
             OptionalFeatureHelper.enableOptionalFeature(cn, API_KEY_OPTIONAL_FEATURE_FLAG);
 
             // Attempt authentication using the old, unsupported parameter name
             SimpleHttpResponse oldParameter = cookielessGet(WebTestHelper.buildURL("login", getProjectName(), "whoami",
-                Map.of("LabKeyTransformSessionId", sessionKey)));
-            assertEquals("LabKeyTransformSessionId parameter should have been rejected", 400, oldParameter.getResponseCode());
+                Map.of(OLD_PARAMETER_NAME, sessionKey)));
+            assertEquals(OLD_PARAMETER_NAME + " parameter should have been rejected", 400, oldParameter.getResponseCode());
 
             // 3) Simulate the SSRS callback: cookieless, no Basic auth, ONLY the token on the URL.
             // 3a) Identity check via whoami -- proves the callback authenticates as the right user.
             SimpleHttpResponse whoAmIResponse = cookielessGet(WebTestHelper.buildURL("login", getProjectName(), "whoami",
-                Map.of("apikey", sessionKey)));
+                Map.of(API_KEY_PARAMETER_NAME, sessionKey)));
             JSONObject whoAmI = new JSONObject(whoAmIResponse.getResponseBody());
             assertEquals("Token-authenticated callback resolved to the wrong user", expectedEmail, whoAmI.getString("email"));
             assertNoSessionCookie(whoAmIResponse);
@@ -155,7 +157,7 @@ public class ONPRC_SsrsSessionKeyTest extends BaseWebDriverTest
             // well-formed XML containing the expected data row (the current user, filtered by email).
             SimpleHttpResponse selectRows = cookielessGet(WebTestHelper.buildURL("query", getProjectName(), "selectRows",
                 Map.of("schemaName", "core", "query.queryName", "Users", "query.columns", "Email",
-                    "query.Email~eq", expectedEmail, "respFormat", "xml", "apikey", sessionKey)));
+                    "query.Email~eq", expectedEmail, "respFormat", "xml", API_KEY_PARAMETER_NAME, sessionKey)));
             assertEquals("selectRows callback with a valid token should succeed", 200, selectRows.getResponseCode());
             assertNoSessionCookie(selectRows);
 
@@ -177,13 +179,13 @@ public class ONPRC_SsrsSessionKeyTest extends BaseWebDriverTest
 
             // 4b) Bogus token -> guest
             JSONObject bogus = cookielessGetJson(WebTestHelper.buildURL("login", getProjectName(), "whoami",
-                Map.of("apikey", "not-a-real-session-key")));
+                Map.of(API_KEY_PARAMETER_NAME, "not-a-real-session-key")));
             assertFalse("A cookieless callback with a bogus token should be guest", bogus.getBoolean("success"));
 
             // 5) Lifecycle: after the user logs out, the session key must stop working (auto-invalidated with the session).
             signOut();
             JSONObject afterLogout = cookielessGetJson(WebTestHelper.buildURL("login", getProjectName(), "whoami",
-                Map.of("apikey", sessionKey)));
+                Map.of(API_KEY_PARAMETER_NAME, sessionKey)));
             assertFalse("A cookieless callback with a bogus token should be guest", afterLogout.getBoolean("success"));
         }
         finally
@@ -216,7 +218,7 @@ public class ONPRC_SsrsSessionKeyTest extends BaseWebDriverTest
             .flatMap(e -> e.getValue().stream())
             .filter(cookie -> cookie.startsWith("JSESSIONID="))
             .toList();
-        assertTrue("apikey URL parameter should not set a JSESSIONID cookie: " + sessionCookies, sessionCookies.isEmpty());
+        assertTrue(API_KEY_PARAMETER_NAME + " URL parameter should not set a JSESSIONID cookie: " + sessionCookies, sessionCookies.isEmpty());
     }
 
     /**
