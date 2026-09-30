@@ -98,8 +98,8 @@ public class ONPRC_SsrsSessionKeyTest extends BaseWebDriverTest
         // Treat this LabKey instance as the fake SSRS target (mirrors AbstractGenericONPRC_EHRTest). preloadSession()
         // does not actually need these, but setting them keeps the printable reports page behaving as in production.
         setModuleProperties(Arrays.asList(
-                new ModulePropertyValue("ONPRC_EHR", "/" + getProjectName(), "SSRSServerURL", WebTestHelper.getBaseURL()),
-                new ModulePropertyValue("ONPRC_EHR", "/" + getProjectName(), "SSRSReportFolder", "DummySSRSFolder")
+            new ModulePropertyValue("ONPRC_EHR", "/" + getProjectName(), "SSRSServerURL", WebTestHelper.getBaseURL()),
+            new ModulePropertyValue("ONPRC_EHR", "/" + getProjectName(), "SSRSReportFolder", "DummySSRSFolder")
         ));
     }
 
@@ -126,7 +126,7 @@ public class ONPRC_SsrsSessionKeyTest extends BaseWebDriverTest
         assertNotEquals("getSessionId returned the raw JSESSIONID instead of a session key", jsessionId, sessionKey);
 
         String expectedEmail = PasswordUtil.getUsername();
-        Connection cn = createDefaultConnection();
+        Connection cn = WebTestHelper.getRemoteApiConnection(); // Not tied to test user session
 
         try
         {
