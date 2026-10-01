@@ -1,0 +1,10 @@
+<!--Report title-->
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="AlopeciaScoreMissingBehaviorCases" tableDbType="TABLE">
+                <tableTitle>Animals with alopecia score 4 or 5 with missing behavior cases</tableTitle>
+            </table>
+        </tables>
+    </metadata>
+</query>

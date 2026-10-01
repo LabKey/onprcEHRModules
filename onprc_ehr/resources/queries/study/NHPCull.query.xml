@@ -1,0 +1,10 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="NHPCull" tableDbType="TABLE">
+                <tableTitle>NHPs marked as Cull</tableTitle>
+                <titleColumn>NHPCull</titleColumn>
+            </table>
+        </tables>
+    </metadata>
+</query>

@@ -27,7 +27,11 @@ exports.init = function(EHR){
                     Id: row.Id,
                     birth: row.date,
                     date: row.date,
-                    calculated_status: 'Fetus'
+                    calculated_status: 'Fetus',
+                    species: row.species,
+                    geographic_origin: row.geographic_origin,
+                    gender: row.gender
+
                 };
 
 
@@ -692,16 +696,6 @@ exports.init = function(EHR){
                         hasUpdates = true;
                     }
 
-                    //update death date in demographics if born dead
-                    if (row.Id && row.date && !data.death && !triggerHelper.isBirthAlive(row.birth_condition || null)){
-                        obj.death = row.date;
-                        hasUpdates = true;
-
-                        //if this is the first time a birth condition was entered, treat this the same as when a death is entered
-                        if (oldRow && !oldRow.birth_condition){
-                            helper.onDeathDeparture(row.Id, row.date);
-                        }
-                    }
 
                     if (hasUpdates){
                         obj.Id = row.Id;
@@ -1064,12 +1058,15 @@ exports.init = function(EHR){
 
             Added Diet to the list by Kollil on 5/14/25. Refer to tkt #12506
             5. E-X1380 - Diet Daily (Non-standard), 5LOP (TAD)
+
+            Added Diet to the list by Kollil on 8/5/2026. Refer to tkt #15123
+            6. E-YYY85 - Diet, 5000 Chow
          */
+
         if (row.code != 'E-85760' && row.code != 'E-Y7735' && row.code != 'E-X0500' &&
-                row.code != 'E-Y9750' && row.code != 'E-X1380' && !row.enddate) {
+                row.code != 'E-Y9750' && row.code != 'E-X1380' && row.code != 'E-YYY85' && !row.enddate) {
             EHR.Server.Utils.addError(scriptErrors, 'enddate', 'Must enter enddate', 'WARN');
         }
-
         //Added by Kollil, 9/15/25
         /* MPA validation, as per ticket #9669
          Add validation code to ensure that MPA is ordered for the correct day:
@@ -1146,6 +1143,9 @@ exports.init = function(EHR){
 
                 if (!row.quantity && row.num_tubes && row.tube_vol){
                     row.quantity = row.num_tubes * row.tube_vol;
+                }
+                if (row.additionalServices == null) {
+                    EHR.Server.Utils.addError(scriptErrors, 'additionalServices', 'Please select from a list of Additional Services items', 'INFO');
                 }
 
                 if (row.additionalServices) {

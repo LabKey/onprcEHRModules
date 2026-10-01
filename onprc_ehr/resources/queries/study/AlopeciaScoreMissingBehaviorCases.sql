@@ -5,11 +5,18 @@ Show 1 year data.
 
 Modified by Kollil 09/15/2025
 Added date comparison to check only dates  and ignore time
+
+Modified by Kollil July 2026
+Showing only 1 month data, Refer to tkt # 14974
 */
 SELECT
     mr.Id,
     d.species,
-    d.gender,
+    CASE
+        WHEN LOWER(d.gender) = 'f' THEN 'Female'
+        WHEN LOWER(d.gender) = 'm' THEN 'Male'
+        ELSE d.gender
+    END AS gender,
     d.Id.age.ageinYearsRounded,
     d.Id.curLocation.area,
     d.Id.curLocation.room,
@@ -22,14 +29,14 @@ FROM (
          FROM study.clinical_observations AS co
          WHERE
            co.category = 'Alopecia Score'
-           AND co.created >= TIMESTAMPADD(SQL_TSI_YEAR, -1, NOW())
+           AND co.created >= TIMESTAMPADD(SQL_TSI_MONTH, -1, NOW())
            AND co.created = (
              SELECT MAX(co2.created)
              FROM study.clinical_observations AS co2
              WHERE
                co2.Id = co.Id
                AND co2.category = 'Alopecia Score'
-               AND co2.created >= TIMESTAMPADD(SQL_TSI_YEAR, -1, NOW())
+               AND co2.created >= TIMESTAMPADD(SQL_TSI_MONTH, -1, NOW())
          )
      ) AS mr
          INNER JOIN study.demographics AS d ON mr.Id = d.Id
@@ -43,8 +50,6 @@ WHERE
       c.Id = mr.Id
       AND c.category = 'Behavior'
       AND c.allProblemCategories = 'Behavioral: Alopecia'
---       AND c.date <= mr.date
---       AND (c.enddate IS NULL OR c.enddate > mr.date)
       AND CAST(c.date AS DATE) <= CAST(mr.date AS DATE)
       AND (c.enddate IS NULL OR CAST(c.enddate AS DATE) >= CAST(mr.date AS DATE))
 )
