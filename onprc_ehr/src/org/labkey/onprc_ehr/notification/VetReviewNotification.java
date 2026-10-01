@@ -87,7 +87,7 @@ public class VetReviewNotification extends ColonyAlertsNotification
     {
         StringBuilder msg = new StringBuilder();
 
-       /* remarksWithoutAssignedVet(c, u, msg);*/
+        /* remarksWithoutAssignedVet(c, u, msg);*/
         DVMAlopeciaAlert(c,u,msg); //Added by Kolli, March 2026
         vetRecordsUnderReview(c, u, msg);
         animalsWithoutAssignedVet(c, u, msg);
@@ -111,7 +111,7 @@ public class VetReviewNotification extends ColonyAlertsNotification
         if (total > 0)
         {
             msg.append("<br><b>ALERT: <b> " + total + " animals found with alopecia score of 4 or 5 with open behavioral case for alopecia in the last 7 days. ");
-            msg.append("<a href='" + getExecuteQueryUrl(c, "study", "DVMAlertforAlopeciaCases", null)  + "'>Click here to view the data in a grid view</a>\n");
+            msg.append("<a href='" + getExecuteQueryUrl(c, "study", "DVMAlertforAlopeciaCasesDVMAlertforAlopeciaCases", null)  + "'>Click here to view the data in a grid view</a></b>\n");
             msg.append("<hr>");
 
             //Display the report in the email
@@ -149,7 +149,6 @@ public class VetReviewNotification extends ColonyAlertsNotification
             });
             msg.append("</table><br><hr>");
         }
-
         else
         {
             msg.append("<b>WARNING: No animals found with alopecia score of 4 or 5 with open behavioral case for alopecia in last 7 days!</b><br><hr>\n");

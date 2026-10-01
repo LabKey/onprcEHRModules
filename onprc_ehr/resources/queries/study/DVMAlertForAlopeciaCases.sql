@@ -54,6 +54,16 @@ WHERE co.category = 'Alopecia Score'
                     AND reset.observation IN ('0', '1', '2', '3')
                     AND reset.date < co.date
               ),
-              '1900-01-01'
+              {ts '1900-01-01 00:00:00'}
         )
-);
+)
+    /* Remove old streaks that later returned to 0-3 */
+  AND NOT EXISTS (
+    SELECT 1
+    FROM study.clinical_observations laterReset
+    WHERE laterReset.Id = co.Id
+      AND laterReset.category = 'Alopecia Score'
+      AND laterReset.observation IN ('0', '1', '2', '3')
+      AND laterReset.date > co.date
+)
+ORDER BY co.Id ASC
