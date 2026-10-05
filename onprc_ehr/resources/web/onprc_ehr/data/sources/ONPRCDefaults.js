@@ -273,13 +273,17 @@ EHR.model.DataModelManager.registerMetadata('Default', {
          }
       },
         //Modified: 9-10-2026 R. Blasa
-        'study.housing': {
+        'study.Housing': {
             room: {
-                editorConfig: {
-                    plugins: [Ext4.create('LDK.plugin.UserEditableCombo', {
-                        allowChooseOther: false
-                    })]
-                }
+             xtype: 'onprc_ehr.roomfieldsingle',
+                allowBlank: false,
+            }
+        },
+
+        'study.Birth': {
+            room: {
+                xtype: 'onprc_ehr.roomfieldsingle',
+                allowBlank: false
             }
         },
 
