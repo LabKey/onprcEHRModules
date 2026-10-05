@@ -19,11 +19,13 @@ import org.json.JSONObject;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.labkey.remoteapi.Connection;
 import org.labkey.test.BaseWebDriverTest;
 import org.labkey.test.ModulePropertyValue;
 import org.labkey.test.TestTimeoutException;
 import org.labkey.test.WebTestHelper;
 import org.labkey.test.categories.ONPRC;
+import org.labkey.test.util.OptionalFeatureHelper;
 import org.labkey.test.util.PasswordUtil;
 import org.labkey.test.util.SimpleHttpRequest;
 import org.labkey.test.util.SimpleHttpResponse;
@@ -55,7 +57,7 @@ import static org.junit.Assert.assertTrue;
  * onprc_ehr-getSessionId.api, which returns a session key (see ONPRC_EHRController.GetSessionIdAction).
  * 2. Clicking a report builds a URL to the SSRS server carrying that key as the "SessionId" parameter.
  * 3. SSRS, running on a separate host with no LabKey cookie, calls back to a selectRows URL, passing the
- * key as the "LabKeyTransformSessionId" query parameter. SecurityManager.getApiKey() reads it from the
+ * key as the "apikey" query parameter. SecurityManager.getApiKey() reads it from the
  * query string and SessionApiKeyManager resolves it back to the user's session.
  * <p>
  * The only thing we fake is SSRS: the SSRSServerURL module property points back at this LabKey instance (the
@@ -65,6 +67,10 @@ import static org.junit.Assert.assertTrue;
 @Category({ONPRC.class})
 public class ONPRC_SsrsSessionKeyTest extends BaseWebDriverTest
 {
+    private final static String API_KEY_OPTIONAL_FEATURE_FLAG = "AllowApiKeyParameter";
+    private final static String API_KEY_PARAMETER_NAME = "apikey";
+    private final static String OLD_PARAMETER_NAME = "LabKeyTransformSessionId";
+
     @Override
     protected String getProjectName()
     {
@@ -92,10 +98,11 @@ public class ONPRC_SsrsSessionKeyTest extends BaseWebDriverTest
         // Treat this LabKey instance as the fake SSRS target (mirrors AbstractGenericONPRC_EHRTest). preloadSession()
         // does not actually need these, but setting them keeps the printable reports page behaving as in production.
         setModuleProperties(Arrays.asList(
-                new ModulePropertyValue("ONPRC_EHR", "/" + getProjectName(), "SSRSServerURL", WebTestHelper.getBaseURL()),
-                new ModulePropertyValue("ONPRC_EHR", "/" + getProjectName(), "SSRSReportFolder", "DummySSRSFolder")
+            new ModulePropertyValue("ONPRC_EHR", "/" + getProjectName(), "SSRSServerURL", WebTestHelper.getBaseURL()),
+            new ModulePropertyValue("ONPRC_EHR", "/" + getProjectName(), "SSRSReportFolder", "DummySSRSFolder")
         ));
     }
+
     @Override
     protected void checkQueries()
     {
@@ -110,8 +117,8 @@ public class ONPRC_SsrsSessionKeyTest extends BaseWebDriverTest
 
         // 2) Harvest the token exactly as the SSRS link would receive it
         String sessionKey = waitFor(
-                () -> (String) executeScript("return (window.ONPRC && ONPRC.Utils) ? ONPRC.Utils.sessionId : null;"),
-                "ONPRC.Utils.preloadSession() never populated a session key", WAIT_FOR_JAVASCRIPT);
+            () -> (String) executeScript("return (window.ONPRC && ONPRC.Utils) ? ONPRC.Utils.sessionId : null;"),
+            "ONPRC.Utils.preloadSession() never populated a session key", WAIT_FOR_JAVASCRIPT);
         assertNotNull("Session key was not preloaded", sessionKey);
 
         // The key must be a session key, NOT the raw JSESSIONID -- that is the whole point of the change.
@@ -119,47 +126,72 @@ public class ONPRC_SsrsSessionKeyTest extends BaseWebDriverTest
         assertNotEquals("getSessionId returned the raw JSESSIONID instead of a session key", jsessionId, sessionKey);
 
         String expectedEmail = PasswordUtil.getUsername();
+        Connection cn = WebTestHelper.getRemoteApiConnection(); // Not tied to test user session
 
-        // 3) Simulate the SSRS callback: cookieless, no Basic auth, ONLY the token on the URL.
-        // 3a) Identity check via whoami -- proves the callback authenticates as the right user.
-        JSONObject whoAmI = cookielessGetJson(WebTestHelper.buildURL("login", getProjectName(), "whoami",
-                Map.of("LabKeyTransformSessionId", sessionKey)));
-        assertEquals("Token-authenticated callback resolved to the wrong user", expectedEmail, whoAmI.getString("email"));
+        try
+        {
+            // Attempt authentication with the optional feature flag off
+            OptionalFeatureHelper.disableOptionalFeature(cn, API_KEY_OPTIONAL_FEATURE_FLAG);
+            JSONObject featureOff = cookielessGetJson(WebTestHelper.buildURL("login", getProjectName(), "whoami",
+                Map.of(API_KEY_PARAMETER_NAME, sessionKey)));
+            assertEquals("With optional feature off, " + API_KEY_PARAMETER_NAME + " parameter should have been ignored, resulting in guest", "guest", featureOff.getString("email"));
 
-        // 3b) Closest-to-real: the actual selectRows callback shape SSRS uses to fetch data. SSRS's XML data
-        // source extension requests the XML response format, so do the same and validate that the payload is
-        // well-formed XML containing the expected data row (the current user, filtered by email).
-        SimpleHttpResponse selectRows = cookielessGet(WebTestHelper.buildURL("query", getProjectName(), "selectRows",
+            // Turn on the optional feature flag for the rest of the test
+            OptionalFeatureHelper.enableOptionalFeature(cn, API_KEY_OPTIONAL_FEATURE_FLAG);
+
+            // Attempt authentication using the old, unsupported parameter name
+            SimpleHttpResponse oldParameter = cookielessGet(WebTestHelper.buildURL("login", getProjectName(), "whoami",
+                Map.of(OLD_PARAMETER_NAME, sessionKey)));
+            assertEquals(OLD_PARAMETER_NAME + " parameter should have been rejected", 400, oldParameter.getResponseCode());
+
+            // 3) Simulate the SSRS callback: cookieless, no Basic auth, ONLY the token on the URL.
+            // 3a) Identity check via whoami -- proves the callback authenticates as the right user.
+            SimpleHttpResponse whoAmIResponse = cookielessGet(WebTestHelper.buildURL("login", getProjectName(), "whoami",
+                Map.of(API_KEY_PARAMETER_NAME, sessionKey)));
+            JSONObject whoAmI = new JSONObject(whoAmIResponse.getResponseBody());
+            assertEquals("Token-authenticated callback resolved to the wrong user", expectedEmail, whoAmI.getString("email"));
+            assertNoSessionCookie(whoAmIResponse);
+
+            // 3b) Closest-to-real: the actual selectRows callback shape SSRS uses to fetch data. SSRS's XML data
+            // source extension requests the XML response format, so do the same and validate that the payload is
+            // well-formed XML containing the expected data row (the current user, filtered by email).
+            SimpleHttpResponse selectRows = cookielessGet(WebTestHelper.buildURL("query", getProjectName(), "selectRows",
                 Map.of("schemaName", "core", "query.queryName", "Users", "query.columns", "Email",
-                        "query.Email~eq", expectedEmail, "respFormat", "xml", "LabKeyTransformSessionId", sessionKey)));
-        assertEquals("selectRows callback with a valid token should succeed", 200, selectRows.getResponseCode());
+                    "query.Email~eq", expectedEmail, "respFormat", "xml", API_KEY_PARAMETER_NAME, sessionKey)));
+            assertEquals("selectRows callback with a valid token should succeed", 200, selectRows.getResponseCode());
+            assertNoSessionCookie(selectRows);
 
-        Document doc = parseXml(selectRows.getResponseBody());
-        Element root = doc.getDocumentElement();
-        assertEquals("Unexpected root element in selectRows XML response", "response", root.getTagName());
-        Element rowsElement = (Element) root.getElementsByTagName("rows").item(0);
-        assertNotNull("selectRows XML response is missing the <rows> element", rowsElement);
-        NodeList rows = rowsElement.getElementsByTagName("element");
-        assertTrue("selectRows XML response should contain at least one data row", rows.getLength() >= 1);
-        Node email = ((Element) rows.item(0)).getElementsByTagName("Email").item(0);
-        assertNotNull("Data row in selectRows XML response is missing the Email column", email);
-        assertEquals("Data row in selectRows XML response should be for the current user", expectedEmail, email.getTextContent());
+            Document doc = parseXml(selectRows.getResponseBody());
+            Element root = doc.getDocumentElement();
+            assertEquals("Unexpected root element in selectRows XML response", "response", root.getTagName());
+            Element rowsElement = (Element) root.getElementsByTagName("rows").item(0);
+            assertNotNull("selectRows XML response is missing the <rows> element", rowsElement);
+            NodeList rows = rowsElement.getElementsByTagName("element");
+            assertTrue("selectRows XML response should contain at least one data row", rows.getLength() >= 1);
+            Node email = ((Element) rows.item(0)).getElementsByTagName("Email").item(0);
+            assertNotNull("Data row in selectRows XML response is missing the Email column", email);
+            assertEquals("Data row in selectRows XML response should be for the current user", expectedEmail, email.getTextContent());
 
-        // 4) Negative controls -- prove it is the token doing the work.
-        // 4a) No token -> guest (empty email)
-        JSONObject noToken = cookielessGetJson(WebTestHelper.buildURL("login", getProjectName(), "whoami"));
-        assertEquals("A cookieless callback with no token should be guest", "guest", noToken.getString("email"));
+            // 4) Negative controls -- prove it is the token doing the work.
+            // 4a) No token -> guest (empty email)
+            JSONObject noToken = cookielessGetJson(WebTestHelper.buildURL("login", getProjectName(), "whoami"));
+            assertEquals("A cookieless callback with no token should be guest", "guest", noToken.getString("email"));
 
-        // 4b) Bogus token -> guest
-        JSONObject bogus = cookielessGetJson(WebTestHelper.buildURL("login", getProjectName(), "whoami",
-                Map.of("LabKeyTransformSessionId", "not-a-real-session-key")));
-        assertFalse("A cookieless callback with a bogus token should be guest", bogus.getBoolean("success"));
+            // 4b) Bogus token -> guest
+            JSONObject bogus = cookielessGetJson(WebTestHelper.buildURL("login", getProjectName(), "whoami",
+                Map.of(API_KEY_PARAMETER_NAME, "not-a-real-session-key")));
+            assertFalse("A cookieless callback with a bogus token should be guest", bogus.getBoolean("success"));
 
-        // 5) Lifecycle: after the user logs out, the session key must stop working (auto-invalidated with the session).
-        signOut();
-        JSONObject afterLogout = cookielessGetJson(WebTestHelper.buildURL("login", getProjectName(), "whoami",
-                Map.of("LabKeyTransformSessionId", sessionKey)));
-        assertFalse("A cookieless callback with a bogus token should be guest", afterLogout.getBoolean("success"));
+            // 5) Lifecycle: after the user logs out, the session key must stop working (auto-invalidated with the session).
+            signOut();
+            JSONObject afterLogout = cookielessGetJson(WebTestHelper.buildURL("login", getProjectName(), "whoami",
+                Map.of(API_KEY_PARAMETER_NAME, sessionKey)));
+            assertFalse("A cookieless callback with a bogus token should be guest", afterLogout.getBoolean("success"));
+        }
+        finally
+        {
+            OptionalFeatureHelper.resetOptionalFeature(cn, API_KEY_OPTIONAL_FEATURE_FLAG);
+        }
     }
 
     /**
@@ -176,6 +208,17 @@ public class ONPRC_SsrsSessionKeyTest extends BaseWebDriverTest
     private JSONObject cookielessGetJson(String url) throws IOException
     {
         return new JSONObject(cookielessGet(url).getResponseBody());
+    }
+
+    // An apikey URL parameter must not plant a session cookie, since the URL could have come from an attacker
+    private void assertNoSessionCookie(SimpleHttpResponse response)
+    {
+        List<String> sessionCookies = response.getResponseHeaderFields().entrySet().stream()
+            .filter(e -> "Set-Cookie".equalsIgnoreCase(e.getKey()))
+            .flatMap(e -> e.getValue().stream())
+            .filter(cookie -> cookie.startsWith("JSESSIONID="))
+            .toList();
+        assertTrue(API_KEY_PARAMETER_NAME + " URL parameter should not set a JSESSIONID cookie: " + sessionCookies, sessionCookies.isEmpty());
     }
 
     /**
