@@ -69,6 +69,7 @@ CREATE TABLE onprc_ehr.serology_test_schedule (
   CONSTRAINT PK_serology_test_schedule PRIMARY KEY (rowid)
 );
 
+-- @SkipOnEmptySchemasBegin
 INSERT INTO onprc_ehr.serology_test_schedule (code, flag, interval) VALUES ('E-32140','SPF', 12);
 INSERT INTO onprc_ehr.serology_test_schedule (code, flag, interval) VALUES ('E-YY351','SPF', 12);
 INSERT INTO onprc_ehr.serology_test_schedule (code, flag, interval) VALUES ('E-Y3284','SPF', 12);
@@ -82,6 +83,7 @@ INSERT INTO onprc_ehr.serology_test_schedule (code, flag, interval) VALUES ('E-Y
 INSERT INTO onprc_ehr.serology_test_schedule (code, flag, interval) VALUES ('E-Y3284','SPF 9', 12);
 INSERT INTO onprc_ehr.serology_test_schedule (code, flag, interval) VALUES ('E-Y3287','SPF 9', 12);
 INSERT INTO onprc_ehr.serology_test_schedule (code, flag, interval) VALUES ('E-YY331','SPF 9', 12);
+-- @SkipOnEmptySchemasEnd
 
 CREATE TABLE onprc_ehr.customers (
   rowId SERIAL NOT NULL,
