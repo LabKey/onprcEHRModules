@@ -685,7 +685,7 @@ Ext4.define('onprc_ehr.panel.SnapshotPanel', {
                 if (this.showLocationDuration && housingRow.date){
                     var date = LDK.ConvertUtils.parseDate(housingRow.date);
                     if (date)
-                        location += ' (' + date.format(LABKEY.extDefaultDateFormat) + ')';
+                        location += ' (' + Ext4.date.format(date, LABKEY.extDefaultDateFormat) + ')';
                 }
             }
         }
