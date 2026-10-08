@@ -445,7 +445,7 @@ Ext4.define('onprc_ehr.panel.SnapshotPanel', {
 
                 var score4 = results[0].duration;
 
-                var text =  '     ' + score3 + '  /     ' + score1.format('Y-m-d') + '     (' + score4 + '     days ago) at ' + score2 + ' kg' ;
+                var text =  '     ' + score3 + '  /     ' + Ext4.Date.format(score1, 'Y-m-d') + '     (' + score4 + '     days ago) at ' + score2 + ' kg' ;
 
                 toSet['bcsScore'] = text;
             }
