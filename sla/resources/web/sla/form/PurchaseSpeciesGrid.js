@@ -39,7 +39,7 @@ Ext4.define('SLA.form.SpeciesGrid', {
         // load the initData, which is provided for an updatePurchaseOrder view, into an Ext store that
         // will be used by the grid to render rows
         this.store = Ext4.create('Ext.data.Store', {
-            fields: Ext4.Array.pluck(this.columns, 'dataIndex').remove(undefined),
+            fields: Ext4.Array.clean(Ext4.Array.pluck(this.columns, 'dataIndex')),
             data: this.initData
         });
 
