@@ -1,4 +1,9 @@
 /*
+ * Copyright (c) 2026 LabKey Corporation
+ *
+ * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
+ */
+/*
  Created by Kollil in Dec 2025
  Tkt # 13461
  Added two filters to the Demographics dataset:

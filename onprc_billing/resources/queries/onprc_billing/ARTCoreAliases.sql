@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2022-2026 LabKey Corporation
+ *
+ * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
+ */
 -- Query to get active aliases, project and PI details to display in the ART Core Aliases drop down list
 -- Created by Kollil: Oct 2021
 -- Modified by Kollil: 3/15/22 to show the GL aliases, removed the Project number from the drop down list.

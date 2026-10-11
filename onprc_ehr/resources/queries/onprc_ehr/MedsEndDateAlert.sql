@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2024-2026 LabKey Corporation
+ *
+ * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
+ */
 /* Kollil, Aug 2024:
   Get all the meds except the following two medications that are allowed to enter without the end dates.
 1. E-85760 - Medroxyprogesterone injectable (150mg/ml)

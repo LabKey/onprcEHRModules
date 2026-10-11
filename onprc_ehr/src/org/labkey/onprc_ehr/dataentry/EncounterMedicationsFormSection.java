@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 LabKey Corporation
+ * Copyright (c) 2014-2026 LabKey Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,7 +47,7 @@ public class EncounterMedicationsFormSection extends EncounterChildFormSection
         List<String> defaultButtons = super.getTbarButtons();
         if ("drug".equals(getQueryName()) || "Drug Administration".equals(getQueryName()))
         {
-            defaultButtons.add(0, "SEDATIONHELPER");
+            defaultButtons.addFirst("SEDATIONHELPER");
         }
 
         defaultButtons.add("DRUGAMOUNTHELPER");

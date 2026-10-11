@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2014 LabKey Corporation
+ * Copyright (c) 2013-2026 LabKey Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,7 +49,7 @@ public class SurgicalRoundsRemarksFormSection extends RoundsRemarksFormSection
     public List<String> getTbarButtons()
     {
         List<String> defaultButtons = super.getTbarButtons();
-        defaultButtons.add(0, "ADDSURGICALCASES");
+        defaultButtons.addFirst("ADDSURGICALCASES");
         defaultButtons.add("BULK_CHANGE_CASES");
 
         return defaultButtons;

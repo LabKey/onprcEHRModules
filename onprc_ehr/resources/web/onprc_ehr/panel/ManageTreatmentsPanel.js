@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 LabKey Corporation
+ * Copyright (c) 2016-2026 LabKey Corporation
  *
  * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
  */
@@ -193,7 +193,8 @@ Ext4.define('onprc_ehr.panel.ManageTreatmentsPanel', {
             columns: 'lsid,objectid,Id,date,enddate,project,category,remark,performedby,code,route,frequency,frequency/meaning,amountAndVolume,modifiedby/DisplayName,modified,enddateTimeCoalesced',
             filterArray: [
                 LABKEY.Filter.create('Id', this.animalId, LABKEY.Filter.Types.EQUAL),
-                LABKEY.Filter.create('enddateTimeCoalesced', xdate, LABKEY.Filter.Types.GTE)//Modified: 6-28-2018  R.Blasa
+                LABKEY.Filter.create('QCState/Label', 'Completed', LABKEY.Filter.Types.EQUAL),
+                LABKEY.Filter.create('enddateTimeCoalesced', xdate, LABKEY.Filter.Types.GTE)
             ],
             autoLoad: true,
             listeners: {

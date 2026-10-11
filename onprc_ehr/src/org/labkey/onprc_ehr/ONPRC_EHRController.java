@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2018 LabKey Corporation
+ * Copyright (c) 2012-2026 LabKey Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -331,7 +331,7 @@ public class ONPRC_EHRController extends SpringActionController
 
                     new SqlExecutor(ti.getSchema()).execute(sql);
 
-                    logger.info(counter + " total case numbers added.");
+                    logger.info("{} total case numbers added.", counter);
 
                     sql = new SQLFragment().append(sqlStart);
                 }
@@ -347,7 +347,7 @@ public class ONPRC_EHRController extends SpringActionController
             ret.put("rows", counter);
             ret.put("success", true);
 
-            logger.info("Case number update completed. " + counter + " total case numbers updated.");
+            logger.info("Case number update completed. {} total case numbers updated.", counter);
 
 
             return new ApiSimpleResponse(ret);
@@ -432,7 +432,7 @@ public class ONPRC_EHRController extends SpringActionController
             sql.add(form.getSnomed());
 
             List<String> results = new SqlSelector(QueryService.get().getUserSchema(getUser(), getContainer(), "ehr_lookups").getDbSchema(), sql).getArrayList(String.class);
-            return results.isEmpty() ? null : results.get(0);
+            return results.isEmpty() ? null : results.getFirst();
         }
 
         private Map<String, Object>[] findSnomed(SnomedForm form)

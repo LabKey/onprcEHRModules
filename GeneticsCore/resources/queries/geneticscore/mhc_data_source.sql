@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2021-2026 LabKey Corporation
+ *
+ * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
+ */
 -- This is the source query for aggregating MHC data into geneticscore.mhc_data
 
 SELECT
@@ -8,6 +13,7 @@ SELECT
     s.totalRecords as totalTests,
     s.status as result,
     cast('SSP' as varchar) as assaytype,
+    'N/A' as librarytype,
     NULL as score
 
 FROM assay.SSP_assay.SSP.SSP_Summary s
@@ -22,6 +28,7 @@ SELECT
     count(*) as totalTests,
     cast('POS' as varchar) as result,
     cast('SBT' as varchar) as assaytype,
+    group_concat(DISTINCT a.analysisId.readset.libraryType, ',') as librarytype,
     sum(a.result) / (SELECT count(DISTINCT a2.analysisId) as total FROM assay.GenotypeAssay.Genotype.Data a2 WHERE a2.subjectId = a.subjectId AND a2.run.assayType = 'SBT' ) AS score,
 
 FROM assay.GenotypeAssay.Genotype.Data a
@@ -37,6 +44,7 @@ DISTINCT s.subjectId,
          1 as totalTests,
          cast('NEG' as varchar) as result,
          cast('SBT' as varchar) as assaytype,
+         null as librarytype,
          NULL as score,
 
 --we want any IDs with SBT data, but lacking data for these special-cased markers

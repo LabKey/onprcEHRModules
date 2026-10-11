@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 LabKey Corporation
+ *
+ * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
+ */
 /* Added by Kollil, Jan 2026
    Refer to tkt # 14056
    - Extract animals under the age of 2.5 with an active assignment. Exclude the U42 and U42E colony maintenance assignments, i.e, center projects for these are 0492-02 and 0492-03.

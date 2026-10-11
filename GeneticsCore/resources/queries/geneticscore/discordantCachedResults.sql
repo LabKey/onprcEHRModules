@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2024-2026 LabKey Corporation
+ *
+ * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
+ */
 SELECT
     COALESCE(t1.subjectId, t2.marker) as subjectId,
     COALESCE(t1.marker, t2.marker) as marker,

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2014 LabKey Corporation
+ * Copyright (c) 2020-2026 LabKey Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -87,6 +87,8 @@ public class ActiveTreatmentsXDemographicsProvider extends AbstractListDemograph
         roundedMax = DateUtils.truncate(roundedMax, Calendar.DATE);
 
         SimpleFilter filter = super.getFilter(ids);
+        filter.addCondition(FieldKey.fromString("isActive"), true, CompareType.EQUAL);
+        filter.addCondition(FieldKey.fromString("qcstate/publicData"), true, CompareType.EQUAL);
         filter.addCondition(FieldKey.fromString("enddateTimeCoalesced"),roundedMax, CompareType.GTE);
         filter.addCondition(FieldKey.fromString("category"), "Husbandry", CompareType.NEQ_OR_NULL);
 

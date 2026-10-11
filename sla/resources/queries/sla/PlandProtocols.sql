@@ -1,4 +1,9 @@
 /*
+ * Copyright (c) 2016-2026 LabKey Corporation
+ *
+ * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
+ */
+/*
 Changed by Kolli - 4/20/2022, Added Linked schema template references
 Changed by Kolli - 2/14/2025, Removed the Breeding info from the protocol field. EHR Issue# 11797
 */

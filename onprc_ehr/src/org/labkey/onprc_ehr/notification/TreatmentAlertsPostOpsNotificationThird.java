@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016 LabKey Corporation
+ * Copyright (c) 2020-2026 LabKey Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -166,7 +166,7 @@ public class TreatmentAlertsPostOpsNotificationThird extends AbstractEHRNotifica
                         totals.put(incomplete, totals.get(incomplete) + 1);
 
                         String area = rs.getString(FieldKey.fromString("Id/curLocation/area"));
-                        Integer areaVal = totalByArea.containsKey(area) ? totalByArea.get(area) : 0;
+                        Integer areaVal = totalByArea.getOrDefault(area, 0);
                         areaVal++;
 
                         totalByArea.put(area, areaVal);

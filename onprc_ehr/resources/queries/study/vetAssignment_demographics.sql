@@ -1,4 +1,9 @@
 /*
+ * Copyright (c) 2023-2026 LabKey Corporation
+ *
+ * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
+ */
+/*
 study.vetAssignment_demographics
 
 Returns at least one record for all living NHPs at the center.

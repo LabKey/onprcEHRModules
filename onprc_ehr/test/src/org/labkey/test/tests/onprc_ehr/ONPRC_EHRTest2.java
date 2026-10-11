@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2019 LabKey Corporation
+ * Copyright (c) 2016-2026 LabKey Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@ package org.labkey.test.tests.onprc_ehr;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
-import org.apache.hc.client5.http.classic.methods.HttpGet;
 import org.awaitility.Awaitility;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -37,7 +36,6 @@ import org.labkey.test.BaseWebDriverTest;
 import org.labkey.test.Locator;
 import org.labkey.test.TestProperties;
 import org.labkey.test.WebDriverWrapper;
-import org.labkey.test.categories.CustomModules;
 import org.labkey.test.categories.EHR;
 import org.labkey.test.categories.ONPRC;
 import org.labkey.test.pages.ehr.AnimalHistoryPage;
@@ -56,7 +54,6 @@ import org.labkey.test.util.ext4cmp.Ext4GridRef;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
 import java.io.IOException;
-import java.net.URI;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -75,7 +72,7 @@ import static org.junit.Assert.assertTrue;
 import static org.labkey.test.util.Ext4Helper.Locators.ext4Button;
 import static org.labkey.test.util.Ext4Helper.elementIfEnabled;
 
-@Category({CustomModules.class, EHR.class, ONPRC.class})
+@Category({EHR.class, ONPRC.class})
 @BaseWebDriverTest.ClassTimeout(minutes = 18)
 public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
 {
@@ -159,7 +156,7 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
         //update to completed, expect to find demographics record.
         SelectRowsCommand select1 = new SelectRowsCommand("study", "birth");
         select1.addFilter(new Filter("Id", damId1, Filter.Operator.EQUAL));
-        final String damLsid = (String) select1.execute(getApiHelper().getConnection(), getContainerPath()).getRows().get(0).get("lsid");
+        final String damLsid = (String) select1.execute(getApiHelper().getConnection(), getContainerPath()).getRows().getFirst().get("lsid");
         getApiHelper().updateRow("study", "birth", new HashMap<>()
         {{
             put("lsid", damLsid);
@@ -181,7 +178,7 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
         select2.addFilter(new Filter("Id", damId1, Filter.Operator.EQUAL));
         List<Map<String, Object>> selectRows2 = select2.execute(getApiHelper().getConnection(), getContainerPath()).getRows();
         org.junit.Assert.assertEquals("Wrong number of demographics rows", 1, selectRows2.size());
-        Map<String, Object> selectRow2 = selectRows2.get(0);
+        Map<String, Object> selectRow2 = selectRows2.getFirst();
         org.junit.Assert.assertEquals("geographic_origin was not updated. Row: " + selectRow2, INDIAN, selectRow2.get("geographic_origin"));
         org.junit.Assert.assertEquals("species was not updated. Row: " + selectRow2, RHESUS, selectRow2.get("species"));
         org.junit.Assert.assertEquals("gender was not updated. Row: " + selectRow2, "f", selectRow2.get("gender"));
@@ -361,14 +358,14 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
 
         org.junit.Assert.assertEquals("Birth record not created: " + offspringId, 1, resp.getRowCount().intValue());
 
-        boolean isPublic = (Boolean) resp.getRows().get(0).get("QCState/PublicData");
-        String damId = (String) resp.getRows().get(0).get("dam");
-        boolean isAlive = resp.getRows().get(0).get("birth_condition/alive") == null || (Boolean) resp.getRows().get(0).get("birth_condition/alive");
-        String room = (String) resp.getRows().get(0).get("room");
-        String cage = (String) resp.getRows().get(0).get("cage");
-        Double weight = (Double) resp.getRows().get(0).get("weight");
-        Date weightDate = (Date) resp.getRows().get(0).get("wdate");
-        Date birthDate = (Date) resp.getRows().get(0).get("date");
+        boolean isPublic = (Boolean) resp.getRows().getFirst().get("QCState/PublicData");
+        String damId = (String) resp.getRows().getFirst().get("dam");
+        boolean isAlive = resp.getRows().getFirst().get("birth_condition/alive") == null || (Boolean) resp.getRows().getFirst().get("birth_condition/alive");
+        String room = (String) resp.getRows().getFirst().get("room");
+        String cage = (String) resp.getRows().getFirst().get("cage");
+        Double weight = (Double) resp.getRows().getFirst().get("weight");
+        Date weightDate = (Date) resp.getRows().getFirst().get("wdate");
+        Date birthDate = (Date) resp.getRows().getFirst().get("date");
 
         SelectRowsCommand select2 = new SelectRowsCommand("study", "demographics");
         select2.addFilter(new Filter("Id", offspringId, Filter.Operator.EQUAL));
@@ -393,20 +390,11 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
         SelectRowsCommand weightSelect = new SelectRowsCommand("study", "weight");
         weightSelect.addFilter(new Filter("Id", offspringId, Filter.Operator.EQUAL));
 
-        if (!isAlive)
-        {
-            //if the animal was born dead, we expect these flags to be endded automatically
-            groupSelect.addFilter(new Filter("enddate", null, Filter.Operator.NONBLANK));
-            spfFlagSelect.addFilter(new Filter("enddate", null, Filter.Operator.NONBLANK));
-            conditionSelect.addFilter(new Filter("enddate", null, Filter.Operator.NONBLANK));
-            housingSelect.addFilter(new Filter("enddate", null, Filter.Operator.NONBLANK));
-        }
-
         if (isPublic)
         {
             //we expect demographics record to be present
             org.junit.Assert.assertEquals(1, demographicsResp.getRowCount().intValue());
-            Map<String, Object> demographicsRow = demographicsResp.getRows().get(0);
+            Map<String, Object> demographicsRow = demographicsResp.getRows().getFirst();
 
             // we expect species/gender to have been copied through once record is public, except for the case of dam being NULL
             if (damId != null)
@@ -415,19 +403,7 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
                 org.junit.Assert.assertEquals(INDIAN, demographicsRow.get("geographic_origin"));
             }
 
-            //expect death date
-            if (!isAlive)
-            {
-                //in our test scenario, death date always matches birth
-                org.junit.Assert.assertEquals("demographics death date should match birth", birthDate, demographicsRow.get("death"));
-            }
-            else
-            {
-                //in our test scenario, death date always matches birth
-                Assert.assertNull("demographics death date should be null", demographicsRow.get("death"));
-            }
-
-            org.junit.Assert.assertEquals("demographics birth date not set properly", birthDate, demographicsRow.get("birth"));
+           org.junit.Assert.assertEquals("demographics birth date not set properly", birthDate, demographicsRow.get("birth"));
 
             //always expect condition = Nonrestricted
             org.junit.Assert.assertEquals(1, conditionSelect.execute(getApiHelper().getConnection(), getContainerPath()).getRowCount().intValue());
@@ -450,20 +426,20 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
             if (room != null)
             {
                 org.junit.Assert.assertEquals(1, housingSelect.execute(getApiHelper().getConnection(), getContainerPath()).getRowCount().intValue());
-                org.junit.Assert.assertEquals(room, housingSelect.execute(getApiHelper().getConnection(), getContainerPath()).getRows().get(0).get("room"));
-                org.junit.Assert.assertEquals(cage, housingSelect.execute(getApiHelper().getConnection(), getContainerPath()).getRows().get(0).get("cage"));
+                org.junit.Assert.assertEquals(room, housingSelect.execute(getApiHelper().getConnection(), getContainerPath()).getRows().getFirst().get("room"));
+                org.junit.Assert.assertEquals(cage, housingSelect.execute(getApiHelper().getConnection(), getContainerPath()).getRows().getFirst().get("cage"));
                 if (!birthWasChanged)
                 {
                     //NOTE: housing is rounded to the nearest minute
-                    org.junit.Assert.assertEquals(DateUtils.truncate(birthDate, Calendar.MINUTE), housingSelect.execute(getApiHelper().getConnection(), getContainerPath()).getRows().get(0).get("date"));
+                    org.junit.Assert.assertEquals(DateUtils.truncate(birthDate, Calendar.MINUTE), housingSelect.execute(getApiHelper().getConnection(), getContainerPath()).getRows().getFirst().get("date"));
                 }
             }
 
             if (weight != null)
             {
                 org.junit.Assert.assertEquals(1, weightSelect.execute(getApiHelper().getConnection(), getContainerPath()).getRowCount().intValue());
-                org.junit.Assert.assertEquals(weight, weightSelect.execute(getApiHelper().getConnection(), getContainerPath()).getRows().get(0).get("weight"));
-                org.junit.Assert.assertEquals(weightDate, weightSelect.execute(getApiHelper().getConnection(), getContainerPath()).getRows().get(0).get("date"));
+                org.junit.Assert.assertEquals(weight, weightSelect.execute(getApiHelper().getConnection(), getContainerPath()).getRows().getFirst().get("weight"));
+                org.junit.Assert.assertEquals(weightDate, weightSelect.execute(getApiHelper().getConnection(), getContainerPath()).getRows().getFirst().get("date"));
             }
         }
         else
@@ -518,7 +494,7 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
         select1.addFilter(new Filter("flag", flag1));
         SelectRowsResponse resp1 = select1.execute(getApiHelper().getConnection(), getContainerPath());
         Assert.assertEquals(1, resp1.getRowCount().intValue());
-        Assert.assertNotNull(resp1.getRows().get(0).get("enddate"));
+        Assert.assertNotNull(resp1.getRows().getFirst().get("enddate"));
 
         //expect failure
         getApiHelper().testValidationMessage(PasswordUtil.getUsername(), "study", "flags", new String[]{"Id", "date", "flag", "objectid", "_recordId"}, new Object[][]{
@@ -665,7 +641,7 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
         sc.setSql("SELECT max(CAST(Id as integer)) as expr FROM (SELECT Id FROM study.demographics WHERE isNumericId = true UNION ALL SELECT Id FROM study.birth WHERE isNumericId = true) t");
         SelectRowsResponse resp = sc.execute(getApiHelper().getConnection(), getContainerPath());
         Assert.assertEquals(1, resp.getRowCount().intValue());
-        final int lastId = Integer.parseInt(resp.getRows().get(0).get("expr").toString()) + 1;
+        final int lastId = Integer.parseInt(resp.getRows().getFirst().get("expr").toString()) + 1;
 
         grid = _helper.getExt4GridForFormSection("Arrivals");
         grid.clickTbarButton("Add");
@@ -758,7 +734,7 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
         InsertRowsCommand projectCommand = new InsertRowsCommand("ehr", "project");
         projectCommand.addRow(Maps.of("project", null, "name", U24_PROJECT, "protocol", DUMMY_PROTOCOL));
         RowsResponse saveRowsResponse = projectCommand.execute(getApiHelper().getConnection(), getContainerPath());
-        Integer projectId = (Integer)saveRowsResponse.getRows().get(0).get("project");
+        Integer projectId = (Integer)saveRowsResponse.getRows().getFirst().get("project");
 
         // Insert dam project assignment into assignment via API
         getApiHelper().doSaveRows(DATA_ADMIN.getEmail(), getApiHelper().prepareInsertCommand("study", "assignment", "lsid",
@@ -797,9 +773,9 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
 
         // Wait for snapshot values to load then verify inherited values
         WebDriverWrapper.waitFor(() -> "Group2".equals(getSnapshotValue("Groups")), 10000);
-        assertTrue("Incorrect group found for infant.", "Group2".equals(getSnapshotValue("Groups")));
+        assertEquals("Incorrect group found for infant.", "Group2", getSnapshotValue("Groups"));
         assertTrue("Incorrect flag found for infant.", getSnapshotValue("Flags").contains("SPF: SPF1"));
-        assertTrue("Incorrect project found for infant.", "[0492-03] [dummyprotocol]".equals(getSnapshotValue("Projects")));
+        assertEquals("Incorrect project found for infant.", "[0492-03] [dummyprotocol]", getSnapshotValue("Projects"));
     }
 
     @Test
@@ -1354,12 +1330,6 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
     {
         GetCommand getCommand = new GetCommand("ehr", "getClinicalHistory")
         {
-            @Override
-            protected HttpGet createRequest(URI uri)
-            {
-                return new HttpGet(uri);
-            }
-
             @Override
             protected Map<String, Object> createParameterMap()
             {
