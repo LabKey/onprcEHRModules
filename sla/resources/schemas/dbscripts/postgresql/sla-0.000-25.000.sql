@@ -186,6 +186,7 @@ CREATE TABLE sla.species (
     CONSTRAINT PK_species PRIMARY KEY (species)
 );
 
+-- @SkipOnEmptySchemasBegin
 INSERT INTO sla.species (species) VALUES ('Rats');
 INSERT INTO sla.species (species) VALUES ('Hamsters');
 INSERT INTO sla.species (species) VALUES ('Guinea Pigs');
@@ -194,6 +195,7 @@ INSERT INTO sla.species (species) VALUES ('Rabbits');
 INSERT INTO sla.species (species) VALUES ('Frogs');
 INSERT INTO sla.species (species) VALUES ('Birds');
 INSERT INTO sla.species (species) VALUES ('Fish');
+-- @SkipOnEmptySchemasEnd
 
 CREATE TABLE sla.gender (
     gender VARCHAR(200),
@@ -206,9 +208,11 @@ CREATE TABLE sla.gender (
     CONSTRAINT PK_gender PRIMARY KEY (gender)
 );
 
+-- @SkipOnEmptySchemasBegin
 INSERT INTO sla.gender (gender) VALUES ('Male or Female');
 INSERT INTO sla.gender (gender) VALUES ('Female');
 INSERT INTO sla.gender (gender) VALUES ('Male');
+-- @SkipOnEmptySchemasEnd
 
 CREATE TABLE sla.Reference_Data (
     rowId SERIAL,
