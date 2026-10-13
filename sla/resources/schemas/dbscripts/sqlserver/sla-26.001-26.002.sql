@@ -1,7 +1,7 @@
 /************************************************************************************
  Name:          onprc_ehr.SLACensusInvestigatorUpdate
  Author:        Lakshmi Kolli
- Created:       June 2026
+ Created:       Oct 2026
  Description:
  Updates sla.census.investigatorId directly from ehr.project and onprc_ehr.investigators.
 
