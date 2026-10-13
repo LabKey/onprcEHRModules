@@ -9,6 +9,6 @@ SELECT
 FROM study.tissueDistributions t
 Where t.taskid is not null
   And t.QCState.Label in ('Request: Pending','Completed','In Progress')
-   And t.requestCategory in ('','Affiliate','external')
+   And (t.requestCategory in ('Affiliate','external') or t.requestCategory is null )
 
 GROUP BY calendarYear, t.requestCategory
