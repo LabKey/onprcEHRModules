@@ -99,7 +99,6 @@ SELECT
     pf.procedureId,
     pf.chargeId,
     pf.unitCost,
-    pf.matchesProject,
     pf.taskId
 
 FROM ProcedureFees pf
