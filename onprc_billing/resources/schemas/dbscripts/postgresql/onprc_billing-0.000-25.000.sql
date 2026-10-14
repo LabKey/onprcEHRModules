@@ -711,6 +711,7 @@ CREATE TABLE onprc_billing.chargeableItemCategories (
   CONSTRAINT PK_chargeableItemCategories PRIMARY KEY (category)
 );
 
+-- @SkipOnEmptySchemasBegin
 INSERT INTO onprc_billing.chargeableItemCategories (category) VALUES ('Animal Per Diem');
 INSERT INTO onprc_billing.chargeableItemCategories (category) VALUES ('Clinical Lab Test');
 INSERT INTO onprc_billing.chargeableItemCategories (category) VALUES ('Clinical Procedure');
@@ -720,6 +721,7 @@ INSERT INTO onprc_billing.chargeableItemCategories (category) VALUES ('Misc. Fee
 INSERT INTO onprc_billing.chargeableItemCategories (category) VALUES ('Small Animal Per Diem');
 INSERT INTO onprc_billing.chargeableItemCategories (category) VALUES ('Surgery');
 INSERT INTO onprc_billing.chargeableItemCategories (category) VALUES ('Time Mated Breeders');
+-- @SkipOnEmptySchemasEnd
 
 CREATE TABLE onprc_billing.aliasCategories (
   category varchar(100),
@@ -727,9 +729,11 @@ CREATE TABLE onprc_billing.aliasCategories (
   CONSTRAINT PK_aliasCategories PRIMARY KEY (category)
 );
 
+-- @SkipOnEmptySchemasBegin
 INSERT INTO onprc_billing.aliasCategories (category) VALUES ('OGA');
 INSERT INTO onprc_billing.aliasCategories (category) VALUES ('Other');
 INSERT INTO onprc_billing.aliasCategories (category) VALUES ('GL');
+-- @SkipOnEmptySchemasEnd
 
 ALTER TABLE onprc_billing.creditAccount ADD tempaccount varchar(100);
 UPDATE onprc_billing.creditAccount SET tempaccount = cast(account as varchar(100));
@@ -767,7 +771,9 @@ ALTER TABLE onprc_billing.miscCharges DROP COLUMN totalcost;
 ALTER TABLE onprc_billing.aliases ADD aliasType VARCHAR(100);
 
 DELETE FROM onprc_billing.aliasCategories WHERE category = 'Non-Syncing';
+-- @SkipOnEmptySchemasBegin
 INSERT INTO onprc_billing.aliasCategories (category) VALUES ('Non-Syncing');
+-- @SkipOnEmptySchemasEnd
 
 CREATE TABLE onprc_billing.aliasTypes (
     aliasType varchar(500) not null,
@@ -810,8 +816,10 @@ CREATE TABLE onprc_billing.miscChargesType (
   CONSTRAINT PK_miscChargesType PRIMARY KEY (category)
 );
 
+-- @SkipOnEmptySchemasBegin
 INSERT INTO onprc_billing.miscChargesType (category) VALUES ('Adjustment');
 INSERT INTO onprc_billing.miscChargesType (category) VALUES ('Reversal');
+-- @SkipOnEmptySchemasEnd
 
 ALTER TABLE onprc_billing.miscCharges ADD chargeCategory VARCHAR(100);
 UPDATE onprc_billing.miscCharges SET chargeCategory = chargetype;
