@@ -21,7 +21,11 @@ import org.labkey.api.ehr.dataentry.TaskForm;
 import org.labkey.api.ehr.dataentry.TaskFormSection;
 import org.labkey.api.ehr.security.EHRClinicalEntryPermission;
 import org.labkey.api.module.Module;
+import org.labkey.api.security.Group;
+import org.labkey.api.security.GroupManager;
+import org.labkey.api.security.permissions.AdminPermission;
 import org.labkey.api.view.template.ClientDependency;
+import org.labkey.security.xml.GroupEnumType;
 
 import java.util.Arrays;
 
@@ -53,7 +57,18 @@ public class TBTestObservationFormType extends TaskForm
 
     }
 
+    //Modified: 12-11-2025  R.Blasa
+    @Override
+    public boolean isVisible()
+    {
+        Group h = GroupManager.getGroup(getCtx().getContainer(), "Form Bulk Clinical Entry SF", GroupEnumType.SITE);
+        if (h != null && getCtx().getUser().isInGroup(h.getUserId()) && !getCtx().getContainer().hasPermission(getCtx().getUser(), AdminPermission.class))
+        {
+            return false;
+        }
 
+        return super.isVisible();
+    }
 
     @Override
     protected boolean canInsert()
@@ -64,3 +79,5 @@ public class TBTestObservationFormType extends TaskForm
         return super.canInsert();
     }
 }
+
+
