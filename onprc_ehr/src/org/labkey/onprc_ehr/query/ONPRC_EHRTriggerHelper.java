@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2015 LabKey Corporation
+ * Copyright (c) 2014-2026 LabKey Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,6 @@ import jakarta.mail.Address;
 import jakarta.mail.Message;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
-import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.labkey.api.collections.CaseInsensitiveHashMap;
@@ -224,7 +223,7 @@ public class ONPRC_EHRTriggerHelper
             if (date.getHours() == 0 && date.getMinutes() == 0)
             {
                 Exception e = new Exception();
-                _log.error("Attempting to terminate study details records with a rounded date.  This might indicate upstream code is rounding the date: " + dateTimeFormat.format(date), e);
+                _log.error("Attempting to terminate study details records with a rounded date.  This might indicate upstream code is rounding the date: {}", dateTimeFormat.format(date), e);
             }
 
             SimpleFilter filter = new SimpleFilter(FieldKey.fromString("Id"), row.get("Id"));
@@ -259,7 +258,7 @@ public class ONPRC_EHRTriggerHelper
 
         if (!toUpdate.isEmpty())
         {
-            _log.info("closing study details records: " + toUpdate.size());
+            _log.info("closing study details records: {}", toUpdate.size());
             Map<String, Object> context = getExtraContext();
             context.put("skipAnnounceChangedParticipants", true);
             housing.getUpdateService().updateRows(getUser(), getContainer(), toUpdate, oldKeys, null, context);
@@ -306,7 +305,7 @@ public class ONPRC_EHRTriggerHelper
 
             if ((current == null && old != null) || (current != null && old != null && !current.equals(old)))
             {
-                _log.info("change: " + field);
+                _log.info("change: {}", field);
                 hasChanged = true;
             }
             // filling in units after the fact has been causing some unnecessary splitting of records.
@@ -370,7 +369,7 @@ public class ONPRC_EHRTriggerHelper
 
     public Date createUpdatedTreatmentRow(Map<String, Object> row, Map<String, Object> oldRow) throws Exception
     {
-        _log.info("creating updated treatment: " + row.get("objectid"));
+        _log.info("creating updated treatment: {}", row.get("objectid"));
         Map<String, Object> toCreate = new CaseInsensitiveHashMap<>();
         toCreate.putAll(oldRow);
         toCreate.remove("lsid");
@@ -459,7 +458,7 @@ public class ONPRC_EHRTriggerHelper
 
         if (!_cachedFrequencies.containsKey(frequency))
         {
-            _log.error("unknown treatment frequency: " + frequency);
+            _log.error("unknown treatment frequency: {}", frequency);
             return false;
         }
 
@@ -1042,7 +1041,7 @@ public class ONPRC_EHRTriggerHelper
         oldKeys.put("objectid", objectid);
 
         List<Map<String, Object>> updatedRows = ti.getUpdateService().updateRows(getUser(), getContainer(), Arrays.asList(toUpdate), Arrays.asList(oldKeys), null, getExtraContext());
-        _log.info("transfer request rows updated: " + updatedRows.size());
+        _log.info("transfer request rows updated: {}", updatedRows.size());
     }
 
     public String getOverlappingGroupAssignments(String id, String objectid)
@@ -1092,10 +1091,10 @@ public class ONPRC_EHRTriggerHelper
         }
         else if (ret.size() > 1)
         {
-            _log.error("duplicate flags found for: " + category + " / " + value);
+            _log.error("duplicate flags found for: {} / {}", category, value);
         }
 
-        return ret.get(0);
+        return ret.getFirst();
     }
 
     // Taken from DateUtils.  should remove if we upgrade core
@@ -1149,7 +1148,7 @@ public class ONPRC_EHRTriggerHelper
                 //terminate rows
                 if (!toEnd.isEmpty())
                 {
-                    _log.info("ending " + toEnd.size() + " assignments due to animal death on: " + deathDate.toString());
+                    _log.info("ending {} assignments due to animal death on: {}", toEnd.size(), deathDate.toString());
                     assignmentTable.getUpdateService().updateRows(getUser(), getContainer(), toEnd, toEndKeys, null, getExtraContext());
                 }
             }
@@ -1162,7 +1161,7 @@ public class ONPRC_EHRTriggerHelper
     }
 
     //Added on 10/5/2016, L.Kolli
-    public Map<String, Object> onAnimalArrival_AddDemographics(String id, Map<String, Object> row) throws QueryUpdateServiceException, DuplicateKeyException, SQLException, BatchValidationException
+    public Map<String, Object> onAnimalArrival_AddDemographics(String id, Map<String, Object> row)
     {
         Map<String, Object> demographicsProps = new HashMap<>();
 
@@ -1245,8 +1244,8 @@ public class ONPRC_EHRTriggerHelper
     //    Added: 6-27-2017  F.Blasa  Process when transitioning from Prenatal - Fetus to Live
     public void doBirthConditionAfterPrenatal(String id, Date date, String dam, Date Arrival_Date, String birthCondition, boolean isBecomingPublic) throws Exception
     {
-        //is the infant is dead, terminate the assignments
-        Date enddate = isBirthAlive(birthCondition) ? null : date;
+
+        Date enddate = null ;
 
         String nonRestrictedFlag = getFlag("Condition", NONRESTRICTED, null, true);
         if (nonRestrictedFlag != null)
@@ -1274,16 +1273,9 @@ public class ONPRC_EHRTriggerHelper
     //Modified: 10-13-2016 R.Blasa  to include assign Arrival date
     public void doBirthTriggers(String id, Date date, String dam, Date Arrival_Date, String birthCondition, String species, boolean isBecomingPublic) throws Exception
     {
-        //is the infant is dead, terminate the assignments
-        Date enddate = isBirthAlive(birthCondition) ? null : date;
 
+        Date enddate =  null ;
 
-        //also check for a pre-existing death record:
-        Date deathDate = new TableSelector(getTableInfo("study", "deaths"), Collections.singleton("date"), new SimpleFilter(FieldKey.fromString("Id"), id), null).getObject(Date.class);
-        if (deathDate != null)
-        {
-            enddate = deathDate;
-        }
 
         //note: we only want this to run the first time this record becomes public, not on subsequent updates
         if (isBecomingPublic)
@@ -1336,11 +1328,11 @@ public class ONPRC_EHRTriggerHelper
             TableSelector existingSP4 = new TableSelector(flagsSP4, Collections.singleton("flag"), flagFilter, null);
             if (existingSP4.exists())
             {
-                _log.info("SP4 Flag active record exist for this monkey id: " + id + "Value") ;
+                _log.info("SP4 Flag active record exist for this monkey id: {}Value", id);
             }
             else
             {
-                _log.info("adding SP4 Animal : " + id + "Value");
+                _log.info("adding SP4 Animal : {}Value", id);
 
                 EHRService.get().ensureFlagActive(getUser(), getContainer(), SPFFlag, date, enddate, null, Collections.singletonList(id), false);
 
@@ -1365,11 +1357,11 @@ public class ONPRC_EHRTriggerHelper
             List<String> flagList = ts.getArrayList(String.class);
             if (flagList.size() == 1)
             {
-                EHRService.get().ensureFlagActive(getUser(), getContainer(), flagList.get(0), date, enddate, null, Collections.singletonList(id), false);
+                EHRService.get().ensureFlagActive(getUser(), getContainer(), flagList.getFirst(), date, enddate, null, Collections.singletonList(id), false);
             }
             else if (flagList.size() > 1)
             {
-                _log.error("dam has more than 1 active SPF flag: " + dam);
+                _log.error("dam has more than 1 active SPF flag: {}", dam);
             }
             else if (flagList.isEmpty())
             {
@@ -1394,11 +1386,11 @@ public class ONPRC_EHRTriggerHelper
                     TableSelector existingSP4 = new TableSelector(flagsSP4, Collections.singleton("flag"), flagFilter2, null);
                     if (existingSP4.exists())
                     {
-                        _log.info("SP4 Flag active record exist for this monkey id: " + id + "Value") ;
+                        _log.info("SP4 Flag active record exist for this monkey id: {}Value", id);
                     }
                     else
                     {
-                        _log.info("adding SP4 Animal : " + id + "Value");
+                        _log.info("adding SP4 Animal : {}Value", id);
 
                         EHRService.get().ensureFlagActive(getUser(), getContainer(), SPFFlag, date, enddate, null, Collections.singletonList(id), false);
 
@@ -1428,20 +1420,20 @@ public class ONPRC_EHRTriggerHelper
                         new CompareType.CompareClause(FieldKey.fromString("enddate"), CompareType.DATE_GTE, date),
                         new CompareType.CompareClause(FieldKey.fromString("enddate"), CompareType.ISBLANK, null)
                 ));
-                groupFilter2.addCondition(FieldKey.fromString("groupid"), groupList.get(0));
+                groupFilter2.addCondition(FieldKey.fromString("groupid"), groupList.getFirst());
                 TableSelector existingGroupTs = new TableSelector(animalGroups, Collections.singleton("groupid"), groupFilter2, null);
                 if (existingGroupTs.exists())
                 {
-                    _log.info("infant: " + id + " is already assigned to animal group " + groupList.get(0) + ", so birth trigger will not re-add");
+                    _log.info("infant: {} is already assigned to animal group {}, so birth trigger will not re-add", id, groupList.getFirst());
                 }
                 else
                 {
-                    _log.info("adding animal group " + groupList.get(0) + " to infant: " + id + ", based on dam: " + dam);
+                    _log.info("adding animal group {} to infant: {}, based on dam: {}", groupList.getFirst(), id, dam);
                     Map<String, Object> row = new CaseInsensitiveHashMap<>();
                     row.put("Id", id);
                     row.put("date", date);
                     row.put("enddate", enddate);
-                    row.put("groupid", groupList.get(0));
+                    row.put("groupid", groupList.getFirst());
                     row.put("objectid", new GUID().toString());
 
                     BatchValidationException errors = new BatchValidationException();
@@ -1486,11 +1478,11 @@ public class ONPRC_EHRTriggerHelper
                 {
                     if (existingAssignmentList.contains(project))
                     {
-                        _log.info(id + " is already assigned to project " + project + ", so it will not be reassigned in birth trigger");
+                        _log.info("{} is already assigned to project {}, so it will not be reassigned in birth trigger", id, project);
                         continue;
                     }
 
-                    _log.info("adding assignment for project " + project + " to infant: " + id + ", based on dam: " + dam);
+                    _log.info("adding assignment for project {} to infant: {}, based on dam: {}", project, id, dam);
                     Map<String, Object> row = new CaseInsensitiveHashMap<>();
                     row.put("Id", id);
                     row.put("date", date);
@@ -1573,7 +1565,7 @@ public class ONPRC_EHRTriggerHelper
             }
             else
             {
-                _log.error("Unable to find condition matching: " + condition);
+                _log.error("Unable to find condition matching: {}", condition);
             }
         }
     }
@@ -1742,7 +1734,7 @@ public class ONPRC_EHRTriggerHelper
             });
         }
 
-        return _cachedBirthConditions.containsKey(condition) ? _cachedBirthConditions.get(condition) : true;
+        return _cachedBirthConditions.getOrDefault(condition, true);
     }
 
     public Integer getConditionCodeByFlag(final String flag)
@@ -1759,7 +1751,7 @@ public class ONPRC_EHRTriggerHelper
             List<Integer> ret = ts.getArrayList(Integer.class);
             if (!ret.isEmpty())
             {
-                _cachedConditionCodes.put(flag, ret.get(0));
+                _cachedConditionCodes.put(flag, ret.getFirst());
             }
             else
             {
@@ -1784,7 +1776,7 @@ public class ONPRC_EHRTriggerHelper
             List<Integer> ret = ts.getArrayList(Integer.class);
             if (!ret.isEmpty())
             {
-                _cachedConditionCodeMeanings.put(meaning, ret.get(0));
+                _cachedConditionCodeMeanings.put(meaning, ret.getFirst());
             }
             else
             {
@@ -1848,7 +1840,7 @@ public class ONPRC_EHRTriggerHelper
         DividerRecord targetDivider = getDividerRecord(divider);
         if (targetDivider == null)
         {
-            _log.error("Unknown divider: " + divider);
+            _log.error("Unknown divider: {}", divider);
             return null;
         }
 
@@ -1868,7 +1860,7 @@ public class ONPRC_EHRTriggerHelper
         String lowestCage = getLowestCageForUnit(room, cage);
         if (!cageDividerMap.containsKey(lowestCage))
         {
-            _log.error("Unknown cage: " + lowestCage);
+            _log.error("Unknown cage: {}", lowestCage);
             return null;
         }
 
@@ -1880,7 +1872,7 @@ public class ONPRC_EHRTriggerHelper
 
         for (String changingCage : dividerChanges.keySet())
         {
-            _log.info("Divider change: " + changingCage + " / " + dividerChanges.get(changingCage));
+            _log.info("Divider change: {} / {}", changingCage, dividerChanges.get(changingCage));
             if (isValidateOnly)
             {
                 errors.add("This will change the divider for cage: " + changingCage);
@@ -1949,11 +1941,11 @@ public class ONPRC_EHRTriggerHelper
 
         if (lowestCage == null)
         {
-            _log.error("unable to find effective cage for: " + cageRec.getCage());
+            _log.error("unable to find effective cage for: {}", cageRec.getCage());
             return null;
         }
 
-        _log.info("original cage: " + cageRec.getCage() + ", effective: " + lowestCage.getCage());
+        _log.info("original cage: {}, effective: {}", cageRec.getCage(), lowestCage.getCage());
 
         return lowestCage.getCage();
     }
@@ -1964,7 +1956,7 @@ public class ONPRC_EHRTriggerHelper
         {
             SqlSelector ss = new SqlSelector(DbSchema.get("ehr"), "SELECT COALESCE(max(project), 0) as expr FROM ehr.project");
             List<Integer> ret = ss.getArrayList(Integer.class);
-            _nextProjectId = ret.isEmpty() ? 0 : ret.get(0);
+            _nextProjectId = ret.isEmpty() ? 0 : ret.getFirst();
         }
 
         _nextProjectId++;
@@ -1992,7 +1984,7 @@ public class ONPRC_EHRTriggerHelper
 
             SqlSelector ss = new SqlSelector(DbSchema.get("ehr"), "SELECT COALESCE(max(CAST(protocol as INTEGER)), 0) as expr FROM ehr.protocol WHERE " + suffix);
             List<Integer> ret = ss.getArrayList(Integer.class);
-            _nextProtocolId = ret.isEmpty() ? 0 : ret.get(0);
+            _nextProtocolId = ret.isEmpty() ? 0 : ret.getFirst();
         }
 
         _nextProtocolId++;
@@ -2151,7 +2143,7 @@ public class ONPRC_EHRTriggerHelper
         String existingDemographicsVal = new TableSelector(getTableInfo("study", "demographics"), PageFlowUtil.set(targetField), new SimpleFilter(FieldKey.fromString("Id"), id), null).getObject(String.class);
         if (parent.equals(existingDemographicsVal))
         {
-            _log.info("updating " + targetField + " on demographics for animal: " + id + " from parentage");
+            _log.info("updating {} on demographics for animal: {} from parentage", targetField, id);
         }
 
     }
@@ -2449,7 +2441,7 @@ public class ONPRC_EHRTriggerHelper
             //Create header information on the report
 
             html.append("<table border=1 style='border-collapse: collapse;'>");
-            html.append("<tr style='font-weight: bold;'><td>Center Project</td><td>Project ID</td><td>Iacuc Protocol</td><td> Investigator</td><td>  Project Start Date</td><td>  Project Previous End Date</td><td>  Project End Date</td></tr>\n");
+            html.append("<tr style='font-weight: bold;'><td>Center Project</td><td>Project ID</td><td>Iacuc Protocol</td><td> Contact</td><td>  Project Start Date</td><td>  Project Previous End Date</td><td>  Project End Date</td></tr>\n");
             ts.forEach(new Selector.ForEachBlock<ResultSet>()
                        {
 

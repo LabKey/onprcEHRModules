@@ -1,4 +1,9 @@
 /*
+ * Copyright (c) 2020-2026 LabKey Corporation
+ *
+ * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
+ */
+/*
 * 2017/9/20 Updated statement to handle an issue where records where the qc state was set to deleted, caancelled or pending approval were being
 * marked as counts against volume.  The method used here was to determine the current qcstate and exclude these values
  */

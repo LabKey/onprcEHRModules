@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2017 LabKey Corporation
+ * Copyright (c) 2021-2026 LabKey Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -55,19 +55,13 @@ public class ONPRC_EHR_ComplianceDBModule extends ExtendedSimpleModule
     @Override
     public Double getSchemaVersion()
     {
-        return 25.001;
-    } //Modified: 9-8-025
+        return 26.000;
+    }
 
     @Override
     public @NotNull Collection<String> getSchemaNames()
     {
         return Collections.singleton(ONPRC_EHR_ComplianceDBSchema.NAME);
-    }
-
-    @Override
-    public boolean hasScripts()
-    {
-        return true;
     }
 
     @Override

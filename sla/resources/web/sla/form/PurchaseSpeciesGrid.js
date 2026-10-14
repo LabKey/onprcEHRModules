@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2016-2026 LabKey Corporation
+ *
+ * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
+ */
 /**
  * Ext component for display the editable grid of Species purchase order information (see CreatePurchaseOrder.js for usage).
  */

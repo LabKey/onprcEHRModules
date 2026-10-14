@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2013 LabKey Corporation
+ * Copyright (c) 2013-2026 LabKey Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ package org.labkey.sla.etl;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 import org.labkey.api.data.PropertyManager;
 import org.labkey.api.data.PropertyManager.WritablePropertyMap;
 
@@ -53,7 +54,7 @@ public class ETL
         {
             executor = (executor == null ? Executors.newSingleThreadScheduledExecutor(new ThreadFactory() {
                 @Override
-                public Thread newThread(Runnable r) {
+                public Thread newThread(@NotNull Runnable r) {
                     return new Thread(r, "SLA ETL");
                 }
             }) : executor);
@@ -64,7 +65,7 @@ public class ETL
                 int interval = runnable.getRunIntervalInMinutes();
                 if (interval != 0)
                 {
-                    log.info("Scheduling SLA ETL with " + interval + " minute interval and delay: " + delay);
+                    log.info("Scheduling SLA ETL with {} minute interval and delay: {}", interval, delay);
                     future = executor.scheduleWithFixedDelay(runnable, delay, interval, TimeUnit.MINUTES);
                     setEnabled(true);
                     isScheduled = true;
@@ -128,7 +129,7 @@ public class ETL
                 }
                 catch (IOException e)
                 {
-                    log.error("Error running ETL: " + e.getMessage());
+                    log.error("Error running ETL: {}", e.getMessage());
                 }
             }
 
@@ -146,13 +147,7 @@ public class ETL
         if (prop == null)
             return false;
 
-        Boolean value = Boolean.parseBoolean(prop);
-        if (value == null)
-        {
-            return false;
-        }
-
-        return value;
+        return Boolean.parseBoolean(prop);
     }
 
     public static boolean isRunning()

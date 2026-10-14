@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013 LabKey Corporation
+ * Copyright (c) 2013-2026 LabKey Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -57,13 +57,14 @@ public class SLAModule extends ExtendedSimpleModule
     @Override
     public @Nullable Double getSchemaVersion()
     {
-        return 23.003;
+        return 26.000;
     }
 
     @Override
-    public boolean hasScripts()
+    public double getEarliestUpgradeVersion()
     {
-        return true;
+        // Allow upgrades from 23.000+
+        return 23.000;
     }
 
     @Override

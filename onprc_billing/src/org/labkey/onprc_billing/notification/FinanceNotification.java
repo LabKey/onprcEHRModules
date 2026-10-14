@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013 LabKey Corporation
+ * Copyright (c) 2014-2026 LabKey Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,6 +39,7 @@ import org.labkey.api.query.QueryException;
 import org.labkey.api.query.QueryService;
 import org.labkey.api.query.UserSchema;
 import org.labkey.api.security.User;
+import org.labkey.api.util.PageFlowUtil;
 import org.labkey.onprc_billing.ONPRC_BillingManager;
 import org.labkey.onprc_billing.ONPRC_BillingModule;
 import org.labkey.onprc_billing.ONPRC_BillingSchema;
@@ -58,12 +59,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
-/**
- * Created with IntelliJ IDEA.
- * User: bimber
- * Date: 4/5/13
- * Time: 2:25 PM
- */
 public class FinanceNotification extends AbstractNotification
 {
     protected static final DecimalFormat _dollarFormat = new DecimalFormat("$###,##0.00");
@@ -341,14 +336,14 @@ public class FinanceNotification extends AbstractNotification
                 Double quantity = rs.getDouble(FieldKey.fromString("quantity"));
                 if (unitCost != null && quantity != null)
                 {
-                    double t = totalsMap.containsKey("totalCost") ? totalsMap.get("totalCost") : 0.0;
+                    double t = totalsMap.getOrDefault("totalCost", 0.0);
                     t += (quantity * unitCost);
                     totalsMap.put("totalCost", t);
                 }
 
                 if (quantity != null)
                 {
-                    double t = totalsMap.containsKey("total") ? totalsMap.get("total") : 0.0;
+                    double t = totalsMap.getOrDefault("total", 0.0);
                     t += quantity;
                     totalsMap.put("total", t);
                 }
@@ -404,7 +399,7 @@ public class FinanceNotification extends AbstractNotification
                             values = new HashMap<>();
 
 
-                        Integer count = values.containsKey(fd.getFieldName()) ? values.get(fd.getFieldName()) : 0;
+                        Integer count = values.getOrDefault(fd.getFieldName(), 0);
                         count++;
                         values.put(fd.getFieldName(), count);
 
@@ -428,8 +423,8 @@ public class FinanceNotification extends AbstractNotification
             Map<String, Double> totalsMap = totalsByCategory.get(category);
             Container container = containerMap.get(category);
 
-            String url = getExecuteQueryUrl(container, ONPRC_BillingSchema.NAME, categoryToQuery.get(category), null) + "&query.param.StartDate=" + getDateFormat(c).format(start.getTime()) + "&query.param.EndDate=" + getDateFormat(c).format(endDate.getTime());
-            msg.append("<tr><td><a href='" + url + "'>" + category + "</a></td><td>" + totalsMap.get("total") + "</td><td>" + _dollarFormat.format(totalsMap.get("totalCost")) + "</td></tr>");
+            String url = getExecuteQueryUrl(container, ONPRC_BillingSchema.NAME, categoryToQuery.get(category), null) + "&query.param.StartDate=" + PageFlowUtil.encodeURIComponent(getDateFormat(c).format(start.getTime())) + "&query.param.EndDate=" + PageFlowUtil.encodeURIComponent(getDateFormat(c).format(endDate.getTime()));
+            msg.append("<tr><td><a href='" + PageFlowUtil.filter(url) + "'>" + PageFlowUtil.filter(category) + "</a></td><td>" + totalsMap.get("total") + "</td><td>" + _dollarFormat.format(totalsMap.get("totalCost")) + "</td></tr>");
         }
         msg.append("</table><br><br>");
 
@@ -472,37 +467,37 @@ public class FinanceNotification extends AbstractNotification
                 {
                     Map<String, Integer> totals = dataByCategory.get(category);
 
-                    String baseUrl = getExecuteQueryUrl(containerMap.get(category), ONPRC_BillingSchema.NAME, categoryToQuery.get(category), null) + "&query.param.StartDate=" + getDateFormat(c).format(start.getTime()) + "&query.param.EndDate=" + getDateFormat(c).format(endDate.getTime());
-                    String projUrl = baseUrl + ("None".equals(tokens[1]) ? "&query.project/displayName~isblank" : "&query.project/displayName~eq=" + tokens[1]);
-                    msg.append("<tr><td>" + financialAnalyst + "</td>");    //the FA
-                    msg.append("<td><a href='" + projUrl + "'>" + tokens[1] + "</a></td>");
+                    String baseUrl = getExecuteQueryUrl(containerMap.get(category), ONPRC_BillingSchema.NAME, categoryToQuery.get(category), null) + "&query.param.StartDate=" + PageFlowUtil.encodeURIComponent(getDateFormat(c).format(start.getTime())) + "&query.param.EndDate=" + PageFlowUtil.encodeURIComponent(getDateFormat(c).format(endDate.getTime()));
+                    String projUrl = baseUrl + ("None".equals(tokens[1]) ? "&query.project/displayName~isblank" : "&query.project/displayName~eq=" + PageFlowUtil.encodeURIComponent(tokens[1]));
+                    msg.append("<tr><td>" + PageFlowUtil.filter(financialAnalyst) + "</td>");    //the FA
+                    msg.append("<td><a href='" + PageFlowUtil.filter(projUrl) + "'>" + PageFlowUtil.filter(tokens[1]) + "</a></td>");
 
                     //alias
                     String accountUrl = null;
                     Container financeContainer = ONPRC_BillingManager.get().getBillingContainer(containerMap.get(category));
                     if (financeContainer != null && !"Unknown".equals((tokens[2])))
                     {
-                        accountUrl = getExecuteQueryUrl(financeContainer, ONPRC_BillingSchema.NAME, "aliases", null, null) + "&query.alias~eq=" + tokens[2];
+                        accountUrl = getExecuteQueryUrl(financeContainer, ONPRC_BillingSchema.NAME, "aliases", null, null) + "&query.alias~eq=" + PageFlowUtil.encodeURIComponent(tokens[2]);
                     }
 
                     if (accountUrl != null)
                     {
-                        msg.append("<td><a href='" + accountUrl + "'>" + tokens[2] + "</a></td>");
+                        msg.append("<td><a href='" + PageFlowUtil.filter(accountUrl) + "'>" + PageFlowUtil.filter(tokens[2]) + "</a></td>");
                     }
                     else
                     {
-                        msg.append("<td>" + (tokens[2]) + "</td>");
+                        msg.append("<td>" + PageFlowUtil.filter(tokens[2]) + "</td>");
                     }
 
-                    msg.append("<td>" + (tokens[3]) + "</td>");
-                    msg.append("<td>" + category + "</td>");
+                    msg.append("<td>" + PageFlowUtil.filter(tokens[3]) + "</td>");
+                    msg.append("<td>" + PageFlowUtil.filter(category) + "</td>");
 
                     for (FieldDescriptor fd : foundCols)
                     {
                         if (totals.containsKey(fd.getFieldName()))
                         {
                             String url = projUrl + fd.getFilter();
-                            msg.append("<td" + (fd.isShouldHighlight() ? " style='background-color: yellow;'" : "") + "><a href='" + url + "'>" + totals.get(fd.getFieldName()) + "</a></td>");
+                            msg.append("<td" + (fd.isShouldHighlight() ? " style='background-color: yellow;'" : "") + "><a href='" + PageFlowUtil.filter(url) + "'>" + totals.get(fd.getFieldName()) + "</a></td>");
                         }
                         else
                         {

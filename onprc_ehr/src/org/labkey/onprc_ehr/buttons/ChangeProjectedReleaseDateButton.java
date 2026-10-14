@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 LabKey Corporation
+ * Copyright (c) 2014-2026 LabKey Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,7 +39,7 @@ public class ChangeProjectedReleaseDateButton extends MarkCompletedButton
         String pkColName = null;
         if (ti.getPkColumnNames() != null && ti.getPkColumnNames().size() == 1)
         {
-            pkColName = ti.getPkColumnNames().get(0);
+            pkColName = ti.getPkColumnNames().getFirst();
         }
 
         return "EHR.window.MarkCompletedWindow.buttonHandler(dataRegionName, " + PageFlowUtil.jsString(_schemaName) + ", " + PageFlowUtil.jsString(_queryName) + ", " + PageFlowUtil.jsString(xtype) + ", " + PageFlowUtil.jsString(pkColName) + ", false, 'projectedRelease');";

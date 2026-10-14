@@ -1,43 +1,25 @@
 <etl xmlns="http://labkey.org/etl/xml">
   <name>eiACUCtoPrime</name>
-  <description>Transfers from the eIACUC Import tables to the Prime tables in ONPRC_EHR</description>
+  <description>Copies from eIACUCProd.eIACUC tables to onprc_ehr.eIACUC_PRIME_VIEW_ tables</description>
   <transforms>
     <transform id="step1a">
-      <description>Transfer to eIACUC Animal Groups</description>
+      <description>Copy Animal Groups</description>
       <source queryName="PRIME_VIEW_ANIMAL_GROUPS" schemaName="eIACUC"/>
       <destination queryName="eIACUC_PRIME_VIEW_ANIMAL_GROUPS" schemaName="ONPRC_EHR" targetOption="truncate"/>
     </transform>
-    <transform id="step2a">
-      <description>Transfer to IBX Numbers</description>
-      <source queryName="PRIME_VIEW_IBC_NUMBERS" schemaName="eIACUC"/>
-      <destination queryName="eIACUC_PRIME_VIEW_IBC_NUMBERS" schemaName="ONPRC_EHR" targetOption="truncate"/>
-    </transform>
-    <transform id="step3a">
-      <description>Transfer to Non Surgical Procedures</description>
-      <source queryName="PRIME_VIEW_NON_SURGICAL_PROCS" schemaName="eIACUC"/>
-      <destination queryName="eIACUC_PRIME_VIEW_NON_SURGICAL_PROCS" schemaName="ONPRC_EHR" targetOption="truncate"/>
-    </transform>
-    <transform id="step4a">
-      <description>Transfer to Protocols</description>
+      <transform id="step2a">
+      <description>Copy Protocols</description>
       <source queryName="PRIME_VIEW_PROTOCOLS" schemaName="eIACUC"/>
       <destination queryName="eIACUC_PRIME_VIEW_PROTOCOLS" schemaName="ONPRC_EHR" targetOption="truncate"/>
     </transform>
-    <transform id="step5a">
-      <description>Transfer to Surgical Procedures</description>
-      <source queryName="PRIME_VIEW_SURGERIES" schemaName="eIACUC"/>
-      <destination queryName="eIACUC_PRIME_VIEW_SURGICAL_PROCS" schemaName="ONPRC_EHR" targetOption="truncate"/>
-    </transform>
-    <transform id="UpdateBaseProtocol" type="StoredProcedure">
-      <description>Determines and populates BaseProtocol and RevisionNumber data for the protocol table in schema onprc_ehr.</description>
+      <transform id="step3a" type="StoredProcedure">
+      <description>Run stored procedure to create BaseProtocol and RevisionNumber fields and merge into Protocols</description>
       <procedure schemaName="onprc_ehr" procedureName="BaseProtocol">
       </procedure>
     </transform>
-
   </transforms>
-	<schedule>
-
-             <!--3AM-->
-                    <cron expression="0 50 04 * * ?"/>
-
-        </schedule>
+  <schedule>
+     <!-- 4:50 AM -->
+     <cron expression="0 50 4 * * ?"/>
+   </schedule>
 </etl>

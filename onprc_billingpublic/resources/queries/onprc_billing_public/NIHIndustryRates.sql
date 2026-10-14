@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2016-2026 LabKey Corporation
+ *
+ * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
+ */
 /*Updated:  5/2/2024 jonesga
 Changes Made:  We added two fiuelds to the query as requested to show
             the rate sheet selecteed and the parameter added

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2017 LabKey Corporation
+ * Copyright (c) 2013-2026 LabKey Corporation
  *
  * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
  * Research completed by Dr Ted Hobbs ONPRC has updated the process for calculating availaable blood

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<etl xmlns="http://labkey.org/etl/xml">
+
+    <name>TB_Test_Historical_Record_Updates</name>
+
+    <description>Transfer Tb Test temp tables into study Clinical Observation values</description>
+
+
+    <transforms>
+
+        <transform id="step1">
+
+            <description>Transfer to EHR Tasks</description>
+
+            <source schemaName="onprc_ehr" queryName="Observation_Historical_EHRTasks"/>
+
+            <destination schemaName="EHR" queryName="tasks"  />
+
+        </transform>
+
+        <transform id="step2">
+
+            <description>Transfer temp table data to study clinical observation </description>
+
+            <source schemaName="onprc_ehr" queryName="Temp_Clinical_Observations_Historical"/>
+
+            <destination schemaName="study" queryName="clinical_observations" />
+
+        </transform>
+
+    </transforms>
+
+</etl>
+
+
+
+

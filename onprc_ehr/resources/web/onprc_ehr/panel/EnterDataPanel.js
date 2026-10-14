@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2020-2026 LabKey Corporation
+ *
+ * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
+ */
 
 //Created: 12-13-2016 R.Blasa
 //Modified: 8-1-2022  R.Blasa
@@ -492,14 +497,9 @@ Ext4.define('onprc_ehr.panel.EnterDataPanel', {
                                 width: 200
                             },{
                                 xtype: 'ldk-linkbutton',
-                                text: 'Requests With Manual Results',
+                                text: 'Requests',
                                 linkCls: 'labkey-text-link',
-                                href: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'study', 'query.queryName': 'Clinpath Runs', 'query.viewName': 'Requests', 'query.QCState/Label~startswith': 'Request:', 'query.servicerequested/chargetype~eq': 'Clinpath', 'query.mergeSyncInfo/automaticresults~eq': false})
-                            },{
-                                xtype: 'ldk-linkbutton',
-                                text: 'Requests With Automatic Results',
-                                linkCls: 'labkey-text-link',
-                                href: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'study', 'query.queryName': 'Clinpath Runs', 'query.viewName': 'Requests', 'query.QCState/Label~startswith': 'Request:', 'query.servicerequested/chargetype~eq': 'Clinpath', 'query.mergeSyncInfo/automaticresults~eq': true})
+                                href: LABKEY.ActionURL.buildURL('query', 'executeQuery', null, {schemaName: 'study', 'query.queryName': 'Clinpath Runs', 'query.viewName': 'Requests', 'query.QCState/Label~startswith': 'Request:', 'query.servicerequested/chargetype~eq': 'Clinpath'})
                             }]
                         },{
                             layout: 'hbox',

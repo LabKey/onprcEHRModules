@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2020-2026 LabKey Corporation
+ *
+ * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
+ */
 --Corrested Issue with Adjustments and loading into Test
 --20200111 - changed source from rate data to a passthru with a lookup of rate name and unit cost
 

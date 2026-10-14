@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2018 LabKey Corporation
+ * Copyright (c) 2016-2026 LabKey Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,12 +41,6 @@ public class ProtocolAlertsNotification extends AbstractEHRNotification
     public String getEmailSubject(Container c)
     {
         return "Protocol Alerts Notification: " + DateUtil.formatDateTime(c);
-    }
-
-    @Override
-    public String getCronString()
-    {
-        return null;
     }
 
     @Override

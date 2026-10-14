@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2013-2026 LabKey Corporation
+ *
+ * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
+ */
 -- NOTE: and changes to the logic the this query should also modify mhcFlagSummary.sql, parentageFlagSummary.sql and dnaFlagSummary.sql
 -- in the GeneticsCore module
 SELECT

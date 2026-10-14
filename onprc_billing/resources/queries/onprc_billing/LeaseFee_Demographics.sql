@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2020-2026 LabKey Corporation
+ *
+ * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
+ */
 /*-objectives are
 IDentify Research versus resource assignments
 Identify infant assignments (determine if Born to resource Mom)

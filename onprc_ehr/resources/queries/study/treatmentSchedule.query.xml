@@ -73,7 +73,7 @@
                         <isHidden>true</isHidden>
                     </column>
                     <column columnName="qcstate">
-                        <isHidden>true</isHidden>
+                        <isHidden>false</isHidden>
                         <fk>
                             <fkDbSchema>core</fkDbSchema>
                             <fkTable>qcstate</fkTable>

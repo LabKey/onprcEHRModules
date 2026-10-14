@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013 LabKey Corporation
+ * Copyright (c) 2014-2026 LabKey Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,13 +42,13 @@ public class ONPRC_SSUModule extends ExtendedSimpleModule
     @Override
     public @Nullable Double getSchemaVersion()
     {
-        return 13.23;
+        return 26.000;
     }
 
     @Override
-    public boolean hasScripts()
+    public double getEarliestUpgradeVersion()
     {
-        return true;
+        return 13.23;
     }
 
     @Override

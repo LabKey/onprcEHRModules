@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2020-2026 LabKey Corporation
+ *
+ * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
+ */
 --20200113 Updated to look up active alias at time of assignment - Critical when dealing with Historic assignments
 SELECT d.id,
 d.CenterProject,

@@ -1,3 +1,18 @@
+/*
+ * Copyright (c) 2025-2026 LabKey Corporation
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.labkey.test.tests.onprc_ehr;
 
 import org.junit.Assert;
@@ -15,7 +30,6 @@ import org.labkey.test.pages.issues.UpdatePage;
 import org.labkey.test.pages.search.SearchResultsPage;
 import org.labkey.test.util.IssuesHelper;
 import org.labkey.test.util.SearchHelper;
-import org.labkey.test.util.SqlserverOnlyTest;
 import org.labkey.test.util.TestUser;
 
 import java.util.Arrays;
@@ -26,7 +40,7 @@ import static org.labkey.test.util.PermissionsHelper.EDITOR_ROLE;
 import static org.labkey.test.util.PermissionsHelper.FOLDER_ADMIN_ROLE;
 
 @Category({EHR.class, ONPRC.class})
-public class ONPRC_RestrictedIssueTest extends BaseWebDriverTest implements SqlserverOnlyTest
+public class ONPRC_RestrictedIssueTest extends BaseWebDriverTest
 {
     private final IssuesHelper _issuesHelper;
 
@@ -291,7 +305,7 @@ public class ONPRC_RestrictedIssueTest extends BaseWebDriverTest implements Sqls
         SearchResultsPage resultsPage = searchHelper.searchFor("\"Restricted issue search test\"");
 
         // verify that we can return links even if the user doesn't have permission to view a restricted issue
-        Assert.assertTrue("Number of search results not expected", resultsPage.getResults().size() == 2);
+        Assert.assertEquals("Number of search results not expected", 2, resultsPage.getResults().size());
 
         // verify assigned to users will see both results but shouldn't be able to see details of issues not assigned to them,
         // also verify that there is a warning rendered if a search result is restricted
