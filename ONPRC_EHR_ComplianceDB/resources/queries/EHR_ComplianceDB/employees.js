@@ -39,7 +39,7 @@ function afterUpdate(row, oldRow, errors){
             helper.cascadeUpdate('onprc_ehr_compliancedb', 'requirementsperemployee', 'employeeid', row[fieldName], oldRow[fieldName]);
             helper.cascadeUpdate('ehr_compliancedb', 'completiondates', 'employeeid', row[fieldName], oldRow[fieldName]);
             helper.cascadeUpdate('ehr_compliancedb', 'employeerequirementexemptions', 'employeeid', row[fieldName], oldRow[fieldName]);
-
+            helper.cascadeUpdate('onprc_ehr_compliancedb', 'employeeperunit', 'employeeid', row[fieldName], oldRow[fieldName]);
         }
     }
 }
