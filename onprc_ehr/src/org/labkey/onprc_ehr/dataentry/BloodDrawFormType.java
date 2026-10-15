@@ -82,11 +82,7 @@ public class BloodDrawFormType extends TaskForm
         {
             return false;
         }
-        Group h = GroupManager.getGroup(getCtx().getContainer(), "Form Bulk Clinical Entry SF", GroupEnumType.SITE);
-        if (h != null && getCtx().getUser().isInGroup(h.getUserId()) && !getCtx().getContainer().hasPermission(getCtx().getUser(), AdminPermission.class))
-        {
-            return false;
-        }
+       
         return super.isVisible();
     }
 }

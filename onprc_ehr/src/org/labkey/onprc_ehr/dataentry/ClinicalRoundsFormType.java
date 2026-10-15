@@ -80,16 +80,5 @@ public class ClinicalRoundsFormType extends TaskForm
 
 
     }
-    //Modified: 10-12-2026  R.Blasa
-    @Override
-    public boolean isVisible()
-    {
-        Group g = GroupManager.getGroup(getCtx().getContainer(), "Form Bulk Clinical Entry SF", GroupEnumType.SITE);
-        if (g != null && getCtx().getUser().isInGroup(g.getUserId()) && !getCtx().getContainer().hasPermission(getCtx().getUser(), AdminPermission.class))
-        {
-            return false;
-        }
 
-        return super.isVisible();
-    }
 }
