@@ -13,7 +13,7 @@ SELECT a.protocol,
 FROM sla.allowableAnimals a,
     onprc_ehr.eIACUC_PRIME_VIEW_PROTOCOLS c
 Where c.Protocol_State = 'Approved'
-  And (c.protocol_Id = a.protocol.displayname OR c.protocol_Id like '%' + a.protocol.displayname)
+  And (c.protocol_Id = a.protocol.displayname OR c.protocol_Id like '%' || a.protocol.displayname)
  -- And (c.protocol_Id = a.protocol OR c.protocol_Id like '%' + a.protocol)
   And curdate() between a.startdate And a.endDate
 

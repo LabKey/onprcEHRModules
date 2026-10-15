@@ -468,10 +468,21 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
     private void addNaturalSort(AbstractTableInfo ti, String columnName)
     {
         var column = ti.getMutableColumn(columnName);
-        if (column != null)
+        if (column == null)
+            return;
+
+        //applyNaturalSort() throws on anything that is not a string.  A table whose underlying database table is
+        //missing resolves its columns without a type, so one such table would otherwise take down every caller
+        //that enumerates this schema.  Warn and skip instead - the missing table is the problem to chase.
+        if (!String.class.equals(column.getJavaClass()))
         {
-            LDKService.get().applyNaturalSort(ti, columnName);
+            _log.warn("Skipping natural sort on " + ti.getPublicSchemaName() + "." + ti.getName() + "." + columnName
+                    + ": expected a string column but was " + column.getJavaClass().getSimpleName()
+                    + ".  This usually means the underlying table is missing from the database.");
+            return;
         }
+
+        LDKService.get().applyNaturalSort(ti, columnName);
     }
 
     private void customizeDateColumn(AbstractTableInfo ti)
@@ -1061,20 +1072,26 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
 
     }
 
+    //treatment_times.time and treatment_frequency_times.hourofday are integers like 800 or 1600.  Both are rendered as a
+    //zero-padded 4-character string so they sort correctly once group_concat'd.
+    private String getZeroPaddedTimeSql(AbstractTableInfo ti, String column)
+    {
+        if (ti.getSqlDialect().isSqlServer())
+            return "REPLICATE('0', 4 - LEN(" + column + "))  + cast(" + column + " as varchar(4))";
+
+        return "LPAD(CAST(" + column + " AS VARCHAR(4)), 4, '0')";
+    }
+
     private void customizeTreatmentOrdersTable(AbstractTableInfo ti)
     {
-        //for now, sqlserver only
-        if (!ti.getSqlDialect().isSqlServer())
-            return;
-
         String name = "treatmentTimes";
         if (null == ti.getColumn(name) && null != ti.getColumn("objectid"))
         {
             SQLFragment sql = new SQLFragment("COALESCE(" +
-                "(SELECT " + ti.getSqlDialect().getGroupConcat(new SQLFragment("REPLICATE('0', 4 - LEN(tt.time))  + cast(tt.time as varchar(4))"), true, false, getNewlineSql(ti)).getSqlCharSequence() + " as _expr " +
+                "(SELECT " + ti.getSqlDialect().getGroupConcat(new SQLFragment(getZeroPaddedTimeSql(ti, "tt.time")), true, false, getNewlineSql(ti)).getSqlCharSequence() + " as _expr " +
                 " FROM ehr.treatment_times tt " +
                 " WHERE tt.treatmentId = " + ExprColumn.STR_TABLE_ALIAS + ".objectid)" +
-                ", (SELECT " + ti.getSqlDialect().getGroupConcat(new SQLFragment("REPLICATE('0', 4 - LEN(ft.hourofday))  + cast(ft.hourofday as varchar(4))"), true, false, getNewlineSql(ti)).getSqlCharSequence() + " as _expr " +
+                ", (SELECT " + ti.getSqlDialect().getGroupConcat(new SQLFragment(getZeroPaddedTimeSql(ti, "ft.hourofday")), true, false, getNewlineSql(ti)).getSqlCharSequence() + " as _expr " +
                 " FROM ehr_lookups.treatment_frequency f " +
                 " JOIN ehr_lookups.treatment_frequency_times ft ON (f.meaning = ft.frequency) WHERE f.rowid = " + ExprColumn.STR_TABLE_ALIAS + ".frequency)" +
                 ", 'Custom')"
@@ -1103,15 +1120,11 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
 
     private void customizeTreatmentFrequency(AbstractTableInfo ti)
     {
-        //for now, sqlserver only
-        if (!ti.getSqlDialect().isSqlServer())
-            return;
-
         String name = "times";
         ColumnInfo existing = ti.getColumn(name);
         if (null == existing && null != ti.getColumn("meaning"))
         {
-            SQLFragment sql = new SQLFragment("(SELECT " + ti.getSqlDialect().getGroupConcat(new SQLFragment("REPLICATE('0', 4 - LEN(t.hourofday))  + cast(t.hourofday as varchar(4))"), true, true, ",").getSqlCharSequence() +
+            SQLFragment sql = new SQLFragment("(SELECT " + ti.getSqlDialect().getGroupConcat(new SQLFragment(getZeroPaddedTimeSql(ti, "t.hourofday")), true, true, ",").getSqlCharSequence() +
                     "FROM ehr_lookups.treatment_frequency_times t " +
                     " WHERE t.frequency = " + ExprColumn.STR_TABLE_ALIAS + ".meaning " +
                     " GROUP BY t.frequency " +

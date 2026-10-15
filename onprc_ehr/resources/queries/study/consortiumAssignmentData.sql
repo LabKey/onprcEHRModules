@@ -16,9 +16,9 @@ SELECT
   group_concat(DISTINCT a.project.displayName, chr(10)) as overlappingProjects,
   group_concat(DISTINCT a.project.use_category, (',' || chr(10))) as utilization,
 
-  sum(CASE WHEN (a.project.use_category = 'Research') THEN 1 ELSE 0 END) as totalResearchAssignments,
-  sum(CASE WHEN (a.project.use_category = 'U42') THEN 1 ELSE 0 END) as isU42,
-  sum(CASE WHEN (a.project.use_category = 'U24') THEN 1 ELSE 0 END) as isU24
+  sum(CASE WHEN (LOWER(a.project.use_category) = 'research') THEN 1 ELSE 0 END) as totalResearchAssignments,
+  sum(CASE WHEN (LOWER(a.project.use_category) = 'u42') THEN 1 ELSE 0 END) as isU42,
+  sum(CASE WHEN (LOWER(a.project.use_category) = 'u24') THEN 1 ELSE 0 END) as isU24
 
 FROM study.assignmentOverlaps ao
 

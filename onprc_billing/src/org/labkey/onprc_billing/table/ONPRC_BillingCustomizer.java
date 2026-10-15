@@ -181,8 +181,8 @@ public class ONPRC_BillingCustomizer extends AbstractTableCustomizer
         if (ti.getColumn("totalCost") == null && unitCost != null && ti.getColumn("quantity") != null)
         {
             SQLFragment sql = new SQLFragment(
-                    "CAST(ROUND((" + ExprColumn.STR_TABLE_ALIAS + ".unitCost * " +
-                            ExprColumn.STR_TABLE_ALIAS + ".quantity), 2) AS DECIMAL(18,2))");
+                    "CAST(ROUND(CAST((" + ExprColumn.STR_TABLE_ALIAS + ".unitCost * " +
+                            ExprColumn.STR_TABLE_ALIAS + ".quantity) AS DECIMAL(18,4)), 2) AS DECIMAL(18,2))");
             ExprColumn totalCost = new ExprColumn(
                     ti,
                     "totalCost",
