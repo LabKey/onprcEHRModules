@@ -75,6 +75,7 @@ public class PMICRequestFormType extends RequestForm
         {
             return false;
         }
+
         return super.isVisible();
     }
 

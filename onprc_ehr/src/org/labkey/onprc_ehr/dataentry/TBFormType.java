@@ -20,6 +20,10 @@ import org.labkey.api.ehr.dataentry.TaskForm;
 import org.labkey.api.ehr.dataentry.TaskFormSection;
 import org.labkey.api.ehr.security.EHRClinicalEntryPermission;
 import org.labkey.api.module.Module;
+import org.labkey.api.security.Group;
+import org.labkey.api.security.GroupManager;
+import org.labkey.api.security.permissions.AdminPermission;
+import org.labkey.security.xml.GroupEnumType;
 
 import java.util.Arrays;
 
@@ -40,6 +44,7 @@ public class TBFormType extends TaskForm
 
         setDisplayReviewRequired(true);
     }
+
 
     @Override
     protected boolean canInsert()
