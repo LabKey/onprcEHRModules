@@ -57,18 +57,7 @@ public class TBTestObservationFormType extends TaskForm
 
     }
 
-    //Modified: 12-11-2025  R.Blasa
-    @Override
-    public boolean isVisible()
-    {
-        Group h = GroupManager.getGroup(getCtx().getContainer(), "Form Bulk Clinical Entry SF", GroupEnumType.SITE);
-        if (h != null && getCtx().getUser().isInGroup(h.getUserId()) && !getCtx().getContainer().hasPermission(getCtx().getUser(), AdminPermission.class))
-        {
-            return false;
-        }
 
-        return super.isVisible();
-    }
 
     @Override
     protected boolean canInsert()
