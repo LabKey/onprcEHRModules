@@ -723,20 +723,15 @@ public class ETLRunnable implements Runnable
             }
             else
             {
-                sql.append(" AND tableName IN ('");
-                String delim = "";
-                for (String source : sources)
-                {
-                    sql.append(delim).append(source);
-                    delim = "', '";
-                }
-
-                sql.append(delim).append(tableName);
-                sql.append("')");
+                sql.append(" AND tableName IN (").append(StringUtils.repeat("?", ", ", sources.length + 1)).append(")");
             }
 
             ps = originConnection.prepareStatement(sql.toString());
             ps.setBytes(1, fromVersion);
+            int paramIndex = 2;
+            for (String source : sources)
+                ps.setString(paramIndex++, source);
+            ps.setString(paramIndex, tableName);
 
             rs = ps.executeQuery();
             while (rs.next())
@@ -1188,9 +1183,17 @@ public class ETLRunnable implements Runnable
                                                 objectIdsToAdd.add(objectid);
                                         }
                                         //SQLServer will automatically bump the rowversion for us
-                                        ps2 = originConnection.prepareStatement("UPDATE dbo." + table + " SET objectid = objectid WHERE objectid IN ('" + StringUtils.join(new ArrayList<>(objectIdsToAdd), "','") + "')");
-                                        ps2.execute();
-                                        ps2.close();
+                                        List<String> idList = new ArrayList<>(objectIdsToAdd);
+                                        // SQL Server allows at most 2100 parameters per statement
+                                        for (int start = 0; start < idList.size(); start += 2000)
+                                        {
+                                            List<String> batch = idList.subList(start, Math.min(start + 2000, idList.size()));
+                                            ps2 = originConnection.prepareStatement("UPDATE dbo." + table + " SET objectid = objectid WHERE objectid IN (" + StringUtils.repeat("?", ", ", batch.size()) + ")");
+                                            for (int i = 0; i < batch.size(); i++)
+                                                ps2.setString(i + 1, batch.get(i));
+                                            ps2.execute();
+                                            ps2.close();
+                                        }
                                     }
                                 }
                                 else
