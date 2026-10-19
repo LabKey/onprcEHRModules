@@ -42,10 +42,10 @@ SELECT
     ELSE 0
   END as PCRbloodVol,
 
---   CASE
---       WHEN  (t.isESPFRequired = true AND t.isESPFCurrent = false )  THEN 4
---       ELSE 0
---       END as ESPFbloodVol,
+  CASE
+      WHEN  (t.isESPFRequired = true AND t.isESPFCurrent = false )  THEN 4
+      ELSE 0
+      END as ESPFbloodVol,
 
   -----CBC
   CASE
@@ -104,21 +104,20 @@ SELECT
     ELSE false
     END as isPCRRequired,
 
---     espf.lastDate as lastESPF,
---     timestampdiff('SQL_TSI_DAY', espf.lastDate, now()) as daysSinceESPF,
---    CASE
---       WHEN ( (timestampdiff('SQL_TSI_DAY', espf.lastDate, now()) > 180) OR espf.lastDate is Null ) THEN false
---       ELSE true
---       END as isESPFCurrent,
+----ESPF--->
 
--- ESPF--->  WHEN (year(now()) = year(pcr.lastDate) And (month(pcr.lastDate) = "January" OR month(pcr.lastDate) = "July"))
---         THEN true
+    espf.lastDate as lastESPF,
+    timestampdiff('SQL_TSI_DAY', espf.lastDate, now()) as daysSinceESPF,
+   CASE
+     WHEN (year(now()) = year(espf.lastDate) And (month(espf.lastDate) = "January" OR month(espf.lastDate) = "July"))
+        THEN true
+        END as isESPFCurrent,
 
 
---    CASE
---       WHEN (d.Id.age.ageInDays > 0 )  THEN true
---       ELSE false
---       END as isESPFRequired,
+   CASE
+      WHEN (d.Id.age.ageInDays > 180 )  THEN true
+      ELSE false
+      END as isESPFRequired,
 
 
   ------ All CBC Sections
