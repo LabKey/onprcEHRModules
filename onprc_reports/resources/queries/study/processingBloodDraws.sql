@@ -37,7 +37,7 @@ SELECT
    ELSE
      0
    End +
-  Case when (b.Id IS NOT NULL)  And (s.ESPFBloodVol > 0 ) then 4
+  Case when (b.Id IS NOT NULL OR a.ID IS NOT NULL)  And (s.ESPFBloodVol > 0 ) then s.ESPFBloodVol
   ELSE
       0
   End +
