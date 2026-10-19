@@ -43,7 +43,8 @@ SELECT
   END as PCRbloodVol,
 
   CASE
-      WHEN  (t.isESPFRequired = true AND t.isESPFCurrent = false )  THEN 4
+      WHEN  (t.isESPFRequired = true AND t.isESPFCurrent_Jan = false )  THEN 4
+      WHEN  (t.isESPFRequired = true AND t.isESPFCurrent_July = false ) THEN 8
       ELSE 0
       END as ESPFbloodVol,
 
@@ -109,9 +110,16 @@ SELECT
     espf.lastDate as lastESPF,
     timestampdiff('SQL_TSI_DAY', espf.lastDate, now()) as daysSinceESPF,
    CASE
-     WHEN (year(now()) = year(espf.lastDate) And (month(espf.lastDate) = "January" OR month(espf.lastDate) = "July"))
+     WHEN (year(now()) = year(espf.lastDate) And  month(espf.lastDate) = "January"))
         THEN true
-        END as isESPFCurrent,
+     ELSE false
+    END as isESPFCurrent_Jan,
+
+    CASE
+      WHEN (year(now()) = year(espf.lastDate) And  month(espf.lastDate) = "July"))
+         THEN true
+        ELSE false
+      END as isESPFCurrent_July,
 
 
    CASE
