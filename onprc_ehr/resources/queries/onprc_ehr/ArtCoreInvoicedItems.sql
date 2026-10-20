@@ -3,7 +3,7 @@ PARAMETERS (StartDate TIMESTAMP, EndDate TIMESTAMP)
 SELECT
     i.invoiceId,
     r.
-    i.date,
+        i.date,
     i.Id as NHPID,
     i.item,
     i.category,
@@ -13,6 +13,6 @@ SELECT
     i.debitedAccount,
     i.creditedAccount
 FROM ArtCoreInvoicedItems.invoicedItems i
-            LEFT JOIN ArtCoreInvoicedItems.iNVOICErUNS R ON R.oBJECTid = i.invoiceId
+         LEFT JOIN ArtCoreInvoicedItems.iNVOICErUNS R ON R.oBJECTid = i.invoiceId
 WHERE i.date >= StartDate
-  AND i.date < TIMESTAMPADD('SQL_TSI_DAY', 1, EndDate)
+  AND i.date < TIMESTAMPADD('SQL_TSI_DAY', 1, EndDate)ArtCore
