@@ -8,7 +8,7 @@ var console = require("console");
 var LABKEY = require("labkey");
 var ldkUtils = require("ldk/Utils").LDK.Server.Utils;
 
-var helper = org.labkey.ldk.query.LookupValidationHelper.create(LABKEY.Security.currentContainer.id, LABKEY.Security.currentUser.id, 'ehr_compliancedb', 'requirements');
+var helper = org.labkey.ldk.query.LookupValidationHelper.create(LABKEY.Security.currentContainer.id, LABKEY.Security.currentUser.id, 'ehr_compliancedb', 'employees');
 
 console.log("** evaluating: " + this['javax.script.filename']);
 
@@ -39,7 +39,7 @@ function afterUpdate(row, oldRow, errors){
             helper.cascadeUpdate('onprc_ehr_compliancedb', 'requirementsperemployee', 'employeeid', row[fieldName], oldRow[fieldName]);
             helper.cascadeUpdate('ehr_compliancedb', 'completiondates', 'employeeid', row[fieldName], oldRow[fieldName]);
             helper.cascadeUpdate('ehr_compliancedb', 'employeerequirementexemptions', 'employeeid', row[fieldName], oldRow[fieldName]);
-            helper.cascadeUpdate('onprc_ehr_compliancedb', 'employeeperunit', 'employeeid', row[fieldName], oldRow[fieldName]);
+            helper.cascadeUpdate('ehr_compliancedb', 'employeeperunit', 'employeeid', row[fieldName], oldRow[fieldName]);
         }
     }
 }
@@ -51,7 +51,7 @@ function beforeDelete(row, errors){
         query = queries[j];
         for (var i=0;i<fields.length;i++){
             fieldName = fields[i];
-            if (helper.verifyNotUsed('ehr_compliancedb', query, 'employees', row[fieldName], 'requirements')){
+            if (helper.verifyNotUsed('ehr_compliancedb', query, 'employeeid', row[fieldName], 'employees')){
                 addError(errors, fieldName, 'Cannot delete row with value: ' + row[fieldName] + ' because it is referenced by the table ' + query);
             }
         }
