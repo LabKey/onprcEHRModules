@@ -1,4 +1,5 @@
-<!--Added 2026-10-20 to provide links for query-->
+<!--Added 2026-10-20 to provide links for query<!--&ndash;&gt;
+Update for build-->
 <query xmlns="http://labkey.org/data/xml/query">
     <metadata>
         <tables xmlns="http://labkey.org/data/xml">

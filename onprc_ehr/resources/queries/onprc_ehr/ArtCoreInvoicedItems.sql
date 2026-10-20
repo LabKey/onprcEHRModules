@@ -1,5 +1,5 @@
 /*Added 2026-10-20 Art Core using Linked Schema data*/
-PARAMETERS (StartDate TIMESTAMP, EndDate TIMESTAMP)
+    PARAMETERS (StartDate TIMESTAMP, EndDate TIMESTAMP)
 SELECT
     i.invoiceId,
     r.
