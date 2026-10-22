@@ -1244,8 +1244,8 @@ public class ONPRC_EHRTriggerHelper
     //    Added: 6-27-2017  F.Blasa  Process when transitioning from Prenatal - Fetus to Live
     public void doBirthConditionAfterPrenatal(String id, Date date, String dam, Date Arrival_Date, String birthCondition, boolean isBecomingPublic) throws Exception
     {
-        //is the infant is dead, terminate the assignments
-        Date enddate = isBirthAlive(birthCondition) ? null : date;
+
+        Date enddate = null ;
 
         String nonRestrictedFlag = getFlag("Condition", NONRESTRICTED, null, true);
         if (nonRestrictedFlag != null)
@@ -1273,16 +1273,9 @@ public class ONPRC_EHRTriggerHelper
     //Modified: 10-13-2016 R.Blasa  to include assign Arrival date
     public void doBirthTriggers(String id, Date date, String dam, Date Arrival_Date, String birthCondition, String species, boolean isBecomingPublic) throws Exception
     {
-        //is the infant is dead, terminate the assignments
-        Date enddate = isBirthAlive(birthCondition) ? null : date;
 
+        Date enddate =  null ;
 
-        //also check for a pre-existing death record:
-        Date deathDate = new TableSelector(getTableInfo("study", "deaths"), Collections.singleton("date"), new SimpleFilter(FieldKey.fromString("Id"), id), null).getObject(Date.class);
-        if (deathDate != null)
-        {
-            enddate = deathDate;
-        }
 
         //note: we only want this to run the first time this record becomes public, not on subsequent updates
         if (isBecomingPublic)
@@ -1975,21 +1968,7 @@ public class ONPRC_EHRTriggerHelper
     {
         if (_nextProtocolId == null)
         {
-            String suffix;
-            if (DbScope.getLabKeyScope().getSqlDialect().isPostgreSQL())
-            {
-                suffix = "protocol ~ '^([0-9]+)$'";
-            }
-            else if (DbScope.getLabKeyScope().getSqlDialect().isSqlServer())
-            {
-                suffix = "protocol NOT LIKE '%[^0-9]%'";
-            }
-            else
-            {
-                throw new IllegalArgumentException("ONPRC_EHR Module is only supported on either postgres or sqlserver");
-            }
-
-            SqlSelector ss = new SqlSelector(DbSchema.get("ehr"), "SELECT COALESCE(max(CAST(protocol as INTEGER)), 0) as expr FROM ehr.protocol WHERE " + suffix);
+            SqlSelector ss = new SqlSelector(DbSchema.get("ehr"), "SELECT COALESCE(max(CAST(protocol as INTEGER)), 0) as expr FROM ehr.protocol WHERE protocol ~ '^([0-9]+)$'");
             List<Integer> ret = ss.getArrayList(Integer.class);
             _nextProtocolId = ret.isEmpty() ? 0 : ret.getFirst();
         }

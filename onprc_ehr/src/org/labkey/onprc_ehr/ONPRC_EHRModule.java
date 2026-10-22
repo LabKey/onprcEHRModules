@@ -42,9 +42,12 @@ import org.labkey.api.query.DefaultSchema;
 import org.labkey.api.query.DetailsURL;
 import org.labkey.api.query.QuerySchema;
 import org.labkey.api.resource.Resource;
+import org.labkey.api.security.SecurityManager;
+import org.labkey.api.security.User;
 import org.labkey.api.security.permissions.AdminPermission;
 import org.labkey.api.security.roles.RoleManager;
 import org.labkey.api.settings.AppProps;
+import org.labkey.api.settings.OptionalFeatureService;
 import org.labkey.api.util.URLHelper;
 import org.labkey.api.util.UnexpectedException;
 import org.labkey.api.view.ActionURL;
@@ -124,7 +127,7 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
     @Override
     public @Nullable Double getSchemaVersion()
     {
-        return 26.004;
+        return 26.006;
     }
 
     @Override
@@ -157,6 +160,11 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
     @Override
     protected void doStartupAfterSpringConfig(ModuleContext moduleContext)
     {
+        // SSRS reports authenticate via the apikey URL parameter. TODO: Remove this once ONPRC has upgraded to 26.11 or later.
+        OptionalFeatureService ofs = OptionalFeatureService.get();
+        if (!ofs.isFeatureEnabled(SecurityManager.FEATURE_FLAG_ALLOW_APIKEY_PARAMETER))
+            ofs.setFeatureEnabled(SecurityManager.FEATURE_FLAG_ALLOW_APIKEY_PARAMETER, true, User.getAdminServiceUser());
+
         registerEHRResources();
 
         NotificationService ns = NotificationService.get();
@@ -327,6 +335,8 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
         //Added: 10-12-2023  R.Blasa
         EHRService.get().registerClientDependency(ClientDependency.supplierFromPath("onprc_ehr/form/field/EnvironmentalField.js"), this);
 
+        //Added: 9-14-2026  R.Blasa
+        EHRService.get().registerClientDependency(ClientDependency.supplierFromPath("onprc_ehr/form/field/RoomFieldSingle.js"), this);
 
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.housing, "List Single Housed Animals", this, DetailsURL.fromString("/query/executeQuery.view?schemaName=study&query.queryName=demographicsPaired&query.viewName=Single Housed"), "Commonly Used Queries");
         EHRService.get().registerReportLink(EHRService.REPORT_LINK_TYPE.housing, "Find Animals Housed In A Given Room/Cage At A Specific Time", this, DetailsURL.fromString("/ehr/housingOverlaps.view?groupById=1"), "Commonly Used Queries");

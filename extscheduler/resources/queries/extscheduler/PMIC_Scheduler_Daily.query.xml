@@ -1,0 +1,9 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="PMIC_Scheduler_Daily" tableDbType="NOT_IN_DB">
+                <tableTitle>Today's PMIC scheduled events</tableTitle>
+            </table>
+        </tables>
+    </metadata>
+</query>

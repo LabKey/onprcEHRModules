@@ -720,6 +720,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
     /**
      * find any active assignment where the project lacks a valid protocol
      */
+    //TODO GH Issue 1575: depends on ehr.protocol renewalDate, which has no PostgreSQL equivalent, so this never runs.
     protected void projectsWithExpiredProtocol(final Container c, User u, final StringBuilder msg)
     {
         TableInfo ti = getEHRSchema(c, u).getTable("project");
@@ -824,6 +825,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
     /**
      * protocols with active animals that expire in next 30 days
      */
+    //TODO GH Issue 1575: depends on ehr.protocol daysUntilRenewal, which has no PostgreSQL equivalent, so this never runs.
     protected void protocolsWithAnimalsExpiringSoon(final Container c, User u, final StringBuilder msg)
     {
         if (!DbScope.getLabKeyScope().getSqlDialect().isSqlServer())
@@ -975,6 +977,7 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
     /**
      * we find protocols expiring soon.  this is based on protocols having a 3-year window
      */
+    //TODO GH Issue 1575: depends on ehr.protocol daysUntilRenewal, which has no PostgreSQL equivalent. Also has no caller.
     protected void protocolsExpiringSoon(final Container c, User u, final StringBuilder msg)
     {
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("daysUntilRenewal"), 14, CompareType.DATE_LTE);

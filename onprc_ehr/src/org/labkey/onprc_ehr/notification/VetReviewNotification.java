@@ -37,8 +37,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by bimber on 9/18/2014.
@@ -85,11 +87,74 @@ public class VetReviewNotification extends ColonyAlertsNotification
     {
         StringBuilder msg = new StringBuilder();
 
-       /* remarksWithoutAssignedVet(c, u, msg);*/
+        /* remarksWithoutAssignedVet(c, u, msg);*/
+        DVMAlopeciaAlert(c,u,msg); //Added by Kolli, March 2026
         vetRecordsUnderReview(c, u, msg);
         animalsWithoutAssignedVet(c, u, msg);
 
+
         return msg.toString();
+    }
+
+    /* Added by Kollil 09/22/2025
+    When BSU creates a case AND scores the alopecia at either 4 or 5 (only those scores)
+    THEN the vet assigned to that animal should receive an alert. Show open cases in last 7 days
+    Refer to old tkt # 12523, new tkt # 15401
+    */
+    private void DVMAlopeciaAlert(final Container c, User u, final StringBuilder msg)
+    {
+        TableInfo ti = getStudySchema(c, u).getTable("DVMAlertforAlopeciaCases");
+
+        TableSelector ts = new TableSelector(ti, null, null);
+        long total = ts.getRowCount();
+
+        if (total > 0)
+        {
+            msg.append("<br><b>ALERT: " + total + " animals found with alopecia score of 4 or 5 with open behavioral case for alopecia in the last 7 days. ");
+            msg.append("<a href='" + getExecuteQueryUrl(c, "study", "DVMAlertforAlopeciaCases", null)  + "'>Click here to view the data in a grid view</a></b>\n");
+            msg.append("<br>");
+
+            //Display the report in the email
+            Set<FieldKey> columns = new HashSet<>();
+            columns.add(FieldKey.fromString("Id"));
+            columns.add(FieldKey.fromString("AlertObservationDate"));
+            columns.add(FieldKey.fromString("AlopeciaScore"));
+            columns.add(FieldKey.fromString("performedby"));
+            columns.add(FieldKey.fromString("enteredSincevetReview"));
+            columns.add(FieldKey.fromString("AssignedVet"));
+            columns.add(FieldKey.fromString("BehaviorCaseOpenDate"));
+            columns.add(FieldKey.fromString("VetReviewDueDate"));
+
+            final Map<FieldKey, ColumnInfo> colMap = QueryService.get().getColumns(ti, columns);
+            TableSelector ts2 = new TableSelector(ti, colMap.values(), null, new Sort("date"));
+
+            // Table header
+            msg.append("<table border=1 style='border-collapse: collapse;'>");
+            msg.append("<tr style='font-weight: bold;'>");
+            msg.append("<td> Id </td><td> Alert Observation Date </td><td> Alopecia Score </td><td> Performed by </td><td> Entered Since Vet Review </td><td> Assigned Vet </td><td> Behavior Case Open Date </td><td> Vet Review Due Date </td></tr>");
+
+            ts2.forEach(object -> {
+                Results rs = new ResultsImpl(object, colMap);
+                String url = getParticipantURL(c, rs.getString("Id"));
+
+                msg.append("<td style='border: 1px solid black;'><b> <a href='" + url + "'>" + PageFlowUtil.filter(rs.getString("Id")) + "</a> </b></td>\n");
+                msg.append("<td style='border: 1px solid black;'>" + PageFlowUtil.filter(rs.getString("AlertObservationDate")) + "</td>");
+                msg.append("<td style='border: 1px solid black;'>" + PageFlowUtil.filter(rs.getString("AlopeciaScore")) + "</td>");
+                msg.append("<td style='border: 1px solid black;'>" + PageFlowUtil.filter(rs.getString("performedby")) + "</td>");
+                msg.append("<td style='border: 1px solid black;'>" + PageFlowUtil.filter(rs.getString("enteredSincevetReview")) + "</td>");
+                msg.append("<td style='border: 1px solid black;'>" + PageFlowUtil.filter(rs.getString("AssignedVet")) + "</td>");
+                msg.append("<td style='border: 1px solid black;'>" + PageFlowUtil.filter(rs.getString("BehaviorCaseOpenDate")) + "</td>");
+                msg.append("<td style='border: 1px solid black;'>" + PageFlowUtil.filter(rs.getString("VetReviewDueDate")) + "</td>");
+                msg.append("</tr>");
+            });
+            msg.append("</table><br><hr>");
+        }
+        else
+        {
+            msg.append("<b>WARNING: No animals found with alopecia score of 4 or 5 with open behavioral case for alopecia in last 7 days!</b><br><hr>\n");
+        }
+
+
     }
 
     public void vetRecordsUnderReview(Container c, User u, final StringBuilder msg)

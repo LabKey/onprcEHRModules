@@ -30,7 +30,6 @@ import org.labkey.remoteapi.query.UpdateRowsCommand;
 import org.labkey.test.BaseWebDriverTest;
 import org.labkey.test.Locator;
 import org.labkey.test.WebTestHelper;
-import org.labkey.test.categories.EHR;
 import org.labkey.test.categories.ONPRC;
 import org.labkey.test.util.DataRegionTable;
 import org.labkey.test.util.Ext4Helper;
@@ -73,7 +72,7 @@ import static org.labkey.test.util.Ext4Helper.TextMatchTechnique.CONTAINS;
  * that alone would have caught most of the above. Removing SqlserverOnlyTest here is the fuller fix, but this
  * test has never been run against PostgreSQL and should not be enabled without a green run first.
  */
-@Category({EHR.class, ONPRC.class})
+@Category({ONPRC.class})
 @BaseWebDriverTest.ClassTimeout(minutes = 20)
 public class ONPRC_BillingTest extends AbstractONPRC_EHRTest implements SqlserverOnlyTest
 {

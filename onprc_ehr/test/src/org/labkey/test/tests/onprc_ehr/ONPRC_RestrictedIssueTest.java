@@ -22,7 +22,6 @@ import org.junit.experimental.categories.Category;
 import org.labkey.test.BaseWebDriverTest;
 import org.labkey.test.Locator;
 import org.labkey.test.TestTimeoutException;
-import org.labkey.test.categories.EHR;
 import org.labkey.test.categories.ONPRC;
 import org.labkey.test.pages.issues.DetailsPage;
 import org.labkey.test.pages.issues.InsertPage;
@@ -39,7 +38,7 @@ import java.util.List;
 import static org.labkey.test.util.PermissionsHelper.EDITOR_ROLE;
 import static org.labkey.test.util.PermissionsHelper.FOLDER_ADMIN_ROLE;
 
-@Category({EHR.class, ONPRC.class})
+@Category({ONPRC.class})
 public class ONPRC_RestrictedIssueTest extends BaseWebDriverTest
 {
     private final IssuesHelper _issuesHelper;
