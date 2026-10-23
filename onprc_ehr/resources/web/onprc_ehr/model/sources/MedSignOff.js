@@ -12,12 +12,12 @@ EHR.model.DataModelManager.registerMetadata('MedSignOff', {
             Id: {
                 xtype: 'ehr-animalfield',
                 dataIndex: 'Id',
-                editable: false
+                userEditable: false
             },
             date: {
-                xtype: 'datecolumn',
+                xtype: 'xdatetime',
                 dataIndex: 'date',
-                editable: false
+                userEditable: false
             }
 
         },
