@@ -10,7 +10,7 @@ Ext.define('App.view.Viewport', {
     layout     : 'border',
     items      : [
         {
-            xtype   : 'navigationbar',
+            xtype   : 'navigationbarAmended',
             region  : 'north'
         },
         {
@@ -18,11 +18,11 @@ Ext.define('App.view.Viewport', {
             region  : 'north'
         },
         {
-            xtype   : 'infopanel',
+            xtype   : 'infopanelAmended',
             region  : 'east'
         },
         {
-            xtype   : 'scheduler',
+            xtype   : 'schedulerRadiology',
             region  : 'center'
         }
     ]

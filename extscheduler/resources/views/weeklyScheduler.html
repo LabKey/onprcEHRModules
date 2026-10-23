@@ -37,7 +37,8 @@
         }
         else
         {
-            var schedulerAppLink = LABKEY.ActionURL.buildURL('extscheduler', 'weeklyTest', null, {
+            // var schedulerAppLink = LABKEY.ActionURL.buildURL('extscheduler', 'weeklyTest', null, {
+                var schedulerAppLink = LABKEY.ActionURL.buildURL('extscheduler', 'weekly_Radiology', null, {
                 returnUrl: window.location.pathname + window.location.search
             });
             Ext4.get('launch-link').update('<a class="launch-button" href="' + schedulerAppLink + '">Launch Scheduler</a>');
@@ -75,6 +76,7 @@
             items: [
                 {boxLabel: 'All', name: 'timeframe', inputValue: 'All', checked: true},
                 {boxLabel: 'Previous', name: 'timeframe', inputValue: 'Previous'},
+
                 {boxLabel: 'Upcoming', name: 'timeframe', inputValue: 'Upcoming'}
             ],
             listeners: {
