@@ -1356,6 +1356,17 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
         recentP2.setDisplayWidth("200");
         ti.addColumn(recentP2);
 
+        //Last recorded p2 specifically designed for Surgery cases
+        SQLFragment lastp2Sql = new SQLFragment("(SELECT " + prefix + " (" + "r.p2" + ") as _expr FROM " + realTable.getSelectName() +
+                " r WHERE "
+                + " r.caseid = " + ExprColumn.STR_TABLE_ALIAS + ".objectid AND "
+                + " r.participantId = " + ExprColumn.STR_TABLE_ALIAS + ".participantId  AND (r.category != ? OR r.category IS NULL) ORDER BY r.date desc " + suffix + ")", ONPRC_EHRManager.REPLACED_SOAP);
+        ExprColumn lastP2 = new ExprColumn(ti, "lastP2", lastp2Sql, JdbcType.VARCHAR, objectId);
+        lastP2.setLabel("S2");
+        lastP2.setDescription("This column will display the last P2 recorded corresponding to a case for the animal.");
+        lastP2.setDisplayWidth("200");
+        ti.addColumn(lastP2);
+
         //uses caseId.  this is a proxy for rounds
         SQLFragment recentRemarkSql = new SQLFragment("(SELECT " + prefix + " (" + "r.remark" + ") as _expr FROM " + realTable.getSelectName() +
                 " r WHERE "
