@@ -10,14 +10,16 @@ EHR.model.DataModelManager.registerMetadata('MedSignOff', {
     byQuery: {
         'study.drug': {
             Id: {
-                xtype: 'ehr-animalfield',
                 dataIndex: 'Id',
-                userEditable: false
+                userEditable: false,
+                editable: false
+
             },
             date: {
-                xtype: 'xdatetime',
                 dataIndex: 'date',
-                userEditable: false
+                userEditable: false,
+                editable: false
+
             }
 
         },
