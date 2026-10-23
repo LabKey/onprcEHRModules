@@ -17,6 +17,7 @@ package org.labkey.onprc_ehr.dataentry;
 
 import org.labkey.api.ehr.EHRService;
 import org.labkey.api.ehr.dataentry.DataEntryFormContext;
+import org.labkey.api.ehr.dataentry.FormSection;
 import org.labkey.api.ehr.dataentry.NonStoreFormSection;
 import org.labkey.api.ehr.dataentry.TaskForm;
 import org.labkey.api.ehr.dataentry.TaskFormSection;
@@ -60,6 +61,12 @@ public class MedSignoffFormType extends TaskForm
         }
 
         setDisplayReviewRequired(true);
+        for  (FormSection s : getFormSections())
+        {
+            s.addConfigSource("DrugField_lock");
+        }
+
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/model/sources/DrugField_Lock.js"));
 
     }
 
