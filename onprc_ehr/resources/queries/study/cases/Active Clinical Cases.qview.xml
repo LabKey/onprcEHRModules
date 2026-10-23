@@ -8,6 +8,7 @@
         <column name="Id/demographics/mostRecentHx"/>
         <column name="Id/utilization/use"/>
         <column name="date"/>
+        <column name="caseNo"/>
         <column name="allProblemCategories"/>
         <column name="Id/curLocation/daysInRoom"/>
         <column name="assignedvet/DisplayName">
