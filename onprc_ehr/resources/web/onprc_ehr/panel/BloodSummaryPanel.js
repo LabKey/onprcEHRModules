@@ -5,7 +5,7 @@
  */
 /**
  * @param subjects
-*/
+ */
 //This will correcc the various panels and graphs to implement the new method of work
 //Need to change t
 Ext4.define('ONPRC.panel.BloodSummaryPanel', {
@@ -18,9 +18,9 @@ Ext4.define('ONPRC.panel.BloodSummaryPanel', {
             defaults: {
                 border: false
             },
-          /*  items: [{
-                html: 'Loading...'
-            }]*/
+            /*  items: [{
+                  html: 'Loading...'
+              }]*/
         });
 
         this.callParent();
@@ -34,10 +34,10 @@ Ext4.define('ONPRC.panel.BloodSummaryPanel', {
         multi.add(LABKEY.Query.selectRows, {
             schemaName: 'study',
             queryName: 'demographicsBloodSummary',
-          //  viewName: 'newBloodCalc',
+            //  viewName: 'newBloodCalc',
             filterArray: [LABKEY.Filter.create('id', this.subjects.join(';'), LABKEY.Filter.Types.EQUALS_ONE_OF)],
-     //       columns: 'id,species,species/blood_per_kg,species/max_draw_pct,species/blood_draw_interval,id/MostRecentWeight/mostRecentWeight,id/MostRecentWeight/mostRecentWeightDate,Id/demographics/calculated_status',
-           columns: 'id,Species,species/blood_per_kg,species/max_draw_pct,species/blood_draw_interval,Gender,MostRecentBCS,BCSDate,weight,MostRecentWeightDate,blood_draw_interval,bloodPrevious,bloodFuture,blood_per_kg,FixedRateCalculation,TotalBloodVolume,AllowableBlood,AvailableBlood,Method,Id/demographics/calculated_status',
+            //       columns: 'id,species,species/blood_per_kg,species/max_draw_pct,species/blood_draw_interval,id/MostRecentWeight/mostRecentWeight,id/MostRecentWeight/mostRecentWeightDate,Id/demographics/calculated_status',
+            columns: 'id,Species,species/blood_per_kg,species/max_draw_pct,species/blood_draw_interval,Gender,MostRecentBCS,BCSDate,weight,MostRecentWeightDate,blood_draw_interval,bloodPrevious,bloodFuture,blood_per_kg,FixedRateCalculation,TotalBloodVolume,AllowableBlood,AvailableBlood,Method,Id/demographics/calculated_status',
 
             requiredVersion: 9.1,
             sort: 'id',
@@ -154,67 +154,29 @@ Ext4.define('ONPRC.panel.BloodSummaryPanel', {
     },
 
     getGraphCfg: function(dd, bds){
-        console.log(this.bloodDrawResults);
-
         var subject = dd.getValue('Id');
         var toAdd = [];
-        var results = {
-            metaData: this.bloodDrawResults.metaData,
-            rows: bds
-        };
 
-        //this assumes we sorted on date
+        // currentBloodDraws now returns a per-animal summary rather than one row per draw,
+        // so read the available volume directly instead of building a time series.
+        var summary = bds.length ? new LDK.SelectRowsRow(bds[0]) : null;
+        var available = summary ? summary.getValue('TotalAvailableBlood') : null;
 
-
-        var newRows = [];
-        var rowPrevious;
-        var seriesIds = [];
-        var currentRow;
-        Ext4.each(results.rows, function(row, idx){
-            //capture the current day's amount
-            var rowDate = new Date(row.date.value);
-            if (rowDate && Ext4.Date.format(rowDate, LABKEY.extDefaultDateFormat) == Ext4.Date.format(new Date(), LABKEY.extDefaultDateFormat)){
-                currentRow = row;
-            }
-
-            row.allowableDisplay = row.allowableBlood;
-            row.seriesId = {
-                value: row.id.value + '/' + row.date.value
-            };
-            seriesIds.push(row.seriesId.value);
-
-            //in order to mimic a stepped graph, add one new point per row using the date of the next draw
-            if (rowPrevious){
-                var newRow = Ext4.apply({}, row);
-                newRow.allowableBlood = rowPrevious.allowableBlood;
-                newRow.seriesId = rowPrevious.seriesId;
-                newRow.isHidden = {value: true};
-                newRows.push(newRow);
-            }
-            rowPrevious = row;
-            newRows.push(row);
-
-            //always append one additional datapoint in order to emphasize the ending
-            if (idx == (results.rows.length - 1)){
-                var newRow = Ext4.Object.merge({}, row);
-                newRow.isHidden = {value: true};
-                var date = LDK.ConvertUtils.parseDate(row.date.value);
-                date = Ext4.Date.add(date, Ext4.Date.DAY, 1);
-                newRow.date.value = Ext4.Date.format(date, 'Y/m/d H:i:s');
-                newRows.push(newRow);
-            }
-        }, this);
-
-        results.rows = newRows;
-
-        if (currentRow){
+        if (available !== null && available !== undefined){
             toAdd.push({
-                html: 'The amount of blood available if drawn today is: ' + Ext4.util.Format.round(currentRow.allowableDisplay.value, 1) + ' mL. <br>',
+                html: 'The amount of blood available if drawn today is: ' + Ext4.util.Format.round(available, 1) + ' mL. <br>',
                 border: false,
                 style: 'margin-bottom: 20px'
             });
         }
 
+        toAdd.push({
+            html: '',
+            border: false,
+            style: 'margin-bottom: 10px;'
+        });
+
+        // ...the two ldk-querypanel blocks and the rest stay as they are
 
         toAdd.push({
             html: '',
@@ -231,12 +193,12 @@ Ext4.define('ONPRC.panel.BloodSummaryPanel', {
                 queryName: 'bloodDrawsByDay',
                 allowHeaderLock: false,
                 //frame: 'none',
-               filters: [
+                filters: [
                     LABKEY.Filter.create('Id', subject, LABKEY.Filter.Types.EQUAL),
-                     //THis filter is looking to identify values from bloodDraws by Day and attempts to get the species value, it makes better sense to only filter for the animal
-                     //ID and do the other calcs in the actual query
+                    //THis filter is looking to identify values from bloodDraws by Day and attempts to get the species value, it makes better sense to only filter for the animal
+                    //ID and do the other calcs in the actual query
                     LABKEY.Filter.create('date', '-' + (dd.getValue('species/blood_draw_interval') * 2 ) + 'd', LABKEY.Filter.Types.DATE_GREATER_THAN_OR_EQUAL)
-                 ]
+                ]
 
             })
         });
@@ -251,93 +213,93 @@ Ext4.define('ONPRC.panel.BloodSummaryPanel', {
                 allowHeaderLock: false,
                 //frame: 'none',
                 filters: [
-                     LABKEY.Filter.create('Id', subject, LABKEY.Filter.Types.EQUAL),
-                     LABKEY.Filter.create('qcState','Completed' , LABKEY.Filter.Types.NOT_EQUAL)
-                 ],
+                    LABKEY.Filter.create('Id', subject, LABKEY.Filter.Types.EQUAL),
+                    LABKEY.Filter.create('qcState','Completed' , LABKEY.Filter.Types.NOT_EQUAL)
+                ],
                 sort: '-date'
             })
         });
-/*toAdd.push({
-            xtype: 'container',
-            title: 'Available Blood: ' + subject,
-            items: [{
-                xtype: 'ldk-graphpanel',
-                margin: '0 0 0 0',
-                plotConfig: {
-                    results: results,
-                    title: 'Blood Available To Be Drawn: ' + subject,
-                    height: 400,
-                    width: 800,
-                    yLabel: 'Available Blood (mL)',
-                    xLabel: 'Date',
-                    xField: 'date',
-                    grouping: ['seriesId'],
-                    layers: [{
-                        y: 'allowableBlood',
-                        hoverText: function(row){
-                            var lines = [];
+        /*toAdd.push({
+                    xtype: 'container',
+                    title: 'Available Blood: ' + subject,
+                    items: [{
+                        xtype: 'ldk-graphpanel',
+                        margin: '0 0 0 0',
+                        plotConfig: {
+                            results: results,
+                            title: 'Blood Available To Be Drawn: ' + subject,
+                            height: 400,
+                            width: 800,
+                            yLabel: 'Available Blood (mL)',
+                            xLabel: 'Date',
+                            xField: 'date',
+                            grouping: ['seriesId'],
+                            layers: [{
+                                y: 'allowableBlood',
+                                hoverText: function(row){
+                                    var lines = [];
 
-                            lines.push('Date: ' + Ext4.Date.format(row.date, LABKEY.extDefaultDateFormat));
-                            lines.push('Drawn on this Date: ' + row.quantity);
-                            lines.push('Volume Available on this Date: ' + LABKEY.Utils.roundNumber(row.allowableDisplay, 1) + ' mL');
+                                    lines.push('Date: ' + Ext4.Date.format(row.date, LABKEY.extDefaultDateFormat));
+                                    lines.push('Drawn on this Date: ' + row.quantity);
+                                    lines.push('Volume Available on this Date: ' + LABKEY.Utils.roundNumber(row.allowableDisplay, 1) + ' mL');
 
-                            lines.push('Current Weight: ' + row.mostRecentWeight + ' kg (' + Ext4.Date.format(row.mostRecentWeightDate, LABKEY.extDefaultDateFormat) + ')');
+                                    lines.push('Current Weight: ' + row.mostRecentWeight + ' kg (' + Ext4.Date.format(row.mostRecentWeightDate, LABKEY.extDefaultDateFormat) + ')');
 
-                            lines.push('Drawn in Previous ' + row.blood_draw_interval + ' days: ' + LABKEY.Utils.roundNumber(row.bloodPrevious, 1));
-                            lines.push('Drawn in Next ' + row.blood_draw_interval + ' days: ' + LABKEY.Utils.roundNumber(row.bloodFuture, 1));
+                                    lines.push('Drawn in Previous ' + row.blood_draw_interval + ' days: ' + LABKEY.Utils.roundNumber(row.bloodPrevious, 1));
+                                    lines.push('Drawn in Next ' + row.blood_draw_interval + ' days: ' + LABKEY.Utils.roundNumber(row.bloodFuture, 1));
 
 
-                            return lines.join('\n');
-                        },
-                        name: 'Volume'
-                    }]
-                },
-                getPlotConfig: function(){
-                    var cfg = LDK.panel.GraphPanel.prototype.getPlotConfig.call(this);
-                    cfg.legendPos = 'none';
-                    cfg.aes.color = null;
-                    cfg.aes.shape = null;
-
-                    return cfg;
-                },
-
-                //@Override
-                appendLayer: function(plot, layerConfig){
-                    var meta = this.findMetadata(layerConfig.y);
-                    plot.addLayer(new LABKEY.vis.Layer({
-                        geom: new LABKEY.vis.Geom.Point({size: 5}),
-                        name: layerConfig.name || meta.caption,
-                        aes: {
-                            y: function(row){
-                                if (row.isHidden)
-                                    return null;
-
-                                return row[layerConfig.y]
-                            },
-                            hoverText: layerConfig.hoverText
-                        }
-                    }));
-
-                    //now add segments.  this is an odd way to accomplish grouping, but
-                    //otherwise Vis will give each segment a different color
-                    Ext4.each(seriesIds, function(seriesId){
-                        plot.addLayer(new LABKEY.vis.Layer({
-                            geom: new LABKEY.vis.Geom.Path({size: 5, opacity: 2}),
-                            name: layerConfig.name || meta.caption,
-                            aes: {
-                                y: function(row){
-                                    if (row.seriesId != seriesId)
-                                        return null;
-
-                                    return row[layerConfig.y];
+                                    return lines.join('\n');
                                 },
-                                group: 'none'
-                            }
-                        }));
-                    }, this);
-                }
-            }]
-        });*/
+                                name: 'Volume'
+                            }]
+                        },
+                        getPlotConfig: function(){
+                            var cfg = LDK.panel.GraphPanel.prototype.getPlotConfig.call(this);
+                            cfg.legendPos = 'none';
+                            cfg.aes.color = null;
+                            cfg.aes.shape = null;
+
+                            return cfg;
+                        },
+
+                        //@Override
+                        appendLayer: function(plot, layerConfig){
+                            var meta = this.findMetadata(layerConfig.y);
+                            plot.addLayer(new LABKEY.vis.Layer({
+                                geom: new LABKEY.vis.Geom.Point({size: 5}),
+                                name: layerConfig.name || meta.caption,
+                                aes: {
+                                    y: function(row){
+                                        if (row.isHidden)
+                                            return null;
+
+                                        return row[layerConfig.y]
+                                    },
+                                    hoverText: layerConfig.hoverText
+                                }
+                            }));
+
+                            //now add segments.  this is an odd way to accomplish grouping, but
+                            //otherwise Vis will give each segment a different color
+                            Ext4.each(seriesIds, function(seriesId){
+                                plot.addLayer(new LABKEY.vis.Layer({
+                                    geom: new LABKEY.vis.Geom.Path({size: 5, opacity: 2}),
+                                    name: layerConfig.name || meta.caption,
+                                    aes: {
+                                        y: function(row){
+                                            if (row.seriesId != seriesId)
+                                                return null;
+
+                                            return row[layerConfig.y];
+                                        },
+                                        group: 'none'
+                                    }
+                                }));
+                            }, this);
+                        }
+                    }]
+                });*/
 
         toAdd.push({
             html: '',
