@@ -2270,6 +2270,10 @@ private void appendFlagsAlertActiveCol(final UserSchema ehrSchema, AbstractTable
     //    Added:10-24-2023  R.Blasa Show NHP Training History
     private void appendNHPTrainingCol(final UserSchema ehrSchema, AbstractTableInfo ds)
     {
+        String sn = ds.getPublicSchemaName();
+        if (sn.equals("onprc_billing"))
+            return;
+
         String name = "NHPTrainingActive";
         if (ds.getColumn(name) != null)
             return;
@@ -2305,7 +2309,7 @@ private void appendFlagsAlertActiveCol(final UserSchema ehrSchema, AbstractTable
                         "sd." + pkCol.getColumnName() + ",\n" +
                         "group_concat(DISTINCT h.training_type, chr(10)) as nhptrainingtype,\n" +
                         "group_concat(DISTINCT h.training_results, chr(10)) as nhptrainingresults,\n" +
-                        "group_concat(DISTINCT h.training_type + ': ' + h.remark + '-  ' + h.training_results, chr(10)) as nhptrainingremarks,\n" +
+                        "group_concat(DISTINCT h.training_type + ': ' + h.remark + '-  ' + h.training_results, chr(10)) as nhptrainingremarks\n" +
                         "FROM \"" + schemaName + "\".\"" + queryName + "\" sd\n" +
                         "JOIN \"" + ehrPath + "\".onprc_ehr.NHP_Training h\n" +
                         "  ON (sd.id = h.id  AND (h.training_type in ('Procedure Cage','Tower')) AND h.qcstate.publicdata = true)\n" +
