@@ -11,6 +11,9 @@
                             query.marker~eq=${marker}
                         </url>
                     </column>
+                    <column columnName="isDiscordantResult">
+                        <columnTitle>Is Discordant Result?</columnTitle>
+                    </column>
                 </columns>
             </table>
         </tables>

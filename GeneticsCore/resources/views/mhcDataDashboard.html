@@ -44,7 +44,8 @@
                         name: 'Discordant Cached Results',
                         url: LABKEY.ActionURL.buildURL('query', 'executeQuery.view', null, {
                             schemaName: 'geneticscore',
-                            queryName: 'discordantCachedResults'
+                            queryName: 'discordantCachedResults',
+                            'query.isDiscordantResult~eq': 'DISCORDANT'
                         })
                     },{
                         name: 'Analyses Using Non-Passing Readsets',
