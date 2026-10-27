@@ -35,6 +35,12 @@
                             'query.analysisId/rowId~isblank': ''
                         })
                     },{
+                        name: 'Discordant Genotyping Results',
+                        url: LABKEY.ActionURL.buildURL('query', 'executeQuery.view', null, {
+                            schemaName: 'geneticscore',
+                            queryName: 'discordantGenotypingResults'
+                        })
+                    },{
                         name: 'Discordant Cached Results',
                         url: LABKEY.ActionURL.buildURL('query', 'executeQuery.view', null, {
                             schemaName: 'geneticscore',
