@@ -22,6 +22,11 @@
                 sections: [{
                     header: 'Sample/Data QC',
                     items: [{
+                        name: 'Run the Data Validation Report',
+                        url: LABKEY.ActionURL.buildURL('ldk', 'runNotification.view', null, {
+                            key: 'org.labkey.GeneticsCore.notification.MhcDataNotification'
+                        })
+                    },{
                         name: 'Subjects Discordant Between Genotyping Results and Readsets',
                         url: LABKEY.ActionURL.buildURL('query', 'executeQuery.view', null, {
                             schemaName: 'geneticscore',
