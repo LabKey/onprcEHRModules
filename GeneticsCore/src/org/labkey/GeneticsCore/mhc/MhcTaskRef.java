@@ -209,7 +209,7 @@ public class MhcTaskRef implements TaskRefTask
         {
             //Assay itself:
             TableInfo tableInfo = assay.createDataTable(null);
-            TableSelector ts = new TableSelector(tableInfo, PageFlowUtil.set("subjectId"), (dateSince == null ? null : new SimpleFilter(FieldKey.fromString("run/modified"), dateSince, CompareType.DATE_GTE)), null);
+            TableSelector ts = new TableSelector(tableInfo, PageFlowUtil.set("subjectId"), (dateSince == null ? null : new SimpleFilter(FieldKey.fromString("modified"), dateSince, CompareType.DATE_GTE)), null);
             uniqueIds.addAll(ts.getArrayList(String.class));
 
             //Now audit table:
