@@ -1,24 +1,26 @@
-/*Added 2026-10-20 Art Core using Linked Schema data*/
-    PARAMETERS (StartDate TIMESTAMP, EndDate TIMESTAMP)
+PARAMETERS (StartDate TIMESTAMP, EndDate TIMESTAMP)
 SELECT
-       r.rowID,
-       ii.transactionNumber,
-       ii.Id,
-       ii.date,
-       ii.item,
+    ir.rowId,
+    ii.transactionNumber,
+    ii.Id,
+    ii.date,
+    ii.item,
+    ii.itemCode,
+    ii.category,
+    ii.servicecenter,
+    ii.project,
+    ii.debitedaccount,
+    ii.creditedaccount,
 
-       ii.category,
-       ii.servicecenter,
-       ii.project,
-       ii.debitedaccount,
-       ii.creditedaccount,
-       ii.lastName,
-       ii.firstName,
-       ii.quantity,
-       ii.unitCost,
-       ii.totalcost,
-       ii.chargecategory,
+    ii.lastName,
+    ii.firstName,
+    ii.quantity,
+    ii.unitCost,
+    ii.totalcost,
+    ii.comment,
+    ii.chargecategory
 
-FROM ArtCoreInvoicedDetails.invoicedItems ii left join invoiceRuns r on ii.invoiceid = r.objectId
+FROM invoicedItems ii left outer join invoiceRuns ir on ii.invoiceID = ir.objectID
 WHERE ii.date >= StartDate
   AND ii.date < TIMESTAMPADD('SQL_TSI_DAY', 1, EndDate)
+    and ii.category = 'ART Core'
