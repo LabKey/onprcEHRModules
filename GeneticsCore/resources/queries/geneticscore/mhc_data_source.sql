@@ -14,7 +14,8 @@ SELECT
     s.status as result,
     cast('SSP' as varchar) as assaytype,
     'N/A' as librarytype,
-    NULL as score
+    NULL as score,
+    s.modified
 
 FROM assay.SSP_assay.SSP.SSP_Summary s
 WHERE s.subjectId is not null
@@ -26,10 +27,11 @@ SELECT
     a.marker,
     null as shortName,
     count(*) as totalTests,
-    cast('POS' as varchar) as result,
+    group_concat(distinct a.qual_result, ',') as result,
     cast('SBT' as varchar) as assaytype,
     group_concat(DISTINCT a.analysisId.readset.libraryType, ',') as librarytype,
     sum(a.result) / (SELECT count(DISTINCT a2.analysisId) as total FROM assay.GenotypeAssay.Genotype.Data a2 WHERE a2.subjectId = a.subjectId AND a2.run.assayType = 'SBT' ) AS score,
+    max(a.modified) as modified
 
 FROM assay.GenotypeAssay.Genotype.Data a
 WHERE a.run.assayType = 'SBT'
@@ -46,9 +48,15 @@ DISTINCT s.subjectId,
          cast('SBT' as varchar) as assaytype,
          null as librarytype,
          NULL as score,
+         s.modified
 
 --we want any IDs with SBT data, but lacking data for these special-cased markers
 FROM genotypeassays.primer_pairs p
-     FULL JOIN (SELECT DISTINCT subjectId FROM assay.GenotypeAssay.Genotype.Data s WHERE s.run.assayType = 'SBT') s ON (1=1)
+     FULL JOIN (
+        SELECT subjectId, max(modified) as modified
+        FROM assay.GenotypeAssay.Genotype.Data s
+        WHERE s.run.assayType = 'SBT'
+        GROUP BY s.subjectId
+     ) s ON (1=1)
      LEFT JOIN assay.GenotypeAssay.Genotype.Data a ON (a.run.assayType = 'SBT' AND p.ref_nt_name = a.marker AND a.subjectid = s.subjectid)
 WHERE a.rowid IS NULL AND (p.ref_nt_name LIKE 'Mamu-A%' OR p.ref_nt_name LIKE 'Mamu-B%')
