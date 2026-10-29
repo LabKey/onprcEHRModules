@@ -12,6 +12,12 @@
                             <fkColumnName>id</fkColumnName>
                         </fk>
                     </column>
+                    <column columnName="Room">
+                        <columnTitle>Room</columnTitle>
+                    </column>
+                    <column columnName="Cage">
+                        <columnTitle>Cage</columnTitle>
+                    </column>
                     <column columnName="AlertObservationDate">
                         <isHidden>false</isHidden>
                         <columnTitle>Alert Observation Date</columnTitle>
