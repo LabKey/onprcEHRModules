@@ -104,10 +104,9 @@ public class EventsTable extends FilteredTable<ExtSchedulerQuerySchema>
                 }
                 catch (Exception e)
                 {
-                    if (e.getMessage().contains("Start/End date ranges may not overlap for the same resource."))
+                    if (isOverlapError(e))
                         throw new ValidationException("Resource is not available, please select another time slot.");
-                    else
-                        throw e;
+                    throw e;
                 }
             }
 
@@ -127,7 +126,7 @@ public class EventsTable extends FilteredTable<ExtSchedulerQuerySchema>
 
                 // only allow admin users to update events
                 if (!isAdmin)
-                    throw new UnauthorizedException("User does not have permissions ot perform this operation. Must be an admin to update an event.");
+                    throw new UnauthorizedException("User does not have permissions to perform this operation. Must be an admin to update an event.");
 
                 return super.updateRow(user, container, row, oldRow, configParameters);
             }
@@ -141,11 +140,17 @@ public class EventsTable extends FilteredTable<ExtSchedulerQuerySchema>
                 }
                 catch (Exception e)
                 {
-                    if (e.getMessage().contains("Start/End date ranges may not overlap for the same resource."))
+                    if (isOverlapError(e))
                         throw new ValidationException("Resource is not available, please select another time slot.");
-                    else
-                        throw e;
+                    throw e;
                 }
+            }
+
+            // Null-safe check, since getMessage() may return null
+            private boolean isOverlapError(Exception e)
+            {
+                String message = e.getMessage();
+                return message != null && message.contains("Start/End date ranges may not overlap for the same resource.");
             }
 
             @Override
@@ -170,7 +175,7 @@ public class EventsTable extends FilteredTable<ExtSchedulerQuerySchema>
                 boolean isCreator = ExtSchedulerManager.getInstance().isEventCreator(user, row);
                 if (!isOwner && !isCreator)
                 {
-                    throw new UnauthorizedException("User does not have permissions ot perform this operation. "
+                    throw new UnauthorizedException("User does not have permissions to perform this operation. "
                             + "Must be the owner or creator in order to " + operation + " an event.");
                 }
             }
