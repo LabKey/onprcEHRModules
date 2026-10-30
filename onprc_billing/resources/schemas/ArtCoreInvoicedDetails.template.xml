@@ -8,6 +8,8 @@
         <tableName>fiscalAuthorities</tableName>
         <tableName>invoicedItems</tableName>
         <tableName>ArtCoreInvoiceDetails</tableName>
+        <tableName>Aliases</tableName>
+
     </tables>
     <metadata>
         <dat:tables>
