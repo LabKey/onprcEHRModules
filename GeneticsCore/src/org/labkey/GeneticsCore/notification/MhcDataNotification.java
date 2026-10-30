@@ -162,8 +162,8 @@ public class MhcDataNotification extends AbstractNotification
 
 
             LocalDateTime ld = LocalDateTime.ofInstant(sourceLastModified.toInstant(), ZoneId.systemDefault());
-            ld.minusDays(2);
-            long minAllowableDate = sourceLastModified.toInstant().toEpochMilli();
+            ld = ld.minusDays(2);
+            long minAllowableDate = ld.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
             if (sourceLastModified.getTime() < minAllowableDate)
             {
                 msg.append("<b>WARNING: The most recent MHC data in PRIMe is more 2 two days before the lastest source data. This probably means the ETL isnt working</b><br>\n");
