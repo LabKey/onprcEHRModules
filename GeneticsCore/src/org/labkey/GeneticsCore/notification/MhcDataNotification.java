@@ -39,6 +39,7 @@ import org.labkey.remoteapi.query.Sort;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Collections;
 import java.util.Date;
 
@@ -160,7 +161,7 @@ public class MhcDataNotification extends AbstractNotification
             Date sourceLastModified = ts.getObject(Date.class);
 
 
-            LocalDateTime ld = LocalDateTime.from(sourceLastModified.toInstant());
+            LocalDateTime ld = LocalDateTime.ofInstant(sourceLastModified.toInstant(), ZoneId.systemDefault());
             ld.minusDays(2);
             long minAllowableDate = sourceLastModified.toInstant().toEpochMilli();
             if (sourceLastModified.getTime() < minAllowableDate)
