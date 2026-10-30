@@ -1,5 +1,6 @@
 <!--ART core billing webpart-->
 <!--Built by: kollil-->
+<!--2026-10-26  MEt with Lakshmi and redesigned to page for Current Needs-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,13 +10,13 @@
 <body>
 
 <p><strong style="font-size: 16px;">Please click any one of the following links to navigate to the appropriate web page,</strong></p><br/>
-<p><strong style="color: #212121; font-size: 14px;">Click here to open the ART core service request form:</strong></p>
+<!--<p><strong style="color: #212121; font-size: 14px;">Click here to open the ART core service request form:</strong></p>
 <ul>
-    <!--    <li><a style="font-size: 14px;" href="http://localhost:8080/labkey/ehr/ONPRC/EHR/dataEntryForm.view?formType=ART%20CORE%20SERVICES%20REQUEST">ART core service request form</a></li>-->
-<!--    <li><a style="font-size: 14px;" href="/labkey/ONPRC/EHR/ehr-dataEntryForm.view?formType=ART%20CORE%20SERVICES%20REQUEST">ART core service request form (DEV)</a></li>-->
-<!--    <li><a style="font-size: 14px;" href="<%=contextPath%>/ONPRC/EHR/ehr-dataEntryForm.view?formType=ART%20CORE%20SERVICES%20REQUEST">ART core service request form</a></li>-->
+    &lt;!&ndash;    <li><a style="font-size: 14px;" href="http://localhost:8080/labkey/ehr/ONPRC/EHR/dataEntryForm.view?formType=ART%20CORE%20SERVICES%20REQUEST">ART core service request form</a></li>&ndash;&gt;
+&lt;!&ndash;    <li><a style="font-size: 14px;" href="/labkey/ONPRC/EHR/ehr-dataEntryForm.view?formType=ART%20CORE%20SERVICES%20REQUEST">ART core service request form (DEV)</a></li>&ndash;&gt;
+&lt;!&ndash;    <li><a style="font-size: 14px;" href="<%=contextPath%>/ONPRC/EHR/ehr-dataEntryForm.view?formType=ART%20CORE%20SERVICES%20REQUEST">ART core service request form</a></li>&ndash;&gt;
     <p>COMING SOON!</p>
-</ul>
+</ul>-->
 
 <p><strong style="color: #212121; font-size: 14px;">Click here to reserve Ultrasound machine usage via resource scheduler:</strong></p>
 <ul>
@@ -24,13 +25,13 @@
     <li><a style="font-size: 14px;" href="<%=contextPath%>/ONPRC/ResourceScheduler/Radiology%20Room%20ASB%201/project-begin.view">Resource Scheduler</a></li>
 </ul>
 
-<p><strong style="color: #212121; font-size: 14px;">Click here for assisted reproductive technology services (Ex: Embryology and etc):</strong></p>
+<!--<p><strong style="color: #212121; font-size: 14px;">Click here for assisted reproductive technology services (Ex: Embryology and etc):</strong></p>
 <ul>
-<!--        <li><a style="font-size: 14px;" href="http://localhost:8080/labkey/ONPRC/EHR/ehr-dataEntryForm.view?formType=ARTCoreCharges">Other services(DEV)</a></li>-->
-<!--    <li><a style="font-size: 14px;" href="https://primetest.ohsu.edu/ONPRC/Core%20Facilities/ART%20Core/project-begin.view?pageId=overview">Other services(TEST)</a></li>-->
+&lt;!&ndash;        <li><a style="font-size: 14px;" href="http://localhost:8080/labkey/ONPRC/EHR/ehr-dataEntryForm.view?formType=ARTCoreCharges">Other services(DEV)</a></li>&ndash;&gt;
+&lt;!&ndash;    <li><a style="font-size: 14px;" href="https://primetest.ohsu.edu/ONPRC/Core%20Facilities/ART%20Core/project-begin.view?pageId=overview">Other services(TEST)</a></li>&ndash;&gt;
     <p>COMING SOON!</p>
 
-</ul>
+</ul>-->
 
 <p><strong style="color: #212121; font-size: 14px;">Click here to enter miscellaneous ART Core Charges Input Screen:</strong></p>
 <ul>
@@ -45,7 +46,15 @@
 <!--    <li><span style="color: #212121; font-size: 14px;">&nbsp;</span><a style="font-size: 14px;" href="<%=contextPath%>/ONPRC/EHR/query-executeQuery.view?schemaName=onprc_billing&amp;query.queryName=MiscChargesNotBilled_ARTCore&amp;query.columns=Id%2Cdate%2CbillingDate%2Cproject%2CChargeTo%2CCreditTo%2CcreditAccount%2CcreditAccountType%2CchargeId%2Ccategory%2Citem%2CnihRate%2Cquantity%2Ccomment%2Ccreated%2Ccreatedby%2CTaskId">ART Core Charges Entered (pending billing)</a></li>-->
     <li><span style="color: #212121; font-size: 14px;">&nbsp;</span><a style="font-size: 14px;" href="<%=contextPath%>/ONPRC/EHR/query-executeQuery.view?schemaName=onprc_billing&amp;query.queryName=MiscChargesNotBilled_ARTCore">ART Core Charges Entered (pending billing)</a></li>
 </ul>
-<div style="margin-left: 2em;"><em>The above link displays ART Core charges that have been entered but have not been processed to the OHSU Internal Billing System (IBS).</em> <br/> <em>Billing is normally processed after the end of month and 15th of the month.</em></div>
+<div style="margin-left: 2em;"><em>The above link displays ART Core charges that have been entered but have not been processed to the OHSU Internal Billing System (IBS).</em> <br/> <em>Billing is normally processed after the end of month and 15th of the month.</em></div><br>
+
+<p><strong style="color: #212121; font-size: 14px;">Click here to view the details of Invoiced Items :</strong></p>
+<ul>
+    <!--    <li><span style="color: #212121; font-size: 14px;">&nbsp;</span><a style="font-size: 14px;" href="<%=contextPath%>/ONPRC/EHR/query-executeQuery.view?schemaName=onprc_billing&amp;query.queryName=MiscChargesNotBilled_ARTCore&amp;query.columns=Id%2Cdate%2CbillingDate%2Cproject%2CChargeTo%2CCreditTo%2CcreditAccount%2CcreditAccountType%2CchargeId%2Ccategory%2Citem%2CnihRate%2Cquantity%2Ccomment%2Ccreated%2Ccreatedby%2CTaskId">ART Core Charges Entered (pending billing)</a></li>-->
+    <li><span style="color: #212121; font-size: 14px;">&nbsp;</span><a style="font-size: 14px;" href="<%=contextPath%>/ONPRC/EHR/query-executeQuery.view?schemaName=onprc_billing&query.queryName=ArtCoreInvoiceDetails">ART Core Charges Entered (Billed Charges)</a></li>
+</ul>
+<div style="margin-left: 2em;"><em>The above link displays ART Core charges that have been processed to the OHSU Internal Billing System (IBS).</em> <br/> <em>Billing is normally processed after the end of month and 15th of the month.</em></div>
+
 
 </body>
 </html>
