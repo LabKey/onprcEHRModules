@@ -97,7 +97,6 @@ public class MhcDataNotification extends AbstractNotification
         StringBuilder msg = new StringBuilder();
 
         getDiscordantGenotypes(c, u, msg);
-        getDiscordantGenotypesSource(c,u , msg);
         getDiscordantCachedResults(c, u, msg);
         getGenotypingWithoutAnalysis(c, u, msg);
         getDiscordantSubjectIds(c, u, msg);
@@ -114,11 +113,6 @@ public class MhcDataNotification extends AbstractNotification
     public void getDiscordantGenotypes(Container c, User u, StringBuilder msg)
     {
         genericQueryCheck(c, u, msg, "geneticscore", "discordantGenotypeResults", "discordant genotyping results (cached data)", null);
-    }
-
-    public void getDiscordantGenotypesSource(Container c, User u, StringBuilder msg)
-    {
-        genericQueryCheck(c, u, msg, "geneticscore", "discordantGenotypeResultsSource", "discordant genotyping results (source data)", null);
     }
 
     public void getDiscordantSubjectIds(Container c, User u, StringBuilder msg)
