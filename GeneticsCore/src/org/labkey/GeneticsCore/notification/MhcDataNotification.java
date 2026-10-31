@@ -39,6 +39,7 @@ import org.labkey.remoteapi.query.Sort;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Collections;
 import java.util.Date;
 
@@ -147,8 +148,8 @@ public class MhcDataNotification extends AbstractNotification
                 return;
             }
 
-            Date modified = ConvertHelper.convert(srr.getRows().getFirst().get("modified"), Date.class);
-            if (modified == null)
+            Date destinationLastModified = ConvertHelper.convert(srr.getRows().getFirst().get("modified"), Date.class);
+            if (destinationLastModified == null)
             {
                 _log.error("MhcDataNotification returned NULL for the last modified date on PRIMe records");
                 return;
@@ -159,11 +160,9 @@ public class MhcDataNotification extends AbstractNotification
             ts.setMaxRows(1);
             Date sourceLastModified = ts.getObject(Date.class);
 
-
-            LocalDateTime ld = LocalDateTime.from(sourceLastModified.toInstant());
-            ld.minusDays(2);
-            long minAllowableDate = sourceLastModified.toInstant().toEpochMilli();
-            if (sourceLastModified.getTime() < minAllowableDate)
+            LocalDateTime ld = LocalDateTime.ofInstant(sourceLastModified.toInstant(), ZoneId.systemDefault()).minusDays(2);
+            long minAllowableDate = ld.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+            if (destinationLastModified.getTime() < minAllowableDate)
             {
                 msg.append("<b>WARNING: The most recent MHC data in PRIMe is more 2 two days before the lastest source data. This probably means the ETL isnt working</b><br>\n");
             }
