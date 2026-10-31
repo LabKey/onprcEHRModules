@@ -40,13 +40,19 @@
                             'query.analysisId/rowId~isblank': ''
                         })
                     },{
-                        name: 'Discordant Genotyping Results',
+                        name: 'Discordant Genotyping Results (Cached Data)',
                         url: LABKEY.ActionURL.buildURL('query', 'executeQuery.view', null, {
                             schemaName: 'geneticscore',
                             queryName: 'discordantGenotypeResults'
                         })
                     },{
-                        name: 'Discordant Cached Results',
+                        name: 'Discordant Genotyping Results (Source Data)',
+                        url: LABKEY.ActionURL.buildURL('query', 'executeQuery.view', null, {
+                            schemaName: 'geneticscore',
+                            queryName: 'discordantGenotypeResultsSource'
+                        })
+                    },{
+                        name: 'Results Discordant Between Cached/Source Data',
                         url: LABKEY.ActionURL.buildURL('query', 'executeQuery.view', null, {
                             schemaName: 'geneticscore',
                             queryName: 'discordantCachedResults',

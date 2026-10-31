@@ -2,7 +2,7 @@
     <metadata>
         <tables xmlns="http://labkey.org/data/xml">
             <table tableName="" tableDbType="TABLE">
-                <tableTitle>Cached Genotyping Results Discordant With Data</tableTitle>
+                <tableTitle>Cached Genotyping Results Discordant With Source Data</tableTitle>
                 <columns>
                     <column columnName="totalTestsCached">
                         <columnTitle>Total Tests (Cached)</columnTitle>
