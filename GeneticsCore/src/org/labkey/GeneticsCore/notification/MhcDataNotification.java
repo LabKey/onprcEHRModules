@@ -112,7 +112,7 @@ public class MhcDataNotification extends AbstractNotification
 
     public void getDiscordantGenotypes(Container c, User u, StringBuilder msg)
     {
-        genericQueryCheck(c, u, msg, "geneticscore", "discordantGenotypeResults", "discordant genotyping data", null);
+        genericQueryCheck(c, u, msg, "geneticscore", "discordantGenotypeResults", "discordant genotyping results (cached data)", null);
     }
 
     public void getDiscordantSubjectIds(Container c, User u, StringBuilder msg)
@@ -136,7 +136,7 @@ public class MhcDataNotification extends AbstractNotification
 
         SelectRowsCommand sr = new SelectRowsCommand("geneticscore", "mhc_data");
         sr.setColumns(Collections.singletonList("modified"));
-        sr.addSort(new Sort("-modified"));
+        sr.addSort(new Sort("modified", Sort.Direction.DESCENDING));
         sr.setMaxRows(1);
         try
         {
@@ -164,7 +164,7 @@ public class MhcDataNotification extends AbstractNotification
             long minAllowableDate = ld.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
             if (destinationLastModified.getTime() < minAllowableDate)
             {
-                msg.append("<b>WARNING: The most recent MHC data in PRIMe is more 2 two days before the lastest source data. This probably means the ETL isnt working</b><br>\n");
+                msg.append("<b>WARNING: The most recent MHC data in PRIMe (").append(_dateTimeFormat.format(destinationLastModified)).append(") is more than 2 two days before the lastest source data (").append(_dateTimeFormat.format(sourceLastModified)).append("). This probably means the ETL isn't working.</b><br>\n");
             }
         }
         catch (CommandException | IOException e)
