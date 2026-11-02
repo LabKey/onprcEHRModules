@@ -164,7 +164,7 @@ public class MhcDataNotification extends AbstractNotification
             long minAllowableDate = ld.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
             if (destinationLastModified.getTime() < minAllowableDate)
             {
-                msg.append("<b>WARNING: The most recent MHC data in PRIMe (").append(_dateTimeFormat.format(destinationLastModified)).append(") is more than 2 two days before the lastest source data (").append(_dateTimeFormat.format(sourceLastModified)).append("). This probably means the ETL isn't working.</b><br>\n");
+                msg.append("<b>WARNING: The most recent MHC data in PRIMe (").append(_dateTimeFormat.format(destinationLastModified)).append(") is more than two days before the latest source data (").append(_dateTimeFormat.format(sourceLastModified)).append("). This probably means the ETL isn't working.</b><br>\n");
             }
         }
         catch (CommandException | IOException e)
