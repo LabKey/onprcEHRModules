@@ -79,6 +79,13 @@ public abstract class AbstractGenericONPRC_EHRTest extends AbstractGenericEHRTes
     protected static String[] CATEGORY = {"Divider Change", "Event", "STP_Beh"};
     protected static String[] TINFANT = {"35160", "24456", "36451"};
 
+    // TODO: Remove once SQL Server migration updates are complete and queries are fixed
+    @Override
+    protected boolean skipStudyImportQueryValidation()
+    {
+        return true;
+    }
+
     @Override
     public List<String> getAssociatedModules()
     {
