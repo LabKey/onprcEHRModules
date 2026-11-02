@@ -16,7 +16,7 @@ SELECT
     t2.result as resultSource,
     t2.score as scoreSource,
     CASE
-        WHEN t1.result != t2.result THEN 'DISCORDANT'
+        WHEN is_distinct_from(t1.result, t2.result) THEN 'DISCORDANT'
         ELSE NULL
     END as isDiscordantResult
 
@@ -24,5 +24,5 @@ FROM geneticscore.mhc_data t1
 FULL JOIN geneticscore.mhc_data_source t2 ON (t1.subjectId = t2.subjectId AND t1.marker = t2.marker AND t1.assaytype = t2.assaytype)
 
 WHERE
-    NOT ISEQUAL(t1.totalTests, t2.totalTests) OR
-    NOT ISEQUAL(t1.result, t2.result)
+    is_distinct_from(t1.totalTests, t2.totalTests) OR
+    is_distinct_from(t1.result, t2.result)

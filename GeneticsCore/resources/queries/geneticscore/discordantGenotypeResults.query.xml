@@ -2,7 +2,7 @@
     <metadata>
         <tables xmlns="http://labkey.org/data/xml">
             <table tableName="" tableDbType="TABLE">
-                <tableTitle>Discordant Genotyping Results</tableTitle>
+                <tableTitle>Discordant Cached Genotyping Results</tableTitle>
                 <columns>
                     <column columnName="results">
                         <url>/query/executeQuery.view?schemaName=geneticscore&amp;
@@ -10,9 +10,6 @@
                             query.subjectId~eq=${subjectId}&amp;
                             query.marker~eq=${marker}
                         </url>
-                    </column>
-                    <column columnName="isDiscordantResult">
-                        <columnTitle>Is Discordant Result?</columnTitle>
                     </column>
                 </columns>
             </table>
