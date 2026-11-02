@@ -278,7 +278,7 @@ public class MhcTaskRef implements TaskRefTask
                         ts3.forEachResults(rs -> {
                             if (rs.getObject(FieldKey.fromString("oldRecordMap")) != null)
                             {
-                                Map<String, String> map = new CaseInsensitiveHashMap<>(PageFlowUtil.mapFromQueryString(FieldKey.fromString("oldRecordMap").toString()));
+                                Map<String, String> map = new CaseInsensitiveHashMap<>(PageFlowUtil.mapFromQueryString(rs.getString(FieldKey.fromString("oldRecordMap"))));
                                 if (StringUtils.trimToNull(map.get("subjectid")) != null)
                                 {
                                     uniqueIds.add(map.get("subjectid"));
@@ -287,6 +287,25 @@ public class MhcTaskRef implements TaskRefTask
                         });
                     }
                 }
+
+                // Also check query audit log:
+                TableInfo queryAuditTableInfo = QueryService.get().getUserSchema(job.getUser(), getTargetContainer(job), "auditLog").getTable("QueryUpdateAuditEvent");
+                SimpleFilter auditFilter = new SimpleFilter(FieldKey.fromString("created"), dateSince, CompareType.DATE_GTE);
+                filter.addCondition(FieldKey.fromString("SchemaName"), tableInfo.getUserSchema().getSchemaName());
+                filter.addCondition(FieldKey.fromString("QueryName"), tableInfo.getName());  // Data
+                filter.addCondition(FieldKey.fromString("Comment"), "A row was deleted.");  // Data
+
+                TableSelector tsAudit = new TableSelector(queryAuditTableInfo, PageFlowUtil.set("oldRecordMap"), auditFilter, null);
+                tsAudit.forEachResults(rs -> {
+                    if (rs.getObject(FieldKey.fromString("oldRecordMap")) != null)
+                    {
+                        Map<String, String> map = new CaseInsensitiveHashMap<>(PageFlowUtil.mapFromQueryString(rs.getString(FieldKey.fromString("oldRecordMap"))));
+                        if (StringUtils.trimToNull(map.get("subjectid")) != null)
+                        {
+                            uniqueIds.add(map.get("subjectid"));
+                        }
+                    }
+                });
             }
         }
 
