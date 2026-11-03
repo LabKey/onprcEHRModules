@@ -6,5 +6,5 @@ select
 from onprc_ehr_compliancedb.employeeTraining_details  jj where jj.grid_type = 'area'
 
 
-group by   jj.employeeid, jj.requirementname, jj.grid_type
-    PIVOT   employeeid by  requirementname
+group by   jj.requirementname, jj.employeeid
+           PIVOT   employeeid by  requirementname
