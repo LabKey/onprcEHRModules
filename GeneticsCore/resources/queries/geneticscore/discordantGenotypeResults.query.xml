@@ -11,10 +11,6 @@
                             query.marker~eq=${marker}
                         </url>
                     </column>
-                    <column columnName="cachedObjectId">
-                        <columnTitle>Cached ObjectId</columnTitle>
-                        <isHidden>true</isHidden>
-                    </column>
                 </columns>
             </table>
         </tables>

@@ -271,7 +271,7 @@ public class MhcTaskRef implements TaskRefTask
                         TableInfo queryAuditTableInfo = QueryService.get().getUserSchema(job.getUser(), getTargetContainer(job), "auditLog").getTable("QueryUpdateAuditEvent");
                         SimpleFilter auditFilter = new SimpleFilter(FieldKey.fromString("comment"), "A row was deleted.");
                         auditFilter.addCondition(FieldKey.fromString("SchemaName"), assay.getSchemaName());
-                        auditFilter.addCondition(FieldKey.fromString("QueryName"), "Data");
+                        auditFilter.addCondition(FieldKey.fromString("QueryName"), AssayProtocolSchema.DATA_TABLE_NAME);
                         auditFilter.addCondition(FieldKey.fromString("RowPk"), analysisIdsUpdated.stream().map(String::valueOf).collect(Collectors.toSet()), CompareType.IN);
 
                         TableSelector ts3 = new TableSelector(queryAuditTableInfo, PageFlowUtil.set("oldRecordMap"), auditFilter, null);
@@ -291,9 +291,9 @@ public class MhcTaskRef implements TaskRefTask
                 // Also check query audit log:
                 TableInfo queryAuditTableInfo = QueryService.get().getUserSchema(job.getUser(), getTargetContainer(job), "auditLog").getTable("QueryUpdateAuditEvent");
                 SimpleFilter auditFilter = new SimpleFilter(FieldKey.fromString("created"), dateSince, CompareType.DATE_GTE);
-                filter.addCondition(FieldKey.fromString("SchemaName"), tableInfo.getUserSchema().getSchemaName());
-                filter.addCondition(FieldKey.fromString("QueryName"), tableInfo.getName());  // Data
-                filter.addCondition(FieldKey.fromString("Comment"), "A row was deleted.");  // Data
+                auditFilter.addCondition(FieldKey.fromString("SchemaName"), assay.getSchemaName());
+                auditFilter.addCondition(FieldKey.fromString("QueryName"), AssayProtocolSchema.DATA_TABLE_NAME);
+                auditFilter.addCondition(FieldKey.fromString("Comment"), "A row was deleted.");
 
                 TableSelector tsAudit = new TableSelector(queryAuditTableInfo, PageFlowUtil.set("oldRecordMap"), auditFilter, null);
                 tsAudit.forEachResults(rs -> {
