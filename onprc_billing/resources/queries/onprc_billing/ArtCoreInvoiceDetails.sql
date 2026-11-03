@@ -21,6 +21,4 @@ SELECT
 
 FROM invoicedItems ii left outer join invoiceRuns ir on ii.invoiceID = ir.objectID
         Left join aliases a on a.alias = ii.debitedaccount
-WHERE ii.date >= StartDate
-  AND ii.date < TIMESTAMPADD('SQL_TSI_DAY', 1, EndDate)
-    and ii.category = 'ART Core'
+WHERE  ii.category = 'ART Core'
