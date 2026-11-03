@@ -275,14 +275,14 @@ EHR.model.DataModelManager.registerMetadata('Default', {
         //Modified: 9-10-2026 R. Blasa
         'study.Housing': {
             room: {
-             xtype: 'onprc_ehr.roomfieldsingle',
+             xtype: 'onprc_ehr-roomfieldsingle',
                 allowBlank: false,
             }
         },
 
         'study.Birth': {
             room: {
-                xtype: 'onprc_ehr.roomfieldsingle',
+                xtype: 'onprc_ehr-roomfieldsingle',
                 allowBlank: false
             }
         },

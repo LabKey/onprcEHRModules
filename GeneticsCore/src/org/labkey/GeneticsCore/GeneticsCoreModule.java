@@ -18,6 +18,7 @@ package org.labkey.GeneticsCore;
 
 import org.jetbrains.annotations.Nullable;
 import org.labkey.GeneticsCore.notification.GeneticsCoreNotification;
+import org.labkey.GeneticsCore.notification.MhcDataNotification;
 import org.labkey.api.exp.api.ExperimentService;
 import org.labkey.api.ldk.ExtendedSimpleModule;
 import org.labkey.api.ldk.LDKService;
@@ -55,6 +56,7 @@ public class GeneticsCoreModule extends ExtendedSimpleModule
         LDKService.get().registerQueryButton(btn2, "laboratory", "samples");
 
         NotificationService.get().registerNotification(new GeneticsCoreNotification());
+        NotificationService.get().registerNotification(new MhcDataNotification());
 
         ExperimentService.get().addExperimentListener(new GeneticsCoreExpListener());
     }

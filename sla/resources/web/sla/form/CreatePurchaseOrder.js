@@ -1190,7 +1190,7 @@ Ext4.define('SLA.panel.PurchaseOrderRequest', {
             closable: false
         });
 
-        var msgBoxCloseTask = new Ext.util.DelayedTask(function(){
+        var msgBoxCloseTask = new Ext4.util.DelayedTask(function(){
             msgBox.close();
             successCallback.call(scope);
         }, this);

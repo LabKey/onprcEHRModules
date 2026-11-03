@@ -117,6 +117,8 @@ public class VetReviewNotification extends ColonyAlertsNotification
             //Display the report in the email
             Set<FieldKey> columns = new HashSet<>();
             columns.add(FieldKey.fromString("Id"));
+            columns.add(FieldKey.fromString("Room"));
+            columns.add(FieldKey.fromString("Cage"));
             columns.add(FieldKey.fromString("AlertObservationDate"));
             columns.add(FieldKey.fromString("AlopeciaScore"));
             columns.add(FieldKey.fromString("performedby"));
@@ -131,13 +133,15 @@ public class VetReviewNotification extends ColonyAlertsNotification
             // Table header
             msg.append("<table border=1 style='border-collapse: collapse;'>");
             msg.append("<tr style='font-weight: bold;'>");
-            msg.append("<td> Id </td><td> Alert Observation Date </td><td> Alopecia Score </td><td> Performed by </td><td> Entered Since Vet Review </td><td> Assigned Vet </td><td> Behavior Case Open Date </td><td> Vet Review Due Date </td></tr>");
+            msg.append("<td> Id </td><td> Room </td><td> Cage </td><td> Alert Observation Date </td><td> Alopecia Score </td><td> Performed by </td><td> Entered Since Vet Review </td><td> Assigned Vet </td><td> Behavior Case Open Date </td><td> Vet Review Due Date </td></tr>");
 
             ts2.forEach(object -> {
                 Results rs = new ResultsImpl(object, colMap);
                 String url = getParticipantURL(c, rs.getString("Id"));
 
-                msg.append("<td style='border: 1px solid black;'><b> <a href='" + url + "'>" + PageFlowUtil.filter(rs.getString("Id")) + "</a> </b></td>\n");
+                msg.append("<td style='border: 1px solid black;'> <a href='" + url + "'>" + PageFlowUtil.filter(rs.getString("Id")) + "</a> </td>\n");
+                msg.append("<td style='border: 1px solid black;'>" + PageFlowUtil.filter(rs.getString("Room")) + "</td>");
+                msg.append("<td style='border: 1px solid black;'>" + PageFlowUtil.filter(rs.getString("Cage")) + "</td>");
                 msg.append("<td style='border: 1px solid black;'>" + PageFlowUtil.filter(rs.getString("AlertObservationDate")) + "</td>");
                 msg.append("<td style='border: 1px solid black;'>" + PageFlowUtil.filter(rs.getString("AlopeciaScore")) + "</td>");
                 msg.append("<td style='border: 1px solid black;'>" + PageFlowUtil.filter(rs.getString("performedby")) + "</td>");
@@ -149,11 +153,9 @@ public class VetReviewNotification extends ColonyAlertsNotification
             });
             msg.append("</table><br><hr>");
         }
-        else
-        {
+        else {
             msg.append("<b>WARNING: No animals found with alopecia score of 4 or 5 with open behavioral case for alopecia in last 7 days!</b><br><hr>\n");
         }
-
 
     }
 
