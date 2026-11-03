@@ -19,8 +19,7 @@ SELECT
         WHEN is_distinct_from(t1.result, t2.result) THEN 'DISCORDANT'
         ELSE NULL
     END as isDiscordantResult,
-    t1.objectid as cachedObjectId,
-    t1.objectid as sourceObjectId
+    t1.objectid as cachedObjectId
 
 FROM geneticscore.mhc_data t1
 FULL JOIN geneticscore.mhc_data_source t2 ON (t1.subjectId = t2.subjectId AND t1.marker = t2.marker AND t1.assaytype = t2.assaytype)
