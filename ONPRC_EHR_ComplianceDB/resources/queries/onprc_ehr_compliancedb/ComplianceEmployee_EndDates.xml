@@ -1,0 +1,32 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="ComplianceEmployee_EndDates" tableDbType="NOT_IN_DB">
+                <tableTitle>Compliance Employee End Dates</tableTitle>
+
+                <columns>
+                    <column columnName="employeeid">
+                        <columnTitle>Employee ID</columnTitle>
+                        <isHidden>false</isHidden>
+                        <fk>
+                            <fkDbSchema>ehr_compliancedb</fkDbSchema>
+                            <fkTable>employees</fkTable>
+                            <fkColumnName>employeeid</fkColumnName>
+                        </fk>
+                    </column>
+
+                    <column columnName="requirementname">
+                        <columnTitle>Training Name</columnTitle>
+                        <isHidden>false</isHidden>
+                        <fk>
+                            <fkDbSchema>ehr_compliancedb</fkDbSchema>
+                            <fkTable>requirements</fkTable>
+                            <fkColumnName>requirementname</fkColumnName>
+                        </fk>
+                    </column>
+                 </columns>
+            </table>
+        </tables>
+    </metadata>
+</query>
+
