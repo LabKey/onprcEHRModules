@@ -1,4 +1,3 @@
-PARAMETERS (StartDate TIMESTAMP, EndDate TIMESTAMP)
 SELECT
     ir.rowId,
     ii.transactionNumber,
