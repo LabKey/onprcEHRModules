@@ -37,4 +37,4 @@ from study.demographics d
  left outer join study.demographicsMostRecentWeight w on d.id = w.id
   left outer join demographicsMostRecentBCS mbcs on mbcs.id = d.id
 where d.calculated_status = 'Alive'
-and d.ID not like '[a-z]%'
+and LOWER(SUBSTRING(d.ID, 1, 1)) NOT BETWEEN 'a' AND 'z'

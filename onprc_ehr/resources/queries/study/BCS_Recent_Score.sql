@@ -23,4 +23,4 @@ RIGHT  JOIN
          ) As d
 
 ON c.id = d.id And CAST(c.date AS DATE) = d.MaxDate
-Where  c.category = 'bcs' and c.id  not like '[a-z]%'
+Where  c.category = 'bcs' and LOWER(SUBSTRING(c.id, 1, 1)) NOT BETWEEN 'a' AND 'z'
