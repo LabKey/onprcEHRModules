@@ -134,7 +134,7 @@ Ext4.define('SLA.window.AddCensusWindow', {
 
         var records = [];
         Ext4.Array.forEach(results.rows, function(row){
-            if(row.project){
+            if(row.project && row.animalCount > 0 ){
                 //TODO: set correct rows
 
                 var obj = {
