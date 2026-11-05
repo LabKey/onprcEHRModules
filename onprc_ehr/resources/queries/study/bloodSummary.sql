@@ -117,7 +117,7 @@ SELECT
   TIMESTAMPDIFF('SQL_TSI_DAY',bcs.date,Now()) as DaysSinceBCS,
   --This ca;ciates tje tt
    Case
- 			when  TIMESTAMPDIFF('SQL_TSI_DAY',bcs.date,Now())  < 365 THEN round(cast (113.753 + ((0.752 *  d.id.MostRecentWeight.MostRecentWeight ) - (18.919 * bcs.score))as double),2)
+ 			when  TIMESTAMPDIFF('SQL_TSI_DAY',bcs.date,Now())  < 365 THEN round(cast (113.753 + ((0.752 *  d.id.MostRecentWeight.MostRecentWeight ) - (18.919 * CAST(bcs.score AS DOUBLE)))as double),2)
  			Else (d.species.blood_per_kg  * d.id.MostRecentWeight.MostRecentWeight)
 			END as TotalBloodAvailable,
 
@@ -137,11 +137,11 @@ SELECT
 
   -- blood volume (ml/kg)
 ------113.753+(0.752*Wt)- (18.919*BCS)
-(113.753+(0.752 *  d.id.MostRecentWeight.MostRecentWeight ) - (18.919 * bcs.score)) as BloodVolume,
+(113.753+(0.752 *  d.id.MostRecentWeight.MostRecentWeight ) - (18.919 * CAST(bcs.score AS DOUBLE))) as BloodVolume,
 
 --TBV(mnl)
 -----weight * Blood Volume
-(d.id.MostRecentWeight.MostRecentWeight * (113.753+(0.752 *  d.id.MostRecentWeight.MostRecentWeight ) - (18.919 * bcs.score))) as TBV,
+(d.id.MostRecentWeight.MostRecentWeight * (113.753+(0.752 *  d.id.MostRecentWeight.MostRecentWeight ) - (18.919 * CAST(bcs.score AS DOUBLE)))) as TBV,
 --Allowable BV
 -----TBV*.125
 

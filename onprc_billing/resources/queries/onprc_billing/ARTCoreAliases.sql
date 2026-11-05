@@ -4,7 +4,7 @@
 -- The category on the alias table is OHSU GL. There could be other alias that will be used for charges that are not associated with a center project.
 -- I hope at some point when this is automated, or when ART core understands they can use the center project for charging.
 
-SELECT alias, alias + ' - ' + COALESCE(investigatorName, 'N/A') as aliasPI
+SELECT alias, alias || ' - ' || COALESCE(investigatorName, 'N/A') as aliasPI
 FROM Site.{substitutePath moduleProperty('ONPRC_Billing','BillingContainer_Public')}.onprc_billing_public.aliases
 WHERE (budgetstartdate IS NOT NULL AND (budgetEndDate IS NULL OR budgetEndDate >= TIMESTAMPADD('SQL_TSI_DAY', -30, now()) ))
 

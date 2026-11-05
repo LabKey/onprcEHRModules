@@ -15,7 +15,7 @@ SELECT
 
     /* Concatenate all active cagemate IDs into one cell */
     (
-        SELECT GROUP_CONCAT(DISTINCT CAST(h.roommateId AS VARCHAR), ', ')
+        SELECT GROUP_CONCAT(DISTINCT CAST(h.roommateId AS VARCHAR), ', ') AS x
         FROM housingRoommatesDivider h
         WHERE h.Id = a.Id
           AND h.removalDate IS NULL
@@ -25,7 +25,7 @@ SELECT
 
     /* Concatenate all active projects & investigator into one cell */
     (
-        SELECT GROUP_CONCAT(DISTINCT CAST('[' + d.project.protocol.investigatorId.lastname + ']' + d.project.displayname + '' AS VARCHAR), ', ')
+        SELECT GROUP_CONCAT(DISTINCT CAST('[' || d.project.protocol.investigatorId.lastname || ']' || d.project.displayname || '' AS VARCHAR), ', ') AS x
         FROM housingRoommatesDivider h
         LEFT JOIN study.assignment d ON d.Id = h.roommateId
         WHERE h.Id = a.Id
@@ -33,7 +33,7 @@ SELECT
             AND h.roommateEnd IS NULL
             AND h.roommateId IS NOT NULL
             AND d.enddate IS NULL
-            AND d.isActive = 1
+            AND d.isActive = true
             AND d.project.displayname NOT IN ('0492-02', '0492-03')
     ) AS Cagemate_Assignments
 
@@ -46,7 +46,7 @@ WHERE
     --AND a.project.displayname NOT IN ('0492-02', '0492-03')
     AND a.Id.demographics.species = 'Rhesus Macaque'
     AND EXISTS (
-        SELECT 1
+        SELECT 1 AS x
         FROM study.flags f
         WHERE f.Id = a.Id
           AND f.flag.category = 'Assign Alias'

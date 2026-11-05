@@ -1061,20 +1061,23 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
 
     }
 
+    private static String zeroPadTime(AbstractTableInfo ti, String column)
+    {
+        return ti.getSqlDialect().isSqlServer()
+                ? "REPLICATE('0', 4 - LEN(" + column + "))  + cast(" + column + " as varchar(4))"
+                : "LPAD(CAST(" + column + " AS VARCHAR), 4, '0')";
+    }
+
     private void customizeTreatmentOrdersTable(AbstractTableInfo ti)
     {
-        //for now, sqlserver only
-        if (!ti.getSqlDialect().isSqlServer())
-            return;
-
         String name = "treatmentTimes";
         if (null == ti.getColumn(name) && null != ti.getColumn("objectid"))
         {
             SQLFragment sql = new SQLFragment("COALESCE(" +
-                "(SELECT " + ti.getSqlDialect().getGroupConcat(new SQLFragment("REPLICATE('0', 4 - LEN(tt.time))  + cast(tt.time as varchar(4))"), true, false, getNewlineSql(ti)).getSqlCharSequence() + " as _expr " +
+                "(SELECT " + ti.getSqlDialect().getGroupConcat(new SQLFragment(zeroPadTime(ti, "tt.time")), true, false, getNewlineSql(ti)).getSqlCharSequence() + " as _expr " +
                 " FROM ehr.treatment_times tt " +
                 " WHERE tt.treatmentId = " + ExprColumn.STR_TABLE_ALIAS + ".objectid)" +
-                ", (SELECT " + ti.getSqlDialect().getGroupConcat(new SQLFragment("REPLICATE('0', 4 - LEN(ft.hourofday))  + cast(ft.hourofday as varchar(4))"), true, false, getNewlineSql(ti)).getSqlCharSequence() + " as _expr " +
+                ", (SELECT " + ti.getSqlDialect().getGroupConcat(new SQLFragment(zeroPadTime(ti, "ft.hourofday")), true, false, getNewlineSql(ti)).getSqlCharSequence() + " as _expr " +
                 " FROM ehr_lookups.treatment_frequency f " +
                 " JOIN ehr_lookups.treatment_frequency_times ft ON (f.meaning = ft.frequency) WHERE f.rowid = " + ExprColumn.STR_TABLE_ALIAS + ".frequency)" +
                 ", 'Custom')"
@@ -1103,16 +1106,12 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
 
     private void customizeTreatmentFrequency(AbstractTableInfo ti)
     {
-        //for now, sqlserver only
-        if (!ti.getSqlDialect().isSqlServer())
-            return;
-
         String name = "times";
         ColumnInfo existing = ti.getColumn(name);
         if (null == existing && null != ti.getColumn("meaning"))
         {
-            SQLFragment sql = new SQLFragment("(SELECT " + ti.getSqlDialect().getGroupConcat(new SQLFragment("REPLICATE('0', 4 - LEN(t.hourofday))  + cast(t.hourofday as varchar(4))"), true, true, ",").getSqlCharSequence() +
-                    "FROM ehr_lookups.treatment_frequency_times t " +
+            SQLFragment sql = new SQLFragment("(SELECT " + ti.getSqlDialect().getGroupConcat(new SQLFragment(zeroPadTime(ti, "t.hourofday")), true, true, ",").getSqlCharSequence() +
+                    " FROM ehr_lookups.treatment_frequency_times t " +
                     " WHERE t.frequency = " + ExprColumn.STR_TABLE_ALIAS + ".meaning " +
                     " GROUP BY t.frequency " +
                     " )");
