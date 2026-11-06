@@ -82,6 +82,7 @@ public class BloodDrawFormType extends TaskForm
         {
             return false;
         }
+       
         return super.isVisible();
     }
 }
