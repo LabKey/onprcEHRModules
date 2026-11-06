@@ -457,7 +457,7 @@ Ext4.define('SLA.panel.PurchaseOrderRequest', {
                 speciesInserts.push(speciesRowData);
             }
 
-            //added by Kolli
+            //Added by Kollil
             //Added the new room to the list: NSI 134 on 4/19
             //Added more locations based on the tkt #11850 on 1/16/25. Kept the NSI names too as the historical data still exists
             if (speciesRowData.room == 'NSI 0123D' || speciesRowData.room == 'NSI 0125D' || speciesRowData.room == 'NSI 0134' || speciesRowData.room == 'JNB 0123D' || speciesRowData.room == 'JNB 0125D' || speciesRowData.room == 'JNB 0134')
@@ -468,6 +468,8 @@ Ext4.define('SLA.panel.PurchaseOrderRequest', {
         }, this);
         if (isHazardsRequired && (purchaseData.hazardslist == null || purchaseData.hazardslist == ''))
         {
+            //Kollil by 11/26
+            this.getSubmitButton().enable();
             // this.showErrorMsg('You have selected Location(s): NSI 0123D or NSI 0125D or NSI 134. Please list the biological or chemical agents! ');
             this.showErrorMsg('Please list the biological or chemical agents for this location! ');
             return;
@@ -659,8 +661,12 @@ Ext4.define('SLA.panel.PurchaseOrderRequest', {
                 var perc = (allowableAnimalData.NumUsed + requestedAnimalUsage[key].NumAnimalsOrdered) / allowableAnimalData.NumAllowed;
                 requestedAnimalUsage[key].PercentUsed = Ext4.util.Format.round(perc * 100, 1);
 
-                requestedAnimalUsage[key].Species = detail.Species;
-                requestedAnimalUsage[key].Gender = detail.Gender;
+                // Changed by Kollil, Nov, 2026
+                // checkProjectAnimalUsage: requestedAnimalUsage[key].Species = detail.Species; and .Gender = detail.Gender use capitalized property names,
+                // but elsewhere the detail rows use lowercase (detail.species, detail.gender).
+                // The values will be undefined, so the warning messages will read “Species = undefined, Sex = undefined”.
+                requestedAnimalUsage[key].species = detail.species;
+                requestedAnimalUsage[key].gender = detail.gender;
                 //requestedAnimalUsage[key].Strain = detail.Strain;
                 requestedAnimalUsage[key].NumAllowed = allowableAnimalData.NumAllowed;
             }
@@ -1006,6 +1012,19 @@ Ext4.define('SLA.panel.PurchaseOrderRequest', {
     //Kollil: If the new receiving info is entered, Insert a row into the onprc_billing.miscCharges table
     insertMiscCharges : function (rowId,newPurchaseData)
     {
+        //Kollil, 11/26, AI recommended fix
+        /*
+        If misc charges are only intended during updates, make that intent clear: YES
+        I actually prefer this version because the logic compares previous values against new values, which only makes
+        sense when there is a previous order state. It documents the business rule instead of merely preventing the exception.
+         */
+        // New orders have no initData
+       if (!this.initData || !this.initData.species)
+        {
+            this.showSuccess(rowId);
+            return;
+        }
+
         var miscCharges=[];
         var prevDetailsMap = {};
         //var vendor_id ;
@@ -1048,8 +1067,10 @@ Ext4.define('SLA.panel.PurchaseOrderRequest', {
                 var prevReceiveddate = this.trimDateToYMDStr(prevDetailsMap[objectid]['receiveddate']),
                         prevReceivedby = prevDetailsMap[objectid]['receivedby'];
 
+                console.log("prevReceiveddate" + prevReceiveddate);
+                console.log("prevReceivedby" + prevReceiveddate);
                 //Compare the receiving info with the previous data
-                if ((prevReceiveddate == null & receiveddate != null) || (prevReceivedby == null & receivedby != null))
+                if ((prevReceiveddate == null && receiveddate != null) || (prevReceivedby == null && receivedby != null))
                 {
                     if (this.initData.purchase.vendor == 'ONPRC Weaning - SLA')
                     //if (newPurchaseData['vendorid'] == vendor_id)
