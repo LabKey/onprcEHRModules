@@ -39,6 +39,7 @@ import org.labkey.api.query.QueryException;
 import org.labkey.api.query.QueryService;
 import org.labkey.api.query.UserSchema;
 import org.labkey.api.security.User;
+import org.labkey.api.util.Formats.SafeDecimalFormat;
 import org.labkey.api.util.PageFlowUtil;
 import org.labkey.onprc_billing.ONPRC_BillingManager;
 import org.labkey.onprc_billing.ONPRC_BillingModule;
@@ -46,7 +47,6 @@ import org.labkey.onprc_billing.ONPRC_BillingSchema;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -61,7 +61,7 @@ import java.util.TreeMap;
 
 public class FinanceNotification extends AbstractNotification
 {
-    protected static final DecimalFormat _dollarFormat = new DecimalFormat("$###,##0.00");
+    protected static final SafeDecimalFormat _dollarFormat = new SafeDecimalFormat("$###,##0.00");
 
     public FinanceNotification()
     {
