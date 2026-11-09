@@ -15,9 +15,7 @@
  */
 package org.labkey.GeneticsCore.notification;
 
-import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.jetbrains.annotations.Nullable;
 import org.labkey.GeneticsCore.GeneticsCoreModule;
 import org.labkey.api.data.CompareType;
 import org.labkey.api.data.Container;
@@ -30,8 +28,6 @@ import org.labkey.api.ldk.notification.AbstractNotification;
 import org.labkey.api.ldk.notification.NotificationService;
 import org.labkey.api.module.ModuleLoader;
 import org.labkey.api.query.FieldKey;
-import org.labkey.api.query.QueryService;
-import org.labkey.api.query.UserSchema;
 import org.labkey.api.security.User;
 import org.labkey.api.util.PageFlowUtil;
 import org.labkey.api.util.logging.LogHelper;
@@ -43,6 +39,7 @@ import org.labkey.remoteapi.query.Sort;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Collections;
 import java.util.Date;
 
@@ -79,7 +76,7 @@ public class MhcDataNotification extends AbstractNotification
     @Override
     public String getCronString()
     {
-        return "0 30 3 ? * *";
+        return "0 30 9 ? * *";
     }
 
     @Override
@@ -115,7 +112,7 @@ public class MhcDataNotification extends AbstractNotification
 
     public void getDiscordantGenotypes(Container c, User u, StringBuilder msg)
     {
-        genericQueryCheck(c, u, msg, "geneticscore", "discordantGenotypeResults", "discordant genotyping data", null);
+        genericQueryCheck(c, u, msg, "geneticscore", "discordantGenotypeResults", "discordant genotyping results (cached data)", null);
     }
 
     public void getDiscordantSubjectIds(Container c, User u, StringBuilder msg)
@@ -139,7 +136,7 @@ public class MhcDataNotification extends AbstractNotification
 
         SelectRowsCommand sr = new SelectRowsCommand("geneticscore", "mhc_data");
         sr.setColumns(Collections.singletonList("modified"));
-        sr.addSort(new Sort("-modified"));
+        sr.addSort(new Sort("modified", Sort.Direction.DESCENDING));
         sr.setMaxRows(1);
         try
         {
@@ -151,8 +148,8 @@ public class MhcDataNotification extends AbstractNotification
                 return;
             }
 
-            Date modified = ConvertHelper.convert(srr.getRows().getFirst().get("modified"), Date.class);
-            if (modified == null)
+            Date destinationLastModified = ConvertHelper.convert(srr.getRows().getFirst().get("modified"), Date.class);
+            if (destinationLastModified == null)
             {
                 _log.error("MhcDataNotification returned NULL for the last modified date on PRIMe records");
                 return;
@@ -163,49 +160,16 @@ public class MhcDataNotification extends AbstractNotification
             ts.setMaxRows(1);
             Date sourceLastModified = ts.getObject(Date.class);
 
-
-            LocalDateTime ld = LocalDateTime.from(sourceLastModified.toInstant());
-            ld.minusDays(2);
-            long minAllowableDate = sourceLastModified.toInstant().toEpochMilli();
-            if (sourceLastModified.getTime() < minAllowableDate)
+            LocalDateTime ld = LocalDateTime.ofInstant(sourceLastModified.toInstant(), ZoneId.systemDefault()).minusDays(2);
+            long minAllowableDate = ld.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+            if (destinationLastModified.getTime() < minAllowableDate)
             {
-                msg.append("<b>WARNING: The most recent MHC data in PRIMe is more 2 two days before the lastest source data. This probably means the ETL isnt working</b><br>\n");
+                msg.append("<b>WARNING: The most recent MHC data in PRIMe (").append(_dateTimeFormat.format(destinationLastModified)).append(") is more than two days before the latest source data (").append(_dateTimeFormat.format(sourceLastModified)).append("). This probably means the ETL isn't working.</b><br>\n");
             }
         }
         catch (CommandException | IOException e)
         {
             _log.error("Error running MhcDataNotification", e);
         }
-    }
-
-    private void genericQueryCheck(Container c, User u, StringBuilder msg, String schemaName, String queryName, String message, @Nullable SimpleFilter filter)
-    {
-        TableInfo ti = getTableInfo(u, c, schemaName, queryName);
-
-        TableSelector ts = new TableSelector(ti, filter, null);
-        long count = ts.getRowCount();
-        if (count > 0)
-        {
-            msg.append("<b>WARNING: There are ").append(count).append(" " + message + "</b><br>\n");
-            msg.append("<p><a href='").append(getExecuteQueryUrl(c, schemaName, queryName, null, filter)).append("'>Click here to view them</a><br>\n\n");
-            msg.append("<hr>\n\n");
-        }
-    }
-
-    private TableInfo getTableInfo(User u, Container c, String schemaName, String queryName)
-    {
-        UserSchema us = QueryService.get().getUserSchema(u, c, schemaName);
-        if (us == null)
-        {
-            throw new IllegalStateException("Missing user schema: " + schemaName);
-        }
-
-        TableInfo ti = us.getTable(queryName);
-        if (ti == null)
-        {
-            throw new IllegalStateException("Missing table: " + schemaName + "." + queryName);
-        }
-
-        return ti;
     }
 }

@@ -271,14 +271,14 @@ public class MhcTaskRef implements TaskRefTask
                         TableInfo queryAuditTableInfo = QueryService.get().getUserSchema(job.getUser(), getTargetContainer(job), "auditLog").getTable("QueryUpdateAuditEvent");
                         SimpleFilter auditFilter = new SimpleFilter(FieldKey.fromString("comment"), "A row was deleted.");
                         auditFilter.addCondition(FieldKey.fromString("SchemaName"), assay.getSchemaName());
-                        auditFilter.addCondition(FieldKey.fromString("QueryName"), "Data");
+                        auditFilter.addCondition(FieldKey.fromString("QueryName"), AssayProtocolSchema.DATA_TABLE_NAME);
                         auditFilter.addCondition(FieldKey.fromString("RowPk"), analysisIdsUpdated.stream().map(String::valueOf).collect(Collectors.toSet()), CompareType.IN);
 
                         TableSelector ts3 = new TableSelector(queryAuditTableInfo, PageFlowUtil.set("oldRecordMap"), auditFilter, null);
                         ts3.forEachResults(rs -> {
                             if (rs.getObject(FieldKey.fromString("oldRecordMap")) != null)
                             {
-                                Map<String, String> map = new CaseInsensitiveHashMap<>(PageFlowUtil.mapFromQueryString(FieldKey.fromString("oldRecordMap").toString()));
+                                Map<String, String> map = new CaseInsensitiveHashMap<>(PageFlowUtil.mapFromQueryString(rs.getString(FieldKey.fromString("oldRecordMap"))));
                                 if (StringUtils.trimToNull(map.get("subjectid")) != null)
                                 {
                                     uniqueIds.add(map.get("subjectid"));
@@ -287,6 +287,25 @@ public class MhcTaskRef implements TaskRefTask
                         });
                     }
                 }
+
+                // Also check query audit log:
+                TableInfo queryAuditTableInfo = QueryService.get().getUserSchema(job.getUser(), getTargetContainer(job), "auditLog").getTable("QueryUpdateAuditEvent");
+                SimpleFilter auditFilter = new SimpleFilter(FieldKey.fromString("created"), dateSince, CompareType.DATE_GTE);
+                auditFilter.addCondition(FieldKey.fromString("SchemaName"), assay.getSchemaName());
+                auditFilter.addCondition(FieldKey.fromString("QueryName"), AssayProtocolSchema.DATA_TABLE_NAME);
+                auditFilter.addCondition(FieldKey.fromString("Comment"), "A row was deleted.");
+
+                TableSelector tsAudit = new TableSelector(queryAuditTableInfo, PageFlowUtil.set("oldRecordMap"), auditFilter, null);
+                tsAudit.forEachResults(rs -> {
+                    if (rs.getObject(FieldKey.fromString("oldRecordMap")) != null)
+                    {
+                        Map<String, String> map = new CaseInsensitiveHashMap<>(PageFlowUtil.mapFromQueryString(rs.getString(FieldKey.fromString("oldRecordMap"))));
+                        if (StringUtils.trimToNull(map.get("subjectid")) != null)
+                        {
+                            uniqueIds.add(map.get("subjectid"));
+                        }
+                    }
+                });
             }
         }
 

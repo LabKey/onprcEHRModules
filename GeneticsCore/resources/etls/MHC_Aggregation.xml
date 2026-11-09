@@ -13,6 +13,6 @@
     </transforms>
 
     <schedule>
-        <cron expression="0 15 21 * * ?"/>
+        <cron expression="0 15 18 * * ?"/>
     </schedule>
 </etl>

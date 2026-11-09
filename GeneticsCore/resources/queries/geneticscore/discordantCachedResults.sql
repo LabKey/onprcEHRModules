@@ -4,7 +4,7 @@
  * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
  */
 SELECT
-    COALESCE(t1.subjectId, t2.marker) as subjectId,
+    COALESCE(t1.subjectId, t2.subjectId) as subjectId,
     COALESCE(t1.marker, t2.marker) as marker,
     COALESCE(t1.assaytype, t2.assaytype) as assaytype,
 
@@ -16,13 +16,14 @@ SELECT
     t2.result as resultSource,
     t2.score as scoreSource,
     CASE
-        WHEN t1.result != t2.result THEN 'DISCORDANT'
+        WHEN is_distinct_from(t1.result, t2.result) THEN 'DISCORDANT'
         ELSE NULL
-    END as isDiscordantResult
+    END as isDiscordantResult,
+    t1.objectid as cachedObjectId
 
 FROM geneticscore.mhc_data t1
 FULL JOIN geneticscore.mhc_data_source t2 ON (t1.subjectId = t2.subjectId AND t1.marker = t2.marker AND t1.assaytype = t2.assaytype)
 
 WHERE
-    NOT ISEQUAL(t1.totalTests, t2.totalTests) OR
-    NOT ISEQUAL(t1.result, t2.result)
+    is_distinct_from(t1.totalTests, t2.totalTests) OR
+    is_distinct_from(t1.result, t2.result)
