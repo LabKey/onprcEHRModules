@@ -27,7 +27,6 @@ import org.labkey.test.categories.ONPRC;
 import org.labkey.test.util.PasswordUtil;
 import org.labkey.test.util.SimpleHttpRequest;
 import org.labkey.test.util.SimpleHttpResponse;
-import org.labkey.test.util.SqlserverOnlyTest;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -64,7 +63,7 @@ import static org.junit.Assert.assertTrue;
  * carrying ONLY the token on the URL (no session cookie, no Basic auth) -- exactly the SSRS condition.
  */
 @Category({ONPRC.class})
-public class ONPRC_SsrsSessionKeyTest extends BaseWebDriverTest implements SqlserverOnlyTest
+public class ONPRC_SsrsSessionKeyTest extends BaseWebDriverTest
 {
     @Override
     protected String getProjectName()

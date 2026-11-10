@@ -14,7 +14,7 @@ SELECT
     Case
         When (c.requirementname is null) Then emp.date
         When (c.requirementname is not null) Then c.date
-        ELSE ''
+        ELSE NULL
         End AS DateCompleted,
     emp.comment,
     emp.trainer,
@@ -27,7 +27,7 @@ FROM ehr_compliancedb.completiondates c
     SELECT
         c1.employeeid,
         emp.email,
-        emp.Firstname + ' ' + emp.Lastname as Name,
+        emp.Firstname || ' ' || emp.Lastname as Name,
         emp.unit,
         emp.category,
         emp.location,
