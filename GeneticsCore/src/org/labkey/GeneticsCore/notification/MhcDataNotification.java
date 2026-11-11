@@ -76,7 +76,7 @@ public class MhcDataNotification extends AbstractNotification
     @Override
     public String getCronString()
     {
-        return "0 30 3 ? * *";
+        return "0 30 9 ? * *";
     }
 
     @Override

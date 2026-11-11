@@ -22,6 +22,10 @@
                     <column columnName="scoreSource">
                         <columnTitle>Score (Source)</columnTitle>
                     </column>
+                    <column columnName="cachedObjectId">
+                        <columnTitle>Cached ObjectId</columnTitle>
+                        <isHidden>true</isHidden>
+                    </column>
                 </columns>
             </table>
         </tables>
