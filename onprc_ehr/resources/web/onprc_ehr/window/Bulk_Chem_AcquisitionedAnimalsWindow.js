@@ -8,7 +8,7 @@
  */
 // Note:  This progam processes bulk entries related to SPF Template  5-4-2015
 
-Ext4.define('ONPRC_EHR.window.BulkAcquisitionedAnimalsWindow', {
+Ext4.define('ONPRC_EHR.window.Bulk_Chem_AcquisitionedAnimalsWindow', {
     extend: 'Ext.window.Window',
 
     initComponent: function(){
@@ -313,17 +313,25 @@ Ext4.define('ONPRC_EHR.window.BulkAcquisitionedAnimalsWindow', {
     }
 });
 
-EHR.DataEntryUtils.registerDataEntryFormButton('SEROLOGY_IMPORT', {
-    text: 'SPF Template Import',
-    name: 'serologyimp',
-    itemId: 'serologyimp',
-    tooltip: 'Click to import using a Serology Virology excel template',
+EHR.DataEntryUtils.registerDataEntryFormButton('Chem_Acquisitioned_IMPORT', {
+    text: 'Chem Acqiusition Import Template',
+    name: 'Chem_Acquisition_scan',
+    itemId: 'chemAcquisitionscan',
+    tooltip: 'Click to bulk import records from an excel file',
     handler: function(btn){
         var panel = btn.up('ehr-dataentrypanel');
-        LDK.Assert.assertNotEmpty('Unable to find dataEntryPanel in SPF Template Import button', panel);
+        LDK.Assert.assertNotEmpty('Unable to find dataEntryPanel in CHem_Acquisitioned_IMPORT', panel);
 
-        Ext4.create('ONPRC_EHR.window.BulkSerology_VirologyWindow', {
-            dataEntryPanel: panel
+        var runStore = panel.storeCollection.getClientStoreByName('Clinpath Runs');
+        LDK.Assert.assertNotEmpty('Unable to find clinpath runs store in Chem_Acquisition_IMPORT', runStore);
+
+        var PanelStore = panel.storeCollection.getClientStoreByName('ChemistryResults');
+        LDK.Assert.assertNotEmpty('Unable to find ChemistryResults store in Chemistry Acquisition_IMPORT button', PanelStore);
+
+        Ext4.create('ONPRC_EHR.window.Bulk_Chem_AcquisitionedAnimalsWindow', {
+            dataEntryPanel: panel,
+            runStore: runStore,
+            PanelStore: PanelStore
         }).show();
     }
 });

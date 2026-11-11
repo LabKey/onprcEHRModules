@@ -162,9 +162,9 @@ Ext4.define('ONPRC_EHR.window.Bulk_CBC_AcquisitionedAnimalsWindow', {
 });
 
 EHR.DataEntryUtils.registerDataEntryFormButton('CBC_Acquisitioned_IMPORT', {
-    text: 'CBC Acqiusitioned Import Template',
+    text: 'CBC Acquisition Import Template',
     name: 'CBC_Acquisition_scan',
-    itemId: 'cbcAcqiuisitonescan',
+    itemId: 'cbcAcquisitionscan',
     tooltip: 'Click to bulk import records from an excel file',
     handler: function(btn){
         var panel = btn.up('ehr-dataentrypanel');
@@ -174,9 +174,9 @@ EHR.DataEntryUtils.registerDataEntryFormButton('CBC_Acquisitioned_IMPORT', {
         LDK.Assert.assertNotEmpty('Unable to find clinpath runs store in CBC_Acquisitioned_IMPOR', runStore);
 
         var PanelStore = panel.storeCollection.getClientStoreByName('HematologyResults');
-        LDK.Assert.assertNotEmpty('Unable to find BioFire store in CBC_Acquisitioned_IMPOR button', PanelStore);
+        LDK.Assert.assertNotEmpty('Unable to find Hematology store in CBC_Acquisitioned_IMPORT button', PanelStore);
 
-        Ext4.create('ONPRC_EHR.window.BioFireImportWindow', {
+        Ext4.create('ONPRC_EHR.window.Bulk_CBC_AcquisitionedAnimalsWindow', {
             dataEntryPanel: panel,
             runStore: runStore,
             PanelStore: PanelStore
