@@ -26,5 +26,5 @@ c.enteredSinceVetReview,
 c.QCState,
 c.objectID as sourceRecord,
 c.datefinalized as billingDate
-FROM study.clinpathRuns c left outer join Site.{substitutePath moduleProperty('ONPRC_Billing','BillingContainer')}.lists.Labfee_NoChargeProjects p on CAST(c.project.DisplayName AS INTEGER)  = p.project
+FROM study.clinpathRuns c left outer join Site.{substitutePath moduleProperty('ONPRC_Billing','BillingContainer')}.lists.Labfee_NoChargeProjects p on c.project = p.project
 where (p.dateDisabled is null and p.project is Null)
