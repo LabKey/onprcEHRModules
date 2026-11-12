@@ -7,10 +7,10 @@
 SELECT
     t.*,
     CASE
-        WHEN t.overlappingProjects IS NULL THEN 1
+        WHEN t.totalOverlappingProjects = 0 THEN 1
         -- NOTE: An assignment overlapping with TMB is not charged per diems.  If TMB is single-assigned, it pays per diem and will be caught above.
         WHEN t.tmbAssignments > 0 then 0
-        WHEN t.assignedProject IS NULL AND t.overlappingProjects IS NOT NULL THEN 0
+        WHEN t.assignedProject IS NULL AND t.totalOverlappingProjects > 0 THEN 0
         WHEN t.ProjectType != 'Research' AND t.overlappingProjectsCategory LIKE '%Research%' THEN 0
         WHEN t.ProjectType != 'Research' AND t.overlappingProjectsCategory NOT LIKE '%Research%' THEN (1.0 / NULLIF((t.totalOverlappingProjects + 1), 0))
         WHEN t.ProjectType = 'Research' AND t.overlappingProjectsCategory NOT LIKE '%Research%' THEN 1
@@ -18,11 +18,11 @@ SELECT
         ELSE 1
     END as effectiveDays,
     CASE
-        WHEN (t.assignedProject IS NULL AND t.overlappingProjects IS NULL) THEN 'Base Grant'
-        WHEN t.overlappingProjects IS NULL then 'Single Project'
+        WHEN (t.assignedProject IS NULL AND t.totalOverlappingProjects = 0) THEN 'Base Grant'
+        WHEN t.totalOverlappingProjects = 0 then 'Single Project'
         WHEN (t.tmbAssignments > 0) THEN 'Exempt By TMB'
-        WHEN (t.isTMBProject = 1 AND t.overlappingProjects IS NOT NULL) THEN 'Exempt By TMB'
-        WHEN t.assignedProject IS NULL AND t.overlappingProjects IS NOT NULL THEN 'Paid By Overlapping Project'
+        WHEN (t.isTMBProject = 1 AND t.totalOverlappingProjects > 0) THEN 'Exempt By TMB'
+        WHEN t.assignedProject IS NULL AND t.totalOverlappingProjects > 0 THEN 'Paid By Overlapping Project'
         WHEN t.ProjectType != 'Research' AND t.overlappingProjectsCategory LIKE '%Research%' THEN 'Paid By Overlapping Project'
         WHEN t.ProjectType != 'Research' AND t.overlappingProjectsCategory NOT LIKE '%Research%' THEN 'Multiple Resources'
         WHEN t.ProjectType = 'Research' AND t.overlappingProjectsCategory NOT LIKE '%Research%' THEN 'Single Project'
@@ -103,7 +103,7 @@ FROM (
         FROM ldk.dateRange i
         JOIN study.housing h ON (h.dateOnly <= i.dateOnly AND h.enddateCoalesced >= i.dateOnly AND h.qcstate.publicdata = TRUE)
         LEFT JOIN study.assignment a3 ON a3.id = h.id AND a3.date <= i.dateOnly AND a3.endDateCoalesced > i.dateOnly AND a3.project.Use_Category LIKE '%Research%'
-        LEFT JOIN study.treatment_Order t1 ON t1.id = h.id AND t1.code.meaning LIKE '%Bottle%' AND t1.date <= i.dateOnly
+        LEFT JOIN study.treatment_Order t1 ON t1.id = h.id AND lower(t1.code.meaning) LIKE '%bottle%' AND t1.date <= i.dateOnly
         GROUP BY h.Id, i.dateOnly
     ) i2
 
