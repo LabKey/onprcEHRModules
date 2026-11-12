@@ -51,7 +51,7 @@ SELECT
     WHEN (f.flags LIKE '%MHC Blood Draw Needed%') THEN 1
     WHEN (f.flags LIKE '%MHC Typing Not Needed%') THEN 0
     WHEN (f.flags LIKE '%MHC Blood Draw Collected%') THEN 0
-    WHEN (d.species = 'RHESUS MACAQUE' AND d.Id.age.ageInYears <= 5.0 AND d.geographic_origin = 'India' AND m.Id IS NULL AND (a.Id IS NOT NULL OR d.gender = 'm' ) and u.id is null ) THEN 1
+    WHEN (lower(d.species) = 'rhesus macaque' AND d.Id.age.ageInYears <= 5.0 AND lower(d.geographic_origin) = 'india' AND m.Id IS NULL AND (a.Id IS NOT NULL OR d.gender = 'm' ) and u.id is null ) THEN 1
     WHEN (u.id is not Null) then 1
     ELSE 0
   END as mhcBloodDrawVol,

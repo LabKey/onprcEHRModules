@@ -30,7 +30,7 @@ SELECT
     group_concat(distinct a.qual_result, ',') as result,
     cast('SBT' as varchar) as assaytype,
     group_concat(DISTINCT a.analysisId.readset.libraryType, ',') as librarytype,
-    sum(a.result) / (SELECT count(DISTINCT a2.analysisId) as total FROM assay.GenotypeAssay.Genotype.Data a2 WHERE a2.subjectId = a.subjectId AND a2.run.assayType = 'SBT' ) AS score,
+    sum(a.result) / NULLIF((SELECT count(DISTINCT a2.analysisId) as total FROM assay.GenotypeAssay.Genotype.Data a2 WHERE a2.subjectId = a.subjectId AND a2.run.assayType = 'SBT' ), 0) AS score,
     max(a.modified) as modified
 
 FROM assay.GenotypeAssay.Genotype.Data a
