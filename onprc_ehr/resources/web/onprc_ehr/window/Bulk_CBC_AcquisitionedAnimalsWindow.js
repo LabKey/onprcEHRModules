@@ -109,9 +109,9 @@ Ext4.define('ONPRC_EHR.window.Bulk_CBC_AcquisitionedAnimalsWindow', {
                     MasterHeaderObject = LABKEY.Utils.generateUUID().toUpperCase();
 
 
-                if ( Ext4.String.trim( parsed[3][1]) != "")
+                if ( Ext4.String.trim( parsed[3][2]) != "")
                 {
-                    var vetname = Ext4.String.trim( parsed[3][1]);
+                    var vetname = Ext4.String.trim( parsed[3][2]);
                 }
 
                 this.processRow(row, recordMap, errors, rowIdx, id, parsed, cnt, MasterHeaderObject,vetname);

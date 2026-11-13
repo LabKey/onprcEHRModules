@@ -90,7 +90,7 @@ Ext4.define('ONPRC_EHR.window.Bulk_Chem_AcquisitionedAnimalsWindow', {
 
         Ext4.Msg.wait('Please be patient while we Process your data...');
 
-        var offset = 2;
+        var offset = 7;
         var rowIdx = offset;
         for (var i = offset; i < parsed.length; i++)
         {
@@ -110,15 +110,13 @@ Ext4.define('ONPRC_EHR.window.Bulk_Chem_AcquisitionedAnimalsWindow', {
 
             var cnt = i;
 
-            if ( Ext4.String.trim(row[3])== 1)
-            {
-                MasterHeaderObject = LABKEY.Utils.generateUUID().toUpperCase();
-            }
+
+            MasterHeaderObject = LABKEY.Utils.generateUUID().toUpperCase();
 
 
-            if ( Ext4.String.trim( parsed[0][1]) != "")
+            if ( Ext4.String.trim( parsed[3][2]) != "")
             {
-                var vetname = Ext4.String.trim( parsed[0][1]);
+                var vetname = Ext4.String.trim( parsed[3][2]);
             }
 
             this.processRow(row, recordMap, errors, rowIdx, id, parsed, cnt, MasterHeaderObject,vetname);
@@ -197,7 +195,6 @@ Ext4.define('ONPRC_EHR.window.Bulk_Chem_AcquisitionedAnimalsWindow', {
                 project: project,
                 servicerequested: servicereq,
                 chargeunit: chargeunit,
-                // tissue: tissueheader,       // Tissue for main header    -- Optional
                 type: category,
                 objectid: MasterHeaderObject,
                 performedby: performedBy,
@@ -307,20 +304,13 @@ EHR.DataEntryUtils.registerDataEntryFormButton('Chem_Acquisitioned_IMPORT', {
     name: 'Chem_Acquisition_scan',
     itemId: 'chemAcquisitionscan',
     tooltip: 'Click to bulk import records from an excel file',
+
     handler: function(btn){
         var panel = btn.up('ehr-dataentrypanel');
-        LDK.Assert.assertNotEmpty('Unable to find dataEntryPanel in CHem_Acquisitioned_IMPORT', panel);
-
-        var runStore = panel.storeCollection.getClientStoreByName('Clinpath Runs');
-        LDK.Assert.assertNotEmpty('Unable to find clinpath runs store in Chem_Acquisition_IMPORT', runStore);
-
-        var PanelStore = panel.storeCollection.getClientStoreByName('ChemistryResults');
-        LDK.Assert.assertNotEmpty('Unable to find ChemistryResults store in Chemistry Acquisition_IMPORT button', PanelStore);
+        LDK.Assert.assertNotEmpty('Unable to find dataEntryPanel in Chem Acquisition Animals Import button', panel);
 
         Ext4.create('ONPRC_EHR.window.Bulk_Chem_AcquisitionedAnimalsWindow', {
-            dataEntryPanel: panel,
-            runStore: runStore,
-            PanelStore: PanelStore
+            dataEntryPanel: panel
         }).show();
     }
 });
