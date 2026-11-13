@@ -149,8 +149,8 @@ Ext4.define('ONPRC_EHR.window.Bulk_Chem_AcquisitionedAnimalsWindow', {
         //Lab Results
         if (recordMap.labresults.length)
         {
-            var clientStore = this.dataEntryPanel.storeCollection.getClientStoreByName('serology');
-            LDK.Assert.assertNotEmpty('Unable to find observation store in serology', clientStore);
+            var clientStore = this.dataEntryPanel.storeCollection.getClientStoreByName('chemistryResults');
+            LDK.Assert.assertNotEmpty('Unable to find observation store in chemistryResults', clientStore);
 
             var records = [];
             for (var i = 0; i < recordMap.labresults.length; i++)

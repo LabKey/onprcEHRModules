@@ -145,7 +145,7 @@ Ext4.define('ONPRC_EHR.window.Bulk_CBC_AcquisitionedAnimalsWindow', {
             if (recordMap.labresults.length)
             {
                 var clientStore = this.dataEntryPanel.storeCollection.getClientStoreByName('hematologyResults');
-                LDK.Assert.assertNotEmpty('Unable to find observation store in serology', clientStore);
+                LDK.Assert.assertNotEmpty('Unable to find observation store in hematologyResults', clientStore);
 
                 var records = [];
                 for (var i = 0; i < recordMap.labresults.length; i++)
