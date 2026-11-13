@@ -213,13 +213,13 @@ SELECT
   CASE WHEN alias.fiscalAuthority.faid IS NULL THEN 'Y' ELSE null END as isMissingFaid,
   CASE
     WHEN alias.aliasEnabled IS NULL THEN 'N'
-    WHEN alias.aliasEnabled != 'Y' THEN 'N'
+    WHEN lower(alias.aliasEnabled) != 'y' THEN 'N'
     ELSE null
   END as isAcceptingCharges,
   CASE
     WHEN (alias.budgetStartDate IS NOT NULL AND CAST(alias.budgetStartDate as date) > CAST(p.date as date)) THEN 'Prior To Budget Start'
     WHEN (alias.budgetEndDate IS NOT NULL AND CAST(alias.budgetEndDate as date) < CAST(p.date as date)) THEN 'After Budget End'
-    WHEN (alias.projectStatus IS NOT NULL AND alias.projectStatus != 'ACTIVE' AND alias.projectStatus != 'No Cost Ext' AND alias.projectStatus != 'Partial Setup') THEN 'Grant Project Not Active'
+    WHEN (alias.projectStatus IS NOT NULL AND lower(alias.projectStatus) != 'active' AND lower(alias.projectStatus) != 'no cost ext' AND lower(alias.projectStatus) != 'partial setup') THEN 'Grant Project Not Active'
     ELSE null
   END as isExpiredAccount,
 
@@ -304,7 +304,7 @@ LEFT JOIN onprc_billing.ogaSynchIR ir
           on ir.alias = alias.alias
 
 ) t
-where t.id.demographics.species Not IN ('Rabbit','Guinea Pig')
+where lower(t.id.demographics.species) Not IN ('rabbit','guinea pig')
 UNION ALL
 
 --add misc charges

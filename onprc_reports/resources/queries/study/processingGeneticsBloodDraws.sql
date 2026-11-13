@@ -114,11 +114,11 @@ LEFT JOIN (
       sum(coalesce(s.quantity, 0)) as quantity
       --count(*) as total
     FROM DNA_Bank.samples s
-    WHERE s.dateremoved is null and s.sampleType IN ('gDNA', 'Buffy coat', 'Whole Blood')
+    WHERE s.dateremoved is null and lower(s.sampleType) IN ('gdna', 'buffy coat', 'whole blood')
     GROUP BY s.subjectId, s.sampleType
 
     HAVING (
-      (s.sampletype = 'Buffy coat' AND sum(coalesce(s.quantity, 0)) >= 5.0) OR
+      (lower(s.sampletype) = 'buffy coat' AND sum(coalesce(s.quantity, 0)) >= 5.0) OR
       (s.sampletype = 'Whole Blood' AND sum(coalesce(s.quantity, 0)) >= 5.0)
     )
   ) t

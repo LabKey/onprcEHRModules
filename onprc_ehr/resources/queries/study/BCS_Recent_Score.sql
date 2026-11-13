@@ -15,7 +15,7 @@ RIGHT  JOIN
          a.id,
          MAX(CAST(a.date AS DATE)) as MaxDate
         From study.clinical_Observations a
-         Where a.category = 'bcs'
+         Where lower(a.category) = 'bcs'
          And a.date > TIMESTAMPADD('SQL_TSI_MONTH', -18, Now())
          and a.observation is not null
          --And a.id in ('30661', '16609')
@@ -23,4 +23,4 @@ RIGHT  JOIN
          ) As d
 
 ON c.id = d.id And CAST(c.date AS DATE) = d.MaxDate
-Where  c.category = 'bcs' and LOWER(SUBSTRING(c.id, 1, 1)) NOT BETWEEN 'a' AND 'z'
+Where  lower(c.category) = 'bcs' and LOWER(SUBSTRING(c.id, 1, 1)) NOT BETWEEN 'a' AND 'z'

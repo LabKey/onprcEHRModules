@@ -194,7 +194,7 @@ WHERE CAST(a.datefinalized AS DATE) >= CAST(STARTDATE as DATE) AND CAST(a.datefi
 AND a.qcstate.publicdata = true
 --only charge setup fee for leases >24H.  note: duration assumes today as end, so exclude null enddates
 AND ((a.duration > CAST(javaConstant('org.labkey.onprc_billing.ONPRC_BillingManager.DAY_LEASE_MAX_DURATION') as INTEGER)) OR ( a.assignCondition != a.releaseCondition AND a.enddate IS NULL))
-and  a.id.demographics.species Not IN ('Rabbit','Guinea Pigs')
+and  lower(a.id.demographics.species) Not IN ('rabbit','guinea pigs')
 AND fl.id IS NULL -- Exempt PI-purchased NHPs from lease setup fees
 
 --add released animals that need adjustments

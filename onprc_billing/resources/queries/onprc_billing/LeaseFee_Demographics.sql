@@ -47,7 +47,7 @@ Case
 	--When da.id
 	when ( a.date = a.id.birth.date and t.id is not null) then 'TMB Birth'
 
-	when a.project.use_category = 'Research' then 'Research'
+	when lower(a.project.use_category) = 'research' then 'Research'
 	Else a.project.use_category
 end
 as	AssignmentType,

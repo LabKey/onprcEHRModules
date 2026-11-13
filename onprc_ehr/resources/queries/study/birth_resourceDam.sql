@@ -16,4 +16,4 @@ a.project.use_category,
 a.project as DammProject
 
 FROM birth b join study.assignment a on b.dam = a.id
-where a.project.use_Category not in  ('Research','Aging Resources')
+where lower(a.project.use_Category) not in  ('research','aging resources')

@@ -9,7 +9,7 @@ a.project.protocol.displayName as Item,
 v.protocol.displayName as Vet_AssignedItem,
 Count(a.participantId) as totalNHps
 from study.assignment a left  outer join vet_assignment  v on a.project.protocol = v.protocol.protocol
-where a.project.use_category = 'Research' and a.enddate is null and v.protocol.displayName is null
+where lower(a.project.use_category) = 'research' and a.enddate is null and v.protocol.displayName is null
 group by a.project.protocol.displayname,v.protocol.displayName
 
 Union
@@ -20,7 +20,7 @@ a.project.protocol.displayName as Item,
 v.protocol.displayName as Vet_AssignedItem,
 Count(a.participantId) as totalNHps
 from study.assignment a left  outer join vet_assignment  v on a.project.protocol = v.protocol.protocol
-where a.project.use_category != 'Research'and a.enddate is null and v.protocol.displayName is null
+where lower(a.project.use_category) != 'research'and a.enddate is null and v.protocol.displayName is null
 group by a.project.protocol.displayname,v.protocol.displayName
 Union
 

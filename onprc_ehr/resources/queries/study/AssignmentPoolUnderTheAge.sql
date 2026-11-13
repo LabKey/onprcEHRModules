@@ -50,7 +50,7 @@ WHERE
         FROM study.flags f
         WHERE f.Id = a.Id
           AND f.flag.category = 'Assign Alias'
-          AND f.flag.value = 'Assignment Pool'
+          AND lower(f.flag.value) = 'assignment pool'
           AND f.enddate IS NULL
 )
 
