@@ -75,6 +75,9 @@ public class LabworkFormType extends TaskForm
         //Added 11-2-2022 Blasa
         addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/window/BulkBioFireWindow.js"));
 
+        //Added 11-12-2026 Blasa
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/window/Bulk_CBC_AcquisitionedAnimalsWindow.js"));
+
         setDisplayReviewRequired(true);
     }
 
@@ -96,6 +99,8 @@ public class LabworkFormType extends TaskForm
         defaultButtons.add("SEROLOGY_IMPORT");
         defaultButtons.add("SEROLOGY_SCAN_IMPORT");
         defaultButtons.add("BIOFIRE_IMPORT");
+        defaultButtons.add("CBC_Acquisitioned_IMPORT");
+
 
         return defaultButtons;
     }

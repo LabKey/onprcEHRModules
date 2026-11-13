@@ -8,178 +8,302 @@
 Ext4.define('ONPRC_EHR.window.Bulk_CBC_AcquisitionedAnimalsWindow', {
     extend: 'Ext.window.Window',
 
-    initComponent: function(){
-        Ext4.apply(this, {
-            modal: true,
-            closeAction: 'destroy',
-            title: 'Import CBC Acquisition Animals Results From Excel',
-            bodyStyle: 'padding: 5px;',
-            width: 630,
-            defaults: {
-                border: false
-            },
-            items: [{
-                html : 'This allows you to import record using the CBC Acquisitioned Animals excel form.  To import, cut/paste the contents of the excel file (Ctl + A is a good way to select all) into the box below and hit submit.',
-                style: 'padding-bottom: 10px;'
-            },{
-                xtype: 'ldk-linkbutton',
-                text: '[Download CBC Acquisition Animals Results Template]',
-                scope: this,
-                style: 'margin-bottom: 10px;',
-                handler: function(){
-                    window.location = LABKEY.contextPath + '/onprc_ehr/templates/CBC Acquisition Animals Results_Panel.xlsx'
+        initComponent: function(){
+            Ext4.apply(this, {
+                modal: true,
+                closeAction: 'destroy',
+                title: 'CBC Acquisition Animals Import',
+                bodyStyle: 'padding: 5px;',
+                width: 800,
+                defaults: {
+                    border: false
+                },
+                items: [{
+                    html : 'This allows you to import record using the CBC Acquisition excel form.  To import, cut/paste the contents of the excel file (Ctl + A is a good way to select all) into the box below and hit submit.',
+                    style: 'padding-bottom: 10px;'
+                },{
+                    xtype: 'ldk-linkbutton',
+                    text: '[Download Template]',
+                    scope: this,
+                    style: 'margin-bottom: 10px;',
+                    handler: function(){
+                        window.location = LABKEY.contextPath + '/onprc_ehr/templates/CBC_Acquisition.xlsx'
+                    }
+                },{
+                    xtype: 'textarea',
+                    width: 770,
+                    height: 400,
+                    itemId: 'textField'
+                }],
+                buttons: [{
+                    text: 'Submit',
+                    scope: this,
+                    handler: this.onSubmit
+                },{
+                    text: 'Cancel',
+                    handler: function(btn){
+                        btn.up('window').close();
+                    }
+                }]
+            });
+
+            this.projectStore = EHR.DataEntryUtils.getProjectStore();
+            this.labworkSericeStoreStore = EHR.DataEntryUtils.getLabworkServicesStore();
+
+            this.callParent(arguments);
+        },
+
+        onSubmit: function(){
+            var text = this.down('#textField').getValue();
+            if (!text){
+                Ext4.Msg.alert('Error', 'Must paste the records into the textarea');
+                return;
+            }
+            var MasterHeaderObject = "";
+
+            var parsed = LDK.Utils.CSVToArray(Ext4.String.trim(text), '\t');
+            if (!parsed){
+                Ext4.Msg.alert('Error', 'There was an error parsing the excel file');
+                return;
+            }
+
+            if (parsed.length < 2){
+                Ext4.Msg.alert('Error', 'There are not enough rows in the text, there was an error parsing the excel file');
+                return;
+            }
+
+            this.doParse(parsed);
+        },
+
+        doParse: function(parsed)
+        {
+            var errors = [];
+
+            var recordMap = {
+                primaryheader: [],
+                labresults: []
+            };
+
+            Ext4.Msg.wait('Please be patient while we Process your data...');
+
+            var offset = 7;
+            var rowIdx = offset;
+            for (var i = offset; i < parsed.length; i++)
+            {
+                rowIdx++;
+                var row = parsed[i];
+                // if (!row || row.length < 23)
+                // {
+                //     errors.push('Row ' + rowIdx + ': not enough items in row');
+                //     continue;
+                // }
+                var id = parsed[i][0];
+                if (!id)
+                {
+                    errors.push('Row ' + rowIdx + ': missing Id');
+                    return;
                 }
 
-            },{
-                xtype: 'textarea',
-                itemId: 'textField',
-                height: 300,
-                width: 600
-            }],
-            buttons: [{
-                text: 'Submit',
-                scope: this,
-                handler: this.onSubmit
-            },{
-                text: 'Close',
-                handler: function(btn){
-                    btn.up('window').close();
+                var cnt = i;
+
+                    MasterHeaderObject = LABKEY.Utils.generateUUID().toUpperCase();
+
+
+                if ( Ext4.String.trim( parsed[3][1]) != "")
+                {
+                    var vetname = Ext4.String.trim( parsed[3][1]);
                 }
-            }]
-        });
-        this.projectStore = EHR.DataEntryUtils.getProjectStore();
-        this.labworkSericeStoreStore = EHR.DataEntryUtils.getLabworkServicesStore();
 
-        this.callParent(arguments);
-    },
+                this.processRow(row, recordMap, errors, rowIdx, id, parsed, cnt, MasterHeaderObject,vetname);
+            }
 
-    onSubmit: function(){
-        var text= this.down('#textField').getValue();
-        if (!text){
-            Ext4.Msg.alert('Error', 'No file supplied');
-            return;
-        }
+            Ext4.Msg.hide();
 
-        var parsed = LDK.Utils.CSVToArray(Ext4.String.trim(text), '\t');
-        if (!parsed.length || parsed.length < 14){
-            Ext4.Msg.alert('Error', 'This file does not have enough lines');
-            return;
-        }
+            if (errors.length)
+            {
+                errors = Ext4.unique(errors);
+                Ext4.Msg.alert('Error', 'There following errors were found:<p>' + errors.join('<br>'));
+                return;
+            }
+            //Main Header
+            if (recordMap.primaryheader.length)
+            {
+                var clientStore = this.dataEntryPanel.storeCollection.getClientStoreByName('Clinpath Runs');
+                LDK.Assert.assertNotEmpty('Unable to find procedure store in ClinpathRuns', clientStore);
 
-        //we expect a rectangular table, with 1 column per panel.
-        var runsToCreate = [];
-        var resultsToCreate = [];
+                var records = [];
+                for (var i = 0; i < recordMap.primaryheader.length; i++)
+                {
+                    records.push(clientStore.createModel(recordMap.primaryheader[i]));
+                }
 
-
-        var category = Ext4.String.trim(parsed[5][1])  ;
-        var chargeunit = Ext4.String.trim(parsed[2][1])  ;
-        var vet = Ext4.String.trim(parsed[3][1])  ;
-
-        //Process Service request name
-        var name = Ext4.String.trim(parsed[1][1]);  //service request name
-        var procRecIdx = this.labworkSericeStoreStore.findExact('servicename', name);
-        var procedureRec = this.labworkSericeStoreStore.getAt(procRecIdx);
-        LDK.Assert.assertNotEmpty('Unable to find service request record with name: ' + name + ' in BioFire Window', procedureRec);
-        var servicereq = procedureRec.get('servicename');
-        var performedby = Ext4.String.trim(parsed[4][1]) ;
-
-        if (dateRow.length != idRow.length){
-            Ext4.Msg.alert('Error', 'The length of the first 2 rows do not match.');
-            return;
-        }
-        var errors = [];
-        var offset = 6;
-        var rowIdx = offset;
-        var project = this.resolveProjectByName(Ext4.String.trim(parsed[0][1]), errors,rowIdx );
+                clientStore.add(records);
+            }
 
 
-        for (var i=1;i<idRow.length;i++){       //Column one
-            var runRow = {};
-            runRow.Id = idRow[i];
-            runRow.date = LDK.ConvertUtils.parseDate(dateRow[i]);
-            runRow.objectid = LABKEY.Utils.generateUUID().toUpperCase();
-            runRow.servicerequested = servicereq ;
-            runRow.project = project ;
-            runRow.category = category ;
-            runRow.vet = vet ;
-            runRow.performedby = performedby;
+            //Lab Results
+            if (recordMap.labresults.length)
+            {
+                var clientStore = this.dataEntryPanel.storeCollection.getClientStoreByName('hematologyResults');
+                LDK.Assert.assertNotEmpty('Unable to find observation store in serology', clientStore);
 
+                var records = [];
+                for (var i = 0; i < recordMap.labresults.length; i++)
+                {
+                    records.push(clientStore.createModel(recordMap.labresults[i]));
+                }
+                clientStore.add(records);
+            }
+            this.close();
+        },
 
-            runsToCreate.push(this.runStore.createModel(runRow));
+        processRow: function(row, recordMap, errors, rowIdx,id, parsed, cnt,MasterHeaderObject,vetname)
+        {
 
-            //panel lab results
-            for (var j=2;j<parsed.length;j++){
-                for (var k=2;j< 21;k++) {
-                    var resultRow = {};
-                    resultRow.Id = runRow.Id;
-                    resultRow.date = runRow.date;
-                    resultRow.objectid = LABKEY.Utils.generateUUID().toUpperCase();
-                    resultRow.runid = runRow.objectid;
+            // Generate labwork Header information
+            var performedBy = Ext4.String.trim(parsed[4][1]);
+            var date = LDK.ConvertUtils.parseDate(this.safeGet(parsed, cnt, 1));
+            if (!date)
+            {
+                errors.push('Missing Date');
+            }
 
-                    if (parsed[j].length < i) {
-                        Ext4.Msg.alert('Error', 'The length result line ' + (j + 1) + ' is less than the header line.');
-                        return;
-                    }
-                    resultRow.performedby = performedby;
-                    resultRow.testid = parsed[j - 1][k];
-                    resultRow.result = parsed[j][k];
+            var project = this.resolveProjectByName(parsed[0][1], errors, rowIdx);
+            var chargeunit = Ext4.String.trim(parsed[2][1]);
 
-                    if (Ext4.isDefined(resultRow.qualresult)) {
-                        resultsToCreate.push(this.BioFireStore.createModel(resultRow));
-                    } else {
-                        console.log('skipping result row: [' + result + ']');
-                    }
+            var name = Ext4.String.trim(parsed[1][1]);
+            var procRecIdx = this.labworkSericeStoreStore.findExact('servicename', name);
+            var procedureRec = this.labworkSericeStoreStore.getAt(procRecIdx);
+            LDK.Assert.assertNotEmpty('Unable to find service request record with name: ' + name + 'in Serology_VirologyWindow', procedureRec);
+            var servicereq = procedureRec.get('servicename');
+
+            var category = Ext4.String.trim(parsed[5][1]);
+
+            if (row[0]) {
+
+                var obj = {
+                    Id: row[0],
+                    date: row[1],
+                    project: project,
+                    servicerequested: servicereq,
+                    chargeunit: chargeunit,
+                    // tissue: tissueheader,       // Tissue for main header    -- Optional
+                    type: category,
+                    objectid: MasterHeaderObject,
+                    performedby: performedBy,
+                    vet: vetname
+
+                };
+
+                if (!this.checkRequired(['Id', 'date', 'project', 'chargeunit', 'servicerequested', 'type', 'vet'], obj, errors, rowIdx)) {
+                    recordMap.primaryheader.push(obj);
                 }
             }
-        }
 
-        this.close();
+            for (var k = 2; k < row.length; k++)         // Process only if Agent data exists
+
+            {
+
+                //Test Panel Results
+                 if (row[k] != '') {
+                    var Resultsobjectid = LABKEY.Utils.generateUUID().toUpperCase();
 
 
-        if (runsToCreate.length){
-            this.runStore.add(runsToCreate);
-        }
+                    var obj = {
+                        Id: row[0],
+                        date: row[1],
+                        result: row[k],
+                        objectid: Resultsobjectid,
+                        runid: MasterHeaderObject,
+                        performedby: performedBy
 
-        if (resultsToCreate.length){
-            this.PanelStore.add(resultsToCreate);
-        }
-    },
-    resolveProjectByName: function(projectName, errors, rowIdx){
-        if (!projectName){
-            return null;
-        }
 
-        projectName = Ext4.String.trim(projectName);
-        var ret = EHR.DataEntryUtils.resolveProjectByName(this.projectStore, projectName);
-        if (!ret){
-            errors.push('Row ' + rowIdx + ': unknown project ' + projectName);
-        }
-        else {
+                    };
+
+                    // labwork Panel-Details information
+                    if (!this.checkRequired(['Id', 'date'], obj, errors, rowIdx)) {
+                        recordMap.labresults.push(obj);
+                    }
+
+                }
+            }
+        },
+
+
+
+        checkRequired: function(fields, row, errors, rowIdx){
+            var hasErrors = false,
+                    fieldName;
+            for (var i=0;i<fields.length;i++){
+                fieldName = fields[i];
+                if (Ext4.isEmpty(row[fieldName])){
+                    errors.push('Row ' + rowIdx + ': missing field ' + fieldName);
+                    hasErrors = true;
+                }
+            }
+
+            return   hasErrors;
+        },
+
+        getTime: function(date, timeStr, errors, rowIdx){
+            if (!date || !timeStr){
+                return null;
+            }
+
+            var orig = date;
+            date = LDK.ConvertUtils.parseDate(date);
+            if (!date){
+                errors.push('Row ' + rowIdx + ': invalid date format: ' + orig);
+                return null;
+            }
+
+            timeStr = Ext4.String.leftPad(timeStr, 5, '0'); //expect: HH:mm
+            var ret = LDK.ConvertUtils.parseDate(Ext4.Date.format(date, LABKEY.extDefaultDateFormat) + ' ' + timeStr);
+            if (!ret){
+                errors.push('Row ' + rowIdx + ': invalid time: ' + timeStr);
+            }
+
             return ret;
-        }
-    },
+        },
 
-});
+        resolveProjectByName: function(projectName, errors, rowIdx){
+            if (!projectName){
+                return null;
+            }
+
+            projectName = Ext4.String.trim(projectName);
+            var ret = EHR.DataEntryUtils.resolveProjectByName(this.projectStore, projectName);
+            if (!ret){
+                errors.push('Row ' + rowIdx + ': unknown project ' + projectName);
+            }
+            else {
+                return ret;
+            }
+        },
+
+        safeGet: function(parsed, a, b){
+            if (parsed && parsed.length >= a && parsed[a].length >= b){
+                return parsed[a][b];
+            }
+            else {
+                console.error('Unable to find position: ' + a + '/' + b);
+            }
+        }
+    });
 
 EHR.DataEntryUtils.registerDataEntryFormButton('CBC_Acquisitioned_IMPORT', {
     text: 'CBC Acquisition Import Template',
     name: 'CBC_Acquisition_scan',
     itemId: 'cbcAcquisitionscan',
     tooltip: 'Click to bulk import records from an excel file',
-    handler: function(btn){
-        var panel = btn.up('ehr-dataentrypanel');
-        LDK.Assert.assertNotEmpty('Unable to find dataEntryPanel in CBC_Acquisitioned_IMPOR', panel);
+        handler: function(btn){
+            var panel = btn.up('ehr-dataentrypanel');
+            LDK.Assert.assertNotEmpty('Unable to find dataEntryPanel in CBC Acquisition Animals Import button', panel);
 
-        var runStore = panel.storeCollection.getClientStoreByName('Clinpath Runs');
-        LDK.Assert.assertNotEmpty('Unable to find clinpath runs store in CBC_Acquisitioned_IMPOR', runStore);
+            Ext4.create('ONPRC_EHR.window.Bulk_CBC_AcquisitionedAnimalsWindow', {
+                dataEntryPanel: panel
+            }).show();
+        }
+    });
 
-        var PanelStore = panel.storeCollection.getClientStoreByName('HematologyResults');
-        LDK.Assert.assertNotEmpty('Unable to find Hematology store in CBC_Acquisitioned_IMPORT button', PanelStore);
 
-        Ext4.create('ONPRC_EHR.window.Bulk_CBC_AcquisitionedAnimalsWindow', {
-            dataEntryPanel: panel,
-            runStore: runStore,
-            PanelStore: PanelStore
-        }).show();
-    }
-});
