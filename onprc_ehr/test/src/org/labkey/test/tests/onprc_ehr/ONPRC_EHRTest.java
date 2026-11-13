@@ -757,7 +757,11 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
 
     private void validateSsrsUrlParams(String reportName, String... additionalParams)
     {
-        String url = getURL().toString();
+        // The report URL loads asynchronously (window.open starts at about:blank), so wait for it to commit
+        String url = waitFor(() -> {
+            String current = getDriver().getCurrentUrl();
+            return current != null && current.contains(reportName) ? current : null;
+        }, () -> "SSRS report URL never loaded. Current URL: " + getDriver().getCurrentUrl(), WAIT_FOR_PAGE);
 
         // Sanity check that the session looks plausible
         int sessionIdIndex = url.indexOf("SessionId=") + "SessionId=".length();
