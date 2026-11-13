@@ -212,6 +212,7 @@ Ext4.define('ONPRC_EHR.window.Bulk_CBC_AcquisitionedAnimalsWindow', {
                     var obj = {
                         Id: row[0],
                         date: row[1],
+                        testid:parsed[6][k],
                         result: row[k],
                         objectid: Resultsobjectid,
                         runid: MasterHeaderObject,

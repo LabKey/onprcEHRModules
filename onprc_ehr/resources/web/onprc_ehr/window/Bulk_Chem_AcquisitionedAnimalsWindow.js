@@ -171,84 +171,73 @@ Ext4.define('ONPRC_EHR.window.Bulk_Chem_AcquisitionedAnimalsWindow', {
     {
 
         // Generate labwork Header information
-        var performedBy = Ext4.String.trim(row[13]);
+        var performedBy = Ext4.String.trim(parsed[4][1]);
         var date = LDK.ConvertUtils.parseDate(this.safeGet(parsed, cnt, 1));
         if (!date)
         {
             errors.push('Missing Date');
         }
-        //var project = this.resolveProjectByName(Ext4.String.trim(row[2]), errors, rowIdx);
-        var project = this.resolveProjectByName(row[2], errors, rowIdx);
-        var chargeunit = Ext4.String.trim(row[5]);
 
-        var name = Ext4.String.trim(row[4]);
+        var project = this.resolveProjectByName(parsed[0][1], errors, rowIdx);
+        var chargeunit = Ext4.String.trim(parsed[2][1]);
+
+        var name = Ext4.String.trim(parsed[1][1]);
         var procRecIdx = this.labworkSericeStoreStore.findExact('servicename', name);
         var procedureRec = this.labworkSericeStoreStore.getAt(procRecIdx);
         LDK.Assert.assertNotEmpty('Unable to find service request record with name: ' + name + 'in Serology_VirologyWindow', procedureRec);
         var servicereq = procedureRec.get('servicename');
 
-        var category = Ext4.String.trim(row[14]);
+        var category = Ext4.String.trim(parsed[5][1]);
 
+        if (row[0]) {
 
-        if ( Ext4.String.trim(row[3])== 1)
-        {
-            var tissueheader = "";
-            if (row[0] && row[0].length >= 5) {
-                tissueheader = Ext4.String.trim(row[6].substr(row[6].length - 7, 7));
-             }
             var obj = {
-                Id: id,
-                date: date,
+                Id: row[0],
+                date: row[1],
                 project: project,
                 servicerequested: servicereq,
                 chargeunit: chargeunit,
-                tissue: tissueheader,       // Tissue for main header    -- Optional
+                // tissue: tissueheader,       // Tissue for main header    -- Optional
                 type: category,
                 objectid: MasterHeaderObject,
-                performedby: performedBy,
-                vet:vetname
-
-            };
-
-        if (!this.checkRequired(['Id', 'date', 'project', 'chargeunit', 'servicerequested', 'type', 'vet'], obj, errors, rowIdx))
-             {
-            recordMap.primaryheader.push(obj);
-            }
-        };
-        // Generate Labwork Panel Details
-
-        //Tissue Results
-        if (row[7])
-        {
-            var Resultsobjectid = LABKEY.Utils.generateUUID().toUpperCase();
-
-
-            var obj = {
-                Id: id,
-                date: date,
-                tissue: Ext4.String.trim(row[7].substr(row[7].length - 7, 7)),       // Tissue Results
-                agent:  Ext4.String.trim(row[8].substr(row[8].length - 7, 7)),
-                method: Ext4.String.trim(row[9]),
-                result: Ext4.String.trim(row[10]),
-                qualifier: Ext4.String.trim(row[11]),
-                remark: Ext4.String.trim(row[12]),
-                objectid: Resultsobjectid,
-                runid: MasterHeaderObject,
                 performedby: performedBy,
                 vet: vetname
 
             };
 
-            // labwork Panel-Details information
-            if (!this.checkRequired(['Id', 'date' ,'tissue','agent','method', 'result','vet'],obj,errors, rowIdx))
-            {
-                recordMap.labresults.push(obj);
+            if (!this.checkRequired(['Id', 'date', 'project', 'chargeunit', 'servicerequested', 'type', 'vet'], obj, errors, rowIdx)) {
+                recordMap.primaryheader.push(obj);
             }
-
-
         }
 
+        for (var k = 2; k < row.length; k++)         // Process only if Agent data exists
 
+        {
+
+            //Test Panel Results
+            if (row[k] != '') {
+                var Resultsobjectid = LABKEY.Utils.generateUUID().toUpperCase();
+
+
+                var obj = {
+                    Id: row[0],
+                    date: row[1],
+                    testid:parsed[6][k],
+                    result: row[k],
+                    objectid: Resultsobjectid,
+                    runid: MasterHeaderObject,
+                    performedby: performedBy
+
+
+                };
+
+                // labwork Panel-Details information
+                if (!this.checkRequired(['Id', 'date'], obj, errors, rowIdx)) {
+                    recordMap.labresults.push(obj);
+                }
+
+            }
+        }
     },
 
 
