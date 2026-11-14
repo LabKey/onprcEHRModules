@@ -27,7 +27,7 @@ Ext4.define('ONPRC_EHR.window.Bulk_CBC_AcquisitionedAnimalsWindow', {
                     scope: this,
                     style: 'margin-bottom: 10px;',
                     handler: function(){
-                        window.location = LABKEY.contextPath + '/onprc_ehr/templates/CBC_Acquisition.xlsx'
+                        window.location = LABKEY.contextPath + '/onprc_ehr/templates/CBC_AcquisitionedAnimals.xlsx'
                     }
                 },{
                     xtype: 'textarea',
@@ -92,11 +92,7 @@ Ext4.define('ONPRC_EHR.window.Bulk_CBC_AcquisitionedAnimalsWindow', {
             {
                 rowIdx++;
                 var row = parsed[i];
-                // if (!row || row.length < 23)
-                // {
-                //     errors.push('Row ' + rowIdx + ': not enough items in row');
-                //     continue;
-                // }
+
                 var id = parsed[i][0];
                 if (!id)
                 {
@@ -106,8 +102,10 @@ Ext4.define('ONPRC_EHR.window.Bulk_CBC_AcquisitionedAnimalsWindow', {
 
                 var cnt = i;
 
+                if ( Ext4.String.trim(parsed[7][0])!= "" )
+                {
                     MasterHeaderObject = LABKEY.Utils.generateUUID().toUpperCase();
-
+                }
 
                 if ( Ext4.String.trim( parsed[3][2]) != "")
                 {

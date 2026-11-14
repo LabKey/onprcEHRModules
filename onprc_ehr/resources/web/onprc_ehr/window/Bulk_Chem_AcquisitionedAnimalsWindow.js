@@ -15,7 +15,7 @@ Ext4.define('ONPRC_EHR.window.Bulk_Chem_AcquisitionedAnimalsWindow', {
         Ext4.apply(this, {
             modal: true,
             closeAction: 'destroy',
-            title: 'Acquisitioned Animals Chemistry Lab Import',
+            title: 'Chemistry Acquisition Animals Lab Import',
             bodyStyle: 'padding: 5px;',
             width: 800,
             defaults: {
@@ -30,7 +30,7 @@ Ext4.define('ONPRC_EHR.window.Bulk_Chem_AcquisitionedAnimalsWindow', {
                 scope: this,
                 style: 'margin-bottom: 10px;',
                 handler: function(){
-                    window.location = LABKEY.contextPath + '/onprc_ehr/templates/Acquisitioned_Template.xlsx'
+                    window.location = LABKEY.contextPath + '/onprc_ehr/templates/Chem_Acquisitioned_Template.xlsx'
                 }
             },{
                 xtype: 'textarea',
@@ -111,8 +111,10 @@ Ext4.define('ONPRC_EHR.window.Bulk_Chem_AcquisitionedAnimalsWindow', {
             var cnt = i;
 
 
-            MasterHeaderObject = LABKEY.Utils.generateUUID().toUpperCase();
-
+            if ( Ext4.String.trim(parsed[7][0])!= "" )
+            {
+                MasterHeaderObject = LABKEY.Utils.generateUUID().toUpperCase();
+            }
 
             if ( Ext4.String.trim( parsed[3][2]) != "")
             {
