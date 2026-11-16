@@ -431,7 +431,7 @@ public class SLAController extends SpringActionController
                 slaAdminUsers.addAll(SecurityManager.getAllGroupMembers(SecurityManager.getGroup(slaAdminGroupId), MemberType.ACTIVE_USERS, true));
             }
 
-            String url = ActionURL.getBaseServerURL() + "/sla" + getContainer().getPath() + "/reviewPurchaseOrder.view?rowId=" + order.getRowid();
+            String url = new ActionURL("sla", "reviewPurchaseOrder", getContainer()).addParameter("rowId", String.valueOf(order.getRowid())).getURIString();
             //String subject = "TEST EMAIL: SLA Purchase Order " + (form.getAction().equals("SUBMITTED") ? "Submission" : "Updated") + ": " + order.getRowid();
             //String subject = "SLA Purchase Order " + (form.getAction().equals("SUBMITTED") ? "Submission" : "Updated") + ": " + order.getRowid();
             String subject = "SLA Purchase Order " + (form.getAction().equals("SUBMITTED") ? "Submitted" : "Updated") + ". Project: " + projectNum + ", Requestor: " + requestor.getFirstname() + " " + requestor.getLastname();
