@@ -22,7 +22,7 @@ Ext4.define('ONPRC_EHR.window.Bulk_Chem_AcquisitionedAnimalsWindow', {
                 border: false
             },
             items: [{
-                html : 'This allows you to import record using the Acquisitioned Chemistry Animals excel form.  To import, cut/paste the contents of the excel file (Ctl + A is a good way to select all) into the box below and hit submit.',
+                html : 'This allows you to import record using the Chem_Acquisitioned_Template excel form.  To import, cut/paste the contents of the excel file (Ctl + A is a good way to select all) into the box below and hit submit.',
                 style: 'padding-bottom: 10px;'
             },{
                 xtype: 'ldk-linkbutton',

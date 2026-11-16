@@ -19,7 +19,7 @@ Ext4.define('ONPRC_EHR.window.Bulk_CBC_AcquisitionedAnimalsWindow', {
                     border: false
                 },
                 items: [{
-                    html : 'This allows you to import record using the CBC Acquisition excel form.  To import, cut/paste the contents of the excel file (Ctl + A is a good way to select all) into the box below and hit submit.',
+                    html : 'This allows you to import record using the CBC_Acquisitioned_Template excel form.  To import, cut/paste the contents of the excel file (Ctl + A is a good way to select all) into the box below and hit submit.',
                     style: 'padding-bottom: 10px;'
                 },{
                     xtype: 'ldk-linkbutton',
@@ -27,7 +27,7 @@ Ext4.define('ONPRC_EHR.window.Bulk_CBC_AcquisitionedAnimalsWindow', {
                     scope: this,
                     style: 'margin-bottom: 10px;',
                     handler: function(){
-                        window.location = LABKEY.contextPath + '/onprc_ehr/templates/CBC_AcquisitionedAnimals.xlsx'
+                        window.location = LABKEY.contextPath + '/onprc_ehr/templates/CBC_Acquisitioned_Template.xlsx'
                     }
                 },{
                     xtype: 'textarea',
