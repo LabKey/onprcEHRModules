@@ -11,6 +11,7 @@ SELECT
     a.Id.Age.ageinyears AS Age,
     a.Id.curlocation.room AS Room,
     a.Id.curlocation.cage AS Cage,
+    a.Id.demographics.species AS Species,
     'Assignment Pool' AS Flag,
 
     /* Concatenate all active cagemate IDs into one cell */
