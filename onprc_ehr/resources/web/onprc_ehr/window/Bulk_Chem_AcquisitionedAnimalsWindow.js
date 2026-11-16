@@ -4,7 +4,7 @@
  * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
  */
 /**
- * @cfg dataEntryPanel      Created 2/18/2015    Blasa    Serology Entries
+ * @cfg dataEntryPanel      Created 2/18/2015    Blasa
  */
 // Note:  This progam processes bulk entries related to SPF Template  5-4-2015
 
@@ -184,7 +184,7 @@ Ext4.define('ONPRC_EHR.window.Bulk_Chem_AcquisitionedAnimalsWindow', {
         var name = Ext4.String.trim(parsed[1][1]);
         var procRecIdx = this.labworkSericeStoreStore.findExact('servicename', name);
         var procedureRec = this.labworkSericeStoreStore.getAt(procRecIdx);
-        LDK.Assert.assertNotEmpty('Unable to find service request record with name: ' + name + 'in Serology_VirologyWindow', procedureRec);
+        LDK.Assert.assertNotEmpty('Unable to find service request record with name: ' + name + 'in Lab Results service Window', procedureRec);
         var servicereq = procedureRec.get('servicename');
 
         var category = Ext4.String.trim(parsed[5][1]);

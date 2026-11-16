@@ -172,7 +172,7 @@ Ext4.define('ONPRC_EHR.window.Bulk_CBC_AcquisitionedAnimalsWindow', {
             var name = Ext4.String.trim(parsed[1][1]);
             var procRecIdx = this.labworkSericeStoreStore.findExact('servicename', name);
             var procedureRec = this.labworkSericeStoreStore.getAt(procRecIdx);
-            LDK.Assert.assertNotEmpty('Unable to find service request record with name: ' + name + 'in Serology_VirologyWindow', procedureRec);
+            LDK.Assert.assertNotEmpty('Unable to find service request record with name: ' + name + 'in Lab Results service Window', procedureRec);
             var servicereq = procedureRec.get('servicename');
 
             var category = Ext4.String.trim(parsed[5][1]);
