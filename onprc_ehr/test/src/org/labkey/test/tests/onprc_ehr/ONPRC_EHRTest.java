@@ -569,6 +569,9 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
             goToMedicationsDietForm();
             Ext4GridRef treatmentGrid = _helper.getExt4GridForFormSection("Medication/Treatment Orders");
             waitForFormValidationToSettle();
+            // Every validation-gated action is configured disabled, so the disabled checks prove nothing until one is enabled
+            waitFor(() -> Boolean.FALSE.equals(getValidationGatedActionStates().get(FORCE_SUBMIT)),
+                    FORCE_SUBMIT + " was not available before adding animals", WAIT_FOR_JAVASCRIPT);
 
             holdFormValidation();
             addBatchIdsToGrid(treatmentGrid, allIds);
@@ -2021,6 +2024,8 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
     {
         Locator.XPathLocator validationIndicator = Locator.tagContainingText("span", "Validating...").notHidden();
         waitFor(() -> getFormValidationRequestsInFlight() > 0, "Adding animals did not start validation", WAIT_FOR_JAVASCRIPT);
+        // A hook that no longer matches the form's requests holds nothing, which would leave these checks racing validation again
+        assertTrue("The validation hold did not intercept the form's validation requests", getHeldFormValidationRequests() > 0);
         waitForElement(validationIndicator);
 
         Map<String, Boolean> inFlight = getValidationGatedActionStates();
@@ -2053,10 +2058,11 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
     {
         executeScript("""
                 if (!window.lkTestValidationHold) {
-                    var hold = window.lkTestValidationHold = {held: false, queue: []};
+                    var hold = window.lkTestValidationHold = {held: false, intercepted: 0, queue: []};
                     var request = LABKEY.Ajax.request;
                     LABKEY.Ajax.request = function(config) {
                         if (hold.held && config && config.jsonData && config.jsonData.validateOnly) {
+                            hold.intercepted++;
                             ['success', 'failure'].forEach(function(key) {
                                 var callback = config[key];
                                 if (!callback)
@@ -2085,6 +2091,11 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
                 hold.held = false;
                 hold.queue.splice(0).forEach(function(run) { run(); });
                 """);
+    }
+
+    private int getHeldFormValidationRequests()
+    {
+        return ((Number) executeScript("return window.lkTestValidationHold.intercepted;")).intValue();
     }
 
     private int getFormValidationRequestsInFlight()
