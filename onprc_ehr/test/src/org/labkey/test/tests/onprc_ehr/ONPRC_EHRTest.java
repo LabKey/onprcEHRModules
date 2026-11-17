@@ -22,7 +22,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.Assert;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.labkey.remoteapi.CommandException;
@@ -86,6 +85,7 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
 {
     protected String PROJECT_NAME = "ONPRC_EHR_TestProject";
     private final String ANIMAL_HISTORY_URL = "/" + getContainerPath() + "/ehr-animalHistory.view";
+    private static final String FORCE_SUBMIT = "Force Submit";
 
     @Override
     protected String getProjectName()
@@ -559,8 +559,6 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
     }
 
     @Test
-    // Disabled because the flakiness is blocking ONPRC work; re-enable once it is resolved.
-    @Ignore("Flaky on TeamCity: 'Force Submit' is only disabled while validation is in flight, so the 'More Actions' menu check races a fast validation pass")
     public void testSubmitButtonsDisabledDuringValidation() throws Exception
     {
         List<String> allIds = createTemporaryValidationAnimals(30);
@@ -568,10 +566,12 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         try
         {
             log("Bulk adding animals in treatment orders for temporary test animals");
-            _helper.goToTaskForm("Medications/Diet", false);
+            goToMedicationsDietForm();
             Ext4GridRef treatmentGrid = _helper.getExt4GridForFormSection("Medication/Treatment Orders");
-            addBatchIdsToGrid(treatmentGrid, allIds);
+            waitForFormValidationToSettle();
 
+            holdFormValidation();
+            addBatchIdsToGrid(treatmentGrid, allIds);
             assertActionsDisabledDuringValidation();
 
             treatmentGrid.waitForRowCount(allIds.size());
@@ -2013,37 +2013,115 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         grid.waitForRowCount(ids.size());
     }
 
+    /**
+     * 'Force Submit' is disabled only while validation is in flight, so these checks run under {@link #holdFormValidation()}:
+     * a fast validation pass would otherwise finish before the 'More Actions' menu renders.
+     */
     private void assertActionsDisabledDuringValidation()
     {
-        List<String> buttonTexts = Arrays.asList("Save Draft", "Save & Close", "Submit For Review", "Submit Final");
-        List<String> menuItemTexts = Arrays.asList("Submit And Reload", "Force Submit");
         Locator.XPathLocator validationIndicator = Locator.tagContainingText("span", "Validating...").notHidden();
-        waitFor(() -> !validationIndicator.findElements(getDriver()).isEmpty(),
-                "Validation indicator never appeared", WAIT_FOR_PAGE);
+        waitFor(() -> getFormValidationRequestsInFlight() > 0, "Adding animals did not start validation", WAIT_FOR_JAVASCRIPT);
+        waitForElement(validationIndicator);
 
-        for (String buttonText : buttonTexts)
-        {
-            List<Ext4CmpRef> buttons = _ext4Helper.componentQuery("button[text='" + buttonText + "']", Ext4CmpRef.class);
-            if (!buttons.isEmpty())
-            {
-                waitFor(() -> Boolean.TRUE.equals(buttons.getFirst().getEval("isDisabled() == arguments[0]", true)),
-                        buttonText + " did not become disabled during validation", WAIT_FOR_PAGE);
-            }
-        }
+        Map<String, Boolean> inFlight = getValidationGatedActionStates();
+        for (String action : List.of("Submit Final", FORCE_SUBMIT))
+            assertTrue("Validation-gated action is missing from the form: " + action, inFlight.containsKey(action));
+        inFlight.forEach((action, disabled) ->
+                assertTrue(action + " was not disabled while validation was in progress", disabled));
 
         waitAndClick(_helper.getDataEntryButton("More Actions"));
-        waitForElement(Ext4Helper.Locators.menu().notHidden());
-        for (String menuItemText : menuItemTexts)
-        {
-            waitForElement(Ext4Helper.Locators.menuItemDisabled(menuItemText).notHidden());
-        }
+        waitForElement(Ext4Helper.Locators.menuItemDisabled(FORCE_SUBMIT).notHidden());
         waitAndClick(_helper.getDataEntryButton("More Actions"));
         waitForElementToDisappear(Ext4Helper.Locators.menu().notHidden());
 
-        waitFor(() -> validationIndicator.findElements(getDriver()).isEmpty(),
-                "Validation indicator did not disappear", WAIT_FOR_PAGE * 2);
+        releaseFormValidation();
+        waitForElementToDisappear(validationIndicator, WAIT_FOR_PAGE * 2);
         waitForText(WAIT_FOR_PAGE * 2, "WARN");
         waitForText(WAIT_FOR_PAGE * 2, "ERROR");
+
+        // The form has WARN and ERROR rows, so only the action that overrides them comes back
+        waitFor(() -> !getValidationGatedActionStates().get(FORCE_SUBMIT),
+                FORCE_SUBMIT + " did not become available once validation completed", WAIT_FOR_JAVASCRIPT);
+        assertTrue("Submit Final should stay disabled while the form has errors", getValidationGatedActionStates().get("Submit Final"));
+    }
+
+    /**
+     * Queues the callbacks of the form's validation requests until {@link #releaseFormValidation()}, so the form stays
+     * in its validating state for as long as a test needs to inspect it. The requests still reach the server.
+     */
+    private void holdFormValidation()
+    {
+        executeScript("""
+                if (!window.lkTestValidationHold) {
+                    var hold = window.lkTestValidationHold = {held: false, queue: []};
+                    var request = LABKEY.Ajax.request;
+                    LABKEY.Ajax.request = function(config) {
+                        if (hold.held && config && config.jsonData && config.jsonData.validateOnly) {
+                            ['success', 'failure'].forEach(function(key) {
+                                var callback = config[key];
+                                if (!callback)
+                                    return;
+                                config[key] = function() {
+                                    var scope = this, args = arguments;
+                                    var run = function() { callback.apply(scope, args); };
+                                    if (hold.held)
+                                        hold.queue.push(run);
+                                    else
+                                        run();
+                                };
+                            });
+                        }
+                        return request.apply(this, arguments);
+                    };
+                }
+                window.lkTestValidationHold.held = true;
+                """);
+    }
+
+    private void releaseFormValidation()
+    {
+        executeScript("""
+                var hold = window.lkTestValidationHold;
+                hold.held = false;
+                hold.queue.splice(0).forEach(function(run) { run(); });
+                """);
+    }
+
+    private int getFormValidationRequestsInFlight()
+    {
+        Object count = executeScript("return Ext4.ComponentQuery.query('ehr-dataentrypanel')[0].storeCollection.validationRequestsInFlight;");
+        return ((Number) count).intValue();
+    }
+
+    /** Disabled state of every toolbar button and menu item that validation gates (those with a disableOn), keyed by text. */
+    @SuppressWarnings("unchecked")
+    private Map<String, Boolean> getValidationGatedActionStates()
+    {
+        return (Map<String, Boolean>) executeScript("""
+                var actions = {};
+                function visit(item) {
+                    if (item.disableOn)
+                        actions[item.text] = item.isDisabled();
+                    if (item.menu)
+                        item.menu.items.each(visit);
+                }
+                var panel = Ext4.ComponentQuery.query('ehr-dataentrypanel')[0];
+                Ext4.Array.forEach(panel.getToolbarItems() || [], function(toolbar) {
+                    toolbar.items.each(visit);
+                });
+                return actions;
+                """);
+    }
+
+    /** {@link org.labkey.test.util.ehr.EHRTestHelper#goToTaskForm(String)} matches by substring, which also finds "CMU Medications/Diet". */
+    private void goToMedicationsDietForm()
+    {
+        goToProjectHome();
+        waitAndClickAndWait(Locator.tagContainingText("a", "Enter Data"));
+        waitAndClick(Locator.tagContainingText("a", "Enter New Data"));
+        waitForElement(Locator.tagContainingText("span", "Colony Management:"));
+        waitAndClick(WAIT_FOR_PAGE, Locator.tagWithText("a", "Medications/Diet").withClass("labkey-text-link"), WAIT_FOR_PAGE);
+        waitForElement(Ext4Helper.Locators.ext4Button("Save Draft"), WAIT_FOR_PAGE * 2);
     }
 
     private List<String> createTemporaryValidationAnimals(int count) throws Exception
