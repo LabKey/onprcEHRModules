@@ -96,20 +96,20 @@
                     rooms = Ext4.isArray(rooms) ? rooms: [rooms];
 
 
-                    if (!Ext.isEmpty(animalid)) {
+                    if (!Ext4.isEmpty(animalid)) {
                         animalid = Ext4.String.trim(animalid);
                         animalid = animalid.replace(/[\s,;]+/g, ';');
 
                     }
 
-                    if (!Ext.isEmpty(vetname))
+                    if (!Ext4.isEmpty(vetname))
                         params['query.Id/assignedVet/assignedVet~contains'] =  vetname ;
 
 
-                    if (!Ext.isEmpty(rooms))
+                    if (!Ext4.isEmpty(rooms))
                         params['query.Id/curLocation/room/room~in'] = rooms.join(';');
 
-                    if (!Ext.isEmpty(animalid))
+                    if (!Ext4.isEmpty(animalid))
                           params['query.Id~in'] = animalid;
 
 

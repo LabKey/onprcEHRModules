@@ -13,6 +13,7 @@
     a.Id.Age.ageinyears,
     a.Id.curlocation.room AS Room,
     a.Id.curlocation.cage AS Cage,
+    a.Id.demographics.species AS Species,
     a.project,
     a.project.protocol.displayname AS Protocol,
     a.project.title AS Title,
