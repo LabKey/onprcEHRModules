@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2020-2026 LabKey Corporation
+ *
+ * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
+ */
 select k.Id,K.date,k.room,k.cage,s.room as "Housing Room",s.cage as "Housing Cage"
 
 from study.birth k, study.Housing s

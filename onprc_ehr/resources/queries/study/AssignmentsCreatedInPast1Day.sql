@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2025-2026 LabKey Corporation
+ *
+ * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
+ */
 /* Created by Kollil, Dec, 2025
    Tkt # 13618
    Priority 1: Add Grid 1 ("Assignments Created in the Past Day ") to daily Behavior Alerts email - display full grid in email

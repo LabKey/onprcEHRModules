@@ -1,3 +1,18 @@
+/*
+ * Copyright (c) 2014-2026 LabKey Corporation
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.labkey.onprc_billing.query;
 
 import org.apache.commons.lang3.time.DateUtils;
@@ -26,7 +41,6 @@ import org.labkey.onprc_billing.security.ONPRCBillingAdminPermission;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -71,14 +85,14 @@ public class BillingTriggerHelper
             UserSchema us = QueryService.get().getUserSchema(getUser(), getContainer(), "onprc_billing_public");
             if (us == null)
             {
-                _log.error("Unable to find onprc_billing_public schema in container: " + getContainer().getPath());
+                _log.error("Unable to find onprc_billing_public schema in container: {}", getContainer().getPath());
                 return null;
             }
 
             TableInfo ti = us.getTable("publicInvoiceRuns");
             if (ti == null)
             {
-                _log.error("Unable to find onprc_billing_public.publicInvoiceRuns in container: " + getContainer().getPath());
+                _log.error("Unable to find onprc_billing_public.publicInvoiceRuns in container: {}", getContainer().getPath());
                 return null;
             }
 

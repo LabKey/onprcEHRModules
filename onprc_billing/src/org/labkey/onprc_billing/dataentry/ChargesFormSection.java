@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013 LabKey Corporation
+ * Copyright (c) 2014-2026 LabKey Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -66,7 +66,7 @@ public class ChargesFormSection extends SimpleFormSection
     {
         List<String> defaultButtons = super.getTbarButtons();
         defaultButtons.remove("ADDANIMALS");
-        defaultButtons.add(0, "ADDANIMALST");
+        defaultButtons.addFirst("ADDANIMALST");
 
         return defaultButtons;
     }

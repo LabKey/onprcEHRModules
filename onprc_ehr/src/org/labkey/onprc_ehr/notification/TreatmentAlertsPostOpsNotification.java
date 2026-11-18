@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2018 LabKey Corporation
+ * Copyright (c) 2015-2026 LabKey Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -172,7 +172,7 @@ public class TreatmentAlertsPostOpsNotification extends AbstractEHRNotification
                         {
                             area = "<Unknown Area>";
                         }
-                        Integer areaVal = totalByArea.containsKey(area) ? totalByArea.get(area) : 0;
+                        Integer areaVal = totalByArea.getOrDefault(area, 0);
                         areaVal++;
 
                         totalByArea.put(area, areaVal);

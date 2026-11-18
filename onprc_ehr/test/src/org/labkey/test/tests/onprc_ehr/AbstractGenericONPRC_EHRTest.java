@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2019 LabKey Corporation
+ * Copyright (c) 2016-2026 LabKey Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,12 +37,10 @@ import org.labkey.test.params.list.VarListDefinition;
 import org.labkey.test.tests.ehr.AbstractGenericEHRTest;
 import org.labkey.test.util.Ext4Helper;
 import org.labkey.test.util.LogMethod;
-import org.labkey.test.util.PasswordUtil;
 import org.labkey.test.util.SchemaHelper;
 import org.labkey.test.util.ehr.EHRClientAPIHelper;
 import org.labkey.test.util.ext4cmp.Ext4CmpRef;
 import org.labkey.test.util.ext4cmp.Ext4ComboRef;
-import org.labkey.test.util.ext4cmp.Ext4FieldRef;
 import org.labkey.test.util.ext4cmp.Ext4GridRef;
 
 import java.io.File;
@@ -304,20 +302,6 @@ public abstract class AbstractGenericONPRC_EHRTest extends AbstractGenericEHRTes
         goToProjectHome();
     }
 
-    protected void setupNotificationService()
-    {
-        //set general settings
-        beginAt(WebTestHelper.buildURL("ldk", getContainerPath(),"notificationAdmin"));
-        _helper.waitForCmp("field[fieldLabel='Notification User']");
-        Ext4FieldRef.getForLabel(this, "Notification User").setValue(PasswordUtil.getUsername());
-        Ext4FieldRef.getForLabel(this, "Reply Email").setValue("fakeEmail@fakeDomain.test");
-        Ext4CmpRef btn = _ext4Helper.queryOne("button[text='Save']", Ext4CmpRef.class);
-        btn.waitForEnabled();
-        waitAndClick(Ext4Helper.Locators.ext4Button("Save"));
-        waitForElement(Ext4Helper.Locators.window("Success"));
-        waitAndClickAndWait(Ext4Helper.Locators.ext4Button("OK"));
-    }
-
     @Override
     protected void populateInitialData()
     {
@@ -396,7 +380,7 @@ public abstract class AbstractGenericONPRC_EHRTest extends AbstractGenericEHRTes
         select1.addFilter(new Filter("datedisabled", null, Filter.Operator.ISBLANK));
         SelectRowsResponse resp = select1.execute(getApiHelper().getConnection(), getContainerPath());
 
-        String objectid = resp.getRowCount().intValue() == 0 ? null : (String)resp.getRows().get(0).get("objectid");
+        String objectid = resp.getRowCount().intValue() == 0 ? null : (String)resp.getRows().getFirst().get("objectid");
         if (objectid == null)
         {
             InsertRowsCommand insertRowsCommand = new InsertRowsCommand("ehr_lookups", "flag_values");
@@ -411,7 +395,7 @@ public abstract class AbstractGenericONPRC_EHRTest extends AbstractGenericEHRTes
             });
 
             RowsResponse saveRowsResponse = insertRowsCommand.execute(getApiHelper().getConnection(), getContainerPath());
-            objectid = (String)saveRowsResponse.getRows().get(0).get("objectid");
+            objectid = (String)saveRowsResponse.getRows().getFirst().get("objectid");
         }
 
         return objectid;
@@ -449,7 +433,7 @@ public abstract class AbstractGenericONPRC_EHRTest extends AbstractGenericEHRTes
         SelectRowsCommand select1 = new SelectRowsCommand("ehr", "animal_groups");
         select1.addFilter(new Filter("name", name, Filter.Operator.EQUAL));
         SelectRowsResponse resp = select1.execute(getApiHelper().getConnection(), getContainerPath());
-        Integer groupId = resp.getRowCount().intValue() == 0 ? null : (Integer)resp.getRows().get(0).get("rowid");
+        Integer groupId = resp.getRowCount().intValue() == 0 ? null : (Integer)resp.getRows().getFirst().get("rowid");
         if (groupId == null)
         {
             InsertRowsCommand insertRowsCommand = new InsertRowsCommand("ehr", "animal_groups");
@@ -461,7 +445,7 @@ public abstract class AbstractGenericONPRC_EHRTest extends AbstractGenericEHRTes
             });
 
             RowsResponse saveRowsResponse = insertRowsCommand.execute(getApiHelper().getConnection(), getContainerPath());
-            groupId = (Integer)saveRowsResponse.getRows().get(0).get("rowid");
+            groupId = (Integer)saveRowsResponse.getRows().getFirst().get("rowid");
         }
 
         return groupId;
@@ -497,7 +481,7 @@ public abstract class AbstractGenericONPRC_EHRTest extends AbstractGenericEHRTes
         select1.addFilter(new Filter("value", name, Filter.Operator.EQUAL));
         SelectRowsResponse resp = select1.execute(getApiHelper().getConnection(), getContainerPath());
 
-        String objectid = resp.getRowCount().intValue() == 0 ? null : (String)resp.getRows().get(0).get("objectid");
+        String objectid = resp.getRowCount().intValue() == 0 ? null : (String)resp.getRows().getFirst().get("objectid");
         if (objectid == null)
         {
             InsertRowsCommand insertRowsCommand = new InsertRowsCommand("ehr_lookups", "flag_values");
@@ -511,7 +495,7 @@ public abstract class AbstractGenericONPRC_EHRTest extends AbstractGenericEHRTes
             });
 
             RowsResponse saveRowsResponse = insertRowsCommand.execute(getApiHelper().getConnection(), getContainerPath());
-            objectid = (String)saveRowsResponse.getRows().get(0).get("objectid");
+            objectid = (String)saveRowsResponse.getRows().getFirst().get("objectid");
         }
 
         return objectid;

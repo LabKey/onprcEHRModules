@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2019 LabKey Corporation
+ * Copyright (c) 2016-2026 LabKey Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,7 +38,6 @@ import org.labkey.test.Locator;
 import org.labkey.test.Locators;
 import org.labkey.test.TestFileUtils;
 import org.labkey.test.WebTestHelper;
-import org.labkey.test.categories.CustomModules;
 import org.labkey.test.categories.EHR;
 import org.labkey.test.categories.ONPRC;
 import org.labkey.test.components.BodyWebPart;
@@ -81,7 +80,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-@Category({CustomModules.class, EHR.class, ONPRC.class})
+@Category({EHR.class, ONPRC.class})
 @BaseWebDriverTest.ClassTimeout(minutes = 60)
 public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
 {
@@ -145,7 +144,7 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
 
             SelectRowsCommand protocolSelect = new SelectRowsCommand("ehr", "protocol");
             protocolSelect.addFilter(new Filter("title", protocolTitle));
-            final String protocolId = (String)protocolSelect.execute(getApiHelper().getConnection(), getContainerPath()).getRows().get(0).get("protocol");
+            final String protocolId = (String)protocolSelect.execute(getApiHelper().getConnection(), getContainerPath()).getRows().getFirst().get("protocol");
             Assert.assertNotNull(StringUtils.trimToNull(protocolId));
 
             InsertRowsCommand projectCommand = new InsertRowsCommand("ehr", "project");
@@ -155,7 +154,7 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
 
             SelectRowsCommand projectSelect = new SelectRowsCommand("ehr", "project");
             projectSelect.addFilter(new Filter("protocol", protocolId));
-            Integer projectId = (Integer)projectSelect.execute(getApiHelper().getConnection(), getContainerPath()).getRows().get(0).get("project");
+            Integer projectId = (Integer)projectSelect.execute(getApiHelper().getConnection(), getContainerPath()).getRows().getFirst().get("project");
 
             return Pair.of(protocolId, projectId);
 }
@@ -190,13 +189,13 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
 
         SelectRowsCommand protocolSelect = new SelectRowsCommand("ehr", "protocol");
         protocolSelect.addFilter(new Filter("title", protocolTitle));
-        final String protocolId = (String)protocolSelect.execute(getApiHelper().getConnection(), getContainerPath()).getRows().get(0).get("protocol");
+        final String protocolId = (String)protocolSelect.execute(getApiHelper().getConnection(), getContainerPath()).getRows().getFirst().get("protocol");
         Assert.assertNotNull(StringUtils.trimToNull(protocolId));
 
         InsertRowsCommand investigatorsCommand = new InsertRowsCommand("onprc_ehr", "investigators");
         investigatorsCommand.addRow(Maps.of("firstName", "Testie", "lastName", investLastName));
         CommandResponse response = investigatorsCommand.execute(getApiHelper().getConnection(), getContainerPath());
-        var id = ((HashMap<?, ?>) ((ArrayList<?>) response.getParsedData().get("rows")).get(0)).get("rowid");
+        var id = ((HashMap<?, ?>) ((ArrayList<?>) response.getParsedData().get("rows")).getFirst()).get("rowid");
 
         InsertRowsCommand projectCommand = new InsertRowsCommand("ehr", "project");
         String projectName = generateGUID();
@@ -207,8 +206,8 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         projectSelect.setColumns(List.of("project", "investigatorId/lastName"));
         projectSelect.addFilter(new Filter("protocol", protocolId));
         SelectRowsResponse resp = projectSelect.execute(getApiHelper().getConnection(), getContainerPath());
-        final Integer projectId = (Integer)resp.getRows().get(0).get("project");
-        final String invest = (String) resp.getRows().get(0).get("investigatorId/lastName");
+        final Integer projectId = (Integer)resp.getRows().getFirst().get("project");
+        final String invest = (String) resp.getRows().getFirst().get("investigatorId/lastName");
 
         assertEquals("Investigator name not correct in project table", investLastName, invest);
 
@@ -257,13 +256,13 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         assignmentSelect1.addFilter(new Filter("project", projectId));
         assignmentSelect1.setColumns(Arrays.asList("Id", "lsid", "datefinalized", "enddatefinalized", "project/investigatorId/lastName"));
         SelectRowsResponse assignmentResponse1 = assignmentSelect1.execute(getApiHelper().getConnection(), getContainerPath());
-        Assert.assertNotNull(assignmentResponse1.getRows().get(0).get("datefinalized"));
-        Assert.assertNull(assignmentResponse1.getRows().get(0).get("enddatefinalized"));
+        Assert.assertNotNull(assignmentResponse1.getRows().getFirst().get("datefinalized"));
+        Assert.assertNull(assignmentResponse1.getRows().getFirst().get("enddatefinalized"));
 
-        final String assignInvest = (String)assignmentResponse1.getRows().get(0).get("project/investigatorId/lastName");
+        final String assignInvest = (String)assignmentResponse1.getRows().getFirst().get("project/investigatorId/lastName");
         assertEquals("Investigator name link broken from assignment dataset", investLastName, assignInvest);
 
-        final String assignmentLsid1 = (String)assignmentResponse1.getRows().get(0).get("lsid");
+        final String assignmentLsid1 = (String)assignmentResponse1.getRows().getFirst().get("lsid");
 
         //expect animal condition to change
         SelectRowsCommand conditionSelect1 = new SelectRowsCommand("study", "flags");
@@ -272,7 +271,7 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         conditionSelect1.addFilter(new Filter("isActive", true));
         SelectRowsResponse conditionResponse1 = conditionSelect1.execute(getApiHelper().getConnection(), getContainerPath());
         assertEquals(1, conditionResponse1.getRowCount().intValue());
-        assertEquals("Protocol Restricted", conditionResponse1.getRows().get(0).get("flag/value"));
+        assertEquals("Protocol Restricted", conditionResponse1.getRows().getFirst().get("flag/value"));
 
         //terminate, expect animal condition to change based on release condition
         UpdateRowsCommand assignmentUpdateCommand = new UpdateRowsCommand("study", "assignment");
@@ -292,7 +291,7 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         conditionSelect2.addFilter(new Filter("isActive", true));
         SelectRowsResponse conditionResponse2 = conditionSelect2.execute(getApiHelper().getConnection(), getContainerPath());
         assertEquals(1, conditionResponse2.getRowCount().intValue());
-        assertEquals("Surgically Restricted", conditionResponse2.getRows().get(0).get("flag/value"));
+        assertEquals("Surgically Restricted", conditionResponse2.getRows().getFirst().get("flag/value"));
 
         //make sure other flag terminated on correct date
         SelectRowsCommand conditionSelect3 = new SelectRowsCommand("study", "flags");
@@ -308,8 +307,8 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         assignmentSelect2.addFilter(new Filter("project", projectId));
         assignmentSelect2.setColumns(Arrays.asList("Id", "lsid", "datefinalized", "enddatefinalized"));
         SelectRowsResponse assignmentResponse2 = assignmentSelect2.execute(getApiHelper().getConnection(), getContainerPath());
-        Assert.assertNotNull(assignmentResponse2.getRows().get(0).get("datefinalized"));
-        Assert.assertNotNull(assignmentResponse2.getRows().get(0).get("enddatefinalized"));
+        Assert.assertNotNull(assignmentResponse2.getRows().getFirst().get("datefinalized"));
+        Assert.assertNotNull(assignmentResponse2.getRows().getFirst().get("enddatefinalized"));
 
         // insert second animal, should succeed
         getApiHelper().testValidationMessage(PasswordUtil.getUsername(), "study", "assignment", new String[]{"Id", "date", "enddate", "project", "_recordId"}, new Object[][]{
@@ -379,7 +378,7 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
 
         SelectRowsCommand protocolSelect = new SelectRowsCommand("ehr", "protocol");
         protocolSelect.addFilter(new Filter("title", protocolTitle));
-        String protocolId = (String)protocolSelect.execute(getApiHelper().getConnection(), getContainerPath()).getRows().get(0).get("protocol");
+        String protocolId = (String)protocolSelect.execute(getApiHelper().getConnection(), getContainerPath()).getRows().getFirst().get("protocol");
         Assert.assertNotNull(StringUtils.trimToNull(protocolId));
 
         InsertRowsCommand projectCommand = new InsertRowsCommand("ehr", "project");
@@ -389,7 +388,7 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
 
         SelectRowsCommand projectSelect = new SelectRowsCommand("ehr", "project");
         projectSelect.addFilter(new Filter("protocol", protocolId));
-        Integer projectId = (Integer)projectSelect.execute(getApiHelper().getConnection(), getContainerPath()).getRows().get(0).get("project");
+        Integer projectId = (Integer)projectSelect.execute(getApiHelper().getConnection(), getContainerPath()).getRows().getFirst().get("project");
         Assert.assertNotNull(projectId);
 
         getApiHelper().testValidationMessage(PasswordUtil.getUsername(), "ehr", "project", new String[]{"project", "name"}, new Object[][]{
@@ -490,7 +489,7 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         SelectRowsCommand acquisitionTypeCmd = new SelectRowsCommand("ehr_lookups", "AcquistionType");
         acquisitionTypeCmd.setColumns(Arrays.asList("rowid", "value"));
         acquisitionTypeCmd.addFilter(new Filter("value", "Acquired"));
-        Map<String, Object> acquisitionTypeResult= acquisitionTypeCmd.execute(getApiHelper().getConnection(), getContainerPath()).getRows().get(0);
+        Map<String, Object> acquisitionTypeResult= acquisitionTypeCmd.execute(getApiHelper().getConnection(), getContainerPath()).getRows().getFirst();
         Integer acqType = (Integer) acquisitionTypeResult.get("rowid");
 
         //insert into arrival
@@ -1537,28 +1536,28 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         }
         Assert.assertEquals(1, visible.size());
 
-        visible.get(0).sendKeys("ketamine");
+        visible.getFirst().sendKeys("ketamine");
         sleep(2000);
-        visible.get(0).sendKeys(Keys.ENTER);
+        visible.getFirst().sendKeys(Keys.ENTER);
         String code1 = "Ketamine injectable (100mg/ml) (E-70590)";
         waitForElement(Locator.tagContainingText("div", "1: " + code1),20000);
 
-        visible.get(0).sendKeys("heart");
+        visible.getFirst().sendKeys("heart");
         sleep(2000);
-        visible.get(0).sendKeys(Keys.ENTER);
+        visible.getFirst().sendKeys(Keys.ENTER);
         String code2 = "APEX OF HEART (T-32040)";
         waitForElement(Locator.tagContainingText("div", "2: " + code2),20000);
         assertTrue(isTextBefore(code1, code2));
 
-        visible.get(0).sendKeys("disease");
+        visible.getFirst().sendKeys("disease");
         sleep(2000);
-        visible.get(0).sendKeys(Keys.ENTER);
+        visible.getFirst().sendKeys(Keys.ENTER);
         String code3 = "ALEUTIAN DISEASE (D-03550)";
         waitForElement(Locator.tagContainingText("div", "3: " + code3),20000);
         assertTrue(isTextBefore(code2, code3));
 
         //move first code down
-        click(Locator.id(_ext4Helper.componentQuery("button[testLocator=snomedDownArrow]", Ext4CmpRef.class).get(0).getId()));
+        click(Locator.id(_ext4Helper.componentQuery("button[testLocator=snomedDownArrow]", Ext4CmpRef.class).getFirst().getId()));
         waitForElement(Locator.tagContainingText("div", "1: " + code2));
         assertElementPresent(Locator.tagContainingText("div", "2: " + code1));
         assertElementPresent(Locator.tagContainingText("div", "3: " + code3));
@@ -1570,12 +1569,12 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         assertElementPresent(Locator.tagContainingText("div", "2: " + code3));
 
         //this should do nothing
-        click(Locator.id(_ext4Helper.componentQuery("button[testLocator=snomedUpArrow]", Ext4CmpRef.class).get(0).getId()));
+        click(Locator.id(_ext4Helper.componentQuery("button[testLocator=snomedUpArrow]", Ext4CmpRef.class).getFirst().getId()));
         waitForElement(Locator.tagContainingText("div", "1: " + code2));
         assertElementPresent(Locator.tagContainingText("div", "2: " + code3));
         assertElementPresent(Locator.tagContainingText("div", "3: " + code1));
 
-        click(Locator.id(_ext4Helper.componentQuery("button[testLocator=snomedDelete]", Ext4CmpRef.class).get(0).getId()));
+        click(Locator.id(_ext4Helper.componentQuery("button[testLocator=snomedDelete]", Ext4CmpRef.class).getFirst().getId()));
         assertElementNotPresent(Locator.tagContainingText("div", code2));
 
         waitAndClick(Ext4Helper.Locators.window("Manage SNOMED Codes").append(Ext4Helper.Locators.ext4Button("Submit")));
@@ -1816,8 +1815,8 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
         select.addFilter(new Filter("category", "Behavior", Filter.Operator.EQUAL));
         select.setColumns(Arrays.asList("Id", "objectid, caseNo"));
         SelectRowsResponse resp = select.execute(getApiHelper().getConnection(), getContainerPath());
-        String caseId = (String)resp.getRows().get(0).get("objectid");
-        Integer caseNo = (Integer)resp.getRows().get(0).get("caseNo");
+        String caseId = (String)resp.getRows().getFirst().get("objectid");
+        Integer caseNo = (Integer)resp.getRows().getFirst().get("caseNo");
 
         assertNotNull("Case number is missing.", caseNo);
 
@@ -2027,7 +2026,7 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
             List<Ext4CmpRef> buttons = _ext4Helper.componentQuery("button[text='" + buttonText + "']", Ext4CmpRef.class);
             if (!buttons.isEmpty())
             {
-                waitFor(() -> Boolean.TRUE.equals(buttons.get(0).getEval("isDisabled() == arguments[0]", true)),
+                waitFor(() -> Boolean.TRUE.equals(buttons.getFirst().getEval("isDisabled() == arguments[0]", true)),
                         buttonText + " did not become disabled during validation", WAIT_FOR_PAGE);
             }
         }
@@ -2100,7 +2099,7 @@ public class ONPRC_EHRTest extends AbstractGenericONPRC_EHRTest
                         return false;
                     }
 
-                    return Boolean.TRUE.equals(buttons.get(0).getEval("isDisabled() == arguments[0]", false));
+                    return Boolean.TRUE.equals(buttons.getFirst().getEval("isDisabled() == arguments[0]", false));
                 },
                 "Button did not become enabled: " + buttonText, timeout);
     }

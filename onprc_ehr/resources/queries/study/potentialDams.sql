@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2014 LabKey Corporation
+ * Copyright (c) 2013-2026 LabKey Corporation
  *
  * Updated 2020-04-23 by jones ga
  * changed the source to a insert from a stored procedure

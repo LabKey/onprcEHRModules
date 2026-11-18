@@ -6,6 +6,8 @@ Refer to old tkt # 12523, new ticket # 15401
 */
 SELECT
     co.Id,
+    d.Id.curLocation.room as Room,
+    d.Id.curLocation.cage as Cage,
     co.date AS AlertObservationDate,
     co.observation AS AlopeciaScore,
     co.performedby,

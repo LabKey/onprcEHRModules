@@ -1,7 +1,21 @@
+/*
+ * Copyright (c) 2021-2026 LabKey Corporation
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.labkey.GeneticsCore.mhc;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.xmlbeans.XmlException;
 import org.jetbrains.annotations.NotNull;
 import org.labkey.api.assay.AssayProtocolSchema;
 import org.labkey.api.assay.AssayProvider;
@@ -57,11 +71,11 @@ public class MhcTaskRef implements TaskRefTask
         Date lastRun = getLastRun(job.getContainer());
 
         SimpleDateFormat _dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd kk:mm");
-        job.getLogger().info("Last run: " + (lastRun == null ? "never" : _dateTimeFormat.format(lastRun)));
+        job.getLogger().info("Last run: {}", lastRun == null ? "never" : _dateTimeFormat.format(lastRun));
         Date jobStart = new Date();
 
         Set<String> subjects = getIdsWithChangesForAssay(job, lastRun);
-        job.getLogger().info("Total subjects to process: " + subjects.size());
+        job.getLogger().info("Total subjects to process: {}", subjects.size());
 
         for (String subject : subjects)
         {
@@ -86,7 +100,7 @@ public class MhcTaskRef implements TaskRefTask
     }
 
     @Override
-    public void setSettings(Map<String, String> settings) throws XmlException
+    public void setSettings(Map<String, String> settings)
     {
 
     }
@@ -120,7 +134,7 @@ public class MhcTaskRef implements TaskRefTask
 
     private void processSubject(PipelineJob job, String subject) throws PipelineJobException
     {
-        job.getLogger().info("Processing: " + subject);
+        job.getLogger().info("Processing: {}", subject);
         UserSchema us = QueryService.get().getUserSchema(job.getUser(), getTargetContainer(job), "geneticscore");
         TableInfo mhcData = us.getTable("mhc_data");
 
@@ -129,13 +143,11 @@ public class MhcTaskRef implements TaskRefTask
         if (ts.exists())
         {
             List<Map<String, Object>> toDelete = new ArrayList<>();
-            ts.forEachResults(rs -> {
-                toDelete.add(Map.of("rowid", rs.getString(FieldKey.fromString("rowid")), "objectid", rs.getString(FieldKey.fromString("objectid")), "container", rs.getString(FieldKey.fromString("container"))));
-            });
+            ts.forEachResults(rs -> toDelete.add(Map.of("rowid", rs.getString(FieldKey.fromString("rowid")), "objectid", rs.getString(FieldKey.fromString("objectid")), "container", rs.getString(FieldKey.fromString("container")))));
 
             try
             {
-                job.getLogger().info("deleting existing rows: " + toDelete.size());
+                job.getLogger().info("deleting existing rows: {}", toDelete.size());
                 QueryUpdateService qus = mhcData.getUpdateService();
                 qus.setBulkLoad(false); //preserve audit trail
                 qus.deleteRows(job.getUser(), getTargetContainer(job), toDelete, null, null);
@@ -147,7 +159,7 @@ public class MhcTaskRef implements TaskRefTask
         }
 
         List<Map<String, Object>> toInsert = new ArrayList<>();
-        Set<String> fields = PageFlowUtil.set("subjectid", "marker", "result", "assaytype", "totalTests", "score");
+        Set<String> fields = PageFlowUtil.set("subjectid", "marker", "result", "assaytype", "totalTests", "score", "librarytype");
         new TableSelector(us.getTable("mhc_data_source"), fields, new SimpleFilter(FieldKey.fromString("subjectId"), subject), null).forEachResults(rs -> {
             CaseInsensitiveHashMap<Object> map = new CaseInsensitiveHashMap<>();
             for (String f : fields)
@@ -163,7 +175,7 @@ public class MhcTaskRef implements TaskRefTask
         {
             try
             {
-                job.getLogger().info("inserting rows: " + toInsert.size());
+                job.getLogger().info("inserting rows: {}", toInsert.size());
                 BatchValidationException bve = new BatchValidationException();
                 QueryUpdateService qus = mhcData.getUpdateService();
                 qus.setBulkLoad(true);
@@ -197,7 +209,7 @@ public class MhcTaskRef implements TaskRefTask
         {
             //Assay itself:
             TableInfo tableInfo = assay.createDataTable(null);
-            TableSelector ts = new TableSelector(tableInfo, PageFlowUtil.set("subjectId"), (dateSince == null ? null : new SimpleFilter(FieldKey.fromString("run/modified"), dateSince, CompareType.DATE_GTE)), null);
+            TableSelector ts = new TableSelector(tableInfo, PageFlowUtil.set("subjectId"), (dateSince == null ? null : new SimpleFilter(FieldKey.fromString("modified"), dateSince, CompareType.DATE_GTE)), null);
             uniqueIds.addAll(ts.getArrayList(String.class));
 
             //Now audit table:
@@ -224,7 +236,7 @@ public class MhcTaskRef implements TaskRefTask
                     ExpRun run = ExperimentService.get().getExpRun(rs.getString(FieldKey.fromString("RunLsid")));
                     if (run == null)
                     {
-                        job.getLogger().warn("Unable to find RunLsid for audit row: " + rs.getObject(FieldKey.fromString("RunLsid")));
+                        job.getLogger().warn("Unable to find RunLsid for audit row: {}", rs.getObject(FieldKey.fromString("RunLsid")));
                         return;
                     }
 
@@ -259,14 +271,14 @@ public class MhcTaskRef implements TaskRefTask
                         TableInfo queryAuditTableInfo = QueryService.get().getUserSchema(job.getUser(), getTargetContainer(job), "auditLog").getTable("QueryUpdateAuditEvent");
                         SimpleFilter auditFilter = new SimpleFilter(FieldKey.fromString("comment"), "A row was deleted.");
                         auditFilter.addCondition(FieldKey.fromString("SchemaName"), assay.getSchemaName());
-                        auditFilter.addCondition(FieldKey.fromString("QueryName"), "Data");
+                        auditFilter.addCondition(FieldKey.fromString("QueryName"), AssayProtocolSchema.DATA_TABLE_NAME);
                         auditFilter.addCondition(FieldKey.fromString("RowPk"), analysisIdsUpdated.stream().map(String::valueOf).collect(Collectors.toSet()), CompareType.IN);
 
                         TableSelector ts3 = new TableSelector(queryAuditTableInfo, PageFlowUtil.set("oldRecordMap"), auditFilter, null);
                         ts3.forEachResults(rs -> {
                             if (rs.getObject(FieldKey.fromString("oldRecordMap")) != null)
                             {
-                                Map<String, String> map = new CaseInsensitiveHashMap<>(PageFlowUtil.mapFromQueryString(FieldKey.fromString("oldRecordMap").toString()));
+                                Map<String, String> map = new CaseInsensitiveHashMap<>(PageFlowUtil.mapFromQueryString(rs.getString(FieldKey.fromString("oldRecordMap"))));
                                 if (StringUtils.trimToNull(map.get("subjectid")) != null)
                                 {
                                     uniqueIds.add(map.get("subjectid"));
@@ -275,6 +287,25 @@ public class MhcTaskRef implements TaskRefTask
                         });
                     }
                 }
+
+                // Also check query audit log:
+                TableInfo queryAuditTableInfo = QueryService.get().getUserSchema(job.getUser(), getTargetContainer(job), "auditLog").getTable("QueryUpdateAuditEvent");
+                SimpleFilter auditFilter = new SimpleFilter(FieldKey.fromString("created"), dateSince, CompareType.DATE_GTE);
+                auditFilter.addCondition(FieldKey.fromString("SchemaName"), assay.getSchemaName());
+                auditFilter.addCondition(FieldKey.fromString("QueryName"), AssayProtocolSchema.DATA_TABLE_NAME);
+                auditFilter.addCondition(FieldKey.fromString("Comment"), "A row was deleted.");
+
+                TableSelector tsAudit = new TableSelector(queryAuditTableInfo, PageFlowUtil.set("oldRecordMap"), auditFilter, null);
+                tsAudit.forEachResults(rs -> {
+                    if (rs.getObject(FieldKey.fromString("oldRecordMap")) != null)
+                    {
+                        Map<String, String> map = new CaseInsensitiveHashMap<>(PageFlowUtil.mapFromQueryString(rs.getString(FieldKey.fromString("oldRecordMap"))));
+                        if (StringUtils.trimToNull(map.get("subjectid")) != null)
+                        {
+                            uniqueIds.add(map.get("subjectid"));
+                        }
+                    }
+                });
             }
         }
 

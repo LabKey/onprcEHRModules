@@ -1,0 +1,1 @@
+ALTER TABLE geneticscore.mhc_data ADD libraryType varchar(1000);

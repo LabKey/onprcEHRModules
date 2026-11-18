@@ -1,3 +1,18 @@
+/*
+ * Copyright (c) 2014-2026 LabKey Corporation
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.labkey.onprc_billing.table;
 
 import org.apache.logging.log4j.Logger;
@@ -181,8 +196,8 @@ public class ONPRC_BillingCustomizer extends AbstractTableCustomizer
         if (ti.getColumn("totalCost") == null && unitCost != null && ti.getColumn("quantity") != null)
         {
             SQLFragment sql = new SQLFragment(
-                    "CAST(ROUND((" + ExprColumn.STR_TABLE_ALIAS + ".unitCost * " +
-                            ExprColumn.STR_TABLE_ALIAS + ".quantity), 2) AS DECIMAL(18,2))");
+                    "CAST(ROUND(CAST(" + ExprColumn.STR_TABLE_ALIAS + ".unitCost AS DECIMAL(18,4)) * " +
+                            "CAST(" + ExprColumn.STR_TABLE_ALIAS + ".quantity AS DECIMAL(18,4)), 2) AS DECIMAL(18,2))");
             ExprColumn totalCost = new ExprColumn(
                     ti,
                     "totalCost",

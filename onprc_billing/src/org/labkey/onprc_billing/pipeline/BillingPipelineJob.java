@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013 LabKey Corporation
+ * Copyright (c) 2014-2026 LabKey Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,6 @@ import org.labkey.api.files.FileUrls;
 import org.labkey.api.pipeline.PipeRoot;
 import org.labkey.api.pipeline.PipelineJob;
 import org.labkey.api.pipeline.PipelineJobService;
-import org.labkey.api.pipeline.PipelineValidationException;
 import org.labkey.api.pipeline.TaskId;
 import org.labkey.api.pipeline.TaskPipeline;
 import org.labkey.api.security.User;
@@ -57,7 +56,7 @@ public class BillingPipelineJob extends PipelineJob implements BillingPipelineJo
         _form = form;
     }
 
-    public static FileLike createAnalysisDir(PipeRoot pipeRoot, String name) throws PipelineValidationException, IOException
+    public static FileLike createAnalysisDir(PipeRoot pipeRoot, String name) throws IOException
     {
         String trialName = FileUtil.makeLegalName(name);
         FileLike analysisDir = pipeRoot.resolvePathToFileLike(trialName);

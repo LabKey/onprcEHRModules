@@ -1,3 +1,18 @@
+/*
+ * Copyright (c) 2014-2026 LabKey Corporation
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.labkey.onprc_ssu.notification;
 
 import org.labkey.api.data.ColumnInfo;
@@ -160,7 +175,7 @@ public class SSU_Notification extends AbstractNotification
                     TableSelector ts2 = new TableSelector(casesTable, PageFlowUtil.set("Id"), filter2, null);
                     if (ts2.exists())
                     {
-                        long c = countList.get(0);
+                        long c = countList.getFirst();
                         c--;
                         countList.clear();
                         countList.add(c);
@@ -168,9 +183,9 @@ public class SSU_Notification extends AbstractNotification
                 }
             });
 
-            if (countList.get(0) > 0)
+            if (countList.getFirst() > 0)
             {
-                msg.append("<b>WARNING: There are " + countList.get(0) + " surgeries in the past 48H that lack an open surgery case, excluding procedures with no followup days.</b><br>");
+                msg.append("<b>WARNING: There are " + countList.getFirst() + " surgeries in the past 48H that lack an open surgery case, excluding procedures with no followup days.</b><br>");
                 msg.append("<p><a href='" + getExecuteQueryUrl(ehrContainer, "study", "encounters", "Surgeries", filter) + "'>Click here to view them</a><br>\n");
                 msg.append("<hr>\n");
             }
@@ -222,7 +237,7 @@ public class SSU_Notification extends AbstractNotification
                     TableSelector ts2 = new TableSelector(treatmentsTable, PageFlowUtil.set("Id"), filter2, null);
                     if (ts2.exists())
                     {
-                        Long c = countList.get(0);
+                        Long c = countList.getFirst();
                         c--;
                         countList.clear();
                         countList.add(c);
@@ -244,9 +259,9 @@ public class SSU_Notification extends AbstractNotification
                 }
             });
 
-            if (countList.get(0) > 0)
+            if (countList.getFirst() > 0)
             {
-                msg.append("<b>WARNING: There are " + countList.get(0) + " procedures performed in that past 48H, but do not have any surgical medications ordered, excluding procedures without default post-op analgesia/antibiotics.  NOTE: this currently only looks for the presence of any surgical medication, and does not check whether the right medications have been ordered</b><br>");
+                msg.append("<b>WARNING: There are " + countList.getFirst() + " procedures performed in that past 48H, but do not have any surgical medications ordered, excluding procedures without default post-op analgesia/antibiotics.  NOTE: this currently only looks for the presence of any surgical medication, and does not check whether the right medications have been ordered</b><br>");
                 msg.append("<table border=1 style='border-collapse: collapse;'>");
                 msg.append("<tr style='font-weight: bold;'><td>Id</td><td>Date</td><td>Procedure</td><td>Charge Type</td><td>Surgical Treatments</td></tr>");
                 msg.append(rows);

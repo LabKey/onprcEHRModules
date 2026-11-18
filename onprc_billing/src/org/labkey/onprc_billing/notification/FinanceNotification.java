@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013 LabKey Corporation
+ * Copyright (c) 2014-2026 LabKey Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -59,12 +59,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
-/**
- * Created with IntelliJ IDEA.
- * User: bimber
- * Date: 4/5/13
- * Time: 2:25 PM
- */
 public class FinanceNotification extends AbstractNotification
 {
     protected static final DecimalFormat _dollarFormat = new DecimalFormat("$###,##0.00");
@@ -342,14 +336,14 @@ public class FinanceNotification extends AbstractNotification
                 Double quantity = rs.getDouble(FieldKey.fromString("quantity"));
                 if (unitCost != null && quantity != null)
                 {
-                    double t = totalsMap.containsKey("totalCost") ? totalsMap.get("totalCost") : 0.0;
+                    double t = totalsMap.getOrDefault("totalCost", 0.0);
                     t += (quantity * unitCost);
                     totalsMap.put("totalCost", t);
                 }
 
                 if (quantity != null)
                 {
-                    double t = totalsMap.containsKey("total") ? totalsMap.get("total") : 0.0;
+                    double t = totalsMap.getOrDefault("total", 0.0);
                     t += quantity;
                     totalsMap.put("total", t);
                 }
@@ -405,7 +399,7 @@ public class FinanceNotification extends AbstractNotification
                             values = new HashMap<>();
 
 
-                        Integer count = values.containsKey(fd.getFieldName()) ? values.get(fd.getFieldName()) : 0;
+                        Integer count = values.getOrDefault(fd.getFieldName(), 0);
                         count++;
                         values.put(fd.getFieldName(), count);
 

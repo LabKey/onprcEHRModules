@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2017 LabKey Corporation
+ * Copyright (c) 2012-2026 LabKey Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -125,12 +125,6 @@ public class ONPRC_EHRModule extends ExtendedSimpleModule
     public @Nullable Double getSchemaVersion()
     {
         return 26.006;
-    }
-
-    @Override
-    public boolean hasScripts()
-    {
-        return true;
     }
 
     @Override

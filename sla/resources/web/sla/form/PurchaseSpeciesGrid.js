@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2016-2026 LabKey Corporation
+ *
+ * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
+ */
 /**
  * Ext component for display the editable grid of Species purchase order information (see CreatePurchaseOrder.js for usage).
  */
@@ -34,7 +39,7 @@ Ext4.define('SLA.form.SpeciesGrid', {
         // load the initData, which is provided for an updatePurchaseOrder view, into an Ext store that
         // will be used by the grid to render rows
         this.store = Ext4.create('Ext.data.Store', {
-            fields: Ext4.Array.pluck(this.columns, 'dataIndex').remove(undefined),
+            fields: Ext4.Array.clean(Ext4.Array.pluck(this.columns, 'dataIndex')),
             data: this.initData
         });
 

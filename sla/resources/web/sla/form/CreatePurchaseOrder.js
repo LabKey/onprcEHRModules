@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2016-2026 LabKey Corporation
+ *
+ * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
+ */
 
 /**
  * Ext component for creating the input form and species grid for collecting/updating information about
@@ -1185,7 +1190,7 @@ Ext4.define('SLA.panel.PurchaseOrderRequest', {
             closable: false
         });
 
-        var msgBoxCloseTask = new Ext.util.DelayedTask(function(){
+        var msgBoxCloseTask = new Ext4.util.DelayedTask(function(){
             msgBox.close();
             successCallback.call(scope);
         }, this);
