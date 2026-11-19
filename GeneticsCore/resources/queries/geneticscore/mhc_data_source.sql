@@ -15,7 +15,8 @@ SELECT
     cast('SSP' as varchar) as assaytype,
     'N/A' as librarytype,
     NULL as score,
-    s.modified
+    s.modified,
+    null as analysisId
 
 FROM assay.SSP_assay.SSP.SSP_Summary s
 WHERE s.subjectId is not null
@@ -31,10 +32,11 @@ SELECT
     cast('SBT' as varchar) as assaytype,
     group_concat(DISTINCT a.analysisId.readset.libraryType, ',') as librarytype,
     AVG(a.result) AS score,
-    greatest(max(a.modified), max(a.analysisId.readset.modified)) as modified
+    greatest(max(a.modified), max(a.analysisId.readset.modified)) as modified,
+    a.analysisId
 
 FROM assay.GenotypeAssay.Genotype.Data a
-WHERE a.run.assayType = 'SBT' AND a.analysisId.readset.libraryType LIKE 'SBT_MHC_Class_I_%'
+WHERE a.run.assayType = 'SBT' AND a.analysisId.readset.libraryType LIKE 'SBT_MHC_Class_I!_%' ESCAPE '!'
 GROUP BY a.subjectid, a.marker, a.analysisId
 
 UNION ALL
@@ -48,7 +50,8 @@ DISTINCT s.subjectId,
          cast('SBT' as varchar) as assaytype,
          null as librarytype,
          NULL as score,
-         greatest(s.modified, s.rsModified) as modified
+         greatest(s.modified, s.rsModified) as modified,
+         s.analysisId
 
 --we want any IDs with SBT data, but lacking data for these special-cased markers
 FROM genotypeassays.primer_pairs p
@@ -56,11 +59,11 @@ FROM genotypeassays.primer_pairs p
      FULL JOIN (
         SELECT
             subjectId,
-            analysisId,
+            s.analysisId,
             max(s.modified) as modified,
             max(s.analysisId.readset.modified) as rsModified
         FROM assay.GenotypeAssay.Genotype.Data s
-        WHERE s.subjectId IS NOT NULL AND s.run.assayType = 'SBT' AND s.analysisId.readset.libraryType LIKE 'SBT_MHC_Class_I_%'
+        WHERE s.subjectId IS NOT NULL AND s.run.assayType = 'SBT' AND s.analysisId.readset.libraryType LIKE 'SBT_MHC_Class_I!_%' ESCAPE '!'
         GROUP BY s.subjectId, s.analysisId
      ) s ON (1=1)
      LEFT JOIN assay.GenotypeAssay.Genotype.Data a ON (
@@ -68,6 +71,6 @@ FROM genotypeassays.primer_pairs p
          p.ref_nt_name = a.marker AND
          a.subjectid = s.subjectid AND
          a.analysisId = s.analysisId AND
-         s.analysisId.readset.libraryType LIKE 'SBT_MHC_Class_I_%'
+         s.analysisId.readset.libraryType LIKE 'SBT_MHC_Class_I!_%' ESCAPE '!'
      )
 WHERE a.rowid IS NULL AND s.subjectId IS NOT NULL AND (p.ref_nt_name LIKE 'Mamu-A%' OR p.ref_nt_name LIKE 'Mamu-B%')
