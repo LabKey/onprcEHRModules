@@ -1,4 +1,9 @@
 /*
+ * Copyright (c) 2023-2026 LabKey Corporation
+ *
+ * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
+ */
+/*
  By Lakshmi Kolli, 3/27/2023
  Monkeys needing pregnancy checks:
 Exclude monkeys who have been assessed and found to be nonpregnant- maybe exclude 'nonpregnant state'

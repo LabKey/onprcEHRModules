@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 LabKey Corporation
+ *
+ * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
+ */
 
 CREATE TABLE onprc_ehr.RequirementName_Convert(
     searchid integer IDENTITY(100,1) NOT NULL,

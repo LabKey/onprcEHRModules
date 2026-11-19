@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2014 LabKey Corporation
+ * Copyright (c) 2014-2026 LabKey Corporation
  *
  * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
  */
@@ -134,7 +134,7 @@ Ext4.define('SLA.window.AddCensusWindow', {
 
         var records = [];
         Ext4.Array.forEach(results.rows, function(row){
-            if(row.project){
+            if(row.project && row.Animal_Count != 0 ){
                 //TODO: set correct rows
 
                 var obj = {

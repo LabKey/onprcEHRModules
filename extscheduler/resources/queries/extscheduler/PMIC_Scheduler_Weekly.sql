@@ -1,4 +1,9 @@
 /*
+ * Copyright (c) 2021-2026 LabKey Corporation
+ *
+ * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
+ */
+/*
 Created by: Kolli on 11/14/2019
 Weekly report: This query filters all the PMIC events from today to the next 7 days
 Change by Kolli, 5/5/21: This query filters all the PMIC events from next day to the next 7 days.

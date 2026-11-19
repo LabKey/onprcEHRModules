@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2020-2026 LabKey Corporation
+ *
+ * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
+ */
 SELECT alias, alias + ' - ' + COALESCE(investigatorName, 'N/A') as aliasPI
 FROM Site.{substitutePath moduleProperty('ONPRC_Billing','BillingContainer_Public')}.onprc_billing_public.aliases
 --WHERE a.projectStatus in ('Active', 'Partial Setup', 'No Cost Ext', 'Preaward') OR a.alias in ('68119000', '46050050')

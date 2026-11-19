@@ -4,6 +4,7 @@
         <tables xmlns="http://labkey.org/data/xml">
             <table tableName="PurchaseOrderDetailsAdmin" tableDbType="NOT_IN_DB">
                 <tableTitle>Purchase Order Details</tableTitle>
+
                 <columns>
                     <column columnName="updatelink">
                         <columnTitle></columnTitle>

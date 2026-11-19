@@ -20,9 +20,11 @@
     </transforms>
 
     <schedule>
-        <!-- Runs daily at 11pm -->
-        <cron expression="0 0 23 * * ?"/>
-<!--        <poll interval="15m" />&lt;!&ndash; For testing only - runs every 15 mins &ndash;&gt;-->
+        <!-- Runs daily at 4:30 AM -->
+        <cron expression="0 30 04 * * ?"/>
+
+        <!-- For testing only - runs every 15 mins -->
+        <!-- <poll interval="15m" /> -->
     </schedule>
 
 </etl>

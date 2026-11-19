@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 LabKey Corporation
+ * Copyright (c) 2015-2026 LabKey Corporation
  * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
 
  -- Modified by Kolli on 9/10/2019
@@ -97,7 +97,7 @@ WHERE t1.date is not null
 
 
 -- /*
---  * Copyright (c) 2015 LabKey Corporation
+--  * Copyright (c) 2015-2026 LabKey Corporation
 --  *
 --  * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
 --  */

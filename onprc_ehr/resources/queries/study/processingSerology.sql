@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2014 LabKey Corporation
+ * Copyright (c) 2013-2026 LabKey Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -246,7 +246,7 @@ SELECT
   bchem.lastDate as lastBChem,
   timestampdiff('SQL_TSI_DAY', bchem.lastDate, now()) as daysSinceBChem,
   CASE
-      WHEN ( ( (timestampdiff('SQL_TSI_DAY', bchem.lastDate, now()) > 340 ) OR bchem.lastDate is null ) AND (nts.Id is null) AND d.Id.curLocation.area not in ('Corral', 'Shelters', 'PENS' )  ) THEN false
+      WHEN  ( (timestampdiff('SQL_TSI_DAY', bchem.lastDate, now()) > 340 ) AND (cchem.lastDate is null) AND d.Id.curLocation.area not in ('Corral', 'Shelters', 'PENS' )  ) THEN false
       ELSE true
       END as isBChemCurrent,
 

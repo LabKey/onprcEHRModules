@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2017 LabKey Corporation
+ * Copyright (c) 2013-2026 LabKey Corporation
  *
  * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
  */
@@ -273,13 +273,17 @@ EHR.model.DataModelManager.registerMetadata('Default', {
          }
       },
         //Modified: 9-10-2026 R. Blasa
-        'study.housing': {
+        'study.Housing': {
             room: {
-                editorConfig: {
-                    plugins: [Ext4.create('LDK.plugin.UserEditableCombo', {
-                        allowChooseOther: false
-                    })]
-                }
+             xtype: 'onprc_ehr-roomfieldsingle',
+                allowBlank: false,
+            }
+        },
+
+        'study.Birth': {
+            room: {
+                xtype: 'onprc_ehr-roomfieldsingle',
+                allowBlank: false
             }
         },
 

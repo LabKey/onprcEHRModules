@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2016-2026 LabKey Corporation
+ *
+ * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
+ */
 
 SELECT
 '[Update order]' AS updatelink,
@@ -31,4 +36,4 @@ pd.cancelledby
 
 FROM PublicPurchase p, PublicPurchaseDetails pd
 WHERE p.objectid = pd.purchaseid
-
+ORDER BY requestdate DESC

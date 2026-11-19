@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2025-2026 LabKey Corporation
+ *
+ * Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
+ */
 /* Created by Kollil, Dec, 2025
    Tkt # 13618
    Priority 4: Add links to grids 3 and 4 in daily Behavior Alerts email (do not need to display full grid in email)
@@ -9,6 +14,7 @@ SELECT
     Id.demographics.gender as Sex,
     Id.curlocation.room as Room,
     Id.curlocation.cage as Cage,
+    Id.demographics.species AS Species,
     project.displayname as project,
     project.protocol.displayname as Protocol,
     project.title as Title,

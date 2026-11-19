@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012 LabKey Corporation
+ * Copyright (c) 2013-2026 LabKey Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ package org.labkey.GeneticsCore;
 
 import org.jetbrains.annotations.Nullable;
 import org.labkey.GeneticsCore.notification.GeneticsCoreNotification;
+import org.labkey.GeneticsCore.notification.MhcDataNotification;
 import org.labkey.api.exp.api.ExperimentService;
 import org.labkey.api.ldk.ExtendedSimpleModule;
 import org.labkey.api.ldk.LDKService;
@@ -40,13 +41,7 @@ public class GeneticsCoreModule extends ExtendedSimpleModule
     @Override
     public @Nullable Double getSchemaVersion()
     {
-        return 17.14;
-    }
-
-    @Override
-    public boolean hasScripts()
-    {
-        return true;
+        return 17.15;
     }
 
     @Override
@@ -61,6 +56,7 @@ public class GeneticsCoreModule extends ExtendedSimpleModule
         LDKService.get().registerQueryButton(btn2, "laboratory", "samples");
 
         NotificationService.get().registerNotification(new GeneticsCoreNotification());
+        NotificationService.get().registerNotification(new MhcDataNotification());
 
         ExperimentService.get().addExperimentListener(new GeneticsCoreExpListener());
     }

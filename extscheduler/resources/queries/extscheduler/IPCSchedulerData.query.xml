@@ -1,0 +1,9 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="IPCSchedulerData" tableDbType="NOT_IN_DB">
+                <tableTitle>IPC Scheduler Data</tableTitle>
+            </table>
+        </tables>
+    </metadata>
+</query>
