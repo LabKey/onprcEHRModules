@@ -36,7 +36,7 @@ SELECT
     a.analysisId
 
 FROM assay.GenotypeAssay.Genotype.Data a
-WHERE a.run.assayType = 'SBT' AND a.analysisId.readset.libraryType LIKE 'SBT_MHC_Class_I[_]%'
+WHERE a.run.assayType = 'SBT' AND a.analysisId.readset.libraryType LIKE 'SBT_MHC_Class_I!_%' ESCAPE '!'
 GROUP BY a.subjectid, a.marker, a.analysisId
 
 UNION ALL
@@ -63,7 +63,7 @@ FROM genotypeassays.primer_pairs p
             max(s.modified) as modified,
             max(s.analysisId.readset.modified) as rsModified
         FROM assay.GenotypeAssay.Genotype.Data s
-        WHERE s.subjectId IS NOT NULL AND s.run.assayType = 'SBT' AND s.analysisId.readset.libraryType LIKE 'SBT_MHC_Class_I[_]%'
+        WHERE s.subjectId IS NOT NULL AND s.run.assayType = 'SBT' AND s.analysisId.readset.libraryType LIKE 'SBT_MHC_Class_I!_%' ESCAPE '!'
         GROUP BY s.subjectId, s.analysisId
      ) s ON (1=1)
      LEFT JOIN assay.GenotypeAssay.Genotype.Data a ON (
@@ -71,6 +71,6 @@ FROM genotypeassays.primer_pairs p
          p.ref_nt_name = a.marker AND
          a.subjectid = s.subjectid AND
          a.analysisId = s.analysisId AND
-         s.analysisId.readset.libraryType LIKE 'SBT_MHC_Class_I[_]%'
+         s.analysisId.readset.libraryType LIKE 'SBT_MHC_Class_I!_%' ESCAPE '!'
      )
 WHERE a.rowid IS NULL AND s.subjectId IS NOT NULL AND (p.ref_nt_name LIKE 'Mamu-A%' OR p.ref_nt_name LIKE 'Mamu-B%')
