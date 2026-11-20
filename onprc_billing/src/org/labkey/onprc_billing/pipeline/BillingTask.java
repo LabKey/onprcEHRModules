@@ -149,7 +149,7 @@ public class BillingTask extends PipelineJob.Task<BillingTask.Factory>
             se = new SqlSelector(ONPRC_BillingSchema.getInstance().getSchema(), new SQLFragment("select max(cast(transactionNumber as integer)) as expr from " + ONPRC_BillingSchema.NAME+ "." + ONPRC_BillingSchema.TABLE_INVOICED_ITEMS + " WHERE transactionNumber not like '%[^0-9]%'"));
         else if (DbScope.getLabKeyScope().getSqlDialect().isPostgreSQL())
         {
-            se = new SqlSelector(ONPRC_BillingSchema.getInstance().getSchema(), new SQLFragment("select max(cast(transactionNumber as integer)) as expr from " + ONPRC_BillingSchema.NAME+ "." + ONPRC_BillingSchema.TABLE_INVOICED_ITEMS + " WHERE transactionNumber ~ '^[0-9]$'"));
+            se = new SqlSelector(ONPRC_BillingSchema.getInstance().getSchema(), new SQLFragment("select max(cast(transactionNumber as integer)) as expr from " + ONPRC_BillingSchema.NAME+ "." + ONPRC_BillingSchema.TABLE_INVOICED_ITEMS + " WHERE transactionNumber ~ '^[0-9]+$'"));
         }
         else
         {

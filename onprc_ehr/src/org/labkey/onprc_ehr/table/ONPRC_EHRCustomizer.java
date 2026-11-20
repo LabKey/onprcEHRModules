@@ -1611,64 +1611,61 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
             }
         }
 
-        if (ti.getSqlDialect().isSqlServer())
+        String annualReviewDate = "annualReviewDate";
+        if (null == ti.getColumn(annualReviewDate) && null != ti.getColumn("approve"))
         {
-            String annualReviewDate = "annualReviewDate";
-            if (null == ti.getColumn(annualReviewDate) && null != ti.getColumn("approve"))
-            {
-                //NOTE: day used instead of year to be PG / LK12.3 compatible
-                String sqlString = "(CASE " +
-                        //if the protocol is already ended, or began more than 3 years ago, assume it is ended
-                        " WHEN " + ExprColumn.STR_TABLE_ALIAS + ".enddate IS NOT NULL THEN NULL " +
-                        " WHEN (" + ti.getSqlDialect().getDateDiff(Calendar.DATE, "{fn curdate()}", ExprColumn.STR_TABLE_ALIAS + ".approve") + " >= 1095) THEN NULL" +
-                        //when both dates are null, show null
-                        " WHEN (" + ExprColumn.STR_TABLE_ALIAS + ".approve" + " IS NULL AND " + ExprColumn.STR_TABLE_ALIAS + ".lastAnnualReview" + " IS NULL) THEN NULL" +
-                        //otherwise, show the next annual renewal date
-                        " ELSE {fn timestampadd(SQL_TSI_DAY, 364, COALESCE(" + ExprColumn.STR_TABLE_ALIAS + ".lastAnnualReview, " + ExprColumn.STR_TABLE_ALIAS + ".approve)" + ")}" +
-                        " END)";
-                SQLFragment sql = new SQLFragment(sqlString);
-                ExprColumn annualReviewDateCol = new ExprColumn(ti, annualReviewDate, sql, JdbcType.DATE, ti.getColumn("approve"));
-                annualReviewDateCol.setLabel("IACUC Annual Update Due Date");
-                annualReviewDateCol.setDescription("This column calculates the date when the next annual update is due.  This is 364 days after the last annual review, or blank if more than 3 years after the initial IACUC approval");
-                ti.addColumn(annualReviewDateCol);
+            //NOTE: day used instead of year to be PG / LK12.3 compatible
+            String sqlString = "(CASE " +
+                    //if the protocol is already ended, or began more than 3 years ago, assume it is ended
+                    " WHEN " + ExprColumn.STR_TABLE_ALIAS + ".enddate IS NOT NULL THEN NULL " +
+                    " WHEN (" + ti.getSqlDialect().getDateDiff(Calendar.DATE, "{fn curdate()}", ExprColumn.STR_TABLE_ALIAS + ".approve") + " >= 1095) THEN NULL" +
+                    //when both dates are null, show null
+                    " WHEN (" + ExprColumn.STR_TABLE_ALIAS + ".approve" + " IS NULL AND " + ExprColumn.STR_TABLE_ALIAS + ".lastAnnualReview" + " IS NULL) THEN NULL" +
+                    //otherwise, show the next annual renewal date
+                    " ELSE {fn timestampadd(SQL_TSI_DAY, 364, COALESCE(" + ExprColumn.STR_TABLE_ALIAS + ".lastAnnualReview, " + ExprColumn.STR_TABLE_ALIAS + ".approve)" + ")}" +
+                    " END)";
+            SQLFragment sql = new SQLFragment(sqlString);
+            ExprColumn annualReviewDateCol = new ExprColumn(ti, annualReviewDate, sql, JdbcType.DATE, ti.getColumn("approve"));
+            annualReviewDateCol.setLabel("IACUC Annual Update Due Date");
+            annualReviewDateCol.setDescription("This column calculates the date when the next annual update is due.  This is 364 days after the last annual review, or blank if more than 3 years after the initial IACUC approval");
+            ti.addColumn(annualReviewDateCol);
 
-                String daysUntilAnnual = "daysUntilAnnualReview";
-                SQLFragment sql2 = new SQLFragment("(CASE " +
-                        // see above for logic behind this
-                        " WHEN " + ExprColumn.STR_TABLE_ALIAS + ".enddate IS NOT NULL THEN NULL " +
-                        " WHEN (" + ti.getSqlDialect().getDateDiff(Calendar.DATE, "{fn curdate()}", ExprColumn.STR_TABLE_ALIAS + ".approve") + " >= 1095) THEN NULL" +
-                        //when both date are null, it is due
-                        " WHEN (" + ExprColumn.STR_TABLE_ALIAS + ".approve" + " IS NULL AND " + ExprColumn.STR_TABLE_ALIAS + ".lastAnnualReview" + " IS NULL) THEN 0" +
-                        //NOTE: these expire 1 day prior to a full year, so use 364 instead of 365
-                        " ELSE 364 - (" + ti.getSqlDialect().getDateDiff(Calendar.DATE, "{fn curdate()}", "COALESCE(" + ExprColumn.STR_TABLE_ALIAS + ".lastAnnualReview, " + ExprColumn.STR_TABLE_ALIAS + ".approve)") + ")" +
-                        " END)");
-                ExprColumn daysUntilAnnualCol = new ExprColumn(ti, daysUntilAnnual, sql2, JdbcType.INTEGER, ti.getColumn("approve"));
-                daysUntilAnnualCol.setLabel("Days Until IACUC Annual Update");
-                daysUntilAnnualCol.setDescription("This column calculates the days until the next annual update is due.  This is 364 days after the last annual review, or blank if more than 3 years after the initial IACUC approval");
-                daysUntilAnnualCol.setFacetingBehaviorType(FacetingBehaviorType.ALWAYS_OFF);
-                ti.addColumn(daysUntilAnnualCol);
-            }
+            String daysUntilAnnual = "daysUntilAnnualReview";
+            SQLFragment sql2 = new SQLFragment("(CASE " +
+                    // see above for logic behind this
+                    " WHEN " + ExprColumn.STR_TABLE_ALIAS + ".enddate IS NOT NULL THEN NULL " +
+                    " WHEN (" + ti.getSqlDialect().getDateDiff(Calendar.DATE, "{fn curdate()}", ExprColumn.STR_TABLE_ALIAS + ".approve") + " >= 1095) THEN NULL" +
+                    //when both date are null, it is due
+                    " WHEN (" + ExprColumn.STR_TABLE_ALIAS + ".approve" + " IS NULL AND " + ExprColumn.STR_TABLE_ALIAS + ".lastAnnualReview" + " IS NULL) THEN 0" +
+                    //NOTE: these expire 1 day prior to a full year, so use 364 instead of 365
+                    " ELSE 364 - (" + ti.getSqlDialect().getDateDiff(Calendar.DATE, "{fn curdate()}", "COALESCE(" + ExprColumn.STR_TABLE_ALIAS + ".lastAnnualReview, " + ExprColumn.STR_TABLE_ALIAS + ".approve)") + ")" +
+                    " END)");
+            ExprColumn daysUntilAnnualCol = new ExprColumn(ti, daysUntilAnnual, sql2, JdbcType.INTEGER, ti.getColumn("approve"));
+            daysUntilAnnualCol.setLabel("Days Until IACUC Annual Update");
+            daysUntilAnnualCol.setDescription("This column calculates the days until the next annual update is due.  This is 364 days after the last annual review, or blank if more than 3 years after the initial IACUC approval");
+            daysUntilAnnualCol.setFacetingBehaviorType(FacetingBehaviorType.ALWAYS_OFF);
+            ti.addColumn(daysUntilAnnualCol);
+        }
 
-            String renewalDate = "renewalDate";
-            if (null == ti.getColumn(renewalDate) && null != ti.getColumn("approve"))
-            {
-                //NOTE: while SQL_TSI_YEAR is not PG compatible, use it to deal w/ leap years.
-                String sqlString = "(CASE WHEN " + ExprColumn.STR_TABLE_ALIAS + ".enddate IS NULL THEN {fn timestampadd(SQL_TSI_DAY, -1, {fn timestampadd(SQL_TSI_YEAR, 3, " + ExprColumn.STR_TABLE_ALIAS + ".approve)})} ELSE null END)";
-                SQLFragment sql = new SQLFragment(sqlString);
-                ExprColumn renewalCol = new ExprColumn(ti, renewalDate, sql, JdbcType.DATE, ti.getColumn("approve"));
-                renewalCol.setLabel("3-Yr Expiration Date");
-                ti.addColumn(renewalCol);
+        String renewalDate = "renewalDate";
+        if (null == ti.getColumn(renewalDate) && null != ti.getColumn("approve"))
+        {
+            //NOTE: SQL_TSI_YEAR handles leap years
+            String sqlString = "(CASE WHEN " + ExprColumn.STR_TABLE_ALIAS + ".enddate IS NULL THEN {fn timestampadd(SQL_TSI_DAY, -1, {fn timestampadd(SQL_TSI_YEAR, 3, " + ExprColumn.STR_TABLE_ALIAS + ".approve)})} ELSE null END)";
+            SQLFragment sql = new SQLFragment(sqlString);
+            ExprColumn renewalCol = new ExprColumn(ti, renewalDate, sql, JdbcType.DATE, ti.getColumn("approve"));
+            renewalCol.setLabel("3-Yr Expiration Date");
+            ti.addColumn(renewalCol);
 
-                String daysUntil = "daysUntilRenewal";
-                SQLFragment sql2 = new SQLFragment("(CASE " +
-                        " WHEN " + ExprColumn.STR_TABLE_ALIAS + ".enddate IS NULL " +
-                        " THEN (" + ti.getSqlDialect().getDateDiff(Calendar.DATE, sqlString, "{fn curdate()}") + ") - 1" +
-                        " ELSE NULL END)");
-                ExprColumn daysUntilCol = new ExprColumn(ti, daysUntil, sql2, JdbcType.INTEGER, ti.getColumn("approve"));
-                daysUntilCol.setLabel("Days Until 3-Yr Expiration");
-                daysUntilCol.setFacetingBehaviorType(FacetingBehaviorType.ALWAYS_OFF);
-                ti.addColumn(daysUntilCol);
-            }
+            String daysUntil = "daysUntilRenewal";
+            SQLFragment sql2 = new SQLFragment("(CASE " +
+                    " WHEN " + ExprColumn.STR_TABLE_ALIAS + ".enddate IS NULL " +
+                    " THEN (" + ti.getSqlDialect().getDateDiff(Calendar.DATE, sqlString, "{fn curdate()}") + ") - 1" +
+                    " ELSE NULL END)");
+            ExprColumn daysUntilCol = new ExprColumn(ti, daysUntil, sql2, JdbcType.INTEGER, ti.getColumn("approve"));
+            daysUntilCol.setLabel("Days Until 3-Yr Expiration");
+            daysUntilCol.setFacetingBehaviorType(FacetingBehaviorType.ALWAYS_OFF);
+            ti.addColumn(daysUntilCol);
         }
     }
 
