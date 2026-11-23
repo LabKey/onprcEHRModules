@@ -47,6 +47,7 @@ public class ARTCoreRequestFormType extends RequestForm
             s.addConfigSource("ARTCore_Services");
         }
     }
+
     //Added: 8-7-2024 R.Blasa
     @Override
     public boolean isVisible()
@@ -56,6 +57,8 @@ public class ARTCoreRequestFormType extends RequestForm
         {
             return false;
         }
+
+
         return super.isVisible();
     }
 
