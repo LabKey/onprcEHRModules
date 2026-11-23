@@ -254,6 +254,7 @@ public class BehaviorNotification extends ColonyAlertsNotification
             columns.add(FieldKey.fromString("Sex"));
             columns.add(FieldKey.fromString("Room"));
             columns.add(FieldKey.fromString("Cage"));
+            columns.add(FieldKey.fromString("Species"));
             columns.add(FieldKey.fromString("project"));
             columns.add(FieldKey.fromString("Protocol"));
             columns.add(FieldKey.fromString("Title"));
@@ -272,7 +273,7 @@ public class BehaviorNotification extends ColonyAlertsNotification
 //            msg.append("<hr><b>Assignments created in past 24hrs:</b><br><br>\n");
             msg.append("<table border=1 style='border-collapse: collapse;'>");
             msg.append("<tr bgcolor = " + '"' + "#FFD700" + '"' + "style='font-weight: bold;'>");
-            msg.append("<td>Id </td><td>Sex </td><td>Room </td><td>Cage </td><td>Project </td><td>Protocol </td><td>Title </td><td>Project Investigator </td><td>Assign Date </td><td>Release Date </td><td>Projected Release Date </td><td>Assignment Type </td><td>Assign Condition </td><td>Projected Release Condition </td><td>Condition At Release </td></tr>");
+            msg.append("<td>Id </td><td>Sex </td><td>Room </td><td>Cage </td><td>Species </td><td>Project </td><td>Protocol </td><td>Title </td><td>Project Investigator </td><td>Assign Date </td><td>Release Date </td><td>Projected Release Date </td><td>Assignment Type </td><td>Assign Condition </td><td>Projected Release Condition </td><td>Condition At Release </td></tr>");
 
             ts2.forEach(object -> {
                 Results rs = new ResultsImpl(object, colMap);
@@ -283,6 +284,7 @@ public class BehaviorNotification extends ColonyAlertsNotification
                 msg.append("<td>" + PageFlowUtil.filter(rs.getString("Sex")) + "</td>");
                 msg.append("<td>" + PageFlowUtil.filter(rs.getString("Room")) + "</td>");
                 msg.append("<td>" + PageFlowUtil.filter(rs.getString("Cage")) + "</td>");
+                msg.append("<td>" + PageFlowUtil.filter(rs.getString("Species")) + "</td>");
                 msg.append("<td>" + PageFlowUtil.filter(rs.getString("project")) + "</td>");
                 msg.append("<td>" + PageFlowUtil.filter(rs.getString("Protocol")) + "</td>");
                 msg.append("<td>" + PageFlowUtil.filter(rs.getString("Title")) + "</td>");
@@ -333,6 +335,7 @@ public class BehaviorNotification extends ColonyAlertsNotification
             columns.add(FieldKey.fromString("Sex"));
             columns.add(FieldKey.fromString("Room"));
             columns.add(FieldKey.fromString("Cage"));
+            columns.add(FieldKey.fromString("Species"));
             columns.add(FieldKey.fromString("project"));
             columns.add(FieldKey.fromString("Protocol"));
             columns.add(FieldKey.fromString("Title"));
@@ -350,7 +353,7 @@ public class BehaviorNotification extends ColonyAlertsNotification
 
             msg.append("<table border=1 style='border-collapse: collapse; border: 1px solid black;'>");
             msg.append("<tr bgcolor = " + '"' + "#FFD700" + '"' + "style='font-weight: bold;'>");
-            msg.append("<td>Id </td><td>Sex </td><td>Room </td><td>Cage </td><td>Project </td><td>Protocol </td><td>Title </td><td>Project Investigator </td><td>Assign Date </td><td>Release Date </td><td>Projected Release Date </td><td>Assignment Type </td><td>Assign Condition </td><td>Projected Release Condition </td><td>Condition At Release </td></tr>");
+            msg.append("<td>Id </td><td>Sex </td><td>Room </td><td>Cage </td><td>Species </td><td>Project </td><td>Protocol </td><td>Title </td><td>Project Investigator </td><td>Assign Date </td><td>Release Date </td><td>Projected Release Date </td><td>Assignment Type </td><td>Assign Condition </td><td>Projected Release Condition </td><td>Condition At Release </td></tr>");
 
             ts2.forEach(object -> {
                 Results rs = new ResultsImpl(object, colMap);
@@ -361,6 +364,7 @@ public class BehaviorNotification extends ColonyAlertsNotification
                 msg.append("<td style='border: 1px solid black;'>" + PageFlowUtil.filter(rs.getString("Sex")) + "</td>");
                 msg.append("<td style='border: 1px solid black;'>" + PageFlowUtil.filter(rs.getString("Room")) + "</td>");
                 msg.append("<td style='border: 1px solid black;'>" + PageFlowUtil.filter(rs.getString("Cage")) + "</td>");
+                msg.append("<td style='border: 1px solid black;'>" + PageFlowUtil.filter(rs.getString("Species")) + "</td>");
                 msg.append("<td style='border: 1px solid black;'>" + PageFlowUtil.filter(rs.getString("project")) + "</td>");
                 msg.append("<td style='border: 1px solid black;'>" + PageFlowUtil.filter(rs.getString("Protocol")) + "</td>");
                 msg.append("<td style='border: 1px solid black;'>" + PageFlowUtil.filter(rs.getString("Title")) + "</td>");
