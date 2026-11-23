@@ -308,4 +308,129 @@
             </column>
         </columns>
     </table>
+
+    <table tableName="requirementname_translation" tableDbType="TABLE">
+        <auditLogging>DETAILED</auditLogging>
+        <javaCustomizer class="org.labkey.ldk.query.DefaultTableCustomizer" />
+        <columns>
+            <column columnName="rowid">
+                <isAutoInc>true</isAutoInc>
+                <isKeyField>true</isKeyField>
+                <columnTitle>Key</columnTitle>
+            </column>
+            <column columnName="spreadsheet_name">
+                <columnTitle>Requirement Name Abbrev</columnTitle>
+            </column>
+            <column columnName="prime_name">
+                <columnTitle>Prime Requirement Name</columnTitle>
+            </column>
+            <column columnName="grid_type">
+                <columnTitle>Grid Type</columnTitle>
+            </column>
+            <column columnName="date_disabled">
+                <isHidden>true</isHidden>
+            </column>
+            <column columnName="created">
+                <isHidden>true</isHidden>
+            </column>
+            <column columnName="createdby">
+                <isHidden>true</isHidden>
+            </column>
+            <column columnName="container">
+                <isHidden>true</isHidden>
+            </column>
+        </columns>
+    </table>
+
+    <table tableName="Employeetraining_Details" tableDbType="TABLE">
+        <auditLogging>DETAILED</auditLogging>
+        <javaCustomizer class="org.labkey.ldk.query.DefaultTableCustomizer" />
+        <columns>
+            <column columnName="rowid">
+                <isAutoInc>true</isAutoInc>
+                <isKeyField>true</isKeyField>
+                <columnTitle>Key</columnTitle>
+            </column>
+            <column columnName="employeeid">
+                <columnTitle>Employee ID</columnTitle>
+            </column>
+            <column columnName="requirementname">
+                <columnTitle>Requirement Name</columnTitle>
+            </column>
+            <column columnName="date_completed">
+                <columnTitle>Date Completed</columnTitle>
+            </column>
+            <column columnName="required_Training">
+                <columnTitle>Required Training</columnTitle>
+            </column>
+            <column columnName="objectid">
+                <isHidden>true</isHidden>
+            </column>
+            <column columnName="container">
+                <isHidden>true</isHidden>
+            </column>
+            <column columnName="unit">
+                <columnTitle>Unit</columnTitle>
+            </column>
+            <column columnName="category">
+                <columnTitle>Category</columnTitle>
+            </column>
+            <column columnName="comments">
+                <columnTitle>Comments</columnTitle>
+            </column>
+            <column columnName="createdby">
+                <columnTitle>Created By</columnTitle>
+            </column>
+            <column columnName="created">
+                <columnTitle>Created</columnTitle>
+            </column>
+            <column columnName="modifiedby">
+                <columnTitle>Modified By</columnTitle>
+            </column>
+            <column columnName="modified">
+                <columnTitle>Modified</columnTitle>
+            </column>
+            <column columnName="grid_type">
+                <columnTitle>Grid Type</columnTitle>
+            </column>
+        </columns>
+    </table>
+
+
+
+    <table tableName="employeeAssignedLocation" tableDbType="TABLE">
+        <auditLogging>DETAILED</auditLogging>
+        <javaCustomizer class="org.labkey.ldk.query.DefaultTableCustomizer" />
+        <columns>
+            <column columnName="rowid">
+                <isAutoInc>true</isAutoInc>
+                <isKeyField>true</isKeyField>
+                <columnTitle>Key</columnTitle>
+            </column>
+            <column columnName="employeeid">
+                <columnTitle>Employee ID</columnTitle>
+            </column>
+            <column columnName="location">
+                <columnTitle>Assigned Location</columnTitle>
+            </column>
+            <column columnName="created">
+                <columnTitle>Created</columnTitle>
+            </column>
+            <column columnName="createdby">
+                <columnTitle>Created By</columnTitle>
+            </column>
+            <column columnName="modified">
+                <columnTitle>Modified</columnTitle>
+            </column>
+            <column columnName="modifiedby">
+                <columnTitle>Modified By</columnTitle>
+            </column>
+            <column columnName="objectid">
+                <isHidden>true</isHidden>
+            </column>
+            <column columnName="container">
+                <isHidden>true</isHidden>
+            </column>
+        </columns>
+    </table>
   </tables>
