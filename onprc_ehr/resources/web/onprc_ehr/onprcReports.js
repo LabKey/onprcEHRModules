@@ -283,8 +283,8 @@ EHR.reports.currentBlood = function(panel, tab){
     var  showActionsBtn = true;
     tab.add({
         html: 'This report summarizes the blood available for the animals below. The method field in the display shows which method was used for calculation.  BC represents calculation based on Body Condition Score and RF represent the use of the standard Fixed Ratio. For more detail on this calculation,  <a href="https://bridge.ohsu.edu/research/onprc/dcm/DCM%20Standard%20Operatiing%20Procedures/RS-001-NHP-Blood-Collection.pdf" target="_blank" rel="noopener noreferrer">Please see the PDF Here</a>.' +
-        '<br><br>There are 2 fields relating to blood value. One is Allowable Blood which is the calcuated max allowable value for the animal and Available Blood which represents current available minus any approved pending requests.' +
-        '<br><br>If there have been recent blood draws for the animal, a graph will show the available blood over time.  On the graph, dots indicate dates when either blood was drawn or a previous blood draw fell off.  The horizontal lines indicate the maximum allowable blood that can be drawn on that date.',
+                '<br><br>There are 2 fields relating to blood value. One is Allowable Blood which is the calcuated max allowable value for the animal and Available Blood which represents current available minus any approved pending requests.' +
+                '<br><br>If there have been recent blood draws for the animal, a graph will show the available blood over time.  On the graph, dots indicate dates when either blood was drawn or a previous blood draw fell off.  The horizontal lines indicate the maximum allowable blood that can be drawn on that date.',
         border: false,
         style: 'padding-bottom: 20px;'
     });
@@ -398,51 +398,106 @@ EHR.reports.bloodSchedule = function(panel, tab, viewName){
     var filterArray = panel.getFilterArray(tab);
     var title = panel.getTitleSuffix();
 
-    filterArray.removable = filterArray.removable || [];
-    filterArray.removable.push(LABKEY.Filter.create('date', new Date(), LABKEY.Filter.Types.DATE_EQUAL));
-
     filterArray.nonRemovable = filterArray.nonRemovable || [];
-    filterArray.nonRemovable.push(LABKEY.Filter.create('qcstate/label', 'Request:', LABKEY.Filter.Types.STARTS_WITH));
+    filterArray.nonRemovable.push(
+            LABKEY.Filter.create('qcstate/label', 'Request:', LABKEY.Filter.Types.STARTS_WITH)
+    );
 
-    tab.add({
-        xtype: 'ldk-querypanel',
-        style: 'margin-bottom:20px;',
-        queryConfig: panel.getQWPConfig({
-            schemaName: 'study',
-            queryName: 'blood',
-            viewName: 'Requests',
-            title: 'Daily Blood Schedule' + title,
-            filters: filterArray.nonRemovable,
-            removeableFilters: filterArray.removable
-        })
+    var pad = function(n){ return n < 10 ? '0' + n : '' + n; };
+    var toIso = function(d){
+        return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
+    };
+
+    var uid = 'bloodSched-' + new Date().getTime();
+    var inputId = uid + '-date';
+    var removeId = uid + '-remove';
+    var addId = uid + '-add';
+
+    var state = { date: toIso(new Date()) };   // null = date filter removed
+    var gridHolder = null;
+    var filterBox = null;
+
+    var buildGrid = function(){
+        var filters = filterArray.nonRemovable.slice();
+        if (state.date){
+            filters.push(LABKEY.Filter.create('date', state.date, LABKEY.Filter.Types.DATE_EQUAL));
+        }
+        return {
+            xtype: 'ldk-querypanel',
+            style: 'margin-bottom:20px;',
+            queryConfig: panel.getQWPConfig({
+                schemaName: 'study',
+                queryName: 'blood',
+                viewName: 'Requests',
+                title: 'Daily Blood Schedule' + title + (state.date ? '' : ' (all dates)'),
+                filters: filters
+            })
+        };
+    };
+
+    var filterBarHtml = function(){
+        if (state.date){
+            return '<span style="display:inline-block;padding:3px 8px;border:1px solid #ccc;' +
+                    'border-radius:12px;background:#f3f3f3;">' +
+                    'Date equals ' +
+                    '<input type="date" id="' + inputId + '" value="' + state.date + '" /> ' +
+                    '<a href="#" id="' + removeId + '" title="Remove date filter" ' +
+                    'style="text-decoration:none;font-weight:bold;margin-left:4px;">&times;</a>' +
+                    '</span>';
+        }
+        return '<a href="#" id="' + addId + '">+ Add date filter</a>';
+    };
+
+    var refresh = function(){
+        // Re-render the filter bar
+        filterBox.update(filterBarHtml());
+        wireHandlers();
+
+        // Rebuild the grid with the current filter state
+        if (gridHolder) tab.remove(gridHolder, true);
+        gridHolder = tab.add(buildGrid());
+        tab.doLayout();
+    };
+
+    var wireHandlers = function(){
+        var dateEl = document.getElementById(inputId);
+        var removeEl = document.getElementById(removeId);
+        var addEl = document.getElementById(addId);
+
+        if (dateEl){
+            dateEl.onchange = function(){
+                // Clearing the native date field also counts as removing the filter
+                state.date = dateEl.value || null;
+                refresh();
+            };
+        }
+        if (removeEl){
+            removeEl.onclick = function(e){
+                e.preventDefault();
+                state.date = null;
+                refresh();
+            };
+        }
+        if (addEl){
+            addEl.onclick = function(e){
+                e.preventDefault();
+                state.date = toIso(new Date());   // default back to today
+                refresh();
+            };
+        }
+    };
+
+    filterBox = tab.add({
+        xtype: 'box',
+        style: 'margin-bottom:10px;',
+        html: filterBarHtml(),
+        listeners: {
+            afterrender: wireHandlers
+        }
     });
+
+    gridHolder = tab.add(buildGrid());
 };
-
-EHR.reports.pairHistory = function(panel, tab, viewName){
-    var filterArray = panel.getFilterArray(tab);
-    var title = panel.getTitleSuffix();
-
-    var date = Ext4.Date.format(Ext4.Date.add(new Date(), Ext4.Date.YEAR, -5), LABKEY.extDefaultDateFormat);
-    tab.add({
-        html: 'This report summarizes all animals paired in a cage in the past 5 years, along with any pairing comments entered during this time period.  Note: periods of group housing are not displayed on this report.',
-        border: false,
-        style: 'padding-bottom: 20px;'
-    },{
-        xtype: 'ldk-querypanel',
-        style: 'margin-bottom:20px;',
-        queryConfig: panel.getQWPConfig({
-            schemaName: 'study',
-            queryName: 'pairHistory',
-            title: 'Pair History' + title,
-            filters: filterArray.nonRemovable,
-            removeableFilters: filterArray.removable,
-            parameters: {
-                StartDate: date
-            }
-        })
-    });
-};
-
 EHR.reports.underConstruction = function(panel, tab){
     tab.add({
         html: 'This report is being developed and should be added soon',
@@ -459,11 +514,11 @@ EHR.reports.potentialParents = function(panel, tab){
         style: 'padding-bottom: 20px;',
         bodyStyle: 'padding: 5px;',
         html: 'This report calculates potential parents for the selected animal(s).  The potential parents are determined as follows:' +
-        '<br><br>' +
-        '<ul style="margin-left: 20px">' +
-        '<li style="list-style-type: disc;">Potential dams are determined by finding any female housed in the animal\'s birth location at the time of birth, which were at least 2.5 years old at the time.  Note: this report considers housing in whole-day increments in order to avoid missing potential parents due to errors in the timestamp of transfers.</li>' +
-        '<li style="list-style-type: disc;">Potential sires are determined by finding the locations where all potential dams were housed during the conception window (defined below) relative to the animal\'s birth.  The potential sires are any male animals housed in these locations during the conception window, which are at least 2.5 years old at the time.</li>' +
-        '</ul>'
+                '<br><br>' +
+                '<ul style="margin-left: 20px">' +
+                '<li style="list-style-type: disc;">Potential dams are determined by finding any female housed in the animal\'s birth location at the time of birth, which were at least 2.5 years old at the time.  Note: this report considers housing in whole-day increments in order to avoid missing potential parents due to errors in the timestamp of transfers.</li>' +
+                '<li style="list-style-type: disc;">Potential sires are determined by finding the locations where all potential dams were housed during the conception window (defined below) relative to the animal\'s birth.  The potential sires are any male animals housed in these locations during the conception window, which are at least 2.5 years old at the time.</li>' +
+                '</ul>'
     });
 
     tab.add({
