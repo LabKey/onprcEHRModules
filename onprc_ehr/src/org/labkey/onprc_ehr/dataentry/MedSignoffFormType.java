@@ -16,6 +16,7 @@
 package org.labkey.onprc_ehr.dataentry;
 
 import org.labkey.api.ehr.EHRService;
+import org.labkey.api.ehr.dataentry.FormSection;
 import org.labkey.api.ehr.dataentry.DataEntryFormContext;
 import org.labkey.api.ehr.dataentry.NonStoreFormSection;
 import org.labkey.api.ehr.dataentry.TaskForm;
@@ -60,6 +61,15 @@ public class MedSignoffFormType extends TaskForm
         }
 
         setDisplayReviewRequired(true);
+
+
+        setDisplayReviewRequired(true);
+        for  (FormSection s : getFormSections())
+        {
+            s.addConfigSource("MedSignOff");
+        }
+
+        addClientDependency(ClientDependency.supplierFromPath("onprc_ehr/model/sources/MedSignOff.js"));
 
     }
 
