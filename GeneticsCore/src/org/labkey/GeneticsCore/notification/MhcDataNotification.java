@@ -29,6 +29,7 @@ import org.labkey.api.ldk.notification.NotificationService;
 import org.labkey.api.module.ModuleLoader;
 import org.labkey.api.query.FieldKey;
 import org.labkey.api.security.User;
+import org.labkey.api.util.DOM;
 import org.labkey.api.util.PageFlowUtil;
 import org.labkey.api.util.logging.LogHelper;
 import org.labkey.remoteapi.CommandException;
@@ -40,8 +41,10 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.Map;
 
 public class MhcDataNotification extends AbstractNotification
 {
@@ -100,6 +103,7 @@ public class MhcDataNotification extends AbstractNotification
         getDiscordantCachedResults(c, u, msg);
         getGenotypingWithoutAnalysis(c, u, msg);
         getDiscordantSubjectIds(c, u, msg);
+        getReadsetWithoutLibraryType(c, u, msg);
         testPrimeEtl(c, u, msg);
 
         return msg.toString();
@@ -107,12 +111,38 @@ public class MhcDataNotification extends AbstractNotification
 
     public void getDiscordantCachedResults(Container c, User u, StringBuilder msg)
     {
-        genericQueryCheck(c, u, msg, "geneticscore", "discordantCachedResults", "discordant cached genotypes", new SimpleFilter(FieldKey.fromString("isDiscordantResult"), "DISCORDANT"));
+        final String schemaName = "geneticscore";
+        final String queryName = "discordantCachedResults";
+        SimpleFilter filter = new SimpleFilter(FieldKey.fromString("isDiscordantResult"), "DISCORDANT");
+        TableInfo ti = getTableInfo(u, c, schemaName, queryName);
+        TableSelector ts = new TableSelector(ti, PageFlowUtil.set("subjectId", "marker", "assaytype", "resultCached", "resultSource", "cachedObjectId"), filter, null);
+        int maxRows = 50;
+        ts.setMaxRows(maxRows);
+        Collection<Map<String, Object>> rows = ts.getMapCollection();
+        if (!rows.isEmpty())
+        {
+            msg.append("<b>WARNING: There are ").append(rows.size() == maxRows ? "at least " : "").append(rows.size()).append(" ").append("discordant cached genotypes").append("</b><br>\n");
+            msg.append("<p/><a href='").append(getExecuteQueryUrl(c, schemaName, queryName, null, filter)).append("'>Click here to view them</a><br>\n\n");
+            msg.append("<p/>\n\n");
+            msg.append("<style>.bordered-table { border-collapse: collapse; width: 100%;} .bordered-table th, .bordered-table td { border: 1px solid #333; padding: 8px; text-align: left;}</style>");
+
+            msg.append(DOM.TABLE(DOM.cl("bordered-table"),
+                    DOM.TR(DOM.TH("SubjectId"), DOM.TH("Marker"), DOM.TH("Assay Type"), DOM.TH("Cached Result"), DOM.TH("Source Result"), DOM.TH("Record ObjectId")),
+                    rows.stream().map(row -> DOM.TR(DOM.TD(row.get("subjectId")), DOM.TD(row.get("marker")), DOM.TD(row.get("assaytype")), DOM.TD(row.get("resultCached")), DOM.TD(row.get("resultSource")), DOM.TD(row.get("cachedObjectId"))))
+            ).renderToString());
+
+            msg.append("<hr>\n\n");
+        }
     }
 
     public void getDiscordantGenotypes(Container c, User u, StringBuilder msg)
     {
         genericQueryCheck(c, u, msg, "geneticscore", "discordantGenotypeResults", "discordant genotyping results (cached data)", null);
+    }
+
+    public void getReadsetWithoutLibraryType(Container c, User u, StringBuilder msg)
+    {
+        genericQueryCheck(c, u, msg, "sequenceanalysis", "sequence_readsets", "readsets without a library type", new SimpleFilter(FieldKey.fromString("librarytype"), null, CompareType.ISBLANK));
     }
 
     public void getDiscordantSubjectIds(Container c, User u, StringBuilder msg)

@@ -1,3 +1,4 @@
+<!--UPdated for Buidl 26.7-->
 <templateSchema xmlns="http://labkey.org/data/xml/externalSchema"
                 xmlns:dat="http://labkey.org/data/xml"
                 xmlns:cv="http://labkey.org/data/xml/queryCustomView"
@@ -7,6 +8,8 @@
         <tableName>chargeableItemCategories</tableName>
         <tableName>fiscalAuthorities</tableName>
         <tableName>invoicedItems</tableName>
+        <tableName>ArtCoreInvoiceDetails</tableName>
+        <tableName>Aliases</tableName>
     </tables>
     <metadata>
         <dat:tables>
