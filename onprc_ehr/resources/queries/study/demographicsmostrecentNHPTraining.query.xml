@@ -1,0 +1,28 @@
+<query xmlns="http://labkey.org/data/xml/query">
+    <metadata>
+        <tables xmlns="http://labkey.org/data/xml">
+            <table tableName="demographicsmostrecentNHPTraining" tableDbType="NOT_IN_DB">
+                <tableTitle>Recent NHP Training</tableTitle>
+                <columns>
+                    <column columnName="Id">
+                        <isKeyField>true</isKeyField>
+                        <isHidden>true</isHidden>
+                    </column>
+                    <column columnName="date">
+                        <columnTitle>Date</columnTitle>
+                    </column>
+                    <column columnName="training_type">
+                        <columnTitle>Training Type</columnTitle>
+                    </column>
+                    <column columnName="training_results">
+                        <columnTitle>Training Results</columnTitle>
+                    </column>
+                    <column columnName="remark">
+                        <columnTitle>Comments</columnTitle>
+                    </column>
+                </columns>
+                <titleColumn>MostRecentTBDate</titleColumn>
+            </table>
+        </tables>
+    </metadata>
+</query>

@@ -842,6 +842,15 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
             ds.addColumn(col17);
         }
 
+
+        if (ds.getColumn("mostRecentNHPTraining") == null)
+        {
+            var col17 = getWrappedIdCol(us, ds, "mostRecentNHPTraining", "demographicsmostrecentNHPTraining");
+            col17.setLabel("NHP Training");
+            col17.setDescription("Calculates the most recent NHP Training entry");
+            ds.addColumn(col17);
+        }
+
         if (ds.getColumn("clinicalActions") == null)
         {
             var col17 = new AliasedColumn("clinicalActions", ds.getColumn("Id"));
@@ -2291,7 +2300,7 @@ private void appendFlagsAlertActiveCol(final UserSchema ehrSchema, AbstractTable
         final String ehrPath = ehrSchema.getContainer().getPath();
 
         WrappedColumn col = new WrappedColumn(pkCol, name);
-        col.setLabel("NHP Training Type");
+        col.setLabel("    NHP Training Type");
         col.setReadOnly(true);
         col.setIsUnselectable(true);
         col.setUserEditable(false);
