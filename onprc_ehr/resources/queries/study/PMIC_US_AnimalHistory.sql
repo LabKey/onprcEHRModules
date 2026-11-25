@@ -24,4 +24,4 @@ from study.PMIC_USImagingData a, study.encounters e
 Where a.taskid = e.taskid
   and a.id = e.id
   and e.chargetype = 'PMIC'
-  and e.type = 'procedure'
+  and e.type = 'Procedure'

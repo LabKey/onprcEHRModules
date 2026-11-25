@@ -41,15 +41,15 @@ SELECT
     --if we dont know the aliasType, we also dont know what do to
     WHEN (alias.aliasType.aliasType IS NULL) THEN null
     --remove both subsidy and raise F&A if needed
-    WHEN (alias.aliasType.removeSubsidy = true AND (alias.aliasType.canRaiseFA = true AND p.chargeId.canRaiseFA = true)) THEN ((cr.unitCost / (1 - COALESCE(cr.subsidy, 0))) * (CASE WHEN (alias.faRate IS NOT NULL AND alias.faRate < CAST(ir.indirectRate AS DOUBLE)) THEN
-    ((1 + (CAST(ir.indirectRate AS DOUBLE) / (1 + alias.faRate)))) ELSE 1 END))
+    WHEN (alias.aliasType.removeSubsidy = true AND (alias.aliasType.canRaiseFA = true AND p.chargeId.canRaiseFA = true)) THEN ((cr.unitCost / NULLIF((1 - COALESCE(cr.subsidy, 0)),0)) * (CASE WHEN (alias.faRate IS NOT NULL AND alias.faRate < CAST(ir.indirectRate AS DOUBLE)) THEN
+    ((1 + (CAST(ir.indirectRate AS DOUBLE) / NULLIF((1 + alias.faRate),0)))) ELSE 1 END))
 
     --remove subsidy only
-    WHEN (alias.aliasType.removeSubsidy = true AND alias.aliasType.canRaiseFA = false) THEN (cr.unitCost / (1 - COALESCE(cr.subsidy, 0)))
+    WHEN (alias.aliasType.removeSubsidy = true AND alias.aliasType.canRaiseFA = false) THEN (cr.unitCost / NULLIF((1 - COALESCE(cr.subsidy, 0)),0))
 
     --raise F&A only
     --WHEN (alias.aliasType.removeSubsidy = false AND (alias.aliasType.canRaiseFA = true AND p.chargeId.canRaiseFA = true)) THEN (cr.unitCost * (CASE WHEN (alias.faRate IS NOT NULL AND alias.faRate < CAST(ir.indirectRate AS DOUBLE)) THEN (1 + (CAST(ir.indirectRate   AS DOUBLE) - alias.faRate)) ELSE 1 END))
-   WHEN (alias.aliasType.removeSubsidy = false AND (alias.aliasType.canRaiseFA = true AND p.chargeId.canRaiseFA = true)) THEN (cr.unitCost * (CASE WHEN (alias.faRate IS NOT NULL AND alias.faRate < CAST(ir.indirectRate AS DOUBLE)) THEN ((1 + (CAST(ir.indirectRate  AS DOUBLE)))/(1+ alias.faRate)) ELSE 1 END))
+   WHEN (alias.aliasType.removeSubsidy = false AND (alias.aliasType.canRaiseFA = true AND p.chargeId.canRaiseFA = true)) THEN (cr.unitCost * (CASE WHEN (alias.faRate IS NOT NULL AND alias.faRate < CAST(ir.indirectRate AS DOUBLE)) THEN ((1 + (CAST(ir.indirectRate  AS DOUBLE)))/NULLIF((1+ alias.faRate),0)) ELSE 1 END))
  --the NIH rate
     ELSE cr.unitCost
   END AS DOUBLE), 2) as unitCost,
@@ -105,13 +105,13 @@ SELECT
   CASE WHEN alias.fiscalAuthority.faid IS NULL THEN 'Y' ELSE null END as isMissingFaid,
   CASE
     WHEN alias.aliasEnabled IS NULL THEN 'N'
-    WHEN alias.aliasEnabled != 'Y' THEN 'N'
+    WHEN lower(alias.aliasEnabled) != 'y' THEN 'N'
     ELSE null
   END as isAcceptingCharges,
   CASE
     WHEN (alias.budgetStartDate IS NOT NULL AND CAST(alias.budgetStartDate as date) > CAST(p.date as date)) THEN 'Prior To Budget Start'
     WHEN (alias.budgetEndDate IS NOT NULL AND CAST(alias.budgetEndDate as date) < CAST(p.date as date)) THEN 'After Budget End'
-    WHEN (alias.projectStatus IS NOT NULL AND alias.projectStatus != 'ACTIVE' AND alias.projectStatus != 'No Cost Ext' AND alias.projectStatus != 'Partial Setup') THEN 'Grant Project Not Active'
+    WHEN (alias.projectStatus IS NOT NULL AND lower(alias.projectStatus) != 'active' AND lower(alias.projectStatus) != 'no cost ext' AND lower(alias.projectStatus) != 'partial setup') THEN 'Grant Project Not Active'
     ELSE null
   END as isExpiredAccount,
   CASE WHEN (TIMESTAMPDIFF('SQL_TSI_DAY', p.date, curdate()) > 45) THEN 'Y' ELSE null END as isOldCharge,

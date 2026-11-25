@@ -54,7 +54,7 @@ SELECT
 FROM study.demographics d
 WHERE d.calculated_status = 'Alive'
     AND d.Id.age.ageInYears >= 2.5 --greater than 2.5years
-    AND d.gender = 'F'
+    AND d.gender = 'f'
     AND d.Id.activepregnancies.estDeliveryDate IS NULL
     AND d.Id.curlocation.area NOT IN ('Corral', 'Shelters', 'ASB ESPF', 'Catch Area', 'Harem')
     AND d.Id.curlocation.cage IS NOT NULL

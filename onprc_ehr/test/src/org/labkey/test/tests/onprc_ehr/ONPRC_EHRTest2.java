@@ -55,17 +55,23 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 
 import java.io.IOException;
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -1174,12 +1180,94 @@ public class ONPRC_EHRTest2 extends AbstractONPRC_EHRTest
         }
     }
 
-    //TODO: @Test
-    public void vetReviewTest()
+    @Test
+    public void testRemarksEnteredSinceVetReview() throws Exception
     {
-        // mark vet review
+        final String animalId = SUBJECTS[4];
+        getApiHelper().deleteAllRecords("study", "Clinical Remarks", new Filter("Id", animalId));
 
-        // add/replace SOAP
+        // Inserted out of date order; the column sorts on the leading date token
+        String[][] remarks = {
+                {"2024-03-10 09:15", "3/10", "second remark"},
+                {"2024-03-15 14:30", "3/15", "third remark"},
+                {"2024-03-05 08:00", "3/5", "first remark"}
+        };
+        Map<String, String> objectIds = new HashMap<>();
+        InsertRowsCommand insertCommand = new InsertRowsCommand("study", "Clinical Remarks");
+        for (String[] remark : remarks)
+        {
+            String objectId = UUID.randomUUID().toString();
+            objectIds.put(remark[2], objectId);
+            insertCommand.addRow(Map.of("Id", animalId, "date", remark[0], "category", "Clinical", "remark", remark[2],
+                    "performedby", "vetReviewTest", "QCStateLabel", "Completed", "objectid", objectId));
+        }
+        insertCommand.execute(getApiHelper().getConnection(), getContainerPath());
+
+        String expected = Arrays.stream(remarks)
+                .sorted(Comparator.comparing(remark -> remark[0]))
+                .map(remark -> remark[0] + ":00<>" + remark[1] + ": \nRemark: " + remark[2] + "\nEntered By: vetReviewTest\n<>" + objectIds.get(remark[2]) + "<:>")
+                .collect(Collectors.joining("\n\n"));
+
+        SelectRowsCommand select = new SelectRowsCommand("study", "Demographics");
+        select.setColumns(Arrays.asList("Id", "totalRemarksEnteredSinceReview", "remarksEnteredSinceReview"));
+        select.addFilter(new Filter("Id", animalId));
+        Map<String, Object> row = select.execute(getApiHelper().getConnection(), getContainerPath()).getRows().getFirst();
+        assertEquals("Wrong remark count since last vet review", 3, ((Number) row.get("totalRemarksEnteredSinceReview")).intValue());
+        assertEquals("Wrong remarks since last vet review", expected, row.get("remarksEnteredSinceReview"));
+    }
+
+    @Test
+    public void testProtocolExpirationColumns() throws Exception
+    {
+        final String prefix = "ExpirationTest";
+        getApiHelper().deleteAllRecords("ehr", "protocol", new Filter("protocol", prefix, Filter.Operator.STARTS_WITH));
+
+        LocalDate today = LocalDate.now();
+        LocalDate recentApproval = today.minusDays(400);
+        LocalDate olderApproval = today.minusDays(800);
+        LocalDate expiredApproval = today.minusDays(1200);
+        InsertRowsCommand insertCommand = new InsertRowsCommand("ehr", "protocol");
+        insertCommand.addRow(Maps.of("protocol", prefix + "Recent", "approve", recentApproval.toString()));
+        insertCommand.addRow(Maps.of("protocol", prefix + "Reviewed", "approve", olderApproval.toString(), "lastAnnualReview", today.minusDays(354).toString()));
+        insertCommand.addRow(Maps.of("protocol", prefix + "Expired", "approve", expiredApproval.toString()));
+        insertCommand.addRow(Maps.of("protocol", prefix + "Ended", "approve", recentApproval.toString(), "enddate", today.minusDays(1).toString()));
+        insertCommand.execute(getApiHelper().getConnection(), getContainerPath());
+
+        SelectRowsCommand select = new SelectRowsCommand("ehr", "protocol");
+        select.setColumns(Arrays.asList("protocol", "annualReviewDate", "daysUntilAnnualReview", "renewalDate", "daysUntilRenewal"));
+        select.addFilter(new Filter("protocol", prefix, Filter.Operator.STARTS_WITH));
+        Map<String, Map<String, Object>> rows = new HashMap<>();
+        select.execute(getApiHelper().getConnection(), getContainerPath()).getRows().forEach(row -> rows.put((String) row.get("protocol"), row));
+
+        // Annual update is due 364 days after the last review (or approval); 3-year expiration is the day before the third anniversary
+        assertProtocolDates(rows.get(prefix + "Recent"), recentApproval.plusDays(364), -36, recentApproval.plusYears(3).minusDays(1));
+        assertProtocolDates(rows.get(prefix + "Reviewed"), today.plusDays(10), 10, olderApproval.plusYears(3).minusDays(1));
+        assertProtocolDates(rows.get(prefix + "Expired"), null, null, expiredApproval.plusYears(3).minusDays(1));
+        assertProtocolDates(rows.get(prefix + "Ended"), null, null, null);
+    }
+
+    private void assertProtocolDates(Map<String, Object> row, LocalDate annualReviewDate, Integer daysUntilAnnualReview, LocalDate renewalDate)
+    {
+        String protocol = (String) row.get("protocol");
+        assertEquals("Wrong annual review date for " + protocol, annualReviewDate, toLocalDate(row.get("annualReviewDate")));
+        assertEquals("Wrong days until annual review for " + protocol, daysUntilAnnualReview, toInteger(row.get("daysUntilAnnualReview")));
+        assertEquals("Wrong renewal date for " + protocol, renewalDate, toLocalDate(row.get("renewalDate")));
+        Integer daysUntilRenewal = renewalDate == null ? null : (int) ChronoUnit.DAYS.between(LocalDate.now(), renewalDate) - 1;
+        assertEquals("Wrong days until renewal for " + protocol, daysUntilRenewal, toInteger(row.get("daysUntilRenewal")));
+    }
+
+    private LocalDate toLocalDate(Object value)
+    {
+        if (value == null)
+            return null;
+        if (value instanceof Date date)
+            return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        return LocalDate.parse(value.toString().substring(0, 10));
+    }
+
+    private Integer toInteger(Object value)
+    {
+        return value == null ? null : ((Number) value).intValue();
     }
 
     //TODO: @Test

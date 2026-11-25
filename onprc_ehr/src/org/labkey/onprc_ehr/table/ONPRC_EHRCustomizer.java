@@ -1061,20 +1061,23 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
 
     }
 
+    private static String zeroPadTime(AbstractTableInfo ti, String column)
+    {
+        return ti.getSqlDialect().isSqlServer()
+                ? "REPLICATE('0', 4 - LEN(" + column + "))  + cast(" + column + " as varchar(4))"
+                : "LPAD(CAST(" + column + " AS VARCHAR), 4, '0')";
+    }
+
     private void customizeTreatmentOrdersTable(AbstractTableInfo ti)
     {
-        //for now, sqlserver only
-        if (!ti.getSqlDialect().isSqlServer())
-            return;
-
         String name = "treatmentTimes";
         if (null == ti.getColumn(name) && null != ti.getColumn("objectid"))
         {
             SQLFragment sql = new SQLFragment("COALESCE(" +
-                "(SELECT " + ti.getSqlDialect().getGroupConcat(new SQLFragment("REPLICATE('0', 4 - LEN(tt.time))  + cast(tt.time as varchar(4))"), true, false, getNewlineSql(ti)).getSqlCharSequence() + " as _expr " +
+                "(SELECT " + ti.getSqlDialect().getGroupConcat(new SQLFragment(zeroPadTime(ti, "tt.time")), true, false, getNewlineSql(ti)).getSqlCharSequence() + " as _expr " +
                 " FROM ehr.treatment_times tt " +
                 " WHERE tt.treatmentId = " + ExprColumn.STR_TABLE_ALIAS + ".objectid)" +
-                ", (SELECT " + ti.getSqlDialect().getGroupConcat(new SQLFragment("REPLICATE('0', 4 - LEN(ft.hourofday))  + cast(ft.hourofday as varchar(4))"), true, false, getNewlineSql(ti)).getSqlCharSequence() + " as _expr " +
+                ", (SELECT " + ti.getSqlDialect().getGroupConcat(new SQLFragment(zeroPadTime(ti, "ft.hourofday")), true, false, getNewlineSql(ti)).getSqlCharSequence() + " as _expr " +
                 " FROM ehr_lookups.treatment_frequency f " +
                 " JOIN ehr_lookups.treatment_frequency_times ft ON (f.meaning = ft.frequency) WHERE f.rowid = " + ExprColumn.STR_TABLE_ALIAS + ".frequency)" +
                 ", 'Custom')"
@@ -1103,16 +1106,12 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
 
     private void customizeTreatmentFrequency(AbstractTableInfo ti)
     {
-        //for now, sqlserver only
-        if (!ti.getSqlDialect().isSqlServer())
-            return;
-
         String name = "times";
         ColumnInfo existing = ti.getColumn(name);
         if (null == existing && null != ti.getColumn("meaning"))
         {
-            SQLFragment sql = new SQLFragment("(SELECT " + ti.getSqlDialect().getGroupConcat(new SQLFragment("REPLICATE('0', 4 - LEN(t.hourofday))  + cast(t.hourofday as varchar(4))"), true, true, ",").getSqlCharSequence() +
-                    "FROM ehr_lookups.treatment_frequency_times t " +
+            SQLFragment sql = new SQLFragment("(SELECT " + ti.getSqlDialect().getGroupConcat(new SQLFragment(zeroPadTime(ti, "t.hourofday")), true, true, ",").getSqlCharSequence() +
+                    " FROM ehr_lookups.treatment_frequency_times t " +
                     " WHERE t.frequency = " + ExprColumn.STR_TABLE_ALIAS + ".meaning " +
                     " GROUP BY t.frequency " +
                     " )");
@@ -1198,12 +1197,11 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
                 earliestRemarkCol.setLabel("Earliest Remark Entered Since Last Vet Review");
                 ti.addColumn(earliestRemarkCol);
 
-                //date part not supported in postgres
-                if (ti.getSqlDialect().isSqlServer())
                 {
+                    String sortableDate = ti.getSqlDialect().isSqlServer() ? "LEFT(CONVERT(VARCHAR, cr.date, 120), 19)" : "to_char(cr.date, 'YYYY-MM-DD HH24:MI:SS')";
                     //NOTE: the first token in the group_concat() is used for sorting
-                    SQLFragment groupConatSql = new SQLFragment(ti.getSqlDialect().concatenate("LEFT(CONVERT(VARCHAR, cr.date, 120), 19)", "'<>'", "CAST(" + ti.getSqlDialect().getDatePart(Calendar.MONTH, "cr.date") + " AS VARCHAR)", "'/'", "CAST(" + ti.getSqlDialect().getDatePart(Calendar.DATE, "cr.date") + " AS VARCHAR)", "': '", getChr(ti) + "(10)", "CASE WHEN cr.description IS NULL THEN '' ELSE " + ti.getSqlDialect().concatenate("COALESCE(cr.description, '')", getChr(ti) + "(10)") + " END", "CASE WHEN cr.remark IS NULL THEN '' ELSE " + ti.getSqlDialect().concatenate("'Remark: '",  "COALESCE(cr.remark, '')", getChr(ti) + "(10)") + " END", "CASE WHEN cr.performedby IS NULL THEN '' ELSE " + ti.getSqlDialect().concatenate("'Entered By: '",  "COALESCE(cr.performedby, '')", getChr(ti) + "(10)") + " END", "'<>'","cr.objectid", "'<:>'"));
-                    SQLFragment remarkSql = new SQLFragment("(SELECT " + ti.getSqlDialect().getGroupConcat(groupConatSql, false, true, ti.getSqlDialect().concatenate(getChr(ti) + "(10)", getChr(ti) + "(10)")).getSqlCharSequence() + " as expr1 FROM " + remarksTable.getSelectName() + " cr WHERE cr.participantid = " + ExprColumn.STR_TABLE_ALIAS + ".participantid AND cr.qcstate = ? AND cr.datefinalized <= {fn now()} AND (cr.category IS NULL or cr.category = ? or cr.category = ?) AND cr.datefinalized >= COALESCE((SELECT max(t.date) as expr FROM " + obsRealTable.getSelectName() + " t WHERE t.category = ? AND " + ExprColumn.STR_TABLE_ALIAS + ".participantId = t.participantId), ?))", qcStateRowId, ONPRC_EHRManager.CLINICAL_SOAP_CATEGORY, ONPRC_EHRManager.RECORD_AMENDMENT, ONPRC_EHRManager.VET_REVIEW, getDefaultVetReviewDate(ti.getUserSchema().getContainer()));
+                    SQLFragment groupConatSql = new SQLFragment(ti.getSqlDialect().concatenate(sortableDate, "'<>'", "CAST(" + ti.getSqlDialect().getDatePart(Calendar.MONTH, "cr.date") + " AS VARCHAR)", "'/'", "CAST(" + ti.getSqlDialect().getDatePart(Calendar.DATE, "cr.date") + " AS VARCHAR)", "': '", getChr(ti) + "(10)", "CASE WHEN cr.description IS NULL THEN '' ELSE " + ti.getSqlDialect().concatenate("COALESCE(cr.description, '')", getChr(ti) + "(10)") + " END", "CASE WHEN cr.remark IS NULL THEN '' ELSE " + ti.getSqlDialect().concatenate("'Remark: '",  "COALESCE(cr.remark, '')", getChr(ti) + "(10)") + " END", "CASE WHEN cr.performedby IS NULL THEN '' ELSE " + ti.getSqlDialect().concatenate("'Entered By: '",  "COALESCE(cr.performedby, '')", getChr(ti) + "(10)") + " END", "'<>'","cr.objectid", "'<:>'"));
+                    SQLFragment remarkSql = new SQLFragment("(SELECT " + ti.getSqlDialect().getGroupConcat(groupConatSql, false, true, new SQLFragment(ti.getSqlDialect().concatenate(getChr(ti) + "(10)", getChr(ti) + "(10)"))).getSqlCharSequence() + " as expr1 FROM " + remarksTable.getSelectName() + " cr WHERE cr.participantid = " + ExprColumn.STR_TABLE_ALIAS + ".participantid AND cr.qcstate = ? AND cr.datefinalized <= {fn now()} AND (cr.category IS NULL or cr.category = ? or cr.category = ?) AND cr.datefinalized >= COALESCE((SELECT max(t.date) as expr FROM " + obsRealTable.getSelectName() + " t WHERE t.category = ? AND " + ExprColumn.STR_TABLE_ALIAS + ".participantId = t.participantId), ?))", qcStateRowId, ONPRC_EHRManager.CLINICAL_SOAP_CATEGORY, ONPRC_EHRManager.RECORD_AMENDMENT, ONPRC_EHRManager.VET_REVIEW, getDefaultVetReviewDate(ti.getUserSchema().getContainer()));
                     ExprColumn remarkCol = new ExprColumn(ti, "remarksEnteredSinceReview", remarkSql, JdbcType.VARCHAR, ti.getColumn("Id"), ti.getColumn("date"));
                     remarkCol.setLabel("Remarks Entered Since Last Vet Review");
                     remarkCol.setDisplayColumnFactory(VetReviewDisplayColumn::new);
@@ -1613,64 +1611,61 @@ public class ONPRC_EHRCustomizer extends AbstractTableCustomizer
             }
         }
 
-        if (ti.getSqlDialect().isSqlServer())
+        String annualReviewDate = "annualReviewDate";
+        if (null == ti.getColumn(annualReviewDate) && null != ti.getColumn("approve"))
         {
-            String annualReviewDate = "annualReviewDate";
-            if (null == ti.getColumn(annualReviewDate) && null != ti.getColumn("approve"))
-            {
-                //NOTE: day used instead of year to be PG / LK12.3 compatible
-                String sqlString = "(CASE " +
-                        //if the protocol is already ended, or began more than 3 years ago, assume it is ended
-                        " WHEN " + ExprColumn.STR_TABLE_ALIAS + ".enddate IS NOT NULL THEN NULL " +
-                        " WHEN (" + ti.getSqlDialect().getDateDiff(Calendar.DATE, "{fn curdate()}", ExprColumn.STR_TABLE_ALIAS + ".approve") + " >= 1095) THEN NULL" +
-                        //when both dates are null, show null
-                        " WHEN (" + ExprColumn.STR_TABLE_ALIAS + ".approve" + " IS NULL AND " + ExprColumn.STR_TABLE_ALIAS + ".lastAnnualReview" + " IS NULL) THEN NULL" +
-                        //otherwise, show the next annual renewal date
-                        " ELSE {fn timestampadd(SQL_TSI_DAY, 364, COALESCE(" + ExprColumn.STR_TABLE_ALIAS + ".lastAnnualReview, " + ExprColumn.STR_TABLE_ALIAS + ".approve)" + ")}" +
-                        " END)";
-                SQLFragment sql = new SQLFragment(sqlString);
-                ExprColumn annualReviewDateCol = new ExprColumn(ti, annualReviewDate, sql, JdbcType.DATE, ti.getColumn("approve"));
-                annualReviewDateCol.setLabel("IACUC Annual Update Due Date");
-                annualReviewDateCol.setDescription("This column calculates the date when the next annual update is due.  This is 364 days after the last annual review, or blank if more than 3 years after the initial IACUC approval");
-                ti.addColumn(annualReviewDateCol);
+            //NOTE: day used instead of year to be PG / LK12.3 compatible
+            String sqlString = "(CASE " +
+                    //if the protocol is already ended, or began more than 3 years ago, assume it is ended
+                    " WHEN " + ExprColumn.STR_TABLE_ALIAS + ".enddate IS NOT NULL THEN NULL " +
+                    " WHEN (" + ti.getSqlDialect().getDateDiff(Calendar.DATE, "{fn curdate()}", ExprColumn.STR_TABLE_ALIAS + ".approve") + " >= 1095) THEN NULL" +
+                    //when both dates are null, show null
+                    " WHEN (" + ExprColumn.STR_TABLE_ALIAS + ".approve" + " IS NULL AND " + ExprColumn.STR_TABLE_ALIAS + ".lastAnnualReview" + " IS NULL) THEN NULL" +
+                    //otherwise, show the next annual renewal date
+                    " ELSE {fn timestampadd(SQL_TSI_DAY, 364, COALESCE(" + ExprColumn.STR_TABLE_ALIAS + ".lastAnnualReview, " + ExprColumn.STR_TABLE_ALIAS + ".approve)" + ")}" +
+                    " END)";
+            SQLFragment sql = new SQLFragment(sqlString);
+            ExprColumn annualReviewDateCol = new ExprColumn(ti, annualReviewDate, sql, JdbcType.DATE, ti.getColumn("approve"));
+            annualReviewDateCol.setLabel("IACUC Annual Update Due Date");
+            annualReviewDateCol.setDescription("This column calculates the date when the next annual update is due.  This is 364 days after the last annual review, or blank if more than 3 years after the initial IACUC approval");
+            ti.addColumn(annualReviewDateCol);
 
-                String daysUntilAnnual = "daysUntilAnnualReview";
-                SQLFragment sql2 = new SQLFragment("(CASE " +
-                        // see above for logic behind this
-                        " WHEN " + ExprColumn.STR_TABLE_ALIAS + ".enddate IS NOT NULL THEN NULL " +
-                        " WHEN (" + ti.getSqlDialect().getDateDiff(Calendar.DATE, "{fn curdate()}", ExprColumn.STR_TABLE_ALIAS + ".approve") + " >= 1095) THEN NULL" +
-                        //when both date are null, it is due
-                        " WHEN (" + ExprColumn.STR_TABLE_ALIAS + ".approve" + " IS NULL AND " + ExprColumn.STR_TABLE_ALIAS + ".lastAnnualReview" + " IS NULL) THEN 0" +
-                        //NOTE: these expire 1 day prior to a full year, so use 364 instead of 365
-                        " ELSE 364 - (" + ti.getSqlDialect().getDateDiff(Calendar.DATE, "{fn curdate()}", "COALESCE(" + ExprColumn.STR_TABLE_ALIAS + ".lastAnnualReview, " + ExprColumn.STR_TABLE_ALIAS + ".approve)") + ")" +
-                        " END)");
-                ExprColumn daysUntilAnnualCol = new ExprColumn(ti, daysUntilAnnual, sql2, JdbcType.INTEGER, ti.getColumn("approve"));
-                daysUntilAnnualCol.setLabel("Days Until IACUC Annual Update");
-                daysUntilAnnualCol.setDescription("This column calculates the days until the next annual update is due.  This is 364 days after the last annual review, or blank if more than 3 years after the initial IACUC approval");
-                daysUntilAnnualCol.setFacetingBehaviorType(FacetingBehaviorType.ALWAYS_OFF);
-                ti.addColumn(daysUntilAnnualCol);
-            }
+            String daysUntilAnnual = "daysUntilAnnualReview";
+            SQLFragment sql2 = new SQLFragment("(CASE " +
+                    // see above for logic behind this
+                    " WHEN " + ExprColumn.STR_TABLE_ALIAS + ".enddate IS NOT NULL THEN NULL " +
+                    " WHEN (" + ti.getSqlDialect().getDateDiff(Calendar.DATE, "{fn curdate()}", ExprColumn.STR_TABLE_ALIAS + ".approve") + " >= 1095) THEN NULL" +
+                    //when both date are null, it is due
+                    " WHEN (" + ExprColumn.STR_TABLE_ALIAS + ".approve" + " IS NULL AND " + ExprColumn.STR_TABLE_ALIAS + ".lastAnnualReview" + " IS NULL) THEN 0" +
+                    //NOTE: these expire 1 day prior to a full year, so use 364 instead of 365
+                    " ELSE 364 - (" + ti.getSqlDialect().getDateDiff(Calendar.DATE, "{fn curdate()}", "COALESCE(" + ExprColumn.STR_TABLE_ALIAS + ".lastAnnualReview, " + ExprColumn.STR_TABLE_ALIAS + ".approve)") + ")" +
+                    " END)");
+            ExprColumn daysUntilAnnualCol = new ExprColumn(ti, daysUntilAnnual, sql2, JdbcType.INTEGER, ti.getColumn("approve"));
+            daysUntilAnnualCol.setLabel("Days Until IACUC Annual Update");
+            daysUntilAnnualCol.setDescription("This column calculates the days until the next annual update is due.  This is 364 days after the last annual review, or blank if more than 3 years after the initial IACUC approval");
+            daysUntilAnnualCol.setFacetingBehaviorType(FacetingBehaviorType.ALWAYS_OFF);
+            ti.addColumn(daysUntilAnnualCol);
+        }
 
-            String renewalDate = "renewalDate";
-            if (null == ti.getColumn(renewalDate) && null != ti.getColumn("approve"))
-            {
-                //NOTE: while SQL_TSI_YEAR is not PG compatible, use it to deal w/ leap years.
-                String sqlString = "(CASE WHEN " + ExprColumn.STR_TABLE_ALIAS + ".enddate IS NULL THEN {fn timestampadd(SQL_TSI_DAY, -1, {fn timestampadd(SQL_TSI_YEAR, 3, " + ExprColumn.STR_TABLE_ALIAS + ".approve)})} ELSE null END)";
-                SQLFragment sql = new SQLFragment(sqlString);
-                ExprColumn renewalCol = new ExprColumn(ti, renewalDate, sql, JdbcType.DATE, ti.getColumn("approve"));
-                renewalCol.setLabel("3-Yr Expiration Date");
-                ti.addColumn(renewalCol);
+        String renewalDate = "renewalDate";
+        if (null == ti.getColumn(renewalDate) && null != ti.getColumn("approve"))
+        {
+            //NOTE: SQL_TSI_YEAR handles leap years
+            String sqlString = "(CASE WHEN " + ExprColumn.STR_TABLE_ALIAS + ".enddate IS NULL THEN {fn timestampadd(SQL_TSI_DAY, -1, {fn timestampadd(SQL_TSI_YEAR, 3, " + ExprColumn.STR_TABLE_ALIAS + ".approve)})} ELSE null END)";
+            SQLFragment sql = new SQLFragment(sqlString);
+            ExprColumn renewalCol = new ExprColumn(ti, renewalDate, sql, JdbcType.DATE, ti.getColumn("approve"));
+            renewalCol.setLabel("3-Yr Expiration Date");
+            ti.addColumn(renewalCol);
 
-                String daysUntil = "daysUntilRenewal";
-                SQLFragment sql2 = new SQLFragment("(CASE " +
-                        " WHEN " + ExprColumn.STR_TABLE_ALIAS + ".enddate IS NULL " +
-                        " THEN (" + ti.getSqlDialect().getDateDiff(Calendar.DATE, sqlString, "{fn curdate()}") + ") - 1" +
-                        " ELSE NULL END)");
-                ExprColumn daysUntilCol = new ExprColumn(ti, daysUntil, sql2, JdbcType.INTEGER, ti.getColumn("approve"));
-                daysUntilCol.setLabel("Days Until 3-Yr Expiration");
-                daysUntilCol.setFacetingBehaviorType(FacetingBehaviorType.ALWAYS_OFF);
-                ti.addColumn(daysUntilCol);
-            }
+            String daysUntil = "daysUntilRenewal";
+            SQLFragment sql2 = new SQLFragment("(CASE " +
+                    " WHEN " + ExprColumn.STR_TABLE_ALIAS + ".enddate IS NULL " +
+                    " THEN (" + ti.getSqlDialect().getDateDiff(Calendar.DATE, sqlString, "{fn curdate()}") + ") - 1" +
+                    " ELSE NULL END)");
+            ExprColumn daysUntilCol = new ExprColumn(ti, daysUntil, sql2, JdbcType.INTEGER, ti.getColumn("approve"));
+            daysUntilCol.setLabel("Days Until 3-Yr Expiration");
+            daysUntilCol.setFacetingBehaviorType(FacetingBehaviorType.ALWAYS_OFF);
+            ti.addColumn(daysUntilCol);
         }
     }
 
@@ -2479,7 +2474,7 @@ private void appendFlagsAlertActiveCol(final UserSchema ehrSchema, AbstractTable
             TableInfo housing = getRealTableForDataset(ti, "housing");
             if (null != housing && null != ti.getColumn("room") && null != ti.getColumn("cage"))
             {
-                SQLFragment sql = new SQLFragment("(SELECT CASE WHEN count(h.participantid) > 8 THEN '>8 Animals' ELSE " + ti.getSqlDialect().getGroupConcat(new SQLFragment("h.participantid"), true, true, "', '").getSqlCharSequence() + " END as expr FROM studydataset." + housing.getName() + " h WHERE h.room = " + ExprColumn.STR_TABLE_ALIAS + ".room AND ((h.enddate IS NULL AND h.date <= {fn now()} AND h.cage IS NULL AND " + ExprColumn.STR_TABLE_ALIAS + ".cage IS NULL) OR (h.cage = " + ExprColumn.STR_TABLE_ALIAS + ".cage)))");
+                SQLFragment sql = new SQLFragment("(SELECT CASE WHEN count(h.participantid) > 8 THEN '>8 Animals' ELSE " + ti.getSqlDialect().getGroupConcat(new SQLFragment("h.participantid"), true, true, ", ").getSqlCharSequence() + " END as expr FROM studydataset." + housing.getName() + " h WHERE h.room = " + ExprColumn.STR_TABLE_ALIAS + ".room AND ((h.enddate IS NULL AND h.date <= {fn now()} AND h.cage IS NULL AND " + ExprColumn.STR_TABLE_ALIAS + ".cage IS NULL) OR (h.cage = " + ExprColumn.STR_TABLE_ALIAS + ".cage)))");
                 ExprColumn newCol = new ExprColumn(ti, name, sql, JdbcType.VARCHAR, ti.getColumn("room"), ti.getColumn("cage"));
                 newCol.setLabel("Animals Housed In Destination");
                 ti.addColumn(newCol);

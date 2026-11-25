@@ -19,7 +19,7 @@ and b.qcstate = 18 and b.isActive ='true')
 
 And a.Id.DataSet.demographics.calculated_status.code = 'Alive'
 and a.qcstate = 18
-and not(a.species in ('rabbit', 'guinea pig'))
+and not(lower(a.species) in ('rabbit', 'guinea pig'))
 
 UNION
 
@@ -38,7 +38,7 @@ where b.project.name not in ('0492-02','0492-03','1063')
 and b.qcstate = 18 and b.isActive ='true')
 And a.Id.DataSet.demographics.calculated_status.code = 'Dead'
 and a.qcstate = 18
-and not(a.species in ('rabbit', 'guinea pig'))
+and not(lower(a.species) in ('rabbit', 'guinea pig'))
 
 UNION
 
@@ -57,5 +57,5 @@ where b.project.name not in ('0492-02','0492-03','1063')
 and b.qcstate = 18 and b.isActive ='true')
 and a.qcstate = 18
 and a.birth_condition = 'Fetus - Prenatal'
-and not(a.species in ('rabbit', 'guinea pig'))
+and not(lower(a.species) in ('rabbit', 'guinea pig'))
 

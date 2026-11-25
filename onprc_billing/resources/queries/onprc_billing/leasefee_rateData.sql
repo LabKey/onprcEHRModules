@@ -49,7 +49,7 @@ Case
 	Else Null
 	End as chargeID,
 --lf.chargeId,
-Null as RevisedChargeID,
+CAST(Null AS INTEGER) as RevisedChargeID,
 
 1 as quantity
 

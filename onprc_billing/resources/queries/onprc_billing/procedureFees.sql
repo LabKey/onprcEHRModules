@@ -78,7 +78,7 @@ and  mfd.active = true
 WHERE
 cast(e.datefinalized as Date) >= StartDate  AND CAST(e.datefinalized as date) <= CAST(EndDate as date)
 and e.billable = 'yes'
-and e.chargetype IS NOT NULL and e.chargetype NOT IN ('Not Billable', 'No Charge') and e.code.meaning like 'bottle%'
+and e.chargetype IS NOT NULL and e.chargetype NOT IN ('Not Billable', 'No Charge') and lower(e.code.meaning) like 'bottle%'
 GROUP BY e.Id, e.date, CAST(e.dateFinalized as date), e.project, e.chargetype, e.taskid, mfd.chargeId,mfd.code,e.code.code,mfd.code.code,e.code,mfd.chargeId.rowId
 
 UNION ALL
@@ -102,7 +102,7 @@ and  mfd.active = true
 WHERE
 cast(e.datefinalized as Date) >= StartDate  AND CAST(e.datefinalized as date) <= CAST(EndDate as date)
 and e.billable = 'yes'
-and e.chargetype IS NOT NULL and e.chargetype NOT IN ('Not Billable', 'No Charge') and e.code.meaning like 'diet%'
+and e.chargetype IS NOT NULL and e.chargetype NOT IN ('Not Billable', 'No Charge') and lower(e.code.meaning) like 'diet%'
 GROUP BY e.Id, e.date, CAST(e.dateFinalized as date), e.project, e.chargetype, e.taskid, mfd.chargeId,mfd.code,e.code.code,mfd.code.code,e.code,mfd.chargeId.rowId
 
 
@@ -132,7 +132,7 @@ WHERE
 cast(e.datefinalized as Date) >= StartDate  AND CAST(e.datefinalized as date) <= CAST(EndDate as date)
 and e.billable = 'yes'
 --and e.chargetype IS NOT NULL and e.chargetype NOT IN ('Not Billable', 'No Charge')
-and s.categories like '%drugs%'
+and lower(s.categories) like '%drugs%'
 GROUP BY e.Id, e.date, CAST(e.dateFinalized as date), e.project, e.chargetype, e.taskid, --mfd.chargeId,mfd.code,
 e.code.code,e.billable,
 --mfd.code.code,

@@ -42,7 +42,7 @@ SELECT d.Id,
        r.exemptionRate,
        r.Multiplier,
        r.subsidy,
-       RateCalc(r.AliasAtTime,r.chargeID,d.project,d.Date,.4)  as CalculatedRate,
+       RateCalc(r.AliasAtTime,r.chargeID,d.project,CAST(d.Date AS DATE),.4)  as CalculatedRate,
        null as revisedRate,
        r.revisedChargeID,
        r.revisedSubsidy
@@ -68,7 +68,7 @@ select
     '' as BirthType,
     'automatic_adjustment' as AssignmentTypeNA,
     '' as DayLease,
-    '' as DayLeaseLength, --integer
+    0 as DayLeaseLength, --integer
     '' as MultipleAssignments,
        null as dualassignment,
        null as creditto,
@@ -91,8 +91,8 @@ select
     null as exemptionRate,
      null as Multiplier,
      null as subsidy,
-    RateCalc(a.alias,a.leasecharge1,a.projectID, a.date,a.farate) as CalculatedRate,
-    RateCalc(a.alias,a.leasecharge2,a.projectID, a.date,a.farate) as RevisedRate,
+    RateCalc(a.alias,a.leasecharge1,a.projectID, CAST(a.date AS DATE),a.farate) as CalculatedRate,
+    RateCalc(a.alias,a.leasecharge2,a.projectID, CAST(a.date AS DATE),a.farate) as RevisedRate,
     a.leaseCharge2,
     null as RevisedSubsidy
 

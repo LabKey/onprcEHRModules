@@ -723,11 +723,6 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
     protected void projectsWithExpiredProtocol(final Container c, User u, final StringBuilder msg)
     {
         TableInfo ti = getEHRSchema(c, u).getTable("project");
-        if (!ti.getSqlDialect().isSqlServer())
-        {
-            return;
-        }
-
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("enddateCoalesced"), "+0d", CompareType.DATE_GTE);
         filter.addCondition(FieldKey.fromString("protocol/renewalDate"), new Date(), CompareType.DATE_LTE);
         TableSelector ts = new TableSelector(ti, filter, null);
@@ -826,11 +821,6 @@ public class ColonyAlertsNotification extends AbstractEHRNotification
      */
     protected void protocolsWithAnimalsExpiringSoon(final Container c, User u, final StringBuilder msg)
     {
-        if (!DbScope.getLabKeyScope().getSqlDialect().isSqlServer())
-        {
-            return;
-        }
-
         SimpleFilter filter = new SimpleFilter(FieldKey.fromString("daysUntilRenewal"), 30, CompareType.LTE);
         filter.addCondition(FieldKey.fromString("activeAnimals/totalActiveAnimals"), 0, CompareType.GT);
 

@@ -10,4 +10,4 @@ f.RequestedBY,
 f.ScheduleNecropsy,
 f.history
 FROM flags f join demographics d on f.id = d.id
-where f.flag.value like '%Underutilized%' and d.calculated_status = 'alive' and f.enddate is null
+where f.flag.value like '%Underutilized%' and d.calculated_status = 'Alive' and f.enddate is null

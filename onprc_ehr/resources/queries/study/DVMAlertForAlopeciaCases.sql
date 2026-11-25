@@ -12,8 +12,8 @@ SELECT
     co.observation AS AlopeciaScore,
     co.performedby,
     CASE
-        WHEN co.enteredSincevetReview = 1 THEN 'true'
-        WHEN co.enteredSincevetReview = 0 THEN 'false'
+        WHEN co.enteredSincevetReview = true THEN 'true'
+        WHEN co.enteredSincevetReview = false THEN 'false'
         ELSE NULL
     END AS enteredSincevetReview,
     co.Id.assignedVet.AssignedVet AS AssignedVet,
@@ -40,7 +40,7 @@ WHERE co.category = 'Alopecia Score'
 
     /* Only the first 4/5 in a streak */
   AND NOT EXISTS (
-    SELECT 1
+    SELECT 1 AS x
     FROM study.clinical_observations prev
     WHERE prev.Id = co.Id
       AND prev.category = 'Alopecia Score'
@@ -49,7 +49,7 @@ WHERE co.category = 'Alopecia Score'
       AND prev.date >
         COALESCE(
               (
-                  SELECT MAX(reset.date)
+                  SELECT MAX(reset.date) AS x
                   FROM study.clinical_observations reset
                   WHERE reset.Id = co.Id
                     AND reset.category = 'Alopecia Score'
@@ -61,7 +61,7 @@ WHERE co.category = 'Alopecia Score'
 )
     /* Remove old streaks that later returned to 0-3 */
   AND NOT EXISTS (
-    SELECT 1
+    SELECT 1 AS x
     FROM study.clinical_observations laterReset
     WHERE laterReset.Id = co.Id
       AND laterReset.category = 'Alopecia Score'

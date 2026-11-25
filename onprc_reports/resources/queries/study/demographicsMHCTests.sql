@@ -22,6 +22,6 @@ SELECT
   group_concat(DISTINCT CASE
     WHEN (s.allele = 'Mamu-B*017g' AND (s.result = 'POS' OR s.result = 'NEG')) THEN s.result
     ELSE NULL
-  END) as B17,
+  END) as B17
 FROM MHC_Data.MHC_Data_Unified s
 GROUP BY s.Id

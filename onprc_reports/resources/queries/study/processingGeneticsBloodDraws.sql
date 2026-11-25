@@ -51,7 +51,7 @@ SELECT
     WHEN (f.flags LIKE '%MHC Blood Draw Needed%') THEN 1
     WHEN (f.flags LIKE '%MHC Typing Not Needed%') THEN 0
     WHEN (f.flags LIKE '%MHC Blood Draw Collected%') THEN 0
-    WHEN (d.species = 'RHESUS MACAQUE' AND d.Id.age.ageInYears <= 5.0 AND d.geographic_origin = 'India' AND m.Id IS NULL AND (a.Id IS NOT NULL OR d.gender = 'm' ) and u.id is null ) THEN 1
+    WHEN (lower(d.species) = 'rhesus macaque' AND d.Id.age.ageInYears <= 5.0 AND lower(d.geographic_origin) = 'india' AND m.Id IS NULL AND (a.Id IS NOT NULL OR d.gender = 'm' ) and u.id is null ) THEN 1
     WHEN (u.id is not Null) then 1
     ELSE 0
   END as mhcBloodDrawVol,
@@ -110,16 +110,16 @@ LEFT JOIN (
   FROM (
     SELECT
       s.subjectId,
-      s.sampleType,
+      lower(s.sampleType) as sampleType,
       sum(coalesce(s.quantity, 0)) as quantity
       --count(*) as total
     FROM DNA_Bank.samples s
-    WHERE s.dateremoved is null and s.sampleType IN ('gDNA', 'Buffy coat', 'Whole Blood')
-    GROUP BY s.subjectId, s.sampleType
+    WHERE s.dateremoved is null and lower(s.sampleType) IN ('gdna', 'buffy coat', 'whole blood')
+    GROUP BY s.subjectId, lower(s.sampleType)
 
     HAVING (
-      (s.sampletype = 'Buffy coat' AND sum(coalesce(s.quantity, 0)) >= 5.0) OR
-      (s.sampletype = 'Whole Blood' AND sum(coalesce(s.quantity, 0)) >= 5.0)
+      (lower(s.sampleType) = 'buffy coat' AND sum(coalesce(s.quantity, 0)) >= 5.0) OR
+      (lower(s.sampleType) = 'whole blood' AND sum(coalesce(s.quantity, 0)) >= 5.0)
     )
   ) t
   GROUP BY t.subjectId

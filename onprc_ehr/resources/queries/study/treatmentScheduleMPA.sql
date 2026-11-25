@@ -57,7 +57,7 @@ FROM study.demographics h JOIN (
         t1.date as startDate,
         timestampdiff('SQL_TSI_DAY', cast(t1.dateOnly as timestamp), dr.dateOnly) + 1 as daysElapsed,
         t1.enddate, t1.code, t1.volume, t1.vol_units, t1.concentration, t1.conc_units, t1.amountWithUnits,
-        t1.amountAndVolume, t1.dosage, t1.dosage_units, t1.frequency.meaning + ' (' + t1.frequency.times + ')' as frequency, t1.route,
+        t1.amountAndVolume, t1.dosage, t1.dosage_units, t1.frequency.meaning || ' (' || t1.frequency.times || ')' as frequency, t1.route,
         t1.reason, t1.performedby, t1.remark, t1.qcstate.label as TreatmentStatus
         FROM ehr_lookups.dateRange dr
 
