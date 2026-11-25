@@ -474,6 +474,13 @@ Ext4.define('SLA.panel.PurchaseOrderRequest', {
         if (isHazardsRequired && (purchaseData.hazardslist == null || purchaseData.hazardslist == ''))
         {
             // this.showErrorMsg('You have selected Location(s): NSI 0123D or NSI 0125D or NSI 134. Please list the biological or chemical agents! ');
+
+            /*
+            Modified by Kollil, Nov 2026
+            Problem: The button was still disabled here, but never enabled
+            Fix: Added the enable action
+             */
+            this.getSubmitButton().enable();
             this.showErrorMsg('Please list the biological or chemical agents for this location! ');
             return;
         }
@@ -535,7 +542,7 @@ Ext4.define('SLA.panel.PurchaseOrderRequest', {
                 Ext4.Msg.confirm('Confirmation Message', warnMsg, function (btn)
                 {
                     if (btn == 'yes')
-                    //successCallback.call(scope);
+                            //successCallback.call(scope);
                         this.saveRows(commands, purchaseData);
                     else
                         this.getSubmitButton().enable();
@@ -561,7 +568,7 @@ Ext4.define('SLA.panel.PurchaseOrderRequest', {
                 Ext4.Msg.confirm('Confirmation Message', warnMsg, function (btn)
                 {
                     if (btn == 'yes')
-                    //successCallback.call(scope);
+                            //successCallback.call(scope);
                         this.insertPurchaseOrder(purchaseData);
                     else
                         this.getSubmitButton().enable();
@@ -664,8 +671,13 @@ Ext4.define('SLA.panel.PurchaseOrderRequest', {
                 var perc = (allowableAnimalData.NumUsed + requestedAnimalUsage[key].NumAnimalsOrdered) / allowableAnimalData.NumAllowed;
                 requestedAnimalUsage[key].PercentUsed = Ext4.util.Format.round(perc * 100, 1);
 
-                requestedAnimalUsage[key].Species = detail.Species;
-                requestedAnimalUsage[key].Gender = detail.Gender;
+                /*Modified by Kollil Dec 2026
+                Problem: Uses detail.Species / detail.Gender instead of the lowercase properties used elsewhere.
+                */
+                // requestedAnimalUsage[key].Species = detail.Species;
+                // requestedAnimalUsage[key].Gender = detail.Gender;
+                requestedAnimalUsage[key].Species = detail.species || '';
+                requestedAnimalUsage[key].Gender = detail.gender || '';
                 //requestedAnimalUsage[key].Strain = detail.Strain;
                 requestedAnimalUsage[key].NumAllowed = allowableAnimalData.NumAllowed;
             }
@@ -854,8 +866,18 @@ Ext4.define('SLA.panel.PurchaseOrderRequest', {
                                 prevDatecancelled = this.trimDateToYMDStr(prevDetailsMap[objectid]['datecancelled']),
                                 prevCancelledby = prevDetailsMap[objectid]['cancelledby'];
 
-                        sendNotification = prevReceiveddate != receiveddate || prevReceivedby != receivedby
-                                || prevDatecancelled != datecancelled || prevCancelledby != cancelledby;
+                        /*
+                        Modified by : Kollil, Nov 2026
+                        Problem: Each iteration overwrites:
+                         */
+                        // sendNotification = prevReceiveddate != receiveddate || prevReceivedby != receivedby
+                        //         || prevDatecancelled != datecancelled || prevCancelledby != cancelledby;
+                        sendNotification ||= (
+                                prevReceiveddate != receiveddate ||
+                                prevReceivedby != receivedby ||
+                                prevDatecancelled != datecancelled ||
+                                prevCancelledby != cancelledby
+                        );
                     }
                     else if (receiveddate != null || receivedby != null || datecancelled != null || cancelledby != null)
                     {
@@ -1013,6 +1035,16 @@ Ext4.define('SLA.panel.PurchaseOrderRequest', {
     {
         var miscCharges=[];
         var prevDetailsMap = {};
+
+        /*
+        Modified by Kollil, Nov 2026
+        Problem: Only execute misc-charge comparison logic on updates, so added the fix
+          */
+        if (!this.isUpdate)
+        {
+            return;
+        }
+
         //var vendor_id ;
 
         ////Get the vendor id for the given name
@@ -1054,10 +1086,11 @@ Ext4.define('SLA.panel.PurchaseOrderRequest', {
                         prevReceivedby = prevDetailsMap[objectid]['receivedby'];
 
                 //Compare the receiving info with the previous data
-                if ((prevReceiveddate == null & receiveddate != null) || (prevReceivedby == null & receivedby != null))
+                // if ((prevReceiveddate == null & receiveddate != null) || (prevReceivedby == null & receivedby != null))
+                if ((prevReceiveddate == null && receiveddate != null) || (prevReceivedby == null && receivedby != null))
                 {
                     if (this.initData.purchase.vendor == 'ONPRC Weaning - SLA')
-                    //if (newPurchaseData['vendorid'] == vendor_id)
+                            //if (newPurchaseData['vendorid'] == vendor_id)
                     {
                         miscCharges.push({
                             "date": receiveddate,
