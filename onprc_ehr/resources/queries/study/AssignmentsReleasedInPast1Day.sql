@@ -13,6 +13,7 @@ SELECT
     Id.demographics.gender as Sex,
     Id.curlocation.room as Room,
     Id.curlocation.cage as Cage,
+    Id.demographics.species as Species,
     project.displayname as project,
     project.protocol.displayname as Protocol,
     project.title as Title,

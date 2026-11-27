@@ -12,6 +12,7 @@ SELECT
     Id.demographics.gender as Sex,
     Id.curlocation.room as Room,
     Id.curlocation.cage as Cage,
+    Id.demographics.species as Species,
     project.displayname as project,
     project.protocol.displayname as Protocol,
     project.title as Title,
@@ -23,6 +24,5 @@ SELECT
     assignCondition.meaning as AssignCondition,
     projectedReleaseCondition.meaning as ProjectedReleaseCondition,
     releaseCondition.meaning as ConditionAtRelease
-
 FROM Assignment
 WHERE CAST(created AS DATE) >= TIMESTAMPADD('SQL_TSI_DAY', -1, CAST(NOW() AS DATE))

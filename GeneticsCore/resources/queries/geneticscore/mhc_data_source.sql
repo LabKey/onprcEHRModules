@@ -14,7 +14,9 @@ SELECT
     s.status as result,
     cast('SSP' as varchar) as assaytype,
     'N/A' as librarytype,
-    NULL as score
+    NULL as score,
+    s.modified,
+    null as analysisId
 
 FROM assay.SSP_assay.SSP.SSP_Summary s
 WHERE s.subjectId is not null
@@ -26,14 +28,16 @@ SELECT
     a.marker,
     null as shortName,
     count(*) as totalTests,
-    cast('POS' as varchar) as result,
+    group_concat(distinct a.qual_result, ',') as result,
     cast('SBT' as varchar) as assaytype,
     group_concat(DISTINCT a.analysisId.readset.libraryType, ',') as librarytype,
-    sum(a.result) / (SELECT count(DISTINCT a2.analysisId) as total FROM assay.GenotypeAssay.Genotype.Data a2 WHERE a2.subjectId = a.subjectId AND a2.run.assayType = 'SBT' ) AS score,
+    AVG(a.result) AS score,
+    greatest(max(a.modified), max(a.analysisId.readset.modified)) as modified,
+    a.analysisId
 
 FROM assay.GenotypeAssay.Genotype.Data a
-WHERE a.run.assayType = 'SBT'
-GROUP BY a.subjectid, a.marker
+WHERE a.run.assayType = 'SBT' AND a.analysisId.readset.libraryType LIKE 'SBT_MHC_Class_I!_%' ESCAPE '!'
+GROUP BY a.subjectid, a.marker, a.analysisId
 
 UNION ALL
 
@@ -46,9 +50,27 @@ DISTINCT s.subjectId,
          cast('SBT' as varchar) as assaytype,
          null as librarytype,
          NULL as score,
+         greatest(s.modified, s.rsModified) as modified,
+         s.analysisId
 
 --we want any IDs with SBT data, but lacking data for these special-cased markers
 FROM genotypeassays.primer_pairs p
-     FULL JOIN (SELECT DISTINCT subjectId FROM assay.GenotypeAssay.Genotype.Data s WHERE s.run.assayType = 'SBT') s ON (1=1)
-     LEFT JOIN assay.GenotypeAssay.Genotype.Data a ON (a.run.assayType = 'SBT' AND p.ref_nt_name = a.marker AND a.subjectid = s.subjectid)
-WHERE a.rowid IS NULL AND (p.ref_nt_name LIKE 'Mamu-A%' OR p.ref_nt_name LIKE 'Mamu-B%')
+     -- NOTE: this is now grouped on analysisId, so that we report one record for each unit of data, rather than one for each subject as a whole:
+     FULL JOIN (
+        SELECT
+            subjectId,
+            s.analysisId,
+            max(s.modified) as modified,
+            max(s.analysisId.readset.modified) as rsModified
+        FROM assay.GenotypeAssay.Genotype.Data s
+        WHERE s.subjectId IS NOT NULL AND s.run.assayType = 'SBT' AND s.analysisId.readset.libraryType LIKE 'SBT_MHC_Class_I!_%' ESCAPE '!'
+        GROUP BY s.subjectId, s.analysisId
+     ) s ON (1=1)
+     LEFT JOIN assay.GenotypeAssay.Genotype.Data a ON (
+         a.run.assayType = 'SBT' AND
+         p.ref_nt_name = a.marker AND
+         a.subjectid = s.subjectid AND
+         a.analysisId = s.analysisId AND
+         s.analysisId.readset.libraryType LIKE 'SBT_MHC_Class_I!_%' ESCAPE '!'
+     )
+WHERE a.rowid IS NULL AND s.subjectId IS NOT NULL AND (p.ref_nt_name LIKE 'Mamu-A%' OR p.ref_nt_name LIKE 'Mamu-B%')
