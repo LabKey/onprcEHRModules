@@ -16,7 +16,8 @@ SELECT
   c.mostRecentP2,
   c.isActive,
   c.assignedvet,
-  c.mostRecentCeg_Plan
+  c.mostRecentCeg_Plan,
+  c.caseNo
 
 FROM study.cases c
 WHERE c.isOpen = true AND c.category = 'Clinical'

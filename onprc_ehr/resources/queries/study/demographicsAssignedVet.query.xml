@@ -7,6 +7,9 @@
                     <column columnName="AssignmentType">
                         <url replaceMissing="blankValue">executeQuery.view?schemaName=study&amp;query.queryName=VetAssignment_Filter&amp;query.Id~contains=${Id}</url>
                     </column>
+                    <column columnName="masterProblems">
+                        <columnTitle>Case Number: Master Problem(s)</columnTitle>
+                    </column>
                 </columns>
             </table>
         </tables>
